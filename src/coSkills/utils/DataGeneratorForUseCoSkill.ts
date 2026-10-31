@@ -8,7 +8,7 @@ import {
     AuxiliaryTypes_MapSize,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Units_IUnitMap,
+    type Units_UnitMap,
 } from "../../internal.ts";
 import type { FixedAreaDamage } from "../../proto/schema/CommonProto/Config/CoSkillCfg/InstantManual/FixedAreaDamage.ts";
 import { DataForUseCoSkill } from "../../proto/schema/CommonProto/Structure/DataForUseCoSkill.ts";
@@ -181,7 +181,7 @@ function getFixedAreaDamageCenterForType5({ war, valueMaps, radius, hpDamage, is
     }
 }
 
-function getValueMap(unitMap: Units_IUnitMap.IUnitMap, teamIndex: number): ValueMaps {
+function getValueMap(unitMap: Units_UnitMap.UnitMap, teamIndex: number): ValueMaps {
     const { width, height } = unitMap.getMapSize().getWH();
     const hpMap             = Helpers_Collection.createEmptyMap(width, height, 0);
     const fundMap           = Helpers_Collection.createEmptyMap(width, height, 0);

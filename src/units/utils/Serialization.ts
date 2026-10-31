@@ -6,7 +6,7 @@ import {
     type GameConfigs_GameConfig,
     Helpers_Misc,
     AuxiliaryTypes_GridIndex,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MapSize,
     Players_Constants,
     WeightedGridIndexes_Utils,
@@ -18,7 +18,7 @@ import {
     SerialUnit,
 } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 
-export function createNewUnitDataForChangeType(unit: Units_IUnit.IUnit, newUnitTypeId: number): SerialUnit {
+export function createNewUnitDataForChangeType(unit: Units_Unit.Unit, newUnitTypeId: number): SerialUnit {
     const unitTemplateCfg       = Helpers_Misc.getExisted(unit.getGcData().getUnitTemplateCfg(newUnitTypeId));
     const maxBuildMaterial      = unitTemplateCfg.getMaxBuildMaterial() ?? 0;
     const maxPrimaryWeaponAmmo  = unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? 0;

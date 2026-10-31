@@ -27,13 +27,11 @@ import {
     Numbers_Constants,
     Numbers_Utils,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     Tiles_Utils_Common,
     UnitBuffs_Constants,
     UnitBuffs_Utils_Common,
     Units_Constants,
-    type Units_IUnit,
-    type Units_IUnitView,
     Units_Unit,
     Units_UnitView,
     Units_Utils_Common,
@@ -51,7 +49,7 @@ import type { UnitBuff } from "../proto/schema/CommonProto/Structure/UnitBuff.ts
 import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 
-export class Unit implements Units_IUnit.IUnit {
+export class Unit {
     private _gameConfig?                        : GameConfigs_GameConfig.GameConfig;
     private _templateCfg?                       : UnitTemplateCfg;
     private _playerIndex                        = 0;
@@ -124,7 +122,7 @@ export class Unit implements Units_IUnit.IUnit {
 
     public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
         if (war.getGcData() !== this.getGcData()) {
-            throw Helpers_Misc.newError(`IUnit.startRunning() invalid gameConfig.`);
+            throw Helpers_Misc.newError(`Unit.startRunning() invalid gameConfig.`);
         }
 
         this._setWar(war);
@@ -136,7 +134,7 @@ export class Unit implements Units_IUnit.IUnit {
         this.getView().stopRunningView();
     }
 
-    public clone(): Units_IUnit.IUnit {
+    public clone(): Units_Unit.Unit {
         const unit = new Units_Unit.Unit();
         unit.init(this.serialize(), this.getGcData());
         unit.startRunning(this.getWar());
@@ -221,7 +219,7 @@ export class Unit implements Units_IUnit.IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////
-    public getView(): Units_IUnitView.IUnitView {
+    public getView(): Units_UnitView.UnitView {
         return this._view;
     }
 
@@ -308,7 +306,7 @@ export class Unit implements Units_IUnit.IUnit {
         if (((maxHp == null) && (hp != null))               ||
             ((maxHp != null) && ((hp < 0) || (hp > maxHp)))
         ) {
-            throw Helpers_Misc.newError(`IUnit.setCurrentHp() invalid hp: ${hp}, maxHp: ${maxHp}`);
+            throw Helpers_Misc.newError(`Unit.setCurrentHp() invalid hp: ${hp}, maxHp: ${maxHp}`);
         }
         this._currentHp = hp;
     }
@@ -966,7 +964,7 @@ export class Unit implements Units_IUnit.IUnit {
     public checkIsCapturer(): boolean {
         return !!this.getTemplateCfg()?.getCanCaptureTile();
     }
-    public checkCanCaptureTile(tile: Tiles_ITile.ITile): boolean {
+    public checkCanCaptureTile(tile: Tiles_Tile.Tile): boolean {
         return (this.checkIsCapturer())
             && (this.getTeamIndex() !== tile.getTeamIndex())
             && (tile.getMaxCapturePoint() != null);
@@ -1295,7 +1293,7 @@ export class Unit implements Units_IUnit.IUnit {
         } else {
             const currentMaterial = this.getCurrentProduceMaterial();
             if (currentMaterial == null) {
-                throw Helpers_Misc.newError(`IUnit.checkIsProduceMaterialInShort() empty currentMaterial.`);
+                throw Helpers_Misc.newError(`Unit.checkIsProduceMaterialInShort() empty currentMaterial.`);
             }
 
             return currentMaterial / maxMaterial <= 0.4;
@@ -1433,7 +1431,7 @@ export class Unit implements Units_IUnit.IUnit {
     public setCurrentPromotion(promotion: number): void {
         const maxPromotion = this.getMaxPromotion();
         if ((maxPromotion == null) || (promotion < 0) || (promotion > maxPromotion)) {
-            throw Helpers_Misc.newError(`IUnit.setCurrentPromotion() invalid promotion: ${promotion}, maxPromotion: ${maxPromotion}`);
+            throw Helpers_Misc.newError(`Unit.setCurrentPromotion() invalid promotion: ${promotion}, maxPromotion: ${maxPromotion}`);
         }
         this._currentPromotion = promotion;
     }
@@ -1456,7 +1454,7 @@ export class Unit implements Units_IUnit.IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for launch silo.
     ////////////////////////////////////////////////////////////////////////////////
-    public checkCanLaunchSiloOnTile(tile: Tiles_ITile.ITile): boolean {
+    public checkCanLaunchSiloOnTile(tile: Tiles_Tile.Tile): boolean {
         const launchSiloParams = tile.getTemplateCfg().getLaunchSiloParams();
         return (!!launchSiloParams?.length)
             && (this.getGcData().checkIsUnitTypeInCategory(this.getUnitType(), launchSiloParams[0]));
@@ -1478,15 +1476,15 @@ export class Unit implements Units_IUnit.IUnit {
     public checkIsTileBuilder(): boolean {
         return this._getBuildableTileCfg() != null;
     }
-    public checkCanBuildOnTile(tile: Tiles_ITile.ITile): boolean {
+    public checkCanBuildOnTile(tile: Tiles_Tile.Tile): boolean {
         const tileObjectType = tile.getObjectType();
         if (tileObjectType == null) {
-            throw Helpers_Misc.newError(`IUnit.checkCanBuildOnTile() tileObjectType is empty.`);
+            throw Helpers_Misc.newError(`Unit.checkCanBuildOnTile() tileObjectType is empty.`);
         }
 
         const tileBaseType = tile.getBaseType();
         if (tileBaseType == null) {
-            throw Helpers_Misc.newError(`IUnit.checkCanBuildOnTile() empty tileBaseType.`);
+            throw Helpers_Misc.newError(`Unit.checkCanBuildOnTile() empty tileBaseType.`);
         }
 
         const material = this.getCurrentBuildMaterial();
@@ -1527,7 +1525,7 @@ export class Unit implements Units_IUnit.IUnit {
         } else {
             const currentMaterial = this.getCurrentBuildMaterial();
             if (currentMaterial == null) {
-                throw Helpers_Misc.newError(`IUnit.checkIsBuildMaterialInShort() empty currentMaterial.`);
+                throw Helpers_Misc.newError(`Unit.checkIsBuildMaterialInShort() empty currentMaterial.`);
                 return false;
             }
 
@@ -1544,7 +1542,7 @@ export class Unit implements Units_IUnit.IUnit {
     public getLoadedUnitsCount(): number {
         return this.getLoadedUnits().length;
     }
-    public getLoadedUnits(): Units_IUnit.IUnit[] {
+    public getLoadedUnits(): Units_Unit.Unit[] {
         return this.getWar()?.getUnitMap()?.getUnitsLoadedByLoader(this, false) || [];
     }
 
@@ -1561,7 +1559,7 @@ export class Unit implements Units_IUnit.IUnit {
         return false;
     }
 
-    public checkCanLoadUnit(unit: Units_IUnit.IUnit): boolean {
+    public checkCanLoadUnit(unit: Units_Unit.Unit): boolean {
         const cfg                       = this.getTemplateCfg();
         const gameConfig                = this.getGcData();
         const maxLoadUnitsCount         = this.getMaxLoadUnitsCount();
@@ -1593,7 +1591,7 @@ export class Unit implements Units_IUnit.IUnit {
     public checkCanSupplyLoadedUnit(): boolean {
         return !!this.getTemplateCfg()?.getCanSupplyLoadedUnits();
     }
-    private _checkCanRepairLoadedUnit(unit: Units_IUnit.IUnit): boolean {
+    private _checkCanRepairLoadedUnit(unit: Units_Unit.Unit): boolean {
         return (this.getNormalizedRepairHpForLoadedUnit() != null)
             && (unit.getLoaderUnitId() === this.getUnitId())
             && ((!unit.checkIsFullHp()) || (unit.checkCanBeSupplied()));
@@ -1633,7 +1631,7 @@ export class Unit implements Units_IUnit.IUnit {
     public getLoaderUnitId(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
         return this._loaderUnitId;
     }
-    public getLoaderUnit(): Units_IUnit.IUnit | null {
+    public getLoaderUnit(): Units_Unit.Unit | null {
         const unitId = this.getLoaderUnitId();
         if (unitId == null) {
             return null;
@@ -1646,7 +1644,7 @@ export class Unit implements Units_IUnit.IUnit {
         return Units_Utils_Common.checkIsMeetLoadedStateId(state, this.getLoaderUnitId() != null);
     }
 
-    public getRepairHpAndCostForLoadedUnit(unit: Units_IUnit.IUnit): AuxiliaryTypes_AuxiliaryTypes.RepairHpAndCost | null {
+    public getRepairHpAndCostForLoadedUnit(unit: Units_Unit.Unit): AuxiliaryTypes_AuxiliaryTypes.RepairHpAndCost | null {
         if (!this._checkCanRepairLoadedUnit(unit)) {
             return null;
         }
@@ -1679,7 +1677,7 @@ export class Unit implements Units_IUnit.IUnit {
     public checkIsAdjacentUnitSupplier(): boolean {
         return !!this.getTemplateCfg()?.getCanSupplyAdjacentUnits();
     }
-    public checkCanSupplyAdjacentUnit(unit: Units_IUnit.IUnit): boolean {
+    public checkCanSupplyAdjacentUnit(unit: Units_Unit.Unit): boolean {
         return (this.checkIsAdjacentUnitSupplier())
             && (this.getLoaderUnitId() == null)
             && (unit.getLoaderUnitId() == null)
@@ -1691,13 +1689,13 @@ export class Unit implements Units_IUnit.IUnit {
     public checkCanBeSuppliedWithFuel(): boolean {
         const maxFuel = this.getMaxFuel();
         if (maxFuel == null) {
-            throw Helpers_Misc.newError(`IUnit.checkCanBeSuppliedWithFuel() empty maxFuel.`);
+            throw Helpers_Misc.newError(`Unit.checkCanBeSuppliedWithFuel() empty maxFuel.`);
             return false;
         }
 
         const currentFuel = this.getCurrentFuel();
         if (currentFuel == null) {
-            throw Helpers_Misc.newError(`IUnit.checkCanBeSuppliedWithFuel() empty currentFuel.`);
+            throw Helpers_Misc.newError(`Unit.checkCanBeSuppliedWithFuel() empty currentFuel.`);
             return false;
         }
 
@@ -1710,7 +1708,7 @@ export class Unit implements Units_IUnit.IUnit {
         } else {
             const currentAmmo = this.getPrimaryWeaponCurrentAmmo();
             if (currentAmmo == null) {
-                throw Helpers_Misc.newError(`IUnit.checkCanBeSuppliedWithPrimaryWeaponAmmo() empty currentAmmo.`);
+                throw Helpers_Misc.newError(`Unit.checkCanBeSuppliedWithPrimaryWeaponAmmo() empty currentAmmo.`);
                 return false;
             }
 
@@ -1724,7 +1722,7 @@ export class Unit implements Units_IUnit.IUnit {
         } else {
             const currentAmmo = this.getFlareCurrentAmmo();
             if (currentAmmo == null) {
-                throw Helpers_Misc.newError(`IUnit.checkCanBeSuppliedWithFlareAmmo() empty currentAmmo.`);
+                throw Helpers_Misc.newError(`Unit.checkCanBeSuppliedWithFlareAmmo() empty currentAmmo.`);
                 return false;
             }
 
@@ -1870,7 +1868,7 @@ export class Unit implements Units_IUnit.IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for join.
     ////////////////////////////////////////////////////////////////////////////////
-    public checkCanJoinUnit(unit: Units_IUnit.IUnit): boolean {
+    public checkCanJoinUnit(unit: Units_Unit.Unit): boolean {
         const playerIndex = this.getPlayerIndex();
         return (this !== unit)
             && (this.getUnitType() === unit.getUnitType())
@@ -1883,7 +1881,7 @@ export class Unit implements Units_IUnit.IUnit {
             && (!unit.checkHasBuff(UnitBuffs_Constants.BuffTypeId.Disease));
     }
 
-    public getJoinIncome(unit: Units_IUnit.IUnit): number {
+    public getJoinIncome(unit: Units_Unit.Unit): number {
         if (!this.checkCanJoinUnit(unit)) {
             throw Helpers_Misc.newError(`Can not join.`);
         }

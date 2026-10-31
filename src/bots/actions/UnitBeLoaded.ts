@@ -5,13 +5,13 @@ import {
     Bots_Utils,
     type Bots_CommonParams,
     type AuxiliaryTypes_GridIndex,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
     type Bots_Types,
 } from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export async function getScoreAndActionUnitBeLoaded(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+export async function getScoreAndActionUnitBeLoaded(commonParams: Bots_CommonParams.CommonParams, unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
     await Timer_TimerModel.checkAndCallLater();
 
     const unitGridIndex = unit.getGridIndex();
@@ -40,7 +40,7 @@ export async function getScoreAndActionUnitBeLoaded(commonParams: Bots_CommonPar
     };
 }
 
-async function getScoreForActionUnitBeLoaded(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Promise<number> {
+async function getScoreForActionUnitBeLoaded(commonParams: Bots_CommonParams.CommonParams, unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Promise<number> {
     await Timer_TimerModel.checkAndCallLater();
 
     const war       = commonParams.getWar();

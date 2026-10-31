@@ -4,8 +4,8 @@ import {
     type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlannerView,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
+    type Units_Unit,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_MovableArea,
     type AuxiliaryTypes_MovePathNode,
@@ -44,19 +44,19 @@ export interface IActionPlanner {
     getView(): ActionPlanners_IActionPlannerView.IActionPlannerView;
     updateView(): void;
 
-    checkCanControlUnit(unit: Units_IUnit.IUnit): boolean;
+    checkCanControlUnit(unit: Units_Unit.Unit): boolean;
 
     getMapSize(): AuxiliaryTypes_MapSize.MapSize;
 
     checkIsStateRequesting(): boolean;
 
-    getFocusUnit(): Units_IUnit.IUnit | null;
-    getFocusUnitOnMap(): Units_IUnit.IUnit | null;
-    setFocusUnitOnMap(unit: Units_IUnit.IUnit): void;
+    getFocusUnit(): Units_Unit.Unit | null;
+    getFocusUnitOnMap(): Units_Unit.Unit | null;
+    setFocusUnitOnMap(unit: Units_Unit.Unit): void;
     clearFocusUnitOnMap(): void;
 
-    getFocusUnitLoaded(): Units_IUnit.IUnit | null;
-    setFocusUnitLoaded(unit: Units_IUnit.IUnit): void;
+    getFocusUnitLoaded(): Units_Unit.Unit | null;
+    setFocusUnitLoaded(unit: Units_Unit.Unit): void;
     clearFocusUnitLoaded(): void;
     getUnitIdForFocusUnitLoaded(): number | null;
 
@@ -64,8 +64,8 @@ export interface IActionPlanner {
     setAvailableDropDestinations(destinations: AuxiliaryTypes_GridIndex.GridIndex[]): void;
     clearAvailableDropDestinations(): void;
 
-    getChoosingUnitForDrop(): Units_IUnit.IUnit | null;
-    setChoosingUnitForDrop(unit: Units_IUnit.IUnit): void;
+    getChoosingUnitForDrop(): Units_Unit.Unit | null;
+    setChoosingUnitForDrop(unit: Units_Unit.Unit): void;
     clearChoosingUnitForDrop(): void;
 
     getChosenUnitsForDrop(): ActionPlanners_Types.ChosenUnitForDrop[];
@@ -132,15 +132,15 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing attackable area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitsForPreviewingAttackableArea(): Map<number, Units_IUnit.IUnit>;
-    getTilesForPreviewingAttackableArea(): Set<Tiles_ITile.ITile>;
+    getUnitsForPreviewingAttackableArea(): Map<number, Units_Unit.Unit>;
+    getTilesForPreviewingAttackableArea(): Set<Tiles_Tile.Tile>;
 
     getAreaForPreviewingAttackableArea(): AuxiliaryTypes_AttackableArea.AttackableArea;
     clearDataForPreviewingAttackableArea(): void;
-    addUnitForPreviewAttackableArea(unit: Units_IUnit.IUnit): void;
-    addTileForPreviewAttackableArea(tile: Tiles_ITile.ITile): void;
+    addUnitForPreviewAttackableArea(unit: Units_Unit.Unit): void;
+    addTileForPreviewAttackableArea(tile: Tiles_Tile.Tile): void;
 
-    updateAreaForPreviewingAttackableArea(unit: Units_IUnit.IUnit): void;
+    updateAreaForPreviewingAttackableArea(unit: Units_Unit.Unit): void;
 
     getIsIgnoreAllyForPreviewingAttackableArea(): boolean;
     setIsIgnoreAllyForPreviewingAttackableArea(isIgnore: boolean): void;
@@ -151,9 +151,9 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing movable area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitForPreviewingMovableArea(): Units_IUnit.IUnit | null;
+    getUnitForPreviewingMovableArea(): Units_Unit.Unit | null;
     getAreaForPreviewingMovableArea(): AuxiliaryTypes_MovableArea.MovableArea | null;
-    setUnitForPreviewingMovableArea(unit: Units_IUnit.IUnit): void;
+    setUnitForPreviewingMovableArea(unit: Units_Unit.Unit): void;
     clearDataForPreviewingMovableArea(): void;
     resetAreaForPreviewingMovableArea(): void;
 
@@ -163,15 +163,15 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing visible area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitForPreviewingVisibleArea(): Units_IUnit.IUnit | null;
+    getUnitForPreviewingVisibleArea(): Units_Unit.Unit | null;
     getAreaForPreviewingVisible(): AuxiliaryTypes_GridIndex.GridIndex[] | null;
     clearDataForPreviewingVisibleArea(): void;
-    setUnitForPreviewingVisibleArea(unit: Units_IUnit.IUnit): void;
+    setUnitForPreviewingVisibleArea(unit: Units_Unit.Unit): void;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     checkCanFocusUnitOnMapAttackTarget(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean;
 
-    calculateAvailableDropDestination(unitForDrop: Units_IUnit.IUnit, chosenDropDestinations: AuxiliaryTypes_GridIndex.GridIndex[]): AuxiliaryTypes_GridIndex.GridIndex[];
+    calculateAvailableDropDestination(unitForDrop: Units_Unit.Unit, chosenDropDestinations: AuxiliaryTypes_GridIndex.GridIndex[]): AuxiliaryTypes_GridIndex.GridIndex[];
 }

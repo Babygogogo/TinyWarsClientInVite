@@ -10,7 +10,7 @@ import {
     ExpressionParsers_Contexts_Tile,
     Tiles_Constants_Common,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetCustomCrystalStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCrystalStateExpr.ts";
@@ -320,7 +320,7 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     return null;
 }
 
-function checkIsMeetConditionForTile(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConditionForTile(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -328,7 +328,7 @@ function checkIsMeetConditionForTile(action: WeaSetCustomCrystalStateExpr, tile:
         return false;
     }
 }
-function evalActRadius(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): number {
+function evalActRadius(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): number {
     const defaultValue  = customCrystalData.getRadius();
     const act           = action.getActRadius();
     if (!act) {
@@ -350,7 +350,7 @@ function evalActRadius(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.I
         return defaultValue;
     }
 }
-function evalActPriority(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): number {
+function evalActPriority(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): number {
     const defaultValue  = customCrystalData.getPriority();
     const act           = action.getActPriority();
     if (!act) {
@@ -372,7 +372,7 @@ function evalActPriority(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile
         return defaultValue;
     }
 }
-function evalActCanAffectSelf(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): boolean {
+function evalActCanAffectSelf(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): boolean {
     const defaultValue  = customCrystalData.getCanAffectSelf();
     const act           = action.getActCanAffectSelf();
     if (!act) {
@@ -390,7 +390,7 @@ function evalActCanAffectSelf(action: WeaSetCustomCrystalStateExpr, tile: Tiles_
         return defaultValue;
     }
 }
-function evalActCanAffectAlly(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): boolean {
+function evalActCanAffectAlly(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): boolean {
     const defaultValue  = customCrystalData.getCanAffectAlly();
     const act           = action.getActCanAffectAlly();
     if (!act) {
@@ -408,7 +408,7 @@ function evalActCanAffectAlly(action: WeaSetCustomCrystalStateExpr, tile: Tiles_
         return defaultValue;
     }
 }
-function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): boolean {
+function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): boolean {
     const defaultValue  = customCrystalData.getCanAffectEnemy();
     const act           = action.getActCanAffectEnemy();
     if (!act) {
@@ -426,7 +426,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateExpr, tile: Tiles
         return defaultValue;
     }
 }
-function evalActOffsetFund(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): number {
+function evalActOffsetFund(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): number {
     const defaultValue  = customCrystalData.getOffsetFund();
     const act           = action.getActOffsetFund();
     if (!act) {
@@ -448,7 +448,7 @@ function evalActOffsetFund(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITi
         return defaultValue;
     }
 }
-function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): number {
+function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): number {
     const defaultValue  = customCrystalData.getOffsetEnergyPercentage();
     const act           = action.getActOffsetEnergyPercentage();
     if (!act) {
@@ -470,7 +470,7 @@ function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateExpr, til
         return defaultValue;
     }
 }
-function evalActOffsetHp(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): number {
+function evalActOffsetHp(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): number {
     const defaultValue  = customCrystalData.getOffsetHp();
     const act           = action.getActOffsetHp();
     if (!act) {
@@ -492,7 +492,7 @@ function evalActOffsetHp(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile
         return defaultValue;
     }
 }
-function evalActCanBeFatal(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): boolean {
+function evalActCanBeFatal(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): boolean {
     const defaultValue  = !!customCrystalData.getCanBeFatal();
     const act           = action.getActCanBeFatal();
     if (!act) {
@@ -510,7 +510,7 @@ function evalActCanBeFatal(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITi
         return defaultValue;
     }
 }
-function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): number {
+function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): number {
     const defaultValue  = customCrystalData.getOffsetFuelPercentage();
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
@@ -532,7 +532,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateExpr, tile:
         return defaultValue;
     }
 }
-function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): number {
+function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): number {
     const defaultValue  = customCrystalData.getOffsetPrimaryAmmoPercentage();
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
@@ -560,7 +560,7 @@ export async function applyWithExtraData(_action: WeaSetCustomCrystalStateExpr):
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const newTileDataDict = new Map<Tiles_ITile.ITile, TileCustomCrystalData>();
+    const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomCrystalData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customCrystalData = tile.getFinalCrystalData();
         if (customCrystalData == null) {
@@ -576,7 +576,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateExpr
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
 }
-function createNewTileCustomCrystalData(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.ITile, customCrystalData: TileCustomCrystalData): TileCustomCrystalData {
+function createNewTileCustomCrystalData(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): TileCustomCrystalData {
     const radius                        = evalActRadius(action, tile, customCrystalData);
     const priority                      = evalActPriority(action, tile, customCrystalData);
     const canAffectSelf                 = evalActCanAffectSelf(action, tile, customCrystalData);
@@ -603,7 +603,7 @@ function createNewTileCustomCrystalData(action: WeaSetCustomCrystalStateExpr, ti
         offsetPrimaryAmmoPercentage : offsetPrimaryAmmoPercentage,
     });
 }
-function applyNewTileDataDict(dict: Map<Tiles_ITile.ITile, TileCustomCrystalData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, TileCustomCrystalData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     for (const [tile, tileCustomCrystalData] of dict) {
         const cfg       = tile.getTemplateCfg();
         const newData   = Tiles_Utils_Serialization.create({

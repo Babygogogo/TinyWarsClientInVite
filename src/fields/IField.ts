@@ -6,16 +6,16 @@ import {
     type BaseWar_Interface_IBwWar,
     type Fields_IFieldView,
     type FogMaps_IFogMap,
-    type Tiles_ITileMap,
-    type Units_IUnitMap,
+    type Tiles_TileMap,
+    type Units_UnitMap,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 import type { SerialField } from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
 
 export interface IField {
     getFogMap(): FogMaps_IFogMap.IFogMap;
-    getTileMap(): Tiles_ITileMap.ITileMap;
-    getUnitMap(): Units_IUnitMap.IUnitMap;
+    getTileMap(): Tiles_TileMap.TileMap;
+    getUnitMap(): Units_UnitMap.UnitMap;
     getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner;
 
     init({ data, gameConfig, playersCountUnneutral }: {

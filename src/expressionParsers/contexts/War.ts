@@ -36,7 +36,7 @@ import {
     type ExpressionParsers_Types,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 
@@ -1414,7 +1414,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         }
 
         const indexList   = this.getRandomIndexList(srcCount, dstCount, needSort);
-        const dstArray    : Tiles_ITile.ITile[] = [];
+        const dstArray    : Tiles_Tile.Tile[] = [];
         for (let i = 0; i < dstCount; ++i) {
             dstArray[i] = srcArray[indexList[i]];
         }
@@ -1700,7 +1700,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
 
         const war           = this.getWar();
         const tiles         = war.getTileMap().getAllTiles();
-        const resultArray   : Tiles_ITile.ITile[] = [];
+        const resultArray   : Tiles_Tile.Tile[] = [];
         for (const tile of tiles) {
             const result = node.evalLambda(rootCtx, [new ExpressionParsers_Results_Tile.Tile(tile)], null, localVariableDict, isRestricted);
             if (!(result instanceof ExpressionParsers_Results_Num.Num)) {
@@ -1949,7 +1949,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
             return new ExpressionParsers_Results_UnitStatisticArray.UnitStatisticArray(this.getWar(), dataArray);
 
         } else if (value0 instanceof ExpressionParsers_Results_Tile.Tile) {
-            const tileArray: Tiles_ITile.ITile[] = [value0.tile];
+            const tileArray: Tiles_Tile.Tile[] = [value0.tile];
             for (let i = 1; i < argumentArray.length; ++i) {
                 const v = argumentArray[i];
                 if (!(v instanceof ExpressionParsers_Results_Tile.Tile)) {

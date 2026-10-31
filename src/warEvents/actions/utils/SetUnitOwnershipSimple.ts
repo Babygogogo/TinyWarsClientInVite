@@ -13,8 +13,8 @@ import {
     type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarStatisticsManager,
     type Players_IPlayer,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
+    type Units_Unit,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -119,7 +119,7 @@ export async function applyWithExtraData(_action: WeaSetUnitOwnershipSimple): Pr
     // nothing to do
 }
 export async function applyWithoutExtraData(data: WeaSetUnitOwnershipSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const targetUnitSet     = new Set<Units_IUnit.IUnit>();
+    const targetUnitSet     = new Set<Units_Unit.Unit>();
     const unitMap           = war.getUnitMap();
     const newPlayerIndex    = data.getActPlayerIndex();
     {
@@ -128,7 +128,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitOwnershipSimple, isF
         const conPlayerFilter   = data.getConPlayerFilter();
         const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
         const conTileFilter     = data.getConTileFilter();
-        const tileFilterDict    = new Map<Tiles_ITile.ITile, boolean>();
+        const tileFilterDict    = new Map<Tiles_Tile.Tile, boolean>();
         for (const unit of unitMap.getAllUnits()) {
             if (unit.getPlayerIndex() === newPlayerIndex) {
                 continue;
@@ -199,13 +199,13 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function checkIsMeetConTileFilter(resultDict: Map<Tiles_ITile.ITile, boolean>, filter: TileFilter, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConTileFilter(resultDict: Map<Tiles_Tile.Tile, boolean>, filter: TileFilter, tile: Tiles_Tile.Tile): boolean {
     if (!resultDict.has(tile)) {
         resultDict.set(tile, Tiles_Utils_Filter.checkIsMeet(filter, tile));
     }
     return !!resultDict.get(tile);
 }
-function updateWarStatisticsManager(warStatisticsManager: BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager, unit: Units_IUnit.IUnit, newPlayerIndex: number, groupedObserverTeamIndexes: number): void {
+function updateWarStatisticsManager(warStatisticsManager: BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager, unit: Units_Unit.Unit, newPlayerIndex: number, groupedObserverTeamIndexes: number): void {
     const unitType      = unit.getUnitType();
     const normalizedHp  = unit.getNormalizedCurrentHp();
     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({

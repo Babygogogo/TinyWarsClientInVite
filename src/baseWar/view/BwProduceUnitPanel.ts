@@ -25,7 +25,6 @@ import {
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
-    type Units_IUnit,
     Sounds_SoundPlayer,
     Helpers_PointerInput,
     Sounds_Constants,
@@ -308,7 +307,7 @@ function sorterForDataForList(a: DataForUnitRenderer, b: DataForUnitRenderer): n
 
 interface DataForUnitRenderer extends Ui_Types_UiListItemData.UiListItemData {
     unitType                : number;
-    unit                    : Units_IUnit.IUnit;
+    unit                    : Units_Unit.Unit;
     minCost                 : number;
     cfgCost                 : number;
     costModifier            : number;

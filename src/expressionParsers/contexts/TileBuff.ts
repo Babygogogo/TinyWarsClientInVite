@@ -9,7 +9,7 @@ import {
     ExpressionParsers_Results_Tile,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 import type { TileBuff as ProtoTileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
@@ -41,10 +41,10 @@ export class TileBuff extends ExpressionParsers_Contexts_Base.Base {
     }
 
     private readonly _buff  : ProtoTileBuff;
-    private readonly _tile  : Tiles_ITile.ITile;
+    private readonly _tile  : Tiles_Tile.Tile;
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(buff: ProtoTileBuff, tile: Tiles_ITile.ITile) {
+    public constructor(buff: ProtoTileBuff, tile: Tiles_Tile.Tile) {
         super(tile.getWar());
 
         this._buff  = buff;

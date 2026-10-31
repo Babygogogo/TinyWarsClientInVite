@@ -25,7 +25,7 @@ import {
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 
@@ -364,7 +364,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
             return new ExpressionParsers_Results_NullableUnitArray.NullableUnitArray(war, resultArray);
 
         } else if (resultType === ExpressionParsers_Enums.ResultType.Tile) {
-            const resultArray: Tiles_ITile.ITile[] = [];
+            const resultArray: Tiles_Tile.Tile[] = [];
             for (const data of dataArray) {
                 const result = node.evalLambda(rootCtx, [data], null, localVariableDict, isRestricted);
                 if (!(result instanceof ExpressionParsers_Results_Tile.Tile)) {

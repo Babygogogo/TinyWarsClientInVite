@@ -1,7 +1,7 @@
 import {
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwWar,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
     type WarEvents_Types,
 } from "../../internal.ts";
@@ -57,17 +57,17 @@ export interface IBwWarEventManager {
     getOpaEnergyGrowthMultiplierModifier(playerIndex: number): number;
     getOpaAiUnitProductionBonusScore(playerIndex: number, unitTypeId: number, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
     getOpaCoZoneRadiusModifier(playerIndex: number): number;
-    getOpaAttackPowerModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
-    getOpaDefenseModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
-    getOpaMoveRangeModifier(unit: Units_IUnit.IUnit): number;
-    getOpaMaxAttackRangeModifier(unit: Units_IUnit.IUnit): number;
-    getOpaCanAttackAfterMoving(unit: Units_IUnit.IUnit): boolean | null;
-    getOpaUnitVisionRangeModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
-    getOpaIsPenetratingVision(unit: Units_IUnit.IUnit): boolean | null;
-    getOpaLuckLowerLimitModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
-    getOpaLuckUpperLimitModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
-    getOpaFlareRadiusModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
-    getOpaFlareRangeModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaAttackPowerModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaDefenseModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaMoveRangeModifier(unit: Units_Unit.Unit): number;
+    getOpaMaxAttackRangeModifier(unit: Units_Unit.Unit): number;
+    getOpaCanAttackAfterMoving(unit: Units_Unit.Unit): boolean | null;
+    getOpaUnitVisionRangeModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaIsPenetratingVision(unit: Units_Unit.Unit): boolean | null;
+    getOpaLuckLowerLimitModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaLuckUpperLimitModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaFlareRadiusModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaFlareRangeModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
 
     getOpaBgmCode(): number | null;
 

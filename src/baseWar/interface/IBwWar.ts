@@ -18,10 +18,10 @@ import {
     type Players_IPlayer,
     type Players_IPlayerManager,
     type TaskObjectives_ITaskObjectiveManager,
-    type Tiles_ITileMap,
+    type Tiles_TileMap,
     type Turns_ITurnManager,
-    type Units_IUnit,
-    type Units_IUnitMap,
+    type Units_Unit,
+    type Units_UnitMap,
     type Turns_Constants,
     type AuxiliaryTypes_AuxiliaryTypes,
     type WarTypes_Constants,
@@ -96,8 +96,8 @@ export interface IBwWar {
 
     getTurnManager(): Turns_ITurnManager.ITurnManager;
     getFogMap(): FogMaps_IFogMap.IFogMap;
-    getUnitMap(): Units_IUnitMap.IUnitMap;
-    getTileMap(): Tiles_ITileMap.ITileMap;
+    getUnitMap(): Units_UnitMap.UnitMap;
+    getTileMap(): Tiles_TileMap.TileMap;
     getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner;
     getGridVisualEffect(): BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect;
     getCursor(): BaseWar_Interface_IBwCursor.IBwCursor;
@@ -120,7 +120,7 @@ export interface IBwWar {
         movingUnitAndPath       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MovingUnitAndPath>;
         aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex>;
         deleteViewAfterMoving   : boolean;
-    }): Promise<Units_IUnit.IUnit | null>;
+    }): Promise<Units_Unit.Unit | null>;
 
     checkCanProduceUnitByOpaAndRule(playerIndex: number, unitType: number): boolean;
 

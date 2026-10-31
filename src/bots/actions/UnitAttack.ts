@@ -7,15 +7,15 @@ import {
     DamageCalculators_Utils,
     Helpers_Misc,
     type Bots_CommonParams,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
+    type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
     type Bots_Types,
 } from "../../internal.ts";
 import type { BattleDamageInfo } from "../../proto/schema/CommonProto/Structure/BattleDamageInfo.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParams.CommonParams, unit: Units_Unit.Unit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
     await Timer_TimerModel.checkAndCallLater();
 
     const minRange = unit.getMinAttackRange();
@@ -148,7 +148,7 @@ export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParam
 
 async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitGridIndex, battleDamageInfoArray }: {
     commonParams            : Bots_CommonParams.CommonParams;
-    focusUnit               : Units_IUnit.IUnit;
+    focusUnit               : Units_Unit.Unit;
     focusUnitGridIndex      : AuxiliaryTypes_GridIndex.GridIndex;
     battleDamageInfoArray   : BattleDamageInfo[];
 }): Promise<number> {
@@ -159,8 +159,8 @@ async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitG
     const war                       = commonParams.getWar();
     const unitMap                   = war.getUnitMap();
     const tileMap                   = war.getTileMap();
-    const unitHpDict                = new Map<Units_IUnit.IUnit, number>();
-    const tileHpDict                = new Map<Tiles_ITile.ITile, number>();
+    const unitHpDict                = new Map<Units_Unit.Unit, number>();
+    const tileHpDict                = new Map<Tiles_Tile.Tile, number>();
     // const scalerForSelfDamage       = Math.pow(1 / Math.max(1, unitValueRatio), 1) * 9999;
     // const scalerForEnemyDamage      = Math.pow(Math.max(1, unitValueRatio), 1) * 9999;
     const scalerForSelfDamage       = Math.pow(1 / Math.max(1, unitValueRatio), 1) * 5;

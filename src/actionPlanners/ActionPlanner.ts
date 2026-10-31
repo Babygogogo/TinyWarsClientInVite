@@ -76,8 +76,8 @@ import {
     Logger,
     Lang_Constants,
     type Egret_Egret,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
+    type Units_Unit,
     type Notifications_Types,
     type AuxiliaryTypes_MapSize,
 } from "../internal.ts";
@@ -93,9 +93,9 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     private _stateId                            = ActionPlanners_Constants.StateId.Idle;
     private _prevStateId                        = ActionPlanners_Constants.StateId.Idle;
 
-    private _focusUnitOnMap                     : Units_IUnit.IUnit | null = null;
-    private _focusUnitLoaded                    : Units_IUnit.IUnit | null = null;
-    private _choosingUnitForDrop                : Units_IUnit.IUnit | null = null;
+    private _focusUnitOnMap                     : Units_Unit.Unit | null = null;
+    private _focusUnitLoaded                    : Units_Unit.Unit | null = null;
+    private _choosingUnitForDrop                : Units_Unit.Unit | null = null;
     private _chosenUnitsForDrop                 : ActionPlanners_Types.ChosenUnitForDrop[] = [];
     private _availableDropDestinations          : AuxiliaryTypes_GridIndex.GridIndex[] | null = null;
     private _movableArea                        : AuxiliaryTypes_MovableArea.MovableArea | null = null;
@@ -107,12 +107,12 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     private _unitCrushTargetGridIndex           : AuxiliaryTypes_GridIndex.GridIndex | null = null;
     private _unitRepairTargetGridIndex          : AuxiliaryTypes_GridIndex.GridIndex | null = null;
 
-    private _unitsForPreviewAttack              = new Map<number, Units_IUnit.IUnit>();
-    private _tilesForPreviewAttack              = new Set<Tiles_ITile.ITile>();
+    private _unitsForPreviewAttack              = new Map<number, Units_Unit.Unit>();
+    private _tilesForPreviewAttack              = new Set<Tiles_Tile.Tile>();
     private _areaForPreviewAttack               = new AuxiliaryTypes_AttackableArea.AttackableArea([]);
-    private _unitForPreviewMove                 : Units_IUnit.IUnit | null = null;
+    private _unitForPreviewMove                 : Units_Unit.Unit | null = null;
     private _areaForPreviewMove                 : AuxiliaryTypes_MovableArea.MovableArea | null = null;
-    private _unitForPreviewVisible              : Units_IUnit.IUnit | null = null;
+    private _unitForPreviewVisible              : Units_Unit.Unit | null = null;
     private _areaForPreviewVisible              : AuxiliaryTypes_GridIndex.GridIndex[] | null = null;
 
     private _isIgnoreAllyForPreviewAttack       = true;
@@ -193,7 +193,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
             throw Helpers_Misc.newError(`Invalid war.`);
         }
     }
-    public checkCanControlUnit(unit: Units_IUnit.IUnit): boolean {
+    public checkCanControlUnit(unit: Units_Unit.Unit): boolean {
         const war = this.getWar();
         if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
             return false;
@@ -416,23 +416,23 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         return checkIsRequesting(this.getStateId());
     }
 
-    public getFocusUnit(): Units_IUnit.IUnit | null {
+    public getFocusUnit(): Units_Unit.Unit | null {
         return this.getFocusUnitLoaded() || this.getFocusUnitOnMap();
     }
-    public getFocusUnitOnMap(): Units_IUnit.IUnit | null {
+    public getFocusUnitOnMap(): Units_Unit.Unit | null {
         return this._focusUnitOnMap;
     }
-    public setFocusUnitOnMap(unit: Units_IUnit.IUnit): void {
+    public setFocusUnitOnMap(unit: Units_Unit.Unit): void {
         this._focusUnitOnMap = unit;
     }
     public clearFocusUnitOnMap(): void {
         this._focusUnitOnMap = null;
     }
 
-    public getFocusUnitLoaded(): Units_IUnit.IUnit | null {
+    public getFocusUnitLoaded(): Units_Unit.Unit | null {
         return this._focusUnitLoaded;
     }
-    public setFocusUnitLoaded(unit: Units_IUnit.IUnit): void {
+    public setFocusUnitLoaded(unit: Units_Unit.Unit): void {
         this._focusUnitLoaded = unit;
     }
     public clearFocusUnitLoaded(): void {
@@ -452,10 +452,10 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         this._availableDropDestinations = null;
     }
 
-    public getChoosingUnitForDrop(): Units_IUnit.IUnit | null {
+    public getChoosingUnitForDrop(): Units_Unit.Unit | null {
         return this._choosingUnitForDrop;
     }
-    public setChoosingUnitForDrop(unit: Units_IUnit.IUnit): void {
+    public setChoosingUnitForDrop(unit: Units_Unit.Unit): void {
         this._choosingUnitForDrop = unit;
     }
     public clearChoosingUnitForDrop(): void {
@@ -759,10 +759,10 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing attackable area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getUnitsForPreviewingAttackableArea(): Map<number, Units_IUnit.IUnit> {
+    public getUnitsForPreviewingAttackableArea(): Map<number, Units_Unit.Unit> {
         return this._unitsForPreviewAttack;
     }
-    public getTilesForPreviewingAttackableArea(): Set<Tiles_ITile.ITile> {
+    public getTilesForPreviewingAttackableArea(): Set<Tiles_Tile.Tile> {
         return this._tilesForPreviewAttack;
     }
 
@@ -774,17 +774,17 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         this.getTilesForPreviewingAttackableArea().clear();
         this.getAreaForPreviewingAttackableArea().clear();
     }
-    public addUnitForPreviewAttackableArea(unit: Units_IUnit.IUnit): void {
+    public addUnitForPreviewAttackableArea(unit: Units_Unit.Unit): void {
         this.getUnitsForPreviewingAttackableArea().set(unit.getUnitId(), unit);
     }
-    public addTileForPreviewAttackableArea(tile: Tiles_ITile.ITile): void {
+    public addTileForPreviewAttackableArea(tile: Tiles_Tile.Tile): void {
         this.getTilesForPreviewingAttackableArea().add(tile);
 
         const mapSize = this.getMapSize();
         this.getAreaForPreviewingAttackableArea().mergeFrom(AuxiliaryTypes_AttackableArea.AttackableArea.createForTile(tile, mapSize), mapSize);
     }
 
-    public updateAreaForPreviewingAttackableArea(unit: Units_IUnit.IUnit): void {
+    public updateAreaForPreviewingAttackableArea(unit: Units_Unit.Unit): void {
         const canAttackAfterMoving  = unit.getFinalCanAttackAfterMoving();
         const beginningGridIndex    = unit.getGridIndex();
         const hasAmmo               = (!!unit.getPrimaryWeaponCurrentAmmo()) || (unit.checkHasSecondaryWeapon());
@@ -921,7 +921,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing movable area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getUnitForPreviewingMovableArea(): Units_IUnit.IUnit | null {
+    public getUnitForPreviewingMovableArea(): Units_Unit.Unit | null {
         return this._unitForPreviewMove;
     }
     public getAreaForPreviewingMovableArea(): AuxiliaryTypes_MovableArea.MovableArea | null {
@@ -930,7 +930,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     private _setAreaForPreviewingMovableArea(area: AuxiliaryTypes_MovableArea.MovableArea | null): void {
         this._areaForPreviewMove = area;
     }
-    public setUnitForPreviewingMovableArea(unit: Units_IUnit.IUnit): void {
+    public setUnitForPreviewingMovableArea(unit: Units_Unit.Unit): void {
         this._unitForPreviewMove = unit;
     }
     public clearDataForPreviewingMovableArea(): void {
@@ -983,7 +983,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing visible area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getUnitForPreviewingVisibleArea(): Units_IUnit.IUnit | null {
+    public getUnitForPreviewingVisibleArea(): Units_Unit.Unit | null {
         return this._unitForPreviewVisible;
     }
     public getAreaForPreviewingVisible(): AuxiliaryTypes_GridIndex.GridIndex[] | null {
@@ -993,7 +993,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         this._unitForPreviewVisible = null;
         this._areaForPreviewVisible = null;
     }
-    public setUnitForPreviewingVisibleArea(unit: Units_IUnit.IUnit): void {
+    public setUnitForPreviewingVisibleArea(unit: Units_Unit.Unit): void {
         const gridIndex = unit.getGridIndex();
         this._unitForPreviewVisible = unit;
         this._areaForPreviewVisible = gridIndex.getGridsWithinDistance({
@@ -1006,7 +1006,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private _getMoveCost(targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex, movingUnit: Units_IUnit.IUnit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
+    private _getMoveCost(targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex, movingUnit: Units_Unit.Unit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
         const war = this.getWar();
         if (!targetGridIndex.checkIsInsideMap(this.getMapSize())) {
             return null;
@@ -1049,7 +1049,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         }
     }
 
-    public calculateAvailableDropDestination(unitForDrop: Units_IUnit.IUnit, chosenDropDestinations: AuxiliaryTypes_GridIndex.GridIndex[]): AuxiliaryTypes_GridIndex.GridIndex[] {
+    public calculateAvailableDropDestination(unitForDrop: Units_Unit.Unit, chosenDropDestinations: AuxiliaryTypes_GridIndex.GridIndex[]): AuxiliaryTypes_GridIndex.GridIndex[] {
         const loader                = this.getFocusUnit();
         const loaderEndingGridIndex = this.getMovePathDestination().getGridIndex();
         const war                   = this.getWar();
@@ -1071,9 +1071,9 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     }
 }
 
-function createFuncCheckIsUnitVisible(observerTeamIndexes: Set<number>): (unit: Units_IUnit.IUnit) => boolean {
-    const unitVisibleDict = new Map<Units_IUnit.IUnit, boolean>();
-    return (unit: Units_IUnit.IUnit): boolean => {
+function createFuncCheckIsUnitVisible(observerTeamIndexes: Set<number>): (unit: Units_Unit.Unit) => boolean {
+    const unitVisibleDict = new Map<Units_Unit.Unit, boolean>();
+    return (unit: Units_Unit.Unit): boolean => {
         if (unitVisibleDict.has(unit)) {
             return !!unitVisibleDict.get(unit);
         }

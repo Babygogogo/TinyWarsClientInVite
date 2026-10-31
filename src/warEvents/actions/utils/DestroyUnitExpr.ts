@@ -12,7 +12,7 @@ import {
     ExpressionParsers_Contexts_Unit,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaDestroyUnitExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaDestroyUnitExpr.ts";
@@ -92,7 +92,7 @@ export function getErrorTip(data: WeaDestroyUnitExpr, customCounterNameSet: Set<
     return null;
 }
 
-function checkIsMeetConditionForUnit(action: WeaDestroyUnitExpr, unit: Units_IUnit.IUnit): boolean {
+function checkIsMeetConditionForUnit(action: WeaDestroyUnitExpr, unit: Units_Unit.Unit): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -135,7 +135,7 @@ export async function applyWithoutExtraData(action: WeaDestroyUnitExpr, isFast: 
         }
     }
 
-    const destroyedUnits: Units_IUnit.IUnit[] = [];
+    const destroyedUnits: Units_Unit.Unit[] = [];
     for (const unit of unitMap.getAllUnitsOnMap(v => checkIsMeetConditionForUnit(action, v))) {
         destroyedUnits.push(...Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFast));
     }

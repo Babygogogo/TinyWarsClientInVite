@@ -14,8 +14,8 @@ import {
     Visibilities_Utils,
     Players_Constants,
     Lang_Constants,
-    type Tiles_ITileMap,
-    type Units_IUnitMap,
+    type Tiles_TileMap,
+    type Units_UnitMap,
 } from "../../../internal.ts";
 
 import type { WeaFillUnitOnMapSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitOnMapSimple.ts";
@@ -189,8 +189,8 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
 }
 function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovableTile, canBeBlockedByUnit }: {
     origin              : AuxiliaryTypes_GridIndex.GridIndex;
-    unitMap             : Units_IUnitMap.IUnitMap;
-    tileMap             : Tiles_ITileMap.ITileMap;
+    unitMap             : Units_UnitMap.UnitMap;
+    tileMap             : Tiles_TileMap.TileMap;
     moveType            : number;
     needMovableTile     : boolean;
     canBeBlockedByUnit  : boolean;

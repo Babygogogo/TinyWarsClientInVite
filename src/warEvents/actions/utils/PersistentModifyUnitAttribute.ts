@@ -9,7 +9,7 @@ import {
     WarEvents_Actions_Constants_PersistentModifyUnitAttribute,
     Lang_Utils,
     Lang_Constants,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../../../internal.ts";
 
 import type { WeaPersistentModifyUnitAttribute } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentModifyUnitAttribute.ts";
@@ -320,7 +320,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
     return null;
 }
 
-function checkIsMeet(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): boolean {
+function checkIsMeet(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): boolean {
     const war = unit.getWar();
     if ((!action.getIsEffectiveInMpw()) && (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar)) {
         return false;
@@ -334,7 +334,7 @@ function checkIsMeet(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit
     }
 }
 
-export function getAttackPowerModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): number {
+export function getAttackPowerModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): number {
     const str = action.getActAttackPowerModifier();
     if (!str) {
         return 0;
@@ -356,7 +356,7 @@ export function getAttackPowerModifierForUnit(action: WeaPersistentModifyUnitAtt
     }
 }
 
-export function getDefenseModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): number {
+export function getDefenseModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): number {
     const str = action.getActDefenseModifier();
     if (!str) {
         return 0;
@@ -378,7 +378,7 @@ export function getDefenseModifierForUnit(action: WeaPersistentModifyUnitAttribu
     }
 }
 
-export function getFlareRadiusModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): number {
+export function getFlareRadiusModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): number {
     const str = action.getActFlareRadiusModifier();
     if (!str) {
         return 0;
@@ -400,7 +400,7 @@ export function getFlareRadiusModifierForUnit(action: WeaPersistentModifyUnitAtt
     }
 }
 
-export function getFlareRangeModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): number {
+export function getFlareRangeModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): number {
     const str = action.getActFlareRangeModifier();
     if (!str) {
         return 0;
@@ -422,7 +422,7 @@ export function getFlareRangeModifierForUnit(action: WeaPersistentModifyUnitAttr
     }
 }
 
-export function getLuckLowerLimitModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): number {
+export function getLuckLowerLimitModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): number {
     const str = action.getActLuckLowerLimitModifier();
     if (!str) {
         return 0;
@@ -444,7 +444,7 @@ export function getLuckLowerLimitModifierForUnit(action: WeaPersistentModifyUnit
     }
 }
 
-export function getLuckUpperLimitModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): number {
+export function getLuckUpperLimitModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): number {
     const str = action.getActLuckUpperLimitModifier();
     if (!str) {
         return 0;
@@ -466,7 +466,7 @@ export function getLuckUpperLimitModifierForUnit(action: WeaPersistentModifyUnit
     }
 }
 
-export function getMaxAttackRangeModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): number {
+export function getMaxAttackRangeModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): number {
     const str = action.getActMaxAttackRangeModifier();
     if (!str) {
         return 0;
@@ -488,7 +488,7 @@ export function getMaxAttackRangeModifierForUnit(action: WeaPersistentModifyUnit
     }
 }
 
-export function getVisionRangeModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): number {
+export function getVisionRangeModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): number {
     const str = action.getActVisionRangeModifier();
     if (!str) {
         return 0;
@@ -510,7 +510,7 @@ export function getVisionRangeModifierForUnit(action: WeaPersistentModifyUnitAtt
     }
 }
 
-export function getIsPenetratingVisionForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): boolean | null {
+export function getIsPenetratingVisionForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): boolean | null {
     const str = action.getActIsPenetratingVision();
     if (!str) {
         return null;
@@ -532,7 +532,7 @@ export function getIsPenetratingVisionForUnit(action: WeaPersistentModifyUnitAtt
     }
 }
 
-export function getMoveRangeModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): number {
+export function getMoveRangeModifierForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): number {
     const str = action.getActMoveRangeModifier();
     if (!str) {
         return 0;
@@ -554,7 +554,7 @@ export function getMoveRangeModifierForUnit(action: WeaPersistentModifyUnitAttri
     }
 }
 
-export function getCanAttackAfterMovingForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_IUnit.IUnit): boolean | null {
+export function getCanAttackAfterMovingForUnit(action: WeaPersistentModifyUnitAttribute, unit: Units_Unit.Unit): boolean | null {
     const str = action.getActCanAttackAfterMoving();
     if (!str) {
         return null;

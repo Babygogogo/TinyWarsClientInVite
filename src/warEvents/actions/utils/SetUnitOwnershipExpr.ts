@@ -11,7 +11,7 @@ import {
     ExpressionParsers_Contexts_Unit,
     type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarStatisticsManager,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetUnitOwnershipExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitOwnershipExpr.ts";
@@ -91,7 +91,7 @@ export function getErrorTip(data: WeaSetUnitOwnershipExpr, customCounterNameSet:
     return null;
 }
 
-function checkIsMeetConditionForUnit(action: WeaSetUnitOwnershipExpr, unit: Units_IUnit.IUnit): boolean {
+function checkIsMeetConditionForUnit(action: WeaSetUnitOwnershipExpr, unit: Units_Unit.Unit): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -99,7 +99,7 @@ function checkIsMeetConditionForUnit(action: WeaSetUnitOwnershipExpr, unit: Unit
         return false;
     }
 }
-function evalActPlayerIndex(action: WeaSetUnitOwnershipExpr, unit: Units_IUnit.IUnit): number | null {
+function evalActPlayerIndex(action: WeaSetUnitOwnershipExpr, unit: Units_Unit.Unit): number | null {
     const act = action.getActPlayerIndex();
     if (!act) {
         return null;
@@ -126,7 +126,7 @@ export async function applyWithExtraData(action: WeaSetUnitOwnershipExpr): Promi
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetUnitOwnershipExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const newPlayerIndexDict = new Map<Units_IUnit.IUnit, number>();
+    const newPlayerIndexDict = new Map<Units_Unit.Unit, number>();
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
             continue;
@@ -140,7 +140,7 @@ export async function applyWithoutExtraData(action: WeaSetUnitOwnershipExpr, isF
 
     applyNewUnitDataDict(newPlayerIndexDict, war, isFast);
 }
-function applyNewUnitDataDict(dict: Map<Units_IUnit.IUnit, number>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, number>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     const unitMap                   = war.getUnitMap();
     const mapSize                   = unitMap.getMapSize();
     const observerTeamIndexesDict   = new Map<number, number[] | null>();
@@ -179,7 +179,7 @@ function applyNewUnitDataDict(dict: Map<Units_IUnit.IUnit, number>, war: BaseWar
     }
 }
 
-function updateWarStatisticsManager(warStatisticsManager: BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager, unit: Units_IUnit.IUnit, newPlayerIndex: number, groupedObserverTeamIndexes: number): void {
+function updateWarStatisticsManager(warStatisticsManager: BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager, unit: Units_Unit.Unit, newPlayerIndex: number, groupedObserverTeamIndexes: number): void {
     const unitType      = unit.getUnitType();
     const normalizedHp  = unit.getNormalizedCurrentHp();
     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({

@@ -19,8 +19,7 @@ import {
     type Ui_Interfaces_IUiImage,
     type Notifications_Types,
     Units_Constants,
-    type Units_IUnit,
-    type Units_IUnitView,
+    type Units_Unit,
 } from "../internal.ts";
 
 const getGridWidth                          = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
@@ -100,7 +99,7 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
     });
 
     private _conForUnits            = new Ui_Components_UiContainer.UiContainer();
-    private _focusUnitViews         = new Map<number, Units_IUnitView.IUnitView>();
+    private _focusUnitViews         = new Map<number, Units_UnitView.UnitView>();
 
     private _notifyEvents: Notifications_Types.Listener[] = [
         { type : "GridAnimationTick",       callback : this._onNotifyGridAnimationTick },
@@ -954,7 +953,7 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    private _addUnitView(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, _alpha = 1): void {
+    private _addUnitView(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, _alpha = 1): void {
         const view = new Units_UnitView.UnitView().init(unit).startRunningView();
         // view.alpha = alpha;
         _resetUnitViewXy(view, gridIndex);
@@ -993,7 +992,7 @@ function _createImgForMovePathGrid(prev: AuxiliaryTypes_AuxiliaryTypes.Undefinab
     }
 }
 
-function _resetUnitViewXy(view: Units_IUnitView.IUnitView, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
+function _resetUnitViewXy(view: Units_UnitView.UnitView, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
     view.setX(gridIndex.getX() * getGridWidth());
     view.setY(gridIndex.getY() * getGridHeight());
 }

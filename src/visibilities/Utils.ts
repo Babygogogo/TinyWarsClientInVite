@@ -3,9 +3,9 @@ import {
     AuxiliaryTypes_GridIndex,
     Visibilities_Constants,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
-    type Units_IUnit,
-    type Units_IUnitMap,
+    type Tiles_Tile,
+    type Units_Unit,
+    type Units_UnitMap,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_UnitVisionInfo,
 } from "../internal.ts";
@@ -124,14 +124,14 @@ export function getObserverTeamIndexListForUnitOnMap({ war, gridIndex }: {
     return teamIndexList;
 }
 
-export function getAllUnitsOnMapVisibleToTeams(war: BaseWar_Interface_IBwWar.IBwWar, teamIndexes: Set<number>): Set<Units_IUnit.IUnit> {
+export function getAllUnitsOnMapVisibleToTeams(war: BaseWar_Interface_IBwWar.IBwWar, teamIndexes: Set<number>): Set<Units_Unit.Unit> {
     const fogMap                = war.getFogMap();
     const visibilityFromPaths   = fogMap.getVisibilityMapFromPathsForTeams(teamIndexes);
     const visibilityFromTiles   = fogMap.getVisibilityMapFromTilesForTeams(teamIndexes);
     const visibilityFromUnits   = fogMap.getVisibilityMapFromUnitsForTeams(teamIndexes);
     const unitMap               = war.getUnitMap();
     const tileMap               = war.getTileMap();
-    const units                 = new Set<Units_IUnit.IUnit>();
+    const units                 = new Set<Units_Unit.Unit>();
     for (const unit of unitMap.getAllUnitsOnMap()) {
         const gridIndex     = unit.getGridIndex();
         const tile          = tileMap.getTile(gridIndex);
@@ -219,17 +219,17 @@ export function checkIsTileVisibleToTeams(war: BaseWar_Interface_IBwWar.IBwWar, 
 export function getDiscoveredUnitsByPath({ war, path, movingUnit, isUnitDestroyed, visibleUnits, unitVisionInfo }: {
     war             : BaseWar_Interface_IBwWar.IBwWar;
     path            : AuxiliaryTypes_GridIndex.GridIndex[];
-    movingUnit      : Units_IUnit.IUnit;
+    movingUnit      : Units_Unit.Unit;
     isUnitDestroyed : boolean;
-    visibleUnits    : Set<Units_IUnit.IUnit>;
+    visibleUnits    : Set<Units_Unit.Unit>;
     unitVisionInfo  : AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo;
-}): Set<Units_IUnit.IUnit> {
+}): Set<Units_Unit.Unit> {
     const observerTeamIndex                         = movingUnit.getTeamIndex();
     const tileMap                                   = war.getTileMap();
     const mapSize                                   = tileMap.getMapSize();
     const visibilityMap                             = _createVisibilityMapFromPath(war, path, movingUnit, unitVisionInfo);
     const unitMap                                   = war.getUnitMap();
-    const discoveredUnits                           = new Set<Units_IUnit.IUnit>();
+    const discoveredUnits                           = new Set<Units_Unit.Unit>();
     const destination                               = path[path.length - 1];
     const { width: mapWidth, height: mapHeight }    = mapSize.getWH();
     for (let x = 0; x < mapWidth; ++x) {
@@ -277,7 +277,7 @@ export function getVisibilityArrayWithMapFromPath(map: Visibilities_Constants.Vi
     return needSerialize ? data : null;
 }
 
-function _checkHasUnitWithTeamIndexesOnAdjacentGrids(unitMap: Units_IUnitMap.IUnitMap, origin: AuxiliaryTypes_GridIndex.GridIndex, teamIndexes: Set<number>): boolean {
+function _checkHasUnitWithTeamIndexesOnAdjacentGrids(unitMap: Units_UnitMap.UnitMap, origin: AuxiliaryTypes_GridIndex.GridIndex, teamIndexes: Set<number>): boolean {
     for (const adjacentGrid of origin.getAdjacentGrids(unitMap.getMapSize())) {
         const unit = unitMap.getUnitOnMap(adjacentGrid);
         if ((unit) && (teamIndexes.has(unit.getTeamIndex()))) {
@@ -287,12 +287,12 @@ function _checkHasUnitWithTeamIndexesOnAdjacentGrids(unitMap: Units_IUnitMap.IUn
     return false;
 }
 
-function _checkHasUnitWithTeamIndexesOnGrid(unitMap: Units_IUnitMap.IUnitMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, teamIndexes: Set<number>): boolean {
+function _checkHasUnitWithTeamIndexesOnGrid(unitMap: Units_UnitMap.UnitMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, teamIndexes: Set<number>): boolean {
     const unit = unitMap.getUnitOnMap(gridIndex);
     return (unit != null) && (teamIndexes.has(unit.getTeamIndex()));
 }
 
-function _checkIsUnitHiddenByTileToTeam(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit, teamIndex: number): boolean {
+function _checkIsUnitHiddenByTileToTeam(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit, teamIndex: number): boolean {
     const gridIndex = unit.getGridIndex();
     const tileMap   = war.getTileMap();
     const tile      = tileMap.getTile(gridIndex);
@@ -300,7 +300,7 @@ function _checkIsUnitHiddenByTileToTeam(war: BaseWar_Interface_IBwWar.IBwWar, un
     return (tile.getTeamIndex() !== teamIndex) && (tile.checkCanHideUnitType(unitType));
 }
 
-function _createVisibilityMapFromPath(war: BaseWar_Interface_IBwWar.IBwWar, path: AuxiliaryTypes_GridIndex.GridIndex[], unit: Units_IUnit.IUnit, unitVisionInfo: AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo): Visibilities_Constants.VisibilityTypeId[][] {
+function _createVisibilityMapFromPath(war: BaseWar_Interface_IBwWar.IBwWar, path: AuxiliaryTypes_GridIndex.GridIndex[], unit: Units_Unit.Unit, unitVisionInfo: AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo): Visibilities_Constants.VisibilityTypeId[][] {
     const mapSize       = war.getTileMap().getMapSize();
     const visibilityMap = Helpers_Collection.createEmptyMap(mapSize.getWidth(), mapSize.getHeight(), Visibilities_Constants.VisibilityTypeId.Outside);
     const isPenetrating = unitVisionInfo.isPenetrating;
@@ -327,17 +327,17 @@ function _createVisibilityMapFromPath(war: BaseWar_Interface_IBwWar.IBwWar, path
     return visibilityMap;
 }
 
-export function getAllTilesVisibleToTeam(war: BaseWar_Interface_IBwWar.IBwWar, teamIndex: number): Set<Tiles_ITile.ITile> {
+export function getAllTilesVisibleToTeam(war: BaseWar_Interface_IBwWar.IBwWar, teamIndex: number): Set<Tiles_Tile.Tile> {
     return getAllTilesVisibleToTeams(war, new Set([teamIndex]));
 }
-export function getAllTilesVisibleToTeams(war: BaseWar_Interface_IBwWar.IBwWar, teamIndexes: Set<number>): Set<Tiles_ITile.ITile> {
+export function getAllTilesVisibleToTeams(war: BaseWar_Interface_IBwWar.IBwWar, teamIndexes: Set<number>): Set<Tiles_Tile.Tile> {
     const fogMap                = war.getFogMap();
     const visibilityFromPaths   = fogMap.getVisibilityMapFromPathsForTeams(teamIndexes);
     const visibilityFromTiles   = fogMap.getVisibilityMapFromTilesForTeams(teamIndexes);
     const visibilityFromUnits   = fogMap.getVisibilityMapFromUnitsForTeams(teamIndexes);
     const unitMap               = war.getUnitMap();
     const tileMap               = war.getTileMap();
-    const tiles                 = new Set<Tiles_ITile.ITile>();
+    const tiles                 = new Set<Tiles_Tile.Tile>();
     const hasFog                = fogMap.checkHasFogCurrently();
 
     for (const tile of tileMap.getAllTiles()) {

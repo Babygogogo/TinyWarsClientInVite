@@ -18,8 +18,6 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     Utils_ClientErrorCode,
     Helpers_Misc,
-    type Tiles_ITileMap,
-    type Units_IUnitMap,
 } from "../internal.ts";
 
 import { SerialField } from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
@@ -185,11 +183,11 @@ export class Field implements Fields_IField.IField {
         return this._fogMap;
     }
 
-    public getTileMap(): Tiles_ITileMap.ITileMap {
+    public getTileMap(): Tiles_TileMap.TileMap {
         return this._tileMap;
     }
 
-    public getUnitMap(): Units_IUnitMap.IUnitMap {
+    public getUnitMap(): Units_UnitMap.UnitMap {
         return this._unitMap;
     }
 

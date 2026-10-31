@@ -8,7 +8,7 @@ import {
     WarOperations_Executors_Utils_Common,
     AuxiliaryTypes_MovePath,
     type BaseWar_Interface_IBwWar,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../../../internal.ts";
 import type { WoUnitSelfDetonate } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSelfDetonate.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
@@ -131,7 +131,7 @@ async function normalExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, a
             const warStatisticsManager  = war.getWarStatisticsManager();
             const selfDetonateCfg       = Helpers_Misc.getExisted(focusUnit.getTemplateCfg().getSelfDetonateCfg());
             const destination           = pathNodes[pathNodes.length - 1];
-            const targetUnits           : Units_IUnit.IUnit[] = [];
+            const targetUnits           : Units_Unit.Unit[] = [];
             for (const targetGridIndex of destination.getGridsWithinDistance({
                 minDistance : 1,
                 maxDistance : selfDetonateCfg.getRadius(),

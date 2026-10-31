@@ -17,9 +17,9 @@ import {
     ExpressionParsers_Contexts_Tile,
     ExpressionParsers_Contexts_Unit,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
-    type Tiles_ITileMap,
-    type Units_IUnit,
+    type Tiles_Tile,
+    type Tiles_TileMap,
+    type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { TileTemplateCfg } from "../../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
@@ -308,7 +308,7 @@ export function getErrorTip(data: WeaSetTileTypeExpr, customCounterNameSet: Set<
     return null;
 }
 
-function checkIsMeetConditionForTile(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConditionForTile(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -316,7 +316,7 @@ function checkIsMeetConditionForTile(action: WeaSetTileTypeExpr, tile: Tiles_ITi
         return false;
     }
 }
-function evalActBaseType(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): number {
+function evalActBaseType(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getBaseType();
     const act           = action.getActBaseType();
     if (!act) {
@@ -335,7 +335,7 @@ function evalActBaseType(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): n
         return defaultValue;
     }
 }
-function evalActBaseShapeId(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile, newBaseType: number): number {
+function evalActBaseShapeId(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile, newBaseType: number): number {
     const oldBaseShapeId    = tile.getBaseShapeId();
     const defaultValue      = TileBases_Utils.checkIsValidTileBaseShapeId(newBaseType, oldBaseShapeId) ? oldBaseShapeId : 0;
     const act               = action.getActBaseShapeId();
@@ -357,7 +357,7 @@ function evalActBaseShapeId(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile,
         return defaultValue;
     }
 }
-function evalActObjectType(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): number {
+function evalActObjectType(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getObjectType();
     const act           = action.getActObjectType();
     if (!act) {
@@ -376,7 +376,7 @@ function evalActObjectType(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile):
         return defaultValue;
     }
 }
-function evalActObjectShapeId(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile, newObjectType: number): number {
+function evalActObjectShapeId(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile, newObjectType: number): number {
     const oldObjectShapeId    = tile.getObjectShapeId();
     const defaultValue      = TileObjects_Utils.checkIsValidTileObjectShapeId(newObjectType, oldObjectShapeId) ? oldObjectShapeId : 0;
     const act               = action.getActObjectShapeId();
@@ -398,7 +398,7 @@ function evalActObjectShapeId(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITil
         return defaultValue;
     }
 }
-function evalActDecorationType(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): number {
+function evalActDecorationType(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getDecorationType();
     const act           = action.getActDecorationType();
     if (!act) {
@@ -417,7 +417,7 @@ function evalActDecorationType(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITi
         return defaultValue;
     }
 }
-function evalActDecorationShapeId(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile, newDecorationType: number): number {
+function evalActDecorationShapeId(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile, newDecorationType: number): number {
     const oldDecorationShapeId    = tile.getDecorationShapeId();
     const defaultValue      = TileDecorations_Utils.checkIsValidTileDecorationShapeId(newDecorationType, oldDecorationShapeId) ? oldDecorationShapeId : 0;
     const act               = action.getActDecorationShapeId();
@@ -439,7 +439,7 @@ function evalActDecorationShapeId(action: WeaSetTileTypeExpr, tile: Tiles_ITile.
         return defaultValue;
     }
 }
-function evalActUnitHandler(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): UnitHandler {
+function evalActUnitHandler(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): UnitHandler {
     const defaultValue  = UnitHandler.NoAction;
     const act           = action.getActUnitHandler();
     if ((!act) || (tile.getWar().getUnitMap().getUnitOnMap(tile.getGridIndex()) == null)) {
@@ -465,7 +465,7 @@ function evalActUnitHandler(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile)
         return defaultValue;
     }
 }
-function evalActUnitFilter(action: WeaSetTileTypeExpr, unit: Units_IUnit.IUnit): boolean {
+function evalActUnitFilter(action: WeaSetTileTypeExpr, unit: Units_Unit.Unit): boolean {
     const defaultValue  = true;
     const act           = action.getActUnitFilter();
     if (!act) {
@@ -487,7 +487,7 @@ function checkShouldDestroyUnit(
     action      : WeaSetTileTypeExpr,
     unitHandler : UnitHandler,
     cfg         : TileTemplateCfg,
-    unit        : Units_IUnit.IUnit | null,
+    unit        : Units_Unit.Unit | null,
 ): boolean {
     if (unit == null) {
         return false;
@@ -502,7 +502,7 @@ function checkShouldDestroyUnit(
     }
 }
 
-function getAutoTileObjectShapeId(tileMap: Tiles_ITileMap.ITileMap, tile: Tiles_ITile.ITile): number | null {
+function getAutoTileObjectShapeId(tileMap: Tiles_TileMap.TileMap, tile: Tiles_Tile.Tile): number | null {
     const gridIndex = tile.getGridIndex();
     switch (tile.getObjectType()) {
         case Tiles_Constants_Common.ObjectTypeId.Bridge    : return MapEditor_Model_MeHelpers.getAutoBridgeShapeId(tileMap, gridIndex, BridgeConnectTileTypeArray);
@@ -518,7 +518,7 @@ export async function applyWithExtraData(_action: WeaSetTileTypeExpr): Promise<v
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetTileTypeExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const newTileDataDict = new Map<Tiles_ITile.ITile, NewTileData>();
+    const newTileDataDict = new Map<Tiles_Tile.Tile, NewTileData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!checkIsMeetConditionForTile(action, tile)) {
             continue;
@@ -532,7 +532,7 @@ export async function applyWithoutExtraData(action: WeaSetTileTypeExpr, isFast: 
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
 }
-function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): NewTileData | null {
+function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): NewTileData | null {
     const newBaseType           = evalActBaseType(action, tile);
     const newBaseShapeId        = evalActBaseShapeId(action, tile, newBaseType);
     const newObjectType         = evalActObjectType(action, tile);
@@ -604,10 +604,10 @@ function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile):
         destroyUnit          : shouldDestroyUnit,
     };
 }
-function applyNewTileDataDict(dict: Map<Tiles_ITile.ITile, NewTileData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
-    const affectedTiles = new Set<Tiles_ITile.ITile>();
+    const affectedTiles = new Set<Tiles_Tile.Tile>();
     for (const [tile, newTileData] of dict) {
         if (newTileData.destroyUnit) {
             const gridIndex = tile.getGridIndex();

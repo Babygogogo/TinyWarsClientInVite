@@ -26,7 +26,7 @@ import {
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 
@@ -257,7 +257,7 @@ export class TileArray extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _tileArray  : Tiles_ITile.ITile[];
+    private _tileArray  : Tiles_Tile.Tile[];
     private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(data: ExpressionParsers_Results_TileArray.TileArray) {
@@ -320,7 +320,7 @@ export class TileArray extends ExpressionParsers_Contexts_Base.Base {
         }
 
         const war           = this.getWar();
-        const resultArray   : Tiles_ITile.ITile[] = [];
+        const resultArray   : Tiles_Tile.Tile[] = [];
         for (const tile of this._tileArray) {
             const result = node.evalLambda(rootCtx, [new ExpressionParsers_Results_Tile.Tile(tile)], null, localVariableDict, isRestricted);
             if (!(result instanceof ExpressionParsers_Results_Num.Num)) {
@@ -368,7 +368,7 @@ export class TileArray extends ExpressionParsers_Contexts_Base.Base {
             return new ExpressionParsers_Results_NullableUnitArray.NullableUnitArray(war, resultArray);
 
         } else if (resultType === ExpressionParsers_Enums.ResultType.Tile) {
-            const resultArray: Tiles_ITile.ITile[] = [];
+            const resultArray: Tiles_Tile.Tile[] = [];
             for (const tile of tiles) {
                 const result = node.evalLambda(rootCtx, [new ExpressionParsers_Results_Tile.Tile(tile)], null, localVariableDict, isRestricted);
                 if (!(result instanceof ExpressionParsers_Results_Tile.Tile)) {

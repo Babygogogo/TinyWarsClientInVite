@@ -49,7 +49,6 @@ import {
     Users_Model,
     WarTypes_Constants,
     type Egret_Egret,
-    type Units_IUnit,
 } from "../../internal.ts";
 
 import { GridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
@@ -81,7 +80,7 @@ const enum UnitInfoType {
 }
 
 export interface OpenData {
-    unit        : Units_IUnit.IUnit;
+    unit        : Units_Unit.Unit;
     canDelete   : boolean;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
@@ -565,7 +564,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._btnDelete.setIsVisible(!!this.getOpenData()?.canDelete);
     }
 
-    private _createInfoHp(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer {
+    private _createInfoHp(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Hp,
@@ -574,7 +573,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoProductionCost(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer {
+    private _createInfoProductionCost(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.ProductionCost,
@@ -583,7 +582,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoEnergyPerNormalizedHp(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoEnergyPerNormalizedHp(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         const gameVersion = window.GAME_VERSION;
         if ((gameVersion !== GameVersions_Constants.TypeName.Test) &&
             (gameVersion !== GameVersions_Constants.TypeName.Trilogy)
@@ -599,7 +598,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             };
         }
     }
-    private _createInfoMovement(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer {
+    private _createInfoMovement(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Movement,
@@ -608,7 +607,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoFuel(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer {
+    private _createInfoFuel(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Fuel,
@@ -617,7 +616,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoPromotion(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer {
+    private _createInfoPromotion(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Promotion,
@@ -626,7 +625,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoAttackRange(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoAttackRange(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getMinAttackRange() == null
             ? null
             : {
@@ -637,7 +636,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoVision(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer {
+    private _createInfoVision(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Vision,
@@ -646,7 +645,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoPrimaryWeaponAmmo(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoPrimaryWeaponAmmo(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getPrimaryWeaponMaxAmmo() == null
             ? null
             : {
@@ -657,7 +656,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoBuildMaterial(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoBuildMaterial(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getMaxBuildMaterial() == null
             ? null
             : {
@@ -668,7 +667,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoProduceMaterial(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoProduceMaterial(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getMaxProduceMaterial() == null
             ? null
             : {
@@ -679,7 +678,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoFlareAmmo(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoFlareAmmo(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getFlareMaxAmmo() == null
             ? null
             : {
@@ -690,7 +689,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoActionState(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer {
+    private _createInfoActionState(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.ActionState,
@@ -699,7 +698,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoDiving(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoDiving(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return !unit.checkIsDiver()
             ? null
             : {
@@ -710,7 +709,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoIsCoOnboard(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoIsCoOnboard(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return {
             index    : 0,
             infoType : UnitInfoType.IsCoOnboard,
@@ -719,7 +718,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoLoadUnit(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoLoadUnit(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getLoadUnitCategoryId() == null
             ? null
             : {
@@ -730,7 +729,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoTag(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer {
+    private _createInfoTag(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Tag,
@@ -739,7 +738,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoAiMode(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoAiMode(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return ((war.getWarType() !== WarTypes_Constants.WarTypeId.Me) && (unit.getPlayer().getUserId() != null))
             ? null
             : {
@@ -750,7 +749,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoAiWeightedDestination(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer | null {
+    private _createInfoAiWeightedDestination(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return ((war.getWarType() !== WarTypes_Constants.WarTypeId.Me) && (unit.getPlayer().getUserId() != null))
             ? null
             : {
@@ -761,7 +760,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoForbiddenLocation(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer {
+    private _createInfoForbiddenLocation(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.ForbiddenLocations,
@@ -770,7 +769,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoForBuff(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit): DataForInfoRenderer {
+    private _createInfoForBuff(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Buff,
@@ -852,7 +851,7 @@ interface DataForInfoRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index       : number;
     infoType    : UnitInfoType;
     war         : BaseWar_Interface_IBwWar.IBwWar;
-    unit        : Units_IUnit.IUnit;
+    unit        : Units_Unit.Unit;
     panel       : Panel;
 }
 class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForInfoRenderer> {

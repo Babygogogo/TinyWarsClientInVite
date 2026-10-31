@@ -49,10 +49,9 @@ import {
     type Players_IPlayer,
     type Players_IPlayerManager,
     type TaskObjectives_ITaskObjectiveManager,
-    type Tiles_ITileMap,
+    type Tiles_TileMap,
     type Turns_ITurnManager,
-    type Units_IUnit,
-    type Units_IUnitMap,
+    type Units_UnitMap,
     type Turns_Constants,
 } from "../../internal.ts";
 
@@ -487,10 +486,10 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
     public getFogMap(): FogMaps_IFogMap.IFogMap {
         return this.getField().getFogMap();
     }
-    public getUnitMap(): Units_IUnitMap.IUnitMap {
+    public getUnitMap(): Units_UnitMap.UnitMap {
         return this.getField().getUnitMap();
     }
-    public getTileMap(): Tiles_ITileMap.ITileMap {
+    public getTileMap(): Tiles_TileMap.TileMap {
         return this.getField().getTileMap();
     }
     public getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner {
@@ -583,7 +582,7 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         movingUnitAndPath       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MovingUnitAndPath>;
         aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex>;
         deleteViewAfterMoving   : boolean;
-    }): Promise<Units_IUnit.IUnit | null> {
+    }): Promise<Units_Unit.Unit | null> {
         if (movingUnitAndPath == null) {
             return null;
         }

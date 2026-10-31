@@ -11,11 +11,11 @@ import {
     type AuxiliaryTypes_BattleInfo,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwWar,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../internal.ts";
 import { WsUnitStatistics } from "../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
-export function destroyUnitOnMap(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, showExplosionEffect: boolean): Units_IUnit.IUnit[] {
+export function destroyUnitOnMap(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, showExplosionEffect: boolean): Units_Unit.Unit[] {
     const unitMap               = war.getUnitMap();
     const unit                  = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex), Utils_ClientErrorCode.ClientErrorCode.DestructionHelpers_DestroyUnitOnMap_00);
     const destroyedUnits        = [unit];
@@ -125,7 +125,7 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
         battleInfo.destroyedUnits.set(u.getUnitId(), u);
     }
 }
-export function destroyUnitLoaded(war: BaseWar_Interface_IBwWar.IBwWar, unitId: number): Units_IUnit.IUnit[] {
+export function destroyUnitLoaded(war: BaseWar_Interface_IBwWar.IBwWar, unitId: number): Units_Unit.Unit[] {
     const unitMap           = war.getUnitMap();
     const targetUnit        = Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId));
     const destroyedUnits    = [targetUnit];
@@ -160,7 +160,7 @@ export function destroyUnitLoaded(war: BaseWar_Interface_IBwWar.IBwWar, unitId: 
     return destroyedUnits;
 }
 /** @param destroyedUnits 必须属于同一个玩家 */
-function updatePlayersOnUnitDestroyed(destroyedUnits: Units_IUnit.IUnit[]): void {
+function updatePlayersOnUnitDestroyed(destroyedUnits: Units_Unit.Unit[]): void {
     const destroyedCoUnitsCount = destroyedUnits.filter(u => u.getIsCoOnboard()).length;
     if (destroyedCoUnitsCount > 0) {
         const player            = destroyedUnits[0].getPlayer();
@@ -181,7 +181,7 @@ function updatePlayersOnUnitDestroyed(destroyedUnits: Units_IUnit.IUnit[]): void
     }
 }
 /** @param destroyedUnits 必须属于同一个玩家 */
-function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: AuxiliaryTypes_BattleInfo.BattleInfo, isEstimated: boolean, destroyedUnits: Units_IUnit.IUnit[], war: BaseWar_Interface_IBwWar.IBwWar): void {
+function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: AuxiliaryTypes_BattleInfo.BattleInfo, isEstimated: boolean, destroyedUnits: Units_Unit.Unit[], war: BaseWar_Interface_IBwWar.IBwWar): void {
     const destroyedCoUnitsCount = destroyedUnits.filter(u => u.getIsCoOnboard()).length;
     if (destroyedCoUnitsCount > 0) {
         const player      = destroyedUnits[0].getPlayer();

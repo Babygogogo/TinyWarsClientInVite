@@ -21,8 +21,7 @@ import {
     Visibilities_Utils,
     type AuxiliaryTypes_AuxiliaryTypes,
     type Notifications_Types,
-    type Units_IUnit,
-    type Units_IUnitView,
+    type Units_Unit,
 } from "../internal.ts";
 
 import type { GridIndexAndPathInfo } from "../proto/schema/CommonProto/Structure/GridIndexAndPathInfo.ts";
@@ -38,13 +37,13 @@ const getImgUnitStandAnchorOffsetY  = Helpers_Misc.createLazyFunc(() => getGridH
 const getImgUnitStandX              = Helpers_Misc.createLazyFunc(() => getGridWidth() * 2 / 4);
 const AIMING_TIME_MS                = 500;
 
-export class UnitView extends Ui_Components_UiContainer.UiContainer implements Units_IUnitView.IUnitView {
+export class UnitView extends Ui_Components_UiContainer.UiContainer {
     private _imgHp      = new Ui_Components_UiImage.UiImage();
     private _imgState   = new Ui_Components_UiImage.UiImage();
     private _imgUnit    = new Ui_Components_UiImage.UiImage();
     private _imgFlash   = new Ui_Components_UiImage.UiImage();
 
-    private _unit                       : Units_IUnit.IUnit | null = null;
+    private _unit                       : Units_Unit.Unit | null = null;
     private _animationType              = Units_Constants.AnimationTypeId.Stand;
     private _isDark                     = false;
     private _framesForStateAnimation    : string[]  = [];
@@ -96,13 +95,13 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         }
     }
 
-    public init(unit: Units_IUnit.IUnit): Units_IUnitView.IUnitView {
+    public init(unit: Units_Unit.Unit): UnitView {
         this._setUnit(unit);
 
         return this;
     }
 
-    public startRunningView(): Units_IUnitView.IUnitView {
+    public startRunningView(): UnitView {
         Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
         Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);
 
@@ -174,10 +173,10 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         this._resetStateAnimationFrames();
     }
 
-    private _setUnit(unit: Units_IUnit.IUnit): void {
+    private _setUnit(unit: Units_Unit.Unit): void {
         this._unit = unit;
     }
-    public getUnit(): Units_IUnit.IUnit | null {
+    public getUnit(): Units_Unit.Unit | null {
         return this._unit;
     }
 
@@ -273,7 +272,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const watcherTeamIndexes    = war.getPlayerManager().getWatcherTeamIndexesForSelf();
         const gameConfig            = war.getGcData();
         const isAlwaysVisible       = watcherTeamIndexes.has(unit.getTeamIndex());
-        const tween                 = Tween_Executor.Executor.get(this as Units_IUnitView.IUnitView);
+        const tween                 = Tween_Executor.Executor.get<UnitView>(this);
         if (isAlwaysVisible) {
             this.setIsVisible(true);
         }
@@ -445,7 +444,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const unit          = Helpers_Misc.getExisted(this.getUnit());
         const war           = unit.getWar();
         const unitType      = unit.getUnitType();
-        const tween         = Tween_Executor.Executor.get(this as Units_IUnitView.IUnitView);
+        const tween         = Tween_Executor.Executor.get<UnitView>(this);
         const gameConfig    = war.getGcData();
         const moveSfxCfg    = Helpers_Misc.getExisted(Sounds_Utils.getBgmSfxCfg(Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveSfx())));
         if ((path.length > 0) || (aiming?.length)) {

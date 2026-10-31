@@ -7,7 +7,7 @@ import {
     Helpers_Misc,
     CoSkills_Constants,
     type Bots_CommonParams,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
@@ -91,12 +91,12 @@ export async function getActionForPhase01(commonParams: Bots_CommonParams.Common
     return null;
 }
 
-async function getCandidateUnitsForPhase1(commonParams: Bots_CommonParams.CommonParams): Promise<Units_IUnit.IUnit[]> {
+async function getCandidateUnitsForPhase1(commonParams: Bots_CommonParams.CommonParams): Promise<Units_Unit.Unit[]> {
     await Timer_TimerModel.checkAndCallLater();
 
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
     const unitMap           = commonParams.getWar().getUnitMap();
-    const units             : Units_IUnit.IUnit[] = [];
+    const units             : Units_Unit.Unit[] = [];
     for (const unit of unitMap.getAllUnitsOnMap()) {
         if ((unit.getPlayerIndex() === playerIndexInTurn)                                                       &&
             (unit.getActionState() === Units_Constants.ActionStateId.Idle)                                                    &&

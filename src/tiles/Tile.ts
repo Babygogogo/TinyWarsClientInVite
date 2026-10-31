@@ -33,9 +33,7 @@ import {
     Players_Constants,
     type Notifications_Mapping,
     type Players_IPlayer,
-    type Tiles_ITile,
-    type Tiles_ITileView,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../internal.ts";
 
 import type { SelfTileEnabledForUnitProduction } from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
@@ -48,7 +46,7 @@ import type { TileCustomCannonData } from "../proto/schema/CommonProto/WarSerial
 import type { TileCustomCrystalData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
 import type { TileCustomLaserTurretData } from "../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
 
-export class Tile implements Tiles_ITile.ITile {
+export class Tile {
     private _gameConfig?                : GameConfigs_GameConfig.GameConfig;
     private _templateCfg?               : TileTemplateCfg;
     private _gridX                      = 0;
@@ -309,7 +307,7 @@ export class Tile implements Tiles_ITile.ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////
-    public getView(): Tiles_ITileView.ITileView {
+    public getView(): Tiles_TileView.TileView {
         return this._view;
     }
     public flushDataToView(): void {
@@ -614,7 +612,7 @@ export class Tile implements Tiles_ITile.ITile {
     public getDefenseAmount(): number {
         return Tiles_Utils_Common.getDefenseAmount(this.getTemplateCfg(), this.getCustomBuildingData());
     }
-    public getDefenseAmountForUnit(unit: Units_IUnit.IUnit, observerTeamIndexSet: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Set<number>>, useDamagePreviewSettings: boolean): number {
+    public getDefenseAmountForUnit(unit: Units_Unit.Unit, observerTeamIndexSet: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Set<number>>, useDamagePreviewSettings: boolean): number {
         if (!this.checkCanDefendUnit(unit)) {
             return 0;
         }
@@ -665,7 +663,7 @@ export class Tile implements Tiles_ITile.ITile {
     public getDefenseUnitTypeArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]> {
         return Tiles_Utils_Common.getDefenseUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
     }
-    public checkCanDefendUnit(unit: Units_IUnit.IUnit): boolean {
+    public checkCanDefendUnit(unit: Units_Unit.Unit): boolean {
         return Tiles_Utils_Common.checkCanDefendUnit({
             templateCfg        : this.getTemplateCfg(),
             customBuildingData : this.getCustomBuildingData(),
@@ -865,7 +863,7 @@ export class Tile implements Tiles_ITile.ITile {
     public getMoveCostByMoveType(moveType: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
         return this._getMoveCostCfg()[moveType]?.getCost();
     }
-    public getMoveCostByUnit(unit: Units_IUnit.IUnit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
+    public getMoveCostByUnit(unit: Units_Unit.Unit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
         const unitType      = unit.getUnitType();
         const war           = this.getWar();
         if ((this.getTeamIndex() !== unit.getTeamIndex()) && (this.checkCanBlockEnemyUnitType(unitType))) {
@@ -951,7 +949,7 @@ export class Tile implements Tiles_ITile.ITile {
         return Tiles_Utils_Common.getRepairUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
     }
 
-    public getRepairHpAndCostForUnit(unit: Units_IUnit.IUnit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.RepairHpAndCost> {
+    public getRepairHpAndCostForUnit(unit: Units_Unit.Unit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.RepairHpAndCost> {
         if ((this.getTeamIndex() !== unit.getTeamIndex()) || (!this.checkCanRepairOrSupplyUnitType(unit.getUnitType()))) {
             return null;
         }

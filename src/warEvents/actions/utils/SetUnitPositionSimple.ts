@@ -8,8 +8,8 @@ import {
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
+    type Units_Unit,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -138,13 +138,13 @@ export async function applyWithExtraData(_action: WeaSetUnitPositionSimple): Pro
 export async function applyWithoutExtraData(data: WeaSetUnitPositionSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
-    const targetUnitArray   : Units_IUnit.IUnit[] = [];
+    const targetUnitArray   : Units_Unit.Unit[] = [];
     {
         const conUnitFilter     = data.getConUnitFilter();
         const conPlayerFilter   = data.getConPlayerFilter();
         const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
         const conTileFilter     = data.getConTileFilter();
-        const tileFilterDict    = new Map<Tiles_ITile.ITile, boolean>();
+        const tileFilterDict    = new Map<Tiles_Tile.Tile, boolean>();
         for (const unit of unitMap.getAllUnits()) {
             if ((conUnitFilter != null) && (!Units_Utils_Filter.checkIsMeet(conUnitFilter, unit))) {
                 continue;
@@ -168,7 +168,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitPositionSimple, isFa
         }
     }
 
-    const targetTileArray: Tiles_ITile.ITile[] = [];
+    const targetTileArray: Tiles_Tile.Tile[] = [];
     {
         const actTileFilter     = data.getActTileFilter();
         const actPlayerFilter   = data.getActPlayerFilter();
@@ -226,13 +226,13 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function checkIsMeetConTileFilter(resultDict: Map<Tiles_ITile.ITile, boolean>, filter: TileFilter, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConTileFilter(resultDict: Map<Tiles_Tile.Tile, boolean>, filter: TileFilter, tile: Tiles_Tile.Tile): boolean {
     if (!resultDict.has(tile)) {
         resultDict.set(tile, Tiles_Utils_Filter.checkIsMeet(filter, tile));
     }
     return !!resultDict.get(tile);
 }
-function getAvailableLoader(rootLoader: Units_IUnit.IUnit, target: Units_IUnit.IUnit): Units_IUnit.IUnit | null {
+function getAvailableLoader(rootLoader: Units_Unit.Unit, target: Units_Unit.Unit): Units_Unit.Unit | null {
     const loaderArray = [rootLoader];
     for (let i = 0; i < loaderArray.length; ++i) {
         const loader = loaderArray[i];
@@ -244,7 +244,7 @@ function getAvailableLoader(rootLoader: Units_IUnit.IUnit, target: Units_IUnit.I
     }
     return null;
 }
-function moveUnit(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
+function moveUnit(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
     const unitMap = unit.getWar().getUnitMap();
     if (unit.getLoaderUnitId() == null) {
         unitMap.removeUnitOnMap(unit.getGridIndex(), false);

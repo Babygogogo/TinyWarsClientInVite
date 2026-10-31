@@ -12,16 +12,14 @@ import {
     Units_Constants,
     Visibilities_Utils,
     Users_Model,
-    type Egret_Egret,
-    type Units_IUnitMap,
-    type Units_IUnitMapView,
-    type Units_IUnitView,
+    type Units_UnitMap,
+    type Units_UnitView,
 } from "../internal.ts";
 
 const getGridWidth          = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight         = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
-export class UnitMapView extends Ui_Components_UiContainer.UiContainer implements Units_IUnitMapView.IUnitMapView {
+export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
     private readonly _layerForNaval     = new Ui_Components_UiContainer.UiContainer();
     private readonly _layerForGround    = new Ui_Components_UiContainer.UiContainer();
     private readonly _layerForAir       = new Ui_Components_UiContainer.UiContainer();
@@ -30,7 +28,7 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer implement
         { type : "UserSettingsOpacitySettingsChanged",  callback : this._onNotifyUserSettingsOpacitySettingsChanged },
     ];
 
-    private _unitMap    : Units_IUnitMap.IUnitMap | null = null;
+    private _unitMap    : Units_UnitMap.UnitMap | null = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Initializers.
@@ -46,7 +44,7 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer implement
         this.setIsTouchChildrenEnabled(false);
     }
 
-    public init(unitMap: Units_IUnitMap.IUnitMap): void {
+    public init(unitMap: Units_UnitMap.UnitMap): void {
         this._setUnitMap(unitMap);
 
         this._clearAllUnits();
@@ -65,17 +63,17 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer implement
         Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
     }
 
-    private _getUnitMap(): Units_IUnitMap.IUnitMap {
+    private _getUnitMap(): Units_UnitMap.UnitMap {
         return Helpers_Misc.getExisted(this._unitMap);
     }
-    private _setUnitMap(unitMap: Units_IUnitMap.IUnitMap): void {
+    private _setUnitMap(unitMap: Units_UnitMap.UnitMap): void {
         this._unitMap = unitMap;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public addUnit(view: Units_IUnitView.IUnitView, needResetZOrder: boolean): void {
+    public addUnit(view: Units_UnitView.UnitView, needResetZOrder: boolean): void {
         const model = Helpers_Misc.getExisted(view.getUnit());
 
         view.setX(getGridWidth() * model.getGridX());
@@ -87,8 +85,8 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer implement
         (needResetZOrder) && (this._resetZOrderForLayer(layer));
     }
 
-    public removeUnit(view: Units_IUnitView.IUnitView): void {
-        view.getParent()?.removeChild(view as unknown as Egret_Egret.DisplayObject);
+    public removeUnit(view: Units_UnitView.UnitView): void {
+        view.getParent()?.removeChild(view);
     }
 
     public resetZOrder(unitType: number): void {
@@ -204,9 +202,9 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer implement
 
     private _resetZOrderForLayer(layer: Ui_Interfaces_IUiContainer.IUiContainer): void {
         const viewsCount    = layer.getUiChildren().length;
-        const views         = new Array<Units_IUnitView.IUnitView>(viewsCount);
+        const views         = new Array<Units_UnitView.UnitView>(viewsCount);
         for (let i = 0; i < viewsCount; ++i) {
-            views[i] = layer.getUiChildAt(i) as any;
+            views[i] = layer.getUiChildAt(i) as Units_UnitView.UnitView;
         }
         views.sort((v1, v2) => Helpers_Misc.getExisted(v1.getUnit()).getGridY() - Helpers_Misc.getExisted(v2.getUnit()).getGridY());
         for (let i = 0; i < viewsCount; ++i) {

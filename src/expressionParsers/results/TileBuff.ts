@@ -1,15 +1,15 @@
 import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type Tiles_ITile,
+    type Tiles_Tile,
 } from "../../internal.ts";
 import type { TileBuff as ProtoTileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
 
 export class TileBuff extends ExpressionParsers_Results_Base.Base {
     public readonly buff: ProtoTileBuff;
-    public readonly tile: Tiles_ITile.ITile;
+    public readonly tile: Tiles_Tile.Tile;
 
-    public constructor(buff: ProtoTileBuff, tile: Tiles_ITile.ITile) {
+    public constructor(buff: ProtoTileBuff, tile: Tiles_Tile.Tile) {
         super(tile.getWar());
 
         this.buff = buff;

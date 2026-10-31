@@ -12,8 +12,8 @@ import {
     type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
+    type Units_Unit,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -119,7 +119,7 @@ export async function applyWithExtraData(_action: WeaSetUnitTypeSimple): Promise
     // nothing to do
 }
 export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const targetUnitArray       : Units_IUnit.IUnit[] = [];
+    const targetUnitArray       : Units_Unit.Unit[] = [];
     const unitMap               = war.getUnitMap();
     const newUnitType           = data.getActUnitType();
     {
@@ -128,8 +128,8 @@ export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastEx
         const conPlayerFilter       = data.getConPlayerFilter();
         const playerFilterDict      = new Map<Players_IPlayer.IPlayer, boolean>();
         const conTileFilter         = data.getConTileFilter();
-        const tileFilterDict        = new Map<Tiles_ITile.ITile, boolean>();
-        const unitInfoArray         : { unit: Units_IUnit.IUnit, depth: number }[] = [];
+        const tileFilterDict        = new Map<Tiles_Tile.Tile, boolean>();
+        const unitInfoArray         : { unit: Units_Unit.Unit, depth: number }[] = [];
 
         for (const unit of unitMap.getAllUnits()) {
             if (unit.getUnitType() === newUnitType) {
@@ -242,13 +242,13 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function checkIsMeetConTileFilter(resultDict: Map<Tiles_ITile.ITile, boolean>, filter: TileFilter, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConTileFilter(resultDict: Map<Tiles_Tile.Tile, boolean>, filter: TileFilter, tile: Tiles_Tile.Tile): boolean {
     if (!resultDict.has(tile)) {
         resultDict.set(tile, Tiles_Utils_Filter.checkIsMeet(filter, tile));
     }
     return !!resultDict.get(tile);
 }
-function getLoadDepth(unit: Units_IUnit.IUnit): number {
+function getLoadDepth(unit: Units_Unit.Unit): number {
     let depth       = 0;
     let loaderUnit  = unit.getLoaderUnit();
     while (loaderUnit != null) {

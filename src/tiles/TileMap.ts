@@ -16,17 +16,14 @@ import {
     Locations_Constants,
     Players_Constants,
     Tiles_Constants_Common,
-    type Tiles_ITile,
-    type Tiles_ITileMap,
-    type Tiles_ITileMapView,
 } from "../internal.ts";
 
 import type { TileCustomName } from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
 import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
 
-export class TileMap implements Tiles_ITileMap.ITileMap {
-    private _map?                           : Tiles_ITile.ITile[][];
+export class TileMap {
+    private _map?                           : Tiles_Tile.Tile[][];
     private _tileCustomNameArray?           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomName[]>;
     private _mapSize?                       : AuxiliaryTypes_MapSize.MapSize;
     private _visibleGroupedLocationIdArray  : number[] = [];
@@ -61,7 +58,7 @@ export class TileMap implements Tiles_ITileMap.ITileMap {
             }
         }
 
-        const map = Helpers_Collection.createEmptyMap<Tiles_ITile.ITile>(mapWidth, mapHeight);
+        const map = Helpers_Collection.createEmptyMap<Tiles_Tile.Tile>(mapWidth, mapHeight);
         for (const tileData of tiles) {
             const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(tileData.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_03);
             if (!gridIndex.checkIsInsideMap(mapSize)) {
@@ -172,43 +169,43 @@ export class TileMap implements Tiles_ITileMap.ITileMap {
         return Helpers_Misc.getExisted(this._war);
     }
 
-    private _setMap(map: Tiles_ITile.ITile[][]): void {
+    private _setMap(map: Tiles_Tile.Tile[][]): void {
         this._map = map;
     }
-    public getMap(): Tiles_ITile.ITile[][] {
+    public getMap(): Tiles_Tile.Tile[][] {
         return Helpers_Misc.getExisted(this._map);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getView(): Tiles_ITileMapView.ITileMapView {
+    public getView(): Tiles_TileMapView.TileMapView {
         return this._view;
     }
 
-    public forEachTile(func: (t: Tiles_ITile.ITile) => any): void {
+    public forEachTile(func: (t: Tiles_Tile.Tile) => any): void {
         for (const column of this.getMap()) {
             for (const tile of column) {
                 func(tile);
             }
         }
     }
-    public getTile(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Tiles_ITile.ITile {
+    public getTile(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Tiles_Tile.Tile {
         return this.getMap()[gridIndex.getX()][gridIndex.getY()];
     }
-    public getTileWithGridId(gridId: number): Tiles_ITile.ITile {
+    public getTileWithGridId(gridId: number): Tiles_Tile.Tile {
         const width = this.getMapSize().getWidth();
         return this.getMap()[gridId % width][Math.floor(gridId / width)];
     }
-    public getAllTiles(): Tiles_ITile.ITile[] {
-        const tileArray: Tiles_ITile.ITile[] = [];
+    public getAllTiles(): Tiles_Tile.Tile[] {
+        const tileArray: Tiles_Tile.Tile[] = [];
         this.forEachTile(tile => tileArray.push(tile));
         return tileArray;
     }
-    public getTiles(predicate: (tile: Tiles_ITile.ITile) => boolean): Tiles_ITile.ITile[] {
+    public getTiles(predicate: (tile: Tiles_Tile.Tile) => boolean): Tiles_Tile.Tile[] {
         const map               = this.getMap();
         const { width, height } = this.getMapSize().getWH();
-        const tiles             : Tiles_ITile.ITile[] = [];
+        const tiles             : Tiles_Tile.Tile[] = [];
         for (let i = 0; i < width; ++i) {
             for (let j = 0; j < height; ++j) {
                 const tile = map[i][j];
@@ -272,7 +269,7 @@ export class TileMap implements Tiles_ITileMap.ITileMap {
     public getTilesCountForPlayer(playerIndex: number): number {
         return this.getTilesCount(v => v.getPlayerIndex() === playerIndex);
     }
-    public getTilesCount(func: (t: Tiles_ITile.ITile) => boolean): number {
+    public getTilesCount(func: (t: Tiles_Tile.Tile) => boolean): number {
         let count = 0;
         for (const column of this.getMap()) {
             for (const tile of column) {

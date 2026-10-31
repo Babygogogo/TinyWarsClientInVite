@@ -12,7 +12,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Teams_Constants,
-    type Units_IUnit,
 } from "../../../internal.ts";
 
 import type { CommonExtraDataForWarOperation } from "../../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
@@ -108,8 +107,8 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
     }
 
     // 先把unitArrayAfterAction涉及的部队全部从地图上移除，然后再重新加回来，否则如果遇到有部队互相交换了位置之类的复杂情况就会报错（因为尝试把A移动到B所在位置时，B仍然占着位置，A就无法移动过去）
-    const tempRemovedUnits      = new Map<number, Units_IUnit.IUnit>(); // 此临时变量仅用于优化性能，在后续把部队加回来的过程中可以直接从这里取，而不必重新创建
-    // const tempRemovedLoadedUnits: IUnit[] = [];
+    const tempRemovedUnits      = new Map<number, Units_Unit.Unit>(); // 此临时变量仅用于优化性能，在后续把部队加回来的过程中可以直接从这里取，而不必重新创建
+    // const tempRemovedLoadedUnits: Units_Unit.Unit[] = [];
     const hiddenUnitIdArray     = commonExtraData.getHiddenUnitIdArray();  // 如果观战者同时观战多个队伍，则此集合会包含所有相关队伍各自的hiddenUnitIdArray，实际上是不准确的；但由于后续的unitArrayAfterAction同样如此，所以正好能把实际上不是hidden的部队重新加回来，负负得正
     if (hiddenUnitIdArray.length) {
         for (const unitId of hiddenUnitIdArray) {
@@ -166,7 +165,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
         }
     }
 
-    const updatedViewUnits = new Set<Units_IUnit.IUnit>();
+    const updatedViewUnits = new Set<Units_Unit.Unit>();
     for (const unitData of unitArrayAfterAction) {
         const unitId        = unitData.getUnitId();
         const existingUnit  = tempRemovedUnits.get(unitId);
@@ -376,7 +375,7 @@ function checkIsUnitDamaged(oldUnitData: SerialUnit, newUnitData: SerialUnit): b
     return (newUnitData.getCurrentHp()) < (oldUnitData.getCurrentHp());
 }
 
-export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.BattleInfo, war: BaseWar_Interface_IBwWar.IBwWar, allVisibleUnits: Set<Units_IUnit.IUnit>): void {
+export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.BattleInfo, war: BaseWar_Interface_IBwWar.IBwWar, allVisibleUnits: Set<Units_Unit.Unit>): void {
     const gridVisualEffect      = war.getGridVisualEffect();
     let isVisibleUnitDestroyed  = false;
     let isVisibleUnitDamaged    = false;
@@ -445,7 +444,7 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.Battle
     }
 }
 
-export function handleSelfUnitHpAfterWait(focusUnit: Units_IUnit.IUnit, isFastExecute: boolean): void {
+export function handleSelfUnitHpAfterWait(focusUnit: Units_Unit.Unit, isFastExecute: boolean): void {
     const war       = focusUnit.getWar();
     const gridIndex = focusUnit.getGridIndex();
     if (war.getUnitMap().getUnitOnMap(gridIndex) != focusUnit) {
@@ -491,7 +490,7 @@ export function handleSelfUnitHpAfterWait(focusUnit: Units_IUnit.IUnit, isFastEx
     }
 }
 
-export function handlePostOperationPlunder(focusUnit: Units_IUnit.IUnit, isFastExecute: boolean): void {
+export function handlePostOperationPlunder(focusUnit: Units_Unit.Unit, isFastExecute: boolean): void {
     const gridIndex = focusUnit.getGridIndex();
     const war       = focusUnit.getWar();
     if (war.getUnitMap().getUnitOnMap(gridIndex) !== focusUnit) {

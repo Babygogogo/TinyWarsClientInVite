@@ -2,13 +2,13 @@ import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
+    type Tiles_Tile,
 } from "../../internal.ts";
 
 export class TileArray extends ExpressionParsers_Results_Base.Base {
-    public readonly array: Tiles_ITile.ITile[];
+    public readonly array: Tiles_Tile.Tile[];
 
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, array: Tiles_ITile.ITile[]) {
+    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, array: Tiles_Tile.Tile[]) {
         super(war);
 
         this.array = array;

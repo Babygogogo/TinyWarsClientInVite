@@ -16,7 +16,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../../../internal.ts";
 
 import type { WoUnitDropUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitDropUnit.ts";
@@ -69,7 +69,7 @@ function fastExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUni
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
-        const unitsForDrop: Units_IUnit.IUnit[] = [];
+        const unitsForDrop: Units_Unit.Unit[] = [];
         for (const data of action.getDropDestinations()) {
             const unitId        = data.getUnitId() ?? 0;
             const gridIndex     = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(data.getGridIndex()));
@@ -149,7 +149,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
         });
 
         {
-            const affectedLoaderUnits = new Set<Units_IUnit.IUnit | null>();
+            const affectedLoaderUnits = new Set<Units_Unit.Unit | null>();
             for (const data of droppingUnitAndPathArray) {
                 const unitId        = data.getUnit()?.getUnitId() ?? 0;
                 const loadedUnit    = unitMap.getUnitLoadedById(unitId);
@@ -183,7 +183,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
         const fogMap        = war.getFogMap();
-        const unitsForDrop  : Units_IUnit.IUnit[] = [];
+        const unitsForDrop  : Units_Unit.Unit[] = [];
         for (const data of action.getDropDestinations()) {
             const unitId        = data.getUnitId() ?? 0;
             const gridIndex     = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(data.getGridIndex()));

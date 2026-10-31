@@ -17,7 +17,6 @@ import {
     Numbers_Utils,
     Numbers_Constants,
     Players_Constants,
-    type Units_IUnit,
 } from "../../internal.ts";
 
 import type { SelfTileEnabledForUnitProduction } from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
@@ -88,10 +87,10 @@ async function getBestActionPlayerProduceUnit(commonParams: Bots_CommonParams.Co
     }
 
     const mapSize                       = commonParams.getMapSize();
-    const maxAttackRangeDict            = new Map<Units_IUnit.IUnit, number | null>();
-    const moveRangeDict                 = new Map<Units_IUnit.IUnit, number>();
-    const movableAreaDict               = new Map<Units_IUnit.IUnit, AuxiliaryTypes_MovableArea.MovableArea>();
-    const rawGetMinTurnsCountForAttack  = async (attackerUnit: Units_IUnit.IUnit, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex) => {
+    const maxAttackRangeDict            = new Map<Units_Unit.Unit, number | null>();
+    const moveRangeDict                 = new Map<Units_Unit.Unit, number>();
+    const movableAreaDict               = new Map<Units_Unit.Unit, AuxiliaryTypes_MovableArea.MovableArea>();
+    const rawGetMinTurnsCountForAttack  = async (attackerUnit: Units_Unit.Unit, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex) => {
         if (!maxAttackRangeDict.has(attackerUnit)) {
             maxAttackRangeDict.set(attackerUnit, attackerUnit.getCfgMaxAttackRange());
         }
@@ -134,8 +133,8 @@ async function getBestActionPlayerProduceUnit(commonParams: Bots_CommonParams.Co
                 );
         }
     };
-    const minTurnsCountDict         = new Map<Units_IUnit.IUnit, Map<number, number | null>>();
-    const getMinTurnsCountForAttack = async (attackerUnit: Units_IUnit.IUnit, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex) => {
+    const minTurnsCountDict         = new Map<Units_Unit.Unit, Map<number, number | null>>();
+    const getMinTurnsCountForAttack = async (attackerUnit: Units_Unit.Unit, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex) => {
         const gridId = targetGridIndex.getGridId(mapSize);
         if (!minTurnsCountDict.has(attackerUnit)) {
             minTurnsCountDict.set(attackerUnit, new Map([[gridId, await rawGetMinTurnsCountForAttack(attackerUnit, targetGridIndex)]]));
@@ -164,7 +163,7 @@ async function getBestActionPlayerProduceUnit(commonParams: Bots_CommonParams.Co
 async function getBestScoreAndActionPlayerProduceUnitWithGridIndex({ commonParams, produceUnitInfo, getMinTurnsCountForAttack }: {
     commonParams                : Bots_CommonParams.CommonParams;
     produceUnitInfo             : ProduceUnitInfo;
-    getMinTurnsCountForAttack   : (attackerUnit: Units_IUnit.IUnit, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex) => Promise<number | null>;
+    getMinTurnsCountForAttack   : (attackerUnit: Units_Unit.Unit, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex) => Promise<number | null>;
 }): Promise<Bots_Types.ScoreAndAction | null> {
     await Timer_TimerModel.checkAndCallLater();
 
@@ -215,7 +214,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
     producingGridIndex          : AuxiliaryTypes_GridIndex.GridIndex;
     producingUnitType           : number;
     effectiveCoSkill            : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SelfTileEnabledForUnitProduction>;
-    getMinTurnsCountForAttack   : (attackerUnit: Units_IUnit.IUnit, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex) => Promise<number | null>;
+    getMinTurnsCountForAttack   : (attackerUnit: Units_Unit.Unit, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex) => Promise<number | null>;
 }): Promise<number | null> {
     await Timer_TimerModel.checkAndCallLater();
 

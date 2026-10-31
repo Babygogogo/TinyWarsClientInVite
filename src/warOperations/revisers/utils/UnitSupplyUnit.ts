@@ -6,8 +6,8 @@ import {
     AuxiliaryTypes_GridIndex,
     Turns_Constants,
     type BaseWar_Interface_IBwWar,
-    type Units_IUnit,
-    type Units_IUnitMap,
+    type Units_Unit,
+    type Units_UnitMap,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -47,7 +47,7 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitSu
     });
 }
 
-function checkCanDoSupply(unitMap: Units_IUnitMap.IUnitMap, focusUnit: Units_IUnit.IUnit, destination: AuxiliaryTypes_GridIndex.GridIndex): boolean {
+function checkCanDoSupply(unitMap: Units_UnitMap.UnitMap, focusUnit: Units_Unit.Unit, destination: AuxiliaryTypes_GridIndex.GridIndex): boolean {
     if (focusUnit.checkIsAdjacentUnitSupplier()) {
         const mapSize = unitMap.getMapSize();
         if (mapSize == null) {

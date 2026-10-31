@@ -19,7 +19,7 @@ import {
     Helpers_Misc,
     Players_Constants,
     Visibilities_Constants,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../internal.ts";
 
 import { DataForFogMapFromPath } from "../proto/schema/CommonProto/WarSerialization/DataForFogMapFromPath.ts";
@@ -341,7 +341,7 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
         }
     }
     public updateMapFromPathsByUnitAndPath({ unit, unitVisionInfo, path }: {
-        unit            : Units_IUnit.IUnit;
+        unit            : Units_Unit.Unit;
         unitVisionInfo  : AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo;
         path            : AuxiliaryTypes_GridIndex.GridIndex[];
     }): void {

@@ -13,7 +13,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_Tile,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetTileStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileStateExpr.ts";
@@ -231,7 +231,7 @@ export function getErrorTip(data: WeaSetTileStateExpr, customCounterNameSet: Set
     return null;
 }
 
-function checkIsMeetConditionForTile(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConditionForTile(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -239,7 +239,7 @@ function checkIsMeetConditionForTile(action: WeaSetTileStateExpr, tile: Tiles_IT
         return false;
     }
 }
-function evalActPlayerIndex(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile): number {
+function evalActPlayerIndex(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getPlayerIndex();
     const act           = action.getActPlayerIndex();
     if (!act) {
@@ -260,7 +260,7 @@ function evalActPlayerIndex(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile
         return defaultValue;
     }
 }
-function evalActCurrentHp(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile): number {
+function evalActCurrentHp(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getCurrentHp();
     const act           = action.getActCurrentHp();
     if (!act) {
@@ -281,7 +281,7 @@ function evalActCurrentHp(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile):
         return defaultValue;
     }
 }
-function evalActCurrentBuildPoint(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile): number {
+function evalActCurrentBuildPoint(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getCurrentBuildPoint();
     const act           = action.getActCurrentBuildPoint();
     if (!act) {
@@ -302,7 +302,7 @@ function evalActCurrentBuildPoint(action: WeaSetTileStateExpr, tile: Tiles_ITile
         return defaultValue;
     }
 }
-function evalActCurrentCapturePoint(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile): number {
+function evalActCurrentCapturePoint(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getCurrentCapturePoint();
     const act           = action.getActCurrentCapturePoint();
     if (!act) {
@@ -323,7 +323,7 @@ function evalActCurrentCapturePoint(action: WeaSetTileStateExpr, tile: Tiles_ITi
         return defaultValue;
     }
 }
-function evalActIsHighlighted(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile): boolean {
+function evalActIsHighlighted(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = tile.getIsHighlighted();
     const act           = action.getActIsHighlighted();
     if (!act) {
@@ -341,7 +341,7 @@ function evalActIsHighlighted(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITi
         return defaultValue;
     }
 }
-function evalActGroupedLocationIdArray(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile): number[] {
+function evalActGroupedLocationIdArray(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): number[] {
     const defaultValue  = tile.getGroupedLocationIdArray();
     const act           = action.getActGroupedLocationIdArray();
     if (!act) {
@@ -367,7 +367,7 @@ function evalActGroupedLocationIdArray(action: WeaSetTileStateExpr, tile: Tiles_
         return defaultValue;
     }
 }
-function evalActCustomNameId(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
+function evalActCustomNameId(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     const defaultValue  = tile.getCustomNameId();
     const act           = action.getActCustomNameId();
     if (!act) {
@@ -394,7 +394,7 @@ export async function applyWithExtraData(_action: WeaSetTileStateExpr): Promise<
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetTileStateExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const newTileDataDict = new Map<Tiles_ITile.ITile, SerialTile>();
+    const newTileDataDict = new Map<Tiles_Tile.Tile, SerialTile>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!checkIsMeetConditionForTile(action, tile)) {
             continue;
@@ -405,7 +405,7 @@ export async function applyWithoutExtraData(action: WeaSetTileStateExpr, isFast:
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
 }
-function createNewTileData(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile): SerialTile {
+function createNewTileData(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): SerialTile {
     // 为防止随机数导致结果不稳定，此处eval系列函数的顺序一旦写下就不能更改，后续新属性只能添加在最后
     // 必须保证函数顺序前后端相同
     const playerIndex               = evalActPlayerIndex(action, tile);
@@ -440,7 +440,7 @@ function createNewTileData(action: WeaSetTileStateExpr, tile: Tiles_ITile.ITile)
         customNameId           : customNameId ?? null,
     });
 }
-function applyNewTileDataDict(dict: Map<Tiles_ITile.ITile, SerialTile>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, SerialTile>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     for (const [tile, newTileData] of dict) {
         tile.init(newTileData, tile.getGameConfig());
         tile.startRunning(war);

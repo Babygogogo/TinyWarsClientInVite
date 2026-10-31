@@ -6,7 +6,6 @@ import {
     ForceSkins_Constants,
     Ui_Components_UiImage,
     type BaseWar_Model_BwTypes,
-    type Tiles_ITileView,
     type Ui_Interfaces_IUiImage,
     Users_Model,
 } from "../internal.ts";
@@ -14,7 +13,7 @@ import {
 const getGridWidth  = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
-export class TileView implements Tiles_ITileView.ITileView {
+export class TileView {
     private readonly _imgBase       = new Ui_Components_UiImage.UiImage();
     private readonly _imgDecoration = new Ui_Components_UiImage.UiImage();
     private readonly _imgObject     = new Ui_Components_UiImage.UiImage();

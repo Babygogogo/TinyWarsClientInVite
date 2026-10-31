@@ -6,8 +6,8 @@ import {
     type Helpers_PointerInput,
     type PlayerRules_Constants,
     type Players_IPlayer,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
+    type Units_Unit,
 } from "../internal.ts";
 import type { S as MsgAtCreateTourneyS } from "../proto/schema/CommonProto/NetMessage/MsgAtCreateTourney/S.ts";
 import type { S as MsgAtDeleteLastTourneyS } from "../proto/schema/CommonProto/NetMessage/MsgAtDeleteLastTourney/S.ts";
@@ -337,14 +337,14 @@ export type Mapping = {
     BwProduceUnitPanelClosed: undefined;
 
     BwUnitChanged: { gridIndex: AuxiliaryTypes_GridIndex.GridIndex };
-    BwUnitBuffChanged: { unit: Units_IUnit.IUnit };
+    BwUnitBuffChanged: { unit: Units_Unit.Unit };
     BwUnitCustomNameArrayChanged: undefined;
     BwUnitCustomNameIdChanged: undefined;
 
-    BwTileHasLocationIdSet: { tile: Tiles_ITile.ITile };
-    BwTileIsHighlightedChanged: { tile: Tiles_ITile.ITile };
+    BwTileHasLocationIdSet: { tile: Tiles_Tile.Tile };
+    BwTileIsHighlightedChanged: { tile: Tiles_Tile.Tile };
     BwTileChanged: { gridIndex: AuxiliaryTypes_GridIndex.GridIndex };
-    BwTileBuffChanged: { tile: Tiles_ITile.ITile };
+    BwTileBuffChanged: { tile: Tiles_Tile.Tile };
     BwTileCustomNameArrayChanged: undefined;
     BwTileCustomNameIdChanged: undefined;
 

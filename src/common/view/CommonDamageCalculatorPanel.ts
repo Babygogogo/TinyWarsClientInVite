@@ -41,7 +41,7 @@ import {
     Units_Utils_Common,
     Common_Model_CommonModel,
     Units_Constants,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../../internal.ts";
 import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 
@@ -322,7 +322,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             },
         });
     }
-    private _createPlayerDataForUnit(attackerUnit: Units_IUnit.IUnit): AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData {
+    private _createPlayerDataForUnit(attackerUnit: Units_Unit.Unit): AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData {
         const attackerPlayerIndex   = attackerUnit.getPlayerIndex();
         const attackerPlayer        = attackerUnit.getPlayer();
         const attackerGridIndex     = attackerUnit.getGridIndex();

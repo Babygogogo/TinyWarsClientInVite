@@ -1,12 +1,12 @@
 import {
     Timer_TimerModel,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
     type Bots_Types,
 } from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export async function getScoreAndActionUnitBoardedByCo(unit: Units_IUnit.IUnit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+export async function getScoreAndActionUnitBoardedByCo(unit: Units_Unit.Unit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
     await Timer_TimerModel.checkAndCallLater();
 
     if (!unit.checkCanCoBoardAfterMovePath(pathNodes.map(v => v.getGridIndex()))) {
@@ -28,7 +28,7 @@ export async function getScoreAndActionUnitBoardedByCo(unit: Units_IUnit.IUnit, 
     };
 }
 
-async function getScoreForActionUnitBoardedByCo(unit: Units_IUnit.IUnit): Promise<number> {
+async function getScoreForActionUnitBoardedByCo(unit: Units_Unit.Unit): Promise<number> {
     await Timer_TimerModel.checkAndCallLater();
 
     let totalScore      = unit.getCurrentHp() * 100;

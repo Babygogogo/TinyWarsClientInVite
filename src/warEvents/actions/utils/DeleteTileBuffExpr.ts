@@ -7,7 +7,7 @@ import {
     ExpressionParsers_Contexts_Tile,
     ExpressionParsers_Contexts_TileBuff,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { TileBuff as ProtoTileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
@@ -87,7 +87,7 @@ export function getErrorTip(data: WeaDeleteTileBuffExpr, customCounterNameSet: S
     return null;
 }
 
-function evalConTileFilter(action: WeaDeleteTileBuffExpr, tile: Tiles_ITile.ITile): boolean {
+function evalConTileFilter(action: WeaDeleteTileBuffExpr, tile: Tiles_Tile.Tile): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -95,7 +95,7 @@ function evalConTileFilter(action: WeaDeleteTileBuffExpr, tile: Tiles_ITile.ITil
         return false;
     }
 }
-function evalConTileBuffFilter(action: WeaDeleteTileBuffExpr, tile: Tiles_ITile.ITile, buff: ProtoTileBuff): boolean {
+function evalConTileBuffFilter(action: WeaDeleteTileBuffExpr, tile: Tiles_Tile.Tile, buff: ProtoTileBuff): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileBuffFilter() ?? ``).eval(new ExpressionParsers_Contexts_TileBuff.TileBuff(buff, tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -110,7 +110,7 @@ export async function applyWithExtraData(action: WeaDeleteTileBuffExpr, war: Bas
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function applyWithoutExtraData(action: WeaDeleteTileBuffExpr, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): Promise<void> {
-    const newTileDataDict = new Map<Tiles_ITile.ITile, ProtoTileBuff[]>();
+    const newTileDataDict = new Map<Tiles_Tile.Tile, ProtoTileBuff[]>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {
             continue;

@@ -20,7 +20,6 @@ import {
     Numbers_Utils,
     Locations_Constants,
     Lang_Constants,
-    type Units_IUnit,
     Units_Unit,
 } from "../../../internal.ts";
 
@@ -424,7 +423,7 @@ export function getErrorTip(data: WeaFillUnitLoadedExpr, customCounterNameSet: S
     return null;
 }
 
-function checkIsMeetConditionForUnit(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit): boolean {
+function checkIsMeetConditionForUnit(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -450,7 +449,7 @@ function checkIsMeetConditionForUnit(action: WeaFillUnitLoadedExpr, unit: Units_
 //         return null;
 //     }
 // }
-function evalActUnitType(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit): number | null {
+function evalActUnitType(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): number | null {
     const act = action.getActUnitType();
     if (!act) {
         return null;
@@ -469,7 +468,7 @@ function evalActUnitType(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit)
         return null;
     }
 }
-function evalActActionState(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit): number {
+function evalActActionState(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = Units_Constants.ActionStateId.Idle;
     const act             = action.getActActionState();
     if (!act) {
@@ -488,7 +487,7 @@ function evalActActionState(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUn
         return defaultValue;
     }
 }
-function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit, unitType: number): number {
+function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit, unitType: number): number {
     const defaultValue = unit.getGcData().getUnitTemplateCfg(unitType)?.getPrimaryWeaponMaxAmmo() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -514,7 +513,7 @@ function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitLoadedExpr, unit: Un
         return defaultValue;
     }
 }
-function evalActCurrentHp(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit, unitType: number): number {
+function evalActCurrentHp(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit, unitType: number): number {
     const defaultValue = Helpers_Misc.getExisted(unit.getGcData().getUnitTemplateCfg(unitType)?.getMaxHp());
     const act = action.getActCurrentHp();
     if (!act) {
@@ -558,7 +557,7 @@ function evalActCurrentHp(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit
 //         return defaultValue;
 //     }
 // }
-function evalActIsDiving(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit, unitType: number): boolean {
+function evalActIsDiving(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit, unitType: number): boolean {
     const unitCfg = Helpers_Misc.getExisted(unit.getGcData().getUnitTemplateCfg(unitType));
     if (unitCfg.getDiveCfg() == null) {
         return false;
@@ -581,7 +580,7 @@ function evalActIsDiving(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit,
         return defaultValue;
     }
 }
-function evalActFlareCurrentAmmo(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit, unitType: number): number {
+function evalActFlareCurrentAmmo(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit, unitType: number): number {
     const defaultValue = unit.getGcData().getUnitTemplateCfg(unitType)?.getFlareMaxAmmo() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -607,7 +606,7 @@ function evalActFlareCurrentAmmo(action: WeaFillUnitLoadedExpr, unit: Units_IUni
         return defaultValue;
     }
 }
-function evalActCurrentFuel(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit, unitType: number): number {
+function evalActCurrentFuel(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit, unitType: number): number {
     const defaultValue = Helpers_Misc.getExisted(unit.getGcData().getUnitTemplateCfg(unitType)?.getMaxFuel());
     const act = action.getActCurrentFuel();
     if (!act) {
@@ -629,7 +628,7 @@ function evalActCurrentFuel(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUn
         return defaultValue;
     }
 }
-function evalActCurrentBuildMaterial(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit, unitType: number): number {
+function evalActCurrentBuildMaterial(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit, unitType: number): number {
     const defaultValue = unit.getGcData().getUnitTemplateCfg(unitType)?.getMaxBuildMaterial() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -655,7 +654,7 @@ function evalActCurrentBuildMaterial(action: WeaFillUnitLoadedExpr, unit: Units_
         return defaultValue;
     }
 }
-function evalActCurrentProduceMaterial(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit, unitType: number): number {
+function evalActCurrentProduceMaterial(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit, unitType: number): number {
     const defaultValue = unit.getGcData().getUnitTemplateCfg(unitType)?.getMaxProduceMaterial() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -681,7 +680,7 @@ function evalActCurrentProduceMaterial(action: WeaFillUnitLoadedExpr, unit: Unit
         return defaultValue;
     }
 }
-function evalActCurrentPromotion(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit): number {
+function evalActCurrentPromotion(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): number {
     const defaultValue    = unit.getGcData().getUnitMaxPromotion();
     const act             = action.getActCurrentPromotion();
     if (!act) {
@@ -726,7 +725,7 @@ function evalActCurrentPromotion(action: WeaFillUnitLoadedExpr, unit: Units_IUni
 //         return defaultValue;
 //     }
 // }
-function evalActIsCoOnboard(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit): boolean {
+function evalActIsCoOnboard(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): boolean {
     const defaultValue  = false;
     const act             = action.getActIsCoOnboard();
     if (!act) {
@@ -744,7 +743,7 @@ function evalActIsCoOnboard(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUn
         return defaultValue;
     }
 }
-function evalActAiMode(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit): number {
+function evalActAiMode(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = Units_Constants.AiModeId.Normal;
     const act             = action.getActAiMode();
     if (!act) {
@@ -763,7 +762,7 @@ function evalActAiMode(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit): 
         return defaultValue;
     }
 }
-function evalActGroupedTagId(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit): number {
+function evalActGroupedTagId(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = 0;
     const act             = action.getActGroupedTagId();
     if (!act) {
@@ -785,7 +784,7 @@ function evalActGroupedTagId(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IU
         return defaultValue;
     }
 }
-function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit): number[] {
+function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): number[] {
     const act = action.getActForbiddenGroupedLocationIdArray();
     if (!act) {
         return [];
@@ -806,7 +805,7 @@ function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitLoadedExpr, u
         return [];
     }
 }
-function evalActAiWeightedDestination(action: WeaFillUnitLoadedExpr, unit: Units_IUnit.IUnit): AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight | null {
+function evalActAiWeightedDestination(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight | null {
     const act = action.getActAiWeightedDestination();
     if (!act) {
         return null;
@@ -866,7 +865,7 @@ export async function applyWithoutExtraData(action: WeaFillUnitLoadedExpr, isFas
     unitMap.setNextUnitId(nextUnitId);
     applyNewUnitDataArray(newUnitDataList, war, isFast);
 }
-function createNewUnitData(action: WeaFillUnitLoadedExpr, loaderUnit: Units_IUnit.IUnit, unitId: number): SerialUnit | null {
+function createNewUnitData(action: WeaFillUnitLoadedExpr, loaderUnit: Units_Unit.Unit, unitId: number): SerialUnit | null {
     const unitType = evalActUnitType(action, loaderUnit);
     if (unitType == null) {
         return null;
@@ -921,7 +920,7 @@ function createNewUnitData(action: WeaFillUnitLoadedExpr, loaderUnit: Units_IUni
 function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
-    const unitArray     : Units_IUnit.IUnit[] = [];
+    const unitArray     : Units_Unit.Unit[] = [];
     for (const unitData of unitDataArray) {
         const unit = new Units_Unit.Unit();
         unit.init(unitData, gameConfig);

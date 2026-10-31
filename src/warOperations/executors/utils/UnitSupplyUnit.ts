@@ -12,7 +12,7 @@ import {
     Lang_Utils,
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../../../internal.ts";
 
 import type { WoUnitSupplyUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSupplyUnit.ts";
@@ -104,7 +104,7 @@ async function normalExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
             });
 
         } else {
-            const suppliedUnits : Units_IUnit.IUnit[] = [];
+            const suppliedUnits : Units_Unit.Unit[] = [];
             const playerIndex   = focusUnit.getPlayerIndex();
             for (const gridIndex of pathNodes[pathNodes.length - 1].getAdjacentGrids(unitMap.getMapSize())) {
                 const unit = unitMap.getUnitOnMap(gridIndex);

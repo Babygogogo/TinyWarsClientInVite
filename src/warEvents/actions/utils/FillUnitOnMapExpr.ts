@@ -21,8 +21,7 @@ import {
     Locations_Constants,
     Players_Constants,
     Lang_Constants,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
 } from "../../../internal.ts";
 
 import type { WeaFillUnitOnMapExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitOnMapExpr.ts";
@@ -494,7 +493,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     return null;
 }
 
-function checkIsMeetConditionForTile(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConditionForTile(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -502,7 +501,7 @@ function checkIsMeetConditionForTile(action: WeaFillUnitOnMapExpr, tile: Tiles_I
         return false;
     }
 }
-function evalActPlayerIndex(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number | null {
+function evalActPlayerIndex(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): number | null {
     const act = action.getActPlayerIndex();
     if (!act) {
         return null;
@@ -520,7 +519,7 @@ function evalActPlayerIndex(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITil
         return null;
     }
 }
-function evalActUnitType(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number | null {
+function evalActUnitType(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): number | null {
     const act = action.getActUnitType();
     if (!act) {
         return null;
@@ -538,7 +537,7 @@ function evalActUnitType(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile):
         return null;
     }
 }
-function evalActActionState(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number {
+function evalActActionState(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = Units_Constants.ActionStateId.Idle;
     const act             = action.getActActionState();
     if (!act) {
@@ -557,7 +556,7 @@ function evalActActionState(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITil
         return defaultValue;
     }
 }
-function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
+function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, unitType: number): number {
     const defaultValue = tile.getGameConfig().getUnitTemplateCfg(unitType)?.getPrimaryWeaponMaxAmmo() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -583,7 +582,7 @@ function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Til
         return defaultValue;
     }
 }
-function evalActCurrentHp(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
+function evalActCurrentHp(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, unitType: number): number {
     const defaultValue = Helpers_Misc.getExisted(tile.getGameConfig().getUnitTemplateCfg(unitType)?.getMaxHp());
     const act = action.getActCurrentHp();
     if (!act) {
@@ -627,7 +626,7 @@ function evalActCurrentHp(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile,
 //         return defaultValue;
 //     }
 // }
-function evalActIsDiving(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): boolean {
+function evalActIsDiving(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, unitType: number): boolean {
     const unitCfg = Helpers_Misc.getExisted(tile.getGameConfig().getUnitTemplateCfg(unitType));
     if (unitCfg.getDiveCfg() == null) {
         return false;
@@ -650,7 +649,7 @@ function evalActIsDiving(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, 
         return defaultValue;
     }
 }
-function evalActFlareCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
+function evalActFlareCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, unitType: number): number {
     const defaultValue = tile.getGameConfig().getUnitTemplateCfg(unitType)?.getFlareMaxAmmo() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -676,7 +675,7 @@ function evalActFlareCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile
         return defaultValue;
     }
 }
-function evalActCurrentFuel(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
+function evalActCurrentFuel(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, unitType: number): number {
     const defaultValue = Helpers_Misc.getExisted(tile.getGameConfig().getUnitTemplateCfg(unitType)?.getMaxFuel());
     const act = action.getActCurrentFuel();
     if (!act) {
@@ -698,7 +697,7 @@ function evalActCurrentFuel(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITil
         return defaultValue;
     }
 }
-function evalActCurrentBuildMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
+function evalActCurrentBuildMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, unitType: number): number {
     const defaultValue = tile.getGameConfig().getUnitTemplateCfg(unitType)?.getMaxBuildMaterial() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -724,7 +723,7 @@ function evalActCurrentBuildMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles_I
         return defaultValue;
     }
 }
-function evalActCurrentProduceMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
+function evalActCurrentProduceMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, unitType: number): number {
     const defaultValue = tile.getGameConfig().getUnitTemplateCfg(unitType)?.getMaxProduceMaterial() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -750,7 +749,7 @@ function evalActCurrentProduceMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles
         return defaultValue;
     }
 }
-function evalActCurrentPromotion(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number {
+function evalActCurrentPromotion(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue    = tile.getGameConfig().getUnitMaxPromotion();
     const act             = action.getActCurrentPromotion();
     if (!act) {
@@ -795,7 +794,7 @@ function evalActCurrentPromotion(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile
 //         return defaultValue;
 //     }
 // }
-function evalActIsCoOnboard(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): boolean {
+function evalActIsCoOnboard(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = false;
     const act             = action.getActIsCoOnboard();
     if (!act) {
@@ -813,7 +812,7 @@ function evalActIsCoOnboard(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITil
         return defaultValue;
     }
 }
-function evalActAiMode(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number {
+function evalActAiMode(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = Units_Constants.AiModeId.Normal;
     const act             = action.getActAiMode();
     if (!act) {
@@ -832,7 +831,7 @@ function evalActAiMode(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): n
         return defaultValue;
     }
 }
-function evalActGroupedTagId(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number {
+function evalActGroupedTagId(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = 0;
     const act             = action.getActGroupedTagId();
     if (!act) {
@@ -854,7 +853,7 @@ function evalActGroupedTagId(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITi
         return defaultValue;
     }
 }
-function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number[] {
+function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): number[] {
     const act = action.getActForbiddenGroupedLocationIdArray();
     if (!act) {
         return [];
@@ -875,7 +874,7 @@ function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitOnMapExpr, ti
         return [];
     }
 }
-function evalActAiWeightedDestination(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight | null {
+function evalActAiWeightedDestination(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight | null {
     const act = action.getActAiWeightedDestination();
     if (!act) {
         return null;
@@ -930,7 +929,7 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapExpr, isFast
     unitMap.setNextUnitId(nextUnitId);
     applyNewUnitDataArray(newUnitDataList, war, isFast);
 }
-function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitId: number): SerialUnit | null {
+function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, unitId: number): SerialUnit | null {
     const unitType = evalActUnitType(action, tile);
     if (unitType == null) {
         return null;
@@ -989,7 +988,7 @@ function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile
 function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
-    const unitArray     : Units_IUnit.IUnit[] = [];
+    const unitArray     : Units_Unit.Unit[] = [];
     for (const unitData of unitDataArray) {
         const unit = new Units_Unit.Unit();
         unit.init(unitData, gameConfig);

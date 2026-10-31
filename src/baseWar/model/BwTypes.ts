@@ -1,7 +1,7 @@
 import {
     type Units_Constants,
     type GameConfigs_GameConfig,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
@@ -18,8 +18,8 @@ export interface DamagePreviewSettings {
 export interface DataForUnitAction {
     actionType          : Units_Constants.ActionTypeId;
     callback            : () => void;
-    unitForLaunch?      : Units_IUnit.IUnit;
-    unitForDrop?        : Units_IUnit.IUnit;
+    unitForLaunch?      : Units_Unit.Unit;
+    unitForDrop?        : Units_Unit.Unit;
     produceUnitType?    : number;
     costForProduceUnit? : number;
 }

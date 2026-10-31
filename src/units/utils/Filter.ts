@@ -12,7 +12,7 @@ import {
     Helpers_Collection,
     Lang_Constants,
     type GameConfigs_GameConfig,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MapSize,
 } from "../../internal.ts";
 import type { UnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFilter.ts";
@@ -21,7 +21,7 @@ export function checkIsValid(data: UnitFilter, playersCountUnneutral: number, ma
     return getErrorTip(data, playersCountUnneutral, mapSize, gameConfig) == null;
 }
 
-export function checkIsMeet(data: UnitFilter, unit: Units_IUnit.IUnit): boolean {
+export function checkIsMeet(data: UnitFilter, unit: Units_Unit.Unit): boolean {
     {
         const con = data.getConPlayerIndex();
         if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, unit.getPlayerIndex()))) {

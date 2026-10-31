@@ -18,9 +18,8 @@ import {
     Locations_Constants,
     Players_Constants,
     Ui_Components_UiContainer,
-    type Tiles_ITileMap,
-    type Tiles_ITileMapView,
-    type Tiles_ITileView,
+    type Tiles_TileMap,
+    type Tiles_TileView,
     type Ui_Interfaces_IUiImage,
     type Notifications_Types,
     Visibilities_Utils,
@@ -33,7 +32,7 @@ import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/
 const getGridWidth  = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
-export class TileMapView extends Ui_Components_UiContainer.UiContainer implements Tiles_ITileMapView.ITileMapView {
+export class TileMapView extends Ui_Components_UiContainer.UiContainer {
     private readonly _borderLayer               = new Ui_Components_UiContainer.UiContainer();
     private readonly _imgCornerUL               = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0000` });
     private readonly _imgCornerUR               = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0001` });
@@ -44,7 +43,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
     private readonly _imgBorderD                = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0002` });
     private readonly _imgBorderL                = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0003` });
 
-    private readonly _tileViewArray             : Tiles_ITileView.ITileView[] = [];
+    private readonly _tileViewArray             : Tiles_TileView.TileView[] = [];
     private readonly _baseLayer                 = new Ui_Components_UiContainer.UiContainer();
     private readonly _decorationLayer           = new Ui_Components_UiContainer.UiContainer();
     private readonly _gridBorderLayer           = new Ui_Components_UiContainer.UiContainer();
@@ -71,7 +70,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
         { type : "UserSettingsOpacitySettingsChanged",                  callback : this._onNotifyUserSettingsOpacitySettingsChanged },
     ];
 
-    private _tileMap?: Tiles_ITileMap.ITileMap;
+    private _tileMap?: Tiles_TileMap.TileMap;
 
     public constructor() {
         super();
@@ -94,7 +93,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
         this.setIsTouchChildrenEnabled(false);
     }
 
-    public init(tileMap: Tiles_ITileMap.ITileMap): void {
+    public init(tileMap: Tiles_TileMap.TileMap): void {
         this._tileMap = tileMap;
 
         {
@@ -215,7 +214,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
 
         this._updateBorderLayer();
     }
-    public fastInit(tileMap: Tiles_ITileMap.ITileMap): void {
+    public fastInit(tileMap: Tiles_TileMap.TileMap): void {
         this._tileMap = tileMap;
     }
 

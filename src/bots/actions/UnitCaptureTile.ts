@@ -4,13 +4,13 @@ import {
     Helpers_Misc,
     type Bots_CommonParams,
     type AuxiliaryTypes_GridIndex,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
     type Bots_Types,
 } from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export async function getScoreAndActionUnitCaptureTile(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+export async function getScoreAndActionUnitCaptureTile(commonParams: Bots_CommonParams.CommonParams, unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
     await Timer_TimerModel.checkAndCallLater();
 
     const tile = commonParams.getWar().getTileMap().getTile(gridIndex);
@@ -34,7 +34,7 @@ export async function getScoreAndActionUnitCaptureTile(commonParams: Bots_Common
     }
 }
 
-async function getScoreForActionUnitCaptureTile(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, destination: AuxiliaryTypes_GridIndex.GridIndex): Promise<number> {
+async function getScoreForActionUnitCaptureTile(commonParams: Bots_CommonParams.CommonParams, unit: Units_Unit.Unit, destination: AuxiliaryTypes_GridIndex.GridIndex): Promise<number> {
     await Timer_TimerModel.checkAndCallLater();
 
     const tile                  = commonParams.getWar().getTileMap().getTile(destination);

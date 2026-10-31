@@ -12,7 +12,7 @@ import {
     Players_Constants,
     Lang_Constants,
     type GameConfigs_GameConfig,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
 } from "../../internal.ts";
 import type { TileFilter } from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
@@ -21,7 +21,7 @@ export function checkIsValid(data: TileFilter, playersCountUnneutral: number, ma
     return getErrorTip(data, playersCountUnneutral, mapSize, gameConfig) == null;
 }
 
-export function checkIsMeet(data: TileFilter, tile: Tiles_ITile.ITile): boolean {
+export function checkIsMeet(data: TileFilter, tile: Tiles_Tile.Tile): boolean {
     {
         const con = data.getConPlayerIndex();
         if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, tile.getPlayerIndex()))) {
@@ -129,7 +129,7 @@ export function checkIsMeet(data: TileFilter, tile: Tiles_ITile.ITile): boolean 
 
     return true;
 }
-export function checkIsMeetAsOutOfVision(data: TileFilter, tile: Tiles_ITile.ITile): boolean {
+export function checkIsMeetAsOutOfVision(data: TileFilter, tile: Tiles_Tile.Tile): boolean {
     const war         = tile.getWar();
     const playerIndex = (tile.getTemplateCfg().getIsAlwaysShowOwner())
         ? tile.getPlayerIndex()

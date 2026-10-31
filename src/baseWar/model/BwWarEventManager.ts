@@ -77,7 +77,7 @@ import {
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarEventManager,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
     type WarEvents_Types,
 } from "../../internal.ts";
@@ -403,7 +403,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
-    public getOpaAttackPowerModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
+    public getOpaAttackPowerModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
@@ -417,7 +417,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
-    public getOpaDefenseModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
+    public getOpaDefenseModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
@@ -431,7 +431,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
-    public getOpaMoveRangeModifier(unit: Units_IUnit.IUnit): number {
+    public getOpaMoveRangeModifier(unit: Units_Unit.Unit): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
@@ -445,7 +445,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
-    public getOpaMaxAttackRangeModifier(unit: Units_IUnit.IUnit): number {
+    public getOpaMaxAttackRangeModifier(unit: Units_Unit.Unit): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
@@ -459,7 +459,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
-    public getOpaCanAttackAfterMoving(unit: Units_IUnit.IUnit): boolean | null {
+    public getOpaCanAttackAfterMoving(unit: Units_Unit.Unit): boolean | null {
         for (const opaId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(opaId);
             {
@@ -475,7 +475,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return null;
     }
-    public getOpaUnitVisionRangeModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
+    public getOpaUnitVisionRangeModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
@@ -489,7 +489,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
-    public getOpaIsPenetratingVision(unit: Units_IUnit.IUnit): boolean | null {
+    public getOpaIsPenetratingVision(unit: Units_Unit.Unit): boolean | null {
         for (const opaId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(opaId);
             {
@@ -505,7 +505,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return null;
     }
-    public getOpaLuckLowerLimitModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
+    public getOpaLuckLowerLimitModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
@@ -519,7 +519,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
-    public getOpaLuckUpperLimitModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
+    public getOpaLuckUpperLimitModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
@@ -533,7 +533,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
-    public getOpaFlareRadiusModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
+    public getOpaFlareRadiusModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
@@ -547,7 +547,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
-    public getOpaFlareRangeModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
+    public getOpaFlareRangeModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);

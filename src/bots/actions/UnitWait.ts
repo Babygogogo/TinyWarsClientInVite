@@ -1,12 +1,12 @@
 import {
     Timer_TimerModel,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
     type Bots_Types,
 } from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export async function getScoreAndActionUnitWait(unit: Units_IUnit.IUnit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction> {
+export async function getScoreAndActionUnitWait(unit: Units_Unit.Unit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction> {
     await Timer_TimerModel.checkAndCallLater();
 
     const score = await getScoreForActionUnitWait();

@@ -6,8 +6,8 @@ import {
     Helpers_Misc,
     Players_Constants,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
+    type Units_Unit,
     type AuxiliaryTypes_MapSize,
     type Bots_Types,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -25,15 +25,15 @@ export class CommonParams {
     private readonly _mapSize                   : AuxiliaryTypes_MapSize.MapSize;
     private readonly _unitsInfoDict             : Map<number, UnitsInfo>;
     private readonly _unitValueRatio            : number;
-    private readonly _visibleUnits              : Set<Units_IUnit.IUnit>;
+    private readonly _visibleUnits              : Set<Units_Unit.Unit>;
     private readonly _globalOffenseBonuses      : Map<number, number>;
     private readonly _globalDefenseBonuses      : Map<number, number>;
     private readonly _settingsLuckValueDict     : Map<number, number>;
 
-    private readonly _bestScoreAndActionDict    = new Map<Units_IUnit.IUnit, Bots_Types.ScoreAndAction>();
-    private readonly _unitMoveCostDict          = new Map<Units_IUnit.IUnit, Map<Tiles_ITile.ITile, AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>>>();
-    private readonly _canAttackAfterMovingDict  = new Map<Units_IUnit.IUnit, boolean>();
-    private readonly _unitVisionInfoDict        = new Map<Units_IUnit.IUnit, AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo>();
+    private readonly _bestScoreAndActionDict    = new Map<Units_Unit.Unit, Bots_Types.ScoreAndAction>();
+    private readonly _unitMoveCostDict          = new Map<Units_Unit.Unit, Map<Tiles_Tile.Tile, AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>>>();
+    private readonly _canAttackAfterMovingDict  = new Map<Units_Unit.Unit, boolean>();
+    private readonly _unitVisionInfoDict        = new Map<Units_Unit.Unit, AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo>();
 
     public static async create(war: BaseWar_Interface_IBwWar.IBwWar): Promise<CommonParams> {
         const playerIndexInTurn     = war.getPlayerIndexInTurn();
@@ -172,7 +172,7 @@ export class CommonParams {
         war                     : BaseWar_Interface_IBwWar.IBwWar;
         unitsInfoDict           : Map<number, UnitsInfo>;
         unitValueRatio          : number;
-        visibleUnits            : Set<Units_IUnit.IUnit>;
+        visibleUnits            : Set<Units_Unit.Unit>;
         globalOffenseBonuses    : Map<number, number>;
         globalDefenseBonuses    : Map<number, number>;
         settingsLuckValueDict   : Map<number, number>;
@@ -203,7 +203,7 @@ export class CommonParams {
     public getUnitValueRatio(): number {
         return this._unitValueRatio;
     }
-    public getVisibleUnits(): Set<Units_IUnit.IUnit> {
+    public getVisibleUnits(): Set<Units_Unit.Unit> {
         return this._visibleUnits;
     }
     public getGlobalOffenseBonuses(): Map<number, number> {
@@ -215,11 +215,11 @@ export class CommonParams {
     public getSettingsLuckValueDict(): Map<number, number> {
         return this._settingsLuckValueDict;
     }
-    public getBestScoreAndActionDict(): Map<Units_IUnit.IUnit, Bots_Types.ScoreAndAction> {
+    public getBestScoreAndActionDict(): Map<Units_Unit.Unit, Bots_Types.ScoreAndAction> {
         return this._bestScoreAndActionDict;
     }
 
-    public getCanAttackAfterMoving(unit: Units_IUnit.IUnit): boolean {
+    public getCanAttackAfterMoving(unit: Units_Unit.Unit): boolean {
         const dict = this._canAttackAfterMovingDict;
         if (!dict.has(unit)) {
             dict.set(unit, unit.getFinalCanAttackAfterMoving());
@@ -228,7 +228,7 @@ export class CommonParams {
         return dict.get(unit) ?? false;
     }
 
-    public getUnitVisionInfo(unit: Units_IUnit.IUnit): AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo {
+    public getUnitVisionInfo(unit: Units_Unit.Unit): AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo {
         const dict = this._unitVisionInfoDict;
         if (!dict.has(unit)) {
             dict.set(unit, unit.getVisionInfo());
@@ -237,7 +237,7 @@ export class CommonParams {
         return Helpers_Misc.getExisted(dict.get(unit));
     }
 
-    public getMoveCost(unit: Units_IUnit.IUnit, tile: Tiles_ITile.ITile): number | null {
+    public getMoveCost(unit: Units_Unit.Unit, tile: Tiles_Tile.Tile): number | null {
         const moveCostDict = this._unitMoveCostDict;
         if (!moveCostDict.has(unit)) {
             moveCostDict.set(unit, new Map());

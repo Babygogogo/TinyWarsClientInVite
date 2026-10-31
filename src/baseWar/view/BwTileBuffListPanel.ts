@@ -12,7 +12,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -23,7 +23,7 @@ import {
 import type { TileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
 
 export interface OpenData {
-    tile        : Tiles_ITile.ITile;
+    tile        : Tiles_Tile.Tile;
     canModify   : boolean;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
@@ -210,7 +210,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
 interface DataForBuffRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index       : number;
-    tile        : Tiles_ITile.ITile;
+    tile        : Tiles_Tile.Tile;
     buff        : TileBuff;
     isLast      : boolean;
     canModify   : boolean;

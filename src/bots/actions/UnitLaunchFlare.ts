@@ -5,13 +5,13 @@ import {
     Helpers_Misc,
     type Bots_CommonParams,
     type AuxiliaryTypes_GridIndex,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
     type Bots_Types,
 } from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export async function getScoreAndActionUnitLaunchFlare(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, destination: AuxiliaryTypes_GridIndex.GridIndex, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+export async function getScoreAndActionUnitLaunchFlare(commonParams: Bots_CommonParams.CommonParams, unit: Units_Unit.Unit, destination: AuxiliaryTypes_GridIndex.GridIndex, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
     await Timer_TimerModel.checkAndCallLater();
 
     const war = commonParams.getWar();
@@ -47,7 +47,7 @@ export async function getScoreAndActionUnitLaunchFlare(commonParams: Bots_Common
     return Bots_Utils.getBestScoreAndAction(await Promise.all(promiseArray), commonParams);
 }
 
-async function getScoreForActionUnitLaunchFlare(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, destination: AuxiliaryTypes_GridIndex.GridIndex, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex): Promise<number> {
+async function getScoreForActionUnitLaunchFlare(commonParams: Bots_CommonParams.CommonParams, unit: Units_Unit.Unit, destination: AuxiliaryTypes_GridIndex.GridIndex, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex): Promise<number> {
     await Timer_TimerModel.checkAndCallLater();
 
     const flareRadius   = Helpers_Misc.getExisted(unit.getFlareRadius(destination), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForUnitLaunchFlare_00);

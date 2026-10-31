@@ -16,7 +16,6 @@ import {
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiScrollList,
-    type Units_IUnit,
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
@@ -200,7 +199,7 @@ interface DataForUnitActionRenderer extends Ui_Types_UiListItemData.UiListItemDa
     war                 : BaseWar_Interface_IBwWar.IBwWar;
     actionType          : Units_Constants.ActionTypeId;
     callback            : () => void;
-    unit?               : Units_IUnit.IUnit;
+    unit?               : Units_Unit.Unit;
     costForProduceUnit  : number | null;
     isLastAction?       : boolean;
 }

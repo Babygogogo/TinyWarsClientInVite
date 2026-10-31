@@ -23,8 +23,7 @@ import {
     type Egret_Egret,
     type MapEditor_Interface_IMeDrawer,
     type MapEditor_Interface_IMeWar,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
     type Notifications_Types,
 } from "../../internal.ts";
 
@@ -41,8 +40,8 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
     private _dataForDrawTileBase                : MapEditor_Model_MeTypes.DataForDrawTileBase | null = null;
     private _dataForDrawTileDecoration          : MapEditor_Model_MeTypes.DataForDrawTileDecoration | null = null;
     private _dataForPasteTile                   : SerialTile | null = null;
-    private _dataForPasteUnit                   : Units_IUnit.IUnit[] | null = null;
-    private _drawTargetUnit                     : Units_IUnit.IUnit | null = null;
+    private _dataForPasteUnit                   : Units_Unit.Unit[] | null = null;
+    private _drawTargetUnit                     : Units_Unit.Unit | null = null;
     private _dataForAddTileToLocation           : MapEditor_Model_MeTypes.DataForAddTileToLocation | null = null;
     private _dataForDeleteTileFromLocation      : MapEditor_Model_MeTypes.DataForDeleteTileFromLocation | null = null;
     private _symmetricalDrawType                = Geometries_Constants.SymmetryTypeId.None;
@@ -183,10 +182,10 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
     public getDataForPasteTile(): SerialTile | null {
         return this._dataForPasteTile;
     }
-    public setDataForPasteUnit(data: Units_IUnit.IUnit[]): void {
+    public setDataForPasteUnit(data: Units_Unit.Unit[]): void {
         this._dataForPasteUnit = data;
     }
-    public getDataForPasteUnit(): Units_IUnit.IUnit[] | null {
+    public getDataForPasteUnit(): Units_Unit.Unit[] | null {
         return this._dataForPasteUnit;
     }
 
@@ -206,10 +205,10 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         this._setDrawTargetUnit(unit);
         this._setMode(MapEditors_Constants.DrawerMode.DrawUnit);
     }
-    private _setDrawTargetUnit(unit: Units_IUnit.IUnit): void {
+    private _setDrawTargetUnit(unit: Units_Unit.Unit): void {
         this._drawTargetUnit = unit;
     }
-    public getDrawTargetUnit(): Units_IUnit.IUnit | null {
+    public getDrawTargetUnit(): Units_Unit.Unit | null {
         return this._drawTargetUnit;
     }
 
@@ -1006,7 +1005,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             return Helpers_Misc.getExisted(revisedUnitIdDict.get(rawUnitId));
         };
 
-        const addedUnits: Units_IUnit.IUnit[] = [];
+        const addedUnits: Units_Unit.Unit[] = [];
         for (const rawUnit of this.getDataForPasteUnit() ?? []) {
             const unitData = rawUnit.serialize();
             unitData.setUnitId(getRevisedUnitIdDict(unitData.getUnitId()));
@@ -1140,7 +1139,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
     }
 }
 
-function generateSerialTileForDeleteTileObject(tile: Tiles_ITile.ITile, gcData: GameConfigs_GameConfig.GameConfig): SerialTile {
+function generateSerialTileForDeleteTileObject(tile: Tiles_Tile.Tile, gcData: GameConfigs_GameConfig.GameConfig): SerialTile {
     const data = tile.serialize();
     data.setPlayerIndex(Players_Constants.PlayerIndex.Neutral);
     data.setObjectType(Tiles_Constants_Common.ObjectTypeId.Empty);

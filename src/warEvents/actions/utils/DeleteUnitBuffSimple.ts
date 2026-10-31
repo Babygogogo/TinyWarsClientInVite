@@ -9,7 +9,7 @@ import {
     type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -134,7 +134,7 @@ export async function applyWithExtraData(_action: WeaDeleteUnitBuffSimple): Prom
 }
 
 export async function applyWithoutExtraData(action: WeaDeleteUnitBuffSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const targetUnitDict = new Map<Units_IUnit.IUnit, UnitBuff[]>();
+    const targetUnitDict = new Map<Units_Unit.Unit, UnitBuff[]>();
     {
         const tileMap               = war.getTileMap();
         const conTileFilter         = action.getConTileFilter();

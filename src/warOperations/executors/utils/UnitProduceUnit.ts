@@ -18,7 +18,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    type Units_IUnit,
 } from "../../../internal.ts";
 
 import type { WoUnitProduceUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitProduceUnit.ts";
@@ -248,7 +247,7 @@ async function normalExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, ac
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
-function getPromotionForUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, producerUnit: Units_IUnit.IUnit, targetUnitType: number): number {
+function getPromotionForUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, producerUnit: Units_Unit.Unit, targetUnitType: number): number {
     const player                    = producerUnit.getPlayer();
     const coZoneRadius              = player.getCoZoneRadius();
     const gridIndex                 = producerUnit.getGridIndex();

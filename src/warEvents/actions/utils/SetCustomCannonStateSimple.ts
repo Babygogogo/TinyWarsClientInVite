@@ -13,7 +13,7 @@ import {
     type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -397,7 +397,7 @@ export async function applyWithExtraData(_action: WeaSetCustomCannonStateSimple)
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetCustomCannonStateSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const targetTileArray: Tiles_ITile.ITile[] = [];
+    const targetTileArray: Tiles_Tile.Tile[] = [];
     {
         const unitMap           = war.getUnitMap();
         const conTileFilter     = action.getConTileFilter();
@@ -438,7 +438,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomCannonStateSimpl
         }
     }
 
-    const dataDict = new Map<Tiles_ITile.ITile, TileCustomCannonData>();
+    const dataDict = new Map<Tiles_Tile.Tile, TileCustomCannonData>();
     {
         for (const tile of targetTileArray) {
             dataDict.set(tile, TileCustomCannonData.fromJson({
@@ -503,7 +503,7 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function evalActRangeForUp(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActRangeForUp(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCannonData()?.getRangeForUp() ?? 0;
     const act           = action.getActRangeForUp();
     if (!act) {
@@ -516,7 +516,7 @@ function evalActRangeForUp(action: WeaSetCustomCannonStateSimple, tile: Tiles_IT
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActRangeForDown(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActRangeForDown(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCannonData()?.getRangeForDown() ?? 0;
     const act           = action.getActRangeForDown();
     if (!act) {
@@ -529,7 +529,7 @@ function evalActRangeForDown(action: WeaSetCustomCannonStateSimple, tile: Tiles_
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActRangeForLeft(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActRangeForLeft(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCannonData()?.getRangeForLeft() ?? 0;
     const act           = action.getActRangeForLeft();
     if (!act) {
@@ -542,7 +542,7 @@ function evalActRangeForLeft(action: WeaSetCustomCannonStateSimple, tile: Tiles_
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActRangeForRight(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActRangeForRight(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCannonData()?.getRangeForRight() ?? 0;
     const act           = action.getActRangeForRight();
     if (!act) {
@@ -555,7 +555,7 @@ function evalActRangeForRight(action: WeaSetCustomCannonStateSimple, tile: Tiles
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActPriority(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActPriority(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCannonData()?.getPriority() ?? 0;
     const act           = action.getActPriority();
     if (act == null) {
@@ -568,7 +568,7 @@ function evalActPriority(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITil
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActCanAffectSelf(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanAffectSelf(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCannonData()?.getCanAffectSelf();
     const act           = action.getActCanAffectSelf();
     if (act == null) {
@@ -577,7 +577,7 @@ function evalActCanAffectSelf(action: WeaSetCustomCannonStateSimple, tile: Tiles
 
     return act;
 }
-function evalActCanAffectAlly(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanAffectAlly(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCannonData()?.getCanAffectAlly();
     const act           = action.getActCanAffectAlly();
     if (act == null) {
@@ -586,7 +586,7 @@ function evalActCanAffectAlly(action: WeaSetCustomCannonStateSimple, tile: Tiles
 
     return act;
 }
-function evalActCanAffectEnemy(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanAffectEnemy(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCannonData()?.getCanAffectEnemy();
     const act           = action.getActCanAffectEnemy();
     if (act == null) {
@@ -595,7 +595,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomCannonStateSimple, tile: Tile
 
     return act;
 }
-function evalActMaxTargetCount(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActMaxTargetCount(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCannonData()?.getMaxTargetCount() ?? 0;
     const act           = action.getActMaxTargetCount();
     if (!act) {
@@ -608,7 +608,7 @@ function evalActMaxTargetCount(action: WeaSetCustomCannonStateSimple, tile: Tile
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetHp(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetHp(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCannonData()?.getOffsetHp() ?? 0;
     const act           = action.getActOffsetHp();
     if (!act) {
@@ -621,7 +621,7 @@ function evalActOffsetHp(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITil
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCannonData()?.getOffsetFuelPercentage() ?? 0;
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
@@ -634,7 +634,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateSimple, tile
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCannonData()?.getOffsetPrimaryAmmoPercentage() ?? 0;
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
@@ -647,7 +647,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateSimpl
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActCanBeFatal(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanBeFatal(action: WeaSetCustomCannonStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCannonData()?.getCanBeFatal();
     const act           = action.getActCanBeFatal();
     if (act == null) {

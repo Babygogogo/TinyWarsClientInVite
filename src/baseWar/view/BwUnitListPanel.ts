@@ -28,14 +28,14 @@ import {
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
-    type Units_IUnit,
+    type Units_Unit,
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
 
 export interface OpenData {
     war                     : BaseWar_Interface_IBwWar.IBwWar;
-    callbackForMoveCursor   : (unit: Units_IUnit.IUnit) => void;
-    callbackForSelectUnit   : (unit: Units_IUnit.IUnit) => void;
+    callbackForMoveCursor   : (unit: Units_Unit.Unit) => void;
+    callbackForSelectUnit   : (unit: Units_Unit.Unit) => void;
 }
 
 let Alpha = 0.8;
@@ -108,7 +108,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         await super._onClosed();
     }
 
-    public updateOnSelectedUnit(unit: Units_IUnit.IUnit): void {
+    public updateOnSelectedUnit(unit: Units_Unit.Unit): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
@@ -324,7 +324,7 @@ const _IMAGE_SOURCE_MATERIAL    = `c03_t99_s02_f04`;
 const _IMAGE_SOURCE_FLARE       = `c03_t99_s02_f02`;
 
 interface DataForUnitRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    unit                    : Units_IUnit.IUnit;
+    unit                    : Units_Unit.Unit;
     dataForTileView         : BaseWar_Model_BwTypes.DataForTileView;
     cursor                  : BaseWar_Interface_IBwCursor.IBwCursor;
     panel                   : Panel;

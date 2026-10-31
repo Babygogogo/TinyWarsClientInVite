@@ -3,13 +3,13 @@ import {
     Numbers_Utils,
     Numbers_Constants,
     type Bots_CommonParams,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
     type Bots_Types,
 } from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export async function getScoreAndActionUnitProduceUnit(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+export async function getScoreAndActionUnitProduceUnit(commonParams: Bots_CommonParams.CommonParams, unit: Units_Unit.Unit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
     await Timer_TimerModel.checkAndCallLater();
 
     if ((pathNodes.length !== 1) || (unit.getLoaderUnitId() != null)) {

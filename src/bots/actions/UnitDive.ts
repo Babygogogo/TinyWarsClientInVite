@@ -1,12 +1,12 @@
 import {
     Timer_TimerModel,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
     type Bots_Types,
 } from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export async function getScoreAndActionUnitDive(unit: Units_IUnit.IUnit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+export async function getScoreAndActionUnitDive(unit: Units_Unit.Unit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
     await Timer_TimerModel.checkAndCallLater();
 
     if (!unit.checkCanDive()) {
@@ -29,7 +29,7 @@ export async function getScoreAndActionUnitDive(unit: Units_IUnit.IUnit, pathNod
     }
 }
 
-async function getScoreForActionUnitDive(unit: Units_IUnit.IUnit): Promise<number> {
+async function getScoreForActionUnitDive(unit: Units_Unit.Unit): Promise<number> {
     await Timer_TimerModel.checkAndCallLater();
 
     return unit.checkIsFuelInShort() ? -10 : 10;

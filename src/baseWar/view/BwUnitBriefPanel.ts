@@ -13,7 +13,7 @@ import {
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
-    type Units_IUnit,
+    type Units_Unit,
     Helpers_PointerInput,
     Visibilities_Utils,
     Tween_Executor,
@@ -44,7 +44,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _cellList           : BwUnitBriefCell[] = [];
 
-    private _unitList   : Units_IUnit.IUnit[] = [];
+    private _unitList   : Units_Unit.Unit[] = [];
     private _isExpanded = true;
 
     public updateOnLoadedSkin(): void {
@@ -314,7 +314,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
 
     private readonly _unitView      = new Units_UnitView.UnitView();
 
-    private _unit               : Units_IUnit.IUnit | null = null;
+    private _unit               : Units_Unit.Unit | null = null;
 
     public constructor() {
         super();
@@ -338,7 +338,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
         this._updateView();
     }
 
-    public setUnit(unit: Units_IUnit.IUnit): void {
+    public setUnit(unit: Units_Unit.Unit): void {
         this._unit = unit;
         this._updateView();
     }

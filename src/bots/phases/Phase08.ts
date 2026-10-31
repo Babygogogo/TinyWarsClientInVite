@@ -3,7 +3,7 @@ import {
     Bots_Utils,
     Timer_TimerModel,
     type Bots_CommonParams,
-    type Units_IUnit,
+    type Units_Unit,
     type Bots_Types,
 } from "../../internal.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -64,12 +64,12 @@ export async function getActionForPhase08(commonParams: Bots_CommonParams.Common
     }
 }
 
-async function getCandidateUnitsForPhase8(commonParams: Bots_CommonParams.CommonParams): Promise<Units_IUnit.IUnit[]> {
+async function getCandidateUnitsForPhase8(commonParams: Bots_CommonParams.CommonParams): Promise<Units_Unit.Unit[]> {
     await Timer_TimerModel.checkAndCallLater();
 
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
     const unitMap           = commonParams.getWar().getUnitMap();
-    const units             : Units_IUnit.IUnit[] = [];
+    const units             : Units_Unit.Unit[] = [];
     for (const unit of unitMap.getAllUnitsOnMap()) {
         if ((unit.getPlayerIndex() === playerIndexInTurn)       &&
             (unit.getActionState() === Units_Constants.ActionStateId.Idle)    &&

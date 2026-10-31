@@ -13,8 +13,8 @@ import {
     ExpressionParsers_Contexts_Tile,
     ExpressionParsers_Contexts_Unit,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
+    type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetUnitPositionExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitPositionExpr.ts";
@@ -116,7 +116,7 @@ export function getErrorTip(data: WeaSetUnitPositionExpr, customCounterNameSet: 
     return null;
 }
 
-function checkIsMeetConditionForUnit(action: WeaSetUnitPositionExpr, unit: Units_IUnit.IUnit): boolean {
+function checkIsMeetConditionForUnit(action: WeaSetUnitPositionExpr, unit: Units_Unit.Unit): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -124,7 +124,7 @@ function checkIsMeetConditionForUnit(action: WeaSetUnitPositionExpr, unit: Units
         return false;
     }
 }
-function evalActDestination(action: WeaSetUnitPositionExpr, unit: Units_IUnit.IUnit): AuxiliaryTypes_GridIndex.GridIndex | null {
+function evalActDestination(action: WeaSetUnitPositionExpr, unit: Units_Unit.Unit): AuxiliaryTypes_GridIndex.GridIndex | null {
     const act = action.getActDestination();
     if (!act) {
         return null;
@@ -150,7 +150,7 @@ function evalActDestination(action: WeaSetUnitPositionExpr, unit: Units_IUnit.IU
         return null;
     }
 }
-function evalActAlternativeTileFilter(action: WeaSetUnitPositionExpr, tile: Tiles_ITile.ITile): boolean {
+function evalActAlternativeTileFilter(action: WeaSetUnitPositionExpr, tile: Tiles_Tile.Tile): boolean {
     const act = action.getActAlternativeTileFilter();
     if (!act) {
         return false;
@@ -170,7 +170,7 @@ export async function applyWithExtraData(_action: WeaSetUnitPositionExpr): Promi
     // nothing to do
 }
 export function applyWithoutExtraData(action: WeaSetUnitPositionExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const destinationDict = new Map<Units_IUnit.IUnit, AuxiliaryTypes_GridIndex.GridIndex>();
+    const destinationDict = new Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>();
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
             continue;
@@ -185,7 +185,7 @@ export function applyWithoutExtraData(action: WeaSetUnitPositionExpr, isFast: bo
     return applyDestinationDict(destinationDict, war, action, isFast);
 }
  
-async function applyDestinationDict(dict: Map<Units_IUnit.IUnit, AuxiliaryTypes_GridIndex.GridIndex>, war: BaseWar_Interface_IBwWar.IBwWar, action: WeaSetUnitPositionExpr, isFast: boolean): Promise<void> {
+async function applyDestinationDict(dict: Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>, war: BaseWar_Interface_IBwWar.IBwWar, action: WeaSetUnitPositionExpr, isFast: boolean): Promise<void> {
     const unitMap       = war.getUnitMap();
     const tileMap       = war.getTileMap();
     const mapSize       = tileMap.getMapSize();
@@ -260,7 +260,7 @@ async function applyDestinationDict(dict: Map<Units_IUnit.IUnit, AuxiliaryTypes_
     await Promise.all(promiseArray);
 }
 
-function getAlternativeDestination(action: WeaSetUnitPositionExpr, unit: Units_IUnit.IUnit, oldDestination: AuxiliaryTypes_GridIndex.GridIndex): AuxiliaryTypes_GridIndex.GridIndex | null {
+function getAlternativeDestination(action: WeaSetUnitPositionExpr, unit: Units_Unit.Unit, oldDestination: AuxiliaryTypes_GridIndex.GridIndex): AuxiliaryTypes_GridIndex.GridIndex | null {
     if (!action.getActAlternativeTileFilter()) {
         return null;
     }

@@ -13,7 +13,7 @@ import {
     type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -355,7 +355,7 @@ export async function applyWithExtraData(_action: WeaSetCustomCrystalStateSimple
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const targetTileArray: Tiles_ITile.ITile[] = [];
+    const targetTileArray: Tiles_Tile.Tile[] = [];
     {
         const unitMap           = war.getUnitMap();
         const conTileFilter     = action.getConTileFilter();
@@ -396,7 +396,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimp
         }
     }
 
-    const dataDict = new Map<Tiles_ITile.ITile, TileCustomCrystalData>();
+    const dataDict = new Map<Tiles_Tile.Tile, TileCustomCrystalData>();
     {
         for (const tile of targetTileArray) {
             dataDict.set(tile, TileCustomCrystalData.fromJson({
@@ -459,7 +459,7 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function evalActRadius(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActRadius(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getRadius() ?? 0;
     const act           = action.getActRadius();
     if (!act) {
@@ -472,7 +472,7 @@ function evalActRadius(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActPriority(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActPriority(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getPriority() ?? 0;
     const act           = action.getActPriority();
     if (act == null) {
@@ -485,7 +485,7 @@ function evalActPriority(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITi
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActCanAffectSelf(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanAffectSelf(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCrystalData()?.getCanAffectSelf();
     const act           = action.getActCanAffectSelf();
     if (act == null) {
@@ -494,7 +494,7 @@ function evalActCanAffectSelf(action: WeaSetCustomCrystalStateSimple, tile: Tile
 
     return act;
 }
-function evalActCanAffectAlly(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanAffectAlly(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCrystalData()?.getCanAffectAlly();
     const act           = action.getActCanAffectAlly();
     if (act == null) {
@@ -503,7 +503,7 @@ function evalActCanAffectAlly(action: WeaSetCustomCrystalStateSimple, tile: Tile
 
     return act;
 }
-function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCrystalData()?.getCanAffectEnemy();
     const act           = action.getActCanAffectEnemy();
     if (act == null) {
@@ -512,7 +512,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateSimple, tile: Til
 
     return act;
 }
-function evalActOffsetFund(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetFund(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getOffsetFund() ?? 0;
     const act           = action.getActOffsetFund();
     if (act == null) {
@@ -525,7 +525,7 @@ function evalActOffsetFund(action: WeaSetCustomCrystalStateSimple, tile: Tiles_I
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getOffsetEnergyPercentage() ?? 0;
     const act           = action.getActOffsetEnergyPercentage();
     if (!act) {
@@ -538,7 +538,7 @@ function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateSimple, t
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetHp(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetHp(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getOffsetHp() ?? 0;
     const act           = action.getActOffsetHp();
     if (!act) {
@@ -551,7 +551,7 @@ function evalActOffsetHp(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITi
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getOffsetFuelPercentage() ?? 0;
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
@@ -564,7 +564,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateSimple, til
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getOffsetPrimaryAmmoPercentage() ?? 0;
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
@@ -577,7 +577,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateSimp
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActCanBeFatal(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanBeFatal(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCrystalData()?.getCanBeFatal();
     const act           = action.getActCanBeFatal();
     if (act == null) {

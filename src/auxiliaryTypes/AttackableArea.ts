@@ -2,7 +2,7 @@ import {
     Helpers_Misc,
     AuxiliaryTypes_GridIndex,
     Tiles_Constants_MapWeapon,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_MovableArea,
 } from "../internal.ts";
@@ -102,7 +102,7 @@ export class AttackableArea {
         return new AttackableArea(area);
     }
 
-    public static createForTile(tile: Tiles_ITile.ITile, mapSize: AuxiliaryTypes_MapSize.MapSize): AttackableArea {
+    public static createForTile(tile: Tiles_Tile.Tile, mapSize: AuxiliaryTypes_MapSize.MapSize): AttackableArea {
         const area          : Data[][] = [];
         const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
         const tileGridIndex = tile.getGridIndex();

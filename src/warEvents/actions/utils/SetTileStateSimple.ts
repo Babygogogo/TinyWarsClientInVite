@@ -15,7 +15,7 @@ import {
     Lang_Constants,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -283,7 +283,7 @@ export async function applyWithExtraData(_action: WeaSetTileStateSimple): Promis
     // nothing to do
 }
 export async function applyWithoutExtraData(data: WeaSetTileStateSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const targetTileArray: Tiles_ITile.ITile[] = [];
+    const targetTileArray: Tiles_Tile.Tile[] = [];
     {
         const unitMap           = war.getUnitMap();
         const conTileFilter     = data.getConTileFilter();
@@ -362,7 +362,7 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function evalActPlayerIndex(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActPlayerIndex(action: WeaSetTileStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getPlayerIndex();
     const act           = action.getActPlayerIndex();
     if (!act) {
@@ -378,7 +378,7 @@ function evalActPlayerIndex(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITi
         return defaultValue;
     }
 }
-function evalActCurrentHp(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActCurrentHp(action: WeaSetTileStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getCurrentHp();
     const act           = action.getActCurrentHp();
     if (!act) {
@@ -390,7 +390,7 @@ function evalActCurrentHp(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile
         ? defaultValue
         : (newValue < 0 ? 0 : newValue);
 }
-function evalActCurrentBuildPoint(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActCurrentBuildPoint(action: WeaSetTileStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getCurrentBuildPoint();
     const act           = action.getActCurrentBuildPoint();
     if (!act) {
@@ -402,7 +402,7 @@ function evalActCurrentBuildPoint(action: WeaSetTileStateSimple, tile: Tiles_ITi
         ? defaultValue
         : (newValue < 0 ? 0 : newValue);
 }
-function evalActCurrentCapturePoint(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActCurrentCapturePoint(action: WeaSetTileStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getCurrentCapturePoint();
     const act           = action.getActCurrentCapturePoint();
     if (!act) {
@@ -414,10 +414,10 @@ function evalActCurrentCapturePoint(action: WeaSetTileStateSimple, tile: Tiles_I
         ? defaultValue
         : (newValue < 0 ? 0 : newValue);
 }
-function evalActIsHighlighted(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActIsHighlighted(action: WeaSetTileStateSimple, tile: Tiles_Tile.Tile): boolean {
     return action.getActIsHighlighted() ?? tile.getIsHighlighted();
 }
-function evalActLocationIdArray(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): number[] {
+function evalActLocationIdArray(action: WeaSetTileStateSimple, tile: Tiles_Tile.Tile): number[] {
     const act = action.getActLocationIdArray();
     if (act == null) {
         return tile.getGroupedLocationIdArray();
@@ -427,7 +427,7 @@ function evalActLocationIdArray(action: WeaSetTileStateSimple, tile: Tiles_ITile
         );
     }
 }
-function evalActCustomNameId(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
+function evalActCustomNameId(action: WeaSetTileStateSimple, tile: Tiles_Tile.Tile): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     const defaultValue  = tile.getCustomNameId();
     const act           = action.getActCustomNameId();
     if (act == null) {

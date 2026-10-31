@@ -10,7 +10,7 @@ import {
     ExpressionParsers_Contexts_Tile,
     Tiles_Constants_Common,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetCustomCannonStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCannonStateExpr.ts";
@@ -366,7 +366,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateExpr, customCounterName
     return null;
 }
 
-function checkIsMeetConditionForTile(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConditionForTile(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -374,7 +374,7 @@ function checkIsMeetConditionForTile(action: WeaSetCustomCannonStateExpr, tile: 
         return false;
     }
 }
-function evalActRangeForUp(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): number {
+function evalActRangeForUp(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getRangeForUp();
     const act           = action.getActRangeForUp();
     if (!act) {
@@ -396,7 +396,7 @@ function evalActRangeForUp(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITil
         return defaultValue;
     }
 }
-function evalActRangeForDown(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): number {
+function evalActRangeForDown(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getRangeForDown();
     const act           = action.getActRangeForDown();
     if (!act) {
@@ -418,7 +418,7 @@ function evalActRangeForDown(action: WeaSetCustomCannonStateExpr, tile: Tiles_IT
         return defaultValue;
     }
 }
-function evalActRangeForLeft(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): number {
+function evalActRangeForLeft(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getRangeForLeft();
     const act           = action.getActRangeForLeft();
     if (!act) {
@@ -440,7 +440,7 @@ function evalActRangeForLeft(action: WeaSetCustomCannonStateExpr, tile: Tiles_IT
         return defaultValue;
     }
 }
-function evalActRangeForRight(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): number {
+function evalActRangeForRight(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getRangeForRight();
     const act           = action.getActRangeForRight();
     if (!act) {
@@ -462,7 +462,7 @@ function evalActRangeForRight(action: WeaSetCustomCannonStateExpr, tile: Tiles_I
         return defaultValue;
     }
 }
-function evalActPriority(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): number {
+function evalActPriority(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getPriority();
     const act           = action.getActPriority();
     if (!act) {
@@ -484,7 +484,7 @@ function evalActPriority(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.
         return defaultValue;
     }
 }
-function evalActCanAffectSelf(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): boolean {
+function evalActCanAffectSelf(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): boolean {
     const defaultValue  = customCannonData.getCanAffectSelf();
     const act           = action.getActCanAffectSelf();
     if (!act) {
@@ -502,7 +502,7 @@ function evalActCanAffectSelf(action: WeaSetCustomCannonStateExpr, tile: Tiles_I
         return defaultValue;
     }
 }
-function evalActCanAffectAlly(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): boolean {
+function evalActCanAffectAlly(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): boolean {
     const defaultValue  = customCannonData.getCanAffectAlly();
     const act           = action.getActCanAffectAlly();
     if (!act) {
@@ -520,7 +520,7 @@ function evalActCanAffectAlly(action: WeaSetCustomCannonStateExpr, tile: Tiles_I
         return defaultValue;
     }
 }
-function evalActCanAffectEnemy(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): boolean {
+function evalActCanAffectEnemy(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): boolean {
     const defaultValue  = customCannonData.getCanAffectEnemy();
     const act           = action.getActCanAffectEnemy();
     if (!act) {
@@ -538,7 +538,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomCannonStateExpr, tile: Tiles_
         return defaultValue;
     }
 }
-function evalActMaxTargetCount(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): number {
+function evalActMaxTargetCount(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getMaxTargetCount();
     const act           = action.getActMaxTargetCount();
     if (!act) {
@@ -560,7 +560,7 @@ function evalActMaxTargetCount(action: WeaSetCustomCannonStateExpr, tile: Tiles_
         return defaultValue;
     }
 }
-function evalActOffsetHp(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): number {
+function evalActOffsetHp(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getOffsetHp();
     const act           = action.getActOffsetHp();
     if (!act) {
@@ -582,7 +582,7 @@ function evalActOffsetHp(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.
         return defaultValue;
     }
 }
-function evalActCanBeFatal(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): boolean {
+function evalActCanBeFatal(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): boolean {
     const defaultValue  = !!customCannonData.getCanBeFatal();
     const act           = action.getActCanBeFatal();
     if (!act) {
@@ -600,7 +600,7 @@ function evalActCanBeFatal(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITil
         return defaultValue;
     }
 }
-function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): number {
+function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getOffsetFuelPercentage();
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
@@ -622,7 +622,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateExpr, tile: 
         return defaultValue;
     }
 }
-function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): number {
+function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getOffsetPrimaryAmmoPercentage();
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
@@ -650,7 +650,7 @@ export async function applyWithExtraData(_action: WeaSetCustomCannonStateExpr): 
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetCustomCannonStateExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const newTileDataDict = new Map<Tiles_ITile.ITile, TileCustomCannonData>();
+    const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomCannonData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customCannonData = tile.getFinalCannonData();
         if (customCannonData == null) {
@@ -666,7 +666,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomCannonStateExpr,
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
 }
-function createNewTileCustomCannonData(action: WeaSetCustomCannonStateExpr, tile: Tiles_ITile.ITile, customCannonData: TileCustomCannonData): TileCustomCannonData {
+function createNewTileCustomCannonData(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): TileCustomCannonData {
     const rangeForUp                    = evalActRangeForUp(action, tile, customCannonData);
     const rangeForDown                  = evalActRangeForDown(action, tile, customCannonData);
     const rangeForLeft                  = evalActRangeForLeft(action, tile, customCannonData);
@@ -697,7 +697,7 @@ function createNewTileCustomCannonData(action: WeaSetCustomCannonStateExpr, tile
         offsetPrimaryAmmoPercentage : offsetPrimaryAmmoPercentage,
     });
 }
-function applyNewTileDataDict(dict: Map<Tiles_ITile.ITile, TileCustomCannonData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, TileCustomCannonData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     for (const [tile, tileCustomCannonData] of dict) {
         const cfg       = tile.getTemplateCfg();
         const newData   = Tiles_Utils_Serialization.create({

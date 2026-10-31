@@ -14,7 +14,7 @@ import {
     type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -462,7 +462,7 @@ export async function applyWithExtraData(_action: WeaSetCustomBuildingStateSimpl
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const targetTileArray: Tiles_ITile.ITile[] = [];
+    const targetTileArray: Tiles_Tile.Tile[] = [];
     {
         const unitMap           = war.getUnitMap();
         const conTileFilter     = action.getConTileFilter();
@@ -503,7 +503,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
         }
     }
 
-    const dataDict = new Map<Tiles_ITile.ITile, TileCustomBuildingData>();
+    const dataDict = new Map<Tiles_Tile.Tile, TileCustomBuildingData>();
     {
         for (const tile of targetTileArray) {
             dataDict.set(tile, TileCustomBuildingData.fromJson({
@@ -570,7 +570,7 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function evalActDefenseAmount(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActDefenseAmount(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getDefenseAmount();
     const act           = action.getActDefenseAmount();
     if (!act) {
@@ -583,7 +583,7 @@ function evalActDefenseAmount(action: WeaSetCustomBuildingStateSimple, tile: Til
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number[] {
+function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number[] {
     const defaultValue  = tile.getDefenseUnitTypeArray() ?? [];
     const act           = action.getActDefenseUnitTypeArray();
     if (!act) {
@@ -593,7 +593,7 @@ function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateSimple, ti
     const gameConfig = tile.getGameConfig();
     return ArrayModifiers_Utils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
-function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
+function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     if (action.getActDeleteMaxCapturePoint()) {
         return null;
     }
@@ -610,7 +610,7 @@ function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateSimple, tile: T
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue ?? 0),
     });
 }
-function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = tile.getIsDefeatedOnCapture();
     const act           = action.getActIsDefeatedOnCapture();
     if (act == null) {
@@ -619,7 +619,7 @@ function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateSimple, til
 
     return act;
 }
-function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
+function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     if (action.getActDeleteRepairNormalizedHp()) {
         return null;
     }
@@ -636,7 +636,7 @@ function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateSimple, tile
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue ?? 0),
     });
 }
-function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number[] {
+function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number[] {
     const defaultValue  = tile.getRepairUnitTypeArray() ?? [];
     const act           = action.getActRepairUnitTypeArray();
     if (act == null) {
@@ -646,7 +646,7 @@ function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateSimple, til
     const gameConfig = tile.getGameConfig();
     return ArrayModifiers_Utils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
-function evalActIncomePerTurn(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActIncomePerTurn(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getIncomePerTurn();
     const act           = action.getActIncomePerTurn();
     if (act == null) {
@@ -659,7 +659,7 @@ function evalActIncomePerTurn(action: WeaSetCustomBuildingStateSimple, tile: Til
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActVisionRange(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActVisionRange(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getCfgVisionRange();
     const act           = action.getActVisionRange();
     if (act == null) {
@@ -672,7 +672,7 @@ function evalActVisionRange(action: WeaSetCustomBuildingStateSimple, tile: Tiles
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = tile.getIsVisionEnabledForAllPlayers();
     const act           = action.getActIsVisionEnabledForAllPlayers();
     if (act == null) {
@@ -681,7 +681,7 @@ function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateSi
 
     return act;
 }
-function evalActHideUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number[] {
+function evalActHideUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number[] {
     const defaultValue  = tile.getHideUnitTypeArray() ?? [];
     const act           = action.getActHideUnitTypeArray();
     if (act == null) {
@@ -691,7 +691,7 @@ function evalActHideUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile:
     const gameConfig = tile.getGameConfig();
     return ArrayModifiers_Utils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
-function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number[] {
+function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number[] {
     const defaultValue  = tile.getRegularProducibleUnitTypeArray() ?? [];
     const act           = action.getActProduceUnitTypeArray();
     if (act == null) {
@@ -701,7 +701,7 @@ function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateSimple, ti
     const gameConfig = tile.getGameConfig();
     return ArrayModifiers_Utils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
-function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getGlobalAttackBonus();
     const act           = action.getActGlobalAttackBonus();
     if (!act) {
@@ -714,7 +714,7 @@ function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateSimple, tile:
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getGlobalDefenseBonus();
     const act           = action.getActGlobalDefenseBonus();
     if (!act) {
@@ -727,7 +727,7 @@ function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateSimple, tile
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number[] {
+function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number[] {
     const defaultValue  = tile.getCoBoardUnitTypeArray() ?? [];
     const act           = action.getActUnitTypeArrayForCoBoard();
     if (act == null) {
@@ -737,7 +737,7 @@ function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateSimple,
     const gameConfig = tile.getGameConfig();
     return ArrayModifiers_Utils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
-function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number[] {
+function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_Tile.Tile): number[] {
     const defaultValue  = tile.getBlockEnemyUnitTypeArray() ?? [];
     const act           = action.getActBlockEnemyUnitTypeArray();
     if (act == null) {

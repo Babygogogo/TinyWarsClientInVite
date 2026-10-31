@@ -18,7 +18,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../../../internal.ts";
 
 import type { WoUnitLaunchSilo } from "../../../proto/schema/CommonProto/WarOperation/WoUnitLaunchSilo.ts";
@@ -65,7 +65,7 @@ function fastExeUnitLaunchSilo(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
             });
 
             const targetGrids   = targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize : unitMap.getMapSize() });
-            const targetUnits   : Units_IUnit.IUnit[] = [];
+            const targetUnits   : Units_Unit.Unit[] = [];
             for (const grid of targetGrids) {
                 const unit = unitMap.getUnitOnMap(grid);
                 if (unit) {
@@ -162,7 +162,7 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Interface_IBwWar.IBwWar, act
             const warStatisticsManager  = war.getWarStatisticsManager();
             const targetGridIndex       = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
             const targetGrids           = targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize });
-            const targetUnits           : Units_IUnit.IUnit[] = [];
+            const targetUnits           : Units_Unit.Unit[] = [];
             for (const grid of targetGrids) {
                 const unit = unitMap.getUnitOnMap(grid);
                 if (unit) {

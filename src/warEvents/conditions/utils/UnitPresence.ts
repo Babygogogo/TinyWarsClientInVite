@@ -8,7 +8,7 @@ import {
     type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -128,7 +128,7 @@ export function checkIsMeet(data: WecUnitPresence, war: BaseWar_Interface_IBwWar
     }
 
     const tileFilter        = data.getConTileFilter();
-    const tileFilterDict    = new Map<Tiles_ITile.ITile, boolean>();
+    const tileFilterDict    = new Map<Tiles_Tile.Tile, boolean>();
     const playerFilter      = data.getConPlayerFilter();
     const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
     const unitFilter        = data.getConUnitFilter();
@@ -157,7 +157,7 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function checkIsMeetConTileFilter(resultDict: Map<Tiles_ITile.ITile, boolean>, filter: TileFilter, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConTileFilter(resultDict: Map<Tiles_Tile.Tile, boolean>, filter: TileFilter, tile: Tiles_Tile.Tile): boolean {
     if (!resultDict.has(tile)) {
         resultDict.set(tile, Tiles_Utils_Filter.checkIsMeet(filter, tile));
     }

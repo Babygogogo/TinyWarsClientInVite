@@ -8,7 +8,7 @@ import {
     type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -185,7 +185,7 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function checkIsMeetConUnitComparator(filter: AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitFilter>, comparator: ValueAndComparator, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConUnitComparator(filter: AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitFilter>, comparator: ValueAndComparator, tile: Tiles_Tile.Tile): boolean {
     let unitsCount = 0;
     for (const unit of tile.getWar().getUnitMap().getAllUnitsOnGrid(tile.getGridIndex())) {
         if ((filter != null) && (!Units_Utils_Filter.checkIsMeet(filter, unit))) {

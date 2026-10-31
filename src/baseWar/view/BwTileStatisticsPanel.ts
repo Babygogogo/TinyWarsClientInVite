@@ -6,7 +6,7 @@ import {
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTileView,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -119,7 +119,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const playersCountUnneutral = war.getPlayersCountUnneutral();
         const allTiles              = war.getTileMap().getAllTiles();
         const visibleTileSet        = Visibilities_Utils.getAllTilesVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
-        const allTilesForPlayers    : Tiles_ITile.ITile[][] = [];
+        const allTilesForPlayers    : Tiles_Tile.Tile[][] = [];
         for (let i = 0; i <= playersCountUnneutral; ++i) {
             allTilesForPlayers.push([]);
         }

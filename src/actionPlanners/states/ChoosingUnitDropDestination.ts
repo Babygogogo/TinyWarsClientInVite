@@ -12,7 +12,7 @@ import {
     Helpers_Misc,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../../internal.ts";
 
 export class ChoosingUnitDropDestination implements ActionPlanners_States_IState.IState {
@@ -178,7 +178,7 @@ export class ChoosingUnitDropDestination implements ActionPlanners_States_IState
         throw Helpers_Misc.newError(`ChoosingUnitDropDestinationState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, unitForDrop: Units_IUnit.IUnit): void {
+    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, unitForDrop: Units_Unit.Unit): void {
         const currStateId = actionPlanner.getStateId();
         if (currStateId !== ActionPlanners_Constants.StateId.ChoosingUnitAction) {
             throw Helpers_Misc.newError(`Invalid currState: ${currStateId}`);

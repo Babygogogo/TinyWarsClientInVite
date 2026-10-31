@@ -18,7 +18,7 @@ import {
     ExpressionParsers_Results_TileBuffArray,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 
@@ -304,10 +304,10 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _tile       : Tiles_ITile.ITile;
+    private _tile       : Tiles_Tile.Tile;
     private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(tile: Tiles_ITile.ITile) {
+    public constructor(tile: Tiles_Tile.Tile) {
         super(tile.getWar());
 
         this._tile = tile;

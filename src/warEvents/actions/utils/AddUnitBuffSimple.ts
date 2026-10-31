@@ -8,7 +8,7 @@ import {
     type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -191,7 +191,7 @@ export async function applyWithoutExtraData(data: WeaAddUnitBuffSimple, isFastEx
         return;
     }
 
-    const targetUnitList: Units_IUnit.IUnit[] = [];
+    const targetUnitList: Units_Unit.Unit[] = [];
     {
         const tileMap           = war.getTileMap();
         const conTileFilter     = data.getConTileFilter();

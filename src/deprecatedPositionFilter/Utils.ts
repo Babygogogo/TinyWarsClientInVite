@@ -7,8 +7,8 @@ import {
     Helpers_Collection,
     AuxiliaryTypes_GridIndex,
     Lang_Constants,
-    type Tiles_ITile,
-    type Tiles_ITileMap,
+    type Tiles_Tile,
+    type Tiles_TileMap,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_PositionFilter,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -48,7 +48,7 @@ export function checkIsValid(data: AuxiliaryTypes_PositionFilter.PositionFilter,
     return true;
 }
 
-export function checkIsMeet(data: AuxiliaryTypes_PositionFilter.PositionFilter, tile: Tiles_ITile.ITile): boolean {
+export function checkIsMeet(data: AuxiliaryTypes_PositionFilter.PositionFilter, tile: Tiles_Tile.Tile): boolean {
     const gridIndex = tile.getGridIndex();
     {
         const conGridXArray = data.getConGridXArray();
@@ -219,7 +219,7 @@ export function getErrorTip(data: AuxiliaryTypes_PositionFilter.PositionFilter, 
     return null;
 }
 
-export function getMetGridIndexList(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_PositionFilter.PositionFilter>, tileMap: Tiles_ITileMap.ITileMap, predicate: ((g: AuxiliaryTypes_GridIndex.GridIndex) => boolean) | null): AuxiliaryTypes_GridIndex.GridIndex[] {
+export function getMetGridIndexList(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_PositionFilter.PositionFilter>, tileMap: Tiles_TileMap.TileMap, predicate: ((g: AuxiliaryTypes_GridIndex.GridIndex) => boolean) | null): AuxiliaryTypes_GridIndex.GridIndex[] {
     const gridIndexList: AuxiliaryTypes_GridIndex.GridIndex[] = [];
     if (data == null) {
         for (const tile of tileMap.getAllTiles()) {

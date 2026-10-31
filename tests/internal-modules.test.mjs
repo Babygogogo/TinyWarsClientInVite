@@ -53,6 +53,15 @@ test('application dependencies use internal.ts, not sibling implementation modul
   assert.equal(existsSync(path.join(sourceDirectory, 'ui', 'utils', 'UiFactory.ts')), false)
 })
 
+test('tile modules expose concrete classes without the removed interfaces', () => {
+  const entryPoint = readFileSync(internalFile, 'utf8')
+  for (const name of ['Tile', 'TileMap', 'TileMapView', 'TileView']) {
+    assert.equal(existsSync(path.join(sourceDirectory, 'tiles', `I${name}.ts`)), false)
+    assert.doesNotMatch(entryPoint, new RegExp(`\\bTiles_I${name}\\b`))
+    assert.match(entryPoint, new RegExp(`export \\* as Tiles_${name} from "\\./tiles/${name}\\.ts";`))
+  }
+})
+
 test('the entire application initializes as native ESM without factory registration', async () => {
   const module = await loadInternalModules()
   const internal = await module(internalFile)

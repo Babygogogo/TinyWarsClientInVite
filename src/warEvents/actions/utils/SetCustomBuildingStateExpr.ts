@@ -13,7 +13,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_Tile,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetCustomBuildingStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomBuildingStateExpr.ts";
@@ -415,7 +415,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     return null;
 }
 
-function checkIsMeetConditionForTile(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConditionForTile(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -423,7 +423,7 @@ function checkIsMeetConditionForTile(action: WeaSetCustomBuildingStateExpr, tile
         return false;
     }
 }
-function evalActDefenseAmount(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number {
+function evalActDefenseAmount(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number {
     const defaultValue  = customBuildingData.getDefenseAmount();
     const act           = action.getActDefenseAmount();
     if (!act) {
@@ -445,7 +445,7 @@ function evalActDefenseAmount(action: WeaSetCustomBuildingStateExpr, tile: Tiles
         return defaultValue;
     }
 }
-function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number[] {
+function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number[] {
     const defaultValue  = customBuildingData.getDefenseUnitTypeArray();
     const act           = action.getActDefenseUnitTypeArray();
     if (!act) {
@@ -475,7 +475,7 @@ function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile
         return defaultValue;
     }
 }
-function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number | null {
+function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number | null {
     const defaultValue  = customBuildingData.getMaxCapturePoint() ?? null;
     const act           = action.getActMaxCapturePoint();
     if (!act) {
@@ -502,7 +502,7 @@ function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateExpr, tile: Til
         return defaultValue;
     }
 }
-function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): boolean {
+function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): boolean {
     const defaultValue  = customBuildingData.getIsDefeatedOnCapture();
     const act           = action.getActIsDefeatedOnCapture();
     if (!act) {
@@ -520,7 +520,7 @@ function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateExpr, tile:
         return defaultValue;
     }
 }
-function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number | null {
+function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number | null {
     const defaultValue  = customBuildingData.getRepairNormalizedHp() ?? null;
     const act           = action.getActRepairNormalizedHp();
     if (!act) {
@@ -547,7 +547,7 @@ function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateExpr, tile: 
         return defaultValue;
     }
 }
-function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number[] {
+function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number[] {
     const defaultValue  = customBuildingData.getRepairUnitTypeArray();
     const act           = action.getActRepairUnitTypeArray();
     if (!act) {
@@ -577,7 +577,7 @@ function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile:
         return defaultValue;
     }
 }
-function evalActIncomePerTurn(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number {
+function evalActIncomePerTurn(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number {
     const defaultValue  = customBuildingData.getIncomePerTurn();
     const act           = action.getActIncomePerTurn();
     if (!act) {
@@ -599,7 +599,7 @@ function evalActIncomePerTurn(action: WeaSetCustomBuildingStateExpr, tile: Tiles
         return defaultValue;
     }
 }
-function evalActVisionRange(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number {
+function evalActVisionRange(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number {
     const defaultValue  = customBuildingData.getVisionRange();
     const act           = action.getActVisionRange();
     if (!act) {
@@ -621,7 +621,7 @@ function evalActVisionRange(action: WeaSetCustomBuildingStateExpr, tile: Tiles_I
         return defaultValue;
     }
 }
-function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): boolean {
+function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): boolean {
     const defaultValue  = customBuildingData.getIsVisionEnabledForAllPlayers();
     const act           = action.getActIsVisionEnabledForAllPlayers();
     if (!act) {
@@ -639,7 +639,7 @@ function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateEx
         return defaultValue;
     }
 }
-function evalActHideUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number[] {
+function evalActHideUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number[] {
     const defaultValue  = customBuildingData.getHideUnitTypeArray();
     const act           = action.getActHideUnitTypeArray();
     if (!act) {
@@ -669,7 +669,7 @@ function evalActHideUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: T
         return defaultValue;
     }
 }
-function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number[] {
+function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number[] {
     const defaultValue  = customBuildingData.getProduceUnitTypeArray();
     const act           = action.getActProduceUnitTypeArray();
     if (!act) {
@@ -699,7 +699,7 @@ function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile
         return defaultValue;
     }
 }
-function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number {
+function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number {
     const defaultValue  = customBuildingData.getGlobalAttackBonus();
     const act           = action.getActGlobalAttackBonus();
     if (!act) {
@@ -721,7 +721,7 @@ function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateExpr, tile: T
         return defaultValue;
     }
 }
-function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number {
+function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number {
     const defaultValue  = customBuildingData.getGlobalDefenseBonus();
     const act           = action.getActGlobalDefenseBonus();
     if (!act) {
@@ -743,7 +743,7 @@ function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateExpr, tile: 
         return defaultValue;
     }
 }
-function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number[] {
+function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number[] {
     const defaultValue  = customBuildingData.getUnitTypeArrayForCoBoard();
     const act           = action.getActUnitTypeArrayForCoBoard();
     if (!act) {
@@ -773,7 +773,7 @@ function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateExpr, t
         return defaultValue;
     }
 }
-function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): number[] {
+function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): number[] {
     const defaultValue  = customBuildingData.getBlockEnemyUnitTypeArray();
     const act           = action.getActBlockEnemyUnitTypeArray();
     if (!act) {
@@ -809,7 +809,7 @@ export async function applyWithExtraData(action: WeaSetCustomBuildingStateExpr):
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const newTileDataDict = new Map<Tiles_ITile.ITile, TileCustomBuildingData>();
+    const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomBuildingData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if ((!tile.getIsCustomizableBuilding()) || (!checkIsMeetConditionForTile(action, tile))) {
             continue;
@@ -820,7 +820,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateExp
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
 }
-function createNewTileCustomBuildingData(action: WeaSetCustomBuildingStateExpr, tile: Tiles_ITile.ITile, customBuildingData: TileCustomBuildingData): TileCustomBuildingData {
+function createNewTileCustomBuildingData(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): TileCustomBuildingData {
     const defenseAmount                 = evalActDefenseAmount(action, tile, customBuildingData);
     const isDefeatedOnCapture           = evalActIsDefeatedOnCapture(action, tile, customBuildingData);
     const incomePerTurn                 = evalActIncomePerTurn(action, tile, customBuildingData);
@@ -855,7 +855,7 @@ function createNewTileCustomBuildingData(action: WeaSetCustomBuildingStateExpr, 
         blockEnemyUnitTypeArray      : blockEnemyUnitTypeArray,
     });
 }
-function applyNewTileDataDict(dict: Map<Tiles_ITile.ITile, TileCustomBuildingData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, TileCustomBuildingData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     for (const [tile, tileCustomBuildingData] of dict) {
         const cfg       = tile.getTemplateCfg();
         const newData   = Tiles_Utils_Serialization.create({

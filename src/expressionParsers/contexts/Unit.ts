@@ -18,7 +18,7 @@ import {
     ExpressionParsers_Results_Tile,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
-    type Units_IUnit,
+    type Units_Unit,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 
@@ -513,7 +513,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _unit       : Units_IUnit.IUnit | null;
+    private _unit       : Units_Unit.Unit | null;
     private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(data: ExpressionParsers_Results_NullableUnit.NullableUnit) {

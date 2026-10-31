@@ -19,7 +19,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_Unit,
     type BaseWar_Interface_IBwWar,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetUnitStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitStateExpr.ts";
@@ -468,7 +468,7 @@ export function getErrorTip(data: WeaSetUnitStateExpr, customCounterNameSet: Set
     return null;
 }
 
-function checkIsMeetConditionForUnit(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): boolean {
+function checkIsMeetConditionForUnit(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -512,7 +512,7 @@ function checkIsMeetConditionForUnit(action: WeaSetUnitStateExpr, unit: Units_IU
 //         return null;
 //     }
 // }
-function evalActActionState(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number {
+function evalActActionState(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = unit.getActionState();
     const act           = action.getActActionState();
     if (!act) {
@@ -531,7 +531,7 @@ function evalActActionState(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit
         return defaultValue;
     }
 }
-function evalActPrimaryWeaponCurrentAmmo(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number {
+function evalActPrimaryWeaponCurrentAmmo(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = unit.getPrimaryWeaponCurrentAmmo();
     const act           = action.getActPrimaryWeaponCurrentAmmo();
     if (!act) {
@@ -553,7 +553,7 @@ function evalActPrimaryWeaponCurrentAmmo(action: WeaSetUnitStateExpr, unit: Unit
         return defaultValue;
     }
 }
-function evalActCurrentHp(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number {
+function evalActCurrentHp(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = unit.getCurrentHp();
     const act           = action.getActCurrentHp();
     if (!act) {
@@ -575,7 +575,7 @@ function evalActCurrentHp(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit):
         return defaultValue;
     }
 }
-// function evalActIsCapturingTile(action: IWeaSetUnitState, unit: IUnit): boolean {
+// function evalActIsCapturingTile(action: IWeaSetUnitState, unit: Units_Unit.Unit): boolean {
 //     if (!unit.checkIsCapturer()) {
 //         return false;
 //     }
@@ -597,7 +597,7 @@ function evalActCurrentHp(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit):
 //         return defaultValue;
 //     }
 // }
-function evalActIsDiving(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): boolean {
+function evalActIsDiving(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): boolean {
     if (!unit.checkIsDiver()) {
         return false;
     }
@@ -619,7 +619,7 @@ function evalActIsDiving(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): 
         return defaultValue;
     }
 }
-function evalActFlareCurrentAmmo(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number {
+function evalActFlareCurrentAmmo(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = unit.getFlareCurrentAmmo();
     const act           = action.getActFlareCurrentAmmo();
     if (!act) {
@@ -641,7 +641,7 @@ function evalActFlareCurrentAmmo(action: WeaSetUnitStateExpr, unit: Units_IUnit.
         return defaultValue;
     }
 }
-function evalActCurrentFuel(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number {
+function evalActCurrentFuel(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = unit.getCurrentFuel();
     const act           = action.getActCurrentFuel();
     if (!act) {
@@ -663,7 +663,7 @@ function evalActCurrentFuel(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit
         return defaultValue;
     }
 }
-function evalActCurrentBuildMaterial(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number {
+function evalActCurrentBuildMaterial(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = unit.getCurrentBuildMaterial();
     const act           = action.getActCurrentBuildMaterial();
     if (!act) {
@@ -685,7 +685,7 @@ function evalActCurrentBuildMaterial(action: WeaSetUnitStateExpr, unit: Units_IU
         return defaultValue;
     }
 }
-function evalActCurrentProduceMaterial(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number {
+function evalActCurrentProduceMaterial(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = unit.getCurrentProduceMaterial();
     const act           = action.getActCurrentProduceMaterial();
     if (!act) {
@@ -707,7 +707,7 @@ function evalActCurrentProduceMaterial(action: WeaSetUnitStateExpr, unit: Units_
         return defaultValue;
     }
 }
-function evalActCurrentPromotion(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number {
+function evalActCurrentPromotion(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number {
     const defaultValue    = unit.getCurrentPromotion();
     const act             = action.getActCurrentPromotion();
     if (!act) {
@@ -729,7 +729,7 @@ function evalActCurrentPromotion(action: WeaSetUnitStateExpr, unit: Units_IUnit.
         return defaultValue;
     }
 }
-// function evalActIsBuildingTile(action: IWeaSetUnitState, unit: IUnit): boolean {
+// function evalActIsBuildingTile(action: IWeaSetUnitState, unit: Units_Unit.Unit): boolean {
 //     const maxBuildMaterial = unit.getMaxBuildMaterial();
 //     if ((maxBuildMaterial == null) || (maxBuildMaterial <= 0)) {
 //         return false;
@@ -752,7 +752,7 @@ function evalActCurrentPromotion(action: WeaSetUnitStateExpr, unit: Units_IUnit.
 //         return defaultValue;
 //     }
 // }
-function evalActIsCoOnboard(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): boolean {
+function evalActIsCoOnboard(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): boolean {
     const defaultValue  = unit.getIsCoOnboard();
     const act           = action.getActIsCoOnboard();
     if (!act) {
@@ -770,7 +770,7 @@ function evalActIsCoOnboard(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit
         return defaultValue;
     }
 }
-function evalActAiMode(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number {
+function evalActAiMode(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = unit.getAiMode();
     const act           = action.getActAiMode();
     if (!act) {
@@ -789,7 +789,7 @@ function evalActAiMode(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): nu
         return defaultValue;
     }
 }
-function evalActCustomNameId(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
+function evalActCustomNameId(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     const defaultValue  = unit.getCustomNameId();
     const act           = action.getActCustomNameId();
     if (!act) {
@@ -810,7 +810,7 @@ function evalActCustomNameId(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUni
         return defaultValue;
     }
 }
-function evalActGroupedTagId(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number {
+function evalActGroupedTagId(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number {
     const defaultValue  = unit.getGroupedTagId();
     const act           = action.getActGroupedTagId();
     if (!act) {
@@ -832,7 +832,7 @@ function evalActGroupedTagId(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUni
         return defaultValue;
     }
 }
-function evalActForbiddenGroupedLocationIdArray(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): number[] {
+function evalActForbiddenGroupedLocationIdArray(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): number[] {
     const defaultValue  = unit.getForbiddenGroupedLocationIdArray();
     const act           = action.getActForbiddenGroupedLocationIdArray();
     if (!act) {
@@ -854,7 +854,7 @@ function evalActForbiddenGroupedLocationIdArray(action: WeaSetUnitStateExpr, uni
         return defaultValue;
     }
 }
-function evalActAiWeightedDestination(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight> {
+function evalActAiWeightedDestination(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight> {
     const defaultValue  = unit.getAiWeightedDestination();
     const act           = action.getActAiWeightedDestination();
     if (!act) {
@@ -888,7 +888,7 @@ export async function applyWithExtraData(_action: WeaSetUnitStateExpr): Promise<
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetUnitStateExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const newUnitDataDict = new Map<Units_IUnit.IUnit, SerialUnit>();
+    const newUnitDataDict = new Map<Units_Unit.Unit, SerialUnit>();
     for (const unit of war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId())) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
             continue;
@@ -904,7 +904,7 @@ export async function applyWithoutExtraData(action: WeaSetUnitStateExpr, isFast:
 
     applyNewUnitDataDict(newUnitDataDict, war, isFast);
 }
-function createNewUnitData(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit): SerialUnit {
+function createNewUnitData(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): SerialUnit {
     // 为防止随机数导致结果不稳定，此处eval系列函数的顺序一旦写下就不能更改，后续新属性只能添加在最后
     // 必须保证函数顺序前后端相同
     const actionState                       = evalActActionState(action, unit);
@@ -951,7 +951,7 @@ function createNewUnitData(action: WeaSetUnitStateExpr, unit: Units_IUnit.IUnit)
         loaderUnitId             : unit.getLoaderUnitId() ?? null,
     });
 }
-function applyNewUnitDataDict(dict: Map<Units_IUnit.IUnit, SerialUnit>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     const unitMap                   = war.getUnitMap();
     const mapSize                   = unitMap.getMapSize();
     const observerTeamIndexesDict   = new Map<number, number[] | null>();

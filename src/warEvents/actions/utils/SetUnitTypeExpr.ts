@@ -11,7 +11,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_Unit,
     type BaseWar_Interface_IBwWar,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetUnitTypeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitTypeExpr.ts";
@@ -92,7 +92,7 @@ export function getErrorTip(data: WeaSetUnitTypeExpr, customCounterNameSet: Set<
     return null;
 }
 
-function checkIsMeetConditionForUnit(action: WeaSetUnitTypeExpr, unit: Units_IUnit.IUnit): boolean {
+function checkIsMeetConditionForUnit(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -100,7 +100,7 @@ function checkIsMeetConditionForUnit(action: WeaSetUnitTypeExpr, unit: Units_IUn
         return false;
     }
 }
-function evalActUnitType(action: WeaSetUnitTypeExpr, unit: Units_IUnit.IUnit): number | null {
+function evalActUnitType(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): number | null {
     const act = action.getActUnitType();
     if (!act) {
         return null;
@@ -164,7 +164,7 @@ export async function applyWithExtraData(_action: WeaSetUnitTypeExpr): Promise<v
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetUnitTypeExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const newUnitDataDict = new Map<Units_IUnit.IUnit, SerialUnit>();
+    const newUnitDataDict = new Map<Units_Unit.Unit, SerialUnit>();
     for (const unit of war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId())) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
             continue;
@@ -178,7 +178,7 @@ export async function applyWithoutExtraData(action: WeaSetUnitTypeExpr, isFast: 
 
     applyNewUnitDataDict(newUnitDataDict, war, isFast);
 }
-function createNewUnitData(action: WeaSetUnitTypeExpr, unit: Units_IUnit.IUnit): SerialUnit | null {
+function createNewUnitData(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): SerialUnit | null {
     const newUnitType = evalActUnitType(action, unit);
     if (newUnitType == null) {
         return null;
@@ -186,7 +186,7 @@ function createNewUnitData(action: WeaSetUnitTypeExpr, unit: Units_IUnit.IUnit):
 
     return Units_Utils_Serialization.createNewUnitDataForChangeType(unit, newUnitType);
 }
-function applyNewUnitDataDict(dict: Map<Units_IUnit.IUnit, SerialUnit>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     const mapSize                 = war.getTileMap().getMapSize();
     const observerTeamIndexesDict = new Map<number, number[] | null>();
     for (const [unit] of dict) {

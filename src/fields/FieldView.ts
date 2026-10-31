@@ -6,16 +6,16 @@ import {
     type BaseWar_Interface_IBwGridVisualEffectView,
     type Fields_IField,
     type Fields_IFieldView,
-    type Tiles_ITileMapView,
-    type Units_IUnitMapView,
+    type Tiles_TileMapView,
+    type Units_UnitMapView,
 } from "../internal.ts";
 
 export class FieldView extends Ui_Components_UiContainer.UiContainer implements Fields_IFieldView.IFieldView {
     private _field?                 : Fields_IField.IField;
 
-    private _tileMapView?           : Tiles_ITileMapView.ITileMapView;
+    private _tileMapView?           : Tiles_TileMapView.TileMapView;
     private _actionPlannerView?     : ActionPlanners_IActionPlannerView.IActionPlannerView;
-    private _unitMapView?           : Units_IUnitMapView.IUnitMapView;
+    private _unitMapView?           : Units_UnitMapView.UnitMapView;
     private _cursorView?            : BaseWar_Interface_IBwCursorView.IBwCursorView;
     private _gridVisualEffectView?  : BaseWar_Interface_IBwGridVisualEffectView.IBwGridVisualEffectView;
 
@@ -47,10 +47,10 @@ export class FieldView extends Ui_Components_UiContainer.UiContainer implements 
         // nothing to do
     }
 
-    private _getUnitMapView(): Units_IUnitMapView.IUnitMapView {
+    private _getUnitMapView(): Units_UnitMapView.UnitMapView {
         return Helpers_Misc.getExisted(this._unitMapView);
     }
-    private _getTileMapView(): Tiles_ITileMapView.ITileMapView {
+    private _getTileMapView(): Tiles_TileMapView.TileMapView {
         return Helpers_Misc.getExisted(this._tileMapView);
     }
 

@@ -1,13 +1,13 @@
 import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type Tiles_ITile,
+    type Tiles_Tile,
 } from "../../internal.ts";
 
 export class Tile extends ExpressionParsers_Results_Base.Base {
-    public readonly tile: Tiles_ITile.ITile;
+    public readonly tile: Tiles_Tile.Tile;
 
-    public constructor(tile: Tiles_ITile.ITile) {
+    public constructor(tile: Tiles_Tile.Tile) {
         super(tile.getWar());
 
         this.tile = tile;

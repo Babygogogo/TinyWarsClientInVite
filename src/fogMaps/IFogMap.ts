@@ -3,7 +3,7 @@ import {
     type FogMaps_Constants,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwWar,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
     type AuxiliaryTypes_UnitVisionInfo,
@@ -54,7 +54,7 @@ export interface IFogMap {
     resetMapFromPathsForPlayer(playerIndex: number, visibilityList: Visibilities_Constants.VisibilityTypeId[] | null): void;
     resetMapFromPathsForPlayerWithEncodedData(playerIndex: number, encodedData?: string): void;
     updateMapFromPathsByUnitAndPath({ unit, unitVisionInfo, path }: {
-        unit            : Units_IUnit.IUnit;
+        unit            : Units_Unit.Unit;
         unitVisionInfo  : AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo;
         path            : AuxiliaryTypes_GridIndex.GridIndex[];
     }): void;

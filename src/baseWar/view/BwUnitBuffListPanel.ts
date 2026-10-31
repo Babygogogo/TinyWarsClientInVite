@@ -16,13 +16,13 @@ import {
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiScrollList,
-    type Units_IUnit,
+    type Units_Unit,
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
 import type { UnitBuff } from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
 
 export interface OpenData {
-    unit        : Units_IUnit.IUnit;
+    unit        : Units_Unit.Unit;
     canModify   : boolean;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
@@ -191,7 +191,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
 interface DataForBuffRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index       : number;
-    unit        : Units_IUnit.IUnit;
+    unit        : Units_Unit.Unit;
     buff        : UnitBuff;
     isLast      : boolean;
     canModify   : boolean;

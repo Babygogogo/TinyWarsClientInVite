@@ -14,8 +14,7 @@ import {
     Visibilities_Utils,
     Lang_Constants,
     type Players_IPlayer,
-    type Tiles_ITile,
-    type Units_IUnit,
+    type Tiles_Tile,
 } from "../../../internal.ts";
 
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
@@ -143,11 +142,11 @@ export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFas
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     const conUnitFilter     = data.getConUnitFilter();
-    const tileFilterDict    = new Map<Tiles_ITile.ITile, boolean>();
+    const tileFilterDict    = new Map<Tiles_Tile.Tile, boolean>();
     const conPlayerFilter   = data.getConPlayerFilter();
     const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
     const conTileFilter     = data.getConTileFilter();
-    const loaderUnitsDict   = new Map<Units_IUnit.IUnit, number>();
+    const loaderUnitsDict   = new Map<Units_Unit.Unit, number>();
     const actLoadCount      = data.getActLoadCount();
     for (const unit of unitMap.getAllUnits()) {
         const remainingCount = (unit.getMaxLoadUnitsCount() ?? 0) - unit.getLoadedUnitsCount();
@@ -223,7 +222,7 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function checkIsMeetConTileFilter(resultDict: Map<Tiles_ITile.ITile, boolean>, filter: TileFilter, tile: Tiles_ITile.ITile): boolean {
+function checkIsMeetConTileFilter(resultDict: Map<Tiles_Tile.Tile, boolean>, filter: TileFilter, tile: Tiles_Tile.Tile): boolean {
     if (!resultDict.has(tile)) {
         resultDict.set(tile, Tiles_Utils_Filter.checkIsMeet(filter, tile));
     }

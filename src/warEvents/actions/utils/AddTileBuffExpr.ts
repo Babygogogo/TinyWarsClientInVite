@@ -9,7 +9,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_Tile,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
@@ -158,7 +158,7 @@ export function getErrorTip(data: WeaAddTileBuffExpr, customCounterNameSet: Set<
     return null;
 }
 
-function evalConTileFilter(action: WeaAddTileBuffExpr, tile: Tiles_ITile.ITile): boolean {
+function evalConTileFilter(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -166,7 +166,7 @@ function evalConTileFilter(action: WeaAddTileBuffExpr, tile: Tiles_ITile.ITile):
         return false;
     }
 }
-function evalActBuffType(action: WeaAddTileBuffExpr, tile: Tiles_ITile.ITile): number {
+function evalActBuffType(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue = 0;
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getActBuffType() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
@@ -177,7 +177,7 @@ function evalActBuffType(action: WeaAddTileBuffExpr, tile: Tiles_ITile.ITile): n
         return defaultValue;
     }
 }
-function evalActExpiringTurnIndex(action: WeaAddTileBuffExpr, tile: Tiles_ITile.ITile): number {
+function evalActExpiringTurnIndex(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = -1;
     const act           = action.getActExpiringTurnIndex();
     if (!act) {
@@ -193,7 +193,7 @@ function evalActExpiringTurnIndex(action: WeaAddTileBuffExpr, tile: Tiles_ITile.
         return defaultValue;
     }
 }
-function evalActExpiringPlayerIndex(action: WeaAddTileBuffExpr, tile: Tiles_ITile.ITile): number {
+function evalActExpiringPlayerIndex(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): number {
     const defaultValue  = 0;
     const act           = action.getActExpiringPlayerIndex();
     if (!act) {
@@ -209,7 +209,7 @@ function evalActExpiringPlayerIndex(action: WeaAddTileBuffExpr, tile: Tiles_ITil
         return defaultValue;
     }
 }
-function evalActExtraParams(action: WeaAddTileBuffExpr, tile: Tiles_ITile.ITile): number[] {
+function evalActExtraParams(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): number[] {
     const defaultValue  : number[]  = [];
     const act           = action.getActExtraParams();
     if (!act) {
@@ -232,7 +232,7 @@ export async function applyWithExtraData(action: WeaAddTileBuffExpr, war: BaseWa
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function applyWithoutExtraData(action: WeaAddTileBuffExpr, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): Promise<void> {
-    const newBuffDict = new Map<Tiles_ITile.ITile, TileBuff>();
+    const newBuffDict = new Map<Tiles_Tile.Tile, TileBuff>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {
             continue;
@@ -248,7 +248,7 @@ export async function applyWithoutExtraData(action: WeaAddTileBuffExpr, war: Bas
         tile.addUnfixedBuff(buff, false);
     }
 }
-function createTileBuff(action: WeaAddTileBuffExpr, tile: Tiles_ITile.ITile): TileBuff | null {
+function createTileBuff(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): TileBuff | null {
     const buffType      = evalActBuffType(action, tile);
     const extraParams   = evalActExtraParams(action, tile);
     const newBuff       = TileBuffs_Utils_Common.create({

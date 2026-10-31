@@ -11,21 +11,18 @@ import {
     Helpers_Collection,
     Units_Utils_CustomName,
     Helpers_Misc,
-    type Units_IUnit,
-    type Units_IUnitMap,
-    type Units_IUnitMapView,
 } from "../internal.ts";
 
 import type { UnitCustomName } from "../proto/schema/CommonProto/Structure/UnitCustomName.ts";
 import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { SerialUnitMap } from "../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
 
-export class UnitMap implements Units_IUnitMap.IUnitMap {
+export class UnitMap {
     private _war?                   : BaseWar_Interface_IBwWar.IBwWar;
     private _nextUnitId?            : number;
-    private _map?                   : (Units_IUnit.IUnit | null)[][];
+    private _map?                   : (Units_Unit.Unit | null)[][];
     private _mapSize?               : AuxiliaryTypes_MapSize.MapSize;
-    private _loadedUnits?           : Map<number, Units_IUnit.IUnit>;
+    private _loadedUnits?           : Map<number, Units_Unit.Unit>;
     private _unitCustomNameArray?   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitCustomName[]>;
 
     private readonly _view          = new Units_UnitMapView.UnitMapView();
@@ -54,9 +51,9 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         }
 
         const mapWidth      = mapSize.getWidth();
-        const map           = Helpers_Collection.createEmptyMap<Units_IUnit.IUnit>(mapWidth);
-        const loadedUnits   = new Map<number, Units_IUnit.IUnit>();
-        const allUnits      = new Map<number, Units_IUnit.IUnit>();
+        const map           = Helpers_Collection.createEmptyMap<Units_Unit.Unit>(mapWidth);
+        const loadedUnits   = new Map<number, Units_Unit.Unit>();
+        const allUnits      = new Map<number, Units_Unit.Unit>();
         for (const unitData of data.getUnits()) {
             const unit = new Units_Unit.Unit();
             unit.init(unitData, gameConfig);
@@ -224,17 +221,17 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         });
     }
 
-    private _setMap(map: (Units_IUnit.IUnit | null)[][]): void {
+    private _setMap(map: (Units_Unit.Unit | null)[][]): void {
         this._map = map;
     }
-    private _getMap(): (Units_IUnit.IUnit | null)[][] {
+    private _getMap(): (Units_Unit.Unit | null)[][] {
         return Helpers_Misc.getExisted(this._map);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getView(): Units_IUnitMapView.IUnitMapView {
+    public getView(): Units_UnitMapView.UnitMapView {
         return this._view;
     }
 
@@ -266,7 +263,7 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         this._nextUnitId = id;
     }
 
-    public getUnit(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, unitId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Units_IUnit.IUnit | null {
+    public getUnit(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, unitId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Units_Unit.Unit | null {
         if (unitId == null) {
             return this.getUnitOnMap(gridIndex);
         } else {
@@ -283,7 +280,7 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
             }
         }
     }
-    public getUnitById(unitId: number): Units_IUnit.IUnit | null {
+    public getUnitById(unitId: number): Units_Unit.Unit | null {
         const unitLoaded = this.getUnitLoadedById(unitId);
         if (unitLoaded) {
             return unitLoaded;
@@ -299,10 +296,10 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         }
     }
 
-    public getUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Units_IUnit.IUnit | null {
+    public getUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Units_Unit.Unit | null {
         return this._getMap()[gridIndex.getX()][gridIndex.getY()] ?? null;
     }
-    public getVisibleUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Units_IUnit.IUnit | null {
+    public getVisibleUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Units_Unit.Unit | null {
         const unit = this.getUnitOnMap(gridIndex);
         if (unit == null) {
             return null;
@@ -322,18 +319,18 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
             : null;
     }
 
-    public getUnitLoadedById(unitId: number): Units_IUnit.IUnit | null {
+    public getUnitLoadedById(unitId: number): Units_Unit.Unit | null {
         return this.getRawAllUnitsLoaded().get(unitId) ?? null;
     }
-    private _setLoadedUnits(units: Map<number, Units_IUnit.IUnit>): void {
+    private _setLoadedUnits(units: Map<number, Units_Unit.Unit>): void {
         this._loadedUnits = units;
     }
-    public getRawAllUnitsLoaded(): Map<number, Units_IUnit.IUnit> {
+    public getRawAllUnitsLoaded(): Map<number, Units_Unit.Unit> {
         return Helpers_Misc.getExisted(this._loadedUnits);
     }
-    public getUnitsLoadedByLoader(loader: Units_IUnit.IUnit, isRecursive: boolean): Units_IUnit.IUnit[] {
-        const units: Units_IUnit.IUnit[] = [];
-        this._forEachUnitLoaded((unit: Units_IUnit.IUnit) => {
+    public getUnitsLoadedByLoader(loader: Units_Unit.Unit, isRecursive: boolean): Units_Unit.Unit[] {
+        const units: Units_Unit.Unit[] = [];
+        this._forEachUnitLoaded((unit: Units_Unit.Unit) => {
             if (unit.getLoaderUnitId() === loader.getUnitId()) {
                 units.push(unit);
                 (isRecursive) && (units.push(...this.getUnitsLoadedByLoader(unit, isRecursive)));
@@ -342,8 +339,8 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         return units;
     }
 
-    public getAllUnitsOnMap(predicate?: (unit: Units_IUnit.IUnit) => boolean): Units_IUnit.IUnit[] {
-        const units: Units_IUnit.IUnit[] = [];
+    public getAllUnitsOnMap(predicate?: (unit: Units_Unit.Unit) => boolean): Units_Unit.Unit[] {
+        const units: Units_Unit.Unit[] = [];
         this._forEachUnitOnMap(unit => {
             if ((predicate == null) || (predicate(unit))) {
                 units.push(unit);
@@ -351,18 +348,18 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         });
         return units;
     }
-    public getAllUnitsLoaded(): Units_IUnit.IUnit[] {
-        const units: Units_IUnit.IUnit[] = [];
+    public getAllUnitsLoaded(): Units_Unit.Unit[] {
+        const units: Units_Unit.Unit[] = [];
         this._forEachUnitLoaded(unit => units.push(unit));
         return units;
     }
-    public getAllUnits(): Units_IUnit.IUnit[] {
+    public getAllUnits(): Units_Unit.Unit[] {
         const units = this.getAllUnitsOnMap();
         this._forEachUnitLoaded(unit => units.push(unit));
         return units;
     }
 
-    public setUnitLoaded(unit: Units_IUnit.IUnit): void {
+    public setUnitLoaded(unit: Units_Unit.Unit): void {
         const loadedUnits = this.getRawAllUnitsLoaded();
         if (loadedUnits == null) {
             throw Helpers_Misc.newError(`BwUnitMap.setUnitLoaded() the map is not initialized.`);
@@ -386,7 +383,7 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         loadedUnits.delete(unitId);
     }
 
-    public setUnitOnMap(unit: Units_IUnit.IUnit): void {
+    public setUnitOnMap(unit: Units_Unit.Unit): void {
         const mapSize   = this.getMapSize();
         const map       = this._getMap();
         if ((!mapSize) || (!map)) {
@@ -405,7 +402,7 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         this.getView().addUnit(unit.getView(), true);
     }
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
-    public removeUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, removeView: boolean): Units_IUnit.IUnit | null {
+    public removeUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, removeView: boolean): Units_Unit.Unit | null {
         const unit = this.getUnitOnMap(gridIndex);
         this._getMap()[gridIndex.getX()][gridIndex.getY()] = null;
 
@@ -415,7 +412,7 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
     }
 
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
-    public removeUnitLoaded(unitId: number): Units_IUnit.IUnit {
+    public removeUnitLoaded(unitId: number): Units_Unit.Unit {
         const loadedUnits   = this.getRawAllUnitsLoaded();
         const unit          = Helpers_Misc.getExisted(loadedUnits.get(unitId));
         loadedUnits.delete(unitId);
@@ -425,7 +422,7 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
     }
 
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
-    public removeUnitById(unitId: number, removeView: boolean): Units_IUnit.IUnit | null {
+    public removeUnitById(unitId: number, removeView: boolean): Units_Unit.Unit | null {
         const unit = this.getUnitById(unitId);
         if (unit == null) {
             return null;
@@ -438,18 +435,18 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         }
     }
 
-    private _forEachUnit(func: (unit: Units_IUnit.IUnit) => any): void {
+    private _forEachUnit(func: (unit: Units_Unit.Unit) => any): void {
         this._forEachUnitOnMap(func);
         this._forEachUnitLoaded(func);
     }
-    private _forEachUnitOnMap(func: (unit: Units_IUnit.IUnit) => any): void {
+    private _forEachUnitOnMap(func: (unit: Units_Unit.Unit) => any): void {
         for (const column of this._getMap()) {
             for (const unit of column) {
                 (unit) && (func(unit));
             }
         }
     }
-    private _forEachUnitLoaded(func: (unit: Units_IUnit.IUnit) => any): void {
+    private _forEachUnitLoaded(func: (unit: Units_Unit.Unit) => any): void {
         for (const [, unit] of this.getRawAllUnitsLoaded()) {
             func(unit);
         }
@@ -481,8 +478,8 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
             return 1 + this.getUnitsLoadedByLoader(unit, true).length;
         }
     }
-    public getAllUnitsOnGrid(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Units_IUnit.IUnit[] {
-        const units : Units_IUnit.IUnit[] = [];
+    public getAllUnitsOnGrid(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Units_Unit.Unit[] {
+        const units : Units_Unit.Unit[] = [];
         const unit  = this.getUnitOnMap(gridIndex);
         if (unit != null) {
             units.push(unit);
@@ -545,8 +542,8 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         return array;
     }
 
-    public getAllCoUnits(playerIndex: number): Units_IUnit.IUnit[] {
-        const coUnits: Units_IUnit.IUnit[] = [];
+    public getAllCoUnits(playerIndex: number): Units_Unit.Unit[] {
+        const coUnits: Units_Unit.Unit[] = [];
         for (const [, unit] of this.getRawAllUnitsLoaded()) {
             if ((unit.getPlayerIndex() === playerIndex) && (unit.getIsCoOnboard())) {
                 coUnits.push(unit);

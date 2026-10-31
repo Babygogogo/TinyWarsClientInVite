@@ -13,7 +13,7 @@ import {
     type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -376,7 +376,7 @@ export async function applyWithExtraData(_action: WeaSetCustomLaserTurretStateSi
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretStateSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
-    const targetTileArray: Tiles_ITile.ITile[] = [];
+    const targetTileArray: Tiles_Tile.Tile[] = [];
     {
         const unitMap           = war.getUnitMap();
         const conTileFilter     = action.getConTileFilter();
@@ -417,7 +417,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretState
         }
     }
 
-    const dataDict = new Map<Tiles_ITile.ITile, TileCustomLaserTurretData>();
+    const dataDict = new Map<Tiles_Tile.Tile, TileCustomLaserTurretData>();
     {
         for (const tile of targetTileArray) {
             dataDict.set(tile, TileCustomLaserTurretData.fromJson({
@@ -481,7 +481,7 @@ function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boo
     }
     return !!resultDict.get(player);
 }
-function evalActRangeForUp(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActRangeForUp(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getRangeForUp() ?? 0;
     const act           = action.getActRangeForUp();
     if (!act) {
@@ -494,7 +494,7 @@ function evalActRangeForUp(action: WeaSetCustomLaserTurretStateSimple, tile: Til
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActRangeForDown(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActRangeForDown(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getRangeForDown() ?? 0;
     const act           = action.getActRangeForDown();
     if (!act) {
@@ -507,7 +507,7 @@ function evalActRangeForDown(action: WeaSetCustomLaserTurretStateSimple, tile: T
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getRangeForLeft() ?? 0;
     const act           = action.getActRangeForLeft();
     if (!act) {
@@ -520,7 +520,7 @@ function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateSimple, tile: T
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActRangeForRight(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActRangeForRight(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getRangeForRight() ?? 0;
     const act           = action.getActRangeForRight();
     if (!act) {
@@ -533,7 +533,7 @@ function evalActRangeForRight(action: WeaSetCustomLaserTurretStateSimple, tile: 
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActPriority(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActPriority(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getPriority() ?? 0;
     const act           = action.getActPriority();
     if (act == null) {
@@ -546,7 +546,7 @@ function evalActPriority(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalLaserTurretData()?.getCanAffectSelf();
     const act           = action.getActCanAffectSelf();
     if (act == null) {
@@ -555,7 +555,7 @@ function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateSimple, tile: 
 
     return act;
 }
-function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalLaserTurretData()?.getCanAffectAlly();
     const act           = action.getActCanAffectAlly();
     if (act == null) {
@@ -564,7 +564,7 @@ function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateSimple, tile: 
 
     return act;
 }
-function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalLaserTurretData()?.getCanAffectEnemy();
     const act           = action.getActCanAffectEnemy();
     if (act == null) {
@@ -573,7 +573,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateSimple, tile:
 
     return act;
 }
-function evalActOffsetHp(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetHp(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getOffsetHp() ?? 0;
     const act           = action.getActOffsetHp();
     if (!act) {
@@ -586,7 +586,7 @@ function evalActOffsetHp(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getOffsetFuelPercentage() ?? 0;
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
@@ -599,7 +599,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateSimple,
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
+function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getOffsetPrimaryAmmoPercentage() ?? 0;
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
@@ -612,7 +612,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretState
         rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActCanBeFatal(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): boolean {
+function evalActCanBeFatal(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalLaserTurretData()?.getCanBeFatal();
     const act           = action.getActCanBeFatal();
     if (act == null) {

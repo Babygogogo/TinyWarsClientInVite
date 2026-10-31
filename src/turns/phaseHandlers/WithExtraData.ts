@@ -9,7 +9,7 @@ import {
     Turns_Constants,
     Tiles_Constants_MapWeapon,
     type BaseWar_Interface_IBwWar,
-    type Tiles_ITile,
+    type Tiles_Tile,
     type Turns_ITurnManager,
 } from "../../internal.ts";
 import type { WoPlayerEndTurn } from "../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
@@ -249,7 +249,7 @@ function runPhaseWaitBeginTurn(turnManager: Turns_ITurnManager.ITurnManager, dat
     }
 }
 
-async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_ITile.ITile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -279,7 +279,7 @@ async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: BaseWar_
         await Timer_TimerModel.wait(400);
     }
 }
-async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_ITile.ITile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -288,7 +288,7 @@ async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: BaseWar_I
         await Timer_TimerModel.wait(400);
     }
 }
-async function handleMapWeaponTileLaserTurret(data: WoSystemBeginTurn, war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_ITile.ITile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileLaserTurret(data: WoSystemBeginTurn, war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {

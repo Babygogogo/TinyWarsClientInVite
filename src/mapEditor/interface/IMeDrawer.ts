@@ -2,7 +2,7 @@ import {
     type MapEditor_Model_MeTypes,
     type MapEditors_Constants,
     type MapEditor_Interface_IMeWar,
-    type Units_IUnit,
+    type Units_Unit,
     type Geometries_Constants,
 } from "../../internal.ts";
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
@@ -27,11 +27,11 @@ export interface IMeDrawer {
     getDrawTargetTileDecorationData(): MapEditor_Model_MeTypes.DataForDrawTileDecoration | null;
     setDataForPasteTile(data: SerialTile): void;
     getDataForPasteTile(): SerialTile | null;
-    setDataForPasteUnit(data: Units_IUnit.IUnit[]): void;
-    getDataForPasteUnit(): Units_IUnit.IUnit[] | null;
+    setDataForPasteUnit(data: Units_Unit.Unit[]): void;
+    getDataForPasteUnit(): Units_Unit.Unit[] | null;
 
     setModeDrawUnit(data: MapEditor_Model_MeTypes.DataForDrawUnit): void;
-    getDrawTargetUnit(): Units_IUnit.IUnit | null;
+    getDrawTargetUnit(): Units_Unit.Unit | null;
 
     setModeAddTileToLocation(data: MapEditor_Model_MeTypes.DataForAddTileToLocation): void;
     getDataForAddTileToLocation(): MapEditor_Model_MeTypes.DataForAddTileToLocation | null;

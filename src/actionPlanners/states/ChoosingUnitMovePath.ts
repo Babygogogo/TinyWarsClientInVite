@@ -9,7 +9,7 @@ import {
     type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
-    type Units_IUnit,
+    type Units_Unit,
 } from "../../internal.ts";
 
 export class ChoosingUnitMovePath implements ActionPlanners_States_IState.IState {
@@ -360,7 +360,7 @@ export class ChoosingUnitMovePath implements ActionPlanners_States_IState.IState
         throw Helpers_Misc.newError(`ChoosingUnitMovePathState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, unitForLaunch: Units_IUnit.IUnit): void {
+    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, unitForLaunch: Units_Unit.Unit): void {
         const currStateId = actionPlanner.getStateId();
         if (currStateId !== ActionPlanners_Constants.StateId.ChoosingUnitAction) {
             throw Helpers_Misc.newError(`Invalid currState: ${currStateId}`);

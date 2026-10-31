@@ -2,7 +2,7 @@ import {
     Timer_TimerModel,
     type Bots_CommonParams,
     type AuxiliaryTypes_GridIndex,
-    type Units_IUnit,
+    type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
     type Bots_Types,
 } from "../../internal.ts";
@@ -11,7 +11,7 @@ import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoConta
 
 export async function getScoreAndActionUnitDropUnit({ commonParams, unit, gridIndex, pathNodes }: {
     commonParams    : Bots_CommonParams.CommonParams;
-    unit            : Units_IUnit.IUnit;
+    unit            : Units_Unit.Unit;
     gridIndex       : AuxiliaryTypes_GridIndex.GridIndex;
     pathNodes       : AuxiliaryTypes_MovePathNode.MovePathNode[];
 }): Promise<Bots_Types.ScoreAndAction | null> {
