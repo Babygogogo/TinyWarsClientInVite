@@ -7,6 +7,7 @@ import {
     Lang_Utils,
     LocalData_Constants,
     LocalData_IndexedDbAccessor,
+    Logger,
     Stages_Constants,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
@@ -53,7 +54,27 @@ const VALUE_TRUE                    = "1";
 const VALUE_FALSE                   = "0";
 
 export function init(): Promise<void> {
-    return LocalData_IndexedDbAccessor.initDatabase();
+    return LocalData_IndexedDbAccessor.initDatabase(database => {
+        Logger.warn(`IndexedDB onUpgradeNeeded triggered.`);
+
+        StoreNormalMapBriefData.initStore(database);
+        StoreNormalMapRawData.initStore(database);
+        StoreMpmFullReplayInfo.initStore(database);
+        StoreMpmFullReplayData.initStore(database);
+        StoreSpmReplayData.initStore(database);
+        StoreSpmWarSaveSlotFullData.initStore(database);
+        StoreMeFullData.initStore(database);
+        StoreCampaignMapRawData.initStore(database);
+        StoreMcrRoomStaticInfo.initStore(database);
+        StoreCcrRoomStaticInfo.initStore(database);
+        StoreMfrRoomStaticInfo.initStore(database);
+        StoreMpwWarSettings.initStore(database);
+        StoreMpwWarProgressInfo.initStore(database);
+        StoreMpwHalfwayReplayData.initStore(database);
+        StoreMpwWatchWarData.initStore(database);
+        StoreMpwOngoingWarData.initStore(database);
+        StoreMpwUnitStatistics.initStore(database);
+    });
 }
 
 export function setAccount(account: string): void {

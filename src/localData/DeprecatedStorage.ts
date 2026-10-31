@@ -1,13 +1,20 @@
 import {
     Helpers_Gzip,
     LocalData_DeprecatedIndexedDbAccessor,
+    Logger,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 import { MapEditorData } from "../proto/schema/CommonProto/Map/MapEditorData.ts";
 import { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
 
 export function init(): Promise<void> {
-    return LocalData_DeprecatedIndexedDbAccessor.initDatabase();
+    return LocalData_DeprecatedIndexedDbAccessor.initDatabase(database => {
+        Logger.warn(`Deprecated IndexedDB onUpgradeNeeded triggered.`);
+
+        StoreNormalMapRawData.initStore(database);
+        StoreMeFullData.initStore(database);
+        StoreCampaignMapRawData.initStore(database);
+    });
 }
 
 export const StoreNormalMapRawData = new LocalData_DeprecatedIndexedDbAccessor.Store1<number, MapRawData, Uint8Array>({

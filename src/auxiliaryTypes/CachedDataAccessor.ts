@@ -74,6 +74,7 @@ export class CachedDataAccessor<KeyType, DataType> {
     // },
 
     public setData(key: KeyType, data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataType>): void {
+        this.cancelRequestRetry(key);
         this._dataTimestampDict.set(key, Timer_TimerModel.getServerTimestamp());
         this._dataDict.set(key, data);
 

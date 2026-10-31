@@ -1,76 +1,74 @@
 import {
     LocalData_Constants,
-    LocalData_Storage,
     Logger,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 
 const DatabaseName      = LocalData_Constants.NewDatabaseName;
 const DatabaseVersion   = LocalData_Constants.NewDatabaseVersion;
+const MaxInitAttempts   = 3;
 
-export function initDatabase(): Promise<void> {
-    return new Promise<void>(resolve => {
+let currentDatabase         : IDBDatabase | null = null;
+let databaseInitialization  : Promise<void> | null = null;
+
+export function initDatabase(onUpgradeNeeded: (database: IDBDatabase) => void): Promise<void> {
+    if (databaseInitialization == null) {
+        databaseInitialization = initDatabaseWithRetries(onUpgradeNeeded).finally(() => {
+            databaseInitialization = null;
+        });
+    }
+    return databaseInitialization;
+}
+
+async function initDatabaseWithRetries(onUpgradeNeeded: (database: IDBDatabase) => void): Promise<void> {
+    for (let attempt = 1; attempt <= MaxInitAttempts; ++attempt) {
+        try {
+            await initDatabaseOnce(onUpgradeNeeded);
+            return;
+        } catch (error) {
+            Logger.warn(`IndexedDB failed to init (attempt ${attempt}/${MaxInitAttempts}).`, error);
+        }
+    }
+}
+
+function initDatabaseOnce(onUpgradeNeeded: (database: IDBDatabase) => void): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
         const request       = window.indexedDB.open(DatabaseName, DatabaseVersion);
         request.onsuccess   = () => {
             Logger.warn(`IndexedDB init successfully.`);
 
-            const database = request.result;
-            LocalData_Storage.StoreNormalMapBriefData.setDatabase(database);
-            LocalData_Storage.StoreNormalMapRawData.setDatabase(database);
-            LocalData_Storage.StoreMpmFullReplayInfo.setDatabase(database);
-            LocalData_Storage.StoreMpmFullReplayData.setDatabase(database);
-            LocalData_Storage.StoreSpmReplayData.setDatabase(database);
-            LocalData_Storage.StoreSpmWarSaveSlotFullData.setDatabase(database);
-            LocalData_Storage.StoreMeFullData.setDatabase(database);
-            LocalData_Storage.StoreCampaignMapRawData.setDatabase(database);
-            LocalData_Storage.StoreMcrRoomStaticInfo.setDatabase(database);
-            LocalData_Storage.StoreCcrRoomStaticInfo.setDatabase(database);
-            LocalData_Storage.StoreMfrRoomStaticInfo.setDatabase(database);
-            LocalData_Storage.StoreMpwWarSettings.setDatabase(database);
-            LocalData_Storage.StoreMpwWarProgressInfo.setDatabase(database);
-            LocalData_Storage.StoreMpwHalfwayReplayData.setDatabase(database);
-            LocalData_Storage.StoreMpwWatchWarData.setDatabase(database);
-            LocalData_Storage.StoreMpwOngoingWarData.setDatabase(database);
-            LocalData_Storage.StoreMpwUnitStatistics.setDatabase(database);
+            const database  = request.result;
+            currentDatabase = database;
+
+            database.onclose = () => {
+                if (currentDatabase !== database) {
+                    return;
+                }
+
+                currentDatabase = null;
+
+                Logger.warn(`IndexedDB connection closed unexpectedly. Reconnecting.`);
+                initDatabase(onUpgradeNeeded);
+            };
 
             resolve();
         };
+
         request.onupgradeneeded = () => {
-            Logger.warn(`IndexedDB upgrade successfully.`);
-
-            const database = request.result;
-            LocalData_Storage.StoreNormalMapBriefData.initStore(database);
-            LocalData_Storage.StoreNormalMapRawData.initStore(database);
-            LocalData_Storage.StoreMpmFullReplayInfo.initStore(database);
-            LocalData_Storage.StoreMpmFullReplayData.initStore(database);
-            LocalData_Storage.StoreSpmReplayData.initStore(database);
-            LocalData_Storage.StoreSpmWarSaveSlotFullData.initStore(database);
-            LocalData_Storage.StoreMeFullData.initStore(database);
-            LocalData_Storage.StoreCampaignMapRawData.initStore(database);
-            LocalData_Storage.StoreMcrRoomStaticInfo.initStore(database);
-            LocalData_Storage.StoreCcrRoomStaticInfo.initStore(database);
-            LocalData_Storage.StoreMfrRoomStaticInfo.initStore(database);
-            LocalData_Storage.StoreMpwWarSettings.initStore(database);
-            LocalData_Storage.StoreMpwWarProgressInfo.initStore(database);
-            LocalData_Storage.StoreMpwHalfwayReplayData.initStore(database);
-            LocalData_Storage.StoreMpwWatchWarData.initStore(database);
-            LocalData_Storage.StoreMpwOngoingWarData.initStore(database);
-            LocalData_Storage.StoreMpwUnitStatistics.initStore(database);
+            onUpgradeNeeded(request.result);
         };
-        request.onerror     = () => {
-            Logger.warn(`IndexedDB failed to init.`);
 
-            resolve();
+        request.onerror = () => {
+            reject(request.error);
         };
     });
 }
 
 export class Store1<KeyType extends string | number, ValueType, EncodedValueType> {
-    private readonly _storeName              : string;
-    private readonly _encode                 : (data: ValueType) => EncodedValueType;
-    private readonly _decode                 : (data: EncodedValueType) => ValueType;
-    private _database               : IDBDatabase | null = null;
-    private readonly _cache                  = new Map<KeyType, ValueType | null>();
+    private readonly _storeName     : string;
+    private readonly _encode        : (data: ValueType) => EncodedValueType;
+    private readonly _decode        : (data: EncodedValueType) => ValueType;
+    private readonly _cache         = new Map<KeyType, ValueType | null>();
     private _hasCalledGetAllData    = false;
 
     public constructor({ storeName, encode, decode }: {
@@ -94,9 +92,6 @@ export class Store1<KeyType extends string | number, ValueType, EncodedValueType
         }
         databaseForInit.createObjectStore(storeName, { keyPath : "key" });
     }
-    public setDatabase(databaseForTransaction: IDBDatabase): void {
-        this._database = databaseForTransaction;
-    }
 
     public getData(key: KeyType): Promise<ValueType | null> {
         return new Promise<ValueType | null>(resolve => {
@@ -105,7 +100,7 @@ export class Store1<KeyType extends string | number, ValueType, EncodedValueType
                 return;
             }
 
-            const request = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).get(key);
+            const request = currentDatabase?.transaction(this._storeName, "readonly").objectStore(this._storeName).get(key);
             if (request == null) {
                 resolve(null);
                 return;
@@ -133,7 +128,7 @@ export class Store1<KeyType extends string | number, ValueType, EncodedValueType
                 return;
             }
 
-            const request = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
+            const request = currentDatabase?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
             if (request == null) {
                 resolve(allDataDict);
                 return;
@@ -159,7 +154,7 @@ export class Store1<KeyType extends string | number, ValueType, EncodedValueType
     public getAllEncodedDataDict(): Promise<Map<KeyType, EncodedValueType>> {
         return new Promise<Map<KeyType, EncodedValueType>>(resolve => {
             const allDataDict   = new Map<KeyType, EncodedValueType>();
-            const request       = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
+            const request       = currentDatabase?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
             if (request == null) {
                 resolve(allDataDict);
                 return;
@@ -176,7 +171,7 @@ export class Store1<KeyType extends string | number, ValueType, EncodedValueType
     }
     public getAllDataCount(): Promise<number> {
         return new Promise<number>(resolve => {
-            const request = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).count();
+            const request = currentDatabase?.transaction(this._storeName, "readonly").objectStore(this._storeName).count();
             if (request == null) {
                 resolve(0);
                 return;
@@ -191,7 +186,7 @@ export class Store1<KeyType extends string | number, ValueType, EncodedValueType
 
     public setData(key: KeyType, value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueType>): Promise<void> {
         return new Promise<void>(resolve => {
-            const store = this._database?.transaction(this._storeName, "readwrite").objectStore(this._storeName);
+            const store = currentDatabase?.transaction(this._storeName, "readwrite").objectStore(this._storeName);
             if (store == null) {
                 resolve();
                 return;
@@ -220,11 +215,10 @@ export class Store1<KeyType extends string | number, ValueType, EncodedValueType
 }
 
 export class Store2<ValueType, EncodedValueType> {
-    private readonly _storeName              : string;
-    private readonly _encode                 : (data: ValueType) => EncodedValueType;
-    private readonly _decode                 : (data: EncodedValueType) => ValueType;
-    private _database               : IDBDatabase | null = null;
-    private readonly _cache                  = new Map<number, Map<number, ValueType | null>>();
+    private readonly _storeName     : string;
+    private readonly _encode        : (data: ValueType) => EncodedValueType;
+    private readonly _decode        : (data: EncodedValueType) => ValueType;
+    private readonly _cache         = new Map<number, Map<number, ValueType | null>>();
     private _hasCalledGetAllData    = false;
 
     public constructor({ storeName, encode, decode }: {
@@ -248,9 +242,6 @@ export class Store2<ValueType, EncodedValueType> {
         }
         databaseForInit.createObjectStore(storeName, { keyPath : ["key1", "key2"] });
     }
-    public setDatabase(databaseForTransaction: IDBDatabase): void {
-        this._database = databaseForTransaction;
-    }
 
     public getData(key1: number, key2: number): Promise<ValueType | null> {
         return new Promise<ValueType | null>(resolve => {
@@ -263,7 +254,7 @@ export class Store2<ValueType, EncodedValueType> {
                 }
             }
 
-            const request = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).get([key1, key2]);
+            const request = currentDatabase?.transaction(this._storeName, "readonly").objectStore(this._storeName).get([key1, key2]);
             if (request == null) {
                 resolve(null);
                 return;
@@ -293,7 +284,7 @@ export class Store2<ValueType, EncodedValueType> {
                 return;
             }
 
-            const request = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
+            const request = currentDatabase?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
             if (request == null) {
                 resolve(allDataDict);
                 return;
@@ -330,7 +321,7 @@ export class Store2<ValueType, EncodedValueType> {
                 return;
             }
 
-            const request = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
+            const request = currentDatabase?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
             if (request == null) {
                 resolve(allDataDict);
                 return;
@@ -353,7 +344,7 @@ export class Store2<ValueType, EncodedValueType> {
     public getAllEncodedDataDict(): Promise<Map<number, Map<number, EncodedValueType>>> {
         return new Promise<Map<number, Map<number, EncodedValueType>>>(resolve => {
             const allDataDict   = new Map<number, Map<number, EncodedValueType>>();
-            const request       = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
+            const request       = currentDatabase?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
             if (request == null) {
                 resolve(allDataDict);
                 return;
@@ -378,7 +369,7 @@ export class Store2<ValueType, EncodedValueType> {
     }
     public getAllDataCount(): Promise<number> {
         return new Promise<number>(resolve => {
-            const request = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).count();
+            const request = currentDatabase?.transaction(this._storeName, "readonly").objectStore(this._storeName).count();
             if (request == null) {
                 resolve(0);
                 return;
@@ -393,7 +384,7 @@ export class Store2<ValueType, EncodedValueType> {
 
     public setData(key1: number, key2: number, value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueType>): Promise<void> {
         return new Promise<void>(resolve => {
-            const store = this._database?.transaction(this._storeName, "readwrite").objectStore(this._storeName);
+            const store = currentDatabase?.transaction(this._storeName, "readwrite").objectStore(this._storeName);
             if (store == null) {
                 resolve();
                 return;

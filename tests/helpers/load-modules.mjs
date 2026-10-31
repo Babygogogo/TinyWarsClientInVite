@@ -6,7 +6,7 @@ import ts from 'typescript'
 
 const sources = new Map()
 
-export function loadInternalModules() {
+export function loadInternalModules(globals = {}) {
   return loadModules(fileURLToPath(new URL('../../src/internal.ts', import.meta.url)), {
     DOMRect: class DOMRect {},
     document: {
@@ -15,6 +15,7 @@ export function loadInternalModules() {
         return { setAttribute() {}, appendChild() {}, addEventListener() {} }
       },
     },
+    ...globals,
   })
 }
 
