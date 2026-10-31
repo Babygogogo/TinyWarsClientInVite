@@ -1,27 +1,13 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
     MultiFreeRoom_Model_MfrModel,
     type Egret_Egret,
 } from "../../internal.ts";
-import type { S as MfrAddDummyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrAddDummy/S.ts";
 import type { C as MfrCreateRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMfrCreateRoom/C.ts";
-import type { S as MfrCreateRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrCreateRoom/S.ts";
-import type { S as MfrDeletePlayerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrDeletePlayer/S.ts";
-import type { S as MfrDeleteRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrDeleteRoom/S.ts";
-import type { S as MfrExitRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrExitRoom/S.ts";
-import type { S as MfrGetJoinableRoomIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetJoinableRoomIdArray/S.ts";
-import type { S as MfrGetJoinedRoomIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetJoinedRoomIdArray/S.ts";
-import type { S as MfrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomPlayerInfo/S.ts";
-import type { S as MfrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomStaticInfo/S.ts";
-import type { S as MfrInviteResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrInvite/S.ts";
-import type { S as MfrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/S.ts";
-import type { S as MfrSetDummySettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrSetDummySettings/S.ts";
-import type { S as MfrSetReadyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrSetReady/S.ts";
 import type { C as MfrSetSelfSettingsRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMfrSetSelfSettings/C.ts";
-import type { S as MfrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrSetSelfSettings/S.ts";
-import type { S as MfrStartWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrStartWar/S.ts";
 
 export function init(): void {
     Networks_Manager.addListeners([
@@ -49,7 +35,7 @@ export function reqCreateRoom(param: MfrCreateRoomRequest): void {
     });
 }
 function _onMsgMfrCreateRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrCreateRoom"]>): void {
-    const data = e.data as MfrCreateRoomResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrCreateRoom", { msg: data });
     }
@@ -65,7 +51,7 @@ export function reqMfrJoinRoom(roomId: number): void {
     });
 }
 async function _onMsgMfrJoinRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrJoinRoom"]>): Promise<void> {
-    const data = e.data as MfrJoinRoomResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrJoinRoom", { msg: data });
     }
@@ -81,7 +67,7 @@ export function reqMfrDeleteRoom(roomId: number): void {
     });
 }
 function _onMsgMfrDeleteRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrDeleteRoom"]>): void {
-    const data = e.data as MfrDeleteRoomResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrDeleteRoom", { msg: data });
     }
@@ -97,7 +83,7 @@ export function reqMfrExitRoom(roomId: number): void {
     });
 }
 async function _onMsgMfrExitRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrExitRoom"]>): Promise<void> {
-    const data = e.data as MfrExitRoomResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrExitRoom", { msg: data });
     }
@@ -115,7 +101,7 @@ export function reqMfrDeletePlayer(roomId: number, playerIndex: number, forbidRe
     });
 }
 async function _onMsgMfrDeletePlayer(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrDeletePlayer"]>): Promise<void> {
-    const data = e.data as MfrDeletePlayerResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrDeletePlayer", { msg: data });
     }
@@ -134,7 +120,7 @@ export function reqMfrAddDummy(roomId: number, playerIndex: number, coId: number
     });
 }
 function _onMsgMfrAddDummy(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrAddDummy"]>): void {
-    const data = e.data as MfrAddDummyResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrAddDummy", { msg: data });
     }
@@ -153,7 +139,7 @@ export function reqMfrSetDummySettings(roomId: number, playerIndex: number, coId
     });
 }
 function _onMsgMfrSetDummySettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrSetDummySettings"]>): void {
-    const data = e.data as MfrSetDummySettingsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrSetDummySettings", { msg: data });
     }
@@ -170,7 +156,7 @@ export function reqMfrInvite(roomId: number, userIdArray: number[]): void {
     });
 }
 function _onMsgMfrInvite(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrInvite"]>): void {
-    const data = e.data as MfrInviteResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrInvite", { msg: data });
     }
@@ -187,7 +173,7 @@ export function reqMfrSetReady(roomId: number, isReady: boolean): void {
     });
 }
 async function _onMsgMfrSetReady(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrSetReady"]>): Promise<void> {
-    const data = e.data as MfrSetReadyResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrSetReady", { msg: data });
     }
@@ -199,7 +185,7 @@ export function reqMfrSetSelfSettings(data: MfrSetSelfSettingsRequest): void {
     });
 }
 async function _onMsgMfrSetSelfSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrSetSelfSettings"]>): Promise<void> {
-    const data = e.data as MfrSetSelfSettingsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrSetSelfSettings", { msg: data });
     }
@@ -215,7 +201,7 @@ export function reqMfrGetRoomStaticInfo(roomId: number): void {
     });
 }
 async function _onMsgMfrGetRoomStaticInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrGetRoomStaticInfo"]>): Promise<void> {
-    const data = e.data as MfrGetRoomStaticInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MultiFreeRoom_Model_MfrModel.updateOnFailedMsgMfrGetRoomStaticInfo(data);
     } else {
@@ -234,7 +220,7 @@ export function reqMfrGetRoomPlayerInfo(roomId: number): void {
     });
 }
 function _onMsgMfrGetRoomPlayerInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrGetRoomPlayerInfo"]>): void {
-    const data = e.data as MfrGetRoomPlayerInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MultiFreeRoom_Model_MfrModel.updateOnFailedMsgMfrGetRoomPlayerInfo(data);
     } else {
@@ -252,7 +238,7 @@ export function reqMfrGetJoinableRoomIdArray(): void {
     });
 }
 function _onMsgMfrGetJoinableRoomIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrGetJoinableRoomIdArray"]>): void {
-    const data = e.data as MfrGetJoinableRoomIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         MultiFreeRoom_Model_MfrModel.setJoinableRoomIdArray(data.getRoomIdArray());
         Notifications_Dispatcher.dispatch("MsgMfrGetJoinableRoomIdArray", { msg: data });
@@ -268,7 +254,7 @@ export function reqMfrGetJoinedRoomIdArray(): void {
     });
 }
 function _onMsgMfrGetJoinedRoomIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrGetJoinedRoomIdArray"]>): void {
-    const data = e.data as MfrGetJoinedRoomIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         MultiFreeRoom_Model_MfrModel.setJoinedRoomIdArray(data.getRoomIdArray());
         Notifications_Dispatcher.dispatch("MsgMfrGetJoinedRoomIdArray", { msg: data });
@@ -285,7 +271,7 @@ export function reqMfrStartWar(roomId: number): void {
     });
 }
 function _onMsgMfrStartWar(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMfrStartWar"]>): void {
-    const data = e.data as MfrStartWarResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMfrStartWar", { msg: data });
     }

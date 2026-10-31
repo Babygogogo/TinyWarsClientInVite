@@ -60,14 +60,14 @@ export class BwCursor implements BaseWar_Interface_IBwCursor.IBwCursor {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onNotifyBwCursorTapped(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorTapped"]>): void {
         if (this.getIsMovableByTouches()) {
-            const data = e.data as Notifications_Mapping.Mapping["BwCursorTapped"];
+            const data = Helpers_Misc.getExisted(e.data);
             this.setGridIndex(data.tappedOn);
             this.updateView();
         }
     }
     private _onNotifyBwCursorDragged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorDragged"]>): void {
         if (this.getIsMovableByTouches()) {
-            const data = e.data as Notifications_Mapping.Mapping["BwCursorDragged"];
+            const data = Helpers_Misc.getExisted(e.data);
             this.setGridIndex(data.draggedTo);
             this.updateView();
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorMove01);

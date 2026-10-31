@@ -243,7 +243,7 @@ export class UiZoomableComponent extends Ui_Components_UiContainerBase.UiContain
     private _onPointerWheel(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
-        const data = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data = Helpers_Misc.getExisted(e.data);
         this.setZoomByScroll(data.stageX, data.stageY, data.wheelValue ?? 0);
     }
 
@@ -253,7 +253,7 @@ export class UiZoomableComponent extends Ui_Components_UiContainerBase.UiContain
         //     this.on(UiTypes.RawEventName.PointerGlobalMove,   this._onTouchMove, this);
         // }
 
-        const data      = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data      = Helpers_Misc.getExisted(e.data);
         const touchId   = data.pointerId;
         if (touchesCount <= 1) {
             this._currGlobalTouchPoints.set(touchId, { x : data.stageX, y : data.stageY });
@@ -261,16 +261,16 @@ export class UiZoomableComponent extends Ui_Components_UiContainerBase.UiContain
         }
     }
     private _onTouchEnd(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        this._removeTouch((e.data as Helpers_PointerInput.PointerUnifiedEventData).pointerId);
+        this._removeTouch((Helpers_Misc.getExisted(e.data)).pointerId);
     }
     // private _onTouchCancel(e: UiEventTypes.UiTouchEvent): void {
     //     this._removeTouch(e.touchPointID);
     // }
     private _onTouchReleaseOutside(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        this._removeTouch((e.data as Helpers_PointerInput.PointerUnifiedEventData).pointerId);
+        this._removeTouch((Helpers_Misc.getExisted(e.data)).pointerId);
     }
     private _onTouchMove(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data                  = Helpers_Misc.getExisted(e.data);
         const touchId               = data.pointerId;
         const currGlobalTouchPoints = this._currGlobalTouchPoints;
         const prevGlobalTouchPoints = this._prevGlobalTouchPoints;

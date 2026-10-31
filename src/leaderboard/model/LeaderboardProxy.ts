@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
@@ -6,9 +7,6 @@ import {
     type Egret_Egret,
     type WarTypes_Constants,
 } from "../../internal.ts";
-import type { S as LbMrwGetRankIndexResponse } from "../../proto/schema/CommonProto/NetMessage/MsgLbMrwGetRankIndex/S.ts";
-import type { S as LbSpmOverallGetRankInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetRankInfo/S.ts";
-import type { S as LbSpmOverallGetTopDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetTopDataArray/S.ts";
 
 export function init(): void {
     Networks_Manager.addListeners([
@@ -28,7 +26,7 @@ export function reqLbSpmOverallGetTopDataArray(configVersion: string): void {
     });
 }
 function _onMsgLbSpmOverallGetTopDataArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgLbSpmOverallGetTopDataArray"]>): void {
-    const data = e.data as LbSpmOverallGetTopDataArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Leaderboard_Model_LeaderboardModel.updateOnMsgLbSpmOverallGetTopDataArray(data);
         Notifications_Dispatcher.dispatch("MsgLbSpmOverallGetTopDataArray", { msg: data });
@@ -45,7 +43,7 @@ export function reqLbSpmOverallGetRankInfo(userId: number): void {
     });
 }
 function _onMsgLbSpmOverallGetRankInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgLbSpmOverallGetRankInfo"]>): void {
-    const data = e.data as LbSpmOverallGetRankInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         Leaderboard_Model_LeaderboardModel.updateOnFailedMsgLbSpmOverallGetRankInfo(data);
     } else {
@@ -66,7 +64,7 @@ export function reqLbMrwGetRankIndex(warType: WarTypes_Constants.WarTypeId, play
     });
 }
 function _onMsgLbMrwGetRankIndex(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgLbMrwGetRankIndex"]>): void {
-    const data = e.data as LbMrwGetRankIndexResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         Leaderboard_Model_LeaderboardModel.updateOnFailedMsgLbMrwGetRankIndex(data);
     } else {

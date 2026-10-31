@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     GamePanels_Dict,
     GamePanels_Manager,
     Helpers_PointerInput,
@@ -97,7 +98,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const groupBar  = this._groupBar;
         const minNumber = openData.minNumber;
         const barWidth  = groupBar.getScaledWidth();
-        const data      = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data      = Helpers_Misc.getExisted(e.data);
         const touchX    = groupBar.globalToLocal(data.stageX, data.stageY).x;
         const num       = Math.round(Math.max(0, Math.min(touchX, barWidth)) / barWidth * (openData.maxNumber - minNumber)) + minNumber;
         if (Math.abs(touchX - this._imgLowerPoint.getX()) <= Math.abs(touchX - this._imgUpperPoint.getX()) ) {
@@ -112,7 +113,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateGroupBar();
     }
     private _onTouchBeginGroupBar(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data          = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data          = Helpers_Misc.getExisted(e.data);
         const touchX        = this._groupBar.globalToLocal(data.stageX, data.stageY).x;
         this._touchingType  = Math.abs(touchX - this._imgLowerPoint.getX()) <= Math.abs(touchX - this._imgUpperPoint.getX())
             ? TouchingType.Lower
@@ -132,7 +133,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const groupBar  = this._groupBar;
         const minNumber = openData.minNumber;
         const barWidth  = groupBar.getScaledWidth();
-        const data      = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data      = Helpers_Misc.getExisted(e.data);
         const touchX    = groupBar.globalToLocal(data.stageX, data.stageY).x;
         const num       = Math.round(Math.max(0, Math.min(touchX, barWidth)) / barWidth * (openData.maxNumber - minNumber)) + minNumber;
         if (touchingType === TouchingType.Lower) {

@@ -1,19 +1,19 @@
 import {
     Egret_Egret,
-    Utils_ClientErrorCode,
-    Notifications_Dispatcher,
+    FloatText,
     GameVersions_Utils,
+    Helpers_Misc,
+    Lang_Constants,
     Lang_Utils,
     Logger,
     Networks_MessageCodes,
-    Helpers_Misc,
-    Utils_ServerErrorCode,
-    FloatText,
-    Lang_Constants,
     Networks_WebsocketConnection,
+    Notifications_Dispatcher,
+    Utils_ClientErrorCode,
+    Utils_ServerErrorCode,
 } from "../internal.ts";
 import {
-    type MessageContainerJson as ProtoMessageContainerJson,
+    type MessageContainerJson,
     MessageContainer,
 } from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
 import { MsgMpwCommonHandleBoot } from "../proto/schema/CommonProto/NetMessage/MsgMpwCommonHandleBoot.ts";
@@ -90,21 +90,21 @@ export function init(): void {
     resetConnection();
 }
 
- 
+
 export function addListeners(listeners: MsgListener[], thisObject?: unknown): void {
     for (const one of listeners) {
         dispatcher.addEventListener(Networks_MessageCodes.MessageCodes[one.msgCode], one.callback as Egret_Egret.EventListener, one.thisObject || thisObject);
     }
 }
 
- 
+
 export function removeListeners(listeners: MsgListener[], thisObject?: unknown): void {
     for (const one of listeners) {
         dispatcher.removeEventListener(Networks_MessageCodes.MessageCodes[one.msgCode], one.callback as Egret_Egret.EventListener, one.thisObject || thisObject);
     }
 }
 
-export function send(containerJson: ProtoMessageContainerJson): void {
+export function send(containerJson: MessageContainerJson): void {
     if (USE_SIGNALR) {
         // const connection = _signalRConnection;
         // if ((!connection) || (connection.state !== signalR.HubConnectionState.Connected)) {
@@ -270,9 +270,9 @@ function _onConnectionData(connection: Networks_WebsocketConnection.WebsocketCon
 //     }
 // }
 
-function getMessageName(container: ProtoMessageContainerJson): keyof ProtoMessageContainerJson {
+function getMessageName(container: MessageContainerJson): keyof MessageContainerJson {
     for (const k in container) {
-        return k as keyof ProtoMessageContainerJson;
+        return k as keyof MessageContainerJson;
     }
     throw Helpers_Misc.newError(`Invalid container.`, Utils_ClientErrorCode.ClientErrorCode.Helpers_GetMessageName_00);
 }

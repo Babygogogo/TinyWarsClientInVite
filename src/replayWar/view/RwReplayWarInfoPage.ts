@@ -13,8 +13,6 @@ import {
     type Ui_Interfaces_IUiLabel,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
-import type { S as ReplayGetReplayInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
-import type { S as ReplayGetSelfRatingResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
 import type { ReplayInfo } from "../../proto/schema/CommonProto/Replay/ReplayInfo.ts";
 
 export type OpenData = {
@@ -75,7 +73,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
     }
 
     private _onNotifyMsgReplayGetBriefInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgReplayGetReplayInfo"]>): void {
-        const data      = (e.data as { msg: ReplayGetReplayInfoResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const replayId  = this.getOpenData()?.replayId;
         if ((replayId != null) && (replayId === data.getReplayId())) {
             this._updateComponentsForReplayBriefInfo();
@@ -83,7 +81,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
     }
 
     private _onNotifyMsgReplayGetSelfRating(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgReplayGetSelfRating"]>): void {
-        const data      = (e.data as { msg: ReplayGetSelfRatingResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const replayId  = this.getOpenData()?.replayId;
         if ((replayId != null) && (replayId === data.getReplayId())) {
             this._updateLabelMyRating();

@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     type Notifications_Mapping,
     Graphics_Constants,
     Emails_Constants,
@@ -20,7 +21,6 @@ import {
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiPromptedInput,
 } from "../../internal.ts";
-import type { S as UserRequestEmailVerificationCodeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
 
 let _lastRequestTimestamp = 0;
 
@@ -81,7 +81,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgUserRequestEmailVerificationCode(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserRequestEmailVerificationCode"]>): void {
         FloatText.showLang(Lang_Constants.TextType.A0863);
 
-        _lastRequestTimestamp = (((e.data as { msg: UserRequestEmailVerificationCodeResponse }).msg).getEndTimestamp() ?? 0) - Emails_Constants.Common.VerificationCodeExpiration;
+        _lastRequestTimestamp = (((Helpers_Misc.getExisted(e.data)).msg).getEndTimestamp() ?? 0) - Emails_Constants.Common.VerificationCodeExpiration;
         this._updateLabelEmailState();
     }
     private _onNotifyMsgUserRequestEmailVerificationCodeFailed(): void {

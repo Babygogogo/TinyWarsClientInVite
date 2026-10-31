@@ -50,7 +50,6 @@ import {
 } from "../../internal.ts";
 
 import type { TileTemplateCfg } from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type { S as MpwCommonMarkGridResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonMarkGrid/S.ts";
 import { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 
 let _selectedMarkTypeId         = GridMarks_Constants.TypeId.MinMarkTypeId;
@@ -175,7 +174,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateTileView();
     }
     private _onNotifyTileBuffChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwTileBuffChanged"]>): void {
-        if ((e.data as Notifications_Mapping.Mapping["BwTileBuffChanged"]).tile === this.getOpenData()?.tile) {
+        if ((Helpers_Misc.getExisted(e.data)).tile === this.getOpenData()?.tile) {
             this._updateTileView();
             this._updateListInfo();
         }
@@ -190,7 +189,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const tileId = tile.getGridIndex().getGridId(tile.getWar().getTileMap().getMapSize());
-        if (((e.data as { msg: MpwCommonMarkGridResponse }).msg).getGridIdArrayForAddMark().indexOf(tileId) >= 0) {
+        if (((Helpers_Misc.getExisted(e.data)).msg).getGridIdArrayForAddMark().indexOf(tileId) >= 0) {
             FloatText.showLang(Lang_Constants.TextType.A0848);
         }
 

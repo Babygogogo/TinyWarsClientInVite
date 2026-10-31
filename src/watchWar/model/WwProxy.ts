@@ -1,20 +1,11 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
     WatchWar_Model_WwModel,
     type Egret_Egret,
 } from "../../internal.ts";
-import type { S as MpwWatchContinueWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchContinueWar/S.ts";
-import type { S as MpwWatchDeleteWatcherResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchDeleteWatcher/S.ts";
-import type { S as MpwWatchGetIncomingInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetIncomingInfo/S.ts";
-import type { S as MpwWatchGetOngoingWarIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetOngoingWarIdArray/S.ts";
-import type { S as MpwWatchGetOutgoingInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetOutgoingInfo/S.ts";
-import type { S as MpwWatchGetRequestableWarIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetRequestableWarIdArray/S.ts";
-import type { S as MpwWatchGetRequestedWarIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetRequestedWarIdArray/S.ts";
-import type { S as MpwWatchGetWatchedWarIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetWatchedWarIdArray/S.ts";
-import type { S as MpwWatchHandleRequestResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchHandleRequest/S.ts";
-import type { S as MpwWatchMakeRequestResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchMakeRequest/S.ts";
 
 export function init(): void {
     Networks_Manager.addListeners([
@@ -53,7 +44,7 @@ export function reqMpwWatchGetRequestableWarIdArray({ warId, coCategoryId, norma
     });
 }
 function _onMsgMpwWatchGetRequestableWarIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwWatchGetRequestableWarIdArray"]>): void {
-    const data = e.data as MpwWatchGetRequestableWarIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         WatchWar_Model_WwModel.setRequestableWarIdArray(data.getWarIdArray());
         Notifications_Dispatcher.dispatch("MsgMpwWatchGetRequestableWarIdArray", { msg: data });
@@ -69,7 +60,7 @@ export function reqMpwWatchGetOngoingWarIdArray(): void {
     });
 }
 function _onMsgMpwWatchGetOngoingWarIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwWatchGetOngoingWarIdArray"]>): void {
-    const data = e.data as MpwWatchGetOngoingWarIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         WatchWar_Model_WwModel.setOngoingWarIdArray(data.getWarIdArray());
         Notifications_Dispatcher.dispatch("MsgMpwWatchGetOngoingWarInfos", { msg: data });
@@ -85,7 +76,7 @@ export function reqMpwWatchRequestedWarIdArray(): void {
     });
 }
 function _onMsgMpwWatchGetRequestedWarIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwWatchGetRequestedWarIdArray"]>): void {
-    const data = e.data as MpwWatchGetRequestedWarIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         WatchWar_Model_WwModel.setRequestedWarIdArray(data.getWarIdArray());
         Notifications_Dispatcher.dispatch("MsgMpwWatchGetRequestedWarIdArray", { msg: data });
@@ -101,7 +92,7 @@ export function reqMpwWatchWatchedWarIdArray(): void {
     });
 }
 function _onMsgMpwWatchGetWatchedWarIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwWatchGetWatchedWarIdArray"]>): void {
-    const data = e.data as MpwWatchGetWatchedWarIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         WatchWar_Model_WwModel.setWatchedWarIdArray(data.getWarIdArray());
         Notifications_Dispatcher.dispatch("MsgMpwWatchGetWatchedWarInfos", { msg: data });
@@ -119,7 +110,7 @@ export function reqWatchMakeRequest(warId: number, dstUserIds: number[]): void {
     });
 }
 function _onMsgMpwWatchMakeRequest(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwWatchMakeRequest"]>): void {
-    const data = e.data as MpwWatchMakeRequestResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMpwWatchMakeRequest", { msg: data });
     }
@@ -137,7 +128,7 @@ export function reqWatchHandleRequest(warId: number, acceptSrcUserIds: number[],
     });
 }
 function _onMsgMpwWatchHandleRequest(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwWatchHandleRequest"]>): void {
-    const data = e.data as MpwWatchHandleRequestResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMpwWatchHandleRequest", { msg: data });
     }
@@ -154,7 +145,7 @@ export function reqWatchDeleteWatcher(warId: number, watcherUserIds: number[]): 
     });
 }
 function _onMsgMpwWatchDeleteWatcher(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwWatchDeleteWatcher"]>): void {
-    const data = e.data as MpwWatchDeleteWatcherResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMpwWatchDeleteWatcher", { msg: data });
     }
@@ -170,7 +161,7 @@ export function reqWatchContinueWar(warId: number): void {
     });
 }
 async function _onMsgMpwWatchContinueWar(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwWatchContinueWar"]>): Promise<void> {
-    const data = e.data as MpwWatchContinueWarResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         WatchWar_Model_WwModel.updateOnFailedMsgMpwWatchContinueWar(data);
     } else {
@@ -189,7 +180,7 @@ export function reqMpwWatchGetIncomingInfo(warId: number): void {
     });
 }
 function _onMsgMpwWatchGetIncomingInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwWatchGetIncomingInfo"]>): void {
-    const data = e.data as MpwWatchGetIncomingInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         WatchWar_Model_WwModel.updateOnFailedMpwWatchGetIncomingInfo(data);
     } else {
@@ -208,7 +199,7 @@ export function reqMpwWatchGetOutgoingInfo(warId: number): void {
     });
 }
 function _onMsgMpwWatchGetOutgoingInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwWatchGetOutgoingInfo"]>): void {
-    const data = e.data as MpwWatchGetOutgoingInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         WatchWar_Model_WwModel.updateOnFailedMpwWatchGetOutgoingInfo(data);
     } else {

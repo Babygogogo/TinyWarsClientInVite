@@ -1,6 +1,6 @@
 import ts from 'typescript'
 
-export function collectEventListeners(program) {
+export function collectEventListeners(program, { kind = 'all' } = {}) {
   const checker = program.getTypeChecker()
   const sources = program.getSourceFiles().filter(source =>
     !source.isDeclarationFile && !source.fileName.includes('/proto/') && !source.fileName.includes('/node_modules/')
@@ -26,7 +26,8 @@ export function collectEventListeners(program) {
   const noData = commonTypes.get('enterFrame')
   const listeners = new Map()
 
-  function register(callback, expected) {
+  function register(callback, expected, listenerKind = 'other') {
+    if (kind !== 'all' && kind !== listenerKind) return
     if (ts.isAsExpression(callback)) callback = callback.expression
     const symbol = checker.getSymbolAtLocation(callback)
     const declarations = ts.isArrowFunction(callback) || ts.isFunctionExpression(callback)
@@ -44,7 +45,18 @@ export function collectEventListeners(program) {
       const parameter = declaration?.parameters?.[0]
       if (!parameter) continue
       if (!listeners.has(parameter)) listeners.set(parameter, new Set())
+      if (listeners.get(parameter).has(expected)) continue
       listeners.get(parameter).add(expected)
+      const eventSymbol = checker.getSymbolAtLocation(parameter.name)
+      function visitForwardedEvent(node) {
+        if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)
+            && node.expression.expression.kind === ts.SyntaxKind.ThisKeyword
+            && node.arguments[0] && checker.getSymbolAtLocation(node.arguments[0]) === eventSymbol) {
+          register(node.expression, expected, listenerKind)
+        }
+        ts.forEachChild(node, visitForwardedEvent)
+      }
+      if (declaration.body) visitForwardedEvent(declaration.body)
     }
   }
 
@@ -54,12 +66,12 @@ export function collectEventListeners(program) {
       const callback = properties.find(property => property.name.getText() === 'callback')
       const type = properties.find(property => property.name.getText() === 'type')
       if (callback && type && ts.isStringLiteral(type.initializer) && mappingTypes.has(type.initializer.text)) {
-        register(callback.initializer, mappingTypes.get(type.initializer.text))
+        register(callback.initializer, mappingTypes.get(type.initializer.text), 'notification')
       }
       const msgCode = properties.find(property => property.name.getText() === 'msgCode')
       if (callback && msgCode && ts.isPropertyAccessExpression(msgCode.initializer)
           && msgCode.initializer.expression.getText() === 'Networks_MessageCodes.MessageCodes') {
-        register(callback.initializer, responseTypes.get(msgCode.initializer.name.text))
+        register(callback.initializer, responseTypes.get(msgCode.initializer.name.text), 'network')
       }
       if (callback && properties.some(property => property.name.getText() === 'ui')) {
         const eventType = properties.find(property => property.name.getText() === 'eventType')?.initializer
@@ -93,7 +105,7 @@ export function collectEventListeners(program) {
       } else if (['addEventListener', 'removeEventListener'].includes(method)) {
         const type = node.arguments[0]
         if (node.expression.expression.getText() === 'Notifications_Dispatcher' && ts.isStringLiteral(type)) {
-          register(node.arguments[1], mappingTypes.get(type.text))
+          register(node.arguments[1], mappingTypes.get(type.text), 'notification')
         } else if (ts.isPropertyAccessExpression(type) && type.expression.getText() === 'Helpers_PointerInput.PointerEventType') {
           register(node.arguments[1], pointerType)
         }

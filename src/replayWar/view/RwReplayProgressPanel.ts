@@ -83,7 +83,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupProgress(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data              = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data              = Helpers_Misc.getExisted(e.data);
         const group             = this._groupProgress;
         const point             = group.globalToLocal(data.stageX, data.stageY);
         const width             = group.getUnscaledWidth();
@@ -94,7 +94,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateLabelTarget();
     }
     private _onTouchMoveGroupProgress(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data              = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data              = Helpers_Misc.getExisted(e.data);
         const group             = this._groupProgress;
         const point             = group.globalToLocal(data.stageX, data.stageY);
         const width             = group.getUnscaledWidth();

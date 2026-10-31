@@ -1,13 +1,11 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
     Common_Model_CommonModel,
     type Egret_Egret,
 } from "../../internal.ts";
-import type { S as CommonGetCoStatisticsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/S.ts";
-import type { S as CommonGetRankListResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetRankList/S.ts";
-import type { S as CommonGetServerStatusResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetServerStatus/S.ts";
 
 export function init(): void {
     Networks_Manager.addListeners([
@@ -27,7 +25,7 @@ export function reqCommonGetServerStatus(): void {
     Networks_Manager.send({ MsgCommonGetServerStatus : { c : {} } });
 }
 function _onMsgCommonGetServerStatus(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonGetServerStatus"]>): void {
-    const data = e.data as CommonGetServerStatusResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgCommonGetServerStatus", { msg: data });
     }
@@ -37,7 +35,7 @@ export function reqGetRankList(): void {
     Networks_Manager.send({ MsgCommonGetRankList : { c : {} } });
 }
 function _onMsgCommonGetRankList(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonGetRankList"]>): void {
-    const data = e.data as CommonGetRankListResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Common_Model_CommonModel.setMrwRankArray(data.getMrwRankDataArray());
         Notifications_Dispatcher.dispatch("MsgCommonGetRankList", { msg: data });
@@ -48,7 +46,7 @@ export function reqCommonGetCoStatistics(): void {
     Networks_Manager.send({ MsgCommonGetCoStatistics : { c : {} } });
 }
 function _onMsgCommonGetCoStatistics(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonGetCoStatistics"]>): void {
-    const data = e.data as CommonGetCoStatisticsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Common_Model_CommonModel.setCoStatistics(data);
         Notifications_Dispatcher.dispatch("MsgCommonGetCoStatistics", { msg: data });

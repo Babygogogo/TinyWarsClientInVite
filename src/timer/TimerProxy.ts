@@ -1,11 +1,11 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
     Timer_TimerModel,
     type Egret_Egret,
 } from "../internal.ts";
-import type { S as CommonHeartbeatResponse } from "../proto/schema/CommonProto/NetMessage/MsgCommonHeartbeat/S.ts";
 
 export function init(): void {
     Networks_Manager.addListeners([
@@ -23,7 +23,7 @@ export function reqCommonHeartbeat(counter: number): void {
     });
 }
 function _onMsgCommonHeartbeat(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonHeartbeat"]>): void {
-    const data = e.data as CommonHeartbeatResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Timer_TimerModel.updateOnMsgCommonHeartbeat(data);
         Notifications_Dispatcher.dispatch("MsgCommonHeartbeat", { msg: data });

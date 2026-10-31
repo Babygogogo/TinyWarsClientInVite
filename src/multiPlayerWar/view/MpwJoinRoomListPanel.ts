@@ -38,15 +38,6 @@ import {
     Ui_Components_UiTabItemRenderer,
     Timer_TimerModel,
 } from "../../internal.ts";
-import type { S as CcrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomPlayerInfo/S.ts";
-import type { S as CcrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomStaticInfo/S.ts";
-import type { S as CcrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrJoinRoom/S.ts";
-import type { S as McrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomPlayerInfo/S.ts";
-import type { S as McrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomStaticInfo/S.ts";
-import type { S as McrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrJoinRoom/S.ts";
-import type { S as MfrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomPlayerInfo/S.ts";
-import type { S as MfrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomStaticInfo/S.ts";
-import type { S as MfrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/S.ts";
 
 export interface OpenData {
     preferredRoomType   : MultiPlayerRooms_Constants.MultiPlayerRoomType;
@@ -155,17 +146,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMcrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrJoinRoom"]>): void {
-        const data      = (e.data as { msg: McrJoinRoomResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrRoomInfoPanel, { roomId });
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
     }
     private _onNotifyMsgMcrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrGetRoomStaticInfo"]>): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr, ((e.data as { msg: McrGetRoomStaticInfoResponse }).msg).getRoomId() ?? 0);
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr, ((Helpers_Misc.getExisted(e.data)).msg).getRoomId() ?? 0);
     }
     private _onNotifyMsgMcrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrGetRoomPlayerInfo"]>): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr, ((e.data as { msg: McrGetRoomPlayerInfoResponse }).msg).getRoomId() ?? 0);
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr, ((Helpers_Misc.getExisted(e.data)).msg).getRoomId() ?? 0);
     }
     private _onNotifyMsgMcrGetJoinableRoomIdArray(): void {
         this._hasReceivedMcrData = true;
@@ -173,17 +164,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCcrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrJoinRoom"]>): void {
-        const data      = (e.data as { msg: CcrJoinRoomResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrRoomInfoPanel, { roomId });
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
     }
     private _onNotifyMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomStaticInfo"]>): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr, ((e.data as { msg: CcrGetRoomStaticInfoResponse }).msg).getRoomId() ?? 0);
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr, ((Helpers_Misc.getExisted(e.data)).msg).getRoomId() ?? 0);
     }
     private _onNotifyMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomPlayerInfo"]>): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr, ((e.data as { msg: CcrGetRoomPlayerInfoResponse }).msg).getRoomId() ?? 0);
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr, ((Helpers_Misc.getExisted(e.data)).msg).getRoomId() ?? 0);
     }
     private _onNotifyMsgCcrGetJoinableRoomIdArray(): void {
         this._hasReceivedCcrData = true;
@@ -191,17 +182,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMfrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrJoinRoom"]>): void {
-        const data      = (e.data as { msg: MfrJoinRoomResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MfrRoomInfoPanel, { roomId });
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
     }
     private _onNotifyMsgMfrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrGetRoomStaticInfo"]>): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr, ((e.data as { msg: MfrGetRoomStaticInfoResponse }).msg).getRoomId() ?? 0);
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr, ((Helpers_Misc.getExisted(e.data)).msg).getRoomId() ?? 0);
     }
     private _onNotifyMsgMfrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrGetRoomPlayerInfo"]>): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr, ((e.data as { msg: MfrGetRoomPlayerInfoResponse }).msg).getRoomId() ?? 0);
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr, ((Helpers_Misc.getExisted(e.data)).msg).getRoomId() ?? 0);
     }
     private _onNotifyMsgMfrGetJoinableRoomIdArray(): void {
         this._hasReceivedMfrData = true;

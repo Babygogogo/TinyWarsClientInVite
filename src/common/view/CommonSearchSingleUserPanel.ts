@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     type Notifications_Mapping,
     type Helpers_PointerInput,
     Tween_Executor,
@@ -24,7 +25,6 @@ import {
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
-import type { S as UserGetUsersByNicknameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetUsersByNickname/S.ts";
 
 export interface OpenData {
     getTitleText        : (() => string) | null;
@@ -150,7 +150,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgUserGetUsersByNickname(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserGetUsersByNickname"]>): void {
-        const data                  = (e.data as { msg: UserGetUsersByNicknameResponse }).msg;
+        const data                  = (Helpers_Misc.getExisted(e.data)).msg;
         this._candidateUserIdArray  = data.getUserIdArray();
         this._selectedUserId        = null;
         this._updateListNickname();

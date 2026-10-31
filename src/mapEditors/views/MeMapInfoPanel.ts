@@ -27,7 +27,6 @@ import {
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
 } from "../../internal.ts";
-import type { S as UserSetMapEditorAutoSaveTimeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
 
 export interface OpenData {
     war     : MapEditor_Interface_IMeWar.IMeWar;
@@ -147,7 +146,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onNotifyMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserSetMapEditorAutoSaveTime"]>): void {
-        const data = (e.data as { msg: UserSetMapEditorAutoSaveTimeResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         FloatText.show(Lang_Utils.getText(data.getTime() == null ? Lang_Constants.TextType.A0248 : Lang_Constants.TextType.A0247));
     }
     private _onNotifyMsgCmSetCampaignMapName(): void {

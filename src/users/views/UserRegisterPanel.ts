@@ -20,7 +20,6 @@ import {
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiPromptedInput,
 } from "../../internal.ts";
-import type { S as UserRegisterResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserRegister/S.ts";
 
 export type OpenData = void;
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
@@ -59,7 +58,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onMsgUserRegister(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserRegister"]>): void {
-        const data = (e.data as { msg: UserRegisterResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0004));
 
         const account   = Helpers_Misc.getExisted(data.getAccount(), Utils_ClientErrorCode.ClientErrorCode.UserRegisterPanel_OnMsgUserRegister_00);

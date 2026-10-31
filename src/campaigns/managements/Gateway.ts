@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
@@ -8,20 +9,6 @@ import {
 } from "../../internal.ts";
 import type { MapExtraTextJson } from "../../proto/schema/CommonProto/Map/MapExtraText.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type { S as CmCreateCampaignResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmCreateCampaign/S.ts";
-import type { S as CmCreateCampaignMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmCreateCampaignMap/S.ts";
-import type { S as CmGetAllCampaignIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmGetAllCampaignIdArray/S.ts";
-import type { S as CmGetDesigningCampaignIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmGetDesigningCampaignIdArray/S.ts";
-import type { S as CmSetCampaignDescResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignDesc/S.ts";
-import type { S as CmSetCampaignEnabledResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignEnabled/S.ts";
-import type { S as CmSetCampaignMapEnabledResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapEnabled/S.ts";
-import type { S as CmSetCampaignMapExtraTextResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapExtraText/S.ts";
-import type { S as CmSetCampaignMapNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapName/S.ts";
-import type { S as CmSetCampaignMapRawDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapRawData/S.ts";
-import type { S as CmSetCampaignMapWarEventActionResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapWarEventAction/S.ts";
-import type { S as CmSetCampaignNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignName/S.ts";
-import type { S as CmSetExtraLinkResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetExtraLink/S.ts";
-import type { S as CmUpdateCampaignDesignersResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmUpdateCampaignDesigners/S.ts";
 import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 
@@ -50,7 +37,7 @@ export function reqCmCreateCampaign(): void {
     });
 }
 async function _onMsgCmCreateCampaign(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmCreateCampaign"]>): Promise<void> {
-    const data = e.data as CmCreateCampaignResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Managements_Provider.updateOnMsgCmCreateCampaign(data);
         Notifications_Dispatcher.dispatch("MsgCmCreateCampaign", { msg: data });
@@ -67,7 +54,7 @@ export function reqCmCreateCampaignMap(campaignId: number): void {
     });
 }
 async function _onMsgCmCreateCampaignMap(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmCreateCampaignMap"]>): Promise<void> {
-    const data = e.data as CmCreateCampaignMapResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmCreateCampaignMap(data);
         Notifications_Dispatcher.dispatch("MsgCmCreateCampaignMap", { msg: data });
@@ -80,7 +67,7 @@ export function reqCmGetAllCampaignIdArray(): void {
     });
 }
 function _onMsgCmGetAllCampaignIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmGetAllCampaignIdArray"]>): void {
-    const data = e.data as CmGetAllCampaignIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         Campaigns_Managements_Provider.updateOnFailedMsgCmGetAllCampaignIdArray(data);
     } else {
@@ -95,7 +82,7 @@ export function reqCmGetDesigningCampaignIdArray(): void {
     });
 }
 function _onMsgCmGetDesigningCampaignIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmGetDesigningCampaignIdArray"]>): void {
-    const data = e.data as CmGetDesigningCampaignIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         Campaigns_Managements_Provider.updateOnFailedMsgCmGetDesigningCampaignIdArray(data);
     } else {
@@ -115,7 +102,7 @@ export function reqCmSetCampaignDesc(campaignId: number, descArray: LanguageText
     });
 }
 async function _onMsgCmSetCampaignDesc(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignDesc"]>): Promise<void> {
-    const data = e.data as CmSetCampaignDescResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignDesc(data);
         Notifications_Dispatcher.dispatch("MsgCmSetCampaignDesc", { msg: data });
@@ -133,7 +120,7 @@ export function reqCmSetCampaignName(campaignId: number, nameArray: LanguageText
     });
 }
 async function _onMsgCmSetCampaignName(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignName"]>): Promise<void> {
-    const data = e.data as CmSetCampaignNameResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignName(data);
         Notifications_Dispatcher.dispatch("MsgCmSetCampaignName", { msg: data });
@@ -151,7 +138,7 @@ export function reqCmSetCampaignEnabled(campaignId: number, isEnabled: boolean):
     });
 }
 async function _onMsgCmSetCampaignEnabled(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignEnabled"]>): Promise<void> {
-    const data = e.data as CmSetCampaignEnabledResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignEnabled(data);
         Notifications_Dispatcher.dispatch("MsgCmSetCampaignEnabled", { msg: data });
@@ -170,7 +157,7 @@ export function reqCmSetCampaignMapEnabled(campaignId: number, campaignMapId: nu
     });
 }
 async function _onMsgCmSetCampaignMapEnabled(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignMapEnabled"]>): Promise<void> {
-    const data = e.data as CmSetCampaignMapEnabledResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignMapEnabled(data);
         Notifications_Dispatcher.dispatch("MsgCmSetCampaignMapEnabled", { msg: data });
@@ -187,7 +174,7 @@ export function reqCmSetCampaignMapRawData(mapRawData: MapRawData): void {
     });
 }
 async function _onMsgCmSetCampaignMapRawData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignMapRawData"]>): Promise<void> {
-    const data = e.data as CmSetCampaignMapRawDataResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignMapRawData(data);
         Notifications_Dispatcher.dispatch("MsgCmSetCampaignMapRawData", { msg: data });
@@ -206,7 +193,7 @@ export function reqCmSetCampaignMapExtraText(campaignId: number, campaignMapId: 
     });
 }
 async function _onMsgCmSetCampaignMapExtraText(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignMapExtraText"]>): Promise<void> {
-    const data = e.data as CmSetCampaignMapExtraTextResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignMapExtraText(data);
         Notifications_Dispatcher.dispatch("MsgCmSetCampaignMapExtraText", { msg: data });
@@ -225,7 +212,7 @@ export function reqCmSetCampaignMapName(campaignId: number, campaignMapId: numbe
     });
 }
 async function _onMsgCmSetCampaignMapName(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignMapName"]>): Promise<void> {
-    const data = e.data as CmSetCampaignMapNameResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignMapName(data);
         Notifications_Dispatcher.dispatch("MsgCmSetCampaignMapName", { msg: data });
@@ -244,7 +231,7 @@ export function reqCmSetCampaignMapWarEventAction(campaignId: number, campaignMa
     });
 }
 async function _onMsgCmSetCampaignMapWarEventAction(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignMapWarEventAction"]>): Promise<void> {
-    const data = e.data as CmSetCampaignMapWarEventActionResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignMapWarEventAction(data);
         Notifications_Dispatcher.dispatch("MsgCmSetCampaignMapWarEventAction", { msg: data });
@@ -263,7 +250,7 @@ export function reqCmUpdateCampaignDesigners(campaignId: number, addUserIdArray:
     });
 }
 async function _onMsgCmUpdateCampaignDesigners(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmUpdateCampaignDesigners"]>): Promise<void> {
-    const data = e.data as CmUpdateCampaignDesignersResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmUpdateCampaignDesigners(data);
         Notifications_Dispatcher.dispatch("MsgCmUpdateCampaignDesigners", { msg: data });
@@ -281,7 +268,7 @@ export function reqCmSetExtraLink(campaignId: number, extraLink: string): void {
     });
 }
 async function _onMsgCmSetExtraLink(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetExtraLink"]>): Promise<void> {
-    const data = e.data as CmSetExtraLinkResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetExtraLink(data);
         Notifications_Dispatcher.dispatch("MsgCmSetExtraLink", { msg: data });

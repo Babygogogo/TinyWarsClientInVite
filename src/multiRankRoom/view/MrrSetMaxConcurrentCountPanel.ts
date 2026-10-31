@@ -109,7 +109,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedGroupStd(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupStd;
         const width                 = group.getUnscaledWidth();
-        const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data                  = Helpers_Misc.getExisted(e.data);
         const point                 = group.globalToLocal(data.stageX, data.stageY);
         const countForStd           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWars_Constants.Common.MaxConcurrentCount - MultiRankedWars_Constants.Common.MinConcurrentCount)) + MultiRankedWars_Constants.Common.MinConcurrentCount;
         this._selectedCountForStd   = countForStd;
@@ -121,7 +121,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchMoveGroupStd(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupStd;
         const width                 = group.getUnscaledWidth();
-        const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data                  = Helpers_Misc.getExisted(e.data);
         const point                 = group.globalToLocal(data.stageX, data.stageY);
         const countForStd           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWars_Constants.Common.MaxConcurrentCount - MultiRankedWars_Constants.Common.MinConcurrentCount)) + MultiRankedWars_Constants.Common.MinConcurrentCount;
         this._selectedCountForStd   = countForStd;
@@ -145,7 +145,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedGroupFog(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupFog;
         const width                 = group.getUnscaledWidth();
-        const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data                  = Helpers_Misc.getExisted(e.data);
         const point                 = group.globalToLocal(data.stageX, data.stageY);
         const countForFog           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWars_Constants.Common.MaxConcurrentCount - MultiRankedWars_Constants.Common.MinConcurrentCount)) + MultiRankedWars_Constants.Common.MinConcurrentCount;
         this._selectedCountForFog   = countForFog;
@@ -157,7 +157,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchMoveGroupFog(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupFog;
         const width                 = group.getUnscaledWidth();
-        const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data                  = Helpers_Misc.getExisted(e.data);
         const point                 = group.globalToLocal(data.stageX, data.stageY);
         const countForFog           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWars_Constants.Common.MaxConcurrentCount - MultiRankedWars_Constants.Common.MinConcurrentCount)) + MultiRankedWars_Constants.Common.MinConcurrentCount;
         this._selectedCountForFog   = countForFog;

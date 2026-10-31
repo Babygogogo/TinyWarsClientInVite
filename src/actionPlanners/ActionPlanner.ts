@@ -266,7 +266,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     private _onNotifyBwCursorDragged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorDragged"]>): void {
         const war = this.getWar();
         if (Users_Model.getSelfSettingsIsAutoScrollMap()) {
-            war.getView().tweenGridToCentralArea((e.data as Notifications_Mapping.Mapping["BwCursorDragged"]).draggedTo);
+            war.getView().tweenGridToCentralArea((Helpers_Misc.getExisted(e.data)).draggedTo);
         }
 
         const currStateId = this.getStateId();

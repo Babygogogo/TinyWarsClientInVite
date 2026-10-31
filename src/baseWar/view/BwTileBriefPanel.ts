@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     type Notifications_Mapping,
     Destructions_Utils,
     ForceSkins_Utils,
@@ -95,7 +96,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     //     this._adjustPositionOnTouch(e.data);
     // }
     private _onNotifyBwCursorGridIndexChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorGridIndexChanged"]>): void {
-        const data  = e.data as Notifications_Mapping.Mapping["BwCursorGridIndexChanged"];
+        const data  = Helpers_Misc.getExisted(e.data);
         const war   = this.getOpenData()?.war;
         if ((war?.getIsRunning()) && (data.cursor === war.getCursor())) {
             this._updateView();
@@ -110,7 +111,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMeTileChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwTileChanged"]>): void {
-        const data  = e.data as Notifications_Mapping.Mapping["BwTileChanged"];
+        const data  = Helpers_Misc.getExisted(e.data);
         const war   = this.getOpenData()?.war;
         if ((war?.getIsRunning()) && (data.gridIndex.checkIsEqual(war.getCursor().getGridIndex()))) {
             this._updateView();
@@ -127,7 +128,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onNotifyTileBuffChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwTileBuffChanged"]>): void {
         const war = this.getOpenData()?.war;
-        if ((e.data as Notifications_Mapping.Mapping["BwTileBuffChanged"]).tile === war?.getTileMap().getTile(war.getCursor().getGridIndex())) {
+        if ((Helpers_Misc.getExisted(e.data)).tile === war?.getTileMap().getTile(war.getCursor().getGridIndex())) {
             this._updateTileView();
         }
     }

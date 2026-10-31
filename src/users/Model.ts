@@ -30,7 +30,6 @@ import type { S as UserGetOnlineStateResponse } from "../proto/schema/CommonProt
 import type { S as UserGetPublicInfoResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfo/S.ts";
 import type { S as UserLoginResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserLogin/S.ts";
 import type { S as UserLoginAsGuestResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserLoginAsGuest/S.ts";
-import type { S as UserLogoutResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserLogout/S.ts";
 import type { S as UserModifyFavoriteReplayIdArrayResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserModifyFavoriteReplayIdArray/S.ts";
 import type { S as UserRequestEmailVerificationCodeResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
 import type { S as UserSetAvatarIdResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetAvatarId/S.ts";
@@ -672,7 +671,7 @@ function _onNotifyNetworkDisconnected(): void {
     setIsLoggedIn(false);
 }
 function _onNotifyMsgUserLogout(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserLogout"]>): void {
-    const reason = ((e.data as { msg: UserLogoutResponse }).msg).getReason();
+    const reason = ((Helpers_Misc.getExisted(e.data)).msg).getReason();
     if (reason === Users_Constants.LogoutTypeId.SelfRequest) {
         FloatText.showLang(Lang_Constants.TextType.A0005);
     } else if (reason === Users_Constants.LogoutTypeId.LoginCollision) {

@@ -51,7 +51,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
         this._callbackOnTap();
     }
     private _onNotifyMePlayerRuleChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["RuleEditor_PlayerRuleChanged"]>): void {
-        const eventData = e.data as Notifications_Mapping.Mapping["RuleEditor_PlayerRuleChanged"];
+        const eventData = Helpers_Misc.getExisted(e.data);
         const data      = this.getOpenData();
         if ((eventData.playerIndex === data?.playerRule.getPlayerIndex()) &&
             (data.playerRuleType === data.playerRuleType)

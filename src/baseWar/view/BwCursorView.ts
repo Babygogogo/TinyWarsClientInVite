@@ -198,7 +198,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
     }
 
     private _onPointerPress(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data      = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data      = Helpers_Misc.getExisted(e.data);
         const touchId   = data.pointerId;
         const stageX    = data.stageX;
         const stageY    = data.stageY;
@@ -221,15 +221,15 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
         }
     }
     private _onPointerReleaseIn(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data = Helpers_Misc.getExisted(e.data);
         this._removeTouch(data.pointerId);
     }
     private _onPointerReleaseOut(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data = Helpers_Misc.getExisted(e.data);
         this._removeTouch(data.pointerId);
     }
     private _onPointerPressMove(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data                  = Helpers_Misc.getExisted(e.data);
         const touchId               = data.pointerId;
         const stageX                = data.stageX;
         const stageY                = data.stageY;

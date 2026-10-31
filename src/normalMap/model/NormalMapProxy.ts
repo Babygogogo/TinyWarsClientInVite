@@ -8,28 +8,7 @@ import {
 } from "../../internal.ts";
 import type { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
 import type { MapTagSingleData } from "../../proto/schema/CommonProto/Map/MapTag/MapTagSingleData.ts";
-import type { S as MapGetMapTagResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMapGetMapTag/S.ts";
-import type { S as MapGetRawDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMapGetRawData/S.ts";
-import type { S as MmAddIgnoredReviewingMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmAddIgnoredReviewingMap/S.ts";
-import type { S as MmAddWarEventResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmAddWarEvent/S.ts";
-import type { S as MmAddWarRuleResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmAddWarRule/S.ts";
-import type { S as MmDeleteRedundantWarEventResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmDeleteRedundantWarEvent/S.ts";
-import type { S as MmDeleteWarRuleResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmDeleteWarRule/S.ts";
-import type { S as MmGetReviewingMapsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmGetReviewingMaps/S.ts";
-import type { S as MmReviewMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmReviewMap/S.ts";
-import type { S as MmSetMapEnabledResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapEnabled/S.ts";
-import type { S as MmSetMapNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapName/S.ts";
-import type { S as MmSetMapTagIdFlagsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapTagIdFlags/S.ts";
-import type { S as MmSetMapTagSingleDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapTagSingleData/S.ts";
-import type { S as MmSetWarRuleAvailabilityResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleAvailability/S.ts";
-import type { S as MmSetWarRuleFixedTileThemeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleFixedTileTheme/S.ts";
-import type { S as MmSetWarRuleNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleName/S.ts";
-import type { S as MmSubmitMapSimpleDialogueResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/S.ts";
 import type { WarRuleDialogueInfo } from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/WarRuleDialogueInfo.ts";
-import type { S as NormalMapGetAllEnabledBriefDataVersionsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetAllEnabledBriefDataVersions/S.ts";
-import type { S as NormalMapGetBriefDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefData/S.ts";
-import type { S as NormalMapGetBriefDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataArray/S.ts";
-import type { S as NormalMapGetBriefDataVersionResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataVersion/S.ts";
 import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
@@ -70,7 +49,7 @@ export function reqMapGetMapTag(): void {
     });
 }
 function _onMsgMapGetMapTag(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMapGetMapTag"]>): void {
-    const data = e.data as MapGetMapTagResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         NormalMap_Model_NormalMapModel.setMapTag(Helpers_Misc.getExisted(data.getMapTag()));
         Notifications_Dispatcher.dispatch("MsgMapGetMapTag", { msg: data });
@@ -86,7 +65,7 @@ export function reqNormalMapGetAllEnabledBriefDataVersions(): void {
     });
 }
 async function _onMsgNormalMapGetAllEnabledBriefDataVersions(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgNormalMapGetAllEnabledBriefDataVersions"]>): Promise<void> {
-    const data = e.data as NormalMapGetAllEnabledBriefDataVersionsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await NormalMap_Model_NormalMapModel.updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data);
         Notifications_Dispatcher.dispatch("MsgNormalMapGetAllEnabledBriefDataVersions", { msg: data });
@@ -103,7 +82,7 @@ export function reqNormalMapGetBriefData(normalMapId: number): void {
     });
 }
 async function _onMsgNormalMapGetBriefData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgNormalMapGetBriefData"]>): Promise<void> {
-    const data  = e.data as NormalMapGetBriefDataResponse;
+    const data  = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         NormalMap_Model_NormalMapModel.updateOnFailedMsgNormalMapGetBriefData(data);
     } else {
@@ -122,7 +101,7 @@ export function reqNormalMapGetBriefDataArray(normalMapIdArray: number[]): void 
     });
 }
 async function _onMsgNormalMapGetBriefDataArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgNormalMapGetBriefDataArray"]>): Promise<void> {
-    const data  = e.data as NormalMapGetBriefDataArrayResponse;
+    const data  = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await NormalMap_Model_NormalMapModel.updateOnMsgNormalMapGetBriefDataArray(data);
         Notifications_Dispatcher.dispatch("MsgNormalMapGetBriefDataArray", { msg: data });
@@ -139,7 +118,7 @@ export function reqNormalMapGetBriefDataVersion(normalMapId: number): void {
     });
 }
 async function _onMsgNormalMapGetBriefDataVersion(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgNormalMapGetBriefDataVersion"]>): Promise<void> {
-    const data  = e.data as NormalMapGetBriefDataVersionResponse;
+    const data  = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         NormalMap_Model_NormalMapModel.updateOnFailedMsgNormalMapGetBriefDataVersion(data);
     } else {
@@ -158,7 +137,7 @@ export function reqGetMapRawData(normalMapId: number): void {
     });
 }
 async function _onMsgMapGetRawData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMapGetRawData"]>): Promise<void> {
-    const data = e.data as MapGetRawDataResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         NormalMap_Model_NormalMapModel.updateOnFailedMsgMapGetRawData(data);
     } else {
@@ -179,7 +158,7 @@ export function reqMmAddIgnoredReviewingMap(designerUserId: number, slotIndex: n
     });
 }
 function _onMsgMmAddIgnoredReviewingMap(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmAddIgnoredReviewingMap"]>): void {
-    const data = e.data as MmAddIgnoredReviewingMapResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMmAddIgnoredReviewingMap", { msg: data });
     }
@@ -201,7 +180,7 @@ export function reqMmSetWarRuleAvailability({ normalMapId, ruleId, availability 
     });
 }
 async function _onMsgMmSetWarRuleAvailability(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmSetWarRuleAvailability"]>): Promise<void> {
-    const data = e.data as MmSetWarRuleAvailabilityResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await NormalMap_Model_NormalMapModel.updateOnMsgMmSetWarRuleAvailability(data);
         Notifications_Dispatcher.dispatch("MsgMmSetWarRuleAvailability", { msg: data });
@@ -219,7 +198,7 @@ export function reqMmSetMapEnabled(normalMapId: number, isEnabled: boolean): voi
     });
 }
 function _onMsgMmSetMapEnabled(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmSetMapEnabled"]>): void {
-    const data = e.data as MmSetMapEnabledResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMmSetMapEnabled", { msg: data });
     }
@@ -231,7 +210,7 @@ export function reqMmGetReviewingMaps(): void {
     });
 }
 function _onMsgMmGetReviewingMaps(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmGetReviewingMaps"]>): void {
-    const data = e.data as MmGetReviewingMapsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         NormalMap_Model_NormalMapModel.updateOnMsgMmGetReviewingMaps(data.getMaps());
         Notifications_Dispatcher.dispatch("MsgMmGetReviewingMaps", { msg: data });
@@ -258,7 +237,7 @@ export function reqMmReviewMap({ designerUserId, slotIndex, modifiedTime, isAcce
     });
 }
 function _onMsgMmReviewMap(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmReviewMap"]>): void {
-    const data = e.data as MmReviewMapResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMmReviewMap", { msg: data });
     }
@@ -275,7 +254,7 @@ export function reqMmSetMapTagIdFlags(normalMapId: number, mapTagIdFlags: number
     });
 }
 async function _onMsgMmSetMapTagIdFlags(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmSetMapTagIdFlags"]>): Promise<void> {
-    const data = e.data as MmSetMapTagIdFlagsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await NormalMap_Model_NormalMapModel.updateOnMsgMmSetMapTagIdFlags(data);
         Notifications_Dispatcher.dispatch("MsgMmSetMapTagIdFlags", { msg: data });
@@ -293,7 +272,7 @@ export function reqMmSetMapName(normalMapId: number, mapNameArray: LanguageText[
     });
 }
 async function _onMsgMmSetMapName(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmSetMapName"]>): Promise<void> {
-    const data = e.data as MmSetMapNameResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await NormalMap_Model_NormalMapModel.updateOnMsgMmSetMapName(data);
         Notifications_Dispatcher.dispatch("MsgMmSetMapName", { msg: data });
@@ -311,7 +290,7 @@ export function reqMmAddWarRule(normalMapId: number, templateWarRule: TemplateWa
     });
 }
 async function _onMsgMmAddWarRule(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmAddWarRule"]>): Promise<void> {
-    const data = e.data as MmAddWarRuleResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await NormalMap_Model_NormalMapModel.updateOnMsgMmAddWarRule(data);
         Notifications_Dispatcher.dispatch("MsgMmAddWarRule", { msg: data });
@@ -329,7 +308,7 @@ export function reqMmAddWarEvent(normalMapId: number, incrementalWarEventFullDat
     });
 }
 async function _onMsgMmAddWarEvent(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmAddWarEvent"]>): Promise<void> {
-    const data = e.data as MmAddWarEventResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMmAddWarEvent", { msg: data });
     }
@@ -351,7 +330,7 @@ export function reqMmSubmitMapSimpleDialogue(
     });
 }
 function _onMsgMmSubmitMapSimpleDialogue(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmSubmitMapSimpleDialogue"]>): void {
-    const data = e.data as MmSubmitMapSimpleDialogueResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMmSubmitMapSimpleDialogue", { msg: data });
     }
@@ -367,7 +346,7 @@ export function reqMmDeleteRedundantWarEvent(normalMapId: number): void {
     });
 }
 async function _onMsgMmDeleteRedundantWarEvent(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmDeleteRedundantWarEvent"]>): Promise<void> {
-    const data = e.data as MmDeleteRedundantWarEventResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMmDeleteRedundantWarEvent", { msg: data });
     }
@@ -384,7 +363,7 @@ export function reqMmDeleteWarRule(normalMapId: number, ruleId: number): void {
     });
 }
 async function _onMsgMmDeleteWarRule(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmDeleteWarRule"]>): Promise<void> {
-    const data = e.data as MmDeleteWarRuleResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await NormalMap_Model_NormalMapModel.updateOnMsgMmDeleteWarRule(data);
         Notifications_Dispatcher.dispatch("MsgMmDeleteWarRule", { msg: data });
@@ -403,7 +382,7 @@ export function reqMmSetWarRuleName(normalMapId: number, ruleId: number, ruleNam
     });
 }
 async function _onMsgMmSetWarRuleName(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmSetWarRuleName"]>): Promise<void> {
-    const data = e.data as MmSetWarRuleNameResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await NormalMap_Model_NormalMapModel.updateOnMsgMmSetWarRuleName(data);
         Notifications_Dispatcher.dispatch("MsgMmSetWarRuleName", { msg: data });
@@ -422,7 +401,7 @@ export function reqMmSetWarRuleFixedTileTheme(normalMapId: number, ruleId: numbe
     });
 }
 async function _onMsgMmSetWarRuleFixedTileTheme(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmSetWarRuleFixedTileTheme"]>): Promise<void> {
-    const data = e.data as MmSetWarRuleFixedTileThemeResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await NormalMap_Model_NormalMapModel.updateOnMsgMmSetWarRuleFixedTileTheme(data);
         Notifications_Dispatcher.dispatch("MsgMmSetWarRuleFixedTileTheme", { msg: data });
@@ -439,7 +418,7 @@ export function reqMmSetMapTagSingleData(data: MapTagSingleData): void {
     });
 }
 function _onMsgMmSetMapTagSingleData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMmSetMapTagSingleData"]>): void {
-    const data = e.data as MmSetMapTagSingleDataResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMmSetMapTagSingleData", { msg: data });
     }

@@ -8,11 +8,6 @@ import {
     type Egret_Egret,
     type Chat_Constants,
 } from "../internal.ts";
-import type { S as ChatAddMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatAddMessage/S.ts";
-import type { S as ChatDeleteMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatDeleteMessage/S.ts";
-import type { S as ChatGetAllMessagesResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatGetAllMessages/S.ts";
-import type { S as ChatGetAllReadProgressListResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatGetAllReadProgressList/S.ts";
-import type { S as ChatUpdateReadProgressResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatUpdateReadProgress/S.ts";
 
 export function init(): void {
     Networks_Manager.addListeners([
@@ -40,7 +35,7 @@ export function reqChatAddMessage(
     });
 }
 function _onMsgChatAddMessage(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChatAddMessage"]>): void {
-    const data = e.data as ChatAddMessageResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Chat_Model.updateOnAddMessage(Helpers_Misc.getExisted(data.getMessage()), true);
         Notifications_Dispatcher.dispatch("MsgChatAddMessage", { msg: data });
@@ -51,7 +46,7 @@ export function reqGetAllMessages(): void {
     Networks_Manager.send({ MsgChatGetAllMessages : { c : {} } });
 }
 function _onMsgChatGetAllMessages(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChatGetAllMessages"]>): void {
-    const data = e.data as ChatGetAllMessagesResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Chat_Model.setAllMessages(data.getMessageList());
         Notifications_Dispatcher.dispatch("MsgChatGetAllMessages", { msg: data });
@@ -76,7 +71,7 @@ export function reqUpdateReadProgress(
     });
 }
 function _onMsgChatUpdateReadProgress(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChatUpdateReadProgress"]>): void {
-    const data = e.data as ChatUpdateReadProgressResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Chat_Model.setReadProgress(Helpers_Misc.getExisted(data.getProgress()));
         Notifications_Dispatcher.dispatch("MsgChatUpdateReadProgress", { msg: data });
@@ -87,7 +82,7 @@ export function reqGetAllReadProgressList(): void {
     Networks_Manager.send({ MsgChatGetAllReadProgressList : { c : {} } });
 }
 function _onMsgChatGetAllReadProgressList(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChatGetAllReadProgressList"]>): void {
-    const data = e.data as ChatGetAllReadProgressListResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Chat_Model.resetAllReadProgress(data.getList());
         Notifications_Dispatcher.dispatch("MsgChatGetAllReadProgressList", { msg: data });
@@ -98,7 +93,7 @@ export function reqChatDeleteMessage(messageId: number): void {
     Networks_Manager.send({ MsgChatDeleteMessage : { c : { messageId } } });
 }
 function _onMsgChatDeleteMessage(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChatDeleteMessage"]>): void {
-    const data = e.data as ChatDeleteMessageResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Chat_Model.updateOnDeleteMessage(Helpers_Misc.getExisted(data.getMessageId()));
         Notifications_Dispatcher.dispatch("MsgChatDeleteMessage", { msg: data });

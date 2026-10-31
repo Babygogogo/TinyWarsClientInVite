@@ -54,8 +54,6 @@ import type { S as MpwCommonMarkGridResponse } from "../../proto/schema/CommonPr
 import type { S as MpwCommonSetGridMarkListResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSetGridMarkList/S.ts";
 import type { S as MpwCommonSetHiddenGridMarkTypeIdListResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSetHiddenGridMarkTypeIdList/S.ts";
 import type { S as MpwCommonSyncWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSyncWar/S.ts";
-import type { S as MpwWatchGetIncomingInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetIncomingInfo/S.ts";
-import type { S as MpwWatchGetOutgoingInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetOutgoingInfo/S.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
@@ -1228,7 +1226,7 @@ function _setWar(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<MultiPlayerWar_I
 }
 
 function _onNotifyMsgMpwWatchGetIncomingInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMpwWatchGetIncomingInfo"]>): void {
-    const data  = (e.data as { msg: MpwWatchGetIncomingInfoResponse }).msg;
+    const data  = (Helpers_Misc.getExisted(e.data)).msg;
     const war   = getWar();
     if (war?.getWarId() !== Helpers_Misc.getExisted(data.getWarId())) {
         return;
@@ -1244,7 +1242,7 @@ function _onNotifyMsgMpwWatchGetIncomingInfo(e: Egret_Egret.Event<Notifications_
     player.setWatchRequestSrcUserIds(info?.getRequestSrcUserIdArray() ?? []);
 }
 function _onNotifyMsgMpwWatchGetOutgoingInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMpwWatchGetOutgoingInfo"]>): void {
-    const data  = (e.data as { msg: MpwWatchGetOutgoingInfoResponse }).msg;
+    const data  = (Helpers_Misc.getExisted(e.data)).msg;
     const war   = getWar();
     if (war?.getWarId() !== Helpers_Misc.getExisted(data.getWarId())) {
         return;

@@ -38,10 +38,6 @@ import {
     Ui_Components_UiTabItemRenderer,
     WarTypes_Constants,
 } from "../../internal.ts";
-import type { S as MrrDeleteRoomByServerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrDeleteRoomByServer/S.ts";
-import type { S as MrrGetRoomPublicInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrGetRoomPublicInfo/S.ts";
-import type { S as MrrSetBannedCoIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetBannedCoIdArray/S.ts";
-import type { S as MrrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetSelfSettings/S.ts";
 
 export interface OpenData {
     roomId  : number;
@@ -439,7 +435,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMrrGetRoomPublicInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMrrGetRoomPublicInfo"]>): void {
-        const data = (e.data as { msg: MrrGetRoomPublicInfoResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getRoomId() === this.getOpenData()?.roomId) {
             this._updateGroupBanCo();
             this._updateGroupSettings();
@@ -449,7 +445,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMrrSetSelfSettings(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMrrSetSelfSettings"]>): void {
-        const data = (e.data as { msg: MrrSetSelfSettingsResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getRoomId() === this.getOpenData()?.roomId) {
             this._updateGroupSettings();
             this._updateGroupState();
@@ -458,7 +454,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMrrSetBannedCoIdArray(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMrrSetBannedCoIdArray"]>): void {
-        const data = (e.data as { msg: MrrSetBannedCoIdArrayResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getRoomId() === this.getOpenData()?.roomId) {
             this._updateGroupBanCo();
             this._updateGroupSettings();
@@ -468,7 +464,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMrrDeleteRoomByServer(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMrrDeleteRoomByServer"]>): void {
-        const data = (e.data as { msg: MrrDeleteRoomByServerResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getRoomId() === this.getOpenData()?.roomId) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0019));
             this.closePanel();

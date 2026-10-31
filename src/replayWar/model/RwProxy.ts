@@ -1,17 +1,11 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
     ReplayWar_Model_RwModel,
     type Egret_Egret,
 } from "../../internal.ts";
-import type { S as ReplayGetAllInfoVersionsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetAllInfoVersions/S.ts";
-import type { S as ReplayGetDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetData/S.ts";
-import type { S as ReplayGetInfoVersionResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetInfoVersion/S.ts";
-import type { S as ReplayGetReplayInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
-import type { S as ReplayGetReplayInfoArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfoArray/S.ts";
-import type { S as ReplayGetSelfRatingResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
-import type { S as ReplaySetSelfRatingResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplaySetSelfRating/S.ts";
 
 export function init(): void {
     Networks_Manager.addListeners([
@@ -36,7 +30,7 @@ export function reqReplayGetData(replayId: number): void {
     });
 }
 async function _onMsgReplayGetData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgReplayGetData"]>): Promise<void> {
-    const data = e.data as ReplayGetDataResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         ReplayWar_Model_RwModel.updateOnFailedMsgReplayGetData(data);
     } else {
@@ -55,7 +49,7 @@ export function reqReplayGetReplayInfo(replayId: number): void {
     });
 }
 async function _onMsgReplayGetReplayInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgReplayGetReplayInfo"]>): Promise<void> {
-    const data = e.data as ReplayGetReplayInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         ReplayWar_Model_RwModel.updateOnFailedMsgReplayGetReplayInfo(data);
     } else {
@@ -74,7 +68,7 @@ export function reqReplayGetReplayInfoArray(replayIdArray: number[]): void {
     });
 }
 async function _onMsgReplayGetReplayInfoArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgReplayGetReplayInfoArray"]>): Promise<void> {
-    const data = e.data as ReplayGetReplayInfoArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await ReplayWar_Model_RwModel.updateOnMsgReplayGetReplayInfoArray(data);
         Notifications_Dispatcher.dispatch("MsgReplayGetReplayInfoArray", { msg: data });
@@ -91,7 +85,7 @@ export function reqReplayGetSelfRating(replayId: number): void {
     });
 }
 function _onMsgReplayGetSelfRating(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgReplayGetSelfRating"]>): void {
-    const data = e.data as ReplayGetSelfRatingResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         ReplayWar_Model_RwModel.updateOnFailedMsgReplayGetSelfRating(data);
     } else {
@@ -111,7 +105,7 @@ export function reqReplaySetSelfRating(replayId: number, rating: number): void {
     });
 }
 function _onMsgReplaySetSelfRating(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgReplaySetSelfRating"]>): void {
-    const data = e.data as ReplaySetSelfRatingResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         ReplayWar_Model_RwModel.updateOnMsgReplaySetSelfRating(data);
         Notifications_Dispatcher.dispatch("MsgReplaySetSelfRating", { msg: data });
@@ -127,7 +121,7 @@ export function reqReplayGetAllInfoVersions(): void {
     });
 }
 async function _onMsgReplayGetAllInfoVersions(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgReplayGetAllInfoVersions"]>): Promise<void> {
-    const data = e.data as ReplayGetAllInfoVersionsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await ReplayWar_Model_RwModel.updateOnMsgReplayGetAllInfoVersions(data);
         Notifications_Dispatcher.dispatch("MsgReplayGetAllInfoVersions", { msg: data });
@@ -144,7 +138,7 @@ export function reqMsgReplayGetInfoVersion(replayId: number): void {
     });
 }
 async function _onMsgReplayGetInfoVersion(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgReplayGetInfoVersion"]>): Promise<void> {
-    const data = e.data as ReplayGetInfoVersionResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         ReplayWar_Model_RwModel.updateOnFailedMsgReplayGetInfoVersion(data);
     } else {

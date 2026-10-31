@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
@@ -7,12 +8,6 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type { S as MeDeleteSlotResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeDeleteSlot/S.ts";
-import type { S as MeGetAllMapDataTimestampsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetAllMapDataTimestamps/S.ts";
-import type { S as MeGetMapDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapData/S.ts";
-import type { S as MeGetMapDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataArray/S.ts";
-import type { S as MeGetMapDataTimestampResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
-import type { S as MeSubmitNormalMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
 import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 
 export function init(): void {
@@ -35,7 +30,7 @@ export function reqMeGetAllMapDataTimestamps(): void {
     });
 }
 async function _onMsgMeGetAllMapDataTimestamps(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeGetAllMapDataTimestamps"]>): Promise<void> {
-    const data = e.data as MeGetAllMapDataTimestampsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MapEditor_Model_MeModel.updateOnFailedMsgMeGetAllMapDataTimestamps(data);
     } else {
@@ -54,7 +49,7 @@ export function reqMeGetMapDataArray(slotIndexArray: number[]): void {
     });
 }
 async function _onMsgMeGetMapDataArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeGetMapDataArray"]>): Promise<void> {
-    const data = e.data as MeGetMapDataArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await MapEditor_Model_MeModel.updateOnMsgMeGetMapDataArray(data);
         Notifications_Dispatcher.dispatch("MsgMeGetMapDataArray", { msg: data });
@@ -71,7 +66,7 @@ export function reqMeGetMapDataTimestamp(slotIndex: number): void {
     });
 }
 async function _onMsgMeGetMapDataTimestamp(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeGetMapDataTimestamp"]>): Promise<void> {
-    const data = e.data as MeGetMapDataTimestampResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await MapEditor_Model_MeModel.updateOnMsgMeGetMapDataTimestamp(data);
         Notifications_Dispatcher.dispatch("MsgMeGetMapDataTimestamp", { msg: data });
@@ -88,7 +83,7 @@ export function reqMeGetMapData(slotIndex: number): void {
     });
 }
 async function _onMsgMeGetMapData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeGetMapData"]>): Promise<void> {
-    const data = e.data as MeGetMapDataResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MapEditor_Model_MeModel.updateOnFailedMsgMeGetMapData(data);
     } else {
@@ -117,7 +112,7 @@ export function reqMeSubmitNormalMap({ slotIndex, mapRawData, needReview, srcNor
     });
 }
 function _onMsgMeSubmitNormalMap(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeSubmitNormalMap"]>): void {
-    const data = e.data as MeSubmitNormalMapResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMeSubmitNormalMap", { msg: data });
     }
@@ -133,7 +128,7 @@ export function reqMeDeleteSlot(slotIndex: number): void {
     });
 }
 async function _onMsgMeDeleteSlot(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeDeleteSlot"]>): Promise<void> {
-    const data = e.data as MeDeleteSlotResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await MapEditor_Model_MeModel.updateOnMsgMeDeleteSlot(data);
         Notifications_Dispatcher.dispatch("MsgMeDeleteSlot", { msg: data });

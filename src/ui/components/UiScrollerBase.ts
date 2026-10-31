@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     Geometries_Utils,
     Helpers_PointerInput,
     FloatText,
@@ -93,7 +94,7 @@ export abstract class UiScrollerBase extends Ui_Components_UiContainerBase.UiCon
             return;
         }
 
-        const value = ((e.data as Helpers_PointerInput.PointerUnifiedEventData).wheelValue ?? 0) / 2;
+        const value = ((Helpers_Misc.getExisted(e.data)).wheelValue ?? 0) / 2;
         if (value == 0) {
             return;
         }
@@ -218,7 +219,7 @@ export abstract class UiScrollerBase extends Ui_Components_UiContainerBase.UiCon
                 return;
             }
 
-            const data = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+            const data = Helpers_Misc.getExisted(e.data);
             if (window.CLIENT_VERSION === "DEVELOP") {
                 FloatText.show(`pointer id: ${data.pointerId}`);
             }
@@ -255,7 +256,7 @@ export abstract class UiScrollerBase extends Ui_Components_UiContainerBase.UiCon
                 return;
             }
 
-            const data              = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+            const data              = Helpers_Misc.getExisted(e.data);
             const touchPoint        = this.globalToLocal(data.stageX, data.stageY);
             const dragStartPoint    = this._dragStartTouchPoint;
             if (dragStartPoint) {

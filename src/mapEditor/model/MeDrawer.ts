@@ -105,12 +105,12 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
     }
 
     private _onNotifyBwCursorTapped(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorTapped"]>): void {
-        const data      = e.data as Notifications_Mapping.Mapping["BwCursorTapped"];
+        const data      = Helpers_Misc.getExisted(e.data);
         const gridIndex = data.tappedOn;
         this._handleAction(gridIndex);
     }
     private _onNotifyBwCursorDragged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorDragged"]>): void {
-        const data = e.data as Notifications_Mapping.Mapping["BwCursorDragged"];
+        const data = Helpers_Misc.getExisted(e.data);
         this._handleAction(data.draggedTo);
     }
 

@@ -40,9 +40,6 @@ import {
     Ui_Components_UiTabItemRenderer,
     Timer_TimerModel,
 } from "../../internal.ts";
-import type { S as CcrExitRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrExitRoom/S.ts";
-import type { S as CcrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomPlayerInfo/S.ts";
-import type { S as CcrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomStaticInfo/S.ts";
 import { C as CcrSetSelfSettingsRequest } from "../../proto/schema/CommonProto/NetMessage/MsgCcrSetSelfSettings/C.ts";
 
 export interface OpenData {
@@ -373,7 +370,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomPlayerInfo"]>): void {
-        const data = (e.data as { msg: CcrGetRoomPlayerInfoResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getRoomId() !== this.getOpenData()?.roomId) {
             return;
         }
@@ -393,7 +390,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomStaticInfo"]>): void {
-        const data = (e.data as { msg: CcrGetRoomStaticInfoResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getRoomId() !== this.getOpenData()?.roomId) {
             return;
         }
@@ -410,7 +407,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private async _onNotifyMsgCcrExitRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrExitRoom"]>): Promise<void> {
-        const data      = (e.data as { msg: CcrExitRoomResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const roomId    = data.getRoomId();
         if (roomId === this.getOpenData()?.roomId) {
             const exitRoomType = data.getExitType();

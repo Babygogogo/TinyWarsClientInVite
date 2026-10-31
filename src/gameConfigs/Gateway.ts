@@ -6,7 +6,6 @@ import {
     GameConfigs_Provider,
     type Egret_Egret,
 } from "../internal.ts";
-import type { S as CommonLatestConfigVersionResponse } from "../proto/schema/CommonProto/NetMessage/MsgCommonLatestConfigVersion/S.ts";
 
 export function init(): void {
     Networks_Manager.addListeners([
@@ -20,7 +19,7 @@ export function reqCommonLatestConfigVersion(): void {
     });
 }
 function _onMsgCommonLatestConfigVersion(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonLatestConfigVersion"]>): void {
-    const data = e.data as CommonLatestConfigVersionResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         GameConfigs_Provider.setLatestConfigVersion(Helpers_Misc.getExisted(data.getVersion()));
         Notifications_Dispatcher.dispatch("MsgCommonLatestConfigVersion", { msg: data });

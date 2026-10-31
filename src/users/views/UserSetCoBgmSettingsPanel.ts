@@ -18,7 +18,6 @@ import {
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
 } from "../../internal.ts";
-import type { S as UserSetCoBgmSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetCoBgmSettings/S.ts";
 
 export interface OpenData {
     gameConfig  : GameConfigs_GameConfig.GameConfig;
@@ -89,7 +88,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgUserSetCoBgmSettings(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserSetCoBgmSettings"]>): void {
         FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
-        const data = (e.data as { msg: UserSetCoBgmSettingsResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getCoCategoryId() === this._coCategoryId) {
             this._updateComponentsForCoAndBgm();
         }

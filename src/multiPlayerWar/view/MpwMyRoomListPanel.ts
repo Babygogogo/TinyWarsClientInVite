@@ -45,21 +45,6 @@ import {
     Timer_TimerModel,
     WarTypes_Constants,
 } from "../../internal.ts";
-import type { S as AtrGetRoomPublicInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetRoomPublicInfo/S.ts";
-import type { S as AtrSetBannedCoIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetBannedCoIdArray/S.ts";
-import type { S as AtrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetSelfSettings/S.ts";
-import type { S as CcrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomPlayerInfo/S.ts";
-import type { S as CcrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomStaticInfo/S.ts";
-import type { S as McrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomPlayerInfo/S.ts";
-import type { S as McrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomStaticInfo/S.ts";
-import type { S as MfrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomPlayerInfo/S.ts";
-import type { S as MfrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomStaticInfo/S.ts";
-import type { S as MmrGetRoomPublicInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetRoomPublicInfo/S.ts";
-import type { S as MmrSetBannedCoIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetBannedCoIdArray/S.ts";
-import type { S as MmrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetSelfSettings/S.ts";
-import type { S as MrrGetRoomPublicInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrGetRoomPublicInfo/S.ts";
-import type { S as MrrSetBannedCoIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetBannedCoIdArray/S.ts";
-import type { S as MrrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetSelfSettings/S.ts";
 
 export type OpenData = void;
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
@@ -191,7 +176,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateGroupRoomList();
     }
     private _onNotifyMsgAtrGetRoomPublicInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgAtrGetRoomPublicInfo"]>): void {
-        const data          = (e.data as { msg: AtrGetRoomPublicInfoResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -201,7 +186,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMsgAtrSetSelfSettings(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgAtrSetSelfSettings"]>): void {
-        const data          = (e.data as { msg: AtrSetSelfSettingsResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -211,7 +196,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMsgAtrSetBannedCoIdArray(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgAtrSetBannedCoIdArray"]>): void {
-        const data          = (e.data as { msg: AtrSetBannedCoIdArrayResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -222,7 +207,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomStaticInfo"]>): void {
-        const data          = (e.data as { msg: CcrGetRoomStaticInfoResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -232,7 +217,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomPlayerInfo"]>): void {
-        const data          = (e.data as { msg: CcrGetRoomPlayerInfoResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -252,7 +237,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMcrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrGetRoomStaticInfo"]>): void {
-        const data          = (e.data as { msg: McrGetRoomStaticInfoResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -262,7 +247,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMsgMcrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrGetRoomPlayerInfo"]>): void {
-        const data          = (e.data as { msg: McrGetRoomPlayerInfoResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -282,7 +267,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMfrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrGetRoomStaticInfo"]>): void {
-        const data          = (e.data as { msg: MfrGetRoomStaticInfoResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -292,7 +277,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMsgMfrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrGetRoomPlayerInfo"]>): void {
-        const data          = (e.data as { msg: MfrGetRoomPlayerInfoResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -319,7 +304,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateGroupRoomList();
     }
     private _onNotifyMsgMmrGetRoomPublicInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMmrGetRoomPublicInfo"]>): void {
-        const data          = (e.data as { msg: MmrGetRoomPublicInfoResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -329,7 +314,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMsgMmrSetSelfSettings(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMmrSetSelfSettings"]>): void {
-        const data          = (e.data as { msg: MmrSetSelfSettingsResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -339,7 +324,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMsgMmrSetBannedCoIdArray(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMmrSetBannedCoIdArray"]>): void {
-        const data          = (e.data as { msg: MmrSetBannedCoIdArrayResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -357,7 +342,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateGroupRoomList();
     }
     private _onNotifyMsgMrrGetRoomPublicInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMrrGetRoomPublicInfo"]>): void {
-        const data          = (e.data as { msg: MrrGetRoomPublicInfoResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -367,7 +352,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMsgMrrSetSelfSettings(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMrrSetSelfSettings"]>): void {
-        const data          = (e.data as { msg: MrrSetSelfSettingsResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
@@ -377,7 +362,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMsgMrrSetBannedCoIdArray(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMrrSetBannedCoIdArray"]>): void {
-        const data          = (e.data as { msg: MrrSetBannedCoIdArrayResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&

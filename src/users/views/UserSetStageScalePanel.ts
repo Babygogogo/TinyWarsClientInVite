@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     Helpers_Text,
     Stages_StageManager,
     Sounds_SoundPlayer,
@@ -76,7 +77,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _handleTouchGroupScale(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group         = this._groupScale;
         const width         = group.getUnscaledWidth();
-        const data          = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data          = Helpers_Misc.getExisted(e.data);
         const point         = group.globalToLocal(data.stageX, data.stageY);
         const scale         = Math.floor(Math.max(0, Math.min(point.x, width)) / width * (Stages_Constants.Scale.MaxScale - Stages_Constants.Scale.MinScale) + Stages_Constants.Scale.MinScale);
         this._selectedScale = scale;

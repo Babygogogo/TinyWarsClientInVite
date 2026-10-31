@@ -8,20 +8,6 @@ import {
     type Egret_Egret,
     type BaseWar_Interface_IBwWar,
 } from "../../internal.ts";
-import type { S as MpwCommonBroadcastGameStartResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonBroadcastGameStart/S.ts";
-import type { S as MpwCommonContinueWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonContinueWar/S.ts";
-import type { S as MpwCommonGetHalfwayReplayDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetHalfwayReplayData/S.ts";
-import type { S as MpwCommonGetJoinedMpwIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetJoinedMpwIdArray/S.ts";
-import type { S as MpwCommonGetUnitStatisticsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/S.ts";
-import type { S as MpwCommonGetWarProgressInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetWarProgressInfo/S.ts";
-import type { S as MpwCommonGetWarSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetWarSettings/S.ts";
-import type { S as MpwCommonGetWarTimestampResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetWarTimestamp/S.ts";
-import type { S as MpwCommonHandleBootResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonHandleBoot/S.ts";
-import type { S as MpwCommonMarkGridResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonMarkGrid/S.ts";
-import type { S as MpwCommonSetGridMarkListResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSetGridMarkList/S.ts";
-import type { S as MpwCommonSetHiddenGridMarkTypeIdListResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSetHiddenGridMarkTypeIdList/S.ts";
-import type { S as MpwCommonSyncWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSyncWar/S.ts";
-import type { S as MpwExecuteWarOperationResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwExecuteWarOperation/S.ts";
 import type { GridIdAndMarkTypeId } from "../../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
@@ -54,7 +40,7 @@ export function reqMpwCommonGetJoinedMpwIdArray(): void {
     });
 }
 function _onMsgMpwCommonGetJoinedMpwIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonGetJoinedMpwIdArray"]>): void {
-    const data = e.data as MpwCommonGetJoinedMpwIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnMsgMpwCommonGetJoinedMpwIdArray(data);
         Notifications_Dispatcher.dispatch("MsgMpwCommonGetJoinedMpwIdArray", { msg: data });
@@ -71,7 +57,7 @@ export function reqMpwCommonGetWarTimestamp(warId: number): void {
     });
 }
 function _onMsgMpwCommonGetWarTimestamp(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonGetWarTimestamp"]>): void {
-    const data = e.data as MpwCommonGetWarTimestampResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnFailedMsgMpwCommonGetWarTimestamp(data);
     } else {
@@ -81,7 +67,7 @@ function _onMsgMpwCommonGetWarTimestamp(e: Egret_Egret.Event<Networks_Manager.Re
 }
 
 async function _onMsgMpwCommonBroadcastGameStart(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonBroadcastGameStart"]>): Promise<void> {
-    const data = e.data as MpwCommonBroadcastGameStartResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     await MultiPlayerWar_Model_MpwModel.updateOnMsgMpwCommonBroadcastGameStart(data);
 }
 
@@ -95,7 +81,7 @@ export function reqMpwCommonContinueWar(warId: number): void {
     });
 }
 async function _onMsgMpwCommonContinueWar(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonContinueWar"]>): Promise<void> {
-    const data = e.data as MpwCommonContinueWarResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnFailedMsgMpwCommonContinueWar(data);
         Notifications_Dispatcher.dispatch("MsgMpwCommonContinueWarFailed", { msg: data });
@@ -117,7 +103,7 @@ export function reqMpwCommonSyncWar(war: BaseWar_Interface_IBwWar.IBwWar, reques
     });
 }
 function _onMsgMpwCommonSyncWar(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonSyncWar"]>): void {
-    const data = e.data as MpwCommonSyncWarResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnPlayerSyncWar(data);
         Notifications_Dispatcher.dispatch("MsgMpwCommonSyncWar", { msg: data });
@@ -134,7 +120,7 @@ export function reqMpwCommonGetWarSettings(warId: number): void {
     });
 }
 async function _onMsgMpwCommonGetWarSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonGetWarSettings"]>): Promise<void> {
-    const data = e.data as MpwCommonGetWarSettingsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnFailedMsgMpwCommonGetWarSettings(data);
     } else {
@@ -153,7 +139,7 @@ export function reqMpwCommonGetWarProgressInfo(warId: number): void {
     });
 }
 async function _onMsgMpwCommonGetWarProgressInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonGetWarProgressInfo"]>): Promise<void> {
-    const data = e.data as MpwCommonGetWarProgressInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnFailedMsgMpwCommonGetWarProgressInfo(data);
     } else {
@@ -175,7 +161,7 @@ export function reqMpwCommonMarkGrid(warId: number, gridIdArrayForAddMark: numbe
     });
 }
 function _onMsgMpwCommonMarkGrid(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonMarkGrid"]>): void {
-    const data = e.data as MpwCommonMarkGridResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnMsgMpwCommonMarkGrid(data);
         Notifications_Dispatcher.dispatch("MsgMpwCommonMarkTile", { msg: data });
@@ -193,7 +179,7 @@ export function reqMpwCommonSetHiddenGridMarkTypeIdList(warId: number, hiddenGri
     });
 }
 function _onMsgMpwCommonSetHiddenGridMarkTypeIdList(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonSetHiddenGridMarkTypeIdList"]>): void {
-    const data = e.data as MpwCommonSetHiddenGridMarkTypeIdListResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnMsgMpwCommonSetHiddenGridMarkTypeIdList(data);
         Notifications_Dispatcher.dispatch("MsgMpwCommonSetPlayerIndexesForShowMarkedGrid", { msg: data });
@@ -211,7 +197,7 @@ export function reqMpwCommonSetGridMarkList(warId: number, list: GridIdAndMarkTy
     });
 }
 function _onMsgMpwCommonSetGridMarkList(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonSetGridMarkList"]>): void {
-    const data = e.data as MpwCommonSetGridMarkListResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnMsgMpwCommonSetGridMarkList(data);
         Notifications_Dispatcher.dispatch("MsgMpwCommonSetGridMarkList", { msg: data });
@@ -228,7 +214,7 @@ export function reqMpwCommonGetHalfwayReplayData(warId: number): void {
     });
 }
 async function _onMsgMpwCommonGetHalfwayReplayData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonGetHalfwayReplayData"]>): Promise<void> {
-    const data = e.data as MpwCommonGetHalfwayReplayDataResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnFailedMsgMpwCommonGetHalfwayReplayData(data);
         Notifications_Dispatcher.dispatch("MsgMpwGetHalfwayReplayDataFailed", { msg: data });
@@ -248,7 +234,7 @@ export function reqMpwCommonGetUnitStatistics(warId: number): void {
     });
 }
 async function _onMsgMpwCommonGetUnitStatistics(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonGetUnitStatistics"]>): Promise<void> {
-    const data = e.data as MpwCommonGetUnitStatisticsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnFailedMsgMpwCommonGetUnitStatistics(data);
         Notifications_Dispatcher.dispatch("MsgMpwCommonGetUnitStatisticsFailed", { msg: data });
@@ -268,7 +254,7 @@ export function reqMpwCommonHandleBoot(warId: number): void {
     });
 }
 function _onMsgMpwCommonHandleBoot(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwCommonHandleBoot"]>): void {
-    const data = e.data as MpwCommonHandleBootResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMpwCommonHandleBoot", { msg: data });
     }
@@ -285,7 +271,7 @@ export function reqMpwExecuteWarOperation(war: BaseWar_Interface_IBwWar.IBwWar, 
     });
 }
 function _onMsgMpwExecuteWarOperation(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMpwExecuteWarOperation"]>): void {
-    const data = e.data as MpwExecuteWarOperationResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         MultiPlayerWar_Model_MpwModel.updateOnMsgMpwExecuteWarOperation(Helpers_Misc.getExisted(data.getActionContainer()), Helpers_Misc.getExisted(data.getWarId()));
         Notifications_Dispatcher.dispatch("MsgMpwExecuteWarOperation", { msg: data });

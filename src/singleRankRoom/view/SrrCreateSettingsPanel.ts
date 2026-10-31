@@ -32,7 +32,6 @@ import {
     Ui_Components_UiTabItemRenderer,
     Timer_TimerModel,
 } from "../../internal.ts";
-import type { S as SpmCreateSrwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/S.ts";
 
 const CONFIRM_INTERVAL_MS = 5000;
 
@@ -138,7 +137,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgSpmCreateSrw(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgSpmCreateSrw"]>): void {
-        const data = (e.data as { msg: SpmCreateSrwResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         Helpers_GameFlow.gotoSinglePlayerWar({
             warData       : Helpers_Misc.getExisted(data.getWarData()),
             slotExtraData : Helpers_Misc.getExisted(data.getExtraData()),

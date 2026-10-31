@@ -218,12 +218,25 @@ agent.dispatchUiCommonEvent(Ui_Types_UiCommonEventType.UiCommonEventType.SkinLoa
     checkEventType(implementation)
   }
   const listeners = collectEventListeners(program)
+  const networkListeners = collectEventListeners(program, { kind: 'network' })
+  const notificationListeners = collectEventListeners(program, { kind: 'notification' })
+  const uiListeners = collectEventListeners(program, { kind: 'other' })
   assert.ok(listeners.size > 0, 'Listener declaration coverage must not be empty')
+  assert.ok(networkListeners.size > 0, 'Network listener declaration coverage must not be empty')
+  assert.ok(notificationListeners.size > 0, 'Notification listener declaration coverage must not be empty')
+  assert.ok(uiListeners.size > 0, 'UI and pointer listener declaration coverage must not be empty')
   for (const [parameter, expectedTypes] of listeners) {
     const location = `${parameter.getSourceFile().fileName}: ${parameter.getText()}`
     assert.ok(ts.isTypeReferenceNode(parameter.type) && parameter.type.typeName.getText() === 'Egret_Egret.Event',
       `Listener must use an Egret event: ${location}`)
     assert.equal(parameter.type.typeArguments?.length, 1, `Listener must declare its event data type: ${location}`)
+    if (networkListeners.has(parameter)) {
+      const dataType = parameter.type.typeArguments[0]
+      assert.ok(ts.isIndexedAccessTypeNode(dataType)
+        && dataType.objectType.getText() === 'Networks_Manager.ResponseMapping'
+        && ts.isLiteralTypeNode(dataType.indexType) && ts.isStringLiteral(dataType.indexType.literal),
+      `Network listeners must declare Event<ResponseMapping["message key"]>: ${location}`)
+    }
     const payload = checker.getTypeFromTypeNode(parameter.type.typeArguments[0])
     assert.equal(payload.flags & (ts.TypeFlags.Any | ts.TypeFlags.Unknown), 0, `Listener data must be concrete: ${location}`)
     for (const expected of expectedTypes) {
@@ -233,6 +246,20 @@ agent.dispatchUiCommonEvent(Ui_Types_UiCommonEventType.UiCommonEventType.SkinLoa
     for (const member of members) {
       assert.ok([...expectedTypes].some(expected => checker.isTypeAssignableTo(member, expected)),
         `Listener data must match its registered events: ${location}`)
+    }
+    {
+      const eventSymbol = checker.getSymbolAtLocation(parameter.name)
+      function checkDataAssertions(node) {
+        if (ts.isAsExpression(node) || ts.isTypeAssertionExpression(node)) {
+          let expression = node.expression
+          while (ts.isParenthesizedExpression(expression)) expression = expression.expression
+          assert.ok(!ts.isPropertyAccessExpression(expression) || expression.name.text !== 'data'
+            || checker.getSymbolAtLocation(expression.expression) !== eventSymbol,
+          `Event callbacks must use their declared data type without assertions: ${location}`)
+        }
+        ts.forEachChild(node, checkDataAssertions)
+      }
+      if (parameter.parent.body) checkDataAssertions(parameter.parent.body)
     }
   }
 })

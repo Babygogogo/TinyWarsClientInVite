@@ -40,7 +40,7 @@ export class UiTab<DataForTabItemRenderer extends Ui_Types_UiListItemData.UiList
 
         // this._getBar().setSelectedItemIndexes([index]);
 
-        const pageIndex = e.data as number; // 必须事先提取，否则经过await之后此值会发生变化
+        const pageIndex = Helpers_Misc.getExisted(e.data); // 必须事先提取，否则经过await之后此值会发生变化
         await this._closePage();
         await this._openPage(pageIndex);
     }

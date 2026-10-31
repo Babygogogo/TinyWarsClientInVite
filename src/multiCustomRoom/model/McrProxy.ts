@@ -1,27 +1,13 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
     MultiCustomRoom_Model_McrModel,
     type Egret_Egret,
 } from "../../internal.ts";
-import type { S as McrAddDummyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrAddDummy/S.ts";
 import type { C as McrCreateRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMcrCreateRoom/C.ts";
-import type { S as McrCreateRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrCreateRoom/S.ts";
-import type { S as McrDeletePlayerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrDeletePlayer/S.ts";
-import type { S as McrDeleteRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrDeleteRoom/S.ts";
-import type { S as McrExitRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrExitRoom/S.ts";
-import type { S as McrGetJoinableRoomIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetJoinableRoomIdArray/S.ts";
-import type { S as McrGetJoinedRoomIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetJoinedRoomIdArray/S.ts";
-import type { S as McrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomPlayerInfo/S.ts";
-import type { S as McrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomStaticInfo/S.ts";
-import type { S as McrInviteResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrInvite/S.ts";
-import type { S as McrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrJoinRoom/S.ts";
-import type { S as McrSetDummySettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetDummySettings/S.ts";
-import type { S as McrSetReadyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetReady/S.ts";
 import type { C as McrSetSelfSettingsRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetSelfSettings/C.ts";
-import type { S as McrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetSelfSettings/S.ts";
-import type { S as McrStartWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrStartWar/S.ts";
 
 export function init(): void {
     Networks_Manager.addListeners([
@@ -49,7 +35,7 @@ export function reqCreateRoom(param: McrCreateRoomRequest): void {
     });
 }
 function _onMsgMcrCreateRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrCreateRoom"]>): void {
-    const data = e.data as McrCreateRoomResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrCreateRoom", { msg: data });
     } else {
@@ -67,7 +53,7 @@ export function reqMcrJoinRoom(roomId: number): void {
     });
 }
 async function _onMsgMcrJoinRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrJoinRoom"]>): Promise<void> {
-    const data = e.data as McrJoinRoomResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrJoinRoom", { msg: data });
     }
@@ -83,7 +69,7 @@ export function reqMcrDeleteRoom(roomId: number): void {
     });
 }
 function _onMsgMcrDeleteRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrDeleteRoom"]>): void {
-    const data = e.data as McrDeleteRoomResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrDeleteRoom", { msg: data });
     }
@@ -99,7 +85,7 @@ export function reqMcrExitRoom(roomId: number): void {
     });
 }
 async function _onMsgMcrExitRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrExitRoom"]>): Promise<void> {
-    const data = e.data as McrExitRoomResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrExitRoom", { msg: data });
     }
@@ -117,7 +103,7 @@ export function reqMcrDeletePlayer(roomId: number, playerIndex: number, forbidRe
     });
 }
 async function _onMsgMcrDeletePlayer(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrDeletePlayer"]>): Promise<void> {
-    const data = e.data as McrDeletePlayerResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrDeletePlayer", { msg: data });
     }
@@ -136,7 +122,7 @@ export function reqMcrAddDummy(roomId: number, playerIndex: number, coId: number
     });
 }
 function _onMsgMcrAddDummy(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrAddDummy"]>): void {
-    const data = e.data as McrAddDummyResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrAddDummy", { msg: data });
     }
@@ -155,7 +141,7 @@ export function reqMcrSetDummySettings(roomId: number, playerIndex: number, coId
     });
 }
 function _onMsgMcrSetDummySettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrSetDummySettings"]>): void {
-    const data = e.data as McrSetDummySettingsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrSetDummySettings", { msg: data });
     }
@@ -172,7 +158,7 @@ export function reqMcrInvite(roomId: number, userIdArray: number[]): void {
     });
 }
 function _onMsgMcrInvite(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrInvite"]>): void {
-    const data = e.data as McrInviteResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrInvite", { msg: data });
     }
@@ -189,7 +175,7 @@ export function reqMcrSetReady(roomId: number, isReady: boolean): void {
     });
 }
 async function _onMsgMcrSetReady(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrSetReady"]>): Promise<void> {
-    const data = e.data as McrSetReadyResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrSetReady", { msg: data });
     }
@@ -201,7 +187,7 @@ export function reqMcrSetSelfSettings(data: McrSetSelfSettingsRequest): void {
     });
 }
 async function _onMsgMcrSetSelfSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrSetSelfSettings"]>): Promise<void> {
-    const data = e.data as McrSetSelfSettingsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrSetSelfSettings", { msg: data });
     }
@@ -217,7 +203,7 @@ export function reqMcrGetRoomStaticInfo(roomId: number): void {
     });
 }
 async function _onMsgMcrGetRoomStaticInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrGetRoomStaticInfo"]>): Promise<void> {
-    const data = e.data as McrGetRoomStaticInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MultiCustomRoom_Model_McrModel.updateOnFailedMsgMcrGetRoomStaticInfo(data);
         Notifications_Dispatcher.dispatch("MsgMcrGetRoomStaticInfoFailed", { msg: data });
@@ -237,7 +223,7 @@ export function reqMcrGetRoomPlayerInfo(roomId: number): void {
     });
 }
 function _onMsgMcrGetRoomPlayerInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrGetRoomPlayerInfo"]>): void {
-    const data = e.data as McrGetRoomPlayerInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
         MultiCustomRoom_Model_McrModel.updateOnFailedMsgMcrGetRoomPlayerInfo(data);
         Notifications_Dispatcher.dispatch("MsgMcrGetRoomPlayerInfoFailed", { msg: data });
@@ -256,7 +242,7 @@ export function reqMcrGetJoinableRoomIdArray(): void {
     });
 }
 function _onMsgMcrGetJoinableRoomIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrGetJoinableRoomIdArray"]>): void {
-    const data = e.data as McrGetJoinableRoomIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         MultiCustomRoom_Model_McrModel.setJoinableRoomIdArray(data.getRoomIdArray());
         Notifications_Dispatcher.dispatch("MsgMcrGetJoinableRoomIdArray", { msg: data });
@@ -272,7 +258,7 @@ export function reqMcrGetJoinedRoomIdArray(): void {
     });
 }
 function _onMsgMcrGetJoinedRoomIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrGetJoinedRoomIdArray"]>): void {
-    const data = e.data as McrGetJoinedRoomIdArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         MultiCustomRoom_Model_McrModel.setJoinedRoomIdArray(data.getRoomIdArray());
         Notifications_Dispatcher.dispatch("MsgMcrGetJoinedRoomIdArray", { msg: data });
@@ -289,7 +275,7 @@ export function reqMcrStartWar(roomId: number): void {
     });
 }
 function _onMsgMcrStartWar(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMcrStartWar"]>): void {
-    const data = e.data as McrStartWarResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgMcrStartWar", { msg: data });
     }

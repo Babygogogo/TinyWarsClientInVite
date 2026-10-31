@@ -36,7 +36,6 @@ import type { S as SpmGetWarSaveSlotFullDataArrayResponse } from "../../proto/sc
 import type { S as SpmSaveScwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveScw/S.ts";
 import type { S as SpmSaveSfwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveSfw/S.ts";
 import type { S as SpmSaveSrwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveSrw/S.ts";
-import type { S as SpmValidateSrwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmValidateSrw/S.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
@@ -61,7 +60,7 @@ export function init(): void {
 }
 
 function _onNotifyMsgSpmValidateSrw(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgSpmValidateSrw"]>): void {
-    const data      = (e.data as { msg: SpmValidateSrwResponse }).msg;
+    const data      = (Helpers_Misc.getExisted(e.data)).msg;
     const status    = data.getStatus();
     if (status === SingleRankedWars_Constants.ValidateStatusId.ConfigVersionNotLatest) {
         FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0278));

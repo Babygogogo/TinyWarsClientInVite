@@ -341,7 +341,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     }
 
     private _onNotifySrrCreatePlayerInfoChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["WarCreator_PlayerInfoChanged"]>): void {
-        const eventData = e.data as Notifications_Mapping.Mapping["WarCreator_PlayerInfoChanged"];
+        const eventData = Helpers_Misc.getExisted(e.data);
         if (eventData.playerIndex === this.getOpenData()?.playerIndex) {
             this._updateComponentsForSettings();
         }

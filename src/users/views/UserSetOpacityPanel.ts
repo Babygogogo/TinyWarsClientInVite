@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     Users_Model,
     Sounds_SoundPlayer,
     Helpers_PointerInput,
@@ -105,7 +106,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._handleTouchGroupUnitOpacity(e);
     }
     private _handleTouchGroupUnitOpacity(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data              = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data              = Helpers_Misc.getExisted(e.data);
         const group             = this._groupUnitOpacity;
         const width             = group.getUnscaledWidth();
         const point             = group.globalToLocal(data.stageX, data.stageY);
@@ -123,7 +124,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._handleTouchGroupTileBaseOpacity(e);
     }
     private _handleTouchGroupTileBaseOpacity(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data              = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data              = Helpers_Misc.getExisted(e.data);
         const group             = this._groupTileBaseOpacity;
         const width             = group.getUnscaledWidth();
         const point             = group.globalToLocal(data.stageX, data.stageY);
@@ -141,7 +142,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._handleTouchGroupTileObjectOpacity(e);
     }
     private _handleTouchGroupTileObjectOpacity(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data              = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data              = Helpers_Misc.getExisted(e.data);
         const group             = this._groupTileObjectOpacity;
         const width             = group.getUnscaledWidth();
         const point             = group.globalToLocal(data.stageX, data.stageY);
@@ -159,7 +160,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._handleTouchGroupTileDecorationOpacity(e);
     }
     private _handleTouchGroupTileDecorationOpacity(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const data              = e.data as Helpers_PointerInput.PointerUnifiedEventData;
+        const data              = Helpers_Misc.getExisted(e.data);
         const group             = this._groupTileDecoratorOpacity;
         const width             = group.getUnscaledWidth();
         const point             = group.globalToLocal(data.stageX, data.stageY);

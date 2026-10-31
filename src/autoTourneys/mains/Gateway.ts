@@ -1,30 +1,13 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
     AutoTourneys_Mains_Provider,
     type Egret_Egret,
 } from "../../internal.ts";
-import type { S as AtCreateTourneyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtCreateTourney/S.ts";
-import type { S as AtDeleteLastTourneyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtDeleteLastTourney/S.ts";
-import type { S as AtDeleteUserResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtDeleteUser/S.ts";
-import type { S as AtGetFullBracketInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetFullBracketInfo/S.ts";
-import type { S as AtGetFullMapInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetFullMapInfo/S.ts";
-import type { S as AtGetGlobalSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetGlobalSettings/S.ts";
-import type { S as AtGetPhaseInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetPhaseInfo/S.ts";
-import type { S as AtGetRegistrationInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
-import type { S as AtGetTourneyInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetTourneyInfo/S.ts";
-import type { S as AtGetUserArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetUserArray/S.ts";
-import type { S as AtRegisterResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtRegister/S.ts";
-import type { S as AtSetAdjustmentDurationResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetAdjustmentDuration/S.ts";
-import type { S as AtSetBootTimerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetBootTimer/S.ts";
-import type { S as AtSetGlobalSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetGlobalSettings/S.ts";
 import type { InitialBracket } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/InitialBracket.ts";
-import type { S as AtSetInitialBracketsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/S.ts";
-import type { S as AtSetMapPoolResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetMapPool/S.ts";
 import type { SimpleMapInfo } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetMapPool/SimpleMapInfo.ts";
-import type { S as AtSetNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetName/S.ts";
-import type { S as AtSetRegistrationDurationResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetRegistrationDuration/S.ts";
 import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 
 export function init(): void {
@@ -59,7 +42,7 @@ export function reqAtGetGlobalSettings(): void {
     });
 }
 function _onMsgAtGetGlobalSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetGlobalSettings"]>): void {
-    const data = e.data as AtGetGlobalSettingsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         AutoTourneys_Mains_Provider.updateOnMsgAtGetGlobalSettings(data);
         Notifications_Dispatcher.dispatch("MsgAtGetGlobalSettings", { msg: data });
@@ -79,7 +62,7 @@ export function reqAtSetGlobalSettings(isEnabled: boolean, interval: number): vo
     });
 }
 function _onMsgAtSetGlobalSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetGlobalSettings"]>): void {
-    const data = e.data as AtSetGlobalSettingsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgAtSetGlobalSettings", { msg: data });
     }
@@ -94,7 +77,7 @@ export function reqAtCreateTourney(): void {
     });
 }
 function _onMsgAtCreateTourney(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtCreateTourney"]>): void {
-    const data = e.data as AtCreateTourneyResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgAtCreateTourney", { msg: data });
     }
@@ -109,7 +92,7 @@ export function reqAtDeleteLastTourney(): void {
     });
 }
 function _onMsgAtDeleteLastTourney(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtDeleteLastTourney"]>): void {
-    const data = e.data as AtDeleteLastTourneyResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgAtDeleteLastTourney", { msg: data });
     }
@@ -126,7 +109,7 @@ export function reqAtSetRegistrationDuration(tourneyId: number, duration: number
     });
 }
 function _onMsgAtSetRegistrationDuration(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetRegistrationDuration"]>): void {
-    const data = e.data as AtSetRegistrationDurationResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgAtSetRegistrationDuration", { msg: data });
     }
@@ -143,7 +126,7 @@ export function reqAtSetAdjustmentDuration(tourneyId: number, duration: number):
     });
 }
 function _onMsgAtSetAdjustmentDuration(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetAdjustmentDuration"]>): void {
-    const data = e.data as AtSetAdjustmentDurationResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgAtSetAdjustmentDuration", { msg: data });
     }
@@ -160,7 +143,7 @@ export function reqAtSetInitialBrackets(tourneyId: number, bracketArray: Initial
     });
 }
 function _onMsgAtSetInitialBrackets(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetInitialBrackets"]>): void {
-    const data = e.data as AtSetInitialBracketsResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgAtSetInitialBrackets", { msg: data });
     }
@@ -177,7 +160,7 @@ export function reqAtDeleteUser(tourneyId: number, userIdArray: number[]): void 
     });
 }
 function _onMsgAtDeleteUser(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtDeleteUser"]>): void {
-    const data = e.data as AtDeleteUserResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgAtDeleteUser", { msg: data });
     }
@@ -194,7 +177,7 @@ export function reqAtSetMapPool(tourneyId: number, mapInfoArray: SimpleMapInfo[]
     });
 }
 function _onMsgAtSetMapPool(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetMapPool"]>): void {
-    const data = e.data as AtSetMapPoolResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgAtSetMapPool", { msg: data });
     }
@@ -211,7 +194,7 @@ export function reqAtSetName(tourneyId: number, nameArray: LanguageText[]): void
     });
 }
 async function _onMsgAtSetName(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetName"]>): Promise<void> {
-    const data = e.data as AtSetNameResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await AutoTourneys_Mains_Provider.updateOnMsgAtSetName(data);
         Notifications_Dispatcher.dispatch("MsgAtSetName", { msg: data });
@@ -229,7 +212,7 @@ export function reqAtSetBootTimer(tourneyId: number, bootTimerParams: number[]):
     });
 }
 async function _onMsgAtSetBootTimer(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetBootTimer"]>): Promise<void> {
-    const data = e.data as AtSetBootTimerResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await AutoTourneys_Mains_Provider.updateOnMsgAtSetBootTimer(data);
         Notifications_Dispatcher.dispatch("MsgAtSetBootTimer", { msg: data });
@@ -245,7 +228,7 @@ export function reqAtGetPhaseInfo(): void {
     });
 }
 function _onMsgAtGetPhaseInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetPhaseInfo"]>): void {
-    const data = e.data as AtGetPhaseInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         AutoTourneys_Mains_Provider.updateOnMsgAtGetPhaseInfo(data);
         Notifications_Dispatcher.dispatch("MsgAtGetPhaseInfo", { msg: data });
@@ -262,7 +245,7 @@ export function reqAtGetRegistrationInfo(tourneyId: number): void {
     });
 }
 function _onMsgAtGetRegistrationInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetRegistrationInfo"]>): void {
-    const data = e.data as AtGetRegistrationInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         AutoTourneys_Mains_Provider.updateOnMsgAtGetRegistrationInfo(data);
         Notifications_Dispatcher.dispatch("MsgAtGetRegistrationInfo", { msg: data });
@@ -279,7 +262,7 @@ export function reqAtGetTourneyInfo(tourneyId: number): void {
     });
 }
 function _onMsgAtGetTourneyInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetTourneyInfo"]>): void {
-    const data = e.data as AtGetTourneyInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         AutoTourneys_Mains_Provider.setAtTourneyInfo(data.getTourneyId() ?? 0, data.getTourneyInfo() ?? null);
         Notifications_Dispatcher.dispatch("MsgAtGetTourneyInfo", { msg: data });
@@ -296,7 +279,7 @@ export function reqAtGetFullMapInfo(tourneyId: number): void {
     });
 }
 function _onMsgAtGetFullMapInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetFullMapInfo"]>): void {
-    const data = e.data as AtGetFullMapInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         AutoTourneys_Mains_Provider.setAtFullMapInfo(data.getTourneyId() ?? 0, data.getFullMapInfo() ?? null);
         Notifications_Dispatcher.dispatch("MsgAtGetFullMapInfo", { msg: data });
@@ -313,7 +296,7 @@ export function reqAtGetFullBracketInfo(tourneyId: number): void {
     });
 }
 function _onMsgAtGetFullBracketInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetFullBracketInfo"]>): void {
-    const data = e.data as AtGetFullBracketInfoResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         AutoTourneys_Mains_Provider.setAtFullBracketInfo(data.getTourneyId() ?? 0, data.getFullBracketInfo() ?? null);
         Notifications_Dispatcher.dispatch("MsgAtGetFullBracketInfo", { msg: data });
@@ -330,7 +313,7 @@ export function reqAtGetUserArray(tourneyId: number): void {
     });
 }
 function _onMsgAtGetUserArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetUserArray"]>): void {
-    const data = e.data as AtGetUserArrayResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         AutoTourneys_Mains_Provider.setAtUserArray(data.getTourneyId() ?? 0, data.getUserIdArray());
         Notifications_Dispatcher.dispatch("MsgAtGetUserArray", { msg: data });
@@ -348,7 +331,7 @@ export function reqAtRegister(tourneyId: number, isRegister: boolean): void {
     });
 }
 function _onMsgAtRegister(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtRegister"]>): void {
-    const data = e.data as AtRegisterResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgAtRegister", { msg: data });
     }

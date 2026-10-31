@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     type Notifications_Mapping,
     Campaigns_Mains_Provider,
     GamePanels_Dict,
@@ -20,7 +21,6 @@ import {
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
 } from "../../../internal.ts";
-import type { S as MeSubmitNormalMapResponse } from "../../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
 
 export interface OpenData {
     campaignId  : number;
@@ -92,7 +92,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForListMap();
     }
     private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
-        const data      = (e.data as { msg: MeSubmitNormalMapResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const slotIndex = data.getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0440),

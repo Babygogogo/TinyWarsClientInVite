@@ -31,7 +31,6 @@ import {
 } from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { PlayerCoInfo } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/PlayerCoInfo.ts";
-import type { S as CampaignCreateWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/S.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 
 export interface OpenData {
@@ -96,7 +95,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this.closePanel();
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
 
-        const data = (e.data as { msg: CampaignCreateWarResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         Helpers_GameFlow.gotoSinglePlayerWar({
             slotIndex     : Helpers_Misc.getExisted(data.getSlotIndex()),
             slotExtraData : Helpers_Misc.getExisted(data.getSlotExtraData()),

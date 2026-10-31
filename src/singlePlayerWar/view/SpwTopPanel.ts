@@ -45,7 +45,6 @@ import {
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
 
-import type { S as SpmCreateSfwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSfw/S.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 
  
@@ -186,7 +185,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
     }
     private _onNotifyBwCoIdChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCoIdChanged"]>): void {
-        const eventData = e.data as Notifications_Mapping.Mapping["BwCoIdChanged"];
+        const eventData = Helpers_Misc.getExisted(e.data);
         if (eventData.player === this.getOpenData()?.war.getPlayerInTurn()) {
             this._updateImgSkinAndCo();
         }
@@ -223,7 +222,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const data = (e.data as { msg: SpmCreateSfwResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (war.getSaveSlotIndex() == null) {
             war.setSaveSlotIndex(Helpers_Misc.getExisted(data.getSlotIndex()));
 
@@ -688,7 +687,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const eventData = e.data as Notifications_Mapping.Mapping["BwPlayerFundChanged"];
+        const eventData = Helpers_Misc.getExisted(e.data);
         if (eventData.player === openData.war.getPlayer(openData.playerIndex)) {
             this._updateLabelFundAndAddFund();
         }
@@ -712,7 +711,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const eventData = e.data as Notifications_Mapping.Mapping["BwCoIdChanged"];
+        const eventData = Helpers_Misc.getExisted(e.data);
         if (eventData.player === openData.war.getPlayer(openData.playerIndex)) {
             this._updateImgCo();
         }

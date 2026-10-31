@@ -30,7 +30,6 @@ import {
     type Ui_Interfaces_IUiLayout,
 } from "../../internal.ts";
 
-import type { S as MeSubmitNormalMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
 
 export interface OpenData {
     war: MultiPlayerWar_Interface_IMpwWar.IMpwWar;
@@ -103,7 +102,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateBtnMapRating();
     }
     private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
-        const slotIndex = ((e.data as { msg: MeSubmitNormalMapResponse }).msg).getSlotIndex() ?? 0;
+        const slotIndex = ((Helpers_Misc.getExisted(e.data)).msg).getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0872),
             callback   : async () => {

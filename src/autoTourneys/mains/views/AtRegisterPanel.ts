@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     type Notifications_Mapping,
     AutoTourneys_Mains_Provider,
     Lang_Utils,
@@ -14,7 +15,6 @@ import {
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
 } from "../../../internal.ts";
-import type { S as AtGetRegistrationInfoResponse } from "../../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
 
 export type OpenData = void;
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
@@ -121,7 +121,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgAtGetRegistrationInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgAtGetRegistrationInfo"]>): void {
-        const data = (e.data as { msg: AtGetRegistrationInfoResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getTourneyId() === this._tourneyId) {
             this._updateView();
         }

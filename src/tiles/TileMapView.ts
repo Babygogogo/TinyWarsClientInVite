@@ -539,7 +539,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
 
     private _onNotifyBwTileHasLocationIdSet(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwTileHasLocationIdSet"]>): void {
         const tileMap   = Helpers_Misc.getExisted(this._tileMap);
-        const { tile }  = e.data as Notifications_Mapping.Mapping["BwTileHasLocationIdSet"];
+        const { tile }  = Helpers_Misc.getExisted(e.data);
         const img       = this._locationLayer.getUiChildAt(tile.getGridIndex().getGridId(tileMap.getMapSize()));
         for (let locationId = Locations_Constants.MinId; locationId <= Locations_Constants.MaxId; ++locationId) {
             if ((tileMap.getIsLocationVisible(locationId)) && (tile.getHasLocationId(locationId))) {
@@ -554,31 +554,31 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
         this.updateCoZone();
     }
     private _onNotifyGridMarkAdded(e: Egret_Egret.Event<Notifications_Mapping.Mapping["GridMarkAdded"]>): void {
-        const data = e.data as Notifications_Mapping.Mapping["GridMarkAdded"];
+        const data = Helpers_Misc.getExisted(e.data);
         if (data.war === this._tileMap?.getWar()) {
             this._updateMarkGrid(data.gridId);
         }
     }
     private _onNotifyGridMarkDeleted(e: Egret_Egret.Event<Notifications_Mapping.Mapping["GridMarkDeleted"]>): void {
-        const data = e.data as Notifications_Mapping.Mapping["GridMarkDeleted"];
+        const data = Helpers_Misc.getExisted(e.data);
         if (data.war === this._tileMap?.getWar()) {
             this._updateMarkGrid(data.gridId);
         }
     }
     private _onNotifyHiddenGridMarkTypeIdListChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["HiddenGridMarkTypeIdListChanged"]>): void {
-        const data = e.data as Notifications_Mapping.Mapping["HiddenGridMarkTypeIdListChanged"];
+        const data = Helpers_Misc.getExisted(e.data);
         if (data.war === this._tileMap?.getWar()) {
             this.resetMarkLayer();
         }
     }
     private _onNotifyGridMarkListChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["GridMarkListChanged"]>): void {
-        const data = e.data as Notifications_Mapping.Mapping["GridMarkListChanged"];
+        const data = Helpers_Misc.getExisted(e.data);
         if (data.war === this._tileMap?.getWar()) {
             this.resetMarkLayer();
         }
     }
     private _onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwPlayerPlayerIndexArrayForShowMarkedGridUpdated"]>): void {
-        const data = e.data as Notifications_Mapping.Mapping["BwPlayerPlayerIndexArrayForShowMarkedGridUpdated"];
+        const data = Helpers_Misc.getExisted(e.data);
         if (data.player.getWar() === this._tileMap?.getWar()) {
             this.resetMarkLayer();
         }

@@ -32,7 +32,6 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
-import type { S as UserGetOnlineStateResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineState/S.ts";
 
  
 enum PanelSkinState {
@@ -213,7 +212,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateBtnChat();
     }
     private _onNotifyMsgUserGetOnlineState(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserGetOnlineState"]>): void {
-        const data = (e.data as { msg: UserGetOnlineStateResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getUserId() === this.getOpenData()?.war.getPlayerInTurn().getUserId()) {
             this._updateLabelPlayerState();
         }
@@ -598,7 +597,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     }
 
     private _onNotifyBwPlayerFundChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwPlayerFundChanged"]>): void {
-        const eventData = e.data as Notifications_Mapping.Mapping["BwPlayerFundChanged"];
+        const eventData = Helpers_Misc.getExisted(e.data);
         const openData  = this.getOpenData();
         if (eventData.player === openData?.war.getPlayer(openData.playerIndex)) {
             this._updateLabelFundAndAddFund();

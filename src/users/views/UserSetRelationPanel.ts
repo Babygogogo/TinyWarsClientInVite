@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     type Notifications_Mapping,
     Users_Model,
     GamePanels_Dict,
@@ -16,7 +17,6 @@ import {
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
 } from "../../internal.ts";
-import type { S as UserSetRelationResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
 
 export interface OpenData {
     userId  : number;
@@ -68,7 +68,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgUserSetRelation(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserSetRelation"]>): void {
-        const data = (e.data as { msg: UserSetRelationResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getTargetUserId() === this.getOpenData()?.userId) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0377));
             this.closePanel();

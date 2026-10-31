@@ -1,13 +1,11 @@
 import {
+    Helpers_Misc,
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
     ChangeLogs_Provider,
     type Egret_Egret,
 } from "../internal.ts";
-import type { S as ChangeLogAddMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogAddMessage/S.ts";
-import type { S as ChangeLogGetMessageListResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogGetMessageList/S.ts";
-import type { S as ChangeLogModifyMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogModifyMessage/S.ts";
 import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
 
 export function init(): void {
@@ -28,7 +26,7 @@ export function reqChangeLogAddMessage(textList: LanguageText[]): void {
     });
 }
 function _onMsgChangeLogAddMessage(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChangeLogAddMessage"]>): void {
-    const data = e.data as ChangeLogAddMessageResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgChangeLogAddMessage", { msg: data });
     }
@@ -45,7 +43,7 @@ export function reqChangeLogModifyMessage(messageId: number, textList: LanguageT
     });
 }
 function _onMsgChangeLogModifyMessage(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChangeLogModifyMessage"]>): void {
-    const data = e.data as ChangeLogModifyMessageResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Notifications_Dispatcher.dispatch("MsgChangeLogModifyMessage", { msg: data });
     }
@@ -60,7 +58,7 @@ export function reqChangeLogGetMessageList(): void {
     });
 }
 function _onMsgChangeLogGetMessageList(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChangeLogGetMessageList"]>): void {
-    const data = e.data as ChangeLogGetMessageListResponse;
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         ChangeLogs_Provider.setAllMessageList(data.getMessageList());
         Notifications_Dispatcher.dispatch("MsgChangeLogGetMessageList", { msg: data });

@@ -47,8 +47,6 @@ import {
     type Egret_Egret,
 } from "../../internal.ts";
 
-import type { S as MeSubmitNormalMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
-import type { S as MmReviewMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmReviewMap/S.ts";
 
 const MaxLengthForListRecent = 30;
 
@@ -349,7 +347,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateLabelLocation();
     }
     private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
-        const data = (e.data as { msg: MeSubmitNormalMapResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (!data.getNeedReview()) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0085));
         } else {
@@ -365,7 +363,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._getWar().setIsMapModified(false);
     }
     private _onNotifyMsgMmReviewMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMmReviewMap"]>): void {
-        const data = (e.data as { msg: MmReviewMapResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getIsAccept()) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0092));
         } else {

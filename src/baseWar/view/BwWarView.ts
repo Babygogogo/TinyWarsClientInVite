@@ -269,11 +269,11 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
     }
 
     private _onNotifyBwFieldZoomedByTouch(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwFieldZoomedByTouch"]>): void {
-        const data = e.data as Notifications_Mapping.Mapping["BwFieldZoomedByTouch"];
+        const data = Helpers_Misc.getExisted(e.data);
         this._fieldContainer.setZoomByTouches(data.current, data.previous);
     }
     private _onNotifyBwFieldDragged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwFieldDragged"]>): void {
-        const data = e.data as Notifications_Mapping.Mapping["BwFieldDragged"];
+        const data = Helpers_Misc.getExisted(e.data);
         this._fieldContainer.setDragByTouches(data.current, data.previous);
     }
 

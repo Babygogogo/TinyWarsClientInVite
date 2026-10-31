@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     type Notifications_Mapping,
     Lang_Utils,
     Common_Model_CommonProxy,
@@ -10,7 +11,6 @@ import {
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
 } from "../../internal.ts";
-import type { S as CommonGetServerStatusResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetServerStatus/S.ts";
 
 export type OpenData = void;
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
@@ -49,7 +49,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onMsgCommonGetServerStatus(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCommonGetServerStatus"]>): void {
-        const data = (e.data as { msg: CommonGetServerStatusResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
 
         this._labelAccounts.setText("" + data.getTotalAccounts());
 

@@ -39,10 +39,6 @@ import {
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
 import type { PlayerInfo } from "../../proto/schema/CommonProto/Mail/MailEndWarNotification/PlayerInfo.ts";
-import type { S as CcrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrJoinRoom/S.ts";
-import type { S as MailSetIsNewResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
-import type { S as McrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrJoinRoom/S.ts";
-import type { S as MfrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/S.ts";
 
 export type OpenData = void;
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
@@ -294,19 +290,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCcrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrJoinRoom"]>): void {
-        const data      = (e.data as { msg: CcrJoinRoomResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         Helpers_GameFlow.gotoCcrRoomInfoPanel(roomId);
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
     }
     private _onNotifyMsgMcrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrJoinRoom"]>): void {
-        const data      = (e.data as { msg: McrJoinRoomResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         Helpers_GameFlow.gotoMcrRoomInfoPanel(roomId);
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
     }
     private _onNotifyMsgMfrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrJoinRoom"]>): void {
-        const data      = (e.data as { msg: MfrJoinRoomResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         Helpers_GameFlow.gotoMfrRoomInfoPanel(roomId);
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
@@ -650,7 +646,7 @@ class MailRenderer
     }
 
     private _onNotifyMsgMailSetIsNew(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMailSetIsNew"]>): void {
-        const data = (e.data as { msg: MailSetIsNewResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getMailId() === this.getOpenData()?.mailId) {
             this._updateImgRed();
         }

@@ -33,7 +33,6 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type { S as MeSubmitNormalMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
 import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
@@ -215,7 +214,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
-        const slotIndex = ((e.data as { msg: MeSubmitNormalMapResponse }).msg).getSlotIndex() ?? 0;
+        const slotIndex = ((Helpers_Misc.getExisted(e.data)).msg).getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0872),
             callback   : async () => {

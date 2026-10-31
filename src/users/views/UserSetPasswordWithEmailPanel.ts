@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     type Notifications_Mapping,
     Users_Utils,
     Users_Constants,
@@ -18,7 +19,6 @@ import {
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiPromptedInput,
 } from "../../internal.ts";
-import type { S as UserRequestPasswordVerificationCodeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserRequestPasswordVerificationCode/S.ts";
 
 let _lastRequestTimestamp = 0;
 
@@ -85,7 +85,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgUserRequestPasswordVerificationCode(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserRequestPasswordVerificationCode"]>): void {
         FloatText.showLang(Lang_Constants.TextType.A0863);
 
-        _lastRequestTimestamp = (((e.data as { msg: UserRequestPasswordVerificationCodeResponse }).msg).getEndTimestamp() ?? 0) - Emails_Constants.Common.VerificationCodeExpiration;
+        _lastRequestTimestamp = (((Helpers_Misc.getExisted(e.data)).msg).getEndTimestamp() ?? 0) - Emails_Constants.Common.VerificationCodeExpiration;
     }
     private _onNotifyMsgUserRequestPasswordVerificationCodeFailed(): void {
         // nothing to do

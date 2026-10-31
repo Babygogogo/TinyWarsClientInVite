@@ -326,7 +326,7 @@ export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemDa
     private _onItemPointerDown(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         // log(`UiList._onItemPointerDown`, e);
 
-        const item = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;
+        const item = (Helpers_Misc.getExisted(e.data)).dispatcher;
         if ((item instanceof Ui_Components_UiListItemRenderer.UiListItemRenderer) && (item.getSkinInfo())) {
             Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(
                 item,
@@ -337,7 +337,7 @@ export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemDa
     private _onItemPointerTap(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         // log(`UiList._onItemPointerTap`, e);
 
-        const dispatcher    = Helpers_Misc.getExisted((e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher) as unknown as Ui_Interfaces_IUiComponent.IUiComponent;
+        const dispatcher    = Helpers_Misc.getExisted((Helpers_Misc.getExisted(e.data)).dispatcher) as unknown as Ui_Interfaces_IUiComponent.IUiComponent;
         const renderer      = this.getAllItems().find(v => v.checkIsSameOrAncestor(dispatcher));
         if (renderer == null) {
             return;
@@ -365,7 +365,7 @@ export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemDa
     private _onItemPointerUp(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         // log(`UiList._onItemPointerUp`, e);
 
-        const item = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;
+        const item = (Helpers_Misc.getExisted(e.data)).dispatcher;
         if ((item instanceof Ui_Components_UiListItemRenderer.UiListItemRenderer) && (item.getSkinInfo())) {
             Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(item, this.getSelectedItems()?.includes(item) ? Ui_Types_UiSkinState.UiSkinState.Down : Ui_Types_UiSkinState.UiSkinState.Up);
         }
@@ -373,7 +373,7 @@ export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemDa
     private _onItemPointerUpOutside(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         // log(`UiList._onItemPointerUpOutside`, e);
 
-        const item = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;
+        const item = (Helpers_Misc.getExisted(e.data)).dispatcher;
         if ((item instanceof Ui_Components_UiListItemRenderer.UiListItemRenderer) && (item.getSkinInfo())) {
             Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(item, this.getSelectedItems()?.includes(item) ? Ui_Types_UiSkinState.UiSkinState.Down : Ui_Types_UiSkinState.UiSkinState.Up);
         }

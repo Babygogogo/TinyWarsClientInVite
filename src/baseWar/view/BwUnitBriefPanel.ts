@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     type Notifications_Mapping,
     type BaseWar_Interface_IBwWar,
     MapEditor_Model_MeWar,
@@ -112,7 +113,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const data = e.data as Notifications_Mapping.Mapping["BwUnitChanged"];
+        const data = Helpers_Misc.getExisted(e.data);
         if (data.gridIndex.checkIsEqual(gridIndex)) {
             this._updateView();
         }
@@ -138,7 +139,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onCellTouchTap(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
-        const dispatcher = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;
+        const dispatcher = (Helpers_Misc.getExisted(e.data)).dispatcher;
         if (dispatcher == null) {
             return;
         }

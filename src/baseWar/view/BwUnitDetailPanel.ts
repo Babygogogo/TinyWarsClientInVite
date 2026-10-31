@@ -189,7 +189,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyBwUnitBuffChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwUnitBuffChanged"]>): void {
-        if ((e.data as Notifications_Mapping.Mapping["BwUnitBuffChanged"]).unit === this.getOpenData()?.unit) {
+        if ((Helpers_Misc.getExisted(e.data)).unit === this.getOpenData()?.unit) {
             this.updateUnitView();
             this._updateListInfo();
         }

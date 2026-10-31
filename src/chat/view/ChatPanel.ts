@@ -40,9 +40,6 @@ import {
 } from "../../internal.ts";
 
 import type { ChatMessage } from "../../proto/schema/CommonProto/Chat/ChatMessage.ts";
-import type { S as ChatAddMessageResponse } from "../../proto/schema/CommonProto/NetMessage/MsgChatAddMessage/S.ts";
-import type { S as ChatDeleteMessageResponse } from "../../proto/schema/CommonProto/NetMessage/MsgChatDeleteMessage/S.ts";
-import type { S as ChatUpdateReadProgressResponse } from "../../proto/schema/CommonProto/NetMessage/MsgChatUpdateReadProgress/S.ts";
 
 let _preferredChatToTarget          = new AuxiliaryTypes_ChatToTarget.ChatToTarget();
 const _preferredChatToTargetDict    = new Map<Chat_Constants.MainCategoryId, AuxiliaryTypes_ChatToTarget.ChatToTarget>();
@@ -182,7 +179,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private async _onNotifyMsgChatAddMessage(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgChatAddMessage"]>): Promise<void> {
-        const message       = Helpers_Misc.getExisted(((e.data as { msg: ChatAddMessageResponse }).msg).getMessage());
+        const message       = Helpers_Misc.getExisted(((Helpers_Misc.getExisted(e.data)).msg).getMessage());
         const msgFromUserId = message.getFromUserId();
         const selfUserId    = Helpers_Misc.getExisted(Users_Model.getSelfUserId());
         if (msgFromUserId === selfUserId) {
@@ -212,7 +209,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private async _onNotifyMsgChatDeleteMessage(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgChatDeleteMessage"]>): Promise<void> {
-        const messageId = ((e.data as { msg: ChatDeleteMessageResponse }).msg).getMessageId();
+        const messageId = ((Helpers_Misc.getExisted(e.data)).msg).getMessageId();
         if (this._listMessage.getBoundDataArray()?.some(v => v?.message.getMessageId() === messageId)) {
             this._updateComponentsForMessage(false);
         }
@@ -739,7 +736,7 @@ class MainCategoryRenderer
             return;
         }
 
-        const data          = (e.data as { msg: ChatAddMessageResponse }).msg;
+        const data          = (Helpers_Misc.getExisted(e.data)).msg;
         const message       = Helpers_Misc.getExisted(data.getMessage());
         const toCategory    = message.getToCategory() as Chat_Constants.ToCategoryId;
         if (mainCategory === Chat_Constants.MainCategoryId.PublicChannel) {
@@ -783,7 +780,7 @@ class MainCategoryRenderer
             return;
         }
 
-        const data      = (e.data as { msg: ChatUpdateReadProgressResponse }).msg;
+        const data      = (Helpers_Misc.getExisted(e.data)).msg;
         const progress  = Helpers_Misc.getExisted(data.getProgress());
         if (checkIsMessageInMainCategory({
             mainCategory : mainCategory,

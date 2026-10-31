@@ -1,4 +1,5 @@
 import {
+    Helpers_Misc,
     type Notifications_Mapping,
     Campaigns_Managements_Provider,
     Campaigns_Mains_Provider,
@@ -19,7 +20,6 @@ import {
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
 } from "../../../internal.ts";
-import type { S as CmSetCampaignNameResponse } from "../../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignName/S.ts";
 
 export type OpenData = void;
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
@@ -148,7 +148,7 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgCmSetCampaignName(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCmSetCampaignName"]>): void {
-        const data = (e.data as { msg: CmSetCampaignNameResponse }).msg;
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if ((data.getCampaignId() ?? 0) === this.getOpenData()?.campaignId) {
             this._updateLabelName();
         }
