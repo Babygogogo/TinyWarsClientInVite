@@ -255,7 +255,7 @@ export abstract class UiPanel<OpenData> extends Ui_Components_UiOpenableComponen
 
                     if (window.CLIENT_VERSION === "DEVELOP") {
                         const agent = group.getEventAgent();
-                        const dict  = this._boundedGroupTouchCallbacks ??= new Map();
+                        const dict  = this._boundedGroupTouchCallbacks ??= new Map<string, () => void>();
                         if (dict.has(name)) {
                             agent.addPointerEventListener(Helpers_PointerInput.PointerEventType.Press, Helpers_Misc.getExisted(dict.get(name)), undefined);
                         } else {

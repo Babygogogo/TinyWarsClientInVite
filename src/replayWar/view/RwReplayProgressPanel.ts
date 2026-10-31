@@ -6,7 +6,6 @@ import {
     Lang_Utils,
     Helpers_PointerInput,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type ReplayWar_Interface_IRwWarBase,
@@ -43,7 +42,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._groupProgress,     callback : this._onTouchedGroupProgress },
@@ -83,7 +82,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onTouchedGroupProgress(e: Egret_Egret.Event): void {
+    private _onTouchedGroupProgress(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const data              = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const group             = this._groupProgress;
         const point             = group.globalToLocal(data.stageX, data.stageY);
@@ -94,7 +93,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateGroupProgress();
         this._updateLabelTarget();
     }
-    private _onTouchMoveGroupProgress(e: Egret_Egret.Event): void {
+    private _onTouchMoveGroupProgress(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const data              = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const group             = this._groupProgress;
         const point             = group.globalToLocal(data.stageX, data.stageY);

@@ -2,7 +2,6 @@ import {
     Helpers_PointerInput,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Notifications_TypeId,
     Ui_Components_UiOpenableComponent,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -28,7 +27,7 @@ export class UiRadioButton extends Ui_Components_UiOpenableComponent.UiOpenableC
             { ui : this._groupRight,     callback : this._onTouchedGroupRight },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
         this.setMouseStyle(Helpers_PointerInput.MouseStyleType.Pointer);
 

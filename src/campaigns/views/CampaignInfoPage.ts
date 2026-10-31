@@ -8,7 +8,6 @@ import {
     GamePanels_Manager,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiOpenableComponent,
     Ui_Types_UiVerticalAlign,
@@ -36,7 +35,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnDesigner,    callback : this._onTouchedBtnDesigner },

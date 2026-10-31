@@ -6,7 +6,6 @@ import {
     WarRules_Utils_CommonData,
     Users_Model,
     ForceSkins_Constants,
-    Notifications_TypeId,
     type GameConfigs_GameConfig,
 } from "../internal.ts";
 import { AtrRoomInfo } from "../proto/schema/CommonProto/AutoTourneyRoom/AtrRoomInfo.ts";
@@ -71,14 +70,14 @@ export class SelfSettings {
     public setCoId(coId: number): void {
         if (this._coId !== coId) {
             this._coId = coId;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.RoomSelfSettingsCoIdChanged);
+            Notifications_Dispatcher.dispatch("RoomSelfSettingsCoIdChanged");
         }
     }
 
     public setUnitAndTileSkinId(skinId: number): void {
         if (this._unitAndTileSkinId !== skinId) {
             this._unitAndTileSkinId = skinId;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.RoomSelfSettingsSkinIdChanged);
+            Notifications_Dispatcher.dispatch("RoomSelfSettingsSkinIdChanged");
         }
     }
     public getUnitAndTileSkinId(): number | null {

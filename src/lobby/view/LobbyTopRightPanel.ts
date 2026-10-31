@@ -3,7 +3,6 @@ import {
     Tween_Executor,
     GamePanels_Dict,
     GamePanels_Manager,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Timer_TimerModel,
     type Ui_Interfaces_IUiButton,
@@ -17,12 +16,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserLogout,           callback : this._onMsgUserLogout },
-            { type : Notifications_TypeId.TypeId.MsgMailGetAllMailArray,  callback : this._onNotifyMsgMailGetAllMailArray },
-            { type : Notifications_TypeId.TypeId.MsgMailGetMail,          callback : this._onNotifyMsgMailGetMail },
-            { type : Notifications_TypeId.TypeId.MsgMailDeleteMail,       callback : this._onNotifyMsgMailDeleteMail },
-            { type : Notifications_TypeId.TypeId.MsgMailSetIsNew,         callback : this._onNotifyMsgMailSetIsNew },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserLogout",           callback : this._onMsgUserLogout },
+            { type : "MsgMailGetAllMailArray",  callback : this._onNotifyMsgMailGetAllMailArray },
+            { type : "MsgMailGetMail",          callback : this._onNotifyMsgMailGetMail },
+            { type : "MsgMailDeleteMail",       callback : this._onNotifyMsgMailDeleteMail },
+            { type : "MsgMailSetIsNew",         callback : this._onNotifyMsgMailSetIsNew },
         ]);
         this._setUiListenerArray([
             { ui : this._btnSettings,    callback : this._onTouchedBtnSettings },

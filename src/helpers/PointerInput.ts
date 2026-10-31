@@ -1,7 +1,6 @@
 import {
     Egret_Egret,
     type AuxiliaryTypes_AuxiliaryTypes,
-    Notifications_TypeId,
     Helpers_Compatibility,
     Notifications_Dispatcher,
     Helpers_Misc,
@@ -124,7 +123,7 @@ export function enable(): void {
         }
 
         const revisedValue = value > 0 ? -100 : 100;
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MouseWheel, revisedValue);
+        Notifications_Dispatcher.dispatch("MouseWheel", { num: revisedValue });
 
         const point         = getStagePoint(e);
         const targetObject  = getPointerTargetObject(point);
@@ -191,7 +190,7 @@ export function enable(): void {
     _canvas.addEventListener("pointerdown", e => {
         // console.log("pointerdown", e, e.button, e.buttons);
         if (e.button === 2) {
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MouseRightButtonClicked, e);
+            Notifications_Dispatcher.dispatch("MouseRightButtonClicked", e);
             return;
         }
 
@@ -333,7 +332,7 @@ export function enable(): void {
             rawEvent     : e,
             dispatcher   : undefined,
         };
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.PointerGlobalMove, _tempPointerMoveEventData);
+        Notifications_Dispatcher.dispatch("PointerGlobalMove", _tempPointerMoveEventData);
 
         lastPressObject?.dispatchEventWith(
             PointerEventType.PressMove,

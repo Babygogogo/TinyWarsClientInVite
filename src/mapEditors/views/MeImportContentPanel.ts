@@ -6,7 +6,6 @@ import {
     GamePanels_Manager,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
@@ -49,7 +48,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnHelp,                                callback : this._onTouchedBtnHelp },
@@ -157,7 +156,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback   : () => {
                 importWarEventFullData(newWarEventFullData, currentWarEventFullData);
                 warEventManager.setWarEventFullData(currentWarEventFullData);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
 
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             },
@@ -190,7 +189,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 openData.war.getWarEventManager().setWarEventFullData(warEventFullData);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
 
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             },
@@ -229,7 +228,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     existingDataArray.push(data);
                 }
                 war.setTaskObjectiveFullData(existingFullData);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged);
+                Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
 
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             },
@@ -259,7 +258,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 openData.war.setTaskObjectiveFullData(srcFullData);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged);
+                Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
 
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             },
@@ -290,7 +289,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     existingDataArray.push(data);
                 }
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
 
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             },
@@ -314,7 +313,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 openData.war.setMapSimpleDialogueArray(dataArray);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
 
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             },

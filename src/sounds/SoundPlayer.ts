@@ -12,7 +12,6 @@ import {
     FloatText,
     CoSkills_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     type Sounds_Types,
     type BaseWar_Interface_IBwWar,
     type Notifications_Types,
@@ -57,8 +56,8 @@ const _SHORT_SFX_PARAM  = new Map<Sounds_Constants.ShortSfxCode, ShortSfxParams>
 ]);
 const _UNIT_MOVE_FADEOUT_TIME   = 0.6;
 const _NOTIFY_EVENTS    : Notifications_Types.Listener[] = [
-    { type : Notifications_TypeId.TypeId.GameShown,    callback : _onNotifyGameShown },
-    { type : Notifications_TypeId.TypeId.GameHidden,   callback : _onNotifyGameHidden },
+    { type : "GameShown",    callback : _onNotifyGameShown },
+    { type : "GameHidden",   callback : _onNotifyGameHidden },
 ];
 
 let _isInitialized              = false;
@@ -295,7 +294,7 @@ function _updateBgmVolumeForNormal(): void {
 
 function _setPlayingBgmCode(bgmCode: number): void {
     _playingBgmCode = bgmCode;
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.SoundManagerPlayingBgmCodeChanged);
+    Notifications_Dispatcher.dispatch("SoundManagerPlayingBgmCodeChanged");
 }
 export function getPlayingBgmCode(): number {
     return _playingBgmCode;

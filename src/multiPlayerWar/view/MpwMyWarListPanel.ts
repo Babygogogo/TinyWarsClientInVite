@@ -27,7 +27,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
@@ -58,8 +57,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.TimeTick,            callback : this._onNotifyTimeTick },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
+            { type : "TimeTick",            callback : this._onNotifyTimeTick },
         ]);
         this._setUiListenerArray([
             { ui : this._btnBack,                    callback : this._onTouchedBtnBack },
@@ -373,7 +372,7 @@ class WarRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TimeTick,                    callback : this._onNotifyTimeTick },
+            { type : "TimeTick",                    callback : this._onNotifyTimeTick },
         ]);
         this._applySettingsForWholeTouch();
     }

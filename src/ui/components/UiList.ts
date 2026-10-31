@@ -323,7 +323,7 @@ export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemDa
         agent.removePointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseIn,  this._onItemPointerUp,          this);
         agent.removePointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseOut, this._onItemPointerUpOutside,   this);
     }
-    private _onItemPointerDown(e: Egret_Egret.Event): void {
+    private _onItemPointerDown(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         // log(`UiList._onItemPointerDown`, e);
 
         const item = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;
@@ -334,7 +334,7 @@ export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemDa
             );
         }
     }
-    private _onItemPointerTap(e: Egret_Egret.Event): void {
+    private _onItemPointerTap(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         // log(`UiList._onItemPointerTap`, e);
 
         const dispatcher    = Helpers_Misc.getExisted((e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher) as unknown as Ui_Interfaces_IUiComponent.IUiComponent;
@@ -362,7 +362,7 @@ export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemDa
 
         renderer.onItemTapEvent({ itemIndex : itemIndex });
     }
-    private _onItemPointerUp(e: Egret_Egret.Event): void {
+    private _onItemPointerUp(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         // log(`UiList._onItemPointerUp`, e);
 
         const item = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;
@@ -370,7 +370,7 @@ export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemDa
             Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(item, this.getSelectedItems()?.includes(item) ? Ui_Types_UiSkinState.UiSkinState.Down : Ui_Types_UiSkinState.UiSkinState.Up);
         }
     }
-    private _onItemPointerUpOutside(e: Egret_Egret.Event): void {
+    private _onItemPointerUpOutside(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         // log(`UiList._onItemPointerUpOutside`, e);
 
         const item = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;

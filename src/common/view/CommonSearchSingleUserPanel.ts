@@ -1,4 +1,6 @@
 import {
+    type Notifications_Mapping,
+    type Helpers_PointerInput,
     Tween_Executor,
     GamePanels_Dict,
     Users_Model,
@@ -9,7 +11,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiInputEventType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -51,8 +52,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserGetUsersByNickname,   callback : this._onNotifyMsgUserGetUsersByNickname },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserGetUsersByNickname",   callback : this._onNotifyMsgUserGetUsersByNickname },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -148,8 +149,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgUserGetUsersByNickname(e: Egret_Egret.Event): void {
-        const data                  = e.data as UserGetUsersByNicknameResponse;
+    private _onNotifyMsgUserGetUsersByNickname(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserGetUsersByNickname"]>): void {
+        const data                  = (e.data as { msg: UserGetUsersByNicknameResponse }).msg;
         this._candidateUserIdArray  = data.getUserIdArray();
         this._selectedUserId        = null;
         this._updateListNickname();
@@ -223,13 +224,13 @@ class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         this._updateGroupSelect();
     }
 
-    private _onTouchedGroupHelp(e: Egret_Egret.Event): void {
+    private _onTouchedGroupHelp(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : this.getOpenData()?.userId });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
-    private _onTouchedGroupSelect(e: Egret_Egret.Event): void {
+    private _onTouchedGroupSelect(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
         const openData = this.getOpenData();

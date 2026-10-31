@@ -9,7 +9,6 @@ import {
     Lang_Constants,
     Timer_TimerModel,
     Graphics_Constants,
-    Notifications_TypeId,
 } from "../internal.ts";
 import type { S as CommonHeartbeatResponse } from "../proto/schema/CommonProto/NetMessage/MsgCommonHeartbeat/S.ts";
 
@@ -22,14 +21,14 @@ let _serverTimestamp        = 0;
 
 export function init(): void {
     Notifications_Dispatcher.addEventListeners([
-        { type : Notifications_TypeId.TypeId.NetworkConnected,       callback : _onNotifyNetworkConnected },
-        { type : Notifications_TypeId.TypeId.NetworkDisconnected,    callback : _onNotifyNetworkDisconnected },
+        { type : "NetworkConnected",       callback : _onNotifyNetworkConnected },
+        { type : "NetworkDisconnected",    callback : _onNotifyNetworkDisconnected },
     ], Timer_TimerModel);
 
     Egret_Egret.setInterval(() => {
         if (_serverTimestamp) {
             (++_serverTimestamp);
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.TimeTick);
+            Notifications_Dispatcher.dispatch("TimeTick");
         }
     }, null, 1000);
 }

@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Users_Utils,
     Utils_ClientErrorCode,
     GamePanels_Dict,
@@ -11,7 +12,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -40,8 +40,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserRegister, callback : this._onMsgUserRegister },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserRegister", callback : this._onMsgUserRegister },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this.closePanel },
@@ -58,8 +58,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onMsgUserRegister(e: Egret_Egret.Event): void {
-        const data = e.data as UserRegisterResponse;
+    private _onMsgUserRegister(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserRegister"]>): void {
+        const data = (e.data as { msg: UserRegisterResponse }).msg;
         FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0004));
 
         const account   = Helpers_Misc.getExisted(data.getAccount(), Utils_ClientErrorCode.ClientErrorCode.UserRegisterPanel_OnMsgUserRegister_00);

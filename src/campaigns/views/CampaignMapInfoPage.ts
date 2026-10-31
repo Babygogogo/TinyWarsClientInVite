@@ -5,7 +5,6 @@ import {
     Lang_Utils,
     GameConfigs_Provider,
     Helpers_Collection,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiImage,
     Ui_Components_UiOpenableComponent,
@@ -37,7 +36,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
 
         this.checkAndInitSizerInfo().addSizerOptions({

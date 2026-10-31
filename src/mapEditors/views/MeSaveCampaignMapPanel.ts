@@ -11,7 +11,6 @@ import {
     MapEditor_Model_MeProxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
@@ -47,7 +46,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },

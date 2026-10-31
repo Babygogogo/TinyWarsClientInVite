@@ -15,7 +15,6 @@ import {
     Tween_Executor,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
@@ -56,9 +55,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetWatchedWarInfos,  callback : this._onNotifyMsgMpwWatchGetWatchedWarInfos },
-            { type : Notifications_TypeId.TypeId.MsgMpwWatchDeleteWatcher,       callback : this._onNotifyMpwWatchDeleteWatcher },
+            { type : "LanguageChanged",                callback : this._onNotifyLanguageChanged },
+            { type : "MsgMpwWatchGetWatchedWarInfos",  callback : this._onNotifyMsgMpwWatchGetWatchedWarInfos },
+            { type : "MsgMpwWatchDeleteWatcher",       callback : this._onNotifyMpwWatchDeleteWatcher },
         ]);
         this._setUiListenerArray([
             { ui : this._btnBack,        callback : this._onTouchedBtnBack },

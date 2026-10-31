@@ -11,7 +11,6 @@ import {
     MultiPlayerRooms_Constants,
     Lang_Constants,
     Graphics_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Timer_TimerModel,
     type Ui_Interfaces_IUiButton,
@@ -61,10 +60,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserLogout,                       callback : this._onMsgUserLogout },
-            { type : Notifications_TypeId.TypeId.MsgMpwCommonGetWarProgressInfo,      callback : this._onMsgMpwCommonGetWarProgressInfo },
-            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetRequestedWarIdArray,   callback : this._onMsgMpwWatchGetRequestedWarIdArray },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserLogout",                       callback : this._onMsgUserLogout },
+            { type : "MsgMpwCommonGetWarProgressInfo",      callback : this._onMsgMpwCommonGetWarProgressInfo },
+            { type : "MsgMpwWatchGetRequestedWarIdArray",   callback : this._onMsgMpwWatchGetRequestedWarIdArray },
         ]);
         this._setUiListenerArray([
             { ui : this._btnRanking,         callback : this._onTouchedBtnRanking },

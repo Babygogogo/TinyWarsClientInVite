@@ -11,9 +11,9 @@ import type { TemplateWarRule } from "../proto/schema/CommonProto/WarRule/Templa
 import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export interface UiListener {
+export interface UiListener<TData = undefined> {
     ui          : Egret_Egret.DisplayObject,
-    callback    : (e: Egret_Egret.Event) => void,
+    callback    : (e: Egret_Egret.Event<TData>) => void,
     eventType?  : string,
     thisObject? : any,
 }

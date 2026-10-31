@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Cos_Constants,
     Notifications_Dispatcher,
     Helpers_ImageSource,
@@ -13,7 +14,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -27,7 +27,6 @@ import {
     type Ui_Interfaces_IUiScrollList,
     type SingleRankRoom_Model_SrrWarCreator,
     type Ui_Types_UiListItemData,
-    type Notifications_DataTypes,
 } from "../../internal.ts";
 
 export type OpenData = {
@@ -47,8 +46,8 @@ export class Page
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarCreator_TemplateWarRuleIdChanged,  callback : this._onNotifySrrCreateModelTemplateWarRuleIdChanged },
+            { type : "LanguageChanged",                         callback : this._onNotifyLanguageChanged },
+            { type : "WarCreator_TemplateWarRuleIdChanged",  callback : this._onNotifySrrCreateModelTemplateWarRuleIdChanged },
         ]);
 
         this.checkAndInitSizerInfo().addSizerOptions({
@@ -142,8 +141,8 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             { ui : this._btnChangeSkinId,        callback : this._onTouchedBtnChangeSkinId },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged,     callback : this._onNotifySrrCreatePlayerInfoChanged },
+            { type : "LanguageChanged",                callback : this._onNotifyLanguageChanged },
+            { type : "WarCreator_PlayerInfoChanged",     callback : this._onNotifySrrCreatePlayerInfoChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -214,7 +213,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             callbackOnConfirm : newCoId => {
                 if (newCoId != currentCoId) {
                     playerInfo.setCoId(newCoId);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged, { playerIndex } as Notifications_DataTypes.WarCreator_PlayerInfoChanged);
+                    Notifications_Dispatcher.dispatch("WarCreator_PlayerInfoChanged", { playerIndex });
                 }
             },
         });
@@ -224,8 +223,8 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifySrrCreatePlayerInfoChanged(e: Egret_Egret.Event): void {
-        const eventData = e.data as Notifications_DataTypes.WarCreator_PlayerInfoChanged;
+    private _onNotifySrrCreatePlayerInfoChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["WarCreator_PlayerInfoChanged"]>): void {
+        const eventData = e.data as Notifications_Mapping.Mapping["WarCreator_PlayerInfoChanged"];
         if (eventData.playerIndex === this.getOpenData()?.playerIndex) {
             this._updateComponentsForSettings();
         }

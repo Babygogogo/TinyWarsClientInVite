@@ -2,7 +2,6 @@ import {
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
-    Notifications_TypeId,
     Timer_TimerModel,
     type Egret_Egret,
 } from "../internal.ts";
@@ -23,10 +22,10 @@ export function reqCommonHeartbeat(counter: number): void {
         },
     });
 }
-function _onMsgCommonHeartbeat(e: Egret_Egret.Event): void {
+function _onMsgCommonHeartbeat(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonHeartbeat"]>): void {
     const data = e.data as CommonHeartbeatResponse;
     if (!data.getErrorCode()) {
         Timer_TimerModel.updateOnMsgCommonHeartbeat(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCommonHeartbeat, data);
+        Notifications_Dispatcher.dispatch("MsgCommonHeartbeat", { msg: data });
     }
 }

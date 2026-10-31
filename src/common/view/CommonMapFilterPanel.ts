@@ -9,7 +9,6 @@ import {
     GamePanels_Manager,
     Players_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -105,7 +104,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnDeleteMapHeight,         callback : this._onTouchedBtnDeleteMapHeight },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();

@@ -30,7 +30,7 @@ export class UiTab<DataForTabItemRenderer extends Ui_Types_UiListItemData.UiList
         bar.getEventAgent().addUiCommonEventListener(Ui_Types_UiCommonEventType.UiCommonEventType.ListItemSelectedByTap, this._onListItemSelectedByTap, this);
     }
 
-    private async _onListItemSelectedByTap(e: Egret_Egret.Event): Promise<void> {
+    private async _onListItemSelectedByTap(e: Egret_Egret.Event<Ui_Types_UiCommonEventType.Mapping[Ui_Types_UiCommonEventType.UiCommonEventType.ListItemSelectedByTap]>): Promise<void> {
         // const item = this._getBar().getItem(index);
         // if (item instanceof UiTabItemRenderer) {
         //     SoundManager.playShortSfx(item.getShortSfxCode());

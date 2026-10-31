@@ -1,7 +1,6 @@
 import {
     Lang_Utils,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiContainer,
     Ui_Components_UiImage,
     Ui_Components_UiLabel,
@@ -33,7 +32,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnClose,   callback : this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();

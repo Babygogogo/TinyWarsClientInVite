@@ -31,3 +31,9 @@ export const enum UiCommonEventType {
 
     SkinLoaded                 = `SkinLoaded`,
 }
+
+export type Mapping = {
+    [T in UiCommonEventType]: T extends UiCommonEventType.ListItemSelectedByTap | UiCommonEventType.ListItemDeselectedByTap
+        ? number
+        : undefined;
+};

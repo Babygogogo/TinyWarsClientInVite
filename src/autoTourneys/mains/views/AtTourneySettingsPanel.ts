@@ -12,7 +12,6 @@ import {
     AutoTourneys_Mains_Gateway,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -48,13 +47,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgAtSetRegistrationDuration,    callback : this._onNotifyMsgAtSetRegistrationDuration },
-            { type : Notifications_TypeId.TypeId.MsgAtSetAdjustmentDuration,      callback : this._onNotifyMsgAtSetAdjustmentDuration },
-            { type : Notifications_TypeId.TypeId.MsgAtGetTourneyInfo,             callback : this._onNotifyMsgAtGetTourneyInfo },
-            { type : Notifications_TypeId.TypeId.MsgAtDeleteUser,                 callback : this._onNotifyMsgAtDeleteUser },
-            { type : Notifications_TypeId.TypeId.MsgAtSetName,                    callback : this._onNotifyMsgAtSetName },
-            { type : Notifications_TypeId.TypeId.MsgAtSetBootTimer,               callback : this._onNotifyMsgAtSetBootTimer },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "MsgAtSetRegistrationDuration",    callback : this._onNotifyMsgAtSetRegistrationDuration },
+            { type : "MsgAtSetAdjustmentDuration",      callback : this._onNotifyMsgAtSetAdjustmentDuration },
+            { type : "MsgAtGetTourneyInfo",             callback : this._onNotifyMsgAtGetTourneyInfo },
+            { type : "MsgAtDeleteUser",                 callback : this._onNotifyMsgAtDeleteUser },
+            { type : "MsgAtSetName",                    callback : this._onNotifyMsgAtSetName },
+            { type : "MsgAtSetBootTimer",               callback : this._onNotifyMsgAtSetBootTimer },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                   callback : this.closePanel },

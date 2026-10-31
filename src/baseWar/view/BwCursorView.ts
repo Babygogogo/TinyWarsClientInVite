@@ -13,7 +13,6 @@ import {
     Ui_Components_UiImage,
     Notifications_Dispatcher,
     Keyboard_KbManager,
-    type Notifications_DataTypes,
     Helpers_Misc,
     Keyboard_KbTypes,
     Tween_Executor,
@@ -32,7 +31,6 @@ import {
     MapEditor_Model_MeProxy,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiContainer,
     type Egret_Egret,
 } from "../../internal.ts";
@@ -112,7 +110,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
     }
 
     public startRunningView(): void {
-        Notifications_Dispatcher.addEventListener(Notifications_TypeId.TypeId.ZoomableContentsMoved, this._onNotifyZoomableContentsMoved, this);
+        Notifications_Dispatcher.addEventListener("ZoomableContentsMoved", this._onNotifyZoomableContentsMoved, this);
         Keyboard_KbManager.addListener(this._onKeyboard, this);
 
         {
@@ -134,7 +132,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
         this._stopNormalAnimation();
         this._stopTargetAnimation();
 
-        Notifications_Dispatcher.removeEventListener(Notifications_TypeId.TypeId.ZoomableContentsMoved,        this._onNotifyZoomableContentsMoved,    this);
+        Notifications_Dispatcher.removeEventListener("ZoomableContentsMoved",        this._onNotifyZoomableContentsMoved,    this);
         Keyboard_KbManager.deleteListener(this._onKeyboard, this);
 
         {
@@ -191,15 +189,15 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
             const currGridIndex = this._getCursor().getGridIndex();
             if (!gridIndex.checkIsEqual(currGridIndex)) {
                 this._isTouchMovedOrMultiple = true;
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorDragged, {
+                Notifications_Dispatcher.dispatch("BwCursorDragged", {
                     current   : currGridIndex,
                     draggedTo : gridIndex,
-                } as Notifications_DataTypes.BwCursorDragged);
+                });
             }
         }
     }
 
-    private _onPointerPress(e: Egret_Egret.Event): void {
+    private _onPointerPress(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const data      = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const touchId   = data.pointerId;
         const stageX    = data.stageX;
@@ -222,15 +220,15 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
             this._isTouchMovedOrMultiple = true;
         }
     }
-    private _onPointerReleaseIn(e: Egret_Egret.Event): void {
+    private _onPointerReleaseIn(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const data = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         this._removeTouch(data.pointerId);
     }
-    private _onPointerReleaseOut(e: Egret_Egret.Event): void {
+    private _onPointerReleaseOut(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const data = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         this._removeTouch(data.pointerId);
     }
-    private _onPointerPressMove(e: Egret_Egret.Event): void {
+    private _onPointerPressMove(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const touchId               = data.pointerId;
         const stageX                = data.stageX;
@@ -243,10 +241,10 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
             currGlobalTouchPoints.set(touchId, { x : stageX, y : stageY });
 
             if (currGlobalTouchPoints.size > 1) {
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwFieldZoomedByTouch, {
+                Notifications_Dispatcher.dispatch("BwFieldZoomedByTouch", {
                     current  : currGlobalTouchPoints,
                     previous : this._prevGlobalTouchPoints,
-                } as Notifications_DataTypes.BwFieldZoomedByTouch);
+                });
             } else {
                 if (this._touchIdForTouchingCursor != null) {
                     const { x: localX, y: localY }  = this.globalToLocal(stageX, stageY);
@@ -254,17 +252,17 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                     const currGridIndex             = this._getCursor().getGridIndex();
                     if (!gridIndex.checkIsEqual(currGridIndex)) {
                         this._isTouchMovedOrMultiple = true;
-                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorDragged, {
+                        Notifications_Dispatcher.dispatch("BwCursorDragged", {
                             current   : currGridIndex,
                             draggedTo : gridIndex,
-                        } as Notifications_DataTypes.BwCursorDragged);
+                        });
                     }
                 } else {
                     if (this._isTouchMovedOrMultiple) {
-                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwFieldDragged, {
-                            current  : currGlobalTouchPoints.values().next().value,
-                            previous : this._prevGlobalTouchPoints.values().next().value,
-                        } as Notifications_DataTypes.BwFieldDragged);
+                        Notifications_Dispatcher.dispatch("BwFieldDragged", {
+                            current  : Helpers_Misc.getExisted(currGlobalTouchPoints.values().next().value),
+                            previous : Helpers_Misc.getExisted(this._prevGlobalTouchPoints.values().next().value),
+                        });
                     }
                 }
             }
@@ -287,13 +285,13 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                 // this.getEventAgent().removePointerEventListener(PointerManager.PointerEventType.PressMove, this._onPointerPressMove, this);
                 if (!this._isTouchMovedOrMultiple) {
                     const initialGlobalTouchPoint = Helpers_Misc.getExisted(this._initialGlobalTouchPoint);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorTapped, {
+                    Notifications_Dispatcher.dispatch("BwCursorTapped", {
                         current  : this._getCursor().getGridIndex(),
                         tappedOn : this._getGridIndexByGlobalXY(initialGlobalTouchPoint.x, initialGlobalTouchPoint.y),
-                    } as Notifications_DataTypes.BwCursorTapped);
+                    });
                 } else {
                     if (touchIdForTouchingCursor != null) {
-                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorDragEnded);
+                        Notifications_Dispatcher.dispatch("BwCursorDragEnded");
                     }
                 }
                 delete this._initialGlobalTouchPoint;
@@ -322,10 +320,10 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
         const allKeys           = data.allKeys;
         if ((newKeys.has(Keyboard_KbTypes.KeyCode.J)) || (newKeys.has(Keyboard_KbTypes.KeyCode.Enter))) {
             data.isHandled = true;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorTapped, {
+            Notifications_Dispatcher.dispatch("BwCursorTapped", {
                 current  : cursorGridIndex,
                 tappedOn : cursorGridIndex,
-            } as Notifications_DataTypes.BwCursorTapped);
+            });
 
         } else if (newKeys.has(Keyboard_KbTypes.KeyCode.K)) {
             data.isHandled = true;
@@ -491,10 +489,10 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                 );
 
                 if (!newGridIndex.checkIsEqual(cursorGridIndex)) {
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorDragged, {
+                    Notifications_Dispatcher.dispatch("BwCursorDragged", {
                         current   : cursorGridIndex,
                         draggedTo : newGridIndex,
-                    } as Notifications_DataTypes.BwCursorDragged);
+                    });
                 }
             }
         }

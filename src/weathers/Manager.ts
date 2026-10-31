@@ -7,7 +7,6 @@ import {
     Helpers_Misc,
     Lang_Utils,
     Lang_Constants,
-    Notifications_TypeId,
     type Weathers_IManager,
     type Weathers_IView,
 } from "../internal.ts";
@@ -82,7 +81,7 @@ export class Manager implements Weathers_IManager.IManager {
     public setForceWeatherType(type: number | null): void {
         if (this._forceWeatherType !== type) {
             this._forceWeatherType = type;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwForceWeatherTypeChanged);
+            Notifications_Dispatcher.dispatch("BwForceWeatherTypeChanged");
         }
     }
     public getForceWeatherType(): number | null {

@@ -3,7 +3,6 @@ import {
     Helpers_Sha1Generator,
     Notifications_Dispatcher,
     Networks_MessageCodes,
-    Notifications_TypeId,
     Users_Model,
     type Egret_Egret,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -91,11 +90,11 @@ export function reqRawLogin(account: string, password: string): void {
         },
     });
 }
-function _onMsgUserLogin(e: Egret_Egret.Event): void {
+function _onMsgUserLogin(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserLogin"]>): void {
     const data = e.data as UserLoginResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserLogin(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserLogin, data);
+        Notifications_Dispatcher.dispatch("MsgUserLogin", { msg: data });
     }
 }
 
@@ -109,11 +108,11 @@ export function reqUserLoginAsGuest(userId: number | null, isAutoRelogin: boolea
         },
     });
 }
-function _onMsgUserLoginAsGuest(e: Egret_Egret.Event): void {
+function _onMsgUserLoginAsGuest(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserLoginAsGuest"]>): void {
     const data = e.data as UserLoginAsGuestResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserLoginAsGuest(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserLoginAsGuest, data);
+        Notifications_Dispatcher.dispatch("MsgUserLoginAsGuest", { msg: data });
     }
 }
 
@@ -128,10 +127,10 @@ export function reqUserRegister(account: string, rawPassword: string, nickname: 
         },
     });
 }
-function _onMsgUserRegister(e: Egret_Egret.Event): void {
+function _onMsgUserRegister(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserRegister"]>): void {
     const data = e.data as UserRegisterResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserRegister, data);
+        Notifications_Dispatcher.dispatch("MsgUserRegister", { msg: data });
     }
 }
 
@@ -143,10 +142,10 @@ export function reqLogout(): void {
         },
     });
 }
-function _onMsgUserLogout(e: Egret_Egret.Event): void {
+function _onMsgUserLogout(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserLogout"]>): void {
     const data = e.data as UserLogoutResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserLogout, data);
+        Notifications_Dispatcher.dispatch("MsgUserLogout", { msg: data });
     }
 }
 
@@ -159,13 +158,13 @@ export function reqUserGetPublicInfo(userId: number): void {
         },
     });
 }
-function _onMsgUserGetPublicInfo(e: Egret_Egret.Event): void {
+function _onMsgUserGetPublicInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserGetPublicInfo"]>): void {
     const data = e.data as UserGetPublicInfoResponse;
     if (data.getErrorCode()) {
         Users_Model.updateOnFailedMsgUserGetPublicInfo(data);
     } else {
         Users_Model.updateOnMsgUserGetPublicInfo(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserGetPublicInfo, data);
+        Notifications_Dispatcher.dispatch("MsgUserGetPublicInfo", { msg: data });
     }
 }
 
@@ -178,10 +177,10 @@ export function reqUserGetPublicInfoArray(userIdArray: number[]): void {
         },
     });
 }
-function _onMsgUserGetPublicInfoArray(e: Egret_Egret.Event): void {
+function _onMsgUserGetPublicInfoArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserGetPublicInfoArray"]>): void {
     const data = e.data as UserGetPublicInfoArrayResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserGetPublicInfoArray, data);
+        Notifications_Dispatcher.dispatch("MsgUserGetPublicInfoArray", { msg: data });
     }
 }
 
@@ -194,13 +193,13 @@ export function reqUserGetBriefInfo(userId: number): void {
         },
     });
 }
-function _onMsgUserGetBriefInfo(e: Egret_Egret.Event): void {
+function _onMsgUserGetBriefInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserGetBriefInfo"]>): void {
     const data = e.data as UserGetBriefInfoResponse;
     if (data.getErrorCode()) {
         Users_Model.updateOnFailedMsgUserGetBriefInfo(data);
     } else {
         Users_Model.updateOnMsgUserGetBriefInfo(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserGetBriefInfo, data);
+        Notifications_Dispatcher.dispatch("MsgUserGetBriefInfo", { msg: data });
     }
 }
 
@@ -213,13 +212,13 @@ export function reqUserGetOnlineState(userId: number): void {
         },
     });
 }
-function _onMsgUserGetOnlineState(e: Egret_Egret.Event): void {
+function _onMsgUserGetOnlineState(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserGetOnlineState"]>): void {
     const data = e.data as UserGetOnlineStateResponse;
     if (data.getErrorCode()) {
         Users_Model.updateOnFailedMsgUserGetOnlineState(data);
     } else {
         Users_Model.updateOnMsgUserGetOnlineState(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserGetOnlineState, data);
+        Notifications_Dispatcher.dispatch("MsgUserGetOnlineState", { msg: data });
     }
 }
 
@@ -233,10 +232,10 @@ export function reqUserGetUsersByNickname(nickname: string, isFollowing: boolean
         },
     });
 }
-function _onMsgUserGetUsersByNickname(e: Egret_Egret.Event): void {
+function _onMsgUserGetUsersByNickname(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserGetUsersByNickname"]>): void {
     const data = e.data as UserGetUsersByNicknameResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserGetUsersByNickname, data);
+        Notifications_Dispatcher.dispatch("MsgUserGetUsersByNickname", { msg: data });
     }
 }
 
@@ -249,13 +248,13 @@ export function reqSetNickname(nickname: string): void {
         },
     });
 }
-async function _onMsgUserSetNickname(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgUserSetNickname(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetNickname"]>): Promise<void> {
     const data = e.data as UserSetNicknameResponse;
     if (data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetNicknameFailed, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetNicknameFailed", { msg: data });
     } else {
         Users_Model.updateOnMsgUserSetNickname(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetNickname, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetNickname", { msg: data });
     }
 }
 
@@ -268,13 +267,13 @@ export function reqSetDiscordInfo(discordInfo: UserDiscordInfoJson): void {
         },
     });
 }
-async function _onMsgUserSetDiscordInfo(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgUserSetDiscordInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetDiscordInfo"]>): Promise<void> {
     const data = e.data as UserSetDiscordInfoResponse;
     if (data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetDiscordInfoFailed, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetDiscordInfoFailed", { msg: data });
     } else {
         Users_Model.updateOnMsgUserSetDiscordInfo(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetDiscordInfo, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetDiscordInfo", { msg: data });
     }
 }
 
@@ -283,10 +282,10 @@ export function reqUserGetOnlineUserIdArray(): void {
         MsgUserGetOnlineUserIdArray : { c : {} },
     });
 }
-function _onMsgUserGetOnlineUserIdArray(e: Egret_Egret.Event): void {
+function _onMsgUserGetOnlineUserIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserGetOnlineUserIdArray"]>): void {
     const data = e.data as UserGetOnlineUserIdArrayResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserGetOnlineUserIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgUserGetOnlineUserIdArray", { msg: data });
     }
 }
 
@@ -300,10 +299,10 @@ export function reqUserSetPassword(oldRawPassword: string, newRawPassword: strin
         }, 
     });
 }
-function _onMsgUserSetPassword(e: Egret_Egret.Event): void {
+function _onMsgUserSetPassword(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetPassword"]>): void {
     const data = e.data as UserSetPasswordResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetPassword, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetPassword", { msg: data });
     }
 }
 
@@ -316,11 +315,11 @@ export function reqUserSetSettings(userSettings: UserSettingsJson): void {
         }, 
     });
 }
-function _onMsgUserSetSettings(e: Egret_Egret.Event): void {
+function _onMsgUserSetSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetSettings"]>): void {
     const data = e.data as UserSetSettingsResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserSetSettings(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetSettings, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetSettings", { msg: data });
     }
 }
 
@@ -334,11 +333,11 @@ export function reqUserSetMapRating(normalMapId: number, rating: number): void {
         }, 
     });
 }
-function _onMsgUserSetMapRating(e: Egret_Egret.Event): void {
+function _onMsgUserSetMapRating(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetMapRating"]>): void {
     const data = e.data as UserSetMapRatingResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserSetMapRating(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetMapRating, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetMapRating", { msg: data });
     }
 }
 
@@ -353,11 +352,11 @@ export function reqUserSetRelation(targetUserId: number, isFollow: boolean, isBl
         }, 
     });
 }
-function _onMsgUserSetRelation(e: Egret_Egret.Event): void {
+function _onMsgUserSetRelation(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetRelation"]>): void {
     const data = e.data as UserSetRelationResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserSetRelation(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetRelation, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetRelation", { msg: data });
     }
 }
 
@@ -371,11 +370,11 @@ export function reqUserModifyFavoriteReplayIdArray(addIdArray: number[], deleteI
         }, 
     });
 }
-function _onMsgUserModifyFavoriteReplayIdArray(e: Egret_Egret.Event): void {
+function _onMsgUserModifyFavoriteReplayIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserModifyFavoriteReplayIdArray"]>): void {
     const data = e.data as UserModifyFavoriteReplayIdArrayResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserModifyFavoriteReplayIdArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserModifyFavoriteReplayIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgUserModifyFavoriteReplayIdArray", { msg: data });
     }
 }
 
@@ -388,13 +387,13 @@ export function reqSetAvatarId(avatarId: number): void {
         },
     });
 }
-async function _onMsgUserSetAvatarId(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgUserSetAvatarId(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetAvatarId"]>): Promise<void> {
     const data = e.data as UserSetAvatarIdResponse;
     if (data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetAvatarIdFailed, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetAvatarIdFailed", { msg: data });
     } else {
         Users_Model.updateOnMsgUserSetAvatarId(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetAvatarId, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetAvatarId", { msg: data });
     }
 }
 
@@ -407,13 +406,13 @@ export function reqSetMapEditorAutoSaveTime(time: AuxiliaryTypes_AuxiliaryTypes.
         },
     });
 }
-function _onMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event): void {
+function _onMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetMapEditorAutoSaveTime"]>): void {
     const data = e.data as UserSetMapEditorAutoSaveTimeResponse;
     if (data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetMapEditorAutoSaveTimeFailed, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetMapEditorAutoSaveTimeFailed", { msg: data });
     } else {
         Users_Model.updateOnMsgUserSetMapEditorAutoSaveTime(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetMapEditorAutoSaveTime, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetMapEditorAutoSaveTime", { msg: data });
     }
 }
 
@@ -427,11 +426,11 @@ export function reqUserSetCoBgmSettings(coCategoryId: number, bgmCodeArray: numb
         },
     });
 }
-function _onMsgUserSetCoBgmSettings(e: Egret_Egret.Event): void {
+function _onMsgUserSetCoBgmSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetCoBgmSettings"]>): void {
     const data = e.data as UserSetCoBgmSettingsResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserSetCoBgmSettings(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetCoBgmSettings, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetCoBgmSettings", { msg: data });
     }
 }
 
@@ -444,11 +443,11 @@ export function reqUserSetSceneBgmSettings(settings: SceneBgmSettingsJson): void
         },
     });
 }
-function _onMsgUserSetSceneBgmSettings(e: Egret_Egret.Event): void {
+function _onMsgUserSetSceneBgmSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetSceneBgmSettings"]>): void {
     const data = e.data as UserSetSceneBgmSettingsResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserSetSceneBgmSettings(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetSceneBgmSettings, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetSceneBgmSettings", { msg: data });
     }
 }
 
@@ -461,11 +460,11 @@ export function reqUserSetShowMedalIdArray(showMedalIdArray: number[]): void {
         },
     });
 }
-function _onMsgUserSetShowMedalIdArray(e: Egret_Egret.Event): void {
+function _onMsgUserSetShowMedalIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserSetShowMedalIdArray"]>): void {
     const data = e.data as UserSetShowMedalIdArrayResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserSetShowMedalIdArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserSetShowMedalIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgUserSetShowMedalIdArray", { msg: data });
     }
 }
 
@@ -478,13 +477,13 @@ export function reqUserRequestEmailVerificationCode(address: string): void {
         },
     });
 }
-function _onMsgUserRequestEmailVerificationCode(e: Egret_Egret.Event): void {
+function _onMsgUserRequestEmailVerificationCode(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserRequestEmailVerificationCode"]>): void {
     const data = e.data as UserRequestEmailVerificationCodeResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserRequestEmailVerificationCode(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserRequestEmailVerificationCode, data);
+        Notifications_Dispatcher.dispatch("MsgUserRequestEmailVerificationCode", { msg: data });
     } else {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserRequestEmailVerificationCodeFailed, data);
+        Notifications_Dispatcher.dispatch("MsgUserRequestEmailVerificationCodeFailed", { msg: data });
     }
 }
 
@@ -497,11 +496,11 @@ export function reqUserVerifyEmail(code: string): void {
         },
     });
 }
-function _onMsgUserVerifyEmail(e: Egret_Egret.Event): void {
+function _onMsgUserVerifyEmail(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserVerifyEmail"]>): void {
     const data = e.data as UserVerifyEmailResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgUserVerifyEmail(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserVerifyEmail, data);
+        Notifications_Dispatcher.dispatch("MsgUserVerifyEmail", { msg: data });
     }
 }
 
@@ -514,12 +513,12 @@ export function reqUserRequestPasswordVerificationCode(account: string): void {
         },
     });
 }
-function _onMsgUserRequestPasswordVerificationCode(e: Egret_Egret.Event): void {
+function _onMsgUserRequestPasswordVerificationCode(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserRequestPasswordVerificationCode"]>): void {
     const data = e.data as UserRequestPasswordVerificationCodeResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserRequestPasswordVerificationCode, data);
+        Notifications_Dispatcher.dispatch("MsgUserRequestPasswordVerificationCode", { msg: data });
     } else {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserRequestPasswordVerificationCodeFailed, data);
+        Notifications_Dispatcher.dispatch("MsgUserRequestPasswordVerificationCodeFailed", { msg: data });
     }
 }
 
@@ -534,9 +533,9 @@ export function reqUserResetPasswordWithEmail(code: string, account: string, new
         },
     });
 }
-function _onMsgUserResetPasswordWithEmail(e: Egret_Egret.Event): void {
+function _onMsgUserResetPasswordWithEmail(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgUserResetPasswordWithEmail"]>): void {
     const data = e.data as UserResetPasswordWithEmailResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgUserResetPasswordWithEmail, data);
+        Notifications_Dispatcher.dispatch("MsgUserResetPasswordWithEmail", { msg: data });
     }
 }

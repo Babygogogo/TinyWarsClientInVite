@@ -10,7 +10,6 @@ import {
     Utils_ServerErrorCode,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Networks_WebsocketConnection,
 } from "../internal.ts";
 import {
@@ -38,11 +37,18 @@ function getFullUrl(): string {
 ////////////////////////////////////////////////////////////////////////////////
 // Type definitions.
 ////////////////////////////////////////////////////////////////////////////////
-export type MsgListener = {
-    msgCode     : Networks_MessageCodes.MessageCodes;
-    callback    : (e: Egret_Egret.Event) => void;
-    thisObject? : unknown;
+export type ResponseMapping = {
+    [M in NonNullable<ReturnType<MessageContainer["getMessageData"]>> as ReturnType<M["getSchemaName"]>]:
+        NonNullable<ReturnType<M["getS"]>>;
 };
+
+export type MsgListener<K extends keyof ResponseMapping = keyof ResponseMapping> = {
+    [P in K]: {
+        msgCode     : (typeof Networks_MessageCodes.MessageCodes)[P];
+        callback    : (e: Egret_Egret.Event<ResponseMapping[P]>) => void;
+        thisObject? : unknown;
+    };
+}[K];
 
 class NetMessageDispatcher extends Egret_Egret.EventDispatcher {
     public dispatchWithContainer(container: MessageContainer): void {
@@ -87,14 +93,14 @@ export function init(): void {
  
 export function addListeners(listeners: MsgListener[], thisObject?: unknown): void {
     for (const one of listeners) {
-        dispatcher.addEventListener(Networks_MessageCodes.MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
+        dispatcher.addEventListener(Networks_MessageCodes.MessageCodes[one.msgCode], one.callback as Egret_Egret.EventListener, one.thisObject || thisObject);
     }
 }
 
  
 export function removeListeners(listeners: MsgListener[], thisObject?: unknown): void {
     for (const one of listeners) {
-        dispatcher.removeEventListener(Networks_MessageCodes.MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
+        dispatcher.removeEventListener(Networks_MessageCodes.MessageCodes[one.msgCode], one.callback as Egret_Egret.EventListener, one.thisObject || thisObject);
     }
 }
 
@@ -190,12 +196,12 @@ function _onConnectionOpened(connection: Networks_WebsocketConnection.WebsocketC
     if (connection === _webSocketConnection) {
         FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0007));
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.NetworkConnected);
+        Notifications_Dispatcher.dispatch("NetworkConnected");
     }
 }
 function _onConnectionClosed(connection: Networks_WebsocketConnection.WebsocketConnection): void {
     if (connection === _webSocketConnection) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.NetworkDisconnected);
+        Notifications_Dispatcher.dispatch("NetworkDisconnected");
 
         if (!checkCanAutoReconnect()) {
             // FloatText.show(Lang.getText(Lang.Type.A0013));

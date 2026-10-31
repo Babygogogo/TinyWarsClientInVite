@@ -10,7 +10,6 @@ import {
     Helpers_Text,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -48,8 +47,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,     callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",     callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -99,7 +98,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     (arr) && (arr.length = 0);
                 }
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -115,7 +114,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback   : () => {
                 const result = WarEvents_FullDatas_Utils.checkAndDeleteUnusedComponents(Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData()));
                 FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0063, result.deletedNodesCount, result.deletedConditionsCount, result.deletedActionsCount));
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -186,7 +185,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             { ui : this._btnDelete,          callback : this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -212,7 +211,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
                     const newEventId = WarEvents_Events_Utils.cloneEvent(openData.fullData, openData.eventId, false);
                     FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
 
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             });
         }
@@ -232,7 +231,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
                     const newEventId = WarEvents_Events_Utils.cloneEvent(openData.fullData, openData.eventId, true);
                     FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
 
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             });
         }
@@ -268,7 +267,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
                         Helpers_Collection.deleteElementFromList(templateWarRule.getWarEventIdArray(), eventId);
                     }
 
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             });
         }

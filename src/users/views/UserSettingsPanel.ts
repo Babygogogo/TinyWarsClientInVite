@@ -12,7 +12,6 @@ import {
     GamePanels_Manager,
     Users_Proxy,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -41,13 +40,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserGetPublicInfo,    callback : this._onMsgUserGetPublicInfo },
-            { type : Notifications_TypeId.TypeId.MsgUserSetNickname,      callback : this._onMsgUserSetNickname },
-            { type : Notifications_TypeId.TypeId.MsgUserSetDiscordInfo,   callback : this._onMsgUserSetDiscordId },
-            { type : Notifications_TypeId.TypeId.MsgMailSetIsNew,         callback : this._onMsgMailSetIsNew },
-            { type : Notifications_TypeId.TypeId.MsgMailGetAllMailArray,  callback : this._onMsgMailGetAllMailArray },
-            { type : Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback : this._onMsgMmGetReviewingMaps },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserGetPublicInfo",    callback : this._onMsgUserGetPublicInfo },
+            { type : "MsgUserSetNickname",      callback : this._onMsgUserSetNickname },
+            { type : "MsgUserSetDiscordInfo",   callback : this._onMsgUserSetDiscordId },
+            { type : "MsgMailSetIsNew",         callback : this._onMsgMailSetIsNew },
+            { type : "MsgMailGetAllMailArray",  callback : this._onMsgMailGetAllMailArray },
+            { type : "MsgMmGetReviewingMaps",   callback : this._onMsgMmGetReviewingMaps },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                   callback : this.closePanel },

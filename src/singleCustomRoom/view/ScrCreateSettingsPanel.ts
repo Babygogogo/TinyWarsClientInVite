@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Common_View_CommonWarAdvancedSettingsPage,
     Common_View_CommonWarBasicSettingsPage,
     Common_View_CommonWarMapInfoPage,
@@ -27,7 +28,6 @@ import {
     FloatText,
     Lang_Constants,
     WarRules_Utils_CommonData,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
     Timer_TimerModel,
@@ -61,9 +61,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgSpmCreateScw,                 callback : this._onNotifyMsgSpmCreateScw },
-            { type : Notifications_TypeId.TypeId.WarCreator_SaveSlotIndexChanged,     callback : this._onNotifyScrCreateWarSaveSlotChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "MsgSpmCreateScw",                 callback : this._onNotifyMsgSpmCreateScw },
+            { type : "WarCreator_SaveSlotIndexChanged",     callback : this._onNotifyScrCreateWarSaveSlotChanged },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -136,8 +136,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgSpmCreateScw(e: Egret_Egret.Event): void {
-        const data = e.data as SpmCreateScwResponse;
+    private _onNotifyMsgSpmCreateScw(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgSpmCreateScw"]>): void {
+        const data = (e.data as { msg: SpmCreateScwResponse }).msg;
         Helpers_GameFlow.gotoSinglePlayerWar({
             warData       : Helpers_Misc.getExisted(data.getWarData()),
             slotExtraData : Helpers_Misc.getExisted(data.getExtraData()),

@@ -13,7 +13,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -104,7 +103,7 @@ class RuleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",        callback : this._onNotifyLanguageChanged },
         ]);
 
         this._listStd.setItemRendererClass(UserRenderer);

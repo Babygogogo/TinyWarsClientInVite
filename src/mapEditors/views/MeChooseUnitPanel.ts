@@ -13,7 +13,6 @@ import {
     GamePanels_Manager,
     Players_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeTypes,
@@ -47,7 +46,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,   callback : this.closePanel },

@@ -4,7 +4,6 @@ import {
     Notifications_Dispatcher,
     Helpers_Misc,
     Turns_Constants,
-    Notifications_TypeId,
     Turns_PhaseHandlers_WithExtraData,
     Turns_PhaseHandlers_WithoutExtraData,
     type BaseWar_Interface_IBwWar,
@@ -98,7 +97,7 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
     public setTurnIndex(index: number): void {
         if (this._turnIndex !== index){
             this._turnIndex = index;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTurnIndexChanged);
+            Notifications_Dispatcher.dispatch("BwTurnIndexChanged");
         }
     }
 
@@ -108,7 +107,7 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
     public setPlayerIndexInTurn(index: number): void {
         if (this._playerIndexInTurn !== index) {
             this._playerIndexInTurn = index;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged);
+            Notifications_Dispatcher.dispatch("BwPlayerIndexInTurnChanged");
         }
     }
     public getPreviousAlivePlayerIndex(playerIndex: number, includeNeutral = false): number {
@@ -136,7 +135,7 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
     public setPhaseCode(code: Turns_Constants.PhaseCode): void {
         if (this._phaseCode !== code) {
             this._phaseCode = code;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTurnPhaseCodeChanged);
+            Notifications_Dispatcher.dispatch("BwTurnPhaseCodeChanged");
         }
     }
 

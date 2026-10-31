@@ -10,7 +10,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
@@ -94,8 +93,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",                         callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",                 callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                                       callback : this.closePanel },
@@ -186,7 +185,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback       : text => {
                 if (action.getConTileFilter() != text) {
                     action.setConTileFilter(text);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });
@@ -217,7 +216,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback       : text => {
                 if (action.getActBaseType() != text) {
                     action.setActBaseType(text);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });
@@ -248,7 +247,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback       : text => {
                 if (action.getActBaseShapeId() != text) {
                     action.setActBaseShapeId(text);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });
@@ -279,7 +278,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback       : text => {
                 if (action.getActObjectType() != text) {
                     action.setActObjectType(text);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });
@@ -310,7 +309,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback       : text => {
                 if (action.getActObjectShapeId() != text) {
                     action.setActObjectShapeId(text);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });
@@ -341,7 +340,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback       : text => {
                 if (action.getActDecorationType() != text) {
                     action.setActDecorationType(text);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });
@@ -372,7 +371,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback       : text => {
                 if (action.getActDecorationShapeId() != text) {
                     action.setActDecorationShapeId(text);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });
@@ -403,7 +402,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback       : text => {
                 if (action.getActUnitHandler() != text) {
                     action.setActUnitHandler(text);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });
@@ -434,7 +433,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback       : text => {
                 if (action.getActUnitFilter() != text) {
                     action.setActUnitFilter(text);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });

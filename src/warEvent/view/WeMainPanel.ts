@@ -14,7 +14,6 @@ import {
     GamePanels_Manager,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
@@ -62,8 +61,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,            callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,    callback : this._onNotifyMeWarEventFullDataChanged },
+            { type : "LanguageChanged",            callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",    callback : this._onNotifyMeWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -125,7 +124,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback   : () => {
                 const result = WarEvents_FullDatas_Utils.checkAndDeleteUnusedComponents(Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData()));
                 FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0063, result.deletedNodesCount, result.deletedConditionsCount, result.deletedActionsCount));
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -160,7 +159,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 });
             }
 
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         }
     }
 
@@ -195,7 +194,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     }
                 }
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -476,7 +475,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
             { ui : this._btnModify, callback : this._onTouchedBtnModify },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._updateComponentsForLanguage();
     }

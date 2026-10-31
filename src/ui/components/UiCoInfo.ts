@@ -12,7 +12,6 @@ import {
     Sounds_Constants,
     CoSkills_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiCoInfoType,
     Ui_Components_UiLayout,
     Ui_Components_UiListItemRenderer,
@@ -103,7 +102,7 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,  callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",  callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._groupDorCoType,             callback : this._onTouchedGroupDorCoType },

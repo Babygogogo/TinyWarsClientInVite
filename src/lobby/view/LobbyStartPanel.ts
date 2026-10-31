@@ -26,7 +26,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -111,7 +110,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._group,          callback : this._onTouchedGroup,  mouseStyle : Helpers_PointerInput.MouseStyleType.Default },
@@ -685,7 +684,7 @@ class CommandRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this,         callback : this._onTouchedSelf },
@@ -701,7 +700,7 @@ class CommandRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         this._updateLabelName();
     }
 
-    private _onTouchedSelf(e: Egret_Egret.Event): void {
+    private _onTouchedSelf(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
         this.getOpenData()?.callback();

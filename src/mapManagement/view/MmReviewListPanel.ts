@@ -13,7 +13,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -50,8 +49,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,  callback : this._onMsgMmGetReviewingMaps },
+            { type : "LanguageChanged",        callback : this._onNotifyLanguageChanged },
+            { type : "MsgMmGetReviewingMaps",  callback : this._onMsgMmGetReviewingMaps },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -262,7 +261,7 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         openData?.panel.setSelectedIndex(openData.index);
     }
 
-    private _onTouchedImgSelected(e: Egret_Egret.Event): void {
+    private _onTouchedImgSelected(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
         const openData = this.getOpenData();
@@ -280,7 +279,7 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
             gridMarkData              : null,
         });
     }
-    private _onTouchedBtnDesigner(e: Egret_Egret.Event): void {
+    private _onTouchedBtnDesigner(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
         const userId = this.getOpenData()?.mapRawData.getDesignerUserId();

@@ -16,7 +16,6 @@ import {
     Players_Constants,
     PlayerRules_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     type Ui_Types_UiListItemData,
     Ui_Components_UiListItemRenderer,
@@ -48,7 +47,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnBatch,   callback : this._onTouchedBtnBatch },
@@ -220,7 +219,7 @@ class RuleTitleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             { ui : this._btnHelp,    callback : this._onTouchedBtnHelp },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
     }
 

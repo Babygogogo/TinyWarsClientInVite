@@ -4,7 +4,6 @@ import {
     Helpers_ImageSource,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -26,8 +25,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,     callback : this._onNotifyBwPlannerStateChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "ActionPlannerStateSet",     callback : this._onNotifyBwPlannerStateChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -107,7 +106,7 @@ class BackgroundRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._imgBg,                      callback : this._onTouchedImgBg },
@@ -136,7 +135,7 @@ class BackgroundRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
         const panel = openData.panel;
         openData.action.setBackgroundId(openData.backgroundId);
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonConfirm01);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         panel.closePanel();
     }
 

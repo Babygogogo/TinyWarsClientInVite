@@ -14,7 +14,6 @@ import {
     FloatText,
     Lang_Constants,
     Graphics_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Timer_TimerModel,
     type Ui_Interfaces_IUiButton,
@@ -49,9 +48,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserLogin,        callback : this._onMsgUserLogin },
-            { type : Notifications_TypeId.TypeId.MsgUserLoginAsGuest, callback : this._onMsgUserLoginAsGuest },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserLogin",        callback : this._onMsgUserLogin },
+            { type : "MsgUserLoginAsGuest", callback : this._onMsgUserLoginAsGuest },
         ]);
         this._setUiListenerArray([
             { ui : this._groupLogin,             callback : this._onTouchedGroupLogin,            mouseStyle : Helpers_PointerInput.MouseStyleType.Default },

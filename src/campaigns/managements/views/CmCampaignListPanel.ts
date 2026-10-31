@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Campaigns_Managements_Provider,
     Campaigns_Mains_Provider,
     GamePanels_Dict,
@@ -8,7 +9,6 @@ import {
     Campaigns_Managements_Gateway,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -34,8 +34,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgCmCreateCampaign,         callback : this._onNotifyMsgCmCreateCampaign },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgCmCreateCampaign",         callback : this._onNotifyMsgCmCreateCampaign },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -130,8 +130,8 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignName,    callback : this._onNotifyMsgCmSetCampaignName },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgCmSetCampaignName",    callback : this._onNotifyMsgCmSetCampaignName },
         ]);
         this._setUiListenerArray([
             { ui : this._btnModify,                      callback : this._onTouchedBtnModify },
@@ -147,8 +147,8 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgCmSetCampaignName(e: Egret_Egret.Event): void {
-        const data = e.data as CmSetCampaignNameResponse;
+    private _onNotifyMsgCmSetCampaignName(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCmSetCampaignName"]>): void {
+        const data = (e.data as { msg: CmSetCampaignNameResponse }).msg;
         if ((data.getCampaignId() ?? 0) === this.getOpenData()?.campaignId) {
             this._updateLabelName();
         }

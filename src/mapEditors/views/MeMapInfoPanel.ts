@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Helpers_GameFlow,
     Maps_Constants,
     Notifications_Dispatcher,
@@ -18,7 +19,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type MapEditor_Interface_IMeWar,
@@ -96,20 +96,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,    callback : this._onNotifyUnitAndTileTextureVersionChanged },
-            { type : Notifications_TypeId.TypeId.MeMapNameChanged,                    callback : this._onNotifyMeMapNameChanged },
-            { type : Notifications_TypeId.TypeId.MeMapCleared,                        callback : this._onNotifyMeMapCleared },
-            { type : Notifications_TypeId.TypeId.MeMapSizeChanged,                    callback : this._onNotifyMeMapSizeChanged },
-            { type : Notifications_TypeId.TypeId.MeMapDescChanged,                    callback : this._onNotifyMeMapDescChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback : this._onNotifyWarEventFullDataChanged },
-            { type : Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,      callback : this._onNotifyMeTaskObjectiveFullDataChanged },
-            { type : Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,          callback : this._onNotifyMeMapSimpleDialogueChanged },
-            { type : Notifications_TypeId.TypeId.BwTileCustomNameArrayChanged,        callback : this._onNotifyBwTileCustomNameArrayChanged },
-            { type : Notifications_TypeId.TypeId.BwUnitCustomNameArrayChanged,        callback : this._onNotifyBwUnitCustomNameArrayChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserSetMapEditorAutoSaveTime,     callback : this._onNotifyMsgUserSetMapEditorAutoSaveTime },
-            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignMapName,             callback : this._onNotifyMsgCmSetCampaignMapName },
-            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignMapExtraText,        callback : this._onNotifyMsgCmSetCampaignMapExtraText },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "UnitAndTileTextureVersionChanged",    callback : this._onNotifyUnitAndTileTextureVersionChanged },
+            { type : "MeMapNameChanged",                    callback : this._onNotifyMeMapNameChanged },
+            { type : "MeMapCleared",                        callback : this._onNotifyMeMapCleared },
+            { type : "MeMapSizeChanged",                    callback : this._onNotifyMeMapSizeChanged },
+            { type : "MeMapDescChanged",                    callback : this._onNotifyMeMapDescChanged },
+            { type : "WarEventFullDataChanged",             callback : this._onNotifyWarEventFullDataChanged },
+            { type : "MeTaskObjectiveFullDataChanged",      callback : this._onNotifyMeTaskObjectiveFullDataChanged },
+            { type : "MeMapSimpleDialogueChanged",          callback : this._onNotifyMeMapSimpleDialogueChanged },
+            { type : "BwTileCustomNameArrayChanged",        callback : this._onNotifyBwTileCustomNameArrayChanged },
+            { type : "BwUnitCustomNameArrayChanged",        callback : this._onNotifyBwUnitCustomNameArrayChanged },
+            { type : "MsgUserSetMapEditorAutoSaveTime",     callback : this._onNotifyMsgUserSetMapEditorAutoSaveTime },
+            { type : "MsgCmSetCampaignMapName",             callback : this._onNotifyMsgCmSetCampaignMapName },
+            { type : "MsgCmSetCampaignMapExtraText",        callback : this._onNotifyMsgCmSetCampaignMapExtraText },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                               callback : this.closePanel },
@@ -146,8 +146,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private _onNotifyMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event): void {
-        const data = e.data as UserSetMapEditorAutoSaveTimeResponse;
+    private _onNotifyMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserSetMapEditorAutoSaveTime"]>): void {
+        const data = (e.data as { msg: UserSetMapEditorAutoSaveTimeResponse }).msg;
         FloatText.show(Lang_Utils.getText(data.getTime() == null ? Lang_Constants.TextType.A0248 : Lang_Constants.TextType.A0247));
     }
     private _onNotifyMsgCmSetCampaignMapName(): void {
@@ -221,7 +221,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 maxTextLength    : Maps_Constants.Common.MaxNameLength,
                 callback         : async newMapNameArray => {
                     war.setMapNameArray(newMapNameArray);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapNameChanged);
+                    Notifications_Dispatcher.dispatch("MeMapNameChanged");
 
                     const campaignMapData = war.getCampaignMapData();
                     if (campaignMapData != null) {
@@ -265,7 +265,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B0893),
                 callback         : async newMapDescArray => {
                     war.setMapDescArray(newMapDescArray);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapDescChanged);
+                    Notifications_Dispatcher.dispatch("MeMapDescChanged");
 
                     const campaignMapData = war.getCampaignMapData();
                     if (campaignMapData != null) {

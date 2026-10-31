@@ -3,7 +3,6 @@ import {
     GamePanels_Manager,
     Helpers_PointerInput,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -52,7 +51,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._groupBar,       callback : this._onTouchedGroupBar },
@@ -89,7 +88,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onTouchedGroupBar(e: Egret_Egret.Event): void {
+    private _onTouchedGroupBar(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
@@ -112,14 +111,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._touchingType = TouchingType.None;
         this._updateGroupBar();
     }
-    private _onTouchBeginGroupBar(e: Egret_Egret.Event): void {
+    private _onTouchBeginGroupBar(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const data          = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const touchX        = this._groupBar.globalToLocal(data.stageX, data.stageY).x;
         this._touchingType  = Math.abs(touchX - this._imgLowerPoint.getX()) <= Math.abs(touchX - this._imgUpperPoint.getX())
             ? TouchingType.Lower
             : TouchingType.Upper;
     }
-    private _onTouchMoveGroupBar(e: Egret_Egret.Event): void {
+    private _onTouchMoveGroupBar(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const touchingType = this._touchingType;
         if (touchingType === TouchingType.None) {
             return;

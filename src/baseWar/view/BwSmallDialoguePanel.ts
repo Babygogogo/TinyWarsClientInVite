@@ -11,7 +11,6 @@ import {
     Sounds_Constants,
     Dialogues_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Timer_TimerModel,
     type BaseWar_Interface_IBwWar,
@@ -52,7 +51,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._imgTouchMask,   callback : this._onTouchedImgTouchMask },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,  callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",  callback : this._onNotifyLanguageChanged },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {

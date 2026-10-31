@@ -57,7 +57,7 @@ import {
     MultiFreeRoom_Model_MfrRoomCreator,
     Sounds_SoundPlayer,
     Lang_Constants,
-    Notifications_TypeId,
+    type Notifications_Types,
     type ReplayWar_View_RwReplayListPanel,
     Utils_ClientErrorCode,
     Users_Model,
@@ -77,15 +77,15 @@ import { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlaye
 import type { GridMarkData } from "../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-const _NET_EVENTS = [
+const _NET_EVENTS: Networks_Manager.MsgListener[] = [
     { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonServerDisconnect, callback : _onMsgCommonServerDisconnect },
 ];
-const _NOTIFY_EVENTS = [
-    { type : Notifications_TypeId.TypeId.NetworkConnected,                callback : _onNotifyNetworkConnected },
-    { type : Notifications_TypeId.TypeId.MsgUserLogin,                    callback : _onMsgUserLogin },
-    { type : Notifications_TypeId.TypeId.MsgUserLoginAsGuest,             callback : _onMsgUserLoginAsGuest },
-    { type : Notifications_TypeId.TypeId.MsgUserLogout,                   callback : _onMsgUserLogout },
-    { type : Notifications_TypeId.TypeId.MsgCommonLatestConfigVersion,    callback : _onMsgCommonLatestConfigVersion },
+const _NOTIFY_EVENTS: Notifications_Types.Listener[] = [
+    { type : "NetworkConnected",                callback : _onNotifyNetworkConnected },
+    { type : "MsgUserLogin",                    callback : _onMsgUserLogin },
+    { type : "MsgUserLoginAsGuest",             callback : _onMsgUserLoginAsGuest },
+    { type : "MsgUserLogout",                   callback : _onMsgUserLogout },
+    { type : "MsgCommonLatestConfigVersion",    callback : _onMsgCommonLatestConfigVersion },
 ];
 
 let _hasOnceWentToLobby = false;

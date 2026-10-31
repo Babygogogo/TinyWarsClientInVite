@@ -3,7 +3,6 @@ import {
     Notifications_Dispatcher,
     Helpers_Misc,
     Turns_Constants,
-    Notifications_TypeId,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
@@ -67,7 +66,7 @@ export class WarCreatorBase {
     public setSaveSlotIndex(slotIndex: number): void {
         if (this.getSaveSlotIndex() !== slotIndex) {
             this._saveSlotIndex = slotIndex;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarCreator_SaveSlotIndexChanged);
+            Notifications_Dispatcher.dispatch("WarCreator_SaveSlotIndexChanged");
         }
     }
 

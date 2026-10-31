@@ -5,7 +5,6 @@ import {
     Helpers_Misc,
     GamePanels_Manager,
     Lang_Constants,
-    Notifications_TypeId,
     GameVersions_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -37,7 +36,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnDownload,    callback : this._onTouchedBtnDownload },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -161,7 +160,7 @@ class VersionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }

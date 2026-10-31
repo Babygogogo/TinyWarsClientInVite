@@ -16,7 +16,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -126,11 +125,11 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             { ui : this._btnChangeController,    callback : this._onTouchedBtnChangeController },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.RoomCreator_SelfCoIdChanged,         callback : this._onNotifyMfrCreateSelfCoIdChanged },
-            { type : Notifications_TypeId.TypeId.RoomCreator_SelfPlayerIndexChanged,  callback : this._onNotifyMfrCreateSelfPlayerIndexChanged },
-            { type : Notifications_TypeId.TypeId.RoomCreator_SelfSkinIdChanged,       callback : this._onNotifyMfrCreateSelfSkinIdChanged },
-            { type : Notifications_TypeId.TypeId.MfrCreatePlayerSkinIdChanged,        callback : this._onNotifyMfrCreatePlayerSkinIdChanged },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "RoomCreator_SelfCoIdChanged",         callback : this._onNotifyMfrCreateSelfCoIdChanged },
+            { type : "RoomCreator_SelfPlayerIndexChanged",  callback : this._onNotifyMfrCreateSelfPlayerIndexChanged },
+            { type : "RoomCreator_SelfSkinIdChanged",       callback : this._onNotifyMfrCreateSelfSkinIdChanged },
+            { type : "MfrCreatePlayerSkinIdChanged",        callback : this._onNotifyMfrCreatePlayerSkinIdChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -198,7 +197,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
                     roomCreator.setSelfUnitAndTileSkinId(oldSkinId);
                 }
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MfrCreatePlayerSkinIdChanged);
+                Notifications_Dispatcher.dispatch("MfrCreatePlayerSkinIdChanged");
             },
         });
     }

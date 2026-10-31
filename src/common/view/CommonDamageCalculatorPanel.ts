@@ -25,7 +25,6 @@ import {
     FloatText,
     CoSkills_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Ui_Components_UiTileView,
     Ui_Components_UiUnitView,
@@ -209,9 +208,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnWeather,                 callback : this._onTouchedBtnWeather },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,   callback : this._onNotifyTileAnimationTick },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
+            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
+            { type : "TileAnimationTick",   callback : this._onNotifyTileAnimationTick },
         ]);
 
         this._setIsTouchMaskEnabled();

@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     ForceSkins_Utils,
     Common_Model_CommonModel,
     MapEditor_Model_MeWar,
@@ -31,11 +32,9 @@ import {
     MultiPlayerWar_Model_MpwProxy,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Types_UiUnitViewData,
-    type Notifications_DataTypes,
     type Tiles_ITile,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -107,14 +106,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.ActionPlannerStateChanged,     callback : this._onNotifyBwPlannerStateChanged },
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,               callback : this._onNotifyTileAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,              callback : this._onNotifyStateIndicatorTick },
-            { type : Notifications_TypeId.TypeId.BwTileIsHighlightedChanged,      callback : this._onNotifyTileIsHighlightedChanged },
-            { type : Notifications_TypeId.TypeId.BwTileBuffChanged,               callback : this._onNotifyTileBuffChanged },
-            { type : Notifications_TypeId.TypeId.BwTileCustomNameIdChanged,       callback : this._onNotifyTileCustomNameIdChanged },
-            { type : Notifications_TypeId.TypeId.MsgMpwCommonMarkTile,            callback : this._onNotifyMsgMpwCommonMarkGrid },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "ActionPlannerStateChanged",     callback : this._onNotifyBwPlannerStateChanged },
+            { type : "TileAnimationTick",               callback : this._onNotifyTileAnimationTick },
+            { type : "StateIndicatorTick",              callback : this._onNotifyStateIndicatorTick },
+            { type : "BwTileIsHighlightedChanged",      callback : this._onNotifyTileIsHighlightedChanged },
+            { type : "BwTileBuffChanged",               callback : this._onNotifyTileBuffChanged },
+            { type : "BwTileCustomNameIdChanged",       callback : this._onNotifyTileCustomNameIdChanged },
+            { type : "MsgMpwCommonMarkTile",            callback : this._onNotifyMsgMpwCommonMarkGrid },
         ]);
         this._setUiListenerArray([
             { ui : this._btnModifyType,                          callback : this._onTouchedBtnModifyType },
@@ -175,8 +174,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyTileIsHighlightedChanged(): void {
         this._updateTileView();
     }
-    private _onNotifyTileBuffChanged(e: Egret_Egret.Event): void {
-        if ((e.data as Notifications_DataTypes.BwTileBuffChanged).tile === this.getOpenData()?.tile) {
+    private _onNotifyTileBuffChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwTileBuffChanged"]>): void {
+        if ((e.data as Notifications_Mapping.Mapping["BwTileBuffChanged"]).tile === this.getOpenData()?.tile) {
             this._updateTileView();
             this._updateListInfo();
         }
@@ -184,14 +183,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyTileCustomNameIdChanged(): void {
         this._updateLabelName();
     }
-    private _onNotifyMsgMpwCommonMarkGrid(e: Egret_Egret.Event): void {
+    private _onNotifyMsgMpwCommonMarkGrid(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMpwCommonMarkTile"]>): void {
         const tile = this.getOpenData()?.tile;
         if (tile == null) {
             return;
         }
 
         const tileId = tile.getGridIndex().getGridId(tile.getWar().getTileMap().getMapSize());
-        if ((e.data as MpwCommonMarkGridResponse).getGridIdArrayForAddMark().indexOf(tileId) >= 0) {
+        if (((e.data as { msg: MpwCommonMarkGridResponse }).msg).getGridIdArrayForAddMark().indexOf(tileId) >= 0) {
             FloatText.showLang(Lang_Constants.TextType.A0848);
         }
 
@@ -256,7 +255,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 tile.flushDataToView();
 
                 war.updateTilesAndUnitsOnVisibilityChanged(false);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileChanged, { gridIndex } as Notifications_DataTypes.BwTileChanged);
+                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
 
                 this._updateView();
             },
@@ -323,10 +322,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         } else if ((war instanceof MapEditor_Model_MeWar.MeWar) || (war instanceof ReplayWar_Model_RwWarBase.RwWarBase)) {
             if (GridMarks_Utils.addGridMark(war.getGridMarkData().getGridIdAndMarkTypeIdList(), gridId, _selectedMarkTypeId)) {
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkAdded, {
+                Notifications_Dispatcher.dispatch("GridMarkAdded", {
                     war    : war,
                     gridId : gridId,
-                } as Notifications_DataTypes.GridMarkAdded);
+                });
 
                 FloatText.showLang(Lang_Constants.TextType.A0848);
                 this._updateBtnMarkAndUnmark();
@@ -337,10 +336,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
             if (GridMarks_Utils.addGridMark(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), gridId, _selectedMarkTypeId)) {
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkAdded, {
+                Notifications_Dispatcher.dispatch("GridMarkAdded", {
                     war    : war,
                     gridId : gridId,
-                } as Notifications_DataTypes.GridMarkAdded);
+                });
 
                 FloatText.showLang(Lang_Constants.TextType.A0848);
                 this._updateBtnMarkAndUnmark();
@@ -379,10 +378,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         } else if ((war instanceof MapEditor_Model_MeWar.MeWar) || (war instanceof ReplayWar_Model_RwWarBase.RwWarBase)) {
             if (GridMarks_Utils.deleteGridMark(war.getGridMarkData().getGridIdAndMarkTypeIdList(), gridId)) {
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkDeleted, {
+                Notifications_Dispatcher.dispatch("GridMarkDeleted", {
                     war    : war,
                     gridId : gridId,
-                } as Notifications_DataTypes.GridMarkDeleted);
+                });
 
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
                 this._updateBtnMarkAndUnmark();
@@ -393,10 +392,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
             if (GridMarks_Utils.deleteGridMark(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), gridId)) {
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkDeleted, {
+                Notifications_Dispatcher.dispatch("GridMarkDeleted", {
                     war    : war,
                     gridId : gridId,
-                } as Notifications_DataTypes.GridMarkDeleted);
+                });
 
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
                 this._updateBtnMarkAndUnmark();
@@ -758,7 +757,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             { ui : this._groupTouchModify,           callback : this._onTouchedGroupModify },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -3533,8 +3532,8 @@ class MoveCostRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,  callback : this._onNotifyUnitStateIndicatorTick },
+            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
+            { type : "StateIndicatorTick",  callback : this._onNotifyUnitStateIndicatorTick },
         ]);
 
         this._conView.addUiChild(this._unitView);
@@ -3602,8 +3601,8 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,       callback : this._onNotifyUnitAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,      callback : this._onNotifyUnitStateIndicatorTick },
+            { type : "UnitAnimationTick",       callback : this._onNotifyUnitAnimationTick },
+            { type : "StateIndicatorTick",      callback : this._onNotifyUnitStateIndicatorTick },
         ]);
 
         this._conView.addUiChild(this._unitView);

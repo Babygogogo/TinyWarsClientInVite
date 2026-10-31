@@ -12,7 +12,6 @@ import {
     FloatText,
     Maps_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -68,7 +67,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -339,7 +338,7 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         openData?.panel.showMap(openData.normalMapId);
     }
 
-    private _onTouchedImgSelected(e: Egret_Egret.Event): void {
+    private _onTouchedImgSelected(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
         const openData = this.getOpenData();
@@ -350,7 +349,7 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         openData.callback(openData.normalMapId);
     }
-    private async _onTouchedBtnDesigner(e: Egret_Egret.Event): Promise<void> {
+    private async _onTouchedBtnDesigner(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): Promise<void> {
         e.stopPropagation();
 
         const normalMapId   = this.getOpenData()?.normalMapId;

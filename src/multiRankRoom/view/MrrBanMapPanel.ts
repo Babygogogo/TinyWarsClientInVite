@@ -8,7 +8,6 @@ import {
     MultiRankRoom_Model_MrrProxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -51,9 +50,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMrrGetBannedNormalMapIdArray, callback : this._onMsgMrrGetBannedNormalMapIdArray },
-            { type : Notifications_TypeId.TypeId.MsgMrrSetBannedNormalMapIdArray, callback : this._onMsgMrrSetBannedNormalMapIdArray },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "MsgMrrGetBannedNormalMapIdArray", callback : this._onMsgMrrGetBannedNormalMapIdArray },
+            { type : "MsgMrrSetBannedNormalMapIdArray", callback : this._onMsgMrrSetBannedNormalMapIdArray },
         ]);
         this._setUiListenerArray([
             { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },

@@ -7,7 +7,6 @@ import {
     Users_Model,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Lang_Constants,
     Timer_TimerModel,
@@ -31,13 +30,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserLogin,                callback : this._onMsgUserLogin },
-            { type : Notifications_TypeId.TypeId.MsgUserLoginAsGuest,         callback : this._onMsgUserLoginAsGuest },
-            { type : Notifications_TypeId.TypeId.MsgUserLogout,               callback : this._onMsgUserLogout },
-            { type : Notifications_TypeId.TypeId.MsgUserSetNickname,          callback : this._onMsgUserSetNickname },
-            { type : Notifications_TypeId.TypeId.MsgUserSetAvatarId,          callback : this._onNotifyMsgUserSetAvatarId },
-            { type : Notifications_TypeId.TypeId.MsgUserSetShowMedalIdArray,  callback : this._onNotifyMsgUserSetShowMEdalIdArray },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserLogin",                callback : this._onMsgUserLogin },
+            { type : "MsgUserLoginAsGuest",         callback : this._onMsgUserLoginAsGuest },
+            { type : "MsgUserLogout",               callback : this._onMsgUserLogout },
+            { type : "MsgUserSetNickname",          callback : this._onMsgUserSetNickname },
+            { type : "MsgUserSetAvatarId",          callback : this._onNotifyMsgUserSetAvatarId },
+            { type : "MsgUserSetShowMedalIdArray",  callback : this._onNotifyMsgUserSetShowMEdalIdArray },
         ]);
         this._setUiListenerArray([
             { ui : this._groupUserInfo,  callback : this._onTouchedGroupUserInfo },

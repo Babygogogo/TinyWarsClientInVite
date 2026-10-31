@@ -12,7 +12,6 @@ import {
     ValueAndComparators_Utils,
     GamePanels_Manager,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
@@ -97,8 +96,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnActCustomNameId,                     callback : this._onTouchedBtnActCustomNameId },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -150,7 +149,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentFilter         : action.getConPlayerFilter(),
             callback              : filter => {
                 action.setConPlayerFilter(filter);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -181,7 +180,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     }));
                 }
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -213,7 +212,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         if (unitsCount == null) {
                             action.setConUnitComparator(null);
                             action.setConUnitFilter(null);
-                            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                         } else {
                             if (oldCon) {
                                 oldCon.setValue(unitsCount);
@@ -225,7 +224,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                 }));
                             }
 
-                            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                         }
                     },
                 });
@@ -251,7 +250,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentFilter         : action.getConTileFilter(),
             callback              : filter => {
                 action.setConTileFilter(filter);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -283,7 +282,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     } else {
                         action.setActCurrentHp(multiplierAndOffset);
                     }
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             }),
         });
@@ -316,7 +315,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     } else {
                         action.setActCurrentBuildPoint(multiplierAndOffset);
                     }
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             }),
         });
@@ -349,7 +348,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     } else {
                         action.setActCurrentCapturePoint(multiplierAndOffset);
                     }
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             }),
         });
@@ -382,7 +381,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     } else {
                         action.setActPlayerIndex(multiplierAndOffset);
                     }
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             }),
         });
@@ -402,7 +401,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             action.setActIsHighlighted(null);
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
 
     private _onTouchedBtnActLocationIdArray(): void {
@@ -422,7 +421,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         addIntArray    : addIntArray,
                         deleteIntArray : [],
                     }));
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
 
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiIntegerPanel, {
@@ -438,7 +437,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                     deleteIntArray : deleteIntArray,
                                 }));
                             }
-                            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                         },
                     });
                 }
@@ -473,7 +472,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     } else {
                         action.setActCustomNameId(multiplierAndOffset);
                     }
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             }),
         });

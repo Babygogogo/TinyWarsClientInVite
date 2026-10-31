@@ -10,7 +10,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type ExpressionParsers_Types,
     type MapEditor_Interface_IMeWar,
@@ -61,8 +60,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged", callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                       callback : this.closePanel },
@@ -125,7 +124,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback       : text => {
                 if (condition.getExpression() != text) {
                     condition.setExpression(text);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });

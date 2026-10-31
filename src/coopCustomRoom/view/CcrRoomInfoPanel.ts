@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Common_View_CommonWarAdvancedSettingsPage,
     Common_View_CommonWarBasicSettingsPage,
     Common_View_CommonWarMapInfoPage,
@@ -35,7 +36,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
     Timer_TimerModel,
@@ -99,11 +99,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnInvite,              callback : this._onTouchedBtnInvite },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomStaticInfo,     callback : this._onNotifyMsgCcrGetRoomStaticInfo },
-            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo,     callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
-            { type : Notifications_TypeId.TypeId.MsgCcrExitRoom,              callback : this._onNotifyMsgCcrExitRoom },
-            { type : Notifications_TypeId.TypeId.MsgCcrInvite,                callback : this._onNotifyMsgCcrInvite },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgCcrGetRoomStaticInfo",     callback : this._onNotifyMsgCcrGetRoomStaticInfo },
+            { type : "MsgCcrGetRoomPlayerInfo",     callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
+            { type : "MsgCcrExitRoom",              callback : this._onNotifyMsgCcrExitRoom },
+            { type : "MsgCcrInvite",                callback : this._onNotifyMsgCcrInvite },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -372,8 +372,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifyMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event): void {
-        const data = e.data as CcrGetRoomPlayerInfoResponse;
+    private _onNotifyMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomPlayerInfo"]>): void {
+        const data = (e.data as { msg: CcrGetRoomPlayerInfoResponse }).msg;
         if (data.getRoomId() !== this.getOpenData()?.roomId) {
             return;
         }
@@ -392,8 +392,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
 
-    private _onNotifyMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event): void {
-        const data = e.data as CcrGetRoomStaticInfoResponse;
+    private _onNotifyMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomStaticInfo"]>): void {
+        const data = (e.data as { msg: CcrGetRoomStaticInfoResponse }).msg;
         if (data.getRoomId() !== this.getOpenData()?.roomId) {
             return;
         }
@@ -409,8 +409,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
 
-    private async _onNotifyMsgCcrExitRoom(e: Egret_Egret.Event): Promise<void> {
-        const data      = e.data as CcrExitRoomResponse;
+    private async _onNotifyMsgCcrExitRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrExitRoom"]>): Promise<void> {
+        const data      = (e.data as { msg: CcrExitRoomResponse }).msg;
         const roomId    = data.getRoomId();
         if (roomId === this.getOpenData()?.roomId) {
             const exitRoomType = data.getExitType();

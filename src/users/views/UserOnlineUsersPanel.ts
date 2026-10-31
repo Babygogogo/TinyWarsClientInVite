@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     GamePanels_Dict,
     GameConfigs_Provider,
     Helpers_ImageSource,
@@ -7,7 +8,6 @@ import {
     GamePanels_Manager,
     Users_Proxy,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -43,8 +43,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserGetOnlineUserIdArray, callback : this._onNotifySUserGetOnlineUsers },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserGetOnlineUserIdArray", callback : this._onNotifySUserGetOnlineUsers },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,   callback : this.closePanel },
@@ -76,11 +76,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifySUserGetOnlineUsers(e: Egret_Egret.Event): void {
-        if (!(e.data instanceof UserGetOnlineUserIdArrayResponse)) {
+    private _onNotifySUserGetOnlineUsers(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserGetOnlineUserIdArray"]>): void {
+        const data = e.data;
+        if (typeof data !== "object" || data == null || !("msg" in data) || !(data.msg instanceof UserGetOnlineUserIdArrayResponse)) {
             throw Helpers_Misc.newError("Invalid online user list notification.");
         }
-        this._msg = e.data;
+        this._msg = data.msg;
         this._updateView();
     }
 

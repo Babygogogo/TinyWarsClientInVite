@@ -4,7 +4,6 @@ import {
     Helpers_Misc,
     LocalData_Storage,
     Tween_Ease,
-    Notifications_TypeId,
     Ui_Components_UiContainer,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiImage,
@@ -31,7 +30,7 @@ const SANDSTORM_ALPHA   = 0.9;
 
 export class View extends Ui_Components_UiContainer.UiContainer implements Weathers_IView.IView {
     private readonly _notifyListeners   : Notifications_Types.Listener[] = [
-        { type : Notifications_TypeId.TypeId.UserSettingsIsShowWeatherAnimationChanged,    callback : this._onNotifyUserSettingsIsShowWeatherAnimationChanged },
+        { type : "UserSettingsIsShowWeatherAnimationChanged",    callback : this._onNotifyUserSettingsIsShowWeatherAnimationChanged },
     ];
 
     private _weatherManager?                : Weathers_IManager.IManager;

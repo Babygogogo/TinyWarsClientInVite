@@ -1,7 +1,6 @@
 import {
     Notifications_Dispatcher,
     Keyboard_KbTypes,
-    Notifications_TypeId,
     type Notifications_Types,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
@@ -18,7 +17,7 @@ const _newKeys          = new Set<Keyboard_KbTypes.KeyCode>();
 const _listenerArray    : Listener[] = [];
 
 const _NOTIFY_EVENTS    : Notifications_Types.Listener[] = [
-    { type : Notifications_TypeId.TypeId.GameHidden,   callback : _onNotifyGameHidden },
+    { type : "GameHidden",   callback : _onNotifyGameHidden },
 ];
 
 export function init(): void {

@@ -8,7 +8,6 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -37,7 +36,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -120,7 +119,7 @@ class NameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             { ui : this._imgSelected,                        callback : this._onTouchedImgSelected },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.BwUnitCustomNameIdChanged,   callback : this._onNotifyBwUnitCustomNameIdChanged },
+            { type : "BwUnitCustomNameIdChanged",   callback : this._onNotifyBwUnitCustomNameIdChanged },
         ]);
         this._applySettingsForWholeTouch(undefined, true);
     }
@@ -189,7 +188,7 @@ class NameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 }
 
                 this._updateView();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwUnitCustomNameArrayChanged);
+                Notifications_Dispatcher.dispatch("BwUnitCustomNameArrayChanged");
             },
         });
     }

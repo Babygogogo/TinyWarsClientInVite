@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Lang_Utils,
     Helpers_ImageSource,
     GamePanels_Dict,
@@ -8,7 +9,6 @@ import {
     Users_Proxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type GameConfigs_GameConfig,
@@ -63,8 +63,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnSuperPower,                      callback : this._onTouchedBtnSuperPower },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserSetCoBgmSettings,     callback : this._onNotifyMsgUserSetCoBgmSettings },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserSetCoBgmSettings",     callback : this._onNotifyMsgUserSetCoBgmSettings },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -86,10 +86,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgUserSetCoBgmSettings(e: Egret_Egret.Event): void {
+    private _onNotifyMsgUserSetCoBgmSettings(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserSetCoBgmSettings"]>): void {
         FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
-        const data = e.data as UserSetCoBgmSettingsResponse;
+        const data = (e.data as { msg: UserSetCoBgmSettingsResponse }).msg;
         if (data.getCoCategoryId() === this._coCategoryId) {
             this._updateComponentsForCoAndBgm();
         }

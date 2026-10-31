@@ -8,10 +8,8 @@ import {
     Users_Model,
     Cos_Utils,
     ForceSkins_Constants,
-    Notifications_TypeId,
     AuxiliaryTypes_WarCreatorBase,
     type GameConfigs_GameConfig,
-    type Notifications_DataTypes,
 } from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { C as SpmCreateSrwRequest } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/C.ts";
@@ -95,7 +93,7 @@ export class SrrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
         }
         this._setPlayerInfoList(newPlayerInfoList);
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarCreator_TemplateWarRuleIdChanged);
+        Notifications_Dispatcher.dispatch("WarCreator_TemplateWarRuleIdChanged");
     }
     public tickTemplateWarRuleId(): void {
         const currTemplateWarRuleId = this.getInstanceWarRule().getTemplateWarRuleId();
@@ -129,6 +127,6 @@ export class SrrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
         // }
 
         targetPlayerData.setUnitAndTileSkinId(newSkinId);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged, { playerIndex } as Notifications_DataTypes.WarCreator_PlayerInfoChanged);
+        Notifications_Dispatcher.dispatch("WarCreator_PlayerInfoChanged", { playerIndex });
     }
 }

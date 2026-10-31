@@ -11,7 +11,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiLayoutBase,
     Ui_Components_UiPanel,
     AuxiliaryTypes_AuxiliaryTypes,
@@ -85,10 +84,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserGetPublicInfo,        callback : this._onNotifyMsgUserGetPublicInfo },
-            { type : Notifications_TypeId.TypeId.MsgUserSetNickname,          callback : this._onNotifyMsgUserSetNickname },
-            { type : Notifications_TypeId.TypeId.MsgUserSetAvatarId,          callback : this._onNotifyMsgUserSetAvatarId },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserGetPublicInfo",        callback : this._onNotifyMsgUserGetPublicInfo },
+            { type : "MsgUserSetNickname",          callback : this._onNotifyMsgUserSetNickname },
+            { type : "MsgUserSetAvatarId",          callback : this._onNotifyMsgUserSetAvatarId },
         ]);
         this._setUiListenerArray([
             { ui : this._labelTitle,             callback : this._onTouchedLabelTitle },

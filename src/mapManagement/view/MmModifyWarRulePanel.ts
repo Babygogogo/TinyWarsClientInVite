@@ -13,7 +13,6 @@ import {
     NormalMap_Model_NormalMapProxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -37,10 +36,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                  callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMmSetWarRuleAvailability,      callback : this._onNotifyMsgMmSetWarRuleAvailability },
-            { type : Notifications_TypeId.TypeId.MsgMmSetWarRuleName,              callback : this._onNotifyMsgMmSetWarRuleName },
-            { type : Notifications_TypeId.TypeId.MsgMmSetWarRuleFixedTileTheme,    callback : this._onNotifyMsgMmSetWarRuleFixedTileTheme },
+            { type : "LanguageChanged",                  callback : this._onNotifyLanguageChanged },
+            { type : "MsgMmSetWarRuleAvailability",      callback : this._onNotifyMsgMmSetWarRuleAvailability },
+            { type : "MsgMmSetWarRuleName",              callback : this._onNotifyMsgMmSetWarRuleName },
+            { type : "MsgMmSetWarRuleFixedTileTheme",    callback : this._onNotifyMsgMmSetWarRuleFixedTileTheme },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },

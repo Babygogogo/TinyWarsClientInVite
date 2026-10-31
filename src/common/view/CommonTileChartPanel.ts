@@ -14,7 +14,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTileView,
@@ -77,8 +76,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,           callback : this._onNotifyTileAnimationTick },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "TileAnimationTick",           callback : this._onNotifyTileAnimationTick },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,   callback : this.closePanel },
@@ -404,7 +403,7 @@ class TileRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,   callback : this._onNotifyTileAnimationTick },
+            { type : "TileAnimationTick",   callback : this._onNotifyTileAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -465,7 +464,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -1304,8 +1303,8 @@ class MoveCostRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,  callback : this._onNotifyUnitStateIndicatorTick },
+            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
+            { type : "StateIndicatorTick",  callback : this._onNotifyUnitStateIndicatorTick },
         ]);
         this.setIsTouchChildrenEnabled(false);
 
@@ -1373,8 +1372,8 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,  callback : this._onNotifyUnitStateIndicatorTick },
+            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
+            { type : "StateIndicatorTick",  callback : this._onNotifyUnitStateIndicatorTick },
         ]);
         this.setIsTouchChildrenEnabled(false);
 

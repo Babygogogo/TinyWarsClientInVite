@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     ActionPlanners_ActionPlannerView,
     AuxiliaryTypes_AttackableArea,
     ActionPlanners_States_ChoosingCoActiveSkillTarget,
@@ -74,8 +75,6 @@ import {
     Users_Model,
     Logger,
     Lang_Constants,
-    Notifications_TypeId,
-    type Notifications_DataTypes,
     type Egret_Egret,
     type Tiles_ITile,
     type Units_IUnit,
@@ -121,9 +120,9 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     private _isIgnoreEnemyForPreviewMove        = true;
 
     private _notifyListeners: Notifications_Types.Listener[] = [
-        { type : Notifications_TypeId.TypeId.BwCursorTapped,      callback : this._onNotifyBwCursorTapped },
-        { type : Notifications_TypeId.TypeId.BwCursorDragged,     callback : this._onNotifyBwCursorDragged },
-        { type : Notifications_TypeId.TypeId.BwCursorDragEnded,   callback : this._onNotifyBwCursorDragEnded },
+        { type : "BwCursorTapped",      callback : this._onNotifyBwCursorTapped },
+        { type : "BwCursorDragged",     callback : this._onNotifyBwCursorDragged },
+        { type : "BwCursorDragEnded",   callback : this._onNotifyBwCursorDragEnded },
     ];
 
     public init(mapSize: AuxiliaryTypes_MapSize.MapSize): void {
@@ -264,10 +263,10 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         getState(nextStateId).doApplyOnTap(this, gridIndex);
     }
 
-    private _onNotifyBwCursorDragged(e: Egret_Egret.Event): void {
+    private _onNotifyBwCursorDragged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorDragged"]>): void {
         const war = this.getWar();
         if (Users_Model.getSelfSettingsIsAutoScrollMap()) {
-            war.getView().tweenGridToCentralArea((e.data as Notifications_DataTypes.BwCursorDragged).draggedTo);
+            war.getView().tweenGridToCentralArea((e.data as Notifications_Mapping.Mapping["BwCursorDragged"]).draggedTo);
         }
 
         const currStateId = this.getStateId();
@@ -307,8 +306,8 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         this._stateId     = stateId;
 
         Logger.log(`ActionPlanner.setStateId() ${stateId}`);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ActionPlannerStateSet);
-        (isChanged) && (Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ActionPlannerStateChanged));
+        Notifications_Dispatcher.dispatch("ActionPlannerStateSet");
+        (isChanged) && (Notifications_Dispatcher.dispatch("ActionPlannerStateChanged"));
     }
 
     public cancelCurrentState(): void {
@@ -692,7 +691,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     }
     public setMovePath(movePath: AuxiliaryTypes_MovePathNode.MovePathNode[]): void {
         this._movePath = movePath;
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ActionPlannerMovePathChanged);
+        Notifications_Dispatcher.dispatch("ActionPlannerMovePathChanged");
     }
     public getMovePath(): AuxiliaryTypes_MovePathNode.MovePathNode[] {
         return this._movePath;

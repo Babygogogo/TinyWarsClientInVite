@@ -38,7 +38,7 @@ const ApkLandscapeDomHeightMultiplier   = 0.3;
 const ApkPortraitDomHeightMultiplier    = 0.55;
 
 export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase implements Ui_Interfaces_IUiTextInput.IUiTextInput {
-    private readonly _boundOnDomKeyDown = (e: Event) => {
+    private readonly _boundOnDomKeyDown = (e: KeyboardEvent) => {
         const dom = this._getDomInput();
         if (dom) {
             this._selectionRange = [
@@ -69,7 +69,7 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
         }
         this.dispatchEventWith(Ui_Types_UiInputEventType.UiInputEventType.KeyInput, undefined, text);
     };
-    private readonly _boundOnDomKeyUp = (e: Event) => {
+    private readonly _boundOnDomKeyUp = (e: KeyboardEvent) => {
         this.dispatchEventWith(Ui_Types_UiInputEventType.UiInputEventType.KeyUp, undefined, e);
     };
     private readonly _boundOnDomFocus = () => {
@@ -571,7 +571,7 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
         const isMultiline = this.getIsMultiline();
 
         {
-            const oldDomInput = this._getDomInput();
+            const oldDomInput: HTMLElement | undefined = this._getDomInput();
             if (oldDomInput) {
                 if ((oldDomInput.nodeName === "TEXTAREA") === isMultiline) {
                     return;
@@ -588,12 +588,13 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
 
         {
             const newDomInput   = _createDomInput(isMultiline);
+            const eventTarget: HTMLElement = newDomInput;
             this._domInput      = newDomInput;
             this._previousAttrs = {};
 
-            newDomInput.addEventListener('keydown',     this._boundOnDomKeyDown);
+            eventTarget.addEventListener('keydown',    this._boundOnDomKeyDown);
             newDomInput.addEventListener('input',       this._boundOnDomInput);
-            newDomInput.addEventListener('keyup',       this._boundOnDomKeyUp);
+            eventTarget.addEventListener('keyup',      this._boundOnDomKeyUp);
             newDomInput.addEventListener('focus',       this._boundOnDomFocus);
             newDomInput.addEventListener('blur',        this._boundOnDomBlur);
             window.TEXT_INPUT_CONTAINER.appendChild(newDomInput);

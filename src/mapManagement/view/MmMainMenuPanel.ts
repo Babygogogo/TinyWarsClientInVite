@@ -5,7 +5,6 @@ import {
     GamePanels_Manager,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -26,9 +25,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMmReloadAllMaps,      callback : this._onMsgMmReloadAllMaps },
-            { type : Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback : this._onMsgMmGetReviewingMaps },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgMmReloadAllMaps",      callback : this._onMsgMmReloadAllMaps },
+            { type : "MsgMmGetReviewingMaps",   callback : this._onMsgMmGetReviewingMaps },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },

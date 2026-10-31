@@ -8,7 +8,6 @@ import {
     Players_Constants,
     Lang_Constants,
     Graphics_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTileView,
@@ -42,7 +41,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,          callback : this.closePanel },
@@ -238,7 +237,7 @@ class TileObjectRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,  callback : this._onNotifyTileAnimationTick },
+            { type : "TileAnimationTick",  callback : this._onNotifyTileAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
 

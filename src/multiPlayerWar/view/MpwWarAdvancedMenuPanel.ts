@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Maps_Constants,
     ActionPlanners_States_RequestingPlayerDeleteUnit,
     ActionPlanners_States_RequestingPlayerSurrender,
@@ -19,7 +20,6 @@ import {
     MapEditor_Model_MeProxy,
     Users_Proxy,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type MultiPlayerWar_Interface_IMpwWar,
@@ -57,11 +57,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,    callback : this._onNotifyUnitAndTileTextureVersionChanged },
-            { type : Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged,  callback : this._onNotifyMsgUserSettingsOpacitySettingsChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserSetMapRating,                 callback : this._onNotifyMsgUserSetMapRating },
-            { type : Notifications_TypeId.TypeId.MsgMeSubmitNormalMap,                callback : this._onNotifyMsgMeSubmitNormalMap },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "UnitAndTileTextureVersionChanged",    callback : this._onNotifyUnitAndTileTextureVersionChanged },
+            { type : "UserSettingsOpacitySettingsChanged",  callback : this._onNotifyMsgUserSettingsOpacitySettingsChanged },
+            { type : "MsgUserSetMapRating",                 callback : this._onNotifyMsgUserSetMapRating },
+            { type : "MsgMeSubmitNormalMap",                callback : this._onNotifyMsgMeSubmitNormalMap },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                                   callback : this.closePanel },
@@ -102,8 +102,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgUserSetMapRating(): void {
         this._updateBtnMapRating();
     }
-    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event): void {
-        const slotIndex = (e.data as MeSubmitNormalMapResponse).getSlotIndex() ?? 0;
+    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
+        const slotIndex = ((e.data as { msg: MeSubmitNormalMapResponse }).msg).getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0872),
             callback   : async () => {

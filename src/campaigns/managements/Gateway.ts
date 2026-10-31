@@ -2,7 +2,6 @@ import {
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
-    Notifications_TypeId,
     Campaigns_Managements_Provider,
     Campaigns_Mains_Provider,
     type Egret_Egret,
@@ -50,11 +49,11 @@ export function reqCmCreateCampaign(): void {
         MsgCmCreateCampaign : { c : {} },
     });
 }
-async function _onMsgCmCreateCampaign(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmCreateCampaign(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmCreateCampaign"]>): Promise<void> {
     const data = e.data as CmCreateCampaignResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Managements_Provider.updateOnMsgCmCreateCampaign(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmCreateCampaign, data);
+        Notifications_Dispatcher.dispatch("MsgCmCreateCampaign", { msg: data });
     }
 }
 
@@ -67,11 +66,11 @@ export function reqCmCreateCampaignMap(campaignId: number): void {
         },
     });
 }
-async function _onMsgCmCreateCampaignMap(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmCreateCampaignMap(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmCreateCampaignMap"]>): Promise<void> {
     const data = e.data as CmCreateCampaignMapResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmCreateCampaignMap(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmCreateCampaignMap, data);
+        Notifications_Dispatcher.dispatch("MsgCmCreateCampaignMap", { msg: data });
     }
 }
 
@@ -80,13 +79,13 @@ export function reqCmGetAllCampaignIdArray(): void {
         MsgCmGetAllCampaignIdArray : { c : {} },
     });
 }
-function _onMsgCmGetAllCampaignIdArray(e: Egret_Egret.Event): void {
+function _onMsgCmGetAllCampaignIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmGetAllCampaignIdArray"]>): void {
     const data = e.data as CmGetAllCampaignIdArrayResponse;
     if (data.getErrorCode()) {
         Campaigns_Managements_Provider.updateOnFailedMsgCmGetAllCampaignIdArray(data);
     } else {
         Campaigns_Managements_Provider.updateOnMsgCmGetAllCampaignIdArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmGetAllCampaignIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgCmGetAllCampaignIdArray", { msg: data });
     }
 }
 
@@ -95,13 +94,13 @@ export function reqCmGetDesigningCampaignIdArray(): void {
         MsgCmGetDesigningCampaignIdArray : { c : {} },
     });
 }
-function _onMsgCmGetDesigningCampaignIdArray(e: Egret_Egret.Event): void {
+function _onMsgCmGetDesigningCampaignIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmGetDesigningCampaignIdArray"]>): void {
     const data = e.data as CmGetDesigningCampaignIdArrayResponse;
     if (data.getErrorCode()) {
         Campaigns_Managements_Provider.updateOnFailedMsgCmGetDesigningCampaignIdArray(data);
     } else {
         Campaigns_Managements_Provider.updateOnMsgCmGetDesigningCampaignIdArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmGetDesigningCampaignIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgCmGetDesigningCampaignIdArray", { msg: data });
     }
 }
 
@@ -115,11 +114,11 @@ export function reqCmSetCampaignDesc(campaignId: number, descArray: LanguageText
         },
     });
 }
-async function _onMsgCmSetCampaignDesc(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmSetCampaignDesc(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignDesc"]>): Promise<void> {
     const data = e.data as CmSetCampaignDescResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignDesc(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmSetCampaignDesc, data);
+        Notifications_Dispatcher.dispatch("MsgCmSetCampaignDesc", { msg: data });
     }
 }
 
@@ -133,11 +132,11 @@ export function reqCmSetCampaignName(campaignId: number, nameArray: LanguageText
         },
     });
 }
-async function _onMsgCmSetCampaignName(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmSetCampaignName(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignName"]>): Promise<void> {
     const data = e.data as CmSetCampaignNameResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignName(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmSetCampaignName, data);
+        Notifications_Dispatcher.dispatch("MsgCmSetCampaignName", { msg: data });
     }
 }
 
@@ -151,11 +150,11 @@ export function reqCmSetCampaignEnabled(campaignId: number, isEnabled: boolean):
         },
     });
 }
-async function _onMsgCmSetCampaignEnabled(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmSetCampaignEnabled(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignEnabled"]>): Promise<void> {
     const data = e.data as CmSetCampaignEnabledResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignEnabled(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmSetCampaignEnabled, data);
+        Notifications_Dispatcher.dispatch("MsgCmSetCampaignEnabled", { msg: data });
     }
 }
 
@@ -170,11 +169,11 @@ export function reqCmSetCampaignMapEnabled(campaignId: number, campaignMapId: nu
         },
     });
 }
-async function _onMsgCmSetCampaignMapEnabled(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmSetCampaignMapEnabled(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignMapEnabled"]>): Promise<void> {
     const data = e.data as CmSetCampaignMapEnabledResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignMapEnabled(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmSetCampaignMapEnabled, data);
+        Notifications_Dispatcher.dispatch("MsgCmSetCampaignMapEnabled", { msg: data });
     }
 }
 
@@ -187,11 +186,11 @@ export function reqCmSetCampaignMapRawData(mapRawData: MapRawData): void {
         },
     });
 }
-async function _onMsgCmSetCampaignMapRawData(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmSetCampaignMapRawData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignMapRawData"]>): Promise<void> {
     const data = e.data as CmSetCampaignMapRawDataResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignMapRawData(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmSetCampaignMapRawData, data);
+        Notifications_Dispatcher.dispatch("MsgCmSetCampaignMapRawData", { msg: data });
     }
 }
 
@@ -206,11 +205,11 @@ export function reqCmSetCampaignMapExtraText(campaignId: number, campaignMapId: 
         },
     });
 }
-async function _onMsgCmSetCampaignMapExtraText(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmSetCampaignMapExtraText(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignMapExtraText"]>): Promise<void> {
     const data = e.data as CmSetCampaignMapExtraTextResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignMapExtraText(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmSetCampaignMapExtraText, data);
+        Notifications_Dispatcher.dispatch("MsgCmSetCampaignMapExtraText", { msg: data });
     }
 }
 
@@ -225,11 +224,11 @@ export function reqCmSetCampaignMapName(campaignId: number, campaignMapId: numbe
         },
     });
 }
-async function _onMsgCmSetCampaignMapName(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmSetCampaignMapName(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignMapName"]>): Promise<void> {
     const data = e.data as CmSetCampaignMapNameResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignMapName(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmSetCampaignMapName, data);
+        Notifications_Dispatcher.dispatch("MsgCmSetCampaignMapName", { msg: data });
     }
 }
 
@@ -244,11 +243,11 @@ export function reqCmSetCampaignMapWarEventAction(campaignId: number, campaignMa
         }, 
     });
 }
-async function _onMsgCmSetCampaignMapWarEventAction(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmSetCampaignMapWarEventAction(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetCampaignMapWarEventAction"]>): Promise<void> {
     const data = e.data as CmSetCampaignMapWarEventActionResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetCampaignMapWarEventAction(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmSetCampaignMapWarEventAction, data);
+        Notifications_Dispatcher.dispatch("MsgCmSetCampaignMapWarEventAction", { msg: data });
     }
 }
 
@@ -263,11 +262,11 @@ export function reqCmUpdateCampaignDesigners(campaignId: number, addUserIdArray:
         },
     });
 }
-async function _onMsgCmUpdateCampaignDesigners(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmUpdateCampaignDesigners(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmUpdateCampaignDesigners"]>): Promise<void> {
     const data = e.data as CmUpdateCampaignDesignersResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmUpdateCampaignDesigners(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmUpdateCampaignDesigners, data);
+        Notifications_Dispatcher.dispatch("MsgCmUpdateCampaignDesigners", { msg: data });
     }
 }
 
@@ -281,10 +280,10 @@ export function reqCmSetExtraLink(campaignId: number, extraLink: string): void {
         },
     });
 }
-async function _onMsgCmSetExtraLink(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCmSetExtraLink(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCmSetExtraLink"]>): Promise<void> {
     const data = e.data as CmSetExtraLinkResponse;
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCmSetExtraLink(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCmSetExtraLink, data);
+        Notifications_Dispatcher.dispatch("MsgCmSetExtraLink", { msg: data });
     }
 }

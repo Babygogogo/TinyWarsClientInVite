@@ -14,7 +14,6 @@ import {
     SinglePlayerWars_Constants,
     Lang_Constants,
     Turns_Constants,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -44,7 +43,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
 
         this._listSettings.setItemRendererClass(SettingsRenderer);
@@ -99,7 +98,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             { ui : this._btnHelp,    callback : this._onTouchedBtnHelp },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
     }
     protected override _doApplyOpenData(): void {

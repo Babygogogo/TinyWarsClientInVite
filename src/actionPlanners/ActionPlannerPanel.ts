@@ -3,7 +3,6 @@ import {
     Sounds_Constants,
     ActionPlanners_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type BaseWar_Interface_IBwWar,
     type Ui_Interfaces_IUiContainer,
@@ -28,8 +27,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.ActionPlannerStateChanged,       callback : this._onNotifyActionPlannerStateChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "ActionPlannerStateChanged",       callback : this._onNotifyActionPlannerStateChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._groupAlly,                              callback : this._onTouchedGroupAlly },

@@ -7,7 +7,6 @@ import {
     GamePanels_Manager,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
@@ -39,9 +38,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,          callback : this._onNotifyMeTaskObjectiveFullDataChanged },
-            { type : Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged,    callback : this._onNotifyMeWarRuleTaskObjectiveIdArrayChanged },
+            { type : "LanguageChanged",                         callback : this._onNotifyLanguageChanged },
+            { type : "MeTaskObjectiveFullDataChanged",          callback : this._onNotifyMeTaskObjectiveFullDataChanged },
+            { type : "MeWarRuleTaskObjectiveIdArrayChanged",    callback : this._onNotifyMeWarRuleTaskObjectiveIdArrayChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this.closePanel },
@@ -112,7 +111,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             }
                         }
                     }
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged);
+                    Notifications_Dispatcher.dispatch("MeWarRuleTaskObjectiveIdArrayChanged");
                 },
             });
         }
@@ -130,7 +129,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0802),
                 callback   : () => {
                     openData.templateWarRule.setTaskObjectiveIdArray([]);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged);
+                    Notifications_Dispatcher.dispatch("MeWarRuleTaskObjectiveIdArrayChanged");
                 },
             });
         }
@@ -200,7 +199,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             { ui : this._btnDelete,      callback : this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -222,7 +221,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             const taskObjectiveIdArray = openData.templateWarRule.getTaskObjectiveIdArray();
             if (taskObjectiveIdArray) {
                 Helpers_Collection.moveElementInList(taskObjectiveIdArray, openData.taskObjectiveId, -1);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged);
+                Notifications_Dispatcher.dispatch("MeWarRuleTaskObjectiveIdArrayChanged");
             }
         }
     }
@@ -238,7 +237,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             const taskObjectiveIdArray = openData.templateWarRule.getTaskObjectiveIdArray();
             if (taskObjectiveIdArray) {
                 Helpers_Collection.moveElementInList(taskObjectiveIdArray, openData.taskObjectiveId, 1);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged);
+                Notifications_Dispatcher.dispatch("MeWarRuleTaskObjectiveIdArrayChanged");
             }
         }
     }
@@ -254,7 +253,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             const taskObjectiveIdArray = openData.templateWarRule.getTaskObjectiveIdArray();
             if (taskObjectiveIdArray) {
                 Helpers_Collection.deleteElementFromList(taskObjectiveIdArray, openData.taskObjectiveId);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged);
+                Notifications_Dispatcher.dispatch("MeWarRuleTaskObjectiveIdArrayChanged");
             }
         }
     }

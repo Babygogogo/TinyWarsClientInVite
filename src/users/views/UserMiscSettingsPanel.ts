@@ -9,7 +9,6 @@ import {
     Users_Proxy,
     LocalData_Storage,
     Sounds_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -47,11 +46,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.UserSettingsIsAutoScrollMapChanged,                  callback : this._onNotifyUserSettingsIsAutoScrollMapChanged },
-            { type : Notifications_TypeId.TypeId.UserSettingsIsReplayResultVisibleChanged,            callback : this._onNotifyUserSettingsIsReplayResultVisibleChanged },
-            { type : Notifications_TypeId.TypeId.UserSettingsIsSetPathModeChanged,                    callback : this._onNotifyUserSettingsIsSetPathModeChanged },
-            { type : Notifications_TypeId.TypeId.UserSettingsCanAcceptNotFollowingMessagesChanged,    callback : this._onNotifyUserSettingsCanAcceptNotFollowingMessagesChanged },
+            { type : "LanguageChanged",                                     callback : this._onNotifyLanguageChanged },
+            { type : "UserSettingsIsAutoScrollMapChanged",                  callback : this._onNotifyUserSettingsIsAutoScrollMapChanged },
+            { type : "UserSettingsIsReplayResultVisibleChanged",            callback : this._onNotifyUserSettingsIsReplayResultVisibleChanged },
+            { type : "UserSettingsIsSetPathModeChanged",                    callback : this._onNotifyUserSettingsIsSetPathModeChanged },
+            { type : "UserSettingsCanAcceptNotFollowingMessagesChanged",    callback : this._onNotifyUserSettingsCanAcceptNotFollowingMessagesChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                                   callback : this.closePanel },
@@ -124,7 +123,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 Lang_Utils.setCurrentLanguageType(num);
                 LocalData_Storage.setLanguageType(num);
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.LanguageChanged);
+                Notifications_Dispatcher.dispatch("LanguageChanged");
             },
         });
     }

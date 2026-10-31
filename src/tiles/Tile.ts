@@ -31,8 +31,7 @@ import {
     Locations_Constants,
     Tiles_Constants_Common,
     Players_Constants,
-    Notifications_TypeId,
-    type Notifications_DataTypes,
+    type Notifications_Mapping,
     type Players_IPlayer,
     type Tiles_ITile,
     type Tiles_ITileView,
@@ -490,7 +489,7 @@ export class Tile implements Tiles_ITile.ITile {
             groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % Locations_Constants.GroupSize));
         }
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileHasLocationIdSet, { tile: this } satisfies Notifications_DataTypes.BwTileHasLocationIdSet);
+        Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile: this } satisfies Notifications_Mapping.Mapping["BwTileHasLocationIdSet"]);
     }
     public setHasLocationIdWithLocationIdArray(locationIdArray: number[], hasId: boolean): void {
         const groupedLocationIdArray = this._groupedLocationIdArray ??= new Array<number>(Locations_Constants.GroupCount).fill(0);
@@ -503,7 +502,7 @@ export class Tile implements Tiles_ITile.ITile {
             }
         }
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileHasLocationIdSet, { tile: this } satisfies Notifications_DataTypes.BwTileHasLocationIdSet);
+        Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile: this } satisfies Notifications_Mapping.Mapping["BwTileHasLocationIdSet"]);
     }
     public getLocationIdList(hasId: boolean): number[] {
         const locationIdArray: number[] = [];
@@ -524,7 +523,7 @@ export class Tile implements Tiles_ITile.ITile {
     public setIsHighlighted(isHighlighted: boolean): void {
         if (this._isHighlighted !== isHighlighted) {
             this._isHighlighted = isHighlighted;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileIsHighlightedChanged, { tile: this } satisfies Notifications_DataTypes.BwTileIsHighlightedChanged);
+            Notifications_Dispatcher.dispatch("BwTileIsHighlightedChanged", { tile: this } satisfies Notifications_Mapping.Mapping["BwTileIsHighlightedChanged"]);
         }
     }
 
@@ -563,9 +562,9 @@ export class Tile implements Tiles_ITile.ITile {
             if (updateView) {
                 this.flushDataToView();
             }
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileBuffChanged, {
+            Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
                 tile : this,
-            } as Notifications_DataTypes.BwTileBuffChanged);
+            });
         }
 
         return isUpdated;
@@ -581,9 +580,9 @@ export class Tile implements Tiles_ITile.ITile {
         if (updateView) {
             this.flushDataToView();
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileBuffChanged, {
+        Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
             tile : this,
-        } as Notifications_DataTypes.BwTileBuffChanged);
+        });
     }
     public deleteUnfixedBuff(buff: TileBuff, updateView: boolean): boolean {
         const buffArray = this.getUnfixedBuffList();
@@ -598,9 +597,9 @@ export class Tile implements Tiles_ITile.ITile {
         if (updateView) {
             this.flushDataToView();
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileBuffChanged, {
+        Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
             tile : this,
-        } as Notifications_DataTypes.BwTileBuffChanged);
+        });
 
         return true;
     }
@@ -1131,7 +1130,7 @@ export class Tile implements Tiles_ITile.ITile {
 
         if (this.getCustomNameId() !== nameId) {
             this._customNameId = nameId;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileCustomNameIdChanged);
+            Notifications_Dispatcher.dispatch("BwTileCustomNameIdChanged");
         }
     }
 

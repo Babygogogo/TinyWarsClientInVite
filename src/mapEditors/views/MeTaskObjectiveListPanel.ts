@@ -9,7 +9,6 @@ import {
     GamePanels_Manager,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
@@ -39,8 +38,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,  callback : this._onNotifyMeTaskObjectiveFullDataChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "MeTaskObjectiveFullDataChanged",  callback : this._onNotifyMeTaskObjectiveFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this.closePanel },
@@ -98,7 +97,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
         taskObjectiveArray.sort((v1, v2) => (v1.getObjectiveId()) - (v2.getObjectiveId()));
         war.setTaskObjectiveFullData(fullData);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, fullData);
+        Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
     }
 
     private _onTouchedBtnHelp(): void {
@@ -163,7 +162,7 @@ class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
             { ui : this._btnEdit,        callback : this._onTouchedBtnEdit },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -207,7 +206,7 @@ class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
                     Helpers_Collection.deleteElementFromList(fullData.getTaskObjectiveArray(), openData.taskObjective);
                     FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, fullData);
+                    Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
                 },
             });
         }

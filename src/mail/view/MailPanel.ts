@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     GamePanels_Manager,
     Cos_Constants,
     Mail_Model_MailModel,
@@ -22,7 +23,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -82,13 +82,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._groupMapView,   callback : this._onTouchedGroupMapView },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMailGetAllMailArray,  callback : this._onNotifyMsgMailGetAllMailArray },
-            { type : Notifications_TypeId.TypeId.MsgMailGetMail,          callback : this._onNotifyMsgMailGetMail },
-            { type : Notifications_TypeId.TypeId.MsgMailDeleteMail,       callback : this._onNotifyMsgMailDeleteMail },
-            { type : Notifications_TypeId.TypeId.MsgCcrJoinRoom,          callback : this._onNotifyMsgCcrJoinRoom },
-            { type : Notifications_TypeId.TypeId.MsgMcrJoinRoom,          callback : this._onNotifyMsgMcrJoinRoom },
-            { type : Notifications_TypeId.TypeId.MsgMfrJoinRoom,          callback : this._onNotifyMsgMfrJoinRoom },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgMailGetAllMailArray",  callback : this._onNotifyMsgMailGetAllMailArray },
+            { type : "MsgMailGetMail",          callback : this._onNotifyMsgMailGetMail },
+            { type : "MsgMailDeleteMail",       callback : this._onNotifyMsgMailDeleteMail },
+            { type : "MsgCcrJoinRoom",          callback : this._onNotifyMsgCcrJoinRoom },
+            { type : "MsgMcrJoinRoom",          callback : this._onNotifyMsgMcrJoinRoom },
+            { type : "MsgMfrJoinRoom",          callback : this._onNotifyMsgMfrJoinRoom },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -293,20 +293,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateView();
     }
 
-    private _onNotifyMsgCcrJoinRoom(e: Egret_Egret.Event): void {
-        const data      = e.data as CcrJoinRoomResponse;
+    private _onNotifyMsgCcrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrJoinRoom"]>): void {
+        const data      = (e.data as { msg: CcrJoinRoomResponse }).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         Helpers_GameFlow.gotoCcrRoomInfoPanel(roomId);
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
     }
-    private _onNotifyMsgMcrJoinRoom(e: Egret_Egret.Event): void {
-        const data      = e.data as McrJoinRoomResponse;
+    private _onNotifyMsgMcrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrJoinRoom"]>): void {
+        const data      = (e.data as { msg: McrJoinRoomResponse }).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         Helpers_GameFlow.gotoMcrRoomInfoPanel(roomId);
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
     }
-    private _onNotifyMsgMfrJoinRoom(e: Egret_Egret.Event): void {
-        const data      = e.data as MfrJoinRoomResponse;
+    private _onNotifyMsgMfrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrJoinRoom"]>): void {
+        const data      = (e.data as { msg: MfrJoinRoomResponse }).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         Helpers_GameFlow.gotoMfrRoomInfoPanel(roomId);
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
@@ -585,7 +585,7 @@ class MailRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.MsgMailSetIsNew,     callback : this._onNotifyMsgMailSetIsNew },
+            { type : "MsgMailSetIsNew",     callback : this._onNotifyMsgMailSetIsNew },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -649,8 +649,8 @@ class MailRenderer
         openData.panel.setAndReviseSelectedMailId(openData.mailId, false);
     }
 
-    private _onNotifyMsgMailSetIsNew(e: Egret_Egret.Event): void {
-        const data = e.data as MailSetIsNewResponse;
+    private _onNotifyMsgMailSetIsNew(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMailSetIsNew"]>): void {
+        const data = (e.data as { msg: MailSetIsNewResponse }).msg;
         if (data.getMailId() === this.getOpenData()?.mailId) {
             this._updateImgRed();
         }

@@ -5,7 +5,7 @@ import {
     Notifications_Dispatcher,
     Helpers_Misc,
     Graphics_Utils,
-    Notifications_TypeId,
+    type Notifications_Types,
     Ui_Components_UiContainer,
     type Ui_Interfaces_IUiContainer,
     Utils_ClientErrorCode,
@@ -25,9 +25,9 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer implement
     private readonly _layerForNaval     = new Ui_Components_UiContainer.UiContainer();
     private readonly _layerForGround    = new Ui_Components_UiContainer.UiContainer();
     private readonly _layerForAir       = new Ui_Components_UiContainer.UiContainer();
-    private readonly _notifyListeners   = [
-        { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,               callback : this._onNotifyActionPlannerStateChanged },
-        { type : Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged,  callback : this._onNotifyUserSettingsOpacitySettingsChanged },
+    private readonly _notifyListeners   : Notifications_Types.Listener[] = [
+        { type : "ActionPlannerStateSet",               callback : this._onNotifyActionPlannerStateChanged },
+        { type : "UserSettingsOpacitySettingsChanged",  callback : this._onNotifyUserSettingsOpacitySettingsChanged },
     ];
 
     private _unitMap    : Units_IUnitMap.IUnitMap | null = null;

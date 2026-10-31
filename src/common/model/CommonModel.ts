@@ -7,7 +7,6 @@ import {
     LocalData_Storage,
     Helpers_ImageSource,
     Common_Model_CommonProxy,
-    Notifications_TypeId,
     type Units_Constants,
     type GameConfigs_GameConfig,
     type Graphics_Constants,
@@ -60,12 +59,12 @@ export function init(): void {
 
     Egret_Egret.setInterval(() => {
         ++_gridAnimationTickCount;
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridAnimationTick);
+        Notifications_Dispatcher.dispatch("GridAnimationTick");
     }, null, GRID_ANIMATION_INTERVAL_MS);
 
     Egret_Egret.setInterval(() => {
         ++_stateIndicatorTickCount;
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.StateIndicatorTick);
+        Notifications_Dispatcher.dispatch("StateIndicatorTick");
     }, null, STATE_INDICATOR_INTERVAL_MS);
 
     updateOnUnitAndTileTextureVersionChanged();
@@ -77,7 +76,7 @@ export function startTileAnimationTick(): void {
     _intervalIdForTileAnimation = Egret_Egret.setInterval(() => {
         ++_tileAnimationTickCount;
         tickTileImageSources();
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.TileAnimationTick);
+        Notifications_Dispatcher.dispatch("TileAnimationTick");
     }, null, TILE_ANIMATION_INTERVAL_MS);
 }
 export function stopTileAnimationTick(): void {
@@ -110,11 +109,11 @@ function onEgretTickForUnitAnimation(time: number): boolean {
     if (_unitAnimationTickCount !== newCount) {
         _unitAnimationTickCount = newCount;
         tickUnitImageSources();
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UnitAnimationTick);
+        Notifications_Dispatcher.dispatch("UnitAnimationTick");
     }
 
     setIsUnitFlashVisible((newCount % 4 === 0) && (time % UNIT_FLASH_DIVIDER <= 100));
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UnitFlashTick);
+    Notifications_Dispatcher.dispatch("UnitFlashTick");
 
     return false;
 }

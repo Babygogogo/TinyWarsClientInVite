@@ -4,7 +4,6 @@ import {
     Helpers_Misc,
     Networks_MessageCodes,
     Mail_Model_MailModel,
-    Notifications_TypeId,
     type Egret_Egret,
 } from "../../internal.ts";
 import type { S as MailDeleteMailResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailDeleteMail/S.ts";
@@ -21,16 +20,16 @@ export function init(): void {
     ], null);
 }
 
-function _onMsgMailGetAllMailArray(e: Egret_Egret.Event): void {
+function _onMsgMailGetAllMailArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMailGetAllMailArray"]>): void {
     const data = e.data as MailGetAllMailArrayResponse;
     Mail_Model_MailModel.resetAllMailDataArray(data.getMailFullDataArray());
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMailGetAllMailArray, data);
+    Notifications_Dispatcher.dispatch("MsgMailGetAllMailArray", { msg: data });
 }
 
-function _onMsgMailGetMail(e: Egret_Egret.Event): void {
+function _onMsgMailGetMail(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMailGetMail"]>): void {
     const data = e.data as MailGetMailResponse;
     Mail_Model_MailModel.updateOnMsgMailGetMail(Helpers_Misc.getExisted(data.getMailFullData()));
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMailGetMail, data);
+    Notifications_Dispatcher.dispatch("MsgMailGetMail", { msg: data });
 }
 
 export function reqMailDeleteMail(mailId: number): void {
@@ -42,11 +41,11 @@ export function reqMailDeleteMail(mailId: number): void {
         }, 
     });
 }
-function _onMsgMailDeleteMail(e: Egret_Egret.Event): void {
+function _onMsgMailDeleteMail(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMailDeleteMail"]>): void {
     const data = e.data as MailDeleteMailResponse;
     if (!data.getErrorCode()) {
         Mail_Model_MailModel.updateOnMsgMailDeleteMail(Helpers_Misc.getExisted(data.getMailId()));
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMailDeleteMail, data);
+        Notifications_Dispatcher.dispatch("MsgMailDeleteMail", { msg: data });
     }
 }
 
@@ -60,10 +59,10 @@ export function reqMailSetIsNew(mailId: number, isNew: boolean): void {
         }, 
     });
 }
-function _onMsgMailSetIsNew(e: Egret_Egret.Event): void {
+function _onMsgMailSetIsNew(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMailSetIsNew"]>): void {
     const data = e.data as MailSetIsNewResponse;
     if (!data.getErrorCode()) {
         Mail_Model_MailModel.updateOnMsgMailSetIsNew(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMailSetIsNew, data);
+        Notifications_Dispatcher.dispatch("MsgMailSetIsNew", { msg: data });
     }
 }

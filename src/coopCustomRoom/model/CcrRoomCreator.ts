@@ -10,7 +10,6 @@ import {
     MultiPlayerRooms_RoomCreatorBase,
     ForceSkins_Constants,
     Turns_Constants,
-    Notifications_TypeId,
     type GameConfigs_GameConfig,
 } from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -161,6 +160,6 @@ export class CcrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
     public deleteAiSkinId(playerIndex: number): void {
         const infoArray = this.getAiSkinInfoArray();
         infoArray.splice(infoArray.findIndex(v => v.getPlayerIndex() === playerIndex), 1);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.CcrCreateAiCoIdChanged);
+        Notifications_Dispatcher.dispatch("CcrCreateAiCoIdChanged");
     }
 }

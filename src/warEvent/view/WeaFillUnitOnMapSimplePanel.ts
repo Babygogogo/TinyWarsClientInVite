@@ -14,7 +14,6 @@ import {
     GamePanels_Manager,
     Players_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Types_UiUnitViewData,
@@ -81,8 +80,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnActIsInTurn,                         callback : this._onTouchedBtnActIsInTurn },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,            callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,    callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",            callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",    callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -136,11 +135,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
             callback          : () => {
                 action.setActCanBeBlockedByUnit(true);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
             callbackOnCancel : () => {
                 action.setActCanBeBlockedByUnit(false);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -157,11 +156,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
             callback          : () => {
                 action.setActNeedMovableTile(true);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
             callbackOnCancel : () => {
                 action.setActNeedMovableTile(false);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -185,7 +184,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback              : ((war instanceof MapEditor_Model_MeWar.MeWar) && (!war.getIsReviewingMap()))
                 ? tileFilter => {
                     action.setConTileFilter(tileFilter);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
                 : null,
         });
@@ -202,7 +201,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             action.setActIsInTurn(true);
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -378,8 +377,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             { ui : this._btnProduceMaterial,         callback : this._onTouchedBtnProduceMaterial },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
+            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
         ]);
 
         this._updateComponentsForLanguage();
@@ -401,7 +400,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         } else {
             unitData.setAiMode(Units_Constants.AiModeId.NoMove);
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnUnitTag(): void {
         const unitData = this.getOpenData()?.unitData;
@@ -415,7 +414,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             getTitleText          : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.Tags)),
             callbackOnConfirm     : tagIdArray => {
                 unitData.setGroupedTagId(Units_Utils_Common.getEncodedTagId(tagIdArray));
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -426,7 +425,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         unitData.setIsDiving(!unitData.getIsDiving());
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnHasLoadedCo(): void {
         const unitData = this.getOpenData()?.unitData;
@@ -435,7 +434,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         unitData.setIsCoOnboard(unitData.getIsCoOnboard() ? null : true);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnActionState(): void {
         const unitData = this.getOpenData()?.unitData;
@@ -448,7 +447,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         } else {
             unitData.setActionState(Units_Constants.ActionStateId.Acted);
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnAiDestination(): void {
         const openData = this.getOpenData();
@@ -467,7 +466,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             callback     : newX => {
                 if (newX == null) {
                     unitData.setAiWeightedDestination(null);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
                         getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1072),
@@ -477,7 +476,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                         callback     : newY => {
                             if (newY == null) {
                                 unitData.setAiWeightedDestination(null);
-                                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                             } else {
                                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
                                     getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1094),
@@ -490,7 +489,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                                             gridIndex : { x : newX, y : newY },
                                             weight    : value,
                                         }));
-                                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                                        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                                     },
                                 });
                             }
@@ -525,7 +524,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                     Units_Utils_Serialization.fillNonTrivialDefaultValues(unitData, gameConfig);
                 }
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -546,7 +545,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             currentValue : unitData.getCurrentHp(),
             callback     : value => {
                 unitData.setCurrentHp(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -567,7 +566,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             currentValue : unitData.getCurrentFuel(),
             callback     : value => {
                 unitData.setCurrentFuel(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -588,7 +587,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             currentValue : unitData.getCurrentPromotion(),
             callback     : value => {
                 unitData.setCurrentPromotion(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -620,7 +619,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 } else {
                     unitData.setCustomNameId(num);
                 }
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -641,7 +640,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             currentValue : unitData.getPrimaryWeaponCurrentAmmo(),
             callback     : value => {
                 unitData.setPrimaryWeaponCurrentAmmo(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -662,7 +661,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             currentValue : unitData.getFlareCurrentAmmo(),
             callback     : value => {
                 unitData.setFlareCurrentAmmo(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -683,7 +682,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             currentValue : unitData.getCurrentBuildMaterial(),
             callback     : value => {
                 unitData.setCurrentBuildMaterial(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -704,7 +703,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             currentValue : unitData.getCurrentProduceMaterial(),
             callback     : value => {
                 unitData.setCurrentProduceMaterial(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }

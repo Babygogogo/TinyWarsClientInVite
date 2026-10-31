@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Notifications_Dispatcher,
     AuxiliaryTypes_CachedDataAccessor,
     WarRules_Utils_Instance,
@@ -17,7 +18,6 @@ import {
     SinglePlayerWars_Constants,
     LocalData_Storage,
     Lang_Constants,
-    Notifications_TypeId,
     SingleRankedWars_Constants,
     type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
@@ -56,12 +56,12 @@ const _slotFullDataAccessor         = new AuxiliaryTypes_CachedDataAccessor.Cach
 
 export function init(): void {
     Notifications_Dispatcher.addEventListeners([
-        { type : Notifications_TypeId.TypeId.MsgSpmValidateSrw,   callback : _onNotifyMsgSpmValidateSrw },
+        { type : "MsgSpmValidateSrw",   callback : _onNotifyMsgSpmValidateSrw },
     ], null);
 }
 
-function _onNotifyMsgSpmValidateSrw(e: Egret_Egret.Event): void {
-    const data      = e.data as SpmValidateSrwResponse;
+function _onNotifyMsgSpmValidateSrw(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgSpmValidateSrw"]>): void {
+    const data      = (e.data as { msg: SpmValidateSrwResponse }).msg;
     const status    = data.getStatus();
     if (status === SingleRankedWars_Constants.ValidateStatusId.ConfigVersionNotLatest) {
         FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0278));

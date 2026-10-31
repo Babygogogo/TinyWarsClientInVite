@@ -13,7 +13,6 @@ import {
     Lang_Constants,
     ValueAndComparators_Utils,
     Turns_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type BaseWar_Interface_IBwWar,
     type Ui_Interfaces_IUiButton,
@@ -58,8 +57,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged", callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                       callback : this.closePanel },
@@ -114,7 +113,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             getNumberMainText    : playerIndex => `P${playerIndex}`,
             callbackOnConfirm    : playerIndexArray => {
                 condition.setPlayerIndexArray(playerIndexArray);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -128,7 +127,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             condition.setIsPlayerInTurn(null);
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
 
     private _onTouchedBtnRecentTurnsCount(): void {
@@ -140,7 +139,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentValue : condition.getRecentTurnsCount() ?? 0,
             callback     : value => {
                 condition.setRecentTurnsCount(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -163,7 +162,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     }));
                 }
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -179,7 +178,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }));
         }
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
 
     private _updateView(): void {

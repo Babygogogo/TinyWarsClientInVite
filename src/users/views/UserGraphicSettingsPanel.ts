@@ -12,7 +12,6 @@ import {
     Common_Model_CommonModel,
     Lang_Constants,
     Graphics_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -59,12 +58,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,                    callback : this._onNotifyUnitAndTileTextureVersionChanged },
-            { type : Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged,                 callback : this._onNotifyUserSettingsIsShowGridBorderChanged },
-            { type : Notifications_TypeId.TypeId.UserSettingsIsUnitFlickeringOnFullEnergyChanged,     callback : this._onNotifyUserSettingsIsUnitFlickeringOnFullEnergyChanged },
-            { type : Notifications_TypeId.TypeId.UserSettingsUnitMoveAniSpeedMultiplierPctChanged,    callback : this._onNotifyUserSettingsUnitMoveAniSpeedMultiplierPctChanged },
-            { type : Notifications_TypeId.TypeId.UserSettingsIsScreenVibrationEnabledChanged,         callback : this._onNotifyUserSettingIsScreenVibrationEnabled },
+            { type : "LanguageChanged",                                     callback : this._onNotifyLanguageChanged },
+            { type : "UnitAndTileTextureVersionChanged",                    callback : this._onNotifyUnitAndTileTextureVersionChanged },
+            { type : "UserSettingsIsShowGridBorderChanged",                 callback : this._onNotifyUserSettingsIsShowGridBorderChanged },
+            { type : "UserSettingsIsUnitFlickeringOnFullEnergyChanged",     callback : this._onNotifyUserSettingsIsUnitFlickeringOnFullEnergyChanged },
+            { type : "UserSettingsUnitMoveAniSpeedMultiplierPctChanged",    callback : this._onNotifyUserSettingsUnitMoveAniSpeedMultiplierPctChanged },
+            { type : "UserSettingsIsScreenVibrationEnabledChanged",         callback : this._onNotifyUserSettingIsScreenVibrationEnabled },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -109,7 +108,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
         this._uiSwitchWeatherAnimation.setCallbackOnTouch(() => {
             LocalData_Storage.setShowWeatherAnimation(!LocalData_Storage.getShowWeatherAnimation());
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsIsShowWeatherAnimationChanged);
+            Notifications_Dispatcher.dispatch("UserSettingsIsShowWeatherAnimationChanged");
             this._updateUiSwitchWeatherAnimation(true);
         });
         this._uiSwitchShowGridBorder.setCallbackOnTouch(() => {

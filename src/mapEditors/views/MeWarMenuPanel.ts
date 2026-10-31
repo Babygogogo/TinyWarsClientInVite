@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     MapEditors_Constants,
     GamePanels_Dict,
     Users_Model,
@@ -8,7 +9,6 @@ import {
     Users_Proxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     WarTypes_Constants,
     type Egret_Egret,
@@ -36,8 +36,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserSetMapEditorAutoSaveTime,     callback : this._onNotifyMsgUserSetMapEditorAutoSaveTime },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserSetMapEditorAutoSaveTime",     callback : this._onNotifyMsgUserSetMapEditorAutoSaveTime },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -97,8 +97,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
 
-    private _onNotifyMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event): void {
-        const data = e.data as UserSetMapEditorAutoSaveTimeResponse;
+    private _onNotifyMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserSetMapEditorAutoSaveTime"]>): void {
+        const data = (e.data as { msg: UserSetMapEditorAutoSaveTimeResponse }).msg;
         FloatText.show(Lang_Utils.getText(data.getTime() == null ? Lang_Constants.TextType.A0248 : Lang_Constants.TextType.A0247));
     }
 

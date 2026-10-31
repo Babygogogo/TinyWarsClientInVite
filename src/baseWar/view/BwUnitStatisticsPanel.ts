@@ -6,7 +6,6 @@ import {
     Common_Model_CommonModel,
     GamePanels_Manager,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiUnitView,
@@ -61,7 +60,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -289,8 +288,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,       callback : this._onNotifyUnitAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,      callback : this._onNotifyUnitStateIndicatorTick },
+            { type : "UnitAnimationTick",       callback : this._onNotifyUnitAnimationTick },
+            { type : "StateIndicatorTick",      callback : this._onNotifyUnitStateIndicatorTick },
         ]);
 
         this._conUnitView0.addUiChild(this._unitView0);

@@ -9,7 +9,6 @@ import {
     Helpers_PointerInput,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -62,8 +61,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.SoundManagerPlayingBgmCodeChanged,   callback : this._onNotifySoundManagerPlayingBgmCodeChanged },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "SoundManagerPlayingBgmCodeChanged",   callback : this._onNotifySoundManagerPlayingBgmCodeChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -112,14 +111,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateBtnSwitchBgm();
     }
 
-    private _onTouchedGroupMainVolume(e: Egret_Egret.Event): void {
+    private _onTouchedGroupMainVolume(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const width = this._groupMainVolume.getScaledWidth();
         const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupMainVolume.globalToLocal(data.stageX, data.stageY);
         Sounds_SoundPlayer.setMainVolume(Math.max(0, Math.min(point.x, width)) / width);
         this._updateGroupMainVolume();
     }
-    private _onTouchMoveGroupMainVolume(e: Egret_Egret.Event): void {
+    private _onTouchMoveGroupMainVolume(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const width = this._groupMainVolume.getScaledWidth();
         const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupMainVolume.globalToLocal(data.stageX, data.stageY);
@@ -140,14 +139,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateGroupMainMute();
     }
 
-    private _onTouchedGroupBgmVolume(e: Egret_Egret.Event): void {
+    private _onTouchedGroupBgmVolume(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const width = this._groupBgmVolume.getScaledWidth();
         const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupBgmVolume.globalToLocal(data.stageX, data.stageY);
         Sounds_SoundPlayer.setBgmVolume(Math.max(0, Math.min(point.x, width)) / width);
         this._updateGroupBgmVolume();
     }
-    private _onTouchMoveGroupBgmVolume(e: Egret_Egret.Event): void {
+    private _onTouchMoveGroupBgmVolume(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const width = this._groupBgmVolume.getScaledWidth();
         const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupBgmVolume.globalToLocal(data.stageX, data.stageY);
@@ -162,14 +161,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateGroupBgmMute();
     }
 
-    private _onTouchedGroupEffectVolume(e: Egret_Egret.Event): void {
+    private _onTouchedGroupEffectVolume(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const width = this._groupEffectVolume.getScaledWidth();
         const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupEffectVolume.globalToLocal(data.stageX, data.stageY);
         Sounds_SoundPlayer.setEffectVolume(Math.max(0, Math.min(point.x, width)) / width);
         this._updateGroupEffectVolume();
     }
-    private _onTouchMoveGroupEffectVolume(e: Egret_Egret.Event): void {
+    private _onTouchMoveGroupEffectVolume(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const width = this._groupEffectVolume.getScaledWidth();
         const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupEffectVolume.globalToLocal(data.stageX, data.stageY);

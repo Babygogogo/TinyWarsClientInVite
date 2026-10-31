@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     MapEditor_Model_MeWar,
     ReplayWar_Model_RwWarBase,
     Ui_Components_UiLabel,
@@ -13,12 +14,10 @@ import {
     Lang_Utils,
     Stages_StageManager,
     Numbers_Utils,
-    Notifications_TypeId,
     Ui_Components_UiContainer,
     Ui_Types_UiHorizontalAlign,
     Ui_Types_UiVerticalAlign,
     Lang_Constants,
-    type Notifications_DataTypes,
     type Ui_Interfaces_IUiComponent,
     type Ui_Interfaces_IUiZoomableComponent,
     type Notifications_Types,
@@ -66,9 +65,9 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
     private _war? : BaseWar_Interface_IBwWar.IBwWar;
 
     private _notifyListeners: Notifications_Types.Listener[] = [
-        { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-        { type : Notifications_TypeId.TypeId.BwFieldZoomedByTouch,    callback : this._onNotifyBwFieldZoomedByTouch },
-        { type : Notifications_TypeId.TypeId.BwFieldDragged,          callback : this._onNotifyBwFieldDragged },
+        { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+        { type : "BwFieldZoomedByTouch",    callback : this._onNotifyBwFieldZoomedByTouch },
+        { type : "BwFieldDragged",          callback : this._onNotifyBwFieldDragged },
     ];
     private _uiListeners: AuxiliaryTypes_AuxiliaryTypes.UiListener[] = [
         { ui : this,     callback : this._onEnterFrame,   eventType : Egret_Egret.Event.ENTER_FRAME },
@@ -134,7 +133,7 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
     public startRunningView(): void {
         Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);
         for (const listener of this._uiListeners) {
-            listener.ui.addEventListener(Helpers_Misc.getExisted(listener.eventType), listener.callback, this);
+            listener.ui.addEventListener(Helpers_Misc.getExisted(listener.eventType), listener.callback as Egret_Egret.EventListener, this);
         }
 
         this._fieldContainer.setMouseWheelListenerEnabled(true);
@@ -144,7 +143,7 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
     public stopRunning(): void {
         Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
         for (const listener of this._uiListeners) {
-            listener.ui.removeEventListener(Helpers_Misc.getExisted(listener.eventType), listener.callback, this);
+            listener.ui.removeEventListener(Helpers_Misc.getExisted(listener.eventType), listener.callback as Egret_Egret.EventListener, this);
         }
 
         this._fieldContainer.setMouseWheelListenerEnabled(false);
@@ -269,12 +268,12 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
         this.updatePersistentText();
     }
 
-    private _onNotifyBwFieldZoomedByTouch(e: Egret_Egret.Event): void {
-        const data = e.data as Notifications_DataTypes.BwFieldZoomedByTouch;
+    private _onNotifyBwFieldZoomedByTouch(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwFieldZoomedByTouch"]>): void {
+        const data = e.data as Notifications_Mapping.Mapping["BwFieldZoomedByTouch"];
         this._fieldContainer.setZoomByTouches(data.current, data.previous);
     }
-    private _onNotifyBwFieldDragged(e: Egret_Egret.Event): void {
-        const data = e.data as Notifications_DataTypes.BwFieldDragged;
+    private _onNotifyBwFieldDragged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwFieldDragged"]>): void {
+        const data = e.data as Notifications_Mapping.Mapping["BwFieldDragged"];
         this._fieldContainer.setDragByTouches(data.current, data.previous);
     }
 

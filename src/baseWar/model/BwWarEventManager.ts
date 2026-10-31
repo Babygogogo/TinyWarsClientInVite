@@ -74,7 +74,6 @@ import {
     Notifications_Dispatcher,
     Helpers_Misc,
     WarOperations_Executors_Utils_Common,
-    Notifications_TypeId,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarEventManager,
@@ -222,7 +221,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     protected _setCustomCounterArray(counterArray: CustomCounter[] | null): void {
         this._customCounterArray = counterArray;
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCustomCountersChanged);
+        Notifications_Dispatcher.dispatch("BwCustomCountersChanged");
     }
     private _getCustomCounterArray(): CustomCounter[] | null {
         return Helpers_Misc.getDefined(this._customCounterArray, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_GetCustomCounterArray_00);
@@ -253,7 +252,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
                     value           : counterValue,
                 }));
             }
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCustomCountersChanged);
+            Notifications_Dispatcher.dispatch("BwCustomCountersChanged");
         }
     }
     public getCustomCounter(counterId: number): number {

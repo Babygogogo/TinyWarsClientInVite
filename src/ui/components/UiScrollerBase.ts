@@ -86,7 +86,7 @@ export abstract class UiScrollerBase extends Ui_Components_UiContainerBase.UiCon
             }
         }
     }
-    private _onPointerWheel(e: Egret_Egret.Event): void {
+    private _onPointerWheel(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
         if ((this._isDragging) || (!this.getIsScrollable())) {
@@ -211,7 +211,7 @@ export abstract class UiScrollerBase extends Ui_Components_UiContainerBase.UiCon
         const trackPad      = this._getTrackPad();
         const eventAgent    = this.getEventAgent();
 
-        eventAgent.addPointerEventListener(Helpers_PointerInput.PointerEventType.Press, (e: Egret_Egret.Event) => {
+        eventAgent.addPointerEventListener(Helpers_PointerInput.PointerEventType.Press, (e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>) => {
             e.stopPropagation();
 
             if (!this.getIsScrollable()) {
@@ -234,21 +234,21 @@ export abstract class UiScrollerBase extends Ui_Components_UiContainerBase.UiCon
             trackPad.pointerDown(this._dragStartTouchPoint);
         }, undefined);
 
-        eventAgent.addPointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseIn, (e: Egret_Egret.Event) => {
+        eventAgent.addPointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseIn, (e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>) => {
             e.stopPropagation();
 
             this._isDragging = 0;
             trackPad.pointerUp();
         }, undefined);
 
-        eventAgent.addPointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseOut, (e: Egret_Egret.Event) => {
+        eventAgent.addPointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseOut, (e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>) => {
             e.stopPropagation();
 
             this._isDragging = 0;
             trackPad.pointerUp();
         }, undefined);
 
-        eventAgent.addPointerEventListener(Helpers_PointerInput.PointerEventType.PressMove, (e: Egret_Egret.Event) => {
+        eventAgent.addPointerEventListener(Helpers_PointerInput.PointerEventType.PressMove, (e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>) => {
             e.stopPropagation();
 
             if (!this._isDragging) {

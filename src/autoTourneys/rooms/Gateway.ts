@@ -3,7 +3,6 @@ import {
     Notifications_Dispatcher,
     Networks_MessageCodes,
     AutoTourneys_Rooms_Provider,
-    Notifications_TypeId,
     type Egret_Egret,
 } from "../../internal.ts";
 import type { S as AtrDeleteRoomByServerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrDeleteRoomByServer/S.ts";
@@ -31,13 +30,13 @@ export function reqAtrGetRoomPublicInfo(roomId: number): void {
         }, 
     });
 }
-async function _onMsgAtrGetRoomPublicInfo(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgAtrGetRoomPublicInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtrGetRoomPublicInfo"]>): Promise<void> {
     const data = e.data as AtrGetRoomPublicInfoResponse;
     if (data.getErrorCode()) {
         AutoTourneys_Rooms_Provider.updateOnFailedMsgAtrGetRoomPublicInfo(data);
     } else {
         await AutoTourneys_Rooms_Provider.updateOnMsgAtrGetRoomPublicInfo(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgAtrGetRoomPublicInfo, data);
+        Notifications_Dispatcher.dispatch("MsgAtrGetRoomPublicInfo", { msg: data });
     }
 }
 
@@ -49,10 +48,10 @@ export function reqAtrGetJoinedRoomIdArray(): void {
         }, 
     });
 }
-function _onMsgAtrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
+function _onMsgAtrGetJoinedRoomIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtrGetJoinedRoomIdArray"]>): void {
     const data = e.data as AtrGetJoinedRoomIdArrayResponse;
     AutoTourneys_Rooms_Provider.setJoinedRoomIdArray(data.getRoomIdArray());
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgAtrGetJoinedRoomIdArray, data);
+    Notifications_Dispatcher.dispatch("MsgAtrGetJoinedRoomIdArray", { msg: data });
 }
 
 export function reqAtrSetBannedCoIdArray(roomId: number, bannedCoIdArray: number[]): void {
@@ -65,11 +64,11 @@ export function reqAtrSetBannedCoIdArray(roomId: number, bannedCoIdArray: number
         }, 
     });
 }
-async function _onMsgAtrSetBannedCoIdArray(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgAtrSetBannedCoIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtrSetBannedCoIdArray"]>): Promise<void> {
     const data = e.data as AtrSetBannedCoIdArrayResponse;
     if (!data.getErrorCode()) {
         await AutoTourneys_Rooms_Provider.updateOnMsgAtrSetBannedCoIdArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgAtrSetBannedCoIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgAtrSetBannedCoIdArray", { msg: data });
     }
 }
 
@@ -84,16 +83,16 @@ export function reqAtrSetSelfSettings(roomId: number, coId: number, unitAndTileS
         }, 
     });
 }
-async function _onMsgAtrSetSelfSettings(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgAtrSetSelfSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtrSetSelfSettings"]>): Promise<void> {
     const data = e.data as AtrSetSelfSettingsResponse;
     if (!data.getErrorCode()) {
         await AutoTourneys_Rooms_Provider.updateOnMsgAtrSetSelfSettings(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgAtrSetSelfSettings, data);
+        Notifications_Dispatcher.dispatch("MsgAtrSetSelfSettings", { msg: data });
     }
 }
 
-function _onMsgAtrDeleteRoomByServer(e: Egret_Egret.Event): void {
+function _onMsgAtrDeleteRoomByServer(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtrDeleteRoomByServer"]>): void {
     const data = e.data as AtrDeleteRoomByServerResponse;
     AutoTourneys_Rooms_Provider.updateOnMsgAtrDeleteRoomByServer(data);
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgAtrDeleteRoomByServer, data);
+    Notifications_Dispatcher.dispatch("MsgAtrDeleteRoomByServer", { msg: data });
 }

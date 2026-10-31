@@ -10,10 +10,8 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type Notifications_DataTypes,
     type Tiles_ITile,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -49,8 +47,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.BwTileBuffChanged,   callback : this._onNotifyBwTileBuffChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
+            { type : "BwTileBuffChanged",   callback : this._onNotifyBwTileBuffChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                   callback : this.closePanel },
@@ -291,9 +289,9 @@ class BuffRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 const buff          = openData.buff;
                 buff.setExpiringTurnIndex(isEmpty ? null : numberArray[0]);
                 buff.setExpiringPlayerIndex(isEmpty ? null : numberArray[1] ?? 0);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileBuffChanged, {
+                Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
                     tile : openData.tile,
-                } as Notifications_DataTypes.BwTileBuffChanged);
+                });
             },
         });
     }

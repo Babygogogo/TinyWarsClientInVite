@@ -33,7 +33,6 @@ import {
     FloatText,
     Lang_Constants,
     BootTimers_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
     Timer_TimerModel,
@@ -81,10 +80,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnChooseSkinId,        callback : this._onTouchedBtnChooseSkinId },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.RoomCreator_SelfCoIdChanged,     callback : this._onNotifyMfrCreateSelfCoIdChanged },
-            { type : Notifications_TypeId.TypeId.RoomCreator_SelfSkinIdChanged,   callback : this._onNotifyMfrCreateSelfSkinIdChanged },
-            { type : Notifications_TypeId.TypeId.MsgMfrCreateRoom,                callback : this._onNotifyMsgMfrCreateRoom },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "RoomCreator_SelfCoIdChanged",     callback : this._onNotifyMfrCreateSelfCoIdChanged },
+            { type : "RoomCreator_SelfSkinIdChanged",   callback : this._onNotifyMfrCreateSelfSkinIdChanged },
+            { type : "MsgMfrCreateRoom",                callback : this._onNotifyMsgMfrCreateRoom },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -211,7 +210,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 targetPlayer.setUnitAndTileSkinId(roomCreator.getSelfUnitAndTileSkinId());
 
                 this._updateLabelPlayerIndex();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MfrCreatePlayerSkinIdChanged);
+                Notifications_Dispatcher.dispatch("MfrCreatePlayerSkinIdChanged");
 
                 const availableCoIdSet = PlayerRules_Utils.getFinalMfwHumanCoIdSet({
                     playerRule      : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, targetPlayerIndex),
@@ -247,7 +246,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 existingPlayer?.setUnitAndTileSkinId(oldSkinId);
                 roomCreator.setSelfUnitAndTileSkinId(newSkinId);
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MfrCreatePlayerSkinIdChanged);
+                Notifications_Dispatcher.dispatch("MfrCreatePlayerSkinIdChanged");
             },
         });
     }

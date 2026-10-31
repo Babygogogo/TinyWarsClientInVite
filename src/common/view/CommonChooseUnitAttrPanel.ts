@@ -10,7 +10,6 @@ import {
     Players_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Ui_Components_UiUnitView,
     Ui_Types_UiUnitViewData,
@@ -119,8 +118,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnProduceMaterial,                 callback : this._onTouchedBtnProduceMaterial },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,           callback : this._onNotifyUnitAnimationTick },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "UnitAnimationTick",           callback : this._onNotifyUnitAnimationTick },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();

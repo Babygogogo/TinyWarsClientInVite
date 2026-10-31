@@ -16,7 +16,6 @@ import {
     FloatText,
     LocalData_DeprecatedStorage,
     Graphics_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -60,9 +59,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,              callback : this._onNotifyUnitAnimationTick },
-            { type : Notifications_TypeId.TypeId.MsgCommonLatestConfigVersion,   callback : this._onMsgCommonLatestConfigVersion },
+            { type : "LanguageChanged",                callback : this._onNotifyLanguageChanged },
+            { type : "UnitAnimationTick",              callback : this._onNotifyUnitAnimationTick },
+            { type : "MsgCommonLatestConfigVersion",   callback : this._onMsgCommonLatestConfigVersion },
         ]);
         this._setUiListenerArray([
             { ui : this._group,              callback : this._onTouchedSelf,          mouseStyle : Helpers_PointerInput.MouseStyleType.Default },
@@ -326,7 +325,7 @@ class LanguageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._applySettingsForWholeTouch();
@@ -355,7 +354,7 @@ class LanguageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         if (Lang_Utils.getCurrentLanguageType() !== languageType) {
             Lang_Utils.setCurrentLanguageType(languageType);
             LocalData_Storage.setLanguageType(languageType);
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.LanguageChanged);
+            Notifications_Dispatcher.dispatch("LanguageChanged");
         }
     }
 

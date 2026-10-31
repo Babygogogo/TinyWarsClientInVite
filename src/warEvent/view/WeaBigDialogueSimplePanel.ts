@@ -17,7 +17,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Interface_IBwWar,
@@ -72,8 +71,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnBackground,      callback : this._onTouchedBtnBackground },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,            callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,    callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",            callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",    callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -113,7 +112,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0228));
         } else {
             dialogueArray.push(getDefaultCoDialogueData());
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         }
     }
 
@@ -127,7 +126,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 dataArray.length = 0;
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -309,7 +308,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             { ui : this._groupHideRightPortrait,     callback : this._onTouchedGroupHideRightPortrait },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
 
         this._label1.setAutoShrinkHeight(60);
@@ -338,7 +337,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 dataForDialogue.setDataForCoDialogue(null);
                 dataForDialogue.setDataForMisc(DataForMisc.fromJson({
                 }));
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 return;
             }
         }
@@ -351,7 +350,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 dataForDialogue.setDataForAside(DataForAside.fromJson({
                     textArray : dataForCoDialogue.getTextArray().map(v => v.toJson()),
                 }));
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 return;
             }
         }
@@ -367,7 +366,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                     nameArray : [],
                     textArray : [],
                 }));
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 return;
             }
         }
@@ -386,7 +385,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0228));
         } else {
             dialogueArray.splice(dialogueArray.indexOf(openData.dataForDialogue), 0, openData.dataForDialogue.clone());
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         }
     }
 
@@ -400,7 +399,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const index         = dialogueArray.indexOf(openData.dataForDialogue);
         if (index > 0) {
             [dialogueArray[index - 1], dialogueArray[index]] = [dialogueArray[index], dialogueArray[index - 1]];
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         }
     }
 
@@ -411,7 +410,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
                 callback   : () => {
                     Helpers_Collection.deleteElementFromList(Helpers_Misc.getExisted(openData.action.getWeaBigDialogueSimple()?.getDataArray()), openData.dataForDialogue);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             });
         }
@@ -427,7 +426,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             ? Dialogues_Constants.BigDialogueSideId.Right
             : Dialogues_Constants.BigDialogueSideId.Left,
         );
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
 
     private _onTouchedBtnPortrait(): void {
@@ -456,7 +455,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 if (num !== 0) {
                     dataForCoDialogue.setCoId(null);
                     dataForCoDialogue.setPlayerIndex(num);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 } else {
                     const currentCoId   = dataForCoDialogue.getCoId() ?? null;
                     const gameConfig    = openData.war.getGcData();
@@ -469,7 +468,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                             if (newCoId !== currentCoId) {
                                 dataForCoDialogue.setPlayerIndex(null);
                                 dataForCoDialogue.setCoId(newCoId);
-                                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                             }
                         },
                     });
@@ -495,7 +494,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 }
 
                 dataForDialogue.setNameArray(revisedArray);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -537,7 +536,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                         }));
                     }
                 }
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -557,7 +556,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
                 callback   : () => {
                     textArray.splice(index, 1);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             });
         }
@@ -600,7 +599,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                         }));
                     }
                 }
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -620,7 +619,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
                 callback   : () => {
                     textArray.splice(index, 1);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             });
         }
@@ -646,7 +645,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 bgmCode : Sounds_Utils.getAllBgmCodeArray()[0],
             }));
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnBgm(): void {
         const openData = this.getOpenData();
@@ -664,7 +663,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             gameConfig        : openData.war.getGcData(),
             callbackOnConfirm : bgmCode => {
                 dataForMisc.createIfNotExistsDataForPlayBgm().setBgmCode(bgmCode);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -688,7 +687,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 sfxCode : Sounds_Utils.getAllSfxCodeArray()[0],
             }));
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnSfx(): void {
         const openData = this.getOpenData();
@@ -706,7 +705,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             gameConfig     : openData.war.getGcData(),
             callback       : sfxCode => {
                 dataForMisc.createIfNotExistsDataForPlaySfx().setSfxCode(sfxCode);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -723,7 +722,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         } else {
             dataForMisc.setHideLeftPortrait(true);
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedGroupHideRightPortrait(): void {
         const dataForMisc = this.getOpenData()?.dataForDialogue.getDataForMisc();
@@ -738,7 +737,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         } else {
             dataForMisc.setHideRightPortrait(true);
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
 
     private _onNotifyLanguageChanged(): void {

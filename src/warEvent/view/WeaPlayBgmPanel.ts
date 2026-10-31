@@ -6,7 +6,6 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
@@ -49,8 +48,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnActUseCoBgm,                         callback : this._onTouchedBtnActUseCoBgm },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -102,7 +101,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callbackOnConfirm : code => {
                 action.setBgmCode(code);
                 action.setUseCoBgm(null);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -115,7 +114,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         action.setUseCoBgm(true);
         action.setBgmCode(null);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
 
     ////////////////////////////////////////////////////////////////////////////////

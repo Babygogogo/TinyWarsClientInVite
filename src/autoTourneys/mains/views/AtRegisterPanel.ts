@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     AutoTourneys_Mains_Provider,
     Lang_Utils,
     Timer_TimerModel,
@@ -6,7 +7,6 @@ import {
     AutoTourneys_Mains_Gateway,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -39,10 +39,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TimeTick,                    callback : this._onNotifyTimeTick },
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgAtRegister,               callback : this._onNotifyMsgAtRegister },
-            { type : Notifications_TypeId.TypeId.MsgAtGetRegistrationInfo,    callback : this._onNotifyMsgAtGetRegistrationInfo },
+            { type : "TimeTick",                    callback : this._onNotifyTimeTick },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgAtRegister",               callback : this._onNotifyMsgAtRegister },
+            { type : "MsgAtGetRegistrationInfo",    callback : this._onNotifyMsgAtGetRegistrationInfo },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -120,8 +120,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
     }
 
-    private _onNotifyMsgAtGetRegistrationInfo(e: Egret_Egret.Event): void {
-        const data = e.data as AtGetRegistrationInfoResponse;
+    private _onNotifyMsgAtGetRegistrationInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgAtGetRegistrationInfo"]>): void {
+        const data = (e.data as { msg: AtGetRegistrationInfoResponse }).msg;
         if (data.getTourneyId() === this._tourneyId) {
             this._updateView();
         }

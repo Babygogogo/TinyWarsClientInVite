@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Helpers_GameFlow,
     GamePanels_Manager,
     Maps_Constants,
@@ -18,7 +19,6 @@ import {
     Users_Proxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiPanel,
     Ui_Types_UiVerticalAlign,
@@ -76,9 +76,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnRating,      callback : this._onTouchedBtnRating },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMeSubmitNormalMap,    callback : this._onNotifyMsgMeSubmitNormalMap },
-            { type : Notifications_TypeId.TypeId.MsgUserSetMapRating,     callback : this._onNotifyMsgUserSetMapRating },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgMeSubmitNormalMap",    callback : this._onNotifyMsgMeSubmitNormalMap },
+            { type : "MsgUserSetMapRating",     callback : this._onNotifyMsgUserSetMapRating },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -214,8 +214,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event): void {
-        const slotIndex = (e.data as MeSubmitNormalMapResponse).getSlotIndex() ?? 0;
+    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
+        const slotIndex = ((e.data as { msg: MeSubmitNormalMapResponse }).msg).getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0872),
             callback   : async () => {

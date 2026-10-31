@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     AuxiliaryTypes_CachedDataAccessor,
     CoopCustomWar_Model_CcwWar,
     BootTimers_Constants,
@@ -32,11 +33,9 @@ import {
     MultiPlayerWar_Model_MpwProxy,
     LocalData_Storage,
     Lang_Constants,
-    Notifications_TypeId,
     Logger,
     WarTypes_Constants,
     type Egret_Egret,
-    type Notifications_DataTypes,
     type MultiPlayerWar_Interface_IMpwWar,
     type Notifications_Types,
 } from "../../internal.ts";
@@ -69,8 +68,8 @@ import type { SettingsForMmw } from "../../proto/schema/CommonProto/WarSettings/
 import type { SettingsForMrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMrw.ts";
 
 const _NOTIFY_LISTENERS     : Notifications_Types.Listener[] = [
-    { type : Notifications_TypeId.TypeId.MsgMpwWatchGetIncomingInfo,      callback : _onNotifyMsgMpwWatchGetIncomingInfo },
-    { type : Notifications_TypeId.TypeId.MsgMpwWatchGetOutgoingInfo,      callback : _onNotifyMsgMpwWatchGetOutgoingInfo },
+    { type : "MsgMpwWatchGetIncomingInfo",      callback : _onNotifyMsgMpwWatchGetIncomingInfo },
+    { type : "MsgMpwWatchGetOutgoingInfo",      callback : _onNotifyMsgMpwWatchGetOutgoingInfo },
 ];
 
 const _joinedMpwIdArrayAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, number[]>({
@@ -297,9 +296,9 @@ export function updateOnMsgMpwCommonSetGridMarkList(data: MpwCommonSetGridMarkLi
     if (war?.getWarId() === data.getWarId()) {
         war.getPlayerLoggedIn()?.setGridMarkList(data.getGridMarkList());
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkListChanged, {
+        Notifications_Dispatcher.dispatch("GridMarkListChanged", {
             war : war,
-        } as Notifications_DataTypes.GridMarkListChanged);
+        });
     }
 }
 
@@ -1228,8 +1227,8 @@ function _setWar(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<MultiPlayerWar_I
     _war = war;
 }
 
-function _onNotifyMsgMpwWatchGetIncomingInfo(e: Egret_Egret.Event): void {
-    const data  = e.data as MpwWatchGetIncomingInfoResponse;
+function _onNotifyMsgMpwWatchGetIncomingInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMpwWatchGetIncomingInfo"]>): void {
+    const data  = (e.data as { msg: MpwWatchGetIncomingInfoResponse }).msg;
     const war   = getWar();
     if (war?.getWarId() !== Helpers_Misc.getExisted(data.getWarId())) {
         return;
@@ -1244,8 +1243,8 @@ function _onNotifyMsgMpwWatchGetIncomingInfo(e: Egret_Egret.Event): void {
     player.setWatchOngoingSrcUserIds(info?.getOngoingSrcUserIdArray() ?? []);
     player.setWatchRequestSrcUserIds(info?.getRequestSrcUserIdArray() ?? []);
 }
-function _onNotifyMsgMpwWatchGetOutgoingInfo(e: Egret_Egret.Event): void {
-    const data  = e.data as MpwWatchGetOutgoingInfoResponse;
+function _onNotifyMsgMpwWatchGetOutgoingInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMpwWatchGetOutgoingInfo"]>): void {
+    const data  = (e.data as { msg: MpwWatchGetOutgoingInfoResponse }).msg;
     const war   = getWar();
     if (war?.getWarId() !== Helpers_Misc.getExisted(data.getWarId())) {
         return;

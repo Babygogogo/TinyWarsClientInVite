@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     ForceSkins_Utils,
     AuxiliaryTypes_GridIndex,
     MapEditor_Model_MeWar,
@@ -16,9 +17,7 @@ import {
     Helpers_Text,
     Locations_Constants,
     Players_Constants,
-    Notifications_TypeId,
     Ui_Components_UiContainer,
-    type Notifications_DataTypes,
     type Tiles_ITileMap,
     type Tiles_ITileMapView,
     type Tiles_ITileView,
@@ -59,17 +58,17 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
     private readonly _markLayer                 = new Ui_Components_UiContainer.UiContainer();
 
     private readonly _notifyListeners: Notifications_Types.Listener[] = [
-        { type : Notifications_TypeId.TypeId.TileAnimationTick,                                   callback : this._onNotifyTileAnimationTick },
-        { type : Notifications_TypeId.TypeId.StateIndicatorTick,                                  callback : this._onNotifyStateIndicatorTick },
-        { type : Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged,                 callback : this._onNotifyIsShowGridBorderChanged },
-        { type : Notifications_TypeId.TypeId.BwTileHasLocationIdSet,                              callback : this._onNotifyBwTileHasLocationIdSet },
-        { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,                           callback : this._onNotifyBwOverridingSkinIdChanged },
-        { type : Notifications_TypeId.TypeId.GridMarkAdded,                                       callback : this._onNotifyGridMarkAdded },
-        { type : Notifications_TypeId.TypeId.GridMarkDeleted,                                     callback : this._onNotifyGridMarkDeleted },
-        { type : Notifications_TypeId.TypeId.GridMarkListChanged,                                 callback : this._onNotifyGridMarkListChanged },
-        { type : Notifications_TypeId.TypeId.HiddenGridMarkTypeIdListChanged,                     callback : this._onNotifyHiddenGridMarkTypeIdListChanged },
-        { type : Notifications_TypeId.TypeId.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated,    callback : this._onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated },
-        { type : Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged,                  callback : this._onNotifyUserSettingsOpacitySettingsChanged },
+        { type : "TileAnimationTick",                                   callback : this._onNotifyTileAnimationTick },
+        { type : "StateIndicatorTick",                                  callback : this._onNotifyStateIndicatorTick },
+        { type : "UserSettingsIsShowGridBorderChanged",                 callback : this._onNotifyIsShowGridBorderChanged },
+        { type : "BwTileHasLocationIdSet",                              callback : this._onNotifyBwTileHasLocationIdSet },
+        { type : "BwOverridingSkinIdChanged",                           callback : this._onNotifyBwOverridingSkinIdChanged },
+        { type : "GridMarkAdded",                                       callback : this._onNotifyGridMarkAdded },
+        { type : "GridMarkDeleted",                                     callback : this._onNotifyGridMarkDeleted },
+        { type : "GridMarkListChanged",                                 callback : this._onNotifyGridMarkListChanged },
+        { type : "HiddenGridMarkTypeIdListChanged",                     callback : this._onNotifyHiddenGridMarkTypeIdListChanged },
+        { type : "BwPlayerPlayerIndexArrayForShowMarkedGridUpdated",    callback : this._onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated },
+        { type : "UserSettingsOpacitySettingsChanged",                  callback : this._onNotifyUserSettingsOpacitySettingsChanged },
     ];
 
     private _tileMap?: Tiles_ITileMap.ITileMap;
@@ -538,9 +537,9 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
         this._updateGridBorderLayerVisible();
     }
 
-    private _onNotifyBwTileHasLocationIdSet(e: Egret_Egret.Event): void {
+    private _onNotifyBwTileHasLocationIdSet(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwTileHasLocationIdSet"]>): void {
         const tileMap   = Helpers_Misc.getExisted(this._tileMap);
-        const { tile }  = e.data as Notifications_DataTypes.BwTileHasLocationIdSet;
+        const { tile }  = e.data as Notifications_Mapping.Mapping["BwTileHasLocationIdSet"];
         const img       = this._locationLayer.getUiChildAt(tile.getGridIndex().getGridId(tileMap.getMapSize()));
         for (let locationId = Locations_Constants.MinId; locationId <= Locations_Constants.MaxId; ++locationId) {
             if ((tileMap.getIsLocationVisible(locationId)) && (tile.getHasLocationId(locationId))) {
@@ -554,32 +553,32 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
     private _onNotifyBwOverridingSkinIdChanged(): void {
         this.updateCoZone();
     }
-    private _onNotifyGridMarkAdded(e: Egret_Egret.Event): void {
-        const data = e.data as Notifications_DataTypes.GridMarkAdded;
+    private _onNotifyGridMarkAdded(e: Egret_Egret.Event<Notifications_Mapping.Mapping["GridMarkAdded"]>): void {
+        const data = e.data as Notifications_Mapping.Mapping["GridMarkAdded"];
         if (data.war === this._tileMap?.getWar()) {
             this._updateMarkGrid(data.gridId);
         }
     }
-    private _onNotifyGridMarkDeleted(e: Egret_Egret.Event): void {
-        const data = e.data as Notifications_DataTypes.GridMarkDeleted;
+    private _onNotifyGridMarkDeleted(e: Egret_Egret.Event<Notifications_Mapping.Mapping["GridMarkDeleted"]>): void {
+        const data = e.data as Notifications_Mapping.Mapping["GridMarkDeleted"];
         if (data.war === this._tileMap?.getWar()) {
             this._updateMarkGrid(data.gridId);
         }
     }
-    private _onNotifyHiddenGridMarkTypeIdListChanged(e: Egret_Egret.Event): void {
-        const data = e.data as Notifications_DataTypes.HiddenGridMarkTypeIdListChanged;
+    private _onNotifyHiddenGridMarkTypeIdListChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["HiddenGridMarkTypeIdListChanged"]>): void {
+        const data = e.data as Notifications_Mapping.Mapping["HiddenGridMarkTypeIdListChanged"];
         if (data.war === this._tileMap?.getWar()) {
             this.resetMarkLayer();
         }
     }
-    private _onNotifyGridMarkListChanged(e: Egret_Egret.Event): void {
-        const data = e.data as Notifications_DataTypes.GridMarkListChanged;
+    private _onNotifyGridMarkListChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["GridMarkListChanged"]>): void {
+        const data = e.data as Notifications_Mapping.Mapping["GridMarkListChanged"];
         if (data.war === this._tileMap?.getWar()) {
             this.resetMarkLayer();
         }
     }
-    private _onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated(e: Egret_Egret.Event): void {
-        const data = e.data as Notifications_DataTypes.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated;
+    private _onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwPlayerPlayerIndexArrayForShowMarkedGridUpdated"]>): void {
+        const data = e.data as Notifications_Mapping.Mapping["BwPlayerPlayerIndexArrayForShowMarkedGridUpdated"];
         if (data.player.getWar() === this._tileMap?.getWar()) {
             this.resetMarkLayer();
         }

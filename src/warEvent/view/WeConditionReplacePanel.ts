@@ -9,7 +9,6 @@ import {
     Lang_Utils,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -39,7 +38,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this.closePanel },
@@ -120,7 +119,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             { ui : this._btnSelect,  callback : this._onTouchedBtnSelect },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._btnCopy.setIsVisible(false);
@@ -145,7 +144,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             conditionIdForDelete : openData.oldConditionId,
             conditionIdForClone  : openData.candidateConditionId,
         }) != null) {
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeConditionReplacePanel);
         } else {
             FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
@@ -163,7 +162,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             oldConditionId : openData.oldConditionId,
             newConditionId : openData.candidateConditionId,
         })) {
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeConditionReplacePanel);
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeCommandPanel);
         } else {

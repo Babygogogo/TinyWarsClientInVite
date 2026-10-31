@@ -1,4 +1,5 @@
 import {
+    type Helpers_PointerInput,
     Broadcasts_Provider,
     GamePanels_Dict,
     Users_Model,
@@ -6,7 +7,6 @@ import {
     Lang_Constants,
     GamePanels_Manager,
     Broadcasts_Gateway,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -31,8 +31,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgBroadcastGetAllMessageIdArray,    callback : this._onNotifyMsgBroadcastGetAllMessageIdArray },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "MsgBroadcastGetAllMessageIdArray",    callback : this._onNotifyMsgBroadcastGetAllMessageIdArray },
         ]);
         this._setUiListenerArray([
             { ui : this._btnAddMessage,                              callback : this._onTouchedBtnAddMessage },
@@ -108,7 +108,7 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
             { ui : this._btnDelete,              callback : this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -138,7 +138,7 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         this.setUnscaledManualHeight(labelContent.getScaledHeight() + 28);
     }
 
-    private _onTouchedBtnDelete(e: Egret_Egret.Event): void {
+    private _onTouchedBtnDelete(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
         const messageId = this.getOpenData()?.messageId;

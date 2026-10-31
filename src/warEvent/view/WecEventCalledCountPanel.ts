@@ -11,7 +11,6 @@ import {
     Helpers_Text,
     GamePanels_Manager,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type BaseWar_Interface_IBwWar,
     type Ui_Interfaces_IUiButton,
@@ -60,8 +59,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged", callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                       callback : this.closePanel },
@@ -121,7 +120,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             ),
             callbackOnConfirm : eventIdArray => {
                 condition.setEventIdArray(eventIdArray);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -134,14 +133,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentValue : condition.getTimesInTurn(),
             callback     : value => {
                 condition.setTimesInTurn(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
     private _onTouchedBtnTimesInTurnComparator(): void {
         const condition = this._getCondition();
         condition.setTimesInTurnComparator(ValueAndComparators_Utils.getNextComparatorId(condition.getTimesInTurnComparator()));
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnTimesTotal(): void {
         const condition = this._getCondition();
@@ -152,14 +151,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentValue : condition.getTimesTotal(),
             callback     : value => {
                 condition.setTimesTotal(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
     private _onTouchedBtnTimesTotalComparator(): void {
         const condition = this._getCondition();
         condition.setTimesTotalComparator(ValueAndComparators_Utils.getNextComparatorId(condition.getTimesTotalComparator()));
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnEventsCount(): void {
         const condition = this._getCondition();
@@ -170,14 +169,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentValue : condition.getEventsCount(),
             callback     : value => {
                 condition.setEventsCount(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
     private _onTouchedBtnEventsCountComparator(): void {
         const condition = this._getCondition();
         condition.setEventsCountComparator(ValueAndComparators_Utils.getNextComparatorId(condition.getEventsCountComparator()));
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
 
     private _updateView(): void {

@@ -1,4 +1,5 @@
 import {
+    type Helpers_PointerInput,
     Egret_Egret,
     CoopCustomRoom_Model_CcrRoomCreator,
     NormalMap_Model_NormalMapModel,
@@ -14,7 +15,6 @@ import {
     FloatText,
     Maps_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -91,7 +91,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnNextPage,    callback : this._onTouchedBtnNextPage },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -498,7 +498,7 @@ class MapNameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         }
     }
 
-    private async _onTouchedBtnHelp(e: Egret_Egret.Event): Promise<void> {
+    private async _onTouchedBtnHelp(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): Promise<void> {
         e.stopPropagation();
 
         const openData = this.getOpenData();

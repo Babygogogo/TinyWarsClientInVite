@@ -10,7 +10,6 @@ import {
     WatchWar_Model_WwProxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type MultiPlayerWar_Interface_IMpwWar,
     type Ui_Interfaces_IUiButton,
@@ -40,9 +39,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetOutgoingInfo,          callback : this._onNotifyMsgMpwWatchGetOutgoingInfo },
-            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetIncomingInfo,          callback : this._onNotifyMsgMpwWatchGetIncomingInfo },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "MsgMpwWatchGetOutgoingInfo",          callback : this._onNotifyMsgMpwWatchGetOutgoingInfo },
+            { type : "MsgMpwWatchGetIncomingInfo",          callback : this._onNotifyMsgMpwWatchGetIncomingInfo },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                                   callback : this.closePanel },

@@ -1,11 +1,11 @@
 import {
+    type Helpers_PointerInput,
     GamePanels_Manager,
     GamePanels_Dict,
     Helpers_ImageSource,
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -39,7 +39,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnHelp,    callback : this._onTouchedBtnHelp },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -141,7 +141,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         this._updateView();
     }
 
-    private _onTouchedImgConfirm(e: Egret_Egret.Event): void {
+    private _onTouchedImgConfirm(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
         const openData = this.getOpenData();

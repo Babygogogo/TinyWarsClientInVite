@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Destructions_Utils,
     ForceSkins_Utils,
     ReplayWar_Model_RwWar,
@@ -15,11 +16,9 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Timer_TimerModel,
     WarTypes_Constants,
-    type Notifications_DataTypes,
     type Egret_Egret,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -58,17 +57,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._setNotifyListenerArray([
             // { type: NotifyType.GlobalTouchBegin,            callback: this._onNotifyGlobalTouchBegin },
             // { type: NotifyType.GlobalTouchMove,             callback: this._onNotifyGlobalTouchMove },
-            { type : Notifications_TypeId.TypeId.BwCursorGridIndexChanged,        callback : this._onNotifyBwCursorGridIndexChanged },
-            { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,           callback : this._onNotifyActionPlannerStateChanged },
-            { type : Notifications_TypeId.TypeId.BwTileChanged,                   callback : this._onNotifyMeTileChanged },
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,               callback : this._onNotifyTileAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,              callback : this._onNotifyStateIndicatorTick },
-            { type : Notifications_TypeId.TypeId.BwTileIsHighlightedChanged,      callback : this._onNotifyTileIsHighlightedChanged },
-            { type : Notifications_TypeId.TypeId.BwTileBuffChanged,               callback : this._onNotifyTileBuffChanged },
-            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback : this._onNotifyBwOverridingSkinIdChanged },
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.BwTileCustomNameArrayChanged,    callback : this._onNotifyBwTileCustomNameArrayChanged },
-            { type : Notifications_TypeId.TypeId.BwTileCustomNameIdChanged,       callback : this._onNotifyBwTileCustomNameIdChanged },
+            { type : "BwCursorGridIndexChanged",        callback : this._onNotifyBwCursorGridIndexChanged },
+            { type : "ActionPlannerStateSet",           callback : this._onNotifyActionPlannerStateChanged },
+            { type : "BwTileChanged",                   callback : this._onNotifyMeTileChanged },
+            { type : "TileAnimationTick",               callback : this._onNotifyTileAnimationTick },
+            { type : "StateIndicatorTick",              callback : this._onNotifyStateIndicatorTick },
+            { type : "BwTileIsHighlightedChanged",      callback : this._onNotifyTileIsHighlightedChanged },
+            { type : "BwTileBuffChanged",               callback : this._onNotifyTileBuffChanged },
+            { type : "BwOverridingSkinIdChanged",       callback : this._onNotifyBwOverridingSkinIdChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "BwTileCustomNameArrayChanged",    callback : this._onNotifyBwTileCustomNameArrayChanged },
+            { type : "BwTileCustomNameIdChanged",       callback : this._onNotifyBwTileCustomNameIdChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._group, callback : this._onTouchedGroup },
@@ -95,8 +94,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // private _onNotifyGlobalTouchMove(e: egret.Event): void {
     //     this._adjustPositionOnTouch(e.data);
     // }
-    private _onNotifyBwCursorGridIndexChanged(e: Egret_Egret.Event): void {
-        const data  = e.data as Notifications_DataTypes.BwCursorGridIndexChanged;
+    private _onNotifyBwCursorGridIndexChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorGridIndexChanged"]>): void {
+        const data  = e.data as Notifications_Mapping.Mapping["BwCursorGridIndexChanged"];
         const war   = this.getOpenData()?.war;
         if ((war?.getIsRunning()) && (data.cursor === war.getCursor())) {
             this._updateView();
@@ -110,8 +109,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this._updateView();
         }
     }
-    private _onNotifyMeTileChanged(e: Egret_Egret.Event): void {
-        const data  = e.data as Notifications_DataTypes.BwTileChanged;
+    private _onNotifyMeTileChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwTileChanged"]>): void {
+        const data  = e.data as Notifications_Mapping.Mapping["BwTileChanged"];
         const war   = this.getOpenData()?.war;
         if ((war?.getIsRunning()) && (data.gridIndex.checkIsEqual(war.getCursor().getGridIndex()))) {
             this._updateView();
@@ -126,9 +125,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyTileIsHighlightedChanged(): void {
         this._updateTileView();
     }
-    private _onNotifyTileBuffChanged(e: Egret_Egret.Event): void {
+    private _onNotifyTileBuffChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwTileBuffChanged"]>): void {
         const war = this.getOpenData()?.war;
-        if ((e.data as Notifications_DataTypes.BwTileBuffChanged).tile === war?.getTileMap().getTile(war.getCursor().getGridIndex())) {
+        if ((e.data as Notifications_Mapping.Mapping["BwTileBuffChanged"]).tile === war?.getTileMap().getTile(war.getCursor().getGridIndex())) {
             this._updateTileView();
         }
     }
@@ -186,7 +185,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             unitMap.setUnitOnMap(unit);
                             unitMap.setNextUnitId(unitId + 1);
                             war.updateTilesAndUnitsOnVisibilityChanged(false);
-                            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwUnitChanged, { gridIndex } as Notifications_DataTypes.BwUnitChanged);
+                            Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex });
                         },
                     });
                 },

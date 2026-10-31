@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Users_Model,
     GamePanels_Dict,
     Lang_Utils,
@@ -8,7 +9,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -41,8 +41,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserSetRelation,  callback : this._onNotifyMsgUserSetRelation },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserSetRelation",  callback : this._onNotifyMsgUserSetRelation },
         ]);
         this._setUiListenerArray([
             { ui : this._groupFollow,            callback : this._onTouchedGroupFollow },
@@ -67,8 +67,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgUserSetRelation(e: Egret_Egret.Event): void {
-        const data = e.data as UserSetRelationResponse;
+    private _onNotifyMsgUserSetRelation(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserSetRelation"]>): void {
+        const data = (e.data as { msg: UserSetRelationResponse }).msg;
         if (data.getTargetUserId() === this.getOpenData()?.userId) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0377));
             this.closePanel();

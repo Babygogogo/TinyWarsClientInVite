@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Common_View_CommonWarAdvancedSettingsPage,
     Common_View_CommonWarBasicSettingsPage,
     Common_View_CommonWarMapInfoPage,
@@ -32,7 +33,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
     WarTypes_Constants,
@@ -96,13 +96,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnChooseReady,         callback : this._onTouchedBtnChooseReady },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.TimeTick,                            callback : this._onNotifyTimeTick },
-            { type : Notifications_TypeId.TypeId.RoomSelfSettingsCoIdChanged,          callback : this._onNotifyAtrSelfSettingsCoIdChanged },
-            { type : Notifications_TypeId.TypeId.MsgAtrGetRoomPublicInfo,             callback : this._onNotifyMsgAtrGetRoomPublicInfo },
-            { type : Notifications_TypeId.TypeId.MsgAtrSetSelfSettings,               callback : this._onNotifyMsgAtrSetSelfSettings },
-            { type : Notifications_TypeId.TypeId.MsgAtrSetBannedCoIdArray,            callback : this._onNotifyMsgAtrSetBannedCoIdArray },
-            { type : Notifications_TypeId.TypeId.MsgAtrDeleteRoomByServer,            callback : this._onNotifyMsgAtrDeleteRoomByServer },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "TimeTick",                            callback : this._onNotifyTimeTick },
+            { type : "RoomSelfSettingsCoIdChanged",          callback : this._onNotifyAtrSelfSettingsCoIdChanged },
+            { type : "MsgAtrGetRoomPublicInfo",             callback : this._onNotifyMsgAtrGetRoomPublicInfo },
+            { type : "MsgAtrSetSelfSettings",               callback : this._onNotifyMsgAtrSetSelfSettings },
+            { type : "MsgAtrSetBannedCoIdArray",            callback : this._onNotifyMsgAtrSetBannedCoIdArray },
+            { type : "MsgAtrDeleteRoomByServer",            callback : this._onNotifyMsgAtrDeleteRoomByServer },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -330,8 +330,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateImgCo();
     }
 
-    private _onNotifyMsgAtrGetRoomPublicInfo(e: Egret_Egret.Event): void {
-        const data = e.data as AtrGetRoomPublicInfoResponse;
+    private _onNotifyMsgAtrGetRoomPublicInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgAtrGetRoomPublicInfo"]>): void {
+        const data = (e.data as { msg: AtrGetRoomPublicInfoResponse }).msg;
         if (data.getRoomId() === this.getOpenData()?.roomId) {
             this._updateGroupBanCo();
             this._updateGroupSettings();
@@ -340,8 +340,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
 
-    private _onNotifyMsgAtrSetSelfSettings(e: Egret_Egret.Event): void {
-        const data = e.data as AtrSetSelfSettingsResponse;
+    private _onNotifyMsgAtrSetSelfSettings(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgAtrSetSelfSettings"]>): void {
+        const data = (e.data as { msg: AtrSetSelfSettingsResponse }).msg;
         if (data.getRoomId() === this.getOpenData()?.roomId) {
             this._updateGroupSettings();
             this._updateGroupState();
@@ -349,8 +349,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
 
-    private _onNotifyMsgAtrSetBannedCoIdArray(e: Egret_Egret.Event): void {
-        const data = e.data as AtrSetBannedCoIdArrayResponse;
+    private _onNotifyMsgAtrSetBannedCoIdArray(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgAtrSetBannedCoIdArray"]>): void {
+        const data = (e.data as { msg: AtrSetBannedCoIdArrayResponse }).msg;
         if (data.getRoomId() === this.getOpenData()?.roomId) {
             this._updateGroupBanCo();
             this._updateGroupSettings();
@@ -359,8 +359,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
 
-    private _onNotifyMsgAtrDeleteRoomByServer(e: Egret_Egret.Event): void {
-        const data = e.data as AtrDeleteRoomByServerResponse;
+    private _onNotifyMsgAtrDeleteRoomByServer(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgAtrDeleteRoomByServer"]>): void {
+        const data = (e.data as { msg: AtrDeleteRoomByServerResponse }).msg;
         if (data.getRoomId() === this.getOpenData()?.roomId) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0019));
             this.closePanel();

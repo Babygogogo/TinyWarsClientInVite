@@ -3,6 +3,28 @@ import {
     Common_View_CommonWarBasicSettingsPage,
     Common_View_CommonWarMapInfoPage,
     Common_View_CommonWarPlayerInfoPage,
+    GameConfigs_Provider,
+    GameModes_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_GameFlow,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    Lang_Constants,
+    Lang_Utils,
+    Players_Constants,
+    SinglePlayerMode_Model_SpmModel,
+    SinglePlayerWars_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Timer_TimerModel,
+    Tween_Executor,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Components_UiTabItemRenderer,
+    WarRules_Utils_CommonData,
+    Wars_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiLabel,
@@ -10,30 +32,7 @@ import {
     type Ui_Interfaces_IUiListItemRenderer,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Interfaces_IUiTab,
-    type AuxiliaryTypes_AuxiliaryTypes,
     type Ui_Types_UiListItemData,
-    Players_Constants,
-    Wars_Constants,
-    Tween_Executor,
-    GamePanels_Dict,
-    SinglePlayerMode_Model_SpmModel,
-    Helpers_Misc,
-    GameConfigs_Provider,
-    GameModes_Utils,
-    Helpers_ProtoSchema_WarSerialization_SerialWar,
-    WarRules_Utils_CommonData,
-    Lang_Utils,
-    Helpers_GameFlow,
-    GamePanels_Manager,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    SinglePlayerWars_Constants,
-    Lang_Constants,
-    Notifications_TypeId,
-    Ui_Components_UiListItemRenderer,
-    Ui_Components_UiPanel,
-    Ui_Components_UiTabItemRenderer,
-    Timer_TimerModel,
 } from "../../internal.ts";
 
 export type OpenData = void;
@@ -58,8 +57,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgSpmGetWarSaveSlotIndexArray,      callback : this._onNotifyMsgSpmGetWarSaveSlotIndexArray },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnBack,        callback : this._onTouchedBtnBack },
@@ -113,11 +111,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
-    }
-
-    private _onNotifyMsgSpmGetWarSaveSlotIndexArray(): void {
-        this._updateGroupWarList();
-        this._updateComponentsForPreviewingWarInfo();
     }
 
     private _onTouchedBtnBack(): void {

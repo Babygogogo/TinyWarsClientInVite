@@ -3,7 +3,6 @@ import {
     Lang_Utils,
     Broadcasts_Provider,
     Stages_StageManager,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Lang_Constants,
     type Ui_Interfaces_IUiContainer,
@@ -21,9 +20,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TimeTick,                            callback : this._onNotifyTimeTick },
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgBroadcastGetAllMessageIdArray,    callback : this._onMsgBroadcastGetAllMessageIdArray },
+            { type : "TimeTick",                            callback : this._onNotifyTimeTick },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "MsgBroadcastGetAllMessageIdArray",    callback : this._onMsgBroadcastGetAllMessageIdArray },
         ]);
 
         this.setIsTouchChildrenEnabled(false);

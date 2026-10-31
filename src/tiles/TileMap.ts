@@ -16,7 +16,6 @@ import {
     Locations_Constants,
     Players_Constants,
     Tiles_Constants_Common,
-    Notifications_TypeId,
     type Tiles_ITile,
     type Tiles_ITileMap,
     type Tiles_ITileMapView,
@@ -355,7 +354,7 @@ export class TileMap implements Tiles_ITileMap.ITileMap {
     public setVisibleGroupedLocationIdArray(idArray: number[]): void {
         this._visibleGroupedLocationIdArray = idArray;
         this.getView().resetLocationLayer();
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileMapLocationVisibleSet);
+        Notifications_Dispatcher.dispatch("BwTileMapLocationVisibleSet");
     }
     public getVisibleGroupedLocationIdArray(): number[] {
         return this._visibleGroupedLocationIdArray;
@@ -379,7 +378,7 @@ export class TileMap implements Tiles_ITileMap.ITileMap {
             groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % Locations_Constants.GroupSize));
         }
         this.getView().resetLocationLayer();
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileMapLocationVisibleSet);
+        Notifications_Dispatcher.dispatch("BwTileMapLocationVisibleSet");
     }
     public setAllLocationVisible(isVisible: boolean): void {
         if (!isVisible) {

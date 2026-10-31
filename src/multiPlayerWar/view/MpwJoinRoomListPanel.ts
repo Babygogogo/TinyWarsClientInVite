@@ -1,4 +1,6 @@
 import {
+    type Notifications_Mapping,
+    type Helpers_PointerInput,
     Common_View_CommonWarAdvancedSettingsPage,
     Common_View_CommonWarBasicSettingsPage,
     Common_View_CommonWarMapInfoPage,
@@ -31,7 +33,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
@@ -77,22 +78,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
 
-            { type : Notifications_TypeId.TypeId.MsgMcrJoinRoom,                  callback : this._onNotifyMsgMcrJoinRoom },
-            { type : Notifications_TypeId.TypeId.MsgMcrGetRoomPlayerInfo,         callback : this._onNotifyMsgMcrGetRoomPlayerInfo },
-            { type : Notifications_TypeId.TypeId.MsgMcrGetRoomStaticInfo,         callback : this._onNotifyMsgMcrGetRoomStaticInfo },
-            { type : Notifications_TypeId.TypeId.MsgMcrGetJoinableRoomIdArray,    callback : this._onNotifyMsgMcrGetJoinableRoomIdArray },
+            { type : "MsgMcrJoinRoom",                  callback : this._onNotifyMsgMcrJoinRoom },
+            { type : "MsgMcrGetRoomPlayerInfo",         callback : this._onNotifyMsgMcrGetRoomPlayerInfo },
+            { type : "MsgMcrGetRoomStaticInfo",         callback : this._onNotifyMsgMcrGetRoomStaticInfo },
+            { type : "MsgMcrGetJoinableRoomIdArray",    callback : this._onNotifyMsgMcrGetJoinableRoomIdArray },
 
-            { type : Notifications_TypeId.TypeId.MsgCcrJoinRoom,                  callback : this._onNotifyMsgCcrJoinRoom },
-            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomStaticInfo,         callback : this._onNotifyMsgCcrGetRoomStaticInfo },
-            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo,         callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
-            { type : Notifications_TypeId.TypeId.MsgCcrGetJoinableRoomIdArray,    callback : this._onNotifyMsgCcrGetJoinableRoomIdArray },
+            { type : "MsgCcrJoinRoom",                  callback : this._onNotifyMsgCcrJoinRoom },
+            { type : "MsgCcrGetRoomStaticInfo",         callback : this._onNotifyMsgCcrGetRoomStaticInfo },
+            { type : "MsgCcrGetRoomPlayerInfo",         callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
+            { type : "MsgCcrGetJoinableRoomIdArray",    callback : this._onNotifyMsgCcrGetJoinableRoomIdArray },
 
-            { type : Notifications_TypeId.TypeId.MsgMfrJoinRoom,                  callback : this._onNotifyMsgMfrJoinRoom },
-            { type : Notifications_TypeId.TypeId.MsgMfrGetRoomStaticInfo,         callback : this._onNotifyMsgMfrGetRoomStaticInfo },
-            { type : Notifications_TypeId.TypeId.MsgMfrGetRoomPlayerInfo,         callback : this._onNotifyMsgMfrGetRoomPlayerInfo },
-            { type : Notifications_TypeId.TypeId.MsgMfrGetJoinableRoomIdArray,    callback : this._onNotifyMsgMfrGetJoinableRoomIdArray },
+            { type : "MsgMfrJoinRoom",                  callback : this._onNotifyMsgMfrJoinRoom },
+            { type : "MsgMfrGetRoomStaticInfo",         callback : this._onNotifyMsgMfrGetRoomStaticInfo },
+            { type : "MsgMfrGetRoomPlayerInfo",         callback : this._onNotifyMsgMfrGetRoomPlayerInfo },
+            { type : "MsgMfrGetJoinableRoomIdArray",    callback : this._onNotifyMsgMfrGetJoinableRoomIdArray },
         ]);
         this._setUiListenerArray([
             { ui : this._btnBack,        callback : this._onTouchedBtnBack },
@@ -153,54 +154,54 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifyMsgMcrJoinRoom(e: Egret_Egret.Event): void {
-        const data      = e.data as McrJoinRoomResponse;
+    private _onNotifyMsgMcrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrJoinRoom"]>): void {
+        const data      = (e.data as { msg: McrJoinRoomResponse }).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrRoomInfoPanel, { roomId });
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
     }
-    private _onNotifyMsgMcrGetRoomStaticInfo(e: Egret_Egret.Event): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr, (e.data as McrGetRoomStaticInfoResponse).getRoomId() ?? 0);
+    private _onNotifyMsgMcrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrGetRoomStaticInfo"]>): void {
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr, ((e.data as { msg: McrGetRoomStaticInfoResponse }).msg).getRoomId() ?? 0);
     }
-    private _onNotifyMsgMcrGetRoomPlayerInfo(e: Egret_Egret.Event): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr, (e.data as McrGetRoomPlayerInfoResponse).getRoomId() ?? 0);
+    private _onNotifyMsgMcrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrGetRoomPlayerInfo"]>): void {
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr, ((e.data as { msg: McrGetRoomPlayerInfoResponse }).msg).getRoomId() ?? 0);
     }
     private _onNotifyMsgMcrGetJoinableRoomIdArray(): void {
         this._hasReceivedMcrData = true;
         this._updateGroupRoomList();
     }
 
-    private _onNotifyMsgCcrJoinRoom(e: Egret_Egret.Event): void {
-        const data      = e.data as CcrJoinRoomResponse;
+    private _onNotifyMsgCcrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrJoinRoom"]>): void {
+        const data      = (e.data as { msg: CcrJoinRoomResponse }).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrRoomInfoPanel, { roomId });
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
     }
-    private _onNotifyMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr, (e.data as CcrGetRoomStaticInfoResponse).getRoomId() ?? 0);
+    private _onNotifyMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomStaticInfo"]>): void {
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr, ((e.data as { msg: CcrGetRoomStaticInfoResponse }).msg).getRoomId() ?? 0);
     }
-    private _onNotifyMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr, (e.data as CcrGetRoomPlayerInfoResponse).getRoomId() ?? 0);
+    private _onNotifyMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomPlayerInfo"]>): void {
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr, ((e.data as { msg: CcrGetRoomPlayerInfoResponse }).msg).getRoomId() ?? 0);
     }
     private _onNotifyMsgCcrGetJoinableRoomIdArray(): void {
         this._hasReceivedCcrData = true;
         this._updateGroupRoomList();
     }
 
-    private _onNotifyMsgMfrJoinRoom(e: Egret_Egret.Event): void {
-        const data      = e.data as MfrJoinRoomResponse;
+    private _onNotifyMsgMfrJoinRoom(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrJoinRoom"]>): void {
+        const data      = (e.data as { msg: MfrJoinRoomResponse }).msg;
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MfrRoomInfoPanel, { roomId });
         FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
     }
-    private _onNotifyMsgMfrGetRoomStaticInfo(e: Egret_Egret.Event): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr, (e.data as MfrGetRoomStaticInfoResponse).getRoomId() ?? 0);
+    private _onNotifyMsgMfrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrGetRoomStaticInfo"]>): void {
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr, ((e.data as { msg: MfrGetRoomStaticInfoResponse }).msg).getRoomId() ?? 0);
     }
-    private _onNotifyMsgMfrGetRoomPlayerInfo(e: Egret_Egret.Event): void {
-        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr, (e.data as MfrGetRoomPlayerInfoResponse).getRoomId() ?? 0);
+    private _onNotifyMsgMfrGetRoomPlayerInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrGetRoomPlayerInfo"]>): void {
+        this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr, ((e.data as { msg: MfrGetRoomPlayerInfoResponse }).msg).getRoomId() ?? 0);
     }
     private _onNotifyMsgMfrGetJoinableRoomIdArray(): void {
         this._hasReceivedMfrData = true;
@@ -703,7 +704,7 @@ class RoomRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             { ui : this._groupName,  callback : this._onTouchedGroupName },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -716,7 +717,7 @@ class RoomRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         this._updateComponentsForLanguage();
     }
 
-    private async _onTouchedBtnHelp(e: Egret_Egret.Event): Promise<void> {
+    private async _onTouchedBtnHelp(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): Promise<void> {
         e.stopPropagation();
 
         const openData = this.getOpenData();

@@ -11,7 +11,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -73,8 +72,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,  callback : this._onNotifyTaskObjectiveFullDataChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "MeTaskObjectiveFullDataChanged",  callback : this._onNotifyTaskObjectiveFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                               callback : this.closePanel },
@@ -115,10 +114,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupModifyDesc(): void {
-        const taskObjective = this.getOpenData()?.taskObjective;
-        if (taskObjective == null) {
+        const openData = this.getOpenData();
+        if (openData == null) {
             return;
         }
+        const taskObjective = openData.taskObjective;
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
@@ -128,7 +128,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             maxLength        : TaskObjectives_Constants.Common.MaxDescLength,
             callback         : newValue => {
                 taskObjective.setDesc(newValue);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
+                Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
             },
         });
     }
@@ -144,10 +144,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupModifyIsMain(): void {
-        const taskObjective = this.getOpenData()?.taskObjective;
-        if (taskObjective == null) {
+        const openData = this.getOpenData();
+        if (openData == null) {
             return;
         }
+        const taskObjective = openData.taskObjective;
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
@@ -156,7 +157,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             taskObjective.setIsMain(true);
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
+        Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
     }
     private _onTouchedBtnHelpIsMain(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
@@ -165,10 +166,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupModifyMaxProgress(): void {
-        const taskObjective = this.getOpenData()?.taskObjective;
-        if (taskObjective == null) {
+        const openData = this.getOpenData();
+        if (openData == null) {
             return;
         }
+        const taskObjective = openData.taskObjective;
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
@@ -181,7 +183,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback     : newValue => {
                 if (newValue != currentValue) {
                     taskObjective.setMaxProgress(newValue);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
+                    Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
                 }
             },
         });
@@ -193,10 +195,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupModifyScoreForCompletion(): void {
-        const taskObjective = this.getOpenData()?.taskObjective;
-        if (taskObjective == null) {
+        const openData = this.getOpenData();
+        if (openData == null) {
             return;
         }
+        const taskObjective = openData.taskObjective;
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
@@ -213,7 +216,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     } else {
                         taskObjective.setScoreForCompletion(newValue);
                     }
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
+                    Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
                 }
             },
         });
@@ -225,10 +228,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupModifyScoreForProgress(): void {
-        const taskObjective = this.getOpenData()?.taskObjective;
-        if (taskObjective == null) {
+        const openData = this.getOpenData();
+        if (openData == null) {
             return;
         }
+        const taskObjective = openData.taskObjective;
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
@@ -245,7 +249,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     } else {
                         taskObjective.setScoreForProgress(newValue);
                     }
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
+                    Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
                 }
             },
         });
@@ -277,7 +281,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             isReviewingMap : openData.isReviewingMap,
             callback       : text => {
                 taskObjective.setUpdaterForCurrentProgress(text);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged);
+                Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
             },
         });
     }

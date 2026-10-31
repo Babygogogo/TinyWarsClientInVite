@@ -13,7 +13,6 @@ import {
     GamePanels_Manager,
     LocalData_Storage,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -49,7 +48,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
@@ -107,7 +106,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._checkAnsSaveTargetSkinIdArray(revisedArray);
 
         war.getTileMap().forEachTile(t => t.flushDataToView());
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwOverridingSkinIdChanged);
+        Notifications_Dispatcher.dispatch("BwOverridingSkinIdChanged");
 
         openData.callback?.(revisedArray);
         this.closePanel();

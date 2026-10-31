@@ -18,7 +18,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Units_Constants,
     type Ui_Interfaces_IUiButton,
@@ -58,12 +57,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.ZoomableContentsMoved,               callback : this._onNotifyZoomableContentsMoved },
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,                   callback : this._onNotifyTileAnimationTick },
-            { type : Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,    callback : this._onNotifyUnitAndTileTextureVersionChanged },
-            { type : Notifications_TypeId.TypeId.BwCursorGridIndexChanged,            callback : this._onNotifyBwCursorGridIndexChanged },
-            { type : Notifications_TypeId.TypeId.ActionPlannerMovePathChanged,        callback : this._onNotifyActionPlannerMovePathChanged },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "ZoomableContentsMoved",               callback : this._onNotifyZoomableContentsMoved },
+            { type : "TileAnimationTick",                   callback : this._onNotifyTileAnimationTick },
+            { type : "UnitAndTileTextureVersionChanged",    callback : this._onNotifyUnitAndTileTextureVersionChanged },
+            { type : "BwCursorGridIndexChanged",            callback : this._onNotifyBwCursorGridIndexChanged },
+            { type : "ActionPlannerMovePathChanged",        callback : this._onNotifyActionPlannerMovePathChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._groupCalculator,            callback : this._onTouchedGroupCalculator },

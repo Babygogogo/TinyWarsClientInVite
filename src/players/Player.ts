@@ -13,8 +13,6 @@ import {
     Numbers_Utils,
     Numbers_Constants,
     CoSkills_Constants,
-    Notifications_TypeId,
-    type Notifications_DataTypes,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwWar,
@@ -212,7 +210,7 @@ export class Player implements Players_IPlayer.IPlayer {
     public setFund(fund: number): void {
         if (this._fund !== fund) {
             this._fund = fund;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwPlayerFundChanged, { player: this });
+            Notifications_Dispatcher.dispatch("BwPlayerFundChanged", { player: this });
         }
     }
     public getFund(): number {
@@ -311,29 +309,29 @@ export class Player implements Players_IPlayer.IPlayer {
     public addGridMark(gridId: number, markTypeId: number): boolean {
         const isAdded = GridMarks_Utils.addGridMark(this.getGridMarkList(), gridId, markTypeId);
         if (isAdded) {
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkAdded, {
+            Notifications_Dispatcher.dispatch("GridMarkAdded", {
                 war    : this.getWar(),
                 gridId : gridId,
-            } as Notifications_DataTypes.GridMarkAdded);
+            });
         }
         return isAdded;
     }
     public deleteGridMark(gridId: number): boolean {
         const isDeleted = GridMarks_Utils.deleteGridMark(this.getGridMarkList(), gridId);
         if (isDeleted) {
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkDeleted, {
+            Notifications_Dispatcher.dispatch("GridMarkDeleted", {
                 war    : this.getWar(),
                 gridId : gridId,
-            } as Notifications_DataTypes.GridMarkDeleted);
+            });
         }
         return isDeleted;
     }
     public updateGridMarkList(gridIdArrayForAddMark: number[], gridIdArrayForDeleteMark: number[], markTypeId: number): void {
         GridMarks_Utils.updateGridMarkList(this.getGridMarkList(), gridIdArrayForAddMark, gridIdArrayForDeleteMark, markTypeId);
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkListChanged, {
+        Notifications_Dispatcher.dispatch("GridMarkListChanged", {
             war : this.getWar(),
-        } as Notifications_DataTypes.GridMarkListChanged);
+        });
     }
 
     private _setHiddenGridMarkTypeIdList(newHiddenGridMarkTypeIdList: number[]): void {
@@ -345,9 +343,9 @@ export class Player implements Players_IPlayer.IPlayer {
         if (!Helpers_Collection.checkIsSameSet(new Set(playerIndexes), new Set(this.getHiddenGridMarkTypeIdList()))) {
             this._setHiddenGridMarkTypeIdList(playerIndexes);
 
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated, {
+            Notifications_Dispatcher.dispatch("BwPlayerPlayerIndexArrayForShowMarkedGridUpdated", {
                 player : this,
-            } as Notifications_DataTypes.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated);
+            });
         }
     }
     public getHiddenGridMarkTypeIdList(): number[] {
@@ -393,7 +391,7 @@ export class Player implements Players_IPlayer.IPlayer {
     public setCoId(coId: number): void {
         if (this._coId !== coId) {
             this._coId = coId;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCoIdChanged, { player: this });
+            Notifications_Dispatcher.dispatch("BwCoIdChanged", { player: this });
         }
     }
     public getCoId(): number {
@@ -409,7 +407,7 @@ export class Player implements Players_IPlayer.IPlayer {
             throw Helpers_Misc.newError(`Invalid energy: ${energy}`);
         }
         this._coCurrentEnergy = energy;
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCoEnergyChanged);
+        Notifications_Dispatcher.dispatch("BwCoEnergyChanged");
     }
     public setAndValidateCoCurrentEnergy(energy: number): void {
         this._setCoCurrentEnergy(Cos_Utils.getValidEnergy(energy));
@@ -509,7 +507,7 @@ export class Player implements Players_IPlayer.IPlayer {
     public setCoUsingSkillType(skillType: CoSkills_Constants.SkillTypeId): void {
         if (this._coUsingSkillType !== skillType) {
             this._coUsingSkillType = skillType;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged);
+            Notifications_Dispatcher.dispatch("BwCoUsingSkillTypeChanged");
         }
     }
     public getCoCurrentSkills(): number[] {

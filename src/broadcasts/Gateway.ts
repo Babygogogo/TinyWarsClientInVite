@@ -3,7 +3,6 @@ import {
     Notifications_Dispatcher,
     Networks_MessageCodes,
     Broadcasts_Provider,
-    Notifications_TypeId,
     type Egret_Egret,
 } from "../internal.ts";
 import type { S as BroadcastAddMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastAddMessage/S.ts";
@@ -34,10 +33,10 @@ export function reqBroadcastAddMessage(textList: LanguageText[], startTime: numb
         },
     });
 }
-function _onMsgBroadcastAddMessage(e: Egret_Egret.Event): void {
+function _onMsgBroadcastAddMessage(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgBroadcastAddMessage"]>): void {
     const data = e.data as BroadcastAddMessageResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgBroadcastAddMessage, data);
+        Notifications_Dispatcher.dispatch("MsgBroadcastAddMessage", { msg: data });
     }
 }
 
@@ -50,10 +49,10 @@ export function reqBroadcastDeleteMessage(messageId: number): void {
         },
     });
 }
-function _onMsgBroadcastDeleteMessage(e: Egret_Egret.Event): void {
+function _onMsgBroadcastDeleteMessage(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgBroadcastDeleteMessage"]>): void {
     const data = e.data as BroadcastDeleteMessageResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgBroadcastDeleteMessage, data);
+        Notifications_Dispatcher.dispatch("MsgBroadcastDeleteMessage", { msg: data });
     }
 }
 
@@ -65,10 +64,10 @@ export function reqBroadcastDoBroadcast(): void {
         },
     });
 }
-function _onMsgBroadcastDoBroadcast(e: Egret_Egret.Event): void {
+function _onMsgBroadcastDoBroadcast(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgBroadcastDoBroadcast"]>): void {
     const data = e.data as BroadcastDoBroadcastResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgBroadcastDoBroadcast, data);
+        Notifications_Dispatcher.dispatch("MsgBroadcastDoBroadcast", { msg: data });
     }
 }
 
@@ -80,11 +79,11 @@ export function reqBroadcastGetAllMessageIdArray(): void {
         }, 
     });
 }
-function _onMsgBroadcastGetAllMessageIdArray(e: Egret_Egret.Event): void {
+function _onMsgBroadcastGetAllMessageIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgBroadcastGetAllMessageIdArray"]>): void {
     const data = e.data as BroadcastGetAllMessageIdArrayResponse;
     if (!data.getErrorCode()) {
         Broadcasts_Provider.setAllMessageIdArray(data.getMessageIdArray());
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgBroadcastGetAllMessageIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgBroadcastGetAllMessageIdArray", { msg: data });
     }
 }
 
@@ -97,12 +96,12 @@ export function reqBroadcastGetMessageData(messageId: number): void {
         }, 
     });
 }
-function _onMsgBroadcastGetMessageData(e: Egret_Egret.Event): void {
+function _onMsgBroadcastGetMessageData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgBroadcastGetMessageData"]>): void {
     const data = e.data as BroadcastGetMessageDataResponse;
     if (data.getErrorCode()) {
         Broadcasts_Provider.updateOnFailedMsgBroadcastGetMessageData(data);
     } else {
         Broadcasts_Provider.updateOnMsgBroadcastGetMessageData(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgBroadcastGetMessageData, data);
+        Notifications_Dispatcher.dispatch("MsgBroadcastGetMessageData", { msg: data });
     }
 }

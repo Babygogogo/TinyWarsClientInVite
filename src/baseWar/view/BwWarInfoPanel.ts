@@ -13,7 +13,6 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     AutoTourneys_Wars_War,
     Players_Constants,
-    type Notifications_DataTypes,
     SinglePlayerWar_Model_SpwModel,
     Utils_ClientErrorCode,
     GamePanels_Manager,
@@ -37,7 +36,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     type Ui_Types_UiListItemData,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -165,9 +163,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.BwCoIdChanged,               callback : this._onNotifyBwCoIdChanged },
-            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,   callback : this._onNotifyBwOverridingSkinIdChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "BwCoIdChanged",               callback : this._onNotifyBwCoIdChanged },
+            { type : "BwOverridingSkinIdChanged",   callback : this._onNotifyBwOverridingSkinIdChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -276,10 +274,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                 const gridIndex = unit.getGridIndex();
                 war.getCursor().setGridIndex(gridIndex);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorTapped, {
+                Notifications_Dispatcher.dispatch("BwCursorTapped", {
                     current  : gridIndex,
                     tappedOn : gridIndex,
-                } as Notifications_DataTypes.BwCursorTapped);
+                });
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitListPanel);
             },
         });
@@ -530,7 +528,7 @@ class RuleTitleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._groupHelp,                  callback : this._onTouchedGroupHelp },
@@ -607,7 +605,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             { ui : this._btnModify,          callback : this._onTouchedBtnModify },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TimeTick,    callback : this._onNotifyTimeTick },
+            { type : "TimeTick",    callback : this._onNotifyTimeTick },
         ]);
     }
 

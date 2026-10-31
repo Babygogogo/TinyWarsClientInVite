@@ -23,11 +23,9 @@ import {
     MultiPlayerWar_Model_MpwProxy,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     GridMarks_Utils,
-    type Notifications_DataTypes,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -81,9 +79,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMpwCommonSetPlayerIndexesForShowMarkedGrid,   callback : this._onNotifyMsgMpwCommonSetPlayerIndexesForShowMarkedGrid },
-            { type : Notifications_TypeId.TypeId.MsgMpwCommonMarkTile,                            callback : this._onNotifyMsgMpwCommonMarkTile },
+            { type : "LanguageChanged",                                 callback : this._onNotifyLanguageChanged },
+            { type : "MsgMpwCommonSetPlayerIndexesForShowMarkedGrid",   callback : this._onNotifyMsgMpwCommonSetPlayerIndexesForShowMarkedGrid },
+            { type : "MsgMpwCommonMarkTile",                            callback : this._onNotifyMsgMpwCommonMarkTile },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -157,17 +155,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             } else if ((war instanceof MapEditor_Model_MeWar.MeWar) || (war instanceof ReplayWar_Model_RwWarBase.RwWarBase)) {
                 war.getGridMarkData().setGridIdAndMarkTypeIdList(data.getGridIdAndMarkTypeIdList());
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkListChanged, {
+                Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                     war : war,
-                } as Notifications_DataTypes.GridMarkListChanged);
+                });
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
             } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
                 war.getSaveSlotExtraData().createIfNotExistsGridMarkData().setGridIdAndMarkTypeIdList(data.getGridIdAndMarkTypeIdList());
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkListChanged, {
+                Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                     war : war,
-                } as Notifications_DataTypes.GridMarkListChanged);
+                });
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
             } else {
@@ -268,9 +266,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             if (!Helpers_Collection.checkIsSameSet(new Set(data.getHiddenMarkTypeIdList()), new Set(hiddenMarkTypeIdList))) {
                 data.setHiddenMarkTypeIdList(hiddenMarkTypeIdList);
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.HiddenGridMarkTypeIdListChanged, {
+                Notifications_Dispatcher.dispatch("HiddenGridMarkTypeIdListChanged", {
                     war : war,
-                } as Notifications_DataTypes.HiddenGridMarkTypeIdListChanged);
+                });
             }
             FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
@@ -279,9 +277,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             if (!Helpers_Collection.checkIsSameSet(new Set(data.getHiddenMarkTypeIdList()), new Set(hiddenMarkTypeIdList))) {
                 data.setHiddenMarkTypeIdList(hiddenMarkTypeIdList);
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.HiddenGridMarkTypeIdListChanged, {
+                Notifications_Dispatcher.dispatch("HiddenGridMarkTypeIdListChanged", {
                     war : war,
-                } as Notifications_DataTypes.HiddenGridMarkTypeIdListChanged);
+                });
             }
             FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
@@ -386,17 +384,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     } else if ((war instanceof MapEditor_Model_MeWar.MeWar) || (war instanceof ReplayWar_Model_RwWarBase.RwWarBase)) {
                         GridMarks_Utils.updateGridMarkList(war.getGridMarkData().getGridIdAndMarkTypeIdList(), addGridIdArray, [], _selectedMarkTypeId);
 
-                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkListChanged, {
+                        Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                             war : war,
-                        } as Notifications_DataTypes.GridMarkListChanged);
+                        });
                         FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
                     } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
                         GridMarks_Utils.updateGridMarkList(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), addGridIdArray, [], _selectedMarkTypeId);
 
-                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkListChanged, {
+                        Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                             war : war,
-                        } as Notifications_DataTypes.GridMarkListChanged);
+                        });
                         FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
                     } else {
@@ -433,17 +431,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     } else if ((war instanceof MapEditor_Model_MeWar.MeWar) || (war instanceof ReplayWar_Model_RwWarBase.RwWarBase)) {
                         GridMarks_Utils.updateGridMarkList(war.getGridMarkData().getGridIdAndMarkTypeIdList(), [], deleteGridIdArray, _selectedMarkTypeId);
 
-                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkListChanged, {
+                        Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                             war : war,
-                        } as Notifications_DataTypes.GridMarkListChanged);
+                        });
                         FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
                     } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
                         GridMarks_Utils.updateGridMarkList(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), [], deleteGridIdArray, _selectedMarkTypeId);
 
-                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridMarkListChanged, {
+                        Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                             war : war,
-                        } as Notifications_DataTypes.GridMarkListChanged);
+                        });
                         FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
                     } else {

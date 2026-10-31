@@ -1,7 +1,6 @@
 import {
     Players_Constants,
     Units_Constants,
-    type Notifications_DataTypes,
     AuxiliaryTypes_ChatToTarget,
     Timer_TimerModel,
     Chat_Model,
@@ -30,7 +29,6 @@ import {
     FloatText,
     CoSkills_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     type Ui_Types_UiListItemData,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -93,18 +91,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged,      callback : this._onNotifyBwPlayerIndexInTurnChanged },
-            { type : Notifications_TypeId.TypeId.ReplayTick,                      callback : this._onNotifyReplayTick },
-            { type : Notifications_TypeId.TypeId.BwCoEnergyChanged,               callback : this._onNotifyBwCoEnergyChanged },
-            { type : Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,       callback : this._onNotifyBwCoUsingSkillChanged },
-            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback : this._onNotifyBwOverridingSkinIdChanged },
-            { type : Notifications_TypeId.TypeId.ReplayAutoReplayChanged,         callback : this._onNotifyReplayAutoReplayChanged },
-            { type : Notifications_TypeId.TypeId.RwPauseTimeChanged,              callback : this._onNotifyRwPauseTimeChanged },
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,   callback : this._onNotifyMsgChatGetAllReadProgressList },
-            { type : Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,       callback : this._onNotifyMsgChatUpdateReadProgress },
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,           callback : this._onNotifyMsgChatGetAllMessages },
-            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,               callback : this._onNotifyMsgChatAddMessage },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "BwPlayerIndexInTurnChanged",      callback : this._onNotifyBwPlayerIndexInTurnChanged },
+            { type : "ReplayTick",                      callback : this._onNotifyReplayTick },
+            { type : "BwCoEnergyChanged",               callback : this._onNotifyBwCoEnergyChanged },
+            { type : "BwCoUsingSkillTypeChanged",       callback : this._onNotifyBwCoUsingSkillChanged },
+            { type : "BwOverridingSkinIdChanged",       callback : this._onNotifyBwOverridingSkinIdChanged },
+            { type : "ReplayAutoReplayChanged",         callback : this._onNotifyReplayAutoReplayChanged },
+            { type : "RwPauseTimeChanged",              callback : this._onNotifyRwPauseTimeChanged },
+            { type : "MsgChatGetAllReadProgressList",   callback : this._onNotifyMsgChatGetAllReadProgressList },
+            { type : "MsgChatUpdateReadProgress",       callback : this._onNotifyMsgChatUpdateReadProgress },
+            { type : "MsgChatGetAllMessages",           callback : this._onNotifyMsgChatGetAllMessages },
+            { type : "MsgChatAddMessage",               callback : this._onNotifyMsgChatAddMessage },
         ]);
         this._setUiListenerArray([
             { ui : this._btnPlayerList,      callback : this._onTouchedBtnPlayerList },
@@ -275,10 +273,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callbackForSelectUnit : unit => {
                 const gridIndex = unit.getGridIndex();
                 war.getCursor().setGridIndex(gridIndex);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorTapped, {
+                Notifications_Dispatcher.dispatch("BwCursorTapped", {
                     current  : gridIndex,
                     tappedOn : gridIndex,
-                } as Notifications_DataTypes.BwCursorTapped);
+                });
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitListPanel);
             },
         });
@@ -742,8 +740,8 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.ReplayTick,                      callback : this._onNotifyReplayTick },
-            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback : this._onNotifyBwOverridingSkinIdChanged },
+            { type : "ReplayTick",                      callback : this._onNotifyReplayTick },
+            { type : "BwOverridingSkinIdChanged",       callback : this._onNotifyBwOverridingSkinIdChanged },
         ]);
         this._applySettingsForWholeTouch();
     }

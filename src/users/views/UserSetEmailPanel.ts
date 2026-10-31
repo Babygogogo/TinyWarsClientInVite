@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Graphics_Constants,
     Emails_Constants,
     GamePanels_Dict,
@@ -9,7 +10,6 @@ import {
     Users_Proxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiInputEventType,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -49,10 +49,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserRequestEmailVerificationCode,         callback : this._onNotifyMsgUserRequestEmailVerificationCode },
-            { type : Notifications_TypeId.TypeId.MsgUserRequestEmailVerificationCodeFailed,   callback : this._onNotifyMsgUserRequestEmailVerificationCodeFailed },
-            { type : Notifications_TypeId.TypeId.MsgUserVerifyEmail,                          callback : this._onNotifyMsgUserVerifyEmail },
+            { type : "LanguageChanged",                             callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserRequestEmailVerificationCode",         callback : this._onNotifyMsgUserRequestEmailVerificationCode },
+            { type : "MsgUserRequestEmailVerificationCodeFailed",   callback : this._onNotifyMsgUserRequestEmailVerificationCodeFailed },
+            { type : "MsgUserVerifyEmail",                          callback : this._onNotifyMsgUserVerifyEmail },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -78,10 +78,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifyMsgUserRequestEmailVerificationCode(e: Egret_Egret.Event): void {
+    private _onNotifyMsgUserRequestEmailVerificationCode(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserRequestEmailVerificationCode"]>): void {
         FloatText.showLang(Lang_Constants.TextType.A0863);
 
-        _lastRequestTimestamp = ((e.data as UserRequestEmailVerificationCodeResponse).getEndTimestamp() ?? 0) - Emails_Constants.Common.VerificationCodeExpiration;
+        _lastRequestTimestamp = (((e.data as { msg: UserRequestEmailVerificationCodeResponse }).msg).getEndTimestamp() ?? 0) - Emails_Constants.Common.VerificationCodeExpiration;
         this._updateLabelEmailState();
     }
     private _onNotifyMsgUserRequestEmailVerificationCodeFailed(): void {

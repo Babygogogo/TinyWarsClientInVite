@@ -6,7 +6,6 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
@@ -70,8 +69,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnActTileFilter,                       callback : this._onTouchedBtnActTileFilter },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -123,7 +122,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentFilter         : action.getConPlayerFilter(),
             callback              : filter => {
                 action.setConPlayerFilter(filter);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -146,7 +145,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentFilter         : action.getConUnitFilter(),
             callback              : filter => {
                 action.setConUnitFilter(filter);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -169,7 +168,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentFilter         : action.getConTileFilter(),
             callback              : filter => {
                 action.setConTileFilter(filter);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -191,7 +190,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentFilter         : action.getActPlayerFilter(),
             callback              : filter => {
                 action.setActPlayerFilter(filter);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -214,7 +213,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentFilter         : action.getActTileFilter(),
             callback              : filter => {
                 action.setActTileFilter(filter);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }

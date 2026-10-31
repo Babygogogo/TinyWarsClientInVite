@@ -2,7 +2,6 @@ import {
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
-    Notifications_TypeId,
     Users_Model,
     type Egret_Egret,
 } from "../../internal.ts";
@@ -75,11 +74,11 @@ export function reqGmSetUserPrivilege(userId: number, userPrivilege: UserPrivile
         }, 
     });
 }
-async function _onMsgGmSetUserPrivilege(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgGmSetUserPrivilege(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgGmSetUserPrivilege"]>): Promise<void> {
     const data = e.data as GmSetUserPrivilegeResponse;
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgGmSetUserPrivilege(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgGmSetUserPrivilege, data);
+        Notifications_Dispatcher.dispatch("MsgGmSetUserPrivilege", { msg: data });
     }
 }
 
@@ -91,10 +90,10 @@ export function reqGmDeleteSpmAllScoreAndReplay(): void {
         },
     });
 }
-function _onMsgGmDeleteSpmAllScoreAndReplay(e: Egret_Egret.Event): void {
+function _onMsgGmDeleteSpmAllScoreAndReplay(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgGmDeleteSpmAllScoreAndReplay"]>): void {
     const data = e.data as GmDeleteSpmAllScoreAndReplayResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgGmDeleteSpmAllScoreAndReplay, data);
+        Notifications_Dispatcher.dispatch("MsgGmDeleteSpmAllScoreAndReplay", { msg: data });
     }
 }
 
@@ -109,10 +108,10 @@ export function reqGmAddUserMedal(userId: number, medalId: number, expireTimesta
         },
     });
 }
-function _onMsgGmAddUserMedal(e: Egret_Egret.Event): void {
+function _onMsgGmAddUserMedal(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgGmAddUserMedal"]>): void {
     const data = e.data as GmAddUserMedalResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgGmAddUserMedal, data);
+        Notifications_Dispatcher.dispatch("MsgGmAddUserMedal", { msg: data });
     }
 }
 

@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Campaigns_Mains_Provider,
     GamePanels_Dict,
     Lang_Utils,
@@ -9,7 +10,6 @@ import {
     MapEditor_Model_MeProxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -37,10 +37,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgCmCreateCampaignMap,      callback : this._onNotifyMsgCmCreateCampaignMap },
-            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignMapEnabled,  callback : this._onNotifyMsgCmSetCampaignMapEnabled },
-            { type : Notifications_TypeId.TypeId.MsgMeSubmitNormalMap,        callback : this._onNotifyMsgMeSubmitNormalMap },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgCmCreateCampaignMap",      callback : this._onNotifyMsgCmCreateCampaignMap },
+            { type : "MsgCmSetCampaignMapEnabled",  callback : this._onNotifyMsgCmSetCampaignMapEnabled },
+            { type : "MsgMeSubmitNormalMap",        callback : this._onNotifyMsgMeSubmitNormalMap },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -91,8 +91,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
         this._updateComponentsForListMap();
     }
-    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event): void {
-        const data      = e.data as MeSubmitNormalMapResponse;
+    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
+        const data      = (e.data as { msg: MeSubmitNormalMapResponse }).msg;
         const slotIndex = data.getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0440),
@@ -176,7 +176,7 @@ class CampaignMapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRen
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnModify,                      callback : this._onTouchedBtnModify },

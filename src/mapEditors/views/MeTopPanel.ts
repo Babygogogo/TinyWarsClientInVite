@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     AuxiliaryTypes_ChatToTarget,
     Maps_Constants,
     MapEditors_Constants,
@@ -29,7 +30,6 @@ import {
     NormalMap_Model_NormalMapProxy,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeTypes,
@@ -132,18 +132,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.TimeTick,                            callback : this._onNotifyTimeTick },
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,                   callback : this._onNotifyTileAnimationTick },
-            { type : Notifications_TypeId.TypeId.MeDrawerModeChanged,                 callback : this._onNotifyMeDrawerModeChanged },
-            { type : Notifications_TypeId.TypeId.MeAutoAdjustToggleVisibilityChanged, callback : this._onNotifyMeAutoAdjustToggleVisibilityChanged },
-            { type : Notifications_TypeId.TypeId.MeRealTimeAdjustChanged,             callback : this._onNotifyMeRealTimeAdjustChanged },
-            { type : Notifications_TypeId.TypeId.BwCursorGridIndexChanged,            callback : this._onNotifyBwCursorGridIndexChanged },
-            { type : Notifications_TypeId.TypeId.BwTileHasLocationIdSet,              callback : this._onNotifyBwTileLocationFlatSet },
-            { type : Notifications_TypeId.TypeId.MsgMeSubmitNormalMap,                callback : this._onNotifyMsgMeSubmitNormalMap },
-            { type : Notifications_TypeId.TypeId.MsgMmReviewMap,                      callback : this._onNotifyMsgMmReviewMap },
-            { type : Notifications_TypeId.TypeId.MsgMeDeleteSlot,                     callback : this._onNotifyMsgMeDeleteSlot },
-            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignMapRawData,          callback : this._onNotifyMsgCmSetCampaignMapRawData },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "TimeTick",                            callback : this._onNotifyTimeTick },
+            { type : "TileAnimationTick",                   callback : this._onNotifyTileAnimationTick },
+            { type : "MeDrawerModeChanged",                 callback : this._onNotifyMeDrawerModeChanged },
+            { type : "MeAutoAdjustToggleVisibilityChanged", callback : this._onNotifyMeAutoAdjustToggleVisibilityChanged },
+            { type : "MeRealTimeAdjustChanged",             callback : this._onNotifyMeRealTimeAdjustChanged },
+            { type : "BwCursorGridIndexChanged",            callback : this._onNotifyBwCursorGridIndexChanged },
+            { type : "BwTileHasLocationIdSet",              callback : this._onNotifyBwTileLocationFlatSet },
+            { type : "MsgMeSubmitNormalMap",                callback : this._onNotifyMsgMeSubmitNormalMap },
+            { type : "MsgMmReviewMap",                      callback : this._onNotifyMsgMmReviewMap },
+            { type : "MsgMeDeleteSlot",                     callback : this._onNotifyMsgMeDeleteSlot },
+            { type : "MsgCmSetCampaignMapRawData",          callback : this._onNotifyMsgCmSetCampaignMapRawData },
         ]);
         this._setUiListenerArray([
             { ui : this._groupModePreview,               callback : this._onTouchedGroupModePreview },
@@ -348,8 +348,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyBwTileLocationFlatSet(): void {
         this._updateLabelLocation();
     }
-    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event): void {
-        const data = e.data as MeSubmitNormalMapResponse;
+    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
+        const data = (e.data as { msg: MeSubmitNormalMapResponse }).msg;
         if (!data.getNeedReview()) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0085));
         } else {
@@ -364,8 +364,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this._getWar().setIsMapModified(false);
     }
-    private _onNotifyMsgMmReviewMap(e: Egret_Egret.Event): void {
-        const data = e.data as MmReviewMapResponse;
+    private _onNotifyMsgMmReviewMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMmReviewMap"]>): void {
+        const data = (e.data as { msg: MmReviewMapResponse }).msg;
         if (data.getIsAccept()) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0092));
         } else {
@@ -1025,8 +1025,8 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,               callback : this._onNotifyTileAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,              callback : this._onNotifyStateIndicatorTick },
+            { type : "TileAnimationTick",               callback : this._onNotifyTileAnimationTick },
+            { type : "StateIndicatorTick",              callback : this._onNotifyStateIndicatorTick },
         ]);
         this._applySettingsForWholeTouch();
 

@@ -13,7 +13,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
     Ui_Components_UiTileView,
@@ -79,9 +78,9 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,          callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserSetMapRating,      callback : this._onNotifyMsgUserSetMapRating },
-            { type : Notifications_TypeId.TypeId.MsgNormalMapGetBriefData, callback : this._onNotifyMsgNormalMapGetBriefData },
+            { type : "LanguageChanged",          callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserSetMapRating",      callback : this._onNotifyMsgUserSetMapRating },
+            { type : "MsgNormalMapGetBriefData", callback : this._onNotifyMsgNormalMapGetBriefData },
         ]);
         this._setUiListenerArray([
             { ui : this._groupMyRating,              callback : this._onTouchedGroupMyRating },
@@ -358,7 +357,7 @@ class TileRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,  callback : this._onNotifyTileAnimationTick },
+            { type : "TileAnimationTick",  callback : this._onNotifyTileAnimationTick },
         ]);
 
         const tileView      = this._tileView;

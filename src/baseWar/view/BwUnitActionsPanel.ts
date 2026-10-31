@@ -20,7 +20,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     type Ui_Types_UiListItemData,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -41,7 +40,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.ZoomableContentsMoved,      callback : this._onNotifyZoomableContentsMoved },
+            { type : "ZoomableContentsMoved",      callback : this._onNotifyZoomableContentsMoved },
         ]);
         this._setKeyboardListener({
             callback   : this._onKeyboard,

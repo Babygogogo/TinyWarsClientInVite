@@ -1,8 +1,8 @@
 import {
+    type Notifications_Mapping,
     Lang_Utils,
     Common_Model_CommonProxy,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -32,7 +32,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.MsgCommonGetServerStatus, callback : this._onMsgCommonGetServerStatus },
+            { type : "MsgCommonGetServerStatus", callback : this._onMsgCommonGetServerStatus },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,   callback : this.closePanel },
@@ -48,8 +48,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Common_Model_CommonProxy.reqCommonGetServerStatus();
     }
 
-    private _onMsgCommonGetServerStatus(e: Egret_Egret.Event): void {
-        const data = e.data as CommonGetServerStatusResponse;
+    private _onMsgCommonGetServerStatus(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCommonGetServerStatus"]>): void {
+        const data = (e.data as { msg: CommonGetServerStatusResponse }).msg;
 
         this._labelAccounts.setText("" + data.getTotalAccounts());
 

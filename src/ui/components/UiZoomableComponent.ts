@@ -4,7 +4,6 @@ import {
     Helpers_Misc,
     Geometries_Utils,
     Helpers_PointerInput,
-    Notifications_TypeId,
     Ui_Components_UiContainer,
     Ui_Components_UiContainerBase,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -157,7 +156,7 @@ export class UiZoomableComponent extends Ui_Components_UiContainerBase.UiContain
         const newX      = needRevise ? this.getRevisedContentX(x) : x;
         if (newX !== contents.getX()) {
             contents.setX(newX);
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ZoomableContentsMoved);
+            Notifications_Dispatcher.dispatch("ZoomableContentsMoved");
         }
     }
     public set customContentX(x: number) {
@@ -174,7 +173,7 @@ export class UiZoomableComponent extends Ui_Components_UiContainerBase.UiContain
         const newY      = needRevise ? this.getRevisedContentY(y) : y;
         if (newY !== contents.getY()) {
             contents.setY(newY);
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ZoomableContentsMoved);
+            Notifications_Dispatcher.dispatch("ZoomableContentsMoved");
         }
     }
     public set customContentY(y: number) {
@@ -241,14 +240,14 @@ export class UiZoomableComponent extends Ui_Components_UiContainerBase.UiContain
     ////////////////////////////////////////////////////////////////////////////////
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////
-    private _onPointerWheel(e: Egret_Egret.Event): void {
+    private _onPointerWheel(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
 
         const data = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         this.setZoomByScroll(data.stageX, data.stageY, data.wheelValue ?? 0);
     }
 
-    private _onTouchBegin(e: Egret_Egret.Event): void {
+    private _onTouchBegin(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const touchesCount = this._currGlobalTouchPoints.size;
         // if (touchesCount <= 0) {
         //     this.on(UiTypes.RawEventName.PointerGlobalMove,   this._onTouchMove, this);
@@ -261,16 +260,16 @@ export class UiZoomableComponent extends Ui_Components_UiContainerBase.UiContain
             this._prevGlobalTouchPoints.set(touchId, { x : data.stageX, y : data.stageY });
         }
     }
-    private _onTouchEnd(e: Egret_Egret.Event): void {
+    private _onTouchEnd(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         this._removeTouch((e.data as Helpers_PointerInput.PointerUnifiedEventData).pointerId);
     }
     // private _onTouchCancel(e: UiEventTypes.UiTouchEvent): void {
     //     this._removeTouch(e.touchPointID);
     // }
-    private _onTouchReleaseOutside(e: Egret_Egret.Event): void {
+    private _onTouchReleaseOutside(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         this._removeTouch((e.data as Helpers_PointerInput.PointerUnifiedEventData).pointerId);
     }
-    private _onTouchMove(e: Egret_Egret.Event): void {
+    private _onTouchMove(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const touchId               = data.pointerId;
         const currGlobalTouchPoints = this._currGlobalTouchPoints;

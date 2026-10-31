@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     GamePanels_Dict,
     Users_Model,
     Lang_Utils,
@@ -8,7 +9,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiInputEventType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -52,8 +52,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserGetUsersByNickname,   callback : this._onNotifyMsgUserGetUsersByNickname },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserGetUsersByNickname",   callback : this._onNotifyMsgUserGetUsersByNickname },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -204,8 +204,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgUserGetUsersByNickname(e: Egret_Egret.Event): void {
-        const data                  = e.data as UserGetUsersByNicknameResponse;
+    private _onNotifyMsgUserGetUsersByNickname(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserGetUsersByNickname"]>): void {
+        const data                  = (e.data as { msg: UserGetUsersByNicknameResponse }).msg;
         this._candidateUserIdArray  = data.getUserIdArray();
         this.getSelectedUserIdSet().clear();
         this._updateListNickname();

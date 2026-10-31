@@ -13,7 +13,6 @@ import {
     NormalMap_Model_NormalMapProxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
@@ -57,9 +56,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMmAddWarEvent,                callback : this._onNotifyMsgMmAddWarEvent },
-            { type : Notifications_TypeId.TypeId.MsgMmSubmitMapSimpleDialogue,    callback : this._onNotifyMsgMmSubmitMapSimpleDialogue },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "MsgMmAddWarEvent",                callback : this._onNotifyMsgMmAddWarEvent },
+            { type : "MsgMmSubmitMapSimpleDialogue",    callback : this._onNotifyMsgMmSubmitMapSimpleDialogue },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },

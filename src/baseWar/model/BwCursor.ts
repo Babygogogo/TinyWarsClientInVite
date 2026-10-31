@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     BaseWar_View_BwCursorView,
     AuxiliaryTypes_GridIndex,
     ReplayWar_Model_RwWarBase,
@@ -10,8 +11,6 @@ import {
     Helpers_Misc,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Notifications_TypeId,
-    type Notifications_DataTypes,
     type Egret_Egret,
     type Notifications_Types,
 } from "../../internal.ts";
@@ -27,9 +26,9 @@ export class BwCursor implements BaseWar_Interface_IBwCursor.IBwCursor {
     private _war?               : BaseWar_Interface_IBwWar.IBwWar;
 
     private _notifyListeners: Notifications_Types.Listener[] = [
-        { type : Notifications_TypeId.TypeId.BwCursorTapped,          callback : this._onNotifyBwCursorTapped },
-        { type : Notifications_TypeId.TypeId.BwCursorDragged,         callback : this._onNotifyBwCursorDragged },
-        { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,   callback : this._onNotifyActionPlannerStateChanged },
+        { type : "BwCursorTapped",          callback : this._onNotifyBwCursorTapped },
+        { type : "BwCursorDragged",         callback : this._onNotifyBwCursorDragged },
+        { type : "ActionPlannerStateSet",   callback : this._onNotifyActionPlannerStateChanged },
     ];
 
     public init(mapSize: AuxiliaryTypes_MapSize.MapSize): void {
@@ -59,16 +58,16 @@ export class BwCursor implements BaseWar_Interface_IBwCursor.IBwCursor {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private _onNotifyBwCursorTapped(e: Egret_Egret.Event): void {
+    private _onNotifyBwCursorTapped(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorTapped"]>): void {
         if (this.getIsMovableByTouches()) {
-            const data = e.data as Notifications_DataTypes.BwCursorTapped;
+            const data = e.data as Notifications_Mapping.Mapping["BwCursorTapped"];
             this.setGridIndex(data.tappedOn);
             this.updateView();
         }
     }
-    private _onNotifyBwCursorDragged(e: Egret_Egret.Event): void {
+    private _onNotifyBwCursorDragged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorDragged"]>): void {
         if (this.getIsMovableByTouches()) {
-            const data = e.data as Notifications_DataTypes.BwCursorDragged;
+            const data = e.data as Notifications_Mapping.Mapping["BwCursorDragged"];
             this.setGridIndex(data.draggedTo);
             this.updateView();
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorMove01);
@@ -122,7 +121,7 @@ export class BwCursor implements BaseWar_Interface_IBwCursor.IBwCursor {
 
         this._gridX = gridIndex.getX();
         this._gridY = gridIndex.getY();
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorGridIndexChanged, { cursor: this });
+        Notifications_Dispatcher.dispatch("BwCursorGridIndexChanged", { cursor: this });
     }
     public getGridIndex(): AuxiliaryTypes_GridIndex.GridIndex {
         return new AuxiliaryTypes_GridIndex.GridIndex(this.getGridX(), this.getGridY());

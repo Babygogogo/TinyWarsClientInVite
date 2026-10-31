@@ -15,7 +15,6 @@ import {
     Geometries_Constants,
     Helpers_ImageSource,
     Graphics_Utils,
-    Notifications_TypeId,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Notifications_Types,
@@ -104,7 +103,7 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
     private _focusUnitViews         = new Map<number, Units_IUnitView.IUnitView>();
 
     private _notifyEvents: Notifications_Types.Listener[] = [
-        { type : Notifications_TypeId.TypeId.GridAnimationTick,       callback : this._onNotifyGridAnimationTick },
+        { type : "GridAnimationTick",       callback : this._onNotifyGridAnimationTick },
     ];
 
     public constructor() {

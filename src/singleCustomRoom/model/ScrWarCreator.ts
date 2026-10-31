@@ -8,10 +8,8 @@ import {
     Users_Model,
     Cos_Utils,
     ForceSkins_Constants,
-    Notifications_TypeId,
     AuxiliaryTypes_WarCreatorBase,
     type GameConfigs_GameConfig,
-    type Notifications_DataTypes,
 } from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { C as SpmCreateScwRequest } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/C.ts";
@@ -93,7 +91,7 @@ export class ScrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
         }
         this._setPlayerInfoList(newPlayerInfoList);
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarCreator_TemplateWarRuleIdChanged);
+        Notifications_Dispatcher.dispatch("WarCreator_TemplateWarRuleIdChanged");
     }
     public tickTemplateWarRuleId(): void {
         const currTemplateWarRuleId = this.getInstanceWarRule().getTemplateWarRuleId();
@@ -115,7 +113,7 @@ export class ScrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
     public tickUserId(playerIndex: number): void {
         const playerInfo = this.getPlayerInfo(playerIndex);
         playerInfo.setUserId(playerInfo.getUserId() ? null : Users_Model.getSelfUserId());
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged, { playerIndex } as Notifications_DataTypes.ScrCreatePlayerInfoChanged);
+        Notifications_Dispatcher.dispatch("WarCreator_PlayerInfoChanged", { playerIndex });
     }
 
     public tickUnitAndTileSkinId(playerIndex: number): void {
@@ -127,12 +125,12 @@ export class ScrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
         if (existingPlayerData) {
             existingPlayerData.setUnitAndTileSkinId(oldSkinId);
             Notifications_Dispatcher.dispatch(
-                Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged,
-                { playerIndex : existingPlayerData.getPlayerIndex() } as Notifications_DataTypes.ScrCreatePlayerInfoChanged,
+                "WarCreator_PlayerInfoChanged",
+                { playerIndex : existingPlayerData.getPlayerIndex() },
             );
         }
 
         targetPlayerData.setUnitAndTileSkinId(newSkinId);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged, { playerIndex } as Notifications_DataTypes.ScrCreatePlayerInfoChanged);
+        Notifications_Dispatcher.dispatch("WarCreator_PlayerInfoChanged", { playerIndex });
     }
 }

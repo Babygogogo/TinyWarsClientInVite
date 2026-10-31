@@ -465,7 +465,6 @@ export * as HalfwayReplayWar_View_HrwWarMenuPanel from "./halfwayReplayWar/view/
 export * as Helpers_Compatibility from "./helpers/Compatibility.ts";
 export * as Helpers_Cookies from "./helpers/Cookies.ts";
 export * as Networks_MessageCodes from "./networks/MessageCodes.ts";
-export * as Notifications_TypeId from "./notifications/TypeId.ts";
 export * as Helpers_GameFlow from "./helpers/GameFlow.ts";
 export * as Helpers_Gzip from "./helpers/Gzip.ts";
 export * as Helpers_ImageSource from "./helpers/ImageSource.ts";
@@ -623,8 +622,8 @@ export * as Networks_Manager from "./networks/Manager.ts";
 export * as Networks_WebsocketConnection from "./networks/WebsocketConnection.ts";
 export * as NormalMap_Model_NormalMapModel from "./normalMap/model/NormalMapModel.ts";
 export * as NormalMap_Model_NormalMapProxy from "./normalMap/model/NormalMapProxy.ts";
-export * as Notifications_DataTypes from "./notifications/DataTypes.ts";
 export * as Notifications_Dispatcher from "./notifications/Dispatcher.ts";
+export * as Notifications_Mapping from "./notifications/Mapping.ts";
 export * as Notifications_Types from "./notifications/Types.ts";
 export * as Numbers_Constants from "./numbers/Constants.ts";
 export * as Numbers_Utils from "./numbers/Utils.ts";

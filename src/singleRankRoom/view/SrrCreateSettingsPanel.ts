@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Common_View_CommonWarAdvancedSettingsPage,
     Common_View_CommonWarBasicSettingsPage,
     Common_View_CommonWarMapInfoPage,
@@ -27,7 +28,6 @@ import {
     SinglePlayerMode_Model_SpmProxy,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
     Timer_TimerModel,
@@ -63,10 +63,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgSpmCreateSrw,                         callback : this._onNotifyMsgSpmCreateSrw },
-            { type : Notifications_TypeId.TypeId.WarCreator_TemplateWarRuleIdChanged,  callback : this._onNotifySrrCreateModelTemplateWarRuleIdChanged },
-            { type : Notifications_TypeId.TypeId.WarCreator_SaveSlotIndexChanged,             callback : this._onNotifySrrCreateWarSaveSlotChanged },
+            { type : "LanguageChanged",                         callback : this._onNotifyLanguageChanged },
+            { type : "MsgSpmCreateSrw",                         callback : this._onNotifyMsgSpmCreateSrw },
+            { type : "WarCreator_TemplateWarRuleIdChanged",  callback : this._onNotifySrrCreateModelTemplateWarRuleIdChanged },
+            { type : "WarCreator_SaveSlotIndexChanged",             callback : this._onNotifySrrCreateWarSaveSlotChanged },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -137,8 +137,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgSpmCreateSrw(e: Egret_Egret.Event): void {
-        const data = e.data as SpmCreateSrwResponse;
+    private _onNotifyMsgSpmCreateSrw(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgSpmCreateSrw"]>): void {
+        const data = (e.data as { msg: SpmCreateSrwResponse }).msg;
         Helpers_GameFlow.gotoSinglePlayerWar({
             warData       : Helpers_Misc.getExisted(data.getWarData()),
             slotExtraData : Helpers_Misc.getExisted(data.getExtraData()),

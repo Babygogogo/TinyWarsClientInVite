@@ -5,7 +5,6 @@ import {
     Helpers_Misc,
     Players_Constants,
     ForceSkins_Constants,
-    Notifications_TypeId,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
@@ -54,7 +53,7 @@ export abstract class RoomCreatorBase {
     public setSelfPlayerIndex(playerIndex: number): void {
         if (playerIndex !== this.getSelfPlayerIndex()) {
             this._selfPlayerIndex = playerIndex;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.RoomCreator_SelfPlayerIndexChanged);
+            Notifications_Dispatcher.dispatch("RoomCreator_SelfPlayerIndexChanged");
         }
     }
 
@@ -64,7 +63,7 @@ export abstract class RoomCreatorBase {
     public setSelfCoId(coId: number): void {
         if (this.getSelfCoId() !== coId) {
             this._selfCoId = coId;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.RoomCreator_SelfCoIdChanged);
+            Notifications_Dispatcher.dispatch("RoomCreator_SelfCoIdChanged");
         }
     }
 
@@ -74,7 +73,7 @@ export abstract class RoomCreatorBase {
     public setSelfUnitAndTileSkinId(skinId: number): void {
         if (skinId !== this.getSelfUnitAndTileSkinId()) {
             this._selfUnitAndTileSkinId = skinId;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.RoomCreator_SelfSkinIdChanged);
+            Notifications_Dispatcher.dispatch("RoomCreator_SelfSkinIdChanged");
         }
     }
 

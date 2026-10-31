@@ -5,7 +5,6 @@ import {
     GamePanels_Manager,
     ForceSkins_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
@@ -51,7 +50,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnConfirm,                         callback : this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();

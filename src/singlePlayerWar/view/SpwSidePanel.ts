@@ -15,7 +15,6 @@ import {
     CoSkills_Constants,
     ActionPlanners_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiContainer,
     Ui_Components_UiLabel,
     Ui_Components_UiPanel,
@@ -63,14 +62,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MouseRightButtonClicked,         callback : this._onNotifyMouseRightButtonClicked },
-            { type : Notifications_TypeId.TypeId.BwTurnPhaseCodeChanged,          callback : this._onNotifyBwTurnPhaseCodeChanged },
-            { type : Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged,      callback : this._onNotifyBwPlayerIndexInTurnChanged },
-            { type : Notifications_TypeId.TypeId.BwCoEnergyChanged,               callback : this._onNotifyBwCoEnergyChanged },
-            { type : Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,       callback : this._onNotifyBwCoUsingSkillChanged },
-            { type : Notifications_TypeId.TypeId.ActionPlannerStateChanged,       callback : this._onNotifyActionPlannerStateChanged },
-            { type : Notifications_TypeId.TypeId.WarOperationNormalExecuted,      callback : this._onNotifyWarOperationNormalExecuted },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "MouseRightButtonClicked",         callback : this._onNotifyMouseRightButtonClicked },
+            { type : "BwTurnPhaseCodeChanged",          callback : this._onNotifyBwTurnPhaseCodeChanged },
+            { type : "BwPlayerIndexInTurnChanged",      callback : this._onNotifyBwPlayerIndexInTurnChanged },
+            { type : "BwCoEnergyChanged",               callback : this._onNotifyBwCoEnergyChanged },
+            { type : "BwCoUsingSkillTypeChanged",       callback : this._onNotifyBwCoUsingSkillChanged },
+            { type : "ActionPlannerStateChanged",       callback : this._onNotifyActionPlannerStateChanged },
+            { type : "WarOperationNormalExecuted",      callback : this._onNotifyWarOperationNormalExecuted },
         ]);
         this._setUiListenerArray([
             { ui : this._btnCop,                 callback : this._onTouchedBtnCop },

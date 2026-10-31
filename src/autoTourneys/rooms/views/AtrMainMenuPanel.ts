@@ -13,7 +13,6 @@ import {
     FloatText,
     Lang_Constants,
     Graphics_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Timer_TimerModel,
     type Ui_Interfaces_IUiButton,
@@ -79,15 +78,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnMode,            callback : this._onTouchedBtnMode },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserLogout,                       callback : this._onNotifyMsgUserLogout },
-            { type : Notifications_TypeId.TypeId.MsgAtrGetRoomPublicInfo,             callback : this._onNotifyMsgAtrGetRoomPublicInfo },
-            { type : Notifications_TypeId.TypeId.MsgAtrGetJoinedRoomIdArray,          callback : this._onNotifyMsgAtrGetJoinedRoomIdArray },
-            { type : Notifications_TypeId.TypeId.MsgMcrGetRoomPlayerInfo,             callback : this._onNotifyMsgMcrGetRoomPlayerInfo },
-            { type : Notifications_TypeId.TypeId.MsgMfrGetRoomPlayerInfo,             callback : this._onNotifyMsgMfrGetRoomPlayerInfo },
-            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo,             callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
-            { type : Notifications_TypeId.TypeId.MsgMpwCommonGetWarProgressInfo,      callback : this._onNotifyMsgMpwCommonGetWarProgressInfo },
-            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetRequestedWarIdArray,   callback : this._onNotifyMsgMpwWatchGetRequestedWarIdArray },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserLogout",                       callback : this._onNotifyMsgUserLogout },
+            { type : "MsgAtrGetRoomPublicInfo",             callback : this._onNotifyMsgAtrGetRoomPublicInfo },
+            { type : "MsgAtrGetJoinedRoomIdArray",          callback : this._onNotifyMsgAtrGetJoinedRoomIdArray },
+            { type : "MsgMcrGetRoomPlayerInfo",             callback : this._onNotifyMsgMcrGetRoomPlayerInfo },
+            { type : "MsgMfrGetRoomPlayerInfo",             callback : this._onNotifyMsgMfrGetRoomPlayerInfo },
+            { type : "MsgCcrGetRoomPlayerInfo",             callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
+            { type : "MsgMpwCommonGetWarProgressInfo",      callback : this._onNotifyMsgMpwCommonGetWarProgressInfo },
+            { type : "MsgMpwWatchGetRequestedWarIdArray",   callback : this._onNotifyMsgMpwWatchGetRequestedWarIdArray },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {

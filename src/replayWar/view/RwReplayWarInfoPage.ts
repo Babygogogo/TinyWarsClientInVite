@@ -1,11 +1,11 @@
 import {
+    type Notifications_Mapping,
     Helpers_Misc,
     NormalMap_Model_NormalMapModel,
     ReplayWar_Model_RwModel,
     Lang_Utils,
     Ui_Utils_UiSkinHelpers,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiOpenableComponent,
     Ui_Types_UiVerticalAlign,
@@ -49,9 +49,9 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         this._setUiListenerArray([
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgReplayGetReplayInfo,  callback : this._onNotifyMsgReplayGetBriefInfo },
-            { type : Notifications_TypeId.TypeId.MsgReplayGetSelfRating,  callback : this._onNotifyMsgReplayGetSelfRating },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgReplayGetReplayInfo",  callback : this._onNotifyMsgReplayGetBriefInfo },
+            { type : "MsgReplayGetSelfRating",  callback : this._onNotifyMsgReplayGetSelfRating },
         ]);
         this.checkAndInitSizerInfo().addSizerOptions({
             verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
@@ -74,16 +74,16 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifyMsgReplayGetBriefInfo(e: Egret_Egret.Event): void {
-        const data      = e.data as ReplayGetReplayInfoResponse;
+    private _onNotifyMsgReplayGetBriefInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgReplayGetReplayInfo"]>): void {
+        const data      = (e.data as { msg: ReplayGetReplayInfoResponse }).msg;
         const replayId  = this.getOpenData()?.replayId;
         if ((replayId != null) && (replayId === data.getReplayId())) {
             this._updateComponentsForReplayBriefInfo();
         }
     }
 
-    private _onNotifyMsgReplayGetSelfRating(e: Egret_Egret.Event): void {
-        const data      = e.data as ReplayGetSelfRatingResponse;
+    private _onNotifyMsgReplayGetSelfRating(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgReplayGetSelfRating"]>): void {
+        const data      = (e.data as { msg: ReplayGetSelfRatingResponse }).msg;
         const replayId  = this.getOpenData()?.replayId;
         if ((replayId != null) && (replayId === data.getReplayId())) {
             this._updateLabelMyRating();

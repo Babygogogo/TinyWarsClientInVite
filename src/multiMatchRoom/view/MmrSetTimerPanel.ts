@@ -7,7 +7,6 @@ import {
     MultiMatchRoom_Model_MmrProxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -40,9 +39,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMmrGetBootTimerDaysRange,     callback : this._onMsgMmrGetBootTimerDaysRange },
-            { type : Notifications_TypeId.TypeId.MsgMmrSetBootTimerDaysRange,     callback : this._onMsgMmrSetBootTimerDaysRange },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "MsgMmrGetBootTimerDaysRange",     callback : this._onMsgMmrGetBootTimerDaysRange },
+            { type : "MsgMmrSetBootTimerDaysRange",     callback : this._onMsgMmrSetBootTimerDaysRange },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this.closePanel },

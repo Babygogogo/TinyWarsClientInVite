@@ -4,7 +4,6 @@ import {
     Helpers_Misc,
     Networks_MessageCodes,
     GameConfigs_Provider,
-    Notifications_TypeId,
     type Egret_Egret,
 } from "../internal.ts";
 import type { S as CommonLatestConfigVersionResponse } from "../proto/schema/CommonProto/NetMessage/MsgCommonLatestConfigVersion/S.ts";
@@ -20,10 +19,10 @@ export function reqCommonLatestConfigVersion(): void {
         MsgCommonLatestConfigVersion : { c : {} },
     });
 }
-function _onMsgCommonLatestConfigVersion(e: Egret_Egret.Event): void {
+function _onMsgCommonLatestConfigVersion(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonLatestConfigVersion"]>): void {
     const data = e.data as CommonLatestConfigVersionResponse;
     if (!data.getErrorCode()) {
         GameConfigs_Provider.setLatestConfigVersion(Helpers_Misc.getExisted(data.getVersion()));
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCommonLatestConfigVersion, data);
+        Notifications_Dispatcher.dispatch("MsgCommonLatestConfigVersion", { msg: data });
     }
 }

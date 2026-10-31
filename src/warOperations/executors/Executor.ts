@@ -21,7 +21,6 @@ import {
     WarOperations_Executors_Utils_SystemEndWar,
     WarOperations_Executors_Utils_SystemHandleBootPlayer,
     WarOperations_Executors_Utils_SystemVoteForDraw,
-    Notifications_TypeId,
     WarOperations_Executors_Utils_UnitAttackTile,
     WarOperations_Executors_Utils_UnitAttackUnit,
     WarOperations_Executors_Utils_UnitBeLoaded,
@@ -86,7 +85,7 @@ export async function checkAndExecute(war: BaseWar_Interface_IBwWar.IBwWar, acti
     war.setIsExecutingAction(false);
 
     if (!isFast) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarOperationNormalExecuted);
+        Notifications_Dispatcher.dispatch("WarOperationNormalExecuted");
     }
 }
 

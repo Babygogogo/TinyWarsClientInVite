@@ -3,7 +3,6 @@ import {
     Notifications_Dispatcher,
     Networks_MessageCodes,
     CoopCustomRoom_Model_CcrModel,
-    Notifications_TypeId,
     type Egret_Egret,
 } from "../../internal.ts";
 import type { S as CcrAddDummyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrAddDummy/S.ts";
@@ -49,10 +48,10 @@ export function reqCreateRoom(param: CcrCreateRoomRequest): void {
         MsgCcrCreateRoom : { c : param.toJson() },
     });
 }
-function _onMsgCcrCreateRoom(e: Egret_Egret.Event): void {
+function _onMsgCcrCreateRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrCreateRoom"]>): void {
     const data = e.data as CcrCreateRoomResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrCreateRoom, data);
+        Notifications_Dispatcher.dispatch("MsgCcrCreateRoom", { msg: data });
     }
 }
 
@@ -65,10 +64,10 @@ export function reqCcrJoinRoom(roomId: number): void {
         },
     });
 }
-async function _onMsgCcrJoinRoom(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCcrJoinRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrJoinRoom"]>): Promise<void> {
     const data = e.data as CcrJoinRoomResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrJoinRoom, data);
+        Notifications_Dispatcher.dispatch("MsgCcrJoinRoom", { msg: data });
     }
 }
 
@@ -81,10 +80,10 @@ export function reqCcrDeleteRoom(roomId: number): void {
         },
     });
 }
-function _onMsgCcrDeleteRoom(e: Egret_Egret.Event): void {
+function _onMsgCcrDeleteRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrDeleteRoom"]>): void {
     const data = e.data as CcrDeleteRoomResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrDeleteRoom, data);
+        Notifications_Dispatcher.dispatch("MsgCcrDeleteRoom", { msg: data });
     }
 }
 
@@ -97,10 +96,10 @@ export function reqCcrExitRoom(roomId: number): void {
         },
     });
 }
-async function _onMsgCcrExitRoom(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCcrExitRoom(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrExitRoom"]>): Promise<void> {
     const data = e.data as CcrExitRoomResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrExitRoom, data);
+        Notifications_Dispatcher.dispatch("MsgCcrExitRoom", { msg: data });
     }
 }
 
@@ -115,10 +114,10 @@ export function reqCcrDeletePlayer(roomId: number, playerIndex: number, forbidRe
         },
     });
 }
-async function _onMsgCcrDeletePlayer(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCcrDeletePlayer(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrDeletePlayer"]>): Promise<void> {
     const data = e.data as CcrDeletePlayerResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrDeletePlayer, data);
+        Notifications_Dispatcher.dispatch("MsgCcrDeletePlayer", { msg: data });
     }
 }
 
@@ -134,10 +133,10 @@ export function reqCcrAddDummy(roomId: number, playerIndex: number, coId: number
         },
     });
 }
-function _onMsgCcrAddDummy(e: Egret_Egret.Event): void {
+function _onMsgCcrAddDummy(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrAddDummy"]>): void {
     const data = e.data as CcrAddDummyResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrAddDummy, data);
+        Notifications_Dispatcher.dispatch("MsgCcrAddDummy", { msg: data });
     }
 }
 
@@ -153,10 +152,10 @@ export function reqCcrSetDummySettings(roomId: number, playerIndex: number, coId
         },
     });
 }
-function _onMsgCcrSetDummySettings(e: Egret_Egret.Event): void {
+function _onMsgCcrSetDummySettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrSetDummySettings"]>): void {
     const data = e.data as CcrSetDummySettingsResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrSetDummySettings, data);
+        Notifications_Dispatcher.dispatch("MsgCcrSetDummySettings", { msg: data });
     }
 }
 
@@ -170,10 +169,10 @@ export function reqCcrInvite(roomId: number, userIdArray: number[]): void {
         },
     });
 }
-function _onMsgCcrInvite(e: Egret_Egret.Event): void {
+function _onMsgCcrInvite(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrInvite"]>): void {
     const data = e.data as CcrInviteResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrInvite, data);
+        Notifications_Dispatcher.dispatch("MsgCcrInvite", { msg: data });
     }
 }
 
@@ -187,10 +186,10 @@ export function reqCcrSetReady(roomId: number, isReady: boolean): void {
         },
     });
 }
-async function _onMsgCcrSetReady(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCcrSetReady(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrSetReady"]>): Promise<void> {
     const data = e.data as CcrSetReadyResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrSetReady, data);
+        Notifications_Dispatcher.dispatch("MsgCcrSetReady", { msg: data });
     }
 }
 
@@ -199,10 +198,10 @@ export function reqCcrSetSelfSettings(data: CcrSetSelfSettingsRequest): void {
         MsgCcrSetSelfSettings : { c : data.toJson() },
     });
 }
-async function _onMsgCcrSetSelfSettings(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCcrSetSelfSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrSetSelfSettings"]>): Promise<void> {
     const data = e.data as CcrSetSelfSettingsResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrSetSelfSettings, data);
+        Notifications_Dispatcher.dispatch("MsgCcrSetSelfSettings", { msg: data });
     }
 }
 
@@ -215,13 +214,13 @@ export function reqCcrGetRoomStaticInfo(roomId: number): void {
         },
     });
 }
-async function _onMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrGetRoomStaticInfo"]>): Promise<void> {
     const data = e.data as CcrGetRoomStaticInfoResponse;
     if (data.getErrorCode()) {
         CoopCustomRoom_Model_CcrModel.updateOnFailedMsgCcrGetRoomStaticInfo(data);
     } else {
         await CoopCustomRoom_Model_CcrModel.updateOnMsgCcrGetRoomStaticInfo(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrGetRoomStaticInfo, data);
+        Notifications_Dispatcher.dispatch("MsgCcrGetRoomStaticInfo", { msg: data });
     }
 }
 
@@ -234,13 +233,13 @@ export function reqCcrGetRoomPlayerInfo(roomId: number): void {
         },
     });
 }
-function _onMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event): void {
+function _onMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrGetRoomPlayerInfo"]>): void {
     const data = e.data as CcrGetRoomPlayerInfoResponse;
     if (data.getErrorCode()) {
         CoopCustomRoom_Model_CcrModel.updateOnFailedMsgCcrGetRoomPlayerInfo(data);
     } else {
         CoopCustomRoom_Model_CcrModel.updateOnMsgCcrGetRoomPlayerInfo(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo, data);
+        Notifications_Dispatcher.dispatch("MsgCcrGetRoomPlayerInfo", { msg: data });
     }
 }
 
@@ -252,11 +251,11 @@ export function reqCcrGetJoinableRoomIdArray(): void {
         },
     });
 }
-function _onMsgCcrGetJoinableRoomIdArray(e: Egret_Egret.Event): void {
+function _onMsgCcrGetJoinableRoomIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrGetJoinableRoomIdArray"]>): void {
     const data = e.data as CcrGetJoinableRoomIdArrayResponse;
     if (!data.getErrorCode()) {
         CoopCustomRoom_Model_CcrModel.setJoinableRoomIdArray(data.getRoomIdArray());
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrGetJoinableRoomIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgCcrGetJoinableRoomIdArray", { msg: data });
     }
 }
 
@@ -268,11 +267,11 @@ export function reqCcrGetJoinedRoomIdArray(): void {
         },
     });
 }
-function _onMsgCcrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
+function _onMsgCcrGetJoinedRoomIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrGetJoinedRoomIdArray"]>): void {
     const data = e.data as CcrGetJoinedRoomIdArrayResponse;
     if (!data.getErrorCode()) {
         CoopCustomRoom_Model_CcrModel.setJoinedRoomIdArray(data.getRoomIdArray());
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrGetJoinedRoomIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgCcrGetJoinedRoomIdArray", { msg: data });
     }
 }
 
@@ -285,9 +284,9 @@ export function reqCcrStartWar(roomId: number): void {
         },
     });
 }
-function _onMsgCcrStartWar(e: Egret_Egret.Event): void {
+function _onMsgCcrStartWar(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCcrStartWar"]>): void {
     const data = e.data as CcrStartWarResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCcrStartWar, data);
+        Notifications_Dispatcher.dispatch("MsgCcrStartWar", { msg: data });
     }
 }

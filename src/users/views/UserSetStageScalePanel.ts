@@ -7,7 +7,6 @@ import {
     LocalData_Storage,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -40,7 +39,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._groupScale,     callback : this._onTouchedGroupScale,    eventType : Helpers_PointerInput.PointerEventType.Press },
@@ -71,10 +70,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onTouchedGroupScale(e: Egret_Egret.Event): void {
+    private _onTouchedGroupScale(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         this._handleTouchGroupScale(e);
     }
-    private _handleTouchGroupScale(e: Egret_Egret.Event): void {
+    private _handleTouchGroupScale(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group         = this._groupScale;
         const width         = group.getUnscaledWidth();
         const data          = e.data as Helpers_PointerInput.PointerUnifiedEventData;

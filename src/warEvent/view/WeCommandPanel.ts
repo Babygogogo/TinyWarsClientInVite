@@ -18,7 +18,6 @@ import {
     Campaigns_Managements_Gateway,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
@@ -135,9 +134,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnUpdateCampaignAction,        callback : this._onTouchedBtnUpdateCampaignAction },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback : this._onNotifyWarEventFullDataChanged },
-            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignMapWarEventAction,   callback : this._onNotifyMsgCmSetCampaignMapWarEventAction },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",             callback : this._onNotifyWarEventFullDataChanged },
+            { type : "MsgCmSetCampaignMapWarEventAction",   callback : this._onNotifyMsgCmSetCampaignMapWarEventAction },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -160,7 +159,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             maxTextLength    : WarEvents_Constants.Event.MaxNameLength,
             callback         : nameArray => {
                 warEvent.setEventNameArray(nameArray);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -188,7 +187,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 callback     : (value) => {
                     eventData.setCanBeTriggeredRightAfterAnyEvent(true);
                     eventData.setMaxCallCountInPlayerTurn(value);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             }),
             callbackOnCancel : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
@@ -199,7 +198,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 callback     : (value) => {
                     eventData.setCanBeTriggeredRightAfterAnyEvent(false);
                     eventData.setMaxCallCountInPlayerTurn(value);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             }),
         });
@@ -217,7 +216,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 maxValue,
                 callback     : (value) => {
                     eventData.setMaxCallCountTotal(value);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
             });
         }
@@ -246,7 +245,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
                 } else {
                     FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `N${newNodeId}`));
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
             callbackOnCancel : () => {
@@ -277,14 +276,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
 
                 this.closePanel();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
             callbackOnCancel : () => {
                 const newEventId = WarEvents_Events_Utils.cloneEvent(Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData()), eventId, false);
                 FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
 
                 this.closePanel();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -303,7 +302,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
 
                 this.closePanel();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -327,7 +326,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 }
 
                 this.closePanel();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -352,7 +351,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             callback   : () => {
                                 subNodeIdAndFlags.setIsNegated(!subNodeIdAndFlags.getIsNegated());
                                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
-                                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                             },
                         });
                     }
@@ -366,7 +365,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             callback   : () => {
                                 nodeIdAndFlags.setIsNegated(!nodeIdAndFlags.getIsNegated());
                                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
-                                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                             },
                         });
                     }
@@ -389,7 +388,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             callback   : () => {
                                 conditionIdAndFlags.setIsNegated(!conditionIdAndFlags.getIsNegated());
                                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
-                                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                             },
                         });
                     }
@@ -414,7 +413,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             allowEmpty       : true,
             callback         : nameArray => {
                 node.setNodeNameArray(nameArray);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -426,7 +425,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const node = Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData()?.getConditionNodeArray().find(v => v.getNodeId() === openData.nodeId));
         node.setIsNeedAnd(node.getIsNeedAnd() ? null : true);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnSwitchNodeTrueFalse(): void {           // DONE
         const openData = this.getOpenData();
@@ -436,7 +435,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const node = Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData()?.getConditionNodeArray().find(v => v.getNodeId() === openData.nodeId));
         node.setIsNeedFalse(node.getIsNeedFalse() ? null : true);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnReplaceNode(): void {               // DONE
         const openData = this.getOpenData();
@@ -475,7 +474,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 if (subNodeId == null) {
                     FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
                 } else {
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                     FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0206, subNodeId));
                 }
             },
@@ -506,7 +505,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback          : () => {
                 const newConditionId = WarEvents_Conditions_Utils_Common.addDefaultCondition(fullData, nodeId);
                 FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `C${newConditionId}`));
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
             callbackOnCancel : () => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionReplacePanel, {
@@ -543,7 +542,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `N${newNodeId}`));
 
             this.closePanel();
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         };
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
@@ -581,7 +580,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `N${newNodeId}`));
 
                 this.closePanel();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -607,7 +606,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
 
             if (Helpers_Collection.moveElementInList2(nodeIdAndFlagsArray, v => v.getNodeId() === nodeId, -1)) {
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             } else {
                 FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
@@ -622,7 +621,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
 
             if (Helpers_Collection.moveElementInList2(rootNodeAndActionsArray, v => v.getNodeIdAndFlags()?.getNodeId() === nodeId, -1)) {
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             } else {
                 FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
@@ -657,7 +656,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 // WarEventHelper.checkAndDeleteUnusedNode(fullData, nodeId);
 
                 this.closePanel();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -675,7 +674,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             allowEmpty       : true,
             callback         : nameArray => {
                 data.setConditionNameArray(nameArray);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -725,7 +724,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `C${newConditionId}`));
 
                 this.closePanel();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -750,7 +749,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (Helpers_Collection.moveElementInList2(conditionIdAndFlagsArray, v => v.getConditionId() === conditionId, -1)) {
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
         } else {
             FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
@@ -776,7 +775,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 // WarEventHelper.checkAndDeleteUnusedCondition(fullData, conditionId);
 
                 this.closePanel();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -794,7 +793,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             allowEmpty       : true,
             callback         : nameArray => {
                 data.setActionNameArray(nameArray);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -861,7 +860,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
                 } else {
                     FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `A${newActionId}`));
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
             callbackOnCancel : () => {
@@ -900,7 +899,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         .splice(Helpers_Misc.getExisted(openData.actionIndex) + 1, 0, newActionId);
                     FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `A${newActionId}`));
 
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
         });
@@ -923,7 +922,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 .splice(Helpers_Misc.getExisted(openData.actionIndex) + 1, 0, actionId);
 
             FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `A${actionId}`));
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         }
     }
     private _onTouchedBtnMoveUpAction(): void {
@@ -951,7 +950,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (Helpers_Collection.moveElementInList(actionIdArray, actionId, -1)) {
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
         } else {
             FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
@@ -979,7 +978,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     ?.getActionIdArray().splice(Helpers_Misc.getExisted(openData.actionIndex), 1);
 
                 this.closePanel();
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }

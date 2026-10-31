@@ -9,7 +9,6 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -35,8 +34,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,     callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",     callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -112,7 +111,7 @@ class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
             { ui : this._imgSelected,                        callback : this._onTouchedImgSelected },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.BwCustomCountersChanged,     callback : this._onNotifyBwCustomCountersChanged },
+            { type : "BwCustomCountersChanged",     callback : this._onNotifyBwCustomCountersChanged },
         ]);
         this._applySettingsForWholeTouch(undefined, true);
     }

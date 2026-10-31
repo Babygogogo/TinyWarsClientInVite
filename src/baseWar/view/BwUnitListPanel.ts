@@ -20,7 +20,6 @@ import {
     GamePanels_Manager,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -73,8 +72,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.ActionPlannerStateChanged, callback : this._onNotifyBwPlannerStateChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "ActionPlannerStateChanged", callback : this._onNotifyBwPlannerStateChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -349,8 +348,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,       callback : this._onNotifyTileAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,      callback : this._onNotifyStateIndicatorTick },
+            { type : "TileAnimationTick",       callback : this._onNotifyTileAnimationTick },
+            { type : "StateIndicatorTick",      callback : this._onNotifyStateIndicatorTick },
         ]);
         this._applySettingsForWholeTouch(undefined, undefined, undefined, Sounds_Constants.ShortSfxCode.None);
 

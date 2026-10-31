@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     PlayerRules_Constants,
     Cos_Constants,
     Graphics_Constants,
@@ -12,12 +13,10 @@ import {
     Helpers_Misc,
     GamePanels_Manager,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     type Egret_Egret,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiLabel,
-    type Notifications_DataTypes,
     type Ui_Types_UiListItemData,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
@@ -40,7 +39,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged, callback : this._onNotifyMePlayerRuleChanged },
+            { type : "RuleEditor_PlayerRuleChanged", callback : this._onNotifyMePlayerRuleChanged },
         ]);
     }
 
@@ -51,8 +50,8 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
     public onItemTapEvent(): void {
         this._callbackOnTap();
     }
-    private _onNotifyMePlayerRuleChanged(e: Egret_Egret.Event): void {
-        const eventData = e.data as Notifications_DataTypes.RuleEditor_PlayerRuleChanged;
+    private _onNotifyMePlayerRuleChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["RuleEditor_PlayerRuleChanged"]>): void {
+        const eventData = e.data as Notifications_Mapping.Mapping["RuleEditor_PlayerRuleChanged"];
         const data      = this.getOpenData();
         if ((eventData.playerIndex === data?.playerRule.getPlayerIndex()) &&
             (data.playerRuleType === data.playerRuleType)
@@ -109,8 +108,8 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
             playerRule.setTeamIndex(playerRule.getTeamIndex() % openData.warRuleCommonData.getPlayerRuleList().length + 1);
 
             Notifications_Dispatcher.dispatch(
-                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                { playerIndex : playerRule.getPlayerIndex(), ruleType : openData.playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                "RuleEditor_PlayerRuleChanged",
+                { playerIndex : playerRule.getPlayerIndex(), ruleType : openData.playerRuleType },
             );
         });
     }
@@ -148,15 +147,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setBannedCoCategoryIdArray(bannedCoCategoryIdArray);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setBannedCoCategoryIdArray(bannedCoCategoryIdArray);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -189,15 +188,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setBannedUnitTypeArray(bannedUnitTypeArray);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setBannedUnitTypeArray(bannedUnitTypeArray);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -219,15 +218,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setInitialFund(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setInitialFund(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -249,15 +248,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setMaxUnitsCount(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : playerRuleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setMaxUnitsCount(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : playerRuleType },
                             );
                         }
                     }
@@ -279,15 +278,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setIncomeMultiplier(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setIncomeMultiplier(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -309,15 +308,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setEnergyAddPctOnCoBoard(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setEnergyAddPctOnCoBoard(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -339,15 +338,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setEnergyLossPctOnCoDie(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of  openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setEnergyLossPctOnCoDie(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -369,15 +368,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setEnergyGrowthMultiplier(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setEnergyGrowthMultiplier(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -394,15 +393,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
             if (!openData.getIsBatch()) {
                 playerRule.setCanActivateCoSkill(!canActivateCoSkill);
                 Notifications_Dispatcher.dispatch(
-                    Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                    { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                    "RuleEditor_PlayerRuleChanged",
+                    { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                 );
             } else {
                 for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                     p.setCanActivateCoSkill(!canActivateCoSkill);
                     Notifications_Dispatcher.dispatch(
-                        Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                        { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                        "RuleEditor_PlayerRuleChanged",
+                        { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                     );
                 }
             }
@@ -417,15 +416,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
             if (!openData.getIsBatch()) {
                 playerRule.setCanCoBoard(!canCoBoard);
                 Notifications_Dispatcher.dispatch(
-                    Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                    { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                    "RuleEditor_PlayerRuleChanged",
+                    { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                 );
             } else {
                 for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                     p.setCanCoBoard(!canCoBoard);
                     Notifications_Dispatcher.dispatch(
-                        Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                        { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                        "RuleEditor_PlayerRuleChanged",
+                        { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                     );
                 }
             }
@@ -440,15 +439,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
             if (!openData.getIsBatch()) {
                 playerRule.setCanUnitJoin(!canUnitJoin);
                 Notifications_Dispatcher.dispatch(
-                    Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                    { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                    "RuleEditor_PlayerRuleChanged",
+                    { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                 );
             } else {
                 for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                     p.setCanUnitJoin(!canUnitJoin);
                     Notifications_Dispatcher.dispatch(
-                        Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                        { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                        "RuleEditor_PlayerRuleChanged",
+                        { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                     );
                 }
             }
@@ -468,15 +467,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setMoveRangeModifier(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setMoveRangeModifier(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -498,15 +497,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setUnitVisionRangeModifier(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setUnitVisionRangeModifier(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -528,15 +527,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setTileVisionRangeModifier(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setTileVisionRangeModifier(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -582,15 +581,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setMcwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setMcwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -636,15 +635,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setMmwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setMmwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -690,15 +689,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setMrwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setMrwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -744,15 +743,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setAtwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setAtwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -798,15 +797,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setCcwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setCcwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -850,15 +849,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setSrwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setSrwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -897,15 +896,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setCampaignHumanCoIdArray(newHumanCoIdArray);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setCampaignHumanCoIdArray(newHumanCoIdArray);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -935,15 +934,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                             if (!openData.getIsBatch()) {
                                 playerRule.setCcwAiCoId(newCoId);
                                 Notifications_Dispatcher.dispatch(
-                                    Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                    { playerIndex : playerIndex, ruleType : playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                    "RuleEditor_PlayerRuleChanged",
+                                    { playerIndex : playerIndex, ruleType : playerRuleType },
                                 );
                             } else {
                                 for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                                     p.setCcwAiCoId(newCoId);
                                     Notifications_Dispatcher.dispatch(
-                                        Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                        { playerIndex : p.getPlayerIndex(), ruleType : playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                        "RuleEditor_PlayerRuleChanged",
+                                        { playerIndex : p.getPlayerIndex(), ruleType : playerRuleType },
                                     );
                                 }
                             }
@@ -954,15 +953,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setCcwAiCoId(null);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerIndex, ruleType : playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerIndex, ruleType : playerRuleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setCcwAiCoId(null);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : playerRuleType },
                             );
                         }
                     }
@@ -992,15 +991,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                             if (!openData.getIsBatch()) {
                                 playerRule.setSrwAiCoId(newCoId);
                                 Notifications_Dispatcher.dispatch(
-                                    Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                    { playerIndex : playerIndex, ruleType : playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                    "RuleEditor_PlayerRuleChanged",
+                                    { playerIndex : playerIndex, ruleType : playerRuleType },
                                 );
                             } else {
                                 for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                                     p.setSrwAiCoId(newCoId);
                                     Notifications_Dispatcher.dispatch(
-                                        Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                        { playerIndex : p.getPlayerIndex(), ruleType : playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                        "RuleEditor_PlayerRuleChanged",
+                                        { playerIndex : p.getPlayerIndex(), ruleType : playerRuleType },
                                     );
                                 }
                             }
@@ -1011,15 +1010,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setSrwAiCoId(null);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerIndex, ruleType : playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerIndex, ruleType : playerRuleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setSrwAiCoId(null);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : playerRuleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : playerRuleType },
                             );
                         }
                     }
@@ -1044,15 +1043,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setCampaignAiCoId(newCoIdArray[0]);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setCampaignAiCoId(newCoIdArray[0]);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -1071,8 +1070,8 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     const ruleType = openData.playerRuleType;
                     playerRule.setCampaignSkinId(newSkinId);
                     Notifications_Dispatcher.dispatch(
-                        Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                        { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                        "RuleEditor_PlayerRuleChanged",
+                        { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                     );
                 },
             });
@@ -1092,15 +1091,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setAttackPowerModifier(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setAttackPowerModifier(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -1122,15 +1121,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setDefenseModifier(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setDefenseModifier(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -1152,15 +1151,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setLuckLowerLimit(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setLuckLowerLimit(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }
@@ -1182,15 +1181,15 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                     if (!openData.getIsBatch()) {
                         playerRule.setLuckUpperLimit(value);
                         Notifications_Dispatcher.dispatch(
-                            Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                            "RuleEditor_PlayerRuleChanged",
+                            { playerIndex : playerRule.getPlayerIndex(), ruleType : ruleType },
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setLuckUpperLimit(value);
                             Notifications_Dispatcher.dispatch(
-                                Notifications_TypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType } as Notifications_DataTypes.RuleEditor_PlayerRuleChanged,
+                                "RuleEditor_PlayerRuleChanged",
+                                { playerIndex : p.getPlayerIndex(), ruleType : ruleType },
                             );
                         }
                     }

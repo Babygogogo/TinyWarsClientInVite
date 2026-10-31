@@ -9,7 +9,6 @@ import {
     Campaigns_Managements_Gateway,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -38,11 +37,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignName,    callback : this._onNotifyMsgCmSetCampaignName },
-            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignDesc,    callback : this._onNotifyMsgCmSetCampaignDesc },
-            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignEnabled, callback : this._onNotifyMsgCmSetCampaignEnabled },
-            { type : Notifications_TypeId.TypeId.MsgCmSetExtraLink,       callback : this._onNotifyMsgCmSetExtraLink },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgCmSetCampaignName",    callback : this._onNotifyMsgCmSetCampaignName },
+            { type : "MsgCmSetCampaignDesc",    callback : this._onNotifyMsgCmSetCampaignDesc },
+            { type : "MsgCmSetCampaignEnabled", callback : this._onNotifyMsgCmSetCampaignEnabled },
+            { type : "MsgCmSetExtraLink",       callback : this._onNotifyMsgCmSetExtraLink },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                       callback : this.closePanel },

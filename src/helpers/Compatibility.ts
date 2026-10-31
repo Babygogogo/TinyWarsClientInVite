@@ -3,7 +3,6 @@ import {
     Lang_Utils,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     type Egret_Egret,
 } from "../internal.ts";
 
@@ -169,9 +168,9 @@ function setIsGameHidden(isHidden: boolean): void {
 
 function onGameHide(): void {
     setIsGameHidden(true);
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GameHidden);
+    Notifications_Dispatcher.dispatch("GameHidden");
 }
 function onGameShow(): void {
     setIsGameHidden(false);
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GameShown);
+    Notifications_Dispatcher.dispatch("GameShown");
 }

@@ -11,7 +11,6 @@ import {
     AuxiliaryTypes_ReplayFilter,
     Lang_Constants,
     Turns_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     WarOperations_Constants,
     type Ui_Interfaces_IUiButton,
@@ -162,7 +161,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             // { ui: this._btnMinMyRating,         callback: this._onTouchedBtnMinMyRating },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();

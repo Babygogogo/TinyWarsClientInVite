@@ -9,7 +9,6 @@ import {
     ChangeLogs_Gateway,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -34,10 +33,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,            callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgChangeLogGetMessageList, callback : this._onMsgChangeLogGetMessageList },
-            { type : Notifications_TypeId.TypeId.MsgChangeLogAddMessage,     callback : this._onMsgChangeLogAddMessage },
-            { type : Notifications_TypeId.TypeId.MsgChangeLogModifyMessage,  callback : this._onMsgChangeLogModifyMessage },
+            { type : "LanguageChanged",            callback : this._onNotifyLanguageChanged },
+            { type : "MsgChangeLogGetMessageList", callback : this._onMsgChangeLogGetMessageList },
+            { type : "MsgChangeLogAddMessage",     callback : this._onMsgChangeLogAddMessage },
+            { type : "MsgChangeLogModifyMessage",  callback : this._onMsgChangeLogModifyMessage },
         ]);
         this._setUiListenerArray([
             { ui : this._btnAddMessage,  callback : this._onTouchedBtnAddMessage },

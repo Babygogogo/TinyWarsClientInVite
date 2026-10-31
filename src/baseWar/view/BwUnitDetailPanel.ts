@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     AuxiliaryTypes_DamageCalculatorPlayerData,
     Common_Model_CommonModel,
     ForceSkins_Utils,
@@ -30,12 +31,10 @@ import {
     Sounds_Constants,
     Lang_Constants,
     Tiles_Constants_Common,
-    Notifications_TypeId,
     GameVersions_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Types_UiUnitViewData,
-    type Notifications_DataTypes,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -131,12 +130,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,           callback : this._onNotifyUnitAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,          callback : this._onNotifyUnitStateIndicatorTick },
-            { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,     callback : this._onNotifyBwPlannerStateChanged },
-            { type : Notifications_TypeId.TypeId.BwUnitBuffChanged,           callback : this._onNotifyBwUnitBuffChanged },
-            { type : Notifications_TypeId.TypeId.BwUnitCustomNameIdChanged,   callback : this._onNotifyUnitCustomNameIdChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "UnitAnimationTick",           callback : this._onNotifyUnitAnimationTick },
+            { type : "StateIndicatorTick",          callback : this._onNotifyUnitStateIndicatorTick },
+            { type : "ActionPlannerStateSet",     callback : this._onNotifyBwPlannerStateChanged },
+            { type : "BwUnitBuffChanged",           callback : this._onNotifyBwUnitBuffChanged },
+            { type : "BwUnitCustomNameIdChanged",   callback : this._onNotifyUnitCustomNameIdChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnModifyName,          callback : this._onTouchedBtnModifyName },
@@ -189,8 +188,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         // this.close();
     }
 
-    private _onNotifyBwUnitBuffChanged(e: Egret_Egret.Event): void {
-        if ((e.data as Notifications_DataTypes.BwUnitBuffChanged).unit === this.getOpenData()?.unit) {
+    private _onNotifyBwUnitBuffChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwUnitBuffChanged"]>): void {
+        if ((e.data as Notifications_Mapping.Mapping["BwUnitBuffChanged"]).unit === this.getOpenData()?.unit) {
             this.updateUnitView();
             this._updateListInfo();
         }
@@ -344,7 +343,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                     unit.getLoaderUnit()?.updateView();
                     ActionPlanners_States_Idle.Idle.getInstance().apply(war.getActionPlanner());
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwUnitChanged, { gridIndex } as Notifications_DataTypes.BwUnitChanged);
+                    Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex });
 
                     this.closePanel();
                 },
@@ -873,7 +872,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             { ui : this._labelTitle,             callback : this._onTouchedLabelTitle },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -1819,7 +1818,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 openData.panel.updateUnitView();
                 ActionPlanners_States_Idle.Idle.getInstance().apply(war.getActionPlanner());
 
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwUnitChanged, { gridIndex : loaderUnit.getGridIndex() } as Notifications_DataTypes.BwUnitChanged);
+                Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex : loaderUnit.getGridIndex() });
             },
         });
     }
@@ -1994,8 +1993,8 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.UnitAnimationTick,       callback : this._onNotifyUnitAnimationTick },
-            { type : Notifications_TypeId.TypeId.StateIndicatorTick,      callback : this._onNotifyUnitStateIndicatorTick },
+            { type : "UnitAnimationTick",       callback : this._onNotifyUnitAnimationTick },
+            { type : "StateIndicatorTick",      callback : this._onNotifyUnitStateIndicatorTick },
         ]);
 
         this._conView.addUiChild(this._unitView);
@@ -2101,7 +2100,7 @@ class MoveCostRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TileAnimationTick,   callback : this._onNotifyTileAnimationTick },
+            { type : "TileAnimationTick",   callback : this._onNotifyTileAnimationTick },
         ]);
 
         const conView   = this._conView;

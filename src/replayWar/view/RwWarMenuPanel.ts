@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     FloatText,
     TestWar_Model_TwWar,
     Users_Model,
@@ -13,7 +14,6 @@ import {
     ReplayWar_Model_RwProxy,
     Users_Proxy,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type ReplayWar_Interface_IRwWar,
@@ -50,10 +50,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgReplaySetSelfRating,              callback : this._onNotifyMsgReplaySetRating },
-            { type : Notifications_TypeId.TypeId.MsgUserModifyFavoriteReplayIdArray,  callback : this._onNotifyMsgUserModifyFavoriteReplayIdArray },
-            { type : Notifications_TypeId.TypeId.MsgMeSubmitNormalMap,                callback : this._onNotifyMsgMeSubmitNormalMap },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "MsgReplaySetSelfRating",              callback : this._onNotifyMsgReplaySetRating },
+            { type : "MsgUserModifyFavoriteReplayIdArray",  callback : this._onNotifyMsgUserModifyFavoriteReplayIdArray },
+            { type : "MsgMeSubmitNormalMap",                callback : this._onNotifyMsgMeSubmitNormalMap },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -94,8 +94,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.OperationSucceeded));
         this._updateBtnFavorite();
     }
-    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event): void {
-        const slotIndex = (e.data as MeSubmitNormalMapResponse).getSlotIndex() ?? 0;
+    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
+        const slotIndex = ((e.data as { msg: MeSubmitNormalMapResponse }).msg).getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0872),
             callback   : async () => {

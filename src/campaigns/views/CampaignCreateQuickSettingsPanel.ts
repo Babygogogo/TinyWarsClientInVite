@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     GamePanels_Manager,
     Stages_Constants,
     SinglePlayerMode_Model_SpmModel,
@@ -17,7 +18,6 @@ import {
     Campaigns_Mains_Gateway,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -56,9 +56,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgCampaignCreateWar,        callback : this._onNotifyMsgCampaignCreateWar },
-            { type : Notifications_TypeId.TypeId.MsgCampaignCreateWarFailed,  callback : this._onNotifyMsgCampaignCreateWarFailed },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgCampaignCreateWar",        callback : this._onNotifyMsgCampaignCreateWar },
+            { type : "MsgCampaignCreateWarFailed",  callback : this._onNotifyMsgCampaignCreateWarFailed },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -92,11 +92,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgCampaignCreateWar(e: Egret_Egret.Event): void {
+    private _onNotifyMsgCampaignCreateWar(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCampaignCreateWar"]>): void {
         this.closePanel();
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
 
-        const data = e.data as CampaignCreateWarResponse;
+        const data = (e.data as { msg: CampaignCreateWarResponse }).msg;
         Helpers_GameFlow.gotoSinglePlayerWar({
             slotIndex     : Helpers_Misc.getExisted(data.getSlotIndex()),
             slotExtraData : Helpers_Misc.getExisted(data.getSlotExtraData()),

@@ -16,7 +16,6 @@ import {
     Sounds_Constants,
     Lang_Constants,
     Graphics_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     WarTypes_Constants,
     type Ui_Interfaces_IUiButton,
@@ -69,13 +68,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._groupVersion,       callback : this._onTouchedGroupVersion },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.TimeTick,                        callback : this._onNotifyTimeTick },
-            { type : Notifications_TypeId.TypeId.MsgUserLogout,                   callback : this._onMsgUserLogout },
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,   callback : this._onMsgChatGetAllReadProgressList },
-            { type : Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,       callback : this._onMsgChatUpdateReadProgress },
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,           callback : this._onMsgChatGetAllMessages },
-            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,               callback : this._onMsgChatAddMessages },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "TimeTick",                        callback : this._onNotifyTimeTick },
+            { type : "MsgUserLogout",                   callback : this._onMsgUserLogout },
+            { type : "MsgChatGetAllReadProgressList",   callback : this._onMsgChatGetAllReadProgressList },
+            { type : "MsgChatUpdateReadProgress",       callback : this._onMsgChatUpdateReadProgress },
+            { type : "MsgChatGetAllMessages",           callback : this._onMsgChatGetAllMessages },
+            { type : "MsgChatAddMessage",               callback : this._onMsgChatAddMessages },
         ]);
 
         applyTouchEnabled(this._groupProfile);

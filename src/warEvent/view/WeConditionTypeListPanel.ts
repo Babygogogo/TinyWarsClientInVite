@@ -6,7 +6,6 @@ import {
     Lang_Utils,
     WarEvents_Conditions_Utils_Common,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
@@ -35,7 +34,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this.closePanel },
@@ -104,7 +103,7 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnSwitch,              callback : this._onTouchedBtnSwitch },
@@ -132,7 +131,7 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             WarEvents_Conditions_Utils_Common.openConditionModifyPanel({ fullData : openData.fullData, condition, war });
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeConditionTypeListPanel);
 
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         }
     }
     private _onNotifyLanguageChanged(): void {        // DONE

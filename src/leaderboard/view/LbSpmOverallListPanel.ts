@@ -9,7 +9,6 @@ import {
     GamePanels_Manager,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -46,8 +45,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgCommonGetRankList,   callback : this._onMsgCommonGetRankList },
+            { type : "LanguageChanged",        callback : this._onNotifyLanguageChanged },
+            { type : "MsgCommonGetRankList",   callback : this._onMsgCommonGetRankList },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },

@@ -23,9 +23,7 @@ import {
     Helpers_Misc,
     Lang_Utils,
     Locations_Utils,
-    type Notifications_DataTypes,
     Notifications_Dispatcher,
-    Notifications_TypeId,
     Numbers_Constants,
     Numbers_Utils,
     type Players_IPlayer,
@@ -2225,9 +2223,9 @@ export class Unit implements Units_IUnit.IUnit {
             if (updateView) {
                 this.updateView();
             }
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwUnitBuffChanged, {
+            Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
                 unit : this,
-            } as Notifications_DataTypes.BwUnitBuffChanged);
+            });
         }
 
         return isUpdated;
@@ -2244,9 +2242,9 @@ export class Unit implements Units_IUnit.IUnit {
             this.updateView();
         }
         if (needNotify) {
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwUnitBuffChanged, {
+            Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
                 unit : this,
-            } as Notifications_DataTypes.BwUnitBuffChanged);
+            });
         }
     }
     public deleteBuff(buff: UnitBuff, updateView: boolean): boolean {
@@ -2262,9 +2260,9 @@ export class Unit implements Units_IUnit.IUnit {
         if (updateView) {
             this.updateView();
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwUnitBuffChanged, {
+        Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
             unit : this,
-        } as Notifications_DataTypes.BwUnitBuffChanged);
+        });
 
         return true;
     }
@@ -2288,7 +2286,7 @@ export class Unit implements Units_IUnit.IUnit {
 
         if (this.getCustomNameId() != nameId) {
             this._customNameId = nameId;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwUnitCustomNameIdChanged);
+            Notifications_Dispatcher.dispatch("BwUnitCustomNameIdChanged");
         }
     }
 

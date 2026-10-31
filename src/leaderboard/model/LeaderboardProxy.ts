@@ -2,7 +2,6 @@ import {
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
-    Notifications_TypeId,
     Leaderboard_Model_LeaderboardModel,
     type Egret_Egret,
     type WarTypes_Constants,
@@ -28,11 +27,11 @@ export function reqLbSpmOverallGetTopDataArray(configVersion: string): void {
         }, 
     });
 }
-function _onMsgLbSpmOverallGetTopDataArray(e: Egret_Egret.Event): void {
+function _onMsgLbSpmOverallGetTopDataArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgLbSpmOverallGetTopDataArray"]>): void {
     const data = e.data as LbSpmOverallGetTopDataArrayResponse;
     if (!data.getErrorCode()) {
         Leaderboard_Model_LeaderboardModel.updateOnMsgLbSpmOverallGetTopDataArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgLbSpmOverallGetTopDataArray, data);
+        Notifications_Dispatcher.dispatch("MsgLbSpmOverallGetTopDataArray", { msg: data });
     }
 }
 
@@ -45,13 +44,13 @@ export function reqLbSpmOverallGetRankInfo(userId: number): void {
         }, 
     });
 }
-function _onMsgLbSpmOverallGetRankInfo(e: Egret_Egret.Event): void {
+function _onMsgLbSpmOverallGetRankInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgLbSpmOverallGetRankInfo"]>): void {
     const data = e.data as LbSpmOverallGetRankInfoResponse;
     if (data.getErrorCode()) {
         Leaderboard_Model_LeaderboardModel.updateOnFailedMsgLbSpmOverallGetRankInfo(data);
     } else {
         Leaderboard_Model_LeaderboardModel.updateOnMsgLbSpmOverallGetRankInfo(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgLbSpmOverallGetRankInfo, data);
+        Notifications_Dispatcher.dispatch("MsgLbSpmOverallGetRankInfo", { msg: data });
     }
 }
 
@@ -66,12 +65,12 @@ export function reqLbMrwGetRankIndex(warType: WarTypes_Constants.WarTypeId, play
         }, 
     });
 }
-function _onMsgLbMrwGetRankIndex(e: Egret_Egret.Event): void {
+function _onMsgLbMrwGetRankIndex(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgLbMrwGetRankIndex"]>): void {
     const data = e.data as LbMrwGetRankIndexResponse;
     if (data.getErrorCode()) {
         Leaderboard_Model_LeaderboardModel.updateOnFailedMsgLbMrwGetRankIndex(data);
     } else {
         Leaderboard_Model_LeaderboardModel.updateOnMsgLbMrwGetRankIndex(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgLbMrwGetRankIndex, data);
+        Notifications_Dispatcher.dispatch("MsgLbMrwGetRankIndex", { msg: data });
     }
 }

@@ -12,6 +12,7 @@ import {
     type Notifications_Types,
     type Ui_Types_UiInputEventListener,
     type Ui_Types_UiPointerEventListener,
+    type Egret_Egret,
 } from "../../internal.ts";
 
 interface KeyboardListener {
@@ -170,9 +171,9 @@ export abstract class UiOpenableComponent<OpenData>
             for (const l of arr) {
                 const ui = l.ui;
                 if (ui instanceof Ui_Components_UiTextInput.UiTextInput) {
-                    ui.getEventAgent().addInputEventListener(l.eventType, l.callback, l.thisObject ?? this);
+                    ui.getEventAgent().addInputEventListener(l.eventType, l.callback as Egret_Egret.EventListener, l.thisObject ?? this);
                 } else if (ui instanceof Ui_Components_UiPromptedInput.UiPromptedInput) {
-                    ui.getInputComponent()?.getEventAgent().addInputEventListener(l.eventType, l.callback, l.thisObject ?? this);
+                    ui.getInputComponent()?.getEventAgent().addInputEventListener(l.eventType, l.callback as Egret_Egret.EventListener, l.thisObject ?? this);
                 } else {
                     throw Helpers_Misc.newError(`Unknown input.`);
                 }
@@ -208,9 +209,9 @@ export abstract class UiOpenableComponent<OpenData>
             for (const l of arr) {
                 const ui = l.ui;
                 if (ui instanceof Ui_Components_UiTextInput.UiTextInput) {
-                    ui.getEventAgent().removeInputEventListener(l.eventType, l.callback, l.thisObject ?? this);
+                    ui.getEventAgent().removeInputEventListener(l.eventType, l.callback as Egret_Egret.EventListener, l.thisObject ?? this);
                 } else if (ui instanceof Ui_Components_UiPromptedInput.UiPromptedInput) {
-                    ui.getInputComponent()?.getEventAgent().removeInputEventListener(l.eventType, l.callback, l.thisObject ?? this);
+                    ui.getInputComponent()?.getEventAgent().removeInputEventListener(l.eventType, l.callback as Egret_Egret.EventListener, l.thisObject ?? this);
                 } else {
                     throw Helpers_Misc.newError(`Unknown input.`);
                 }

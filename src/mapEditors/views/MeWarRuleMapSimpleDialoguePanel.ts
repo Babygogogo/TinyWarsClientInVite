@@ -7,7 +7,6 @@ import {
     GamePanels_Manager,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
@@ -39,9 +38,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,                  callback : this._onNotifyMeMapSimpleDialogueChanged },
-            { type : Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback : this._onNotifyMeWarRuleMapSimpleDialogueIdArrayChanged },
+            { type : "LanguageChanged",                             callback : this._onNotifyLanguageChanged },
+            { type : "MeMapSimpleDialogueChanged",                  callback : this._onNotifyMeMapSimpleDialogueChanged },
+            { type : "MeWarRuleMapSimpleDialogueIdArrayChanged",    callback : this._onNotifyMeWarRuleMapSimpleDialogueIdArrayChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this.closePanel },
@@ -112,7 +111,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             }
                         }
                     }
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
+                    Notifications_Dispatcher.dispatch("MeWarRuleMapSimpleDialogueIdArrayChanged");
                 },
             });
         }
@@ -130,7 +129,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0803),
                 callback   : () => {
                     openData.templateWarRule.setMapSimpleDialogueIdArray([]);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
+                    Notifications_Dispatcher.dispatch("MeWarRuleMapSimpleDialogueIdArrayChanged");
                 },
             });
         }
@@ -200,7 +199,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             { ui : this._btnDelete,      callback : this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -222,7 +221,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             const dialogueIdArray = openData.templateWarRule.getMapSimpleDialogueIdArray();
             if (dialogueIdArray) {
                 Helpers_Collection.moveElementInList(dialogueIdArray, openData.dialogueId, -1);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
+                Notifications_Dispatcher.dispatch("MeWarRuleMapSimpleDialogueIdArrayChanged");
             }
         }
     }
@@ -238,7 +237,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             const dialogueIdArray = openData.templateWarRule.getMapSimpleDialogueIdArray();
             if (dialogueIdArray) {
                 Helpers_Collection.moveElementInList(dialogueIdArray, openData.dialogueId, 1);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
+                Notifications_Dispatcher.dispatch("MeWarRuleMapSimpleDialogueIdArrayChanged");
             }
         }
     }
@@ -254,7 +253,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             const dialogueIdArray = openData.templateWarRule.getMapSimpleDialogueIdArray();
             if (dialogueIdArray) {
                 Helpers_Collection.deleteElementFromList(dialogueIdArray, openData.dialogueId);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
+                Notifications_Dispatcher.dispatch("MeWarRuleMapSimpleDialogueIdArrayChanged");
             }
         }
     }

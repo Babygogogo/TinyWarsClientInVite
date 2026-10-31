@@ -14,7 +14,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -123,7 +122,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             { ui : this._btnChangeSkinId,        callback : this._onTouchedBtnChangeSkinId },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -289,7 +288,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
                             if (newCoId !== ccwAiCoId) {
                                 playerRule.setCcwAiCoId(newCoId);
                                 this._updateComponentsForSettings();
-                                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.CcrCreateAiCoIdChanged);
+                                Notifications_Dispatcher.dispatch("CcrCreateAiCoIdChanged");
                             }
                         },
                     });

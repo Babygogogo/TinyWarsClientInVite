@@ -12,7 +12,6 @@ import {
     AuxiliaryTypes_MapSize,
     ForceSkins_Constants,
     Tiles_Constants_Common,
-    Notifications_TypeId,
     Ui_Types_UiCommonEventType,
     Ui_Components_UiContainer,
     Ui_Components_UiContainerBase,
@@ -165,8 +164,8 @@ class TileMapView extends Ui_Components_UiContainer.UiContainer {
     private readonly _objectLayer           = new TileObjectLayer();
 
     private readonly _notifyListenerArray   : Notifications_Types.Listener[] = [
-        { type : Notifications_TypeId.TypeId.TileAnimationTick,                   callback : this._onNotifyTileAnimationTick },
-        { type : Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged, callback : this._onNotifyIsShowGridBorderChanged },
+        { type : "TileAnimationTick",                   callback : this._onNotifyTileAnimationTick },
+        { type : "UserSettingsIsShowGridBorderChanged", callback : this._onNotifyIsShowGridBorderChanged },
     ];
 
     public constructor() {
@@ -507,8 +506,8 @@ class WarMapUnitMapView extends Ui_Components_UiContainer.UiContainer {
     private readonly _groundLayer           = new Ui_Components_UiContainer.UiContainer();
     private readonly _seaLayer              = new Ui_Components_UiContainer.UiContainer();
     private readonly _notifyListenerArray   : Notifications_Types.Listener[] = [
-        { type : Notifications_TypeId.TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
-        { type : Notifications_TypeId.TypeId.StateIndicatorTick,  callback : this._onNotifyUnitStateIndicatorTick },
+        { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
+        { type : "StateIndicatorTick",  callback : this._onNotifyUnitStateIndicatorTick },
     ];
 
     public constructor() {

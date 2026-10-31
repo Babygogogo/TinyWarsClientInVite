@@ -8,7 +8,6 @@ import {
     NormalMap_Model_NormalMapProxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -36,9 +35,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMmSetMapTagSingleData,    callback : this._onNotifyMsgMmSetMapTagSingleData },
-            { type : Notifications_TypeId.TypeId.MsgMapGetMapTag,             callback : this._onNotifyMsgMapGetMapTag },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgMmSetMapTagSingleData",    callback : this._onNotifyMsgMmSetMapTagSingleData },
+            { type : "MsgMapGetMapTag",             callback : this._onNotifyMsgMapGetMapTag },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,           callback : this.closePanel },
@@ -206,7 +205,7 @@ class MapTagRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }

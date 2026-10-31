@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     AuxiliaryTypes_ChatToTarget,
     Chat_Model,
     ForceSkins_Utils,
@@ -29,12 +30,10 @@ import {
     SinglePlayerMode_Model_SpmProxy,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Types_UiSkinState,
     WarTypes_Constants,
-    type Notifications_DataTypes,
     type Egret_Egret,
     type SinglePlayerWar_Interface_ISpwWar,
     type Ui_Interfaces_IUiButton,
@@ -99,25 +98,25 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.BwPlayerFundChanged,             callback : this._onNotifyBwPlayerFundChanged },
-            { type : Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged,      callback : this._onNotifyBwPlayerIndexInTurnChanged },
-            { type : Notifications_TypeId.TypeId.BwTurnIndexChanged,              callback : this._onNotifyBwTurnIndexChanged },
-            { type : Notifications_TypeId.TypeId.BwCoEnergyChanged,               callback : this._onNotifyBwCoEnergyChanged },
-            { type : Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,       callback : this._onNotifyBwCoUsingSkillChanged },
-            { type : Notifications_TypeId.TypeId.BwCoIdChanged,                   callback : this._onNotifyBwCoIdChanged },
-            { type : Notifications_TypeId.TypeId.BwForceWeatherTypeChanged,       callback : this._onNotifyBwForceWeatherTypeChanged },
-            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback : this._onNotifyBwOverridingSkinIdChanged },
-            { type : Notifications_TypeId.TypeId.WarOperationNormalExecuted,      callback : this._onNotifyWarOperationNormalExecuted },
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,   callback : this._onNotifyMsgChatGetAllReadProgressList },
-            { type : Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,       callback : this._onNotifyMsgChatUpdateReadProgress },
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,           callback : this._onNotifyMsgChatGetAllMessages },
-            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,               callback : this._onNotifyMsgChatAddMessage },
-            { type : Notifications_TypeId.TypeId.MsgSpmCreateSfw,                 callback : this._onNotifyMsgSpmCreateSfw },
-            { type : Notifications_TypeId.TypeId.MsgSpmSaveScw,                   callback : this._onNotifyMsgSpmSaveScw },
-            { type : Notifications_TypeId.TypeId.MsgSpmSaveSfw,                   callback : this._onNotifyMsgSpmSaveSfw },
-            { type : Notifications_TypeId.TypeId.MsgSpmSaveSrw,                   callback : this._onNotifyMsgSpmSaveSrw },
-            { type : Notifications_TypeId.TypeId.MsgCampaignSaveWar,              callback : this._onNotifyMsgCampaignSaveWar },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "BwPlayerFundChanged",             callback : this._onNotifyBwPlayerFundChanged },
+            { type : "BwPlayerIndexInTurnChanged",      callback : this._onNotifyBwPlayerIndexInTurnChanged },
+            { type : "BwTurnIndexChanged",              callback : this._onNotifyBwTurnIndexChanged },
+            { type : "BwCoEnergyChanged",               callback : this._onNotifyBwCoEnergyChanged },
+            { type : "BwCoUsingSkillTypeChanged",       callback : this._onNotifyBwCoUsingSkillChanged },
+            { type : "BwCoIdChanged",                   callback : this._onNotifyBwCoIdChanged },
+            { type : "BwForceWeatherTypeChanged",       callback : this._onNotifyBwForceWeatherTypeChanged },
+            { type : "BwOverridingSkinIdChanged",       callback : this._onNotifyBwOverridingSkinIdChanged },
+            { type : "WarOperationNormalExecuted",      callback : this._onNotifyWarOperationNormalExecuted },
+            { type : "MsgChatGetAllReadProgressList",   callback : this._onNotifyMsgChatGetAllReadProgressList },
+            { type : "MsgChatUpdateReadProgress",       callback : this._onNotifyMsgChatUpdateReadProgress },
+            { type : "MsgChatGetAllMessages",           callback : this._onNotifyMsgChatGetAllMessages },
+            { type : "MsgChatAddMessage",               callback : this._onNotifyMsgChatAddMessage },
+            { type : "MsgSpmCreateSfw",                 callback : this._onNotifyMsgSpmCreateSfw },
+            { type : "MsgSpmSaveScw",                   callback : this._onNotifyMsgSpmSaveScw },
+            { type : "MsgSpmSaveSfw",                   callback : this._onNotifyMsgSpmSaveSfw },
+            { type : "MsgSpmSaveSrw",                   callback : this._onNotifyMsgSpmSaveSrw },
+            { type : "MsgCampaignSaveWar",              callback : this._onNotifyMsgCampaignSaveWar },
         ]);
         this._setUiListenerArray([
             { ui : this._btnWeather,         callback : this._onTouchedBtnWeather },
@@ -186,8 +185,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     }
-    private _onNotifyBwCoIdChanged(e: Egret_Egret.Event): void {
-        const eventData = e.data as Notifications_DataTypes.BwCoIdChanged;
+    private _onNotifyBwCoIdChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCoIdChanged"]>): void {
+        const eventData = e.data as Notifications_Mapping.Mapping["BwCoIdChanged"];
         if (eventData.player === this.getOpenData()?.war.getPlayerInTurn()) {
             this._updateImgSkinAndCo();
         }
@@ -216,7 +215,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateBtnChat();
     }
 
-    private _onNotifyMsgSpmCreateSfw(e: Egret_Egret.Event): void {
+    private _onNotifyMsgSpmCreateSfw(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgSpmCreateSfw"]>): void {
         FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
         const war = this.getOpenData()?.war;
@@ -224,7 +223,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const data = e.data as SpmCreateSfwResponse;
+        const data = (e.data as { msg: SpmCreateSfwResponse }).msg;
         if (war.getSaveSlotIndex() == null) {
             war.setSaveSlotIndex(Helpers_Misc.getExisted(data.getSlotIndex()));
 
@@ -661,12 +660,12 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.BwPlayerFundChanged,         callback : this._onNotifyBwPlayerFundChanged },
-            { type : Notifications_TypeId.TypeId.WarOperationNormalExecuted,  callback : this._onNotifyWarOperationNormalExecuted },
-            { type : Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,   callback : this._onNotifyBwCoUsingSkillChanged },
-            { type : Notifications_TypeId.TypeId.BwCoEnergyChanged,           callback : this._onNotifyBwCoEnergyChanged },
-            { type : Notifications_TypeId.TypeId.BwCoIdChanged,               callback : this._onNotifyBwCoIdChanged },
-            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,   callback : this._onNotifyBwOverridingSkinIdChanged },
+            { type : "BwPlayerFundChanged",         callback : this._onNotifyBwPlayerFundChanged },
+            { type : "WarOperationNormalExecuted",  callback : this._onNotifyWarOperationNormalExecuted },
+            { type : "BwCoUsingSkillTypeChanged",   callback : this._onNotifyBwCoUsingSkillChanged },
+            { type : "BwCoEnergyChanged",           callback : this._onNotifyBwCoEnergyChanged },
+            { type : "BwCoIdChanged",               callback : this._onNotifyBwCoIdChanged },
+            { type : "BwOverridingSkinIdChanged",   callback : this._onNotifyBwOverridingSkinIdChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -683,13 +682,13 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         this._updateLabelEnergy();
     }
 
-    private _onNotifyBwPlayerFundChanged(e: Egret_Egret.Event): void {
+    private _onNotifyBwPlayerFundChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwPlayerFundChanged"]>): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
         }
 
-        const eventData = e.data as Notifications_DataTypes.BwPlayerFundChanged;
+        const eventData = e.data as Notifications_Mapping.Mapping["BwPlayerFundChanged"];
         if (eventData.player === openData.war.getPlayer(openData.playerIndex)) {
             this._updateLabelFundAndAddFund();
         }
@@ -707,13 +706,13 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         this._updateLabelEnergy();
     }
 
-    private _onNotifyBwCoIdChanged(e: Egret_Egret.Event): void {
+    private _onNotifyBwCoIdChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCoIdChanged"]>): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
         }
 
-        const eventData = e.data as Notifications_DataTypes.BwCoIdChanged;
+        const eventData = e.data as Notifications_Mapping.Mapping["BwCoIdChanged"];
         if (eventData.player === openData.war.getPlayer(openData.playerIndex)) {
             this._updateImgCo();
         }

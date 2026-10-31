@@ -30,7 +30,6 @@ import {
     Helpers_PointerInput,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     type Ui_Types_UiListItemData,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -61,8 +60,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,     callback : this._onNotifyBwPlannerStateChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "ActionPlannerStateSet",     callback : this._onNotifyBwPlannerStateChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this._onTouchedBtnClose },
@@ -88,7 +87,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwProduceUnitPanelOpened);
+        Notifications_Dispatcher.dispatch("BwProduceUnitPanelOpened");
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
@@ -99,7 +98,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this.setAndReviseSelectedUnitType(dataArray[0]?.unitType ?? null, true);
     }
     protected override async _onClosed(): Promise<void> {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwProduceUnitPanelClosed);
+        Notifications_Dispatcher.dispatch("BwProduceUnitPanelClosed");
 
         await this._listUnit.removeAllItems();
 
@@ -337,7 +336,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._imgBg,                          callback : this._onTouchedImgBg,         eventType : Helpers_PointerInput.PointerEventType.ReleaseIn },

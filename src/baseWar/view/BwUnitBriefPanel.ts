@@ -1,11 +1,11 @@
 import {
+    type Notifications_Mapping,
     type BaseWar_Interface_IBwWar,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     SinglePlayerWar_Model_SpwWar,
     ActionPlanners_Constants,
     Units_UnitView,
-    type Notifications_DataTypes,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -25,7 +25,6 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Graphics_Constants,
-    Notifications_TypeId,
     Ui_Components_UiContainer,
     Ui_Components_UiPanel,
     Lang_Constants,
@@ -51,13 +50,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._setNotifyListenerArray([
             // { type: NotifyType.GlobalTouchBegin,                callback: this._onNotifyGlobalTouchBegin },
             // { type: NotifyType.GlobalTouchMove,                 callback: this._onNotifyGlobalTouchMove },
-            { type : Notifications_TypeId.TypeId.BwCursorGridIndexChanged,        callback : this._onNotifyBwCursorGridIndexChanged },
-            { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,           callback : this._onNotifyActionPlannerStateSet },
-            { type : Notifications_TypeId.TypeId.BwProduceUnitPanelOpened,        callback : this._onNotifyBwProduceUnitPanelOpened },
-            { type : Notifications_TypeId.TypeId.BwProduceUnitPanelClosed,        callback : this._onNotifyBwProduceUnitPanelClosed },
-            { type : Notifications_TypeId.TypeId.BwUnitChanged,                   callback : this._onNotifyBwUnitChanged },
-            { type : Notifications_TypeId.TypeId.BwUnitCustomNameArrayChanged,    callback : this._onNotifyBwUnitCustomNameArrayChanged },
-            { type : Notifications_TypeId.TypeId.BwUnitCustomNameIdChanged,       callback : this._onNotifyBwUnitCustomNameIdChanged },
+            { type : "BwCursorGridIndexChanged",        callback : this._onNotifyBwCursorGridIndexChanged },
+            { type : "ActionPlannerStateSet",           callback : this._onNotifyActionPlannerStateSet },
+            { type : "BwProduceUnitPanelOpened",        callback : this._onNotifyBwProduceUnitPanelOpened },
+            { type : "BwProduceUnitPanelClosed",        callback : this._onNotifyBwProduceUnitPanelClosed },
+            { type : "BwUnitChanged",                   callback : this._onNotifyBwUnitChanged },
+            { type : "BwUnitCustomNameArrayChanged",    callback : this._onNotifyBwUnitCustomNameArrayChanged },
+            { type : "BwUnitCustomNameIdChanged",       callback : this._onNotifyBwUnitCustomNameIdChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnExpand,  callback : this._onTouchedBtnExpand },
@@ -107,13 +106,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyBwProduceUnitPanelClosed(): void {
         this._updateView();
     }
-    private _onNotifyBwUnitChanged(e: Egret_Egret.Event): void {
+    private _onNotifyBwUnitChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwUnitChanged"]>): void {
         const gridIndex = this.getOpenData()?.war.getCursor().getGridIndex();
         if (gridIndex == null) {
             return;
         }
 
-        const data = e.data as Notifications_DataTypes.BwUnitChanged;
+        const data = e.data as Notifications_Mapping.Mapping["BwUnitChanged"];
         if (data.gridIndex.checkIsEqual(gridIndex)) {
             this._updateView();
         }
@@ -138,7 +137,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateView();
     }
 
-    private _onCellTouchTap(e: Egret_Egret.Event): void {
+    private _onCellTouchTap(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const dispatcher = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;
         if (dispatcher == null) {
             return;

@@ -2,7 +2,6 @@ import {
     Networks_Manager,
     Notifications_Dispatcher,
     Networks_MessageCodes,
-    Notifications_TypeId,
     MapEditor_Model_MeModel,
     type Egret_Egret,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -35,13 +34,13 @@ export function reqMeGetAllMapDataTimestamps(): void {
         }, 
     });
 }
-async function _onMsgMeGetAllMapDataTimestamps(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgMeGetAllMapDataTimestamps(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeGetAllMapDataTimestamps"]>): Promise<void> {
     const data = e.data as MeGetAllMapDataTimestampsResponse;
     if (data.getErrorCode()) {
         MapEditor_Model_MeModel.updateOnFailedMsgMeGetAllMapDataTimestamps(data);
     } else {
         await MapEditor_Model_MeModel.updateOnMsgMeGetAllMapDataTimestamps(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMeGetAllMapDataTimestamps, data);
+        Notifications_Dispatcher.dispatch("MsgMeGetAllMapDataTimestamps", { msg: data });
     }
 }
 
@@ -54,11 +53,11 @@ export function reqMeGetMapDataArray(slotIndexArray: number[]): void {
         }, 
     });
 }
-async function _onMsgMeGetMapDataArray(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgMeGetMapDataArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeGetMapDataArray"]>): Promise<void> {
     const data = e.data as MeGetMapDataArrayResponse;
     if (!data.getErrorCode()) {
         await MapEditor_Model_MeModel.updateOnMsgMeGetMapDataArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMeGetMapDataArray, data);
+        Notifications_Dispatcher.dispatch("MsgMeGetMapDataArray", { msg: data });
     }
 }
 
@@ -71,11 +70,11 @@ export function reqMeGetMapDataTimestamp(slotIndex: number): void {
         }, 
     });
 }
-async function _onMsgMeGetMapDataTimestamp(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgMeGetMapDataTimestamp(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeGetMapDataTimestamp"]>): Promise<void> {
     const data = e.data as MeGetMapDataTimestampResponse;
     if (!data.getErrorCode()) {
         await MapEditor_Model_MeModel.updateOnMsgMeGetMapDataTimestamp(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMeGetMapDataTimestamp, data);
+        Notifications_Dispatcher.dispatch("MsgMeGetMapDataTimestamp", { msg: data });
     }
 }
 
@@ -88,13 +87,13 @@ export function reqMeGetMapData(slotIndex: number): void {
         }, 
     });
 }
-async function _onMsgMeGetMapData(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgMeGetMapData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeGetMapData"]>): Promise<void> {
     const data = e.data as MeGetMapDataResponse;
     if (data.getErrorCode()) {
         MapEditor_Model_MeModel.updateOnFailedMsgMeGetMapData(data);
     } else {
         await MapEditor_Model_MeModel.updateOnMsgMeGetMapData(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMeGetMapData, data);
+        Notifications_Dispatcher.dispatch("MsgMeGetMapData", { msg: data });
     }
 }
 
@@ -117,10 +116,10 @@ export function reqMeSubmitNormalMap({ slotIndex, mapRawData, needReview, srcNor
         },
     });
 }
-function _onMsgMeSubmitNormalMap(e: Egret_Egret.Event): void {
+function _onMsgMeSubmitNormalMap(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeSubmitNormalMap"]>): void {
     const data = e.data as MeSubmitNormalMapResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMeSubmitNormalMap, data);
+        Notifications_Dispatcher.dispatch("MsgMeSubmitNormalMap", { msg: data });
     }
 }
 
@@ -133,10 +132,10 @@ export function reqMeDeleteSlot(slotIndex: number): void {
         },
     });
 }
-async function _onMsgMeDeleteSlot(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgMeDeleteSlot(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMeDeleteSlot"]>): Promise<void> {
     const data = e.data as MeDeleteSlotResponse;
     if (!data.getErrorCode()) {
         await MapEditor_Model_MeModel.updateOnMsgMeDeleteSlot(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMeDeleteSlot, data);
+        Notifications_Dispatcher.dispatch("MsgMeDeleteSlot", { msg: data });
     }
 }

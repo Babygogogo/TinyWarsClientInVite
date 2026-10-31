@@ -5,7 +5,6 @@ import {
     Timer_TimerModel,
     Networks_MessageCodes,
     Chat_Model,
-    Notifications_TypeId,
     type Egret_Egret,
     type Chat_Constants,
 } from "../internal.ts";
@@ -40,22 +39,22 @@ export function reqChatAddMessage(
         }, 
     });
 }
-function _onMsgChatAddMessage(e: Egret_Egret.Event): void {
+function _onMsgChatAddMessage(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChatAddMessage"]>): void {
     const data = e.data as ChatAddMessageResponse;
     if (!data.getErrorCode()) {
         Chat_Model.updateOnAddMessage(Helpers_Misc.getExisted(data.getMessage()), true);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChatAddMessage, data);
+        Notifications_Dispatcher.dispatch("MsgChatAddMessage", { msg: data });
     }
 }
 
 export function reqGetAllMessages(): void {
     Networks_Manager.send({ MsgChatGetAllMessages : { c : {} } });
 }
-function _onMsgChatGetAllMessages(e: Egret_Egret.Event): void {
+function _onMsgChatGetAllMessages(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChatGetAllMessages"]>): void {
     const data = e.data as ChatGetAllMessagesResponse;
     if (!data.getErrorCode()) {
         Chat_Model.setAllMessages(data.getMessageList());
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChatGetAllMessages, data);
+        Notifications_Dispatcher.dispatch("MsgChatGetAllMessages", { msg: data });
     }
 }
 
@@ -76,32 +75,32 @@ export function reqUpdateReadProgress(
         }, 
     });
 }
-function _onMsgChatUpdateReadProgress(e: Egret_Egret.Event): void {
+function _onMsgChatUpdateReadProgress(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChatUpdateReadProgress"]>): void {
     const data = e.data as ChatUpdateReadProgressResponse;
     if (!data.getErrorCode()) {
         Chat_Model.setReadProgress(Helpers_Misc.getExisted(data.getProgress()));
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChatUpdateReadProgress, data);
+        Notifications_Dispatcher.dispatch("MsgChatUpdateReadProgress", { msg: data });
     }
 }
 
 export function reqGetAllReadProgressList(): void {
     Networks_Manager.send({ MsgChatGetAllReadProgressList : { c : {} } });
 }
-function _onMsgChatGetAllReadProgressList(e: Egret_Egret.Event): void {
+function _onMsgChatGetAllReadProgressList(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChatGetAllReadProgressList"]>): void {
     const data = e.data as ChatGetAllReadProgressListResponse;
     if (!data.getErrorCode()) {
         Chat_Model.resetAllReadProgress(data.getList());
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList, data);
+        Notifications_Dispatcher.dispatch("MsgChatGetAllReadProgressList", { msg: data });
     }
 }
 
 export function reqChatDeleteMessage(messageId: number): void {
     Networks_Manager.send({ MsgChatDeleteMessage : { c : { messageId } } });
 }
-function _onMsgChatDeleteMessage(e: Egret_Egret.Event): void {
+function _onMsgChatDeleteMessage(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgChatDeleteMessage"]>): void {
     const data = e.data as ChatDeleteMessageResponse;
     if (!data.getErrorCode()) {
         Chat_Model.updateOnDeleteMessage(Helpers_Misc.getExisted(data.getMessageId()));
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChatDeleteMessage, data);
+        Notifications_Dispatcher.dispatch("MsgChatDeleteMessage", { msg: data });
     }
 }

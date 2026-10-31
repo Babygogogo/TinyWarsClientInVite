@@ -9,7 +9,6 @@ import {
     Sounds_Constants,
     Geometries_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeTypes,
@@ -80,8 +79,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MeDrawerSymmetricalPlayerIndexChanged,   callback : this._onNotifyMeDrawerSymmetricalPlayerIndexChanged },
+            { type : "LanguageChanged",                         callback : this._onNotifyLanguageChanged },
+            { type : "MeDrawerSymmetricalPlayerIndexChanged",   callback : this._onNotifyMeDrawerSymmetricalPlayerIndexChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                   callback : this.closePanel },

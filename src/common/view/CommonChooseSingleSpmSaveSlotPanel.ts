@@ -1,4 +1,5 @@
 import {
+    type Helpers_PointerInput,
     GamePanels_Manager,
     Tween_Executor,
     GamePanels_Dict,
@@ -10,7 +11,6 @@ import {
     Sounds_Constants,
     SinglePlayerWars_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -55,7 +55,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._groupZoomMap,           callback : this._onTouchedGroupZoomMap },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -247,7 +247,7 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         openData?.panel.showMap(openData.slotIndex);
     }
 
-    private async _onTouchedImgSelected(e: Egret_Egret.Event): Promise<void> {
+    private async _onTouchedImgSelected(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): Promise<void> {
         e.stopPropagation();
 
         const openData = this.getOpenData();

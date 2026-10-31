@@ -14,7 +14,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
@@ -84,11 +83,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged,             callback : this._onNotifyMeWarRuleWarEventIdArrayChanged },
-            { type : Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged,        callback : this._onNotifyMeWarRuleTaskObjectiveIdArrayChanged },
-            { type : Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback : this._onNotifyMeWarRuleSimpleDialogueIdArrayChanged },
-            { type : Notifications_TypeId.TypeId.MsgMmAddWarRule,                             callback : this._onNotifyMsgMmAddWarRule },
+            { type : "LanguageChanged",                             callback : this._onNotifyLanguageChanged },
+            { type : "MeWarRuleWarEventIdArrayChanged",             callback : this._onNotifyMeWarRuleWarEventIdArrayChanged },
+            { type : "MeWarRuleTaskObjectiveIdArrayChanged",        callback : this._onNotifyMeWarRuleTaskObjectiveIdArrayChanged },
+            { type : "MeWarRuleMapSimpleDialogueIdArrayChanged",    callback : this._onNotifyMeWarRuleSimpleDialogueIdArrayChanged },
+            { type : "MsgMmAddWarRule",                             callback : this._onNotifyMsgMmAddWarRule },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                       callback : this.closePanel },

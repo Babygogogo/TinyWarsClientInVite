@@ -17,7 +17,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -67,10 +66,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.TimeTick,                callback : this._onNotifyTimeTick },
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgAtSetName,            callback : this._onNotifyMsgAtSetName },
-            { type : Notifications_TypeId.TypeId.MsgMpwWatchMakeRequest,  callback : this._onNotifyMsgMpwWatchMakeRequest },
+            { type : "TimeTick",                callback : this._onNotifyTimeTick },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgAtSetName",            callback : this._onNotifyMsgAtSetName },
+            { type : "MsgMpwWatchMakeRequest",  callback : this._onNotifyMsgMpwWatchMakeRequest },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -354,7 +353,7 @@ class BracketRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._groupName1,                 callback : this._onTouchedGroupName1 },

@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Helpers_Collection,
     Notifications_Dispatcher,
     Sounds_Constants,
@@ -15,7 +16,6 @@ import {
     FloatText,
     Lang_Constants,
     Graphics_Constants,
-    Notifications_TypeId,
     GameVersions_Constants,
     Common_Model_CommonModel,
     WarTypes_Constants,
@@ -76,8 +76,8 @@ const _userOnlineStateAccessor  = new AuxiliaryTypes_CachedDataAccessor.CachedDa
 
 export function init(): void {
     Notifications_Dispatcher.addEventListeners([
-        { type : Notifications_TypeId.TypeId.NetworkDisconnected,    callback : _onNotifyNetworkDisconnected },
-        { type : Notifications_TypeId.TypeId.MsgUserLogout,          callback : _onNotifyMsgUserLogout },
+        { type : "NetworkDisconnected",    callback : _onNotifyNetworkDisconnected },
+        { type : "MsgUserLogout",          callback : _onNotifyMsgUserLogout },
     ], null);
 }
 
@@ -288,7 +288,7 @@ export function setSelfSettingsOpacitySettings(opacitySettings: UserOpacitySetti
     }
 
     selfSettings.setOpacitySettings(opacitySettings);
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged);
+    Notifications_Dispatcher.dispatch("UserSettingsOpacitySettingsChanged");
 }
 export function reqTickSelfSettingsUnitOpacity(): void {
     const unitOpacity = getSelfSettingsOpacitySettings()?.getUnitOpacity();
@@ -318,7 +318,7 @@ function mergeSelfSettingsOpacitySettings(newOpacitySettings: UserOpacitySetting
         currentOpacitySettings.setUnitOpacity(newOpacitySettings.getUnitOpacity() ?? currentOpacitySettings.getUnitOpacity());
     }
 
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged);
+    Notifications_Dispatcher.dispatch("UserSettingsOpacitySettingsChanged");
 }
 
 export function getFollowingUserIdArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]> {
@@ -495,31 +495,31 @@ export function updateOnMsgUserSetSettings(data: UserSetSettingsResponse): void 
 
     if (oldVersion !== getSelfSettingsTextureVersion()) {
         Common_Model_CommonModel.updateOnUnitAndTileTextureVersionChanged();
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged);
+        Notifications_Dispatcher.dispatch("UnitAndTileTextureVersionChanged");
     }
     if (oldIsShowGridBorder !== getSelfSettingsIsShowGridBorder()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsShowGridBorderChanged");
     }
     if (oldIsAutoScrollMap !== getSelfSettingsIsAutoScrollMap()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsIsAutoScrollMapChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsAutoScrollMapChanged");
     }
     if (oldIsUnitFlickeringOnFullEnergy !== getSelfSettingsIsUnitFlickeringOnFullEnergy()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsIsUnitFlickeringOnFullEnergyChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsUnitFlickeringOnFullEnergyChanged");
     }
     if (oldUnitMoveAniSpeedMultiplierPct !== getSelfSettingsUnitMoveAniSpeedMultiplierPct()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsUnitMoveAniSpeedMultiplierPctChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsUnitMoveAniSpeedMultiplierPctChanged");
     }
     if (oldIsReplayResultVisible !== getSelfSettingsIsReplayResultVisible()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsIsReplayResultVisibleChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsReplayResultVisibleChanged");
     }
     if (oldIsSetPathMode !== getSelfSettingsIsSetPathMode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsIsSetPathModeChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsSetPathModeChanged");
     }
     if (oldCanAcceptNotFollowingMessages !== getSelfSettingsCanAcceptNotFollowingMessages()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsCanAcceptNotFollowingMessagesChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsCanAcceptNotFollowingMessagesChanged");
     }
     if (oldIsScreenVibrationEnabled !== getSelfSettingsIsScreenVibrationEnabled()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsIsScreenVibrationEnabledChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsScreenVibrationEnabledChanged");
     }
 }
 export function updateOnMsgUserSetMapRating(data: UserSetMapRatingResponse): void {
@@ -671,8 +671,8 @@ export function updateOnMsgCampaignGetScore(data:CampaignGetScoreResponse): void
 function _onNotifyNetworkDisconnected(): void {
     setIsLoggedIn(false);
 }
-function _onNotifyMsgUserLogout(e: Egret_Egret.Event): void {
-    const reason = (e.data as UserLogoutResponse).getReason();
+function _onNotifyMsgUserLogout(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserLogout"]>): void {
+    const reason = ((e.data as { msg: UserLogoutResponse }).msg).getReason();
     if (reason === Users_Constants.LogoutTypeId.SelfRequest) {
         FloatText.showLang(Lang_Constants.TextType.A0005);
     } else if (reason === Users_Constants.LogoutTypeId.LoginCollision) {

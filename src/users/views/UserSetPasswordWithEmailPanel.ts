@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     Users_Utils,
     Users_Constants,
     Emails_Constants,
@@ -7,7 +8,6 @@ import {
     Users_Proxy,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiInputEventType,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -50,10 +50,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgUserRequestPasswordVerificationCode,          callback : this._onNotifyMsgUserRequestPasswordVerificationCode },
-            { type : Notifications_TypeId.TypeId.MsgUserRequestPasswordVerificationCodeFailed,    callback : this._onNotifyMsgUserRequestPasswordVerificationCodeFailed },
-            { type : Notifications_TypeId.TypeId.MsgUserResetPasswordWithEmail,                   callback : this._onNotifyMsgUserResetPasswordWithEmail },
+            { type : "LanguageChanged",                                 callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserRequestPasswordVerificationCode",          callback : this._onNotifyMsgUserRequestPasswordVerificationCode },
+            { type : "MsgUserRequestPasswordVerificationCodeFailed",    callback : this._onNotifyMsgUserRequestPasswordVerificationCodeFailed },
+            { type : "MsgUserResetPasswordWithEmail",                   callback : this._onNotifyMsgUserResetPasswordWithEmail },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,               callback : this.closePanel },
@@ -82,10 +82,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateInputAccount();
     }
 
-    private _onNotifyMsgUserRequestPasswordVerificationCode(e: Egret_Egret.Event): void {
+    private _onNotifyMsgUserRequestPasswordVerificationCode(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserRequestPasswordVerificationCode"]>): void {
         FloatText.showLang(Lang_Constants.TextType.A0863);
 
-        _lastRequestTimestamp = ((e.data as UserRequestPasswordVerificationCodeResponse).getEndTimestamp() ?? 0) - Emails_Constants.Common.VerificationCodeExpiration;
+        _lastRequestTimestamp = (((e.data as { msg: UserRequestPasswordVerificationCodeResponse }).msg).getEndTimestamp() ?? 0) - Emails_Constants.Common.VerificationCodeExpiration;
     }
     private _onNotifyMsgUserRequestPasswordVerificationCodeFailed(): void {
         // nothing to do

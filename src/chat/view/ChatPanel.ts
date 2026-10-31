@@ -1,4 +1,5 @@
 import {
+    type Notifications_Mapping,
     AuxiliaryTypes_ChatToTarget,
     Chat_Model,
     Chat_Constants,
@@ -32,7 +33,6 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Notifications_TypeId,
     type Ui_Types_UiListItemData,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -75,10 +75,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,       callback : this._onNotifyMsgChatAddMessage },
-            { type : Notifications_TypeId.TypeId.MsgChatDeleteMessage,    callback : this._onNotifyMsgChatDeleteMessage },
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,   callback : this._onNotifyMsgChatGetAllMessages },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgChatAddMessage",       callback : this._onNotifyMsgChatAddMessage },
+            { type : "MsgChatDeleteMessage",    callback : this._onNotifyMsgChatDeleteMessage },
+            { type : "MsgChatGetAllMessages",   callback : this._onNotifyMsgChatGetAllMessages },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this.closePanel },
@@ -181,8 +181,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private async _onNotifyMsgChatAddMessage(e: Egret_Egret.Event): Promise<void> {
-        const message       = Helpers_Misc.getExisted((e.data as ChatAddMessageResponse).getMessage());
+    private async _onNotifyMsgChatAddMessage(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgChatAddMessage"]>): Promise<void> {
+        const message       = Helpers_Misc.getExisted(((e.data as { msg: ChatAddMessageResponse }).msg).getMessage());
         const msgFromUserId = message.getFromUserId();
         const selfUserId    = Helpers_Misc.getExisted(Users_Model.getSelfUserId());
         if (msgFromUserId === selfUserId) {
@@ -211,8 +211,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
 
-    private async _onNotifyMsgChatDeleteMessage(e: Egret_Egret.Event): Promise<void> {
-        const messageId = (e.data as ChatDeleteMessageResponse).getMessageId();
+    private async _onNotifyMsgChatDeleteMessage(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgChatDeleteMessage"]>): Promise<void> {
+        const messageId = ((e.data as { msg: ChatDeleteMessageResponse }).msg).getMessageId();
         if (this._listMessage.getBoundDataArray()?.some(v => v?.message.getMessageId() === messageId)) {
             this._updateComponentsForMessage(false);
         }
@@ -713,10 +713,10 @@ class MainCategoryRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,            callback : this._onMsgChatGetAllMessages },
-            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,                callback : this._onMsgChatAddMessage },
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,    callback : this._onMsgChatGetAllReadProgressList },
-            { type : Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,        callback : this._onMsgChatUpdateReadProgress },
+            { type : "MsgChatGetAllMessages",            callback : this._onMsgChatGetAllMessages },
+            { type : "MsgChatAddMessage",                callback : this._onMsgChatAddMessage },
+            { type : "MsgChatGetAllReadProgressList",    callback : this._onMsgChatGetAllReadProgressList },
+            { type : "MsgChatUpdateReadProgress",        callback : this._onMsgChatUpdateReadProgress },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -733,13 +733,13 @@ class MainCategoryRenderer
     private _onMsgChatGetAllMessages(): void {
         this._updateImgRed();
     }
-    private _onMsgChatAddMessage(e: Egret_Egret.Event): void {
+    private _onMsgChatAddMessage(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgChatAddMessage"]>): void {
         const mainCategory = this.getOpenData()?.mainCategory;
         if (mainCategory == null) {
             return;
         }
 
-        const data          = e.data as ChatAddMessageResponse;
+        const data          = (e.data as { msg: ChatAddMessageResponse }).msg;
         const message       = Helpers_Misc.getExisted(data.getMessage());
         const toCategory    = message.getToCategory() as Chat_Constants.ToCategoryId;
         if (mainCategory === Chat_Constants.MainCategoryId.PublicChannel) {
@@ -777,13 +777,13 @@ class MainCategoryRenderer
     private _onMsgChatGetAllReadProgressList(): void {
         this._updateImgRed();
     }
-    private _onMsgChatUpdateReadProgress(e: Egret_Egret.Event): void {
+    private _onMsgChatUpdateReadProgress(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgChatUpdateReadProgress"]>): void {
         const mainCategory = this.getOpenData()?.mainCategory;
         if (mainCategory == null) {
             return;
         }
 
-        const data      = e.data as ChatUpdateReadProgressResponse;
+        const data      = (e.data as { msg: ChatUpdateReadProgressResponse }).msg;
         const progress  = Helpers_Misc.getExisted(data.getProgress());
         if (checkIsMessageInMainCategory({
             mainCategory : mainCategory,
@@ -854,10 +854,10 @@ class TargetRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,            callback : this._onMsgChatGetAllMessages },
-            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,                callback : this._onMsgChatAddMessage },
-            { type : Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,    callback : this._onMsgChatGetAllReadProgressList },
-            { type : Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,        callback : this._onMsgChatUpdateReadProgress },
+            { type : "MsgChatGetAllMessages",            callback : this._onMsgChatGetAllMessages },
+            { type : "MsgChatAddMessage",                callback : this._onMsgChatAddMessage },
+            { type : "MsgChatGetAllReadProgressList",    callback : this._onMsgChatGetAllReadProgressList },
+            { type : "MsgChatUpdateReadProgress",        callback : this._onMsgChatUpdateReadProgress },
         ]);
         this._applySettingsForWholeTouch();
     }

@@ -4,7 +4,6 @@ import {
     Helpers_Misc,
     Networks_MessageCodes,
     MultiRankRoom_Model_MrrModel,
-    Notifications_TypeId,
     type Egret_Egret,
 } from "../../internal.ts";
 import type { S as MrrDeleteRoomByServerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrDeleteRoomByServer/S.ts";
@@ -38,25 +37,25 @@ export function init(): void {
 export function reqMrrGetMaxConcurrentCount(): void {
     Networks_Manager.send({ MsgMrrGetMaxConcurrentCount : { c : {} } });
 }
-function _onMsgMrrGetMaxConcurrentCount(e: Egret_Egret.Event): void {
+function _onMsgMrrGetMaxConcurrentCount(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrGetMaxConcurrentCount"]>): void {
     const data = e.data as MrrGetMaxConcurrentCountResponse;
     if (!data.getErrorCode()) {
         MultiRankRoom_Model_MrrModel.setMaxConcurrentCount(false, Helpers_Misc.getExisted(data.getMaxCountForStd()));
         MultiRankRoom_Model_MrrModel.setMaxConcurrentCount(true, Helpers_Misc.getExisted(data.getMaxCountForFog()));
         MultiRankRoom_Model_MrrModel.setAdditionalMaxDifferenceInScore(false, data.getAdditionalMaxDifferenceInScoreForStd() ?? 0);
         MultiRankRoom_Model_MrrModel.setAdditionalMaxDifferenceInScore(true, data.getAdditionalMaxDifferenceInScoreForFog() ?? 0);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrGetMaxConcurrentCount, data);
+        Notifications_Dispatcher.dispatch("MsgMrrGetMaxConcurrentCount", { msg: data });
     }
 }
 
 export function reqMrrGetBootTimerDaysRange(): void {
     Networks_Manager.send({ MsgMrrGetBootTimerDaysRange : { c : {} } });
 }
-function _onMsgMrrGetBootTimerDaysRange(e: Egret_Egret.Event): void {
+function _onMsgMrrGetBootTimerDaysRange(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrGetBootTimerDaysRange"]>): void {
     const data = e.data as MrrGetBootTimerDaysRangeResponse;
     if (!data.getErrorCode()) {
         MultiRankRoom_Model_MrrModel.updateOnMsgMrrGetBootTimerDaysRange(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrGetBootTimerDaysRange, data);
+        Notifications_Dispatcher.dispatch("MsgMrrGetBootTimerDaysRange", { msg: data });
     }
 }
 
@@ -70,11 +69,11 @@ export function reqMrrSetBootTimerDaysRange(rangeForStd: number[], rangeForFog: 
         }, 
     });
 }
-function _onMsgMrrSetBootTimerDaysRange(e: Egret_Egret.Event): void {
+function _onMsgMrrSetBootTimerDaysRange(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrSetBootTimerDaysRange"]>): void {
     const data = e.data as MrrSetBootTimerDaysRangeResponse;
     if (!data.getErrorCode()) {
         MultiRankRoom_Model_MrrModel.updateOnMsgMrrSetBootTimerDaysRange(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrSetBootTimerDaysRange, data);
+        Notifications_Dispatcher.dispatch("MsgMrrSetBootTimerDaysRange", { msg: data });
     }
 }
 
@@ -87,13 +86,13 @@ export function reqMrrGetRoomPublicInfo(roomId: number): void {
         }, 
     });
 }
-async function _onMsgMrrGetRoomPublicInfo(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgMrrGetRoomPublicInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrGetRoomPublicInfo"]>): Promise<void> {
     const data = e.data as MrrGetRoomPublicInfoResponse;
     if (data.getErrorCode()) {
         MultiRankRoom_Model_MrrModel.updateOnFailedMsgMrrGetRoomPublicInfo(data);
     } else {
         await MultiRankRoom_Model_MrrModel.updateOnMsgMrrGetRoomPublicInfo(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrGetRoomPublicInfo, data);
+        Notifications_Dispatcher.dispatch("MsgMrrGetRoomPublicInfo", { msg: data });
     }
 }
 
@@ -105,10 +104,10 @@ export function reqMrrGetJoinedRoomIdArray(): void {
         }, 
     });
 }
-function _onMsgMrrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
+function _onMsgMrrGetJoinedRoomIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrGetJoinedRoomIdArray"]>): void {
     const data = e.data as MrrGetJoinedRoomIdArrayResponse;
     MultiRankRoom_Model_MrrModel.setJoinedRoomIdArray(data.getRoomIdArray());
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrGetJoinedRoomIdArray, data);
+    Notifications_Dispatcher.dispatch("MsgMrrGetJoinedRoomIdArray", { msg: data });
 }
 
 export function reqMrrSetBannedCoIdArray(roomId: number, bannedCoIdArray: number[]): void {
@@ -121,11 +120,11 @@ export function reqMrrSetBannedCoIdArray(roomId: number, bannedCoIdArray: number
         }, 
     });
 }
-async function _onMsgMrrSetBannedCoIdArray(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgMrrSetBannedCoIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrSetBannedCoIdArray"]>): Promise<void> {
     const data = e.data as MrrSetBannedCoIdArrayResponse;
     if (!data.getErrorCode()) {
         await MultiRankRoom_Model_MrrModel.updateOnMsgMrrSetBannedCoIdArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrSetBannedCoIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgMrrSetBannedCoIdArray", { msg: data });
     }
 }
 
@@ -146,14 +145,14 @@ export function reqMrrSetMaxConcurrentCount({ maxCountForStd, maxCountForFog, ad
         }, 
     });
 }
-function _onMsgMrrSetMaxConcurrentCount(e: Egret_Egret.Event): void {
+function _onMsgMrrSetMaxConcurrentCount(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrSetMaxConcurrentCount"]>): void {
     const data = e.data as MrrSetMaxConcurrentCountResponse;
     if (!data.getErrorCode()) {
         MultiRankRoom_Model_MrrModel.setMaxConcurrentCount(false, Helpers_Misc.getExisted(data.getMaxCountForStd()));
         MultiRankRoom_Model_MrrModel.setMaxConcurrentCount(true, Helpers_Misc.getExisted(data.getMaxCountForFog()));
         MultiRankRoom_Model_MrrModel.setAdditionalMaxDifferenceInScore(false, data.getAdditionalMaxDifferenceInScoreForStd() ?? 0);
         MultiRankRoom_Model_MrrModel.setAdditionalMaxDifferenceInScore(true, data.getAdditionalMaxDifferenceInScoreForFog() ?? 0);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrSetMaxConcurrentCount, data);
+        Notifications_Dispatcher.dispatch("MsgMrrSetMaxConcurrentCount", { msg: data });
     }
 }
 
@@ -165,11 +164,11 @@ export function reqMrrGetBannedNormalMapIdArray(): void {
         }, 
     });
 }
-function _onMsgMrrGetBannedNormalMapIdArray(e: Egret_Egret.Event): void {
+function _onMsgMrrGetBannedNormalMapIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrGetBannedNormalMapIdArray"]>): void {
     const data = e.data as MrrGetBannedNormalMapIdArrayResponse;
     if (!data.getErrorCode()) {
         MultiRankRoom_Model_MrrModel.updateOnMsgMrrGetBannedNormalMapIdArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrGetBannedNormalMapIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgMrrGetBannedNormalMapIdArray", { msg: data });
     }
 }
 
@@ -183,11 +182,11 @@ export function reqMrrSetBannedNormalMapIdArray(normalMapIdArrayForStd: number[]
         }, 
     });
 }
-function _onMsgMrrSetBannedNormalMapIdArray(e: Egret_Egret.Event): void {
+function _onMsgMrrSetBannedNormalMapIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrSetBannedNormalMapIdArray"]>): void {
     const data = e.data as MrrSetBannedNormalMapIdArrayResponse;
     if (!data.getErrorCode()) {
         MultiRankRoom_Model_MrrModel.updateOnMsgMrrSetBannedNormalMapIdArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrSetBannedNormalMapIdArray, data);
+        Notifications_Dispatcher.dispatch("MsgMrrSetBannedNormalMapIdArray", { msg: data });
     }
 }
 
@@ -202,16 +201,16 @@ export function reqMrrSetSelfSettings(roomId: number, coId: number, unitAndTileS
         }, 
     });
 }
-async function _onMsgMrrSetSelfSettings(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgMrrSetSelfSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrSetSelfSettings"]>): Promise<void> {
     const data = e.data as MrrSetSelfSettingsResponse;
     if (!data.getErrorCode()) {
         await MultiRankRoom_Model_MrrModel.updateOnMsgMrrSetSelfSettings(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrSetSelfSettings, data);
+        Notifications_Dispatcher.dispatch("MsgMrrSetSelfSettings", { msg: data });
     }
 }
 
-function _onMsgMrrDeleteRoomByServer(e: Egret_Egret.Event): void {
+function _onMsgMrrDeleteRoomByServer(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgMrrDeleteRoomByServer"]>): void {
     const data = e.data as MrrDeleteRoomByServerResponse;
     MultiRankRoom_Model_MrrModel.updateOnMsgMrrDeleteRoomByServer(data);
-    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMrrDeleteRoomByServer, data);
+    Notifications_Dispatcher.dispatch("MsgMrrDeleteRoomByServer", { msg: data });
 }

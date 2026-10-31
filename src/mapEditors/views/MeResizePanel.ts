@@ -11,7 +11,6 @@ import {
     GamePanels_Manager,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -51,7 +50,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnCancel,          callback : this.closePanel },
@@ -164,7 +163,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             .startRunningView();
 
         this.closePanel();
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSizeChanged);
+        Notifications_Dispatcher.dispatch("MeMapSizeChanged");
     }
 
     private _onTouchedBtnDeltaTop(): void {

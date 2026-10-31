@@ -7,7 +7,6 @@ import {
     Helpers_ImageSource,
     Helpers_Misc,
     Notifications_Dispatcher,
-    Notifications_TypeId,
     Numbers_Constants,
     ReplayWar_Model_RwWarBase,
     Sounds_Constants,
@@ -51,10 +50,10 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
     private _framesForStateAnimation    : string[]  = [];
 
     private _notifyListeners: Notifications_Types.Listener[] = [
-        { type : Notifications_TypeId.TypeId.UnitAnimationTick,            callback : this._onNotifyUnitAnimationTick },
-        { type : Notifications_TypeId.TypeId.StateIndicatorTick,           callback : this._onNotifyUnitStateIndicatorTick },
-        { type : Notifications_TypeId.TypeId.UnitFlashTick,                callback : this._onNotifyUnitFlashTick },
-        { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,    callback : this._onNotifyBwOverridingSkinIdChanged },
+        { type : "UnitAnimationTick",            callback : this._onNotifyUnitAnimationTick },
+        { type : "StateIndicatorTick",           callback : this._onNotifyUnitStateIndicatorTick },
+        { type : "UnitFlashTick",                callback : this._onNotifyUnitFlashTick },
+        { type : "BwOverridingSkinIdChanged",    callback : this._onNotifyBwOverridingSkinIdChanged },
     ];
 
     public constructor() {

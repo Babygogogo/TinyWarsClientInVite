@@ -11,7 +11,6 @@ import {
     Turns_Constants,
     Players_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type BaseWar_Interface_IBwWar,
     type Ui_Interfaces_IUiButton,
@@ -63,8 +62,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged", callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                       callback : this.closePanel },
@@ -107,12 +106,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTurnIndexComparator(): void {
         const condition = this._getCondition();
         condition.setTurnIndexComparator(ValueAndComparators_Utils.getNextComparatorId(condition.getTurnIndexComparator()));
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnTurnRemainderComparator(): void {
         const condition = this._getCondition();
         condition.setTurnIndexRemainderComparator(ValueAndComparators_Utils.getNextComparatorId(condition.getTurnIndexRemainderComparator()));
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnTurnPhase(): void {
         const condition = this._getCondition();
@@ -124,7 +123,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             condition.setTurnPhase(Turns_Constants.PhaseCode.WaitBeginTurn);
         }
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
     }
     private _onTouchedBtnPlayerIndex(): void {
         const war = this.getOpenData()?.war;
@@ -140,7 +139,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             getNumberMainText    : playerIndex => `P${playerIndex}`,
             callbackOnConfirm    : playerIndexArray => {
                 condition.setPlayerIndexArray(playerIndexArray);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -153,7 +152,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentValue : condition.getTurnIndex(),
             callback     : value => {
                 condition.setTurnIndex(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -166,7 +165,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentValue : condition.getTurnIndexDivider(),
             callback     : value => {
                 condition.setTurnIndexDivider(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -179,7 +178,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentValue : condition.getTurnIndexRemainder(),
             callback     : value => {
                 condition.setTurnIndexRemainder(value);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }

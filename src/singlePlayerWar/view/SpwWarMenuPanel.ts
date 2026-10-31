@@ -13,7 +13,6 @@ import {
     FloatText,
     ActionPlanners_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     WarTypes_Constants,
     type SinglePlayerWar_Interface_ISpwWar,
@@ -51,7 +50,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnDamageCalculator,                        callback : this._onTouchedBtnDamageCalculator },

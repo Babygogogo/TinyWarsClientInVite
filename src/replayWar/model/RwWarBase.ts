@@ -18,7 +18,6 @@ import {
     Sounds_SoundPlayer,
     Egret_Egret,
     Lang_Constants,
-    Notifications_TypeId,
     type ReplayWar_Interface_IRwWarBase,
 } from "../../internal.ts";
 
@@ -259,7 +258,7 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
     public setIsAutoReplay(isAuto: boolean): void {
         if (this.getIsAutoReplay() !== isAuto) {
             this._isAutoReplay = isAuto;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayAutoReplayChanged);
+            Notifications_Dispatcher.dispatch("ReplayAutoReplayChanged");
 
             if ((isAuto) && (!this.getIsExecutingAction()) && (!this.checkIsInEnd())) {
                 this._executeNextAction(false);
@@ -290,7 +289,7 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
     }
     public setNextOperationId(nextOperationId: number): void {
         this._nextOperationId = nextOperationId;
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.RwNextOperationIdChanged);
+        Notifications_Dispatcher.dispatch("RwNextOperationIdChanged");
     }
     public getNextAction(): WoContainer | null {
         const array = this._srcExecutedOperationArray;
@@ -362,7 +361,7 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         this._setIsTickingReplay(true);
         await this._doLoadCheckpoint(checkpointId, floatText);
         this._setIsTickingReplay(false);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
+        Notifications_Dispatcher.dispatch("ReplayTick");
     }
     /** 不加锁，也不判断当前是否被锁 */
     private async _doLoadCheckpoint(checkpointId: number, floatText = true): Promise<void> {
@@ -389,7 +388,7 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         this._setIsTickingReplay(true);
         await this._doLoadPreviousCheckpoint(floatText);
         this._setIsTickingReplay(false);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
+        Notifications_Dispatcher.dispatch("ReplayTick");
     }
     /** 不加锁，也不判断当前是否被锁 */
     private _doLoadPreviousCheckpoint(floatText = true): Promise<void> {
@@ -409,7 +408,7 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         this._setIsTickingReplay(true);
         await this._doLoadCheckpoint(Helpers_Misc.getExisted(this._getCheckpointId(this.getNextOperationId())) + 1);
         this._setIsTickingReplay(false);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
+        Notifications_Dispatcher.dispatch("ReplayTick");
     }
     private async _loadExistingCheckpoint(checkpointId: number, floatText = true): Promise<void> {
         if ((this.getIsExecutingAction()) || (!this.getIsRunning())) {
@@ -462,7 +461,7 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         });
 
         this._setIsTickingReplay(false);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
+        Notifications_Dispatcher.dispatch("ReplayTick");
     }
     public async loadNextAction(): Promise<void> {
         if ((this.checkIsInEnd())           ||
@@ -488,7 +487,7 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         });
 
         this._setIsTickingReplay(false);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
+        Notifications_Dispatcher.dispatch("ReplayTick");
     }
 
     private async _executeNextAction(isFastExecute: boolean): Promise<void> {
@@ -526,7 +525,7 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         }
 
         if (!isFastExecute) {
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
+            Notifications_Dispatcher.dispatch("ReplayTick");
         }
 
         if ((!isInEnd) && (this.getIsAutoReplay()) && (!this.getIsExecutingAction()) && (this.getIsRunning())) {

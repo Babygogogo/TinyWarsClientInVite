@@ -12,7 +12,6 @@ import {
     Players_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
@@ -68,8 +67,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnRename,                  callback : this._onTouchedBtnRename },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,  callback : this._onNotifyMapSimpleDialogueChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MeMapSimpleDialogueChanged",  callback : this._onNotifyMapSimpleDialogueChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -124,7 +123,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
             const dialogueId = war.addDefaultMapSimpleDialogue();
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+            Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
 
             this.setAndReviseSelectedDialogueId(dialogueId, true);
         }
@@ -164,7 +163,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0168, `#${dialogueId}`),
             callback   : () => {
                 war.deleteMapSimpleDialogues([dialogueId]);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
             },
         });
     }
@@ -182,7 +181,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 const newDialogueId = war.cloneMapSimpleDialogue(dialogueId);
                 if (newDialogueId != null) {
                     FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `#${newDialogueId}`));
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                    Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
 
                     // this.setAndReviseSelectedDialogueId(dialogueId, true);
                 }
@@ -239,7 +238,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 getHelpText      : () => Lang_Utils.getText(Lang_Constants.TextType.A0789),
                 callback         : newNameArray => {
                     dialogueData.setDialogueNameArray(newNameArray);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                    Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
                 },
             });
         }
@@ -392,7 +391,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             { ui : this._btnLine,            callback : this._onTouchedBtnLine },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -425,7 +424,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                     textArray : dataForAside.getTextArray().map(v => v.toJson()),
                     nameArray : [],
                 }));
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
                 return;
             }
         }
@@ -438,7 +437,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                     textArray : dataForCoDialogue.getTextArray().map(v => v.toJson()),
                     side      : dataForCoDialogue.getSide(),
                 }));
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
                 return;
             }
         }
@@ -461,7 +460,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             } else {
                 const dataForDialogue = openData.dataForDialogue;
                 dialogueArray.splice(dialogueArray.indexOf(dataForDialogue), 0, dataForDialogue.clone());
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
             }
         }
     }
@@ -479,7 +478,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             const index         = dialogueArray.indexOf(openData.dataForDialogue);
             if (index > 0) {
                 [dialogueArray[index - 1], dialogueArray[index]] = [dialogueArray[index], dialogueArray[index - 1]];
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
             }
         }
     }
@@ -501,7 +500,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                     getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
                     callback   : () => {
                         Helpers_Collection.deleteElementFromList(dataArray, openData.dataForDialogue);
-                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                        Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
                     },
                 });
             }
@@ -524,7 +523,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                     ? Dialogues_Constants.SmallDialogueSideId.Top
                     : Dialogues_Constants.SmallDialogueSideId.Bottom,
                 );
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
             }
         }
     }
@@ -554,7 +553,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                             if (newCoId != null) {
                                 dataForCoDialogue.setPlayerIndex(null);
                             }
-                            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                            Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
                         }
                     },
                 });
@@ -585,7 +584,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                             if (newPlayerIndex != null) {
                                 dataForCoDialogue.setCoId(null);
                             }
-                            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                            Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
                         }
                     },
                 });
@@ -619,7 +618,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                         dataForDialogue.setNameArray([]);
                     }
 
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                    Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
                 },
             });
         }
@@ -653,7 +652,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                         dataForAside.setTextArray(newTextArray);
                     }
 
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
+                    Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
                 },
             });
         }

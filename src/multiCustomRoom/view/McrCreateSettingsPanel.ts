@@ -32,7 +32,6 @@ import {
     FloatText,
     Lang_Constants,
     BootTimers_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
     Timer_TimerModel,
@@ -81,9 +80,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnChooseSkinId,        callback : this._onTouchedBtnChooseSkinId },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,            callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.RoomCreator_SelfCoIdChanged,   callback : this._onNotifyMcrCreateSelfCoIdChanged },
-            { type : Notifications_TypeId.TypeId.MsgMcrCreateRoom,           callback : this._onNotifyMsgMcrCreateRoom },
+            { type : "LanguageChanged",            callback : this._onNotifyLanguageChanged },
+            { type : "RoomCreator_SelfCoIdChanged",   callback : this._onNotifyMcrCreateSelfCoIdChanged },
+            { type : "MsgMcrCreateRoom",           callback : this._onNotifyMsgMcrCreateRoom },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);

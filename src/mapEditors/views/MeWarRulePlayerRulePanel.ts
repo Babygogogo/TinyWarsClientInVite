@@ -14,7 +14,6 @@ import {
     PlayerRules_Constants,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     type Ui_Types_UiListItemData,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -43,9 +42,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,                  callback : this._onNotifyMeMapSimpleDialogueChanged },
-            { type : Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback : this._onNotifyMeWarRuleMapSimpleDialogueIdArrayChanged },
+            { type : "LanguageChanged",                             callback : this._onNotifyLanguageChanged },
+            { type : "MeMapSimpleDialogueChanged",                  callback : this._onNotifyMeMapSimpleDialogueChanged },
+            { type : "MeWarRuleMapSimpleDialogueIdArrayChanged",    callback : this._onNotifyMeWarRuleMapSimpleDialogueIdArrayChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this.closePanel },
@@ -235,7 +234,7 @@ class RuleTitleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._groupHelp,  callback : this._onTouchedGroupHelp },

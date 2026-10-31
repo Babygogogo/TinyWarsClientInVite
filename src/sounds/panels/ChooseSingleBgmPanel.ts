@@ -1,4 +1,5 @@
 import {
+    type Helpers_PointerInput,
     Tween_Executor,
     Sounds_Utils,
     Lang_Utils,
@@ -7,7 +8,6 @@ import {
     GamePanels_Manager,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiInputEventType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -54,8 +54,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._layoutOngoing,                               callback : this._onTouchedGroupOngoing },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.SoundManagerPlayingBgmCodeChanged,   callback : this._onNotifySoundManagerPlayingBgmCodeChanged },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "SoundManagerPlayingBgmCodeChanged",   callback : this._onNotifySoundManagerPlayingBgmCodeChanged },
         ]);
         this._setInputListenerArray([
             { ui : this._inputFilter,                                callback : this._onFocusOutInputFilter,  eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
@@ -209,7 +209,7 @@ class BgmRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._imgSelected,    callback : this._onTouchedImgSelected },
@@ -244,7 +244,7 @@ class BgmRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         this._updateView();
     }
 
-    private _onTouchedImgSelected(e: Egret_Egret.Event): void {
+    private _onTouchedImgSelected(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         e.stopPropagation();
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonConfirm01);
 

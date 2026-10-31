@@ -10,7 +10,6 @@ import {
     MultiRankRoom_Model_MrrProxy,
     Sounds_Constants,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -60,9 +59,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.MsgMrrGetMaxConcurrentCount,    callback : this._onMsgMrrGetMaxConcurrentCount },
-            { type : Notifications_TypeId.TypeId.MsgMrrSetMaxConcurrentCount,    callback : this._onMsgMrrSetMaxConcurrentCount },
+            { type : "LanguageChanged",                callback : this._onNotifyLanguageChanged },
+            { type : "MsgMrrGetMaxConcurrentCount",    callback : this._onMsgMrrGetMaxConcurrentCount },
+            { type : "MsgMrrSetMaxConcurrentCount",    callback : this._onMsgMrrSetMaxConcurrentCount },
         ]);
         this._setUiListenerArray([
             { ui : this._groupStd,                       callback : this._onTouchedGroupStd },
@@ -107,7 +106,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._loadMaxCountAndUpdateView();
     }
 
-    private _onTouchedGroupStd(e: Egret_Egret.Event): void {
+    private _onTouchedGroupStd(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupStd;
         const width                 = group.getUnscaledWidth();
         const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
@@ -119,7 +118,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._selectedCountForFog   = Math.min(this._selectedCountForFog ?? 0, MultiRankedWars_Constants.Common.MaxConcurrentCount - countForStd);
         this._updateGroupFog();
     }
-    private _onTouchMoveGroupStd(e: Egret_Egret.Event): void {
+    private _onTouchMoveGroupStd(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupStd;
         const width                 = group.getUnscaledWidth();
         const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
@@ -143,7 +142,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
-    private _onTouchedGroupFog(e: Egret_Egret.Event): void {
+    private _onTouchedGroupFog(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupFog;
         const width                 = group.getUnscaledWidth();
         const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
@@ -155,7 +154,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._selectedCountForStd   = Math.min(this._selectedCountForStd ?? 0, MultiRankedWars_Constants.Common.MaxConcurrentCount - countForFog);
         this._updateGroupStd();
     }
-    private _onTouchMoveGroupFog(e: Egret_Egret.Event): void {
+    private _onTouchMoveGroupFog(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupFog;
         const width                 = group.getUnscaledWidth();
         const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;

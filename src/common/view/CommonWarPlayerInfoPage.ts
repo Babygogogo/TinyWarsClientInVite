@@ -18,7 +18,6 @@ import {
     Sounds_Constants,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -173,9 +172,9 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             { ui : this._btnChangeDummy, callback : this._onTouchedBtnChangeDummy },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                             callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.TimeTick,                                    callback : this._onNotifyTimeTick },
-            { type : Notifications_TypeId.TypeId.UserSettingsIsReplayResultVisibleChanged,    callback : this._onNotifyUserSettingsIsReplayResultVisibleChanged },
+            { type : "LanguageChanged",                             callback : this._onNotifyLanguageChanged },
+            { type : "TimeTick",                                    callback : this._onNotifyTimeTick },
+            { type : "UserSettingsIsReplayResultVisibleChanged",    callback : this._onNotifyUserSettingsIsReplayResultVisibleChanged },
         ]);
 
         this._updateComponentsForLanguage();

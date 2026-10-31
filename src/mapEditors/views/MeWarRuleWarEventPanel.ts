@@ -7,7 +7,6 @@ import {
     GamePanels_Manager,
     FloatText,
     Lang_Constants,
-    Notifications_TypeId,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
@@ -39,9 +38,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
-            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
-            { type : Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged, callback : this._onNotifyMeWarRuleWarEventIdArrayChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",         callback : this._onNotifyWarEventFullDataChanged },
+            { type : "MeWarRuleWarEventIdArrayChanged", callback : this._onNotifyMeWarRuleWarEventIdArrayChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,       callback : this.closePanel },
@@ -112,7 +111,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             }
                         }
                     }
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
+                    Notifications_Dispatcher.dispatch("MeWarRuleWarEventIdArrayChanged");
                 },
             });
         }
@@ -130,7 +129,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0801),
                 callback   : () => {
                     openData.templateWarRule.setWarEventIdArray([]);
-                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
+                    Notifications_Dispatcher.dispatch("MeWarRuleWarEventIdArrayChanged");
                 },
             });
         }
@@ -200,7 +199,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             { ui : this._btnDelete,      callback : this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -222,7 +221,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             const warEventIdArray = openData.templateWarRule.getWarEventIdArray();
             if (warEventIdArray) {
                 Helpers_Collection.moveElementInList(warEventIdArray, openData.warEventId, -1);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
+                Notifications_Dispatcher.dispatch("MeWarRuleWarEventIdArrayChanged");
             }
         }
     }
@@ -238,7 +237,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             const warEventIdArray = openData.templateWarRule.getWarEventIdArray();
             if (warEventIdArray) {
                 Helpers_Collection.moveElementInList(warEventIdArray, openData.warEventId, 1);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
+                Notifications_Dispatcher.dispatch("MeWarRuleWarEventIdArrayChanged");
             }
         }
     }
@@ -254,7 +253,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             const warEventIdArray = openData.templateWarRule.getWarEventIdArray();
             if (warEventIdArray) {
                 Helpers_Collection.deleteElementFromList(warEventIdArray, openData.warEventId);
-                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
+                Notifications_Dispatcher.dispatch("MeWarRuleWarEventIdArrayChanged");
             }
         }
     }

@@ -8,7 +8,6 @@ import {
     GamePanels_Manager,
     Lang_Constants,
     Turns_Constants,
-    Notifications_TypeId,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -109,7 +108,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnModifyShowDeprecatedCo,  callback : this._onTouchedBtnModifyShowDeprecatedCo },
         ]);
         this._setNotifyListenerArray([
-            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();

@@ -4,7 +4,6 @@ import {
     Notifications_Dispatcher,
     Helpers_Misc,
     Networks_MessageCodes,
-    Notifications_TypeId,
     SinglePlayerMode_Model_SpmModel,
     type Egret_Egret,
     type SinglePlayerWar_Interface_ISpwWar,
@@ -54,13 +53,13 @@ export function reqSpmGetAllWarSaveSlotTimestamps(): void {
         }, 
     });
 }
-function _onMsgSpmGetAllWarSaveSlotTimestamps(e: Egret_Egret.Event): void {
+function _onMsgSpmGetAllWarSaveSlotTimestamps(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmGetAllWarSaveSlotTimestamps"]>): void {
     const data = e.data as SpmGetAllWarSaveSlotTimestampsResponse;
     if (data.getErrorCode()) {
         SinglePlayerMode_Model_SpmModel.updateOnFailedMsgSpmGetAllWarSaveSlotTimestamps(data);
     } else {
         SinglePlayerMode_Model_SpmModel.updateOnMsgSpmGetAllWarSaveSlotTimestamps(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmGetAllWarSaveSlotTimestamps, data);
+        Notifications_Dispatcher.dispatch("MsgSpmGetAllWarSaveSlotTimestamps", { msg: data });
     }
 }
 
@@ -73,11 +72,11 @@ export function reqSpmGetWarSaveSlotFullDataArray(slotIndexArray: number[]): voi
         }, 
     });
 }
-async function _onMsgSpmGetWarSaveSlotFullDataArray(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgSpmGetWarSaveSlotFullDataArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmGetWarSaveSlotFullDataArray"]>): Promise<void> {
     const data = e.data as SpmGetWarSaveSlotFullDataArrayResponse;
     if (!data.getErrorCode()) {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmGetWarSaveSlotFullDataArray(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmGetWarSaveFullDataArray, data);
+        Notifications_Dispatcher.dispatch("MsgSpmGetWarSaveFullDataArray", { msg: data });
     }
 }
 
@@ -90,13 +89,13 @@ export function reqSpmGetWarSaveSlotFullData(slotIndex: number): void {
         },
     });
 }
-async function _onMsgSpmGetWarSaveSlotFullData(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgSpmGetWarSaveSlotFullData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmGetWarSaveSlotFullData"]>): Promise<void> {
     const data = e.data as SpmGetWarSaveSlotFullDataResponse;
     if (data.getErrorCode()) {
         SinglePlayerMode_Model_SpmModel.updateOnFailedMsgSpmGetWarSaveSlotFullData(data);
     } else {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmGetWarSaveSlotFullData(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmGetWarSaveFullData, data);
+        Notifications_Dispatcher.dispatch("MsgSpmGetWarSaveFullData", { msg: data });
     }
 }
 
@@ -105,11 +104,11 @@ export function reqSpmCreateScw(param: SpmCreateScwRequest): void {
         MsgSpmCreateScw : { c : param.toJson() },
     });
 }
-async function _onMsgSpmCreateScw(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgSpmCreateScw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmCreateScw"]>): Promise<void> {
     const data = e.data as SpmCreateScwResponse;
     if (!data.getErrorCode()) {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmCreateScw(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmCreateScw, data);
+        Notifications_Dispatcher.dispatch("MsgSpmCreateScw", { msg: data });
     }
 }
 
@@ -128,11 +127,11 @@ export function reqSpmCreateSfw({ slotIndex, slotExtraData, warData }: {
         },
     });
 }
-async function _onMsgSpmCreateSfw(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgSpmCreateSfw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmCreateSfw"]>): Promise<void> {
     const data = e.data as SpmCreateSfwResponse;
     if (!data.getErrorCode()) {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmCreateSfw(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmCreateSfw, data);
+        Notifications_Dispatcher.dispatch("MsgSpmCreateSfw", { msg: data });
     }
 }
 
@@ -141,11 +140,11 @@ export function reqSpmCreateSrw(data: SpmCreateSrwRequest): void {
         MsgSpmCreateSrw : { c : data.toJson() },
     });
 }
-async function _onMsgSpmCreateSrw(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgSpmCreateSrw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmCreateSrw"]>): Promise<void> {
     const data = e.data as SpmCreateSrwResponse;
     if (!data.getErrorCode()) {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmCreateSrw(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmCreateSrw, data);
+        Notifications_Dispatcher.dispatch("MsgSpmCreateSrw", { msg: data });
     }
 }
 
@@ -160,11 +159,11 @@ export function reqSpmSaveScw(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): v
         },
     });
 }
-async function _onMsgSpmSaveScw(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgSpmSaveScw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmSaveScw"]>): Promise<void> {
     const data = e.data as SpmSaveScwResponse;
     if (!data.getErrorCode()) {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmSaveScw(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmSaveScw, data);
+        Notifications_Dispatcher.dispatch("MsgSpmSaveScw", { msg: data });
     }
 }
 
@@ -179,11 +178,11 @@ export function reqSpmSaveSfw(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): v
         },
     });
 }
-async function _onMsgSpmSaveSfw(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgSpmSaveSfw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmSaveSfw"]>): Promise<void> {
     const data = e.data as SpmSaveSfwResponse;
     if (!data.getErrorCode()) {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmSaveSfw(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmSaveSfw, data);
+        Notifications_Dispatcher.dispatch("MsgSpmSaveSfw", { msg: data });
     }
 }
 
@@ -198,11 +197,11 @@ export function reqSpmSaveSrw(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): v
         },
     });
 }
-async function _onMsgSpmSaveSrw(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgSpmSaveSrw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmSaveSrw"]>): Promise<void> {
     const data = e.data as SpmSaveSrwResponse;
     if (!data.getErrorCode()) {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmSaveSrw(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmSaveSrw, data);
+        Notifications_Dispatcher.dispatch("MsgSpmSaveSrw", { msg: data });
     }
 }
 
@@ -215,11 +214,11 @@ export function reqSpmDeleteWarSaveSlot(slotIndex: number): void {
         },
     });
 }
-async function _onMsgSpmDeleteWarSaveSlot(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgSpmDeleteWarSaveSlot(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmDeleteWarSaveSlot"]>): Promise<void> {
     const data = e.data as SpmDeleteWarSaveSlotResponse;
     if (!data.getErrorCode()) {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmDeleteWarSaveSlot(Helpers_Misc.getExisted(data.getSlotIndex()));
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmDeleteWarSaveSlot, data);
+        Notifications_Dispatcher.dispatch("MsgSpmDeleteWarSaveSlot", { msg: data });
     }
 }
 
@@ -232,11 +231,11 @@ export function reqSpmGetRankList(normalMapId: number): void {
         },
     });
 }
-function _onMsgSpmGetRankList(e: Egret_Egret.Event): void {
+function _onMsgSpmGetRankList(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmGetRankList"]>): void {
     const data = e.data as SpmGetRankListResponse;
     if (!data.getErrorCode()) {
         SinglePlayerMode_Model_SpmModel.updateOnMsgSpmGetRankList(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmGetRankList, data);
+        Notifications_Dispatcher.dispatch("MsgSpmGetRankList", { msg: data });
     }
 }
 
@@ -249,10 +248,10 @@ export function reqSpmValidateSrw(war: SingleRankWar_Interface_ISrwWar.ISrwWar):
         },
     });
 }
-function _onMsgSpmValidateSrw(e: Egret_Egret.Event): void {
+function _onMsgSpmValidateSrw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmValidateSrw"]>): void {
     const data = e.data as SpmValidateSrwResponse;
     if (!data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmValidateSrw, data);
+        Notifications_Dispatcher.dispatch("MsgSpmValidateSrw", { msg: data });
     }
 }
 
@@ -265,12 +264,12 @@ export function reqSpmGetReplayData(rankId: number): void {
         },
     });
 }
-async function _onMsgSpmGetReplayData(e: Egret_Egret.Event): Promise<void> {
+async function _onMsgSpmGetReplayData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmGetReplayData"]>): Promise<void> {
     const data = e.data as SpmGetReplayDataResponse;
     if (data.getErrorCode()) {
         SinglePlayerMode_Model_SpmModel.updateOnFailedMsgSpmGetReplayData(data);
     } else {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmGetReplayData(data);
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgSpmGetReplayData, data);
+        Notifications_Dispatcher.dispatch("MsgSpmGetReplayData", { msg: data });
     }
 }
