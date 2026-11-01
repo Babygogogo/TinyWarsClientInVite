@@ -345,7 +345,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         this._conUnitView.addUiChild(this._unitView);
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunningView();
+        this._unitView.stopRunning();
 
         await super._onClosed();
     }
@@ -404,7 +404,13 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         labelProduce.setLangText(Lang_Constants.TextType.B0691);
         this._imgProduce.loadSource(isFundEnough ? `uncompressedColorYellow0001` : `uncompressedColorGrey0002`);
         this._imgBottom.loadSource(isFundEnough ? `uncompressedColorYellow0001` : `uncompressedColorGrey0002`);
-        this._unitView.init(unit).startRunningView();
+
+        {
+            const unitView = this._unitView;
+            unitView.loadViewDataFromUnit(unit, true);
+            unitView.startRunning();
+        }
+
         this._layoutName.arrangeItems();
     }
 }

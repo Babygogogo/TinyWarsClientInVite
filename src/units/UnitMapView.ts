@@ -1,19 +1,19 @@
 import {
+    ActionPlanners_Constants,
+    Graphics_Utils,
+    Helpers_Misc,
+    Notifications_Dispatcher,
+    type Notifications_Types,
     ReplayWar_Model_RwWar,
     ReplayWar_Model_RwWarBase,
-    ActionPlanners_Constants,
-    Notifications_Dispatcher,
-    Helpers_Misc,
-    Graphics_Utils,
-    type Notifications_Types,
     Ui_Components_UiContainer,
     type Ui_Interfaces_IUiContainer,
-    Utils_ClientErrorCode,
     Units_Constants,
-    Visibilities_Utils,
-    Users_Model,
     type Units_UnitMap,
     type Units_UnitView,
+    Users_Model,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
 } from "../internal.ts";
 
 const getGridWidth          = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
@@ -74,15 +74,19 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
     // Other public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public addUnit(view: Units_UnitView.UnitView, needResetZOrder: boolean): void {
-        const model = Helpers_Misc.getExisted(view.getUnit());
+        const viewData = view.getViewData();
 
-        view.setX(getGridWidth() * model.getGridX());
-        view.setY(getGridHeight() * model.getGridY());
-        (model.getLoaderUnitId() != null) && (view.setIsVisible(false));
+        view.setX(getGridWidth() * viewData.gridX);
+        view.setY(getGridHeight() * viewData.gridY);
+        if (viewData.isLoadedByUnit) {
+            view.setIsVisible(false);
+        }
 
-        const layer = this._getLayerByUnitType(model.getUnitType());
+        const layer = this._getLayerByUnitType(viewData.unitTypeId);
         layer.addUiChild(view);
-        (needResetZOrder) && (this._resetZOrderForLayer(layer));
+        if (needResetZOrder) {
+            this._resetZOrderForLayer(layer);
+        }
     }
 
     public removeUnit(view: Units_UnitView.UnitView): void {
@@ -114,20 +118,17 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) {
             this._resetVisibleForAllUnitsOnMap();
             Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
-            const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
-            (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
+            actionPlanner.getFocusUnitLoaded()?.setViewVisible(false);
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
             this._resetVisibleForAllUnitsOnMap();
             Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
-            const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
-            (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
+            actionPlanner.getFocusUnitLoaded()?.setViewVisible(false);
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget) {
             this._resetVisibleForAllUnitsOnMap();
             Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
-            const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
-            (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
+            actionPlanner.getFocusUnitLoaded()?.setViewVisible(false);
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget) {
             this._resetVisibleForAllUnitsOnMap();
@@ -142,14 +143,12 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitDropDestination) {
             this._resetVisibleForAllUnitsOnMap();
             Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
-            const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
-            (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
+            actionPlanner.getFocusUnitLoaded()?.setViewVisible(false);
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitFlareDestination) {
             this._resetVisibleForAllUnitsOnMap();
             Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
-            const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
-            (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
+            actionPlanner.getFocusUnitLoaded()?.setViewVisible(false);
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitRepairTarget) {
             this._resetVisibleForAllUnitsOnMap();
@@ -159,8 +158,7 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination) {
             this._resetVisibleForAllUnitsOnMap();
             Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
-            const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
-            (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
+            actionPlanner.getFocusUnitLoaded()?.setViewVisible(false);
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingTileProductionTarget) {
             this._resetVisibleForAllUnitsOnMap();
@@ -206,7 +204,7 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
         for (let i = 0; i < viewsCount; ++i) {
             views[i] = layer.getUiChildAt(i) as Units_UnitView.UnitView;
         }
-        views.sort((v1, v2) => Helpers_Misc.getExisted(v1.getUnit()).getGridY() - Helpers_Misc.getExisted(v2.getUnit()).getGridY());
+        views.sort((v1, v2) => v1.getViewData().gridY - v2.getViewData().gridY);
         for (let i = 0; i < viewsCount; ++i) {
             layer.setUiChildIndex(views[i], i);
         }

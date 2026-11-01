@@ -375,7 +375,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunningView();
+        this._unitView.stopRunning();
         Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
@@ -406,8 +406,11 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        const unit = openData.unit;
-        this._unitView.init(unit).startRunningView();
+        const unit      = openData.unit;
+        const unitView  = this._unitView;
+        unitView.loadViewDataFromUnit(unit, true);
+        unitView.startRunning();
+
         this._labelHp.setText(`${unit.getCurrentHp()}`);
         this._labelFuel.setText(`${unit.getCurrentFuel()}`);
         this._labelName.setText(Lang_Utils.getUnitName(unit.getUnitType(), unit.getGcData()) ?? Lang_Constants.UndefinedError);

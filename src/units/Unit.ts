@@ -116,8 +116,6 @@ export class Unit {
         this.setAiWeightedDestinationWithProto(unitData.getAiWeightedDestination());
         this.setBuffList(unitData.getBuffArray());
         this.setCustomNameId(unitData.getCustomNameId());
-
-        this.getView().init(this);
     }
 
     public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
@@ -128,10 +126,12 @@ export class Unit {
         this._setWar(war);
     }
     public startRunningView(): void {
-        this.getView().startRunningView();
+        const view = this.getView();
+        view.loadViewDataFromUnit(this);
+        view.startRunning();
     }
     public stopRunning(): void {
-        this.getView().stopRunningView();
+        this.getView().stopRunning();
     }
 
     public clone(): Units_Unit.Unit {
@@ -224,7 +224,9 @@ export class Unit {
     }
 
     public updateView(): void {
-        this.getView().resetAllViews();
+        const view = this.getView();
+        view.loadViewDataFromUnit(this);
+        view.refreshAllViews();
     }
     public setViewVisible(visible: boolean): void {
         this.getView().setIsVisible(visible);
@@ -238,6 +240,7 @@ export class Unit {
         updateViewAfterMove : boolean;
     }): Promise<void> {
         return this.getView().moveAlongPath({
+            unit                : this,
             path                : pathNodes,
             isDiving            : isDiving,
             isBlocked           : isBlocked,

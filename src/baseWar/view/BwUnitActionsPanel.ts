@@ -226,7 +226,7 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
             .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunningView();
+        this._unitView.stopRunning();
         Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
@@ -254,7 +254,8 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
                 labelCost.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0079)}: ${cost != null ? cost : Lang_Constants.UndefinedError}`);
             }
             unitView.setIsVisible(true);
-            unitView.init(unit).startRunningView();
+            unitView.loadViewDataFromUnit(unit, true);
+            unitView.startRunning();
         }
     }
 

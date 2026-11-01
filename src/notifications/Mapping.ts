@@ -318,7 +318,7 @@ export type Mapping = {
     BwCoUsingSkillTypeChanged: undefined;
     BwCoIdChanged: { player: Players_IPlayer.IPlayer };
     BwForceWeatherTypeChanged: undefined;
-    BwOverridingSkinIdChanged: undefined;
+    BwOverridingSkinIdChanged: { war: BaseWar_Interface_IBwWar.IBwWar };
     BwCustomCountersChanged: undefined;
 
     BwCursorTapped: { current: AuxiliaryTypes_GridIndex.GridIndex, tappedOn: AuxiliaryTypes_GridIndex.GridIndex };

@@ -357,7 +357,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
     }
 
     public dispose(): void {
-        this._unitView.stopRunningView();
+        this._unitView.stopRunning();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -369,7 +369,12 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
             return;
         }
 
-        this._unitView.init(unit).startRunningView();
+        {
+            const unitView = this._unitView;
+            unitView.loadViewDataFromUnit(unit, true);
+            unitView.startRunning();
+        }
+
         this._labelHp.setText(`${unit.getCurrentHp()}`);
         this._labelFuel.setText(`${unit.getCurrentFuel()}`);
         this.updateLabelName();

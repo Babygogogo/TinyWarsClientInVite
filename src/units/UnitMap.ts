@@ -135,7 +135,7 @@ export class UnitMap {
         playersCountUnneutral   : number;
     }): void {
         this.init({
-            data, gameConfig, mapSize, playersCountUnneutral, 
+            data, gameConfig, mapSize, playersCountUnneutral,
         });
     }
 
@@ -145,13 +145,13 @@ export class UnitMap {
         this._forEachUnitLoaded(unit => unit.startRunning(war));
     }
     public startRunningView(): void {
-        this.getView().startRunningView();
         this._forEachUnitOnMap(unit => unit.startRunningView());
         this._forEachUnitLoaded(unit => unit.startRunningView());
+        this.getView().startRunningView();
     }
     public stopRunning(): void {
-        this._forEachUnit(unit => unit.stopRunning());
         this.getView().stopRunningView();
+        this._forEachUnit(unit => unit.stopRunning());
     }
 
     public serialize(): SerialUnitMap {

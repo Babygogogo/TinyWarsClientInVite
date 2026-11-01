@@ -1,14 +1,16 @@
 import {
     AuxiliaryTypes_GridIndex,
+    BaseWar_Interface_IBwWar,
     Common_Model_CommonModel,
     CoSkills_Constants,
+    Egret_Egret,
     ForceSkins_Utils,
     Graphics_Utils,
+    Helpers_Collection,
     Helpers_ImageSource,
     Helpers_Misc,
     Notifications_Dispatcher,
-    Numbers_Constants,
-    ReplayWar_Model_RwWarBase,
+    Notifications_Mapping,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Sounds_Utils,
@@ -16,6 +18,8 @@ import {
     Ui_Components_UiContainer,
     Ui_Components_UiImage,
     Units_Constants,
+    Units_Types,
+    Units_Utils_Common,
     Users_Model,
     Utils_ClientErrorCode,
     Visibilities_Utils,
@@ -38,17 +42,15 @@ const getImgUnitStandX              = Helpers_Misc.createLazyFunc(() => getGridW
 const AIMING_TIME_MS                = 500;
 
 export class UnitView extends Ui_Components_UiContainer.UiContainer {
-    private readonly _imgHp      = new Ui_Components_UiImage.UiImage();
-    private readonly _imgState   = new Ui_Components_UiImage.UiImage();
-    private readonly _imgUnit    = new Ui_Components_UiImage.UiImage();
-    private readonly _imgFlash   = new Ui_Components_UiImage.UiImage();
+    private readonly _imgHp         = new Ui_Components_UiImage.UiImage();
+    private readonly _imgCornerIcon = new Ui_Components_UiImage.UiImage();
+    private readonly _imgUnit       = new Ui_Components_UiImage.UiImage();
+    private readonly _imgFlash      = new Ui_Components_UiImage.UiImage();
 
-    private _unit                       : Units_Unit.Unit | null = null;
-    private _animationType              = Units_Constants.AnimationTypeId.Stand;
-    private _isDark                     = false;
-    private readonly _framesForStateAnimation    : string[]  = [];
+    private readonly _cornerIconSources : string[]  = [];
+    private readonly _viewData          = Units_Utils_Common.generateDefaultViewData();
 
-    private readonly _notifyListeners: Notifications_Types.Listener[] = [
+    private readonly _notificationListeners: Notifications_Types.Listener[] = [
         { type : "UnitAnimationTick",            callback : this._onNotifyUnitAnimationTick },
         { type : "StateIndicatorTick",           callback : this._onNotifyUnitStateIndicatorTick },
         { type : "UnitFlashTick",                callback : this._onNotifyUnitFlashTick },
@@ -79,7 +81,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         }
 
         {
-            const imgState = this._imgState;
+            const imgState = this._imgCornerIcon;
             imgState.setIsSmoothing(false);
             imgState.setX(0);
             imgState.setY(getGridHeight() - getImgUnitStateHeight());
@@ -95,69 +97,35 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         }
     }
 
-    public init(unit: Units_Unit.Unit): UnitView {
-        this._setUnit(unit);
+    public startRunning(): void {
+        Notifications_Dispatcher.removeEventListeners(this._notificationListeners, this);
+        Notifications_Dispatcher.addEventListeners(this._notificationListeners, this);
 
-        return this;
+        this.refreshAllViews();
     }
-
-    public startRunningView(): UnitView {
-        Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
-        Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);
-
-        this.resetAllViews();
-
-        return this;
-    }
-    public stopRunningView(): void {
-        Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
+    public stopRunning(): void {
+        Notifications_Dispatcher.removeEventListeners(this._notificationListeners, this);
     }
 
     private _onNotifyUnitAnimationTick(): void {
-        const war = this.getUnit()?.getWar();
-        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction())){
-            return;
-        }
-
         this._tickUnitAnimationFrame();
     }
     private _onNotifyUnitStateIndicatorTick(): void {
-        const war = this.getUnit()?.getWar();
-        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction())){
-            return;
-        }
-
-        this._tickStateAnimationFrame();
+        this._refreshCornerIcon();
     }
     private _onNotifyUnitFlashTick(): void {
-        const unit = this.getUnit();
+        const unit = this.getViewData();
         if (unit == null) {
             return;
         }
 
-        const war = unit.getWar();
-        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction())){
-            return;
-        }
-
-        const img = this._imgFlash;
-        if ((this._animationType !== Units_Constants.AnimationTypeId.Stand)               ||
-            (!Common_Model_CommonModel.getIsUnitFlashVisible())                   ||
+        const viewData  = this.getViewData();
+        const img       = this._imgFlash;
+        if ((viewData.animationTypeId !== Units_Constants.AnimationTypeId.Stand)    ||
+            (!viewData.isActiveCoSkillReady)                                        ||
+            (!Common_Model_CommonModel.getIsUnitFlashVisible())                     ||
             (!Users_Model.getSelfSettingsIsUnitFlickeringOnFullEnergy())
         ) {
-            img.setIsVisible(false);
-            return;
-        }
-
-        const player            = unit.getPlayer();
-        const powerEnergy       = player.getCoPowerEnergy();
-        const superPowerEnergy  = player.getCoSuperPowerEnergy();
-        if ((powerEnergy == null) && (superPowerEnergy == null)) {
-            img.setIsVisible(false);
-            return;
-        }
-
-        if (player.getCoCurrentEnergy() < Math.min(powerEnergy ?? Numbers_Constants.MaxValue, superPowerEnergy ?? Numbers_Constants.MaxValue)) {
             img.setIsVisible(false);
             return;
         }
@@ -165,109 +133,119 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         img.setIsVisible(true);
         img.loadSource(Common_Model_CommonModel.getCachedUnitFlashImageSource({
             version  : Users_Model.getSelfSettingsTextureVersion(),
-            skinId   : ForceSkins_Utils.getFinalSkinId(war, player.getPlayerIndex()),
-            unitType : unit.getUnitType(),
+            skinId   : viewData.skinId,
+            unitType : viewData.unitTypeId,
         }));
     }
-    private _onNotifyBwOverridingSkinIdChanged(): void {
-        this._resetStateAnimationFrames();
+    private _onNotifyBwOverridingSkinIdChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwOverridingSkinIdChanged"]>): void {
+        if (this.loadViewData({
+            skinId : ForceSkins_Utils.getFinalSkinId(e.data!.war, this.getViewData().playerIndex),
+        })) {
+            this._refreshCornerIconSources();
+        }
     }
 
-    private _setUnit(unit: Units_Unit.Unit): void {
-        this._unit = unit;
+    public getViewData(): Units_Types.ViewData {
+        return this._viewData;
     }
-    public getUnit(): Units_Unit.Unit | null {
-        return this._unit;
+    public loadViewData(viewData: Partial<Units_Types.ViewData>): boolean {
+        return Units_Utils_Common.mergeViewDataFrom(this.getViewData(), viewData);
     }
-
-    public resetAllViews(): void {
-        this._isDark = Helpers_Misc.getExisted(this.getUnit()).getActionState() === Units_Constants.ActionStateId.Acted;
-        this._resetImgUnitFlippedX();
-        this._resetStateAnimationFrames();
-        this.showUnitAnimation(Units_Constants.AnimationTypeId.Stand);
-        this.updateImageHp();
+    public loadViewDataFromUnit(unit: Units_Unit.Unit, ignorePosition = false): boolean {
+        return this.loadViewData(Units_Utils_Common.generateViewData(unit, ignorePosition));
     }
 
-    public showUnitAnimation(type: Units_Constants.AnimationTypeId): void {
-        this._animationType = type;
+    public refreshAllViews(): void {
+        // this.showUnitAnimation(Units_Constants.AnimationTypeId.Stand);
+        this.showAnimation(this.getViewData().animationTypeId);
+        this._refreshPosition();
+        this._refreshImgUnitFlippedX();
+        this._refreshCornerIconSources();
+        this._refreshImageHp();
+    }
+
+    public showAnimation(typeId: Units_Constants.AnimationTypeId): void {
+        this.loadViewData({ animationTypeId : typeId });
         this._tickUnitAnimationFrame();
     }
     private _tickUnitAnimationFrame(): void {
-        const unit = Helpers_Misc.getExisted(this.getUnit());
+        const viewData = this.getViewData();
         this._imgUnit.loadSource(Common_Model_CommonModel.getCachedUnitImageSource({
             version       : Users_Model.getSelfSettingsTextureVersion(),
-            isDark        : this._isDark,
-            animationType : this._animationType,
             tickCount     : Common_Model_CommonModel.getUnitAnimationTickCount(),
-            skinId        : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            unitType      : unit.getUnitType(),
+            isDark        : viewData.isDark,
+            animationType : viewData.animationTypeId,
+            skinId        : viewData.skinId,
+            unitType      : viewData.unitTypeId,
         }));
     }
 
-    public updateImageHp(): void {
-        const unit          = Helpers_Misc.getExisted(this.getUnit());
-        const normalizedHp  = unit.getNormalizedCurrentHp();
-        const img           = this._imgHp;
-        if (normalizedHp >= unit.getNormalizedMaxHp()) {
+    private _refreshImageHp(): void {
+        const viewData  = this.getViewData();
+        const hp        = viewData.normalizedHp;
+        const img       = this._imgHp;
+        if (hp >= 10) {
             img.setIsVisible(false);
         } else {
             img.setIsVisible(true);
             img.loadSource(Helpers_ImageSource.getUnitHp({
                 version : Users_Model.getSelfSettingsTextureVersion(),
-                hp      : normalizedHp,
-                isDark  : this._isDark,
+                hp      : hp,
+                isDark  : viewData.isDark,
             }));
         }
     }
 
-    private _resetStateAnimationFrames(): void {
-        const frames    = this._framesForStateAnimation;
-        frames.length   = 0;
-        this._addFrameForCoSkill();
-        this._addFrameForPromotion();
-        this._addFrameForFuel();
-        this._addFrameForAmmo();
-        this._addFrameForDive();
-        this._addFrameForCapture();
-        this._addFrameForBuild();
-        this._addFrameForLoader();
-        this._addFrameForMaterial();
-        this._addFrameForBuff();
+    private _refreshCornerIconSources(): void {
+        const newFrames: (string | undefined)[] = [];
+        newFrames.push(this._getCornerIconSourceForCoSkill());
+        newFrames.push(this._getCornerIconSourceForPromotion());
+        newFrames.push(this._getCornerIconSourceForFuel());
+        newFrames.push(this._getCornerIconSourceForAmmo());
+        newFrames.push(this._getCornerIconSourceForDive());
+        newFrames.push(this._getCornerIconSourceForCapture());
+        newFrames.push(this._getCornerIconSourceForBuild());
+        newFrames.push(this._getCornerIconSourceForLoader());
+        newFrames.push(this._getCornerIconSourceForMaterial());
+        newFrames.push(...this._getCornerIconSourceForBuff());
 
-        this._tickStateAnimationFrame();
+        const frames    = this._getCornerIconSources();
+        frames.length   = 0;
+        frames.push(...Helpers_Collection.getNonNullElements(newFrames));
+
+        this._refreshCornerIcon();
     }
-    private _tickStateAnimationFrame(): void {
-        const framesCount = this._framesForStateAnimation.length;
-        this._imgState.loadSource(framesCount <= 0
+    private _refreshCornerIcon(): void {
+        const frames        = this._getCornerIconSources();
+        const framesCount   = frames.length;
+        this._imgCornerIcon.loadSource(framesCount <= 0
             ? ``
-            : this._framesForStateAnimation[Common_Model_CommonModel.getStateIndicatorTickCount() % framesCount],
+            : frames[Common_Model_CommonModel.getStateIndicatorTickCount() % framesCount],
         );
     }
 
-    protected _getIsDark(): boolean {
-        return this._isDark;
-    }
-    protected _getFramesForStateAnimation(): string[] {
-        return this._framesForStateAnimation;
+    private _getCornerIconSources(): string[] {
+        return this._cornerIconSources;
     }
 
-    public moveAlongPath({ path, isDiving, isBlocked, aiming, updateViewAfterMove }: {
+    public moveAlongPath({ unit, path, isDiving, isBlocked, aiming, updateViewAfterMove }: {
+        unit                : Units_Unit.Unit;
         path                : AuxiliaryTypes_GridIndex.GridIndex[];
         isDiving            : boolean;
         isBlocked           : boolean;
         aiming              : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
         updateViewAfterMove : boolean;
     }): Promise<void> {
-        this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
+        this.showAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
 
         const startingPoint = path[0].createPointByGridIndex();
         this.setX(startingPoint.x);
         this.setY(startingPoint.y);
 
-        const unit                  = Helpers_Misc.getExisted(this.getUnit());
+        const viewData              = this.getViewData();
+        const playerIndex           = viewData.playerIndex;
+        const unitType              = viewData.unitTypeId;
         const war                   = unit.getWar();
-        const playerIndex           = unit.getPlayerIndex();
-        const unitType              = unit.getUnitType();
         const watcherTeamIndexes    = war.getPlayerManager().getWatcherTeamIndexesForSelf();
         const gameConfig            = war.getGcData();
         const isAlwaysVisible       = watcherTeamIndexes.has(unit.getTeamIndex());
@@ -289,25 +267,25 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
             if (currentX < previousX) {
                 tween.call(() => {
                     this._setImgUnitFlippedX(true);
-                    this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
+                    this.showAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
                 });
             } else if (currentX > previousX) {
                 tween.call(() => {
                     this._setImgUnitFlippedX(false);
-                    this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
+                    this.showAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
                 });
             } else {
                 const currentY  = gridIndex.getY();
                 const previousY = prevGridIndex.getY();
                 if (currentY < previousY) {
                     tween.call(() => {
-                        this._resetImgUnitFlippedX();
-                        this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveUp);
+                        this._refreshImgUnitFlippedX();
+                        this.showAnimation(Units_Constants.AnimationTypeId.MoveUp);
                     });
                 } else if (currentY > previousY) {
                     tween.call(() => {
-                        this._resetImgUnitFlippedX();
-                        this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveDown);
+                        this._refreshImgUnitFlippedX();
+                        this.showAnimation(Units_Constants.AnimationTypeId.MoveDown);
                     });
                 } else {
                     throw Helpers_Misc.newError(`Invalid move path.`);
@@ -318,7 +296,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                 if (isDiving) {
                     tween.call(() => {
                         this.setIsVisible(
-                            (i === path.length - 1 )                                    &&
+                            (i === path.length - 1)                                     &&
                             (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
                                 war                 : war,
                                 gridIndex           : gridIndex,
@@ -367,7 +345,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         return new Promise<void>(resolve => {
             if (!aiming?.length) {
                 tween.call(() => {
-                    this._resetImgUnitFlippedX();
+                    this._refreshImgUnitFlippedX();
                     if ((isBlocked)                                         &&
                         (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
                             war                 : war,
@@ -385,7 +363,12 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                     Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
 
                     if (updateViewAfterMove) {
-                        unit.updateView();
+                        this.loadViewData({
+                            animationTypeId : Units_Constants.AnimationTypeId.Stand,
+                            gridX           : endingGridIndex.getX(),
+                            gridY           : endingGridIndex.getY(),
+                        });
+                        this.refreshAllViews();
                     }
 
                     resolve();
@@ -403,17 +386,17 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                     .call(() => {
                         cursor.setIsMovableByTouches(true);
                         cursor.setIsVisible(true);
-                        this._resetImgUnitFlippedX();
+                        this._refreshImgUnitFlippedX();
                         if ((isBlocked)                                         &&
-                        (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
-                            war                 : war,
-                            unitType            : unitType,
-                            isDiving            : isDiving,
-                            isInvisible         : unit.checkIsInvisible(endingGridIndex),
-                            gridIndex           : endingGridIndex,
-                            unitPlayerIndex     : playerIndex,
-                            observerTeamIndexes : watcherTeamIndexes,
-                        }))
+                            (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
+                                war                 : war,
+                                unitType            : unitType,
+                                isDiving            : isDiving,
+                                isInvisible         : unit.checkIsInvisible(endingGridIndex),
+                                gridIndex           : endingGridIndex,
+                                unitPlayerIndex     : playerIndex,
+                                observerTeamIndexes : watcherTeamIndexes,
+                            }))
                         ) {
                             war.getGridVisualEffect().showEffectBlock(endingGridIndex);
                             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
@@ -421,7 +404,12 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                         Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
 
                         if (updateViewAfterMove) {
-                            unit.updateView();
+                            this.loadViewData({
+                                animationTypeId : Units_Constants.AnimationTypeId.Stand,
+                                gridX           : endingGridIndex.getX(),
+                                gridY           : endingGridIndex.getY(),
+                            });
+                            this.refreshAllViews();
                         }
 
                         resolve();
@@ -429,20 +417,20 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
             }
         });
     }
-    public moveAlongExtraPath({ path, aiming, deleteViewAfterMoving }: {
+    public moveAlongExtraPath({ war, path, aiming, deleteViewAfterMoving }: {
+        war                     : BaseWar_Interface_IBwWar.IBwWar;
         path                    : GridIndexAndPathInfo[];
         aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
         deleteViewAfterMoving   : boolean;
     }): Promise<void> {
-        this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
+        this.showAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
 
         const startingPoint = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(path[0].getGridIndex())).createPointByGridIndex();
         this.setX(startingPoint.x);
         this.setY(startingPoint.y);
 
-        const unit          = Helpers_Misc.getExisted(this.getUnit());
-        const war           = unit.getWar();
-        const unitType      = unit.getUnitType();
+        const viewData      = this.getViewData();
+        const unitType      = viewData.unitTypeId;
         const tween         = Tween_Executor.Executor.get<UnitView>(this);
         const gameConfig    = war.getGcData();
         const moveSfxCfg    = Helpers_Misc.getExisted(Sounds_Utils.getBgmSfxCfg(Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveSfx())));
@@ -460,25 +448,25 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
             if (currentX < previousX) {
                 tween.call(() => {
                     this._setImgUnitFlippedX(true);
-                    this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
+                    this.showAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
                 });
             } else if (currentX > previousX) {
                 tween.call(() => {
                     this._setImgUnitFlippedX(false);
-                    this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
+                    this.showAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
                 });
             } else {
                 const currentY  = gridIndex.getY();
                 const previousY = Helpers_Misc.getExisted(prevGridIndex.getY(),  Utils_ClientErrorCode.ClientErrorCode.BwUnitView_MoveAlongExtraPath_04);
                 if (currentY < previousY) {
                     tween.call(() => {
-                        this._resetImgUnitFlippedX();
-                        this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveUp);
+                        this._refreshImgUnitFlippedX();
+                        this.showAnimation(Units_Constants.AnimationTypeId.MoveUp);
                     });
                 } else if (currentY > previousY) {
                     tween.call(() => {
-                        this._resetImgUnitFlippedX();
-                        this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveDown);
+                        this._refreshImgUnitFlippedX();
+                        this.showAnimation(Units_Constants.AnimationTypeId.MoveDown);
                     });
                 } else {
                     throw Helpers_Misc.newError(`Invalid move path.`);
@@ -510,12 +498,12 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         return new Promise<void>(resolve => {
             if (!aiming?.length) {
                 tween.call(() => {
-                    this._resetImgUnitFlippedX();
+                    this._refreshImgUnitFlippedX();
                     if ((isBlockedInEnd) && (isVisibleInEnd)) {
                         war.getGridVisualEffect().showEffectBlock(endingGridIndex);
                         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
                     }
-                    if (deleteViewAfterMoving)  {
+                    if (deleteViewAfterMoving) {
                         unitMapView.removeUnit(this);
                     }
 
@@ -537,12 +525,12 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                         cursor.setIsMovableByTouches(true);
                         cursor.setIsVisible(true);
 
-                        this._resetImgUnitFlippedX();
+                        this._refreshImgUnitFlippedX();
                         if ((isBlockedInEnd) && (isVisibleInEnd)) {
                             war.getGridVisualEffect().showEffectBlock(endingGridIndex);
                             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
                         }
-                        if (deleteViewAfterMoving)  {
+                        if (deleteViewAfterMoving) {
                             unitMapView.removeUnit(this);
                         }
 
@@ -557,151 +545,149 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private _addFrameForCoSkill(): void {
-        const unit      = Helpers_Misc.getExisted(this.getUnit());
-        const skillType = unit.getPlayer().getCoUsingSkillType();
-        if (skillType === CoSkills_Constants.SkillTypeId.Power) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
+    private _getCornerIconSourceForCoSkill(): string | undefined {
+        const viewData      = this.getViewData();
+        const skillTypeId   = viewData.coSkillTypeIdInUse;
+        if (skillTypeId === CoSkills_Constants.SkillTypeId.Power) {
+            return Helpers_ImageSource.getUnitCornerStateIcon({
                 version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
+                isDark     : viewData.isDark,
                 iconTypeId : Units_Constants.CornerStateIconTypeId.ActivatingCoPower,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
-        } else if (skillType === CoSkills_Constants.SkillTypeId.SuperPower) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
+                skinId     : viewData.skinId,
+            });
+        } else if (skillTypeId === CoSkills_Constants.SkillTypeId.SuperPower) {
+            return Helpers_ImageSource.getUnitCornerStateIcon({
                 version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
+                isDark     : viewData.isDark,
                 iconTypeId : Units_Constants.CornerStateIconTypeId.ActivatingCoSuperPower,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
+                skinId     : viewData.skinId,
+            });
         }
+        return undefined;
     }
-    private _addFrameForPromotion(): void {
-        const unit = Helpers_Misc.getExisted(this.getUnit());
-        if (unit.getIsCoOnboard()) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
+    private _getCornerIconSourceForPromotion(): string | undefined {
+        const viewData = this.getViewData();
+        if (viewData.isCoOnboard) {
+            return Helpers_ImageSource.getUnitCornerStateIcon({
                 version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
+                isDark     : viewData.isDark,
                 iconTypeId : Units_Constants.CornerStateIconTypeId.CoOnboard,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
+                skinId     : viewData.skinId,
+            });
         } else {
-            const promotion = unit.getCurrentPromotion();
+            const promotion = viewData.promotion;
             if (promotion > 0) {
-                this._framesForStateAnimation.push(Helpers_ImageSource.getUnitPromotion({
+                return Helpers_ImageSource.getUnitPromotion({
                     version   : Users_Model.getSelfSettingsTextureVersion(),
-                    isDark    : this._isDark,
+                    isDark    : viewData.isDark,
                     promotion : promotion,
-                    skinId    : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-                }));
+                    skinId    : viewData.skinId,
+                });
             }
         }
+        return undefined;
     }
-    private _addFrameForFuel(): void {
-        const unit = Helpers_Misc.getExisted(this.getUnit());
-        if (unit.checkIsFuelInShort()) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
+    private _getCornerIconSourceForFuel(): string | undefined {
+        const viewData = this.getViewData();
+        if (viewData.isFuelInShort) {
+            return Helpers_ImageSource.getUnitCornerStateIcon({
                 version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
+                isDark     : viewData.isDark,
                 iconTypeId : Units_Constants.CornerStateIconTypeId.LowFuel,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
+                skinId     : viewData.skinId,
+            });
         }
+        return undefined;
     }
-    private _addFrameForAmmo(): void {
-        const unit = Helpers_Misc.getExisted(this.getUnit());
-        if (unit.checkIsPrimaryWeaponAmmoInShort()) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
+    private _getCornerIconSourceForAmmo(): string | undefined {
+        const viewData = this.getViewData();
+        if (viewData.isAmmoInShort) {
+            return Helpers_ImageSource.getUnitCornerStateIcon({
                 version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
+                isDark     : viewData.isDark,
                 iconTypeId : Units_Constants.CornerStateIconTypeId.LowPrimaryAmmo,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
+                skinId     : viewData.skinId,
+            });
         }
-        if (unit.checkIsFlareAmmoInShort()) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
-                iconTypeId : Units_Constants.CornerStateIconTypeId.LowFlareAmmo,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
-        }
+        return undefined;
     }
-    private _addFrameForDive(): void {
-        const unit = Helpers_Misc.getExisted(this.getUnit());
-        if (unit.getIsDiving()) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
+    private _getCornerIconSourceForDive(): string | undefined {
+        const viewData = this.getViewData();
+        if (viewData.isDived) {
+            return Helpers_ImageSource.getUnitCornerStateIcon({
                 version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
+                isDark     : viewData.isDark,
                 iconTypeId : Units_Constants.CornerStateIconTypeId.Diving,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
+                skinId     : viewData.skinId,
+            });
         }
+        return undefined;
     }
-    private _addFrameForCapture(): void {
-        const unit = Helpers_Misc.getExisted(this.getUnit());
-        if (unit.checkIsCapturingTile()) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
+    private _getCornerIconSourceForCapture(): string | undefined {
+        const viewData = this.getViewData();
+        if (viewData.isCapturingTile) {
+            return Helpers_ImageSource.getUnitCornerStateIcon({
                 version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
+                isDark     : viewData.isDark,
                 iconTypeId : Units_Constants.CornerStateIconTypeId.CapturingTile,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
+                skinId     : viewData.skinId,
+            });
         }
+        return undefined;
     }
-    private _addFrameForBuild(): void {
-        const unit = Helpers_Misc.getExisted(this.getUnit());
-        if (unit.checkIsBuildingTile()) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
+    private _getCornerIconSourceForBuild(): string | undefined {
+        const viewData = this.getViewData();
+        if (viewData.isBuildingTile) {
+            return Helpers_ImageSource.getUnitCornerStateIcon({
                 version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
+                isDark     : viewData.isDark,
                 iconTypeId : Units_Constants.CornerStateIconTypeId.BuildingTile,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
+                skinId     : viewData.skinId,
+            });
         }
+        return undefined;
     }
-    private _addFrameForLoader(): void {
-        const unit  = Helpers_Misc.getExisted(this.getUnit());
-        const war   = unit.getWar();
-        if ((war) && (unit.getMaxLoadUnitsCount())) {
-            if (unit.getLoadedUnitsCount() > 0) {
-                this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                    version    : Users_Model.getSelfSettingsTextureVersion(),
-                    isDark     : this._isDark,
-                    iconTypeId : Units_Constants.CornerStateIconTypeId.LoadingUnits,
-                    skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-                }));
-            }
-        }
-    }
-    private _addFrameForMaterial(): void {
-        const unit = Helpers_Misc.getExisted(this.getUnit());
-        if (unit.checkIsBuildMaterialInShort()) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
+    private _getCornerIconSourceForLoader(): string | undefined {
+        const viewData = this.getViewData();
+        if (viewData.hasLoadedUnits) {
+            return Helpers_ImageSource.getUnitCornerStateIcon({
                 version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
+                isDark     : viewData.isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.LoadingUnits,
+                skinId     : viewData.skinId,
+            });
+        }
+        return undefined;
+    }
+    private _getCornerIconSourceForMaterial(): string | undefined {
+        const viewData = this.getViewData();
+        if (viewData.isMaterialInShort) {
+            return Helpers_ImageSource.getUnitCornerStateIcon({
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : viewData.isDark,
                 iconTypeId : Units_Constants.CornerStateIconTypeId.LowBuildMaterial,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
+                skinId     : viewData.skinId,
+            });
         }
-        if (unit.checkIsProduceMaterialInShort()) {
-            this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
-                iconTypeId : Units_Constants.CornerStateIconTypeId.LowProduceMaterial,
-                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            }));
-        }
+        return undefined;
     }
-    private _addFrameForBuff(): void {
-        const arr = this._framesForStateAnimation;
-        for (const buff of Helpers_Misc.getExisted(this.getUnit()).getBuffList()) {
+    private _getCornerIconSourceForBuff(): string[] {
+        const viewData = this.getViewData();
+        const arr      : string[] = [];
+        for (const buff of viewData.buffTypeIdList) {
             arr.push(Helpers_ImageSource.getUnitBuff({
                 version    : Users_Model.getSelfSettingsTextureVersion(),
-                isDark     : this._isDark,
-                buffTypeId : buff.getBuffTypeId(),
+                isDark     : viewData.isDark,
+                buffTypeId : buff,
             }));
         }
+        return arr;
+    }
+
+    private _refreshPosition(): void {
+        const viewData = this.getViewData();
+        this.setX(getGridWidth() * viewData.gridX);
+        this.setY(getGridHeight() * viewData.gridY);
     }
 
     private _setImgUnitFlippedX(isFlipped: boolean): void {
@@ -709,7 +695,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         this._imgUnit.setScaleX(scaleX);
         this._imgFlash.setScaleX(scaleX);
     }
-    private _resetImgUnitFlippedX(): void {
-        this._setImgUnitFlippedX(Helpers_Misc.getExisted(this.getUnit()?.getPlayerIndex()) % 2 === 0);
+    private _refreshImgUnitFlippedX(): void {
+        this._setImgUnitFlippedX(this.getViewData().playerIndex % 2 === 0);
     }
 }

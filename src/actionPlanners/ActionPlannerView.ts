@@ -954,17 +954,20 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private _addUnitView(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, _alpha = 1): void {
-        const view = new Units_UnitView.UnitView().init(unit).startRunningView();
+        const view = new Units_UnitView.UnitView();
+        view.loadViewDataFromUnit(unit);
+        view.startRunning();
+
         // view.alpha = alpha;
         _resetUnitViewXy(view, gridIndex);
-        view.showUnitAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
+        view.showAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
         this._focusUnitViews.set(unit.getUnitId(), view);
         this._conForUnits.addUiChild(view);
     }
 
     private _clearFocusUnitViews(): void {
         for (const [, view] of this._focusUnitViews) {
-            view.stopRunningView();
+            view.stopRunning();
         }
         this._focusUnitViews.clear();
     }

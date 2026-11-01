@@ -250,7 +250,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         this._conUnitView.addUiChild(this._unitView);
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunningView();
+        this._unitView.stopRunning();
 
         await super._onClosed();
     }
@@ -277,8 +277,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             gcData      : gameConfig,
         }), gameConfig);
         unit.startRunning(war);
-        unitView.init(unit);
-        unitView.startRunningView();
+        unitView.loadViewDataFromUnit(unit, true);
+        unitView.startRunning();
     }
 
     public onItemTapEvent(): void {

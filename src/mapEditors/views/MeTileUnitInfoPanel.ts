@@ -265,7 +265,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         this._conUnitView.addUiChild(this._unitView);
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunningView();
+        this._unitView.stopRunning();
 
         await super._onClosed();
     }
@@ -292,8 +292,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         unit.startRunning(war);
 
         const unitView = this._unitView;
-        unitView.init(unit);
-        unitView.startRunningView();
+        unitView.loadViewDataFromUnit(unit, true);
+        unitView.startRunning();
     }
 
     public onItemTapEvent(): void {

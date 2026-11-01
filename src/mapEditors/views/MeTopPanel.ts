@@ -649,7 +649,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 toMapReviewTarget : war.getIsReviewingMap()
                     ? war.getMapDesignerUserId()
                     : Helpers_Misc.getExisted(Users_Model.getSelfUserId()),
-            }), 
+            }),
         });
     }
     private _onTouchedBtnMenu(): void {
@@ -893,13 +893,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const drawMode  = drawer.getMode();
         if (drawMode === MapEditors_Constants.DrawerMode.DrawUnit) {
             con.setIsVisible(true);
-            unitView.init(Helpers_Misc.getExisted(drawer.getDrawTargetUnit()));
-            unitView.resetAllViews();
+            unitView.loadViewDataFromUnit(Helpers_Misc.getExisted(drawer.getDrawTargetUnit()), true);
+            unitView.refreshAllViews();
 
         } else if (drawMode === MapEditors_Constants.DrawerMode.PasteUnit) {
             con.setIsVisible(true);
-            unitView.init(Helpers_Misc.getExisted(drawer.getDataForPasteUnit())[0]);
-            unitView.resetAllViews();
+            unitView.loadViewDataFromUnit(Helpers_Misc.getExisted(drawer.getDataForPasteUnit())[0], true);
+            unitView.refreshAllViews();
 
         } else {
             con.setIsVisible(false);
@@ -1002,7 +1002,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }), gameConfig);
         unit.startRunning(war);
 
-        this._unitView.init(unit);
+        this._unitView.loadViewDataFromUnit(unit, true);
     }
 }
 
@@ -1064,8 +1064,8 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             unit.startRunning(war);
 
             const unitView  = this._unitView;
-            unitView.init(unit);
-            unitView.startRunningView();
+            unitView.loadViewDataFromUnit(unit, true);
+            unitView.startRunning();
         } else {
             conUnitView.setIsVisible(false);
             conTileView.setIsVisible(true);

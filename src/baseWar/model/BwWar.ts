@@ -610,6 +610,7 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         const virtualUnitView = virtualUnit.getView();
         unitMapView.addUnit(virtualUnitView, true);
         await virtualUnitView.moveAlongExtraPath({
+            war                   : this,
             path                  : movingPath,
             aiming                : aiming ? [aiming] : undefined,
             deleteViewAfterMoving : deleteViewAfterMoving,

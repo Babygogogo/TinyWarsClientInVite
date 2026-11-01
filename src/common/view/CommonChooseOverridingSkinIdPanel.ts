@@ -106,7 +106,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._checkAnsSaveTargetSkinIdArray(revisedArray);
 
         war.getTileMap().forEachTile(t => t.flushDataToView());
-        Notifications_Dispatcher.dispatch("BwOverridingSkinIdChanged");
+        Notifications_Dispatcher.dispatch("BwOverridingSkinIdChanged", { war : war });
 
         openData.callback?.(revisedArray);
         this.closePanel();
