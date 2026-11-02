@@ -1,25 +1,21 @@
 import {
-    ForceSkins_Utils,
+    type BaseWar_Interface_IBwCursor,
+    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_BwTypes,
     Common_Model_CommonModel,
+    FloatText,
+    ForceSkins_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Lang_Constants,
+    Lang_Utils,
+    MultiPlayerWar_Model_MpwModel,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
     ReplayWar_Model_RwWarBase,
-    FloatText,
-    Tiles_TileView,
-    Units_UnitView,
-    type BaseWar_Model_BwTypes,
-    type BaseWar_Interface_IBwCursor,
-    type BaseWar_Interface_IBwWar,
-    Units_Constants,
-    Tween_Executor,
-    Visibilities_Utils,
-    GamePanels_Dict,
-    Users_Model,
-    Lang_Utils,
-    MultiPlayerWar_Model_MpwModel,
-    GamePanels_Manager,
     Sounds_Constants,
-    Lang_Constants,
+    Tiles_TileView,
+    Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -28,8 +24,13 @@ import {
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
-    type Units_Unit,
     type Ui_Types_UiListItemData,
+    Units_Constants,
+    type Units_Unit,
+    Units_UnitView,
+    Units_UnitViewPool,
+    Users_Model,
+    Visibilities_Utils,
 } from "../../internal.ts";
 
 export interface OpenData {
@@ -343,7 +344,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _imgFuel!          : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _imgState!         : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _unitView          = new Units_UnitView.UnitView();
+    private _unitView                   : Units_UnitView.UnitView | undefined;
     private readonly _tileView          = new Tiles_TileView.TileView();
 
     public updateOnLoadedSkin(): void {
@@ -355,7 +356,6 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         this._imgHp.loadSource(Common_Model_CommonModel.getUnitAndTileTexturePrefix(Users_Model.getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_HP);
         this._imgFuel.loadSource(Common_Model_CommonModel.getUnitAndTileTexturePrefix(Users_Model.getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_FUEL);
-        this._conUnitView.addUiChild(this._unitView);
 
         const tileView      = this._tileView;
         const conTileView   = this._conTileView;
@@ -367,15 +367,31 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
 
-        const imgSelected = this._imgSelected;
-        imgSelected.setAlpha(0);
-        Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop : true })
-            .to({ customAlpha : 0.6 }, 500)
-            .to({ customAlpha : 0 }, 500);
+        {
+            const imgSelected = this._imgSelected;
+            imgSelected.setAlpha(0);
+            Tween_Executor.Executor.removeTweens(imgSelected);
+            Tween_Executor.Executor.get(imgSelected, { loop : true })
+                .to({ customAlpha : 0.6 }, 500)
+                .to({ customAlpha : 0 }, 500);
+        }
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+
+            this._conUnitView.addUiChild(view);
+        }
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunning();
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
         Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
@@ -406,10 +422,12 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        const unit      = openData.unit;
-        const unitView  = this._unitView;
-        unitView.loadViewDataFromUnit(unit, unit.getWar(), true);
-        unitView.startRunning();
+        const unit = openData.unit;
+        {
+            const unitView = this._unitView;
+            unitView?.loadViewDataFromUnit(unit, unit.getWar(), true);
+            unitView?.refreshAllViews();
+        }
 
         this._labelHp.setText(`${unit.getCurrentHp()}`);
         this._labelFuel.setText(`${unit.getCurrentFuel()}`);

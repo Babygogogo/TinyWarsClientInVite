@@ -150,7 +150,7 @@ function handlePlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: W
             }
         }
 
-        const unit = new Units_Unit.Unit();
+        const unit = new Units_Unit.Unit(true);
         unit.init(unitData, gameConfig);
         unit.startRunning(war);
         unit.startRunningView();

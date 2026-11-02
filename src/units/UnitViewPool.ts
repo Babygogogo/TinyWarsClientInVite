@@ -1,6 +1,7 @@
 import {
     Egret_Egret,
     Helpers_Misc,
+    Logger,
     Notifications_Dispatcher,
     Notifications_Mapping,
     Notifications_Types,
@@ -30,23 +31,23 @@ export class UnitViewPool {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onNotifyUnitAnimationTick(): void {
         for (const view of this._acquiredViews) {
-            // view.updateOnNotifyUnitAnimationTick();
+            view.updateOnNotifyUnitAnimationTick();
         }
     }
     private _onNotifyUnitStateIndicatorTick(): void {
         for (const view of this._acquiredViews) {
-            // view.updateOnNotifyUnitStateIndicatorTick();
+            view.updateOnNotifyUnitStateIndicatorTick();
         }
     }
     private _onNotifyUnitFlashTick(): void {
         for (const view of this._acquiredViews) {
-            // view.updateOnNotifyUnitFlashTick();
+            view.updateOnNotifyUnitFlashTick();
         }
     }
     private _onNotifyBwOverridingSkinIdChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwOverridingSkinIdChanged"]>): void {
         const war = e.data!.war;
         for (const view of this._acquiredViews) {
-            // view.updateOnNotifyBwOverridingSkinIdChanged(war);
+            view.updateOnNotifyBwOverridingSkinIdChanged(war);
         }
     }
 
@@ -54,6 +55,9 @@ export class UnitViewPool {
     public acquire(): Units_UnitView.UnitView {
         const view = this._availableViews.pop() ?? new Units_UnitView.UnitView();
         this._acquiredViews.add(view);
+
+        Logger.log(`Acquired UnitView. Available views: ${this._availableViews.length}, Acquired views: ${this._acquiredViews.size}`);
+
         return view;
     }
 
@@ -62,8 +66,12 @@ export class UnitViewPool {
             throw Helpers_Misc.newError(`UnitView was not acquired from this pool or has already been released.`);
         }
 
+        view.setIsVisible(true);
+
         this._acquiredViews.delete(view);
         this._availableViews.push(view);
+
+        Logger.log(`Released UnitView. Available views: ${this._availableViews.length}, Acquired views: ${this._acquiredViews.size}`);
     }
 
     public getSize(): number {

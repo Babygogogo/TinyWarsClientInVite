@@ -177,7 +177,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             }
 
                             const unitId        = unitMap.getNextUnitId();
-                            const unit          = new Units_Unit.Unit();
+                            const unit          = new Units_Unit.Unit(true);
                             unitData.setUnitId(unitId);
                             unitData.setGridIndex(gridIndex.toProto());
                             unit.init(unitData, war.getGcData());

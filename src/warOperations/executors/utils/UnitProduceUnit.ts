@@ -55,7 +55,7 @@ function fastExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
         } else {
             const gridIndex         = focusUnit.getGridIndex();
             const producedUnitId    = unitMap.getNextUnitId();
-            const producedUnit      = new Units_Unit.Unit();
+            const producedUnit      = new Units_Unit.Unit(true);
             const playerIndex       = focusUnit.getPlayerIndex();
             const gameConfig        = war.getGcData();
             const unitType          = Helpers_Misc.getExisted(focusUnit.getProduceUnitTypeId(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitProduceUnit_01);
@@ -124,10 +124,10 @@ async function normalExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, ac
     if (actionExtraData) {
         const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitProduceUnit_00);
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-        await war.moveExtraUnit({
-            movingUnitAndPath     : movingUnitAndPath,
-            aiming                : null,
-            deleteViewAfterMoving : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : undefined,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -170,7 +170,7 @@ async function normalExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, ac
         } else {
             const gridIndex         = focusUnit.getGridIndex();
             const producedUnitId    = unitMap.getNextUnitId();
-            const producedUnit      = new Units_Unit.Unit();
+            const producedUnit      = new Units_Unit.Unit(true);
             const unitType          = Helpers_Misc.getExisted(focusUnit.getProduceUnitTypeId(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitProduceUnit_01);
             const playerIndex       = focusUnit.getPlayerIndex();
             const gameConfig        = war.getGcData();

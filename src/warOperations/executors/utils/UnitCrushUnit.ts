@@ -71,10 +71,10 @@ async function normalExeUnitCrushUnit(war: BaseWar_Interface_IBwWar.IBwWar, acti
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData());
-        await war.moveExtraUnit({
-            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
-            aiming                : null,
-            deleteViewAfterMoving : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
         });
 
         // TODO 焦点部队移动到目标格子的动画

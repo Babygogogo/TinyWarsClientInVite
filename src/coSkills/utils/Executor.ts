@@ -51,68 +51,68 @@ export function executeInstantSkill({ player, skillId, skillData, targetGridInde
         exeSelfUnitBuffGainWithExtraData({ isFastExecute });
         exeEnemyUnitBuffGainWithExtraData({ isFastExecute });
         exeFixedAreaDamageWithExtraData({
-            skillCfg, player, skillData, targetGridIndexes, isFastExecute, 
+            skillCfg, player, skillData, targetGridIndexes, isFastExecute,
         });
         exeSelfPromotionGainWithExtraData({ isFastExecute });
         exeSelfUnitActionStateWithExtraData({ isFastExecute });
         exeSelfFlareAmmoGainWithExtraData({ isFastExecute });
         exeChangeWeatherWithExtraData({
-            skillCfg, player, skillData, isFastExecute, 
+            skillCfg, player, skillData, isFastExecute,
         });
         exeSelfCoOnboardWithExtraData({ isFastExecute });
     } else {
         exeSelfFundWithoutExtraData({ skillCfg, player, isFastExecute });
         exeEnemyEnergyWithoutExtraData({ skillCfg, player, isFastExecute });
         exeSelfAddUnitWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeSelfHpGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeEnemyHpGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeSelfFuelGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeEnemyFuelGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeSelfMaterialGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeEnemyMaterialGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeSelfPrimaryAmmoGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeEnemyPrimaryAmmoGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeSelfUnitBuffGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeEnemyUnitBuffGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeFixedAreaDamageWithoutExtraData({
-            skillCfg, player, skillData, targetGridIndexes, isFastExecute, 
+            skillCfg, player, skillData, targetGridIndexes, isFastExecute,
         });
         exeSelfPromotionGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeSelfUnitActionStateWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeSelfFlareAmmoGainWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
         exeChangeWeatherWithoutExtraData({
-            skillCfg, player, skillData, isFastExecute, 
+            skillCfg, player, skillData, isFastExecute,
         });
         exeSelfCoOnboardWithoutExtraData({
-            skillCfg, player, coGridIndexList, isFastExecute, 
+            skillCfg, player, coGridIndexList, isFastExecute,
         });
     }
 }
@@ -226,7 +226,7 @@ function exeSelfAddUnitWithoutExtraData({ skillCfg, player, coGridIndexList, isF
         const unitId            = unitMap.getNextUnitId();
         const unitTypeId        = cfg.getUnitTypeId();
         const unitTemplateCfg   = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitTypeId));
-        const unit              = new Units_Unit.Unit();
+        const unit              = new Units_Unit.Unit(true);
         unit.init(Units_Utils_Serialization.create({
             unitType    : unitTypeId,
             unitId      : unitId,
@@ -1155,7 +1155,7 @@ function exeSelfFlareAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexLis
     }
 }
 
- 
+
 function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_IPlayer.IPlayer;
@@ -1185,7 +1185,7 @@ function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isFastExec
         }
     }
 }
- 
+
 function exeChangeWeatherWithoutExtraData({ skillCfg, player, skillData, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_IPlayer.IPlayer;

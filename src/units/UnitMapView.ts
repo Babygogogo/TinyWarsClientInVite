@@ -1,6 +1,5 @@
 import {
     ActionPlanners_Constants,
-    Graphics_Utils,
     Helpers_Misc,
     Notifications_Dispatcher,
     type Notifications_Types,
@@ -15,9 +14,6 @@ import {
     Utils_ClientErrorCode,
     Visibilities_Utils,
 } from "../internal.ts";
-
-const getGridWidth          = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight         = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
 export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
     private readonly _layerForNaval     = new Ui_Components_UiContainer.UiContainer();
@@ -56,7 +52,7 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
         for (const unit of this._getUnitMap().getAllUnits()) {
             const view = unit.getView();
             if (view) {
-                this.addUnit(view, false);
+                this.addUnitView(view, false);
             }
         }
 
@@ -76,23 +72,19 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public addUnit(view: Units_UnitView.UnitView, needResetZOrder: boolean): void {
+    public addUnitView(view: Units_UnitView.UnitView, needResetZOrder: boolean): void {
         const viewData = view.getViewData();
-
-        view.setX(getGridWidth() * viewData.gridX);
-        view.setY(getGridHeight() * viewData.gridY);
-        if (viewData.isLoadedByUnit) {
-            view.setIsVisible(false);
-        }
+        view.setIsVisible(!viewData.isLoadedByUnit);
 
         const layer = this._getLayerByUnitType(viewData.unitTypeId);
         layer.addUiChild(view);
+
         if (needResetZOrder) {
             this._resetZOrderForLayer(layer);
         }
     }
 
-    public removeUnit(view: Units_UnitView.UnitView): void {
+    public deleteUnitView(view: Units_UnitView.UnitView): void {
         view.getParent()?.removeChild(view);
     }
 

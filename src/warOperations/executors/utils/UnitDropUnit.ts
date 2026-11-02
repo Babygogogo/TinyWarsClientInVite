@@ -106,47 +106,33 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
     const gridVisualEffect  = war.getGridVisualEffect();
     const unitMap           = war.getUnitMap();
     if (actionExtraData) {
-        const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDropUnit_00);
-        const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-        const extraUnit         = await war.moveExtraUnit({
-            movingUnitAndPath,
-            aiming                : null,
-            deleteViewAfterMoving : false,
-        });
-
-        const movingPath    = movingUnitAndPath?.getPath();
-        const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
-        const unitMapView   = unitMap.getView();
-        if (lastNode) {
-            if (lastNode.getIsVisible()) {
-                if (actionExtraData.getIsDropBlocked()) {
-                    gridVisualEffect.showEffectBlock(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDropUnit_01));
-                    Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
-                }
-            } else {
-                if (extraUnit) {
-                    const view = extraUnit.getView();
-                    if (view) {
-                        unitMapView.removeUnit(view);
+        const commonExtraData           = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDropUnit_00);
+        const movingUnitAndPath         = commonExtraData.getMovingUnitAndPath();
+        const droppingUnitAndPathArray  = actionExtraData.getDroppingUnitAndPathArray();
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : async extraUnitView => {
+                const movingPath    = movingUnitAndPath?.getPath();
+                const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
+                if (lastNode) {
+                    if (!lastNode.getIsVisible()) {
+                        extraUnitView?.setIsVisible(false);
+                    } else {
+                        if (actionExtraData.getIsDropBlocked()) {
+                            gridVisualEffect.showEffectBlock(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDropUnit_01));
+                            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
+                        }
                     }
-                    extraUnit.stopRunning();
                 }
-            }
-        }
 
-        const droppingUnitAndPathArray = actionExtraData.getDroppingUnitAndPathArray();
-        await Promise.all((droppingUnitAndPathArray).map(v => war.moveExtraUnit({
-            movingUnitAndPath     : v,
-            aiming                : null,
-            deleteViewAfterMoving : true,
-        })));
-        if (extraUnit) {
-            const view = extraUnit.getView();
-            if (view) {
-                unitMapView.removeUnit(view);
-            }
-            extraUnit.stopRunning();
-        }
+                await Promise.all((droppingUnitAndPathArray).map(v => war.showTempUnitMoveAnimation({
+                    movingUnitAndPath : v,
+                    aiming            : null,
+                    callback          : undefined,
+                })));
+            },
+        });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,

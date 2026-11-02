@@ -1,37 +1,38 @@
 import {
-    type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
-    type BaseWar_Interface_IBwWar,
-    ActionPlanners_States_Idle,
-    ActionPlanners_States_RequestingPlayerProduceUnit,
-    FloatText,
     type AuxiliaryTypes_AuxiliaryTypes,
-    Units_Unit,
-    Units_UnitView,
-    Keyboard_KbManager,
-    Units_Utils_Serialization,
-    Notifications_Dispatcher,
-    Keyboard_KbTypes,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Lang_Utils,
-    Units_Utils_Common,
-    GamePanels_Manager,
-    Numbers_Utils,
-    Units_Constants,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
-    Sounds_SoundPlayer,
-    Helpers_PointerInput,
-    Sounds_Constants,
-    Lang_Constants,
     type Ui_Types_UiListItemData,
+    ActionPlanners_States_Idle,
+    ActionPlanners_States_RequestingPlayerProduceUnit,
+    FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_Misc,
+    Helpers_PointerInput,
+    Keyboard_KbManager,
+    Keyboard_KbTypes,
+    Lang_Constants,
+    Lang_Utils,
+    Notifications_Dispatcher,
+    Numbers_Utils,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
+    Units_Constants,
+    Units_Unit,
+    Units_UnitView,
+    Units_UnitViewPool,
+    Units_Utils_Common,
+    Units_Utils_Serialization,
 } from "../../internal.ts";
 
 import type { SelfTileEnabledForUnitProduction } from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
@@ -269,7 +270,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataList          : DataForUnitRenderer[] = [];
 
         for (const unitType of tile.getProducibleUnitTypeArrayForPlayer(playerIndex) ?? []) {
-            const unit = new Units_Unit.Unit();
+            const unit = new Units_Unit.Unit(false);
             unit.init(Units_Utils_Serialization.createDefault({
                 gridIndex   : gridIndex.getXY(),
                 unitId      : -1,
@@ -331,7 +332,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _imgProduce!   : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _labelProduce! : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView      = new Units_UnitView.UnitView();
+    private _unitView               : Units_UnitView.UnitView | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
@@ -341,11 +342,25 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             { ui : this._imgBg,                          callback : this._onTouchedImgBg,         eventType : Helpers_PointerInput.PointerEventType.ReleaseIn },
             { ui : this._groupProduce,                   callback : this._onTouchedGroupProduce,  eventType : Helpers_PointerInput.PointerEventType.ReleaseIn },
         ]);
+    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        this._conUnitView.addUiChild(this._unitView);
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+
+            this._conUnitView.addUiChild(view);
+        }
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunning();
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
 
         await super._onClosed();
     }
@@ -407,8 +422,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         {
             const unitView = this._unitView;
-            unitView.loadViewDataFromUnit(unit, unit.getWar(), true);
-            unitView.startRunning();
+            unitView?.loadViewDataFromUnit(unit, unit.getWar(), true);
+            unitView?.refreshAllViews();
         }
 
         this._layoutName.arrangeItems();

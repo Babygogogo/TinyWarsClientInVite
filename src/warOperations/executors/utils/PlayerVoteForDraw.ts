@@ -47,10 +47,10 @@ async function normalExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, 
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerVoteForDraw_00);
-        await war.moveExtraUnit({
-            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
-            aiming                : null,
-            deleteViewAfterMoving : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -66,7 +66,7 @@ async function normalExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, 
     );
 }
 
- 
+
 async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerVoteForDraw): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {

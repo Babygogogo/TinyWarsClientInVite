@@ -3,14 +3,11 @@ import {
     BaseWar_Interface_IBwWar,
     Common_Model_CommonModel,
     CoSkills_Constants,
-    Egret_Egret,
     ForceSkins_Utils,
     Graphics_Utils,
     Helpers_Collection,
     Helpers_ImageSource,
     Helpers_Misc,
-    Notifications_Dispatcher,
-    Notifications_Mapping,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Sounds_Utils,
@@ -23,7 +20,6 @@ import {
     Utils_ClientErrorCode,
     Visibilities_Utils,
     type AuxiliaryTypes_AuxiliaryTypes,
-    type Notifications_Types,
     type Units_Unit,
 } from "../internal.ts";
 
@@ -48,13 +44,6 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
 
     private readonly _cornerIconSources : string[]  = [];
     private readonly _viewData          = new Units_UnitViewData.UnitViewData();
-
-    private readonly _notificationListeners: Notifications_Types.Listener[] = [
-        { type : "UnitAnimationTick",            callback : this._onNotifyUnitAnimationTick },
-        { type : "StateIndicatorTick",           callback : this._onNotifyUnitStateIndicatorTick },
-        { type : "UnitFlashTick",                callback : this._onNotifyUnitFlashTick },
-        { type : "BwOverridingSkinIdChanged",    callback : this._onNotifyBwOverridingSkinIdChanged },
-    ];
 
     public constructor() {
         super();
@@ -97,22 +86,20 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
     }
 
     public startRunning(): void {
-        Notifications_Dispatcher.removeEventListeners(this._notificationListeners, this);
-        Notifications_Dispatcher.addEventListeners(this._notificationListeners, this);
-
         this.refreshAllViews();
     }
     public stopRunning(): void {
-        Notifications_Dispatcher.removeEventListeners(this._notificationListeners, this);
+        // nothing to do
     }
 
-    private _onNotifyUnitAnimationTick(): void {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public updateOnNotifyUnitAnimationTick(): void {
         this._tickUnitAnimationFrame();
     }
-    private _onNotifyUnitStateIndicatorTick(): void {
+    public updateOnNotifyUnitStateIndicatorTick(): void {
         this._refreshCornerIcon();
     }
-    private _onNotifyUnitFlashTick(): void {
+    public updateOnNotifyUnitFlashTick(): void {
         const unit = this.getViewData();
         if (unit == null) {
             return;
@@ -136,14 +123,15 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
             unitType : viewData.unitTypeId,
         }));
     }
-    private _onNotifyBwOverridingSkinIdChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwOverridingSkinIdChanged"]>): void {
+    public updateOnNotifyBwOverridingSkinIdChanged(war: BaseWar_Interface_IBwWar.IBwWar): void {
         if (this.loadViewData({
-            skinId : ForceSkins_Utils.getFinalSkinId(e.data!.war, this.getViewData().playerIndex),
+            skinId : ForceSkins_Utils.getFinalSkinId(war, this.getViewData().playerIndex),
         })) {
             this._refreshCornerIconSources();
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getViewData(): Units_UnitViewData.UnitViewData {
         return this._viewData;
     }
@@ -416,11 +404,10 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
             }
         });
     }
-    public moveAlongExtraPath({ war, path, aiming, deleteViewAfterMoving }: {
-        war                     : BaseWar_Interface_IBwWar.IBwWar;
-        path                    : GridIndexAndPathInfo[];
-        aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
-        deleteViewAfterMoving   : boolean;
+    public moveAlongExtraPath({ war, path, aiming }: {
+        war     : BaseWar_Interface_IBwWar.IBwWar;
+        path    : GridIndexAndPathInfo[];
+        aiming  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
     }): Promise<void> {
         this.showAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
 
@@ -484,16 +471,15 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         }
 
         const endingNode        = path[path.length - 1];
-        const isBlockedInEnd    = !!endingNode.getIsBlocked();
         const isVisibleInEnd    = !!endingNode.getIsVisible();
-        const unitMapView       = war.getUnitMap().getView();
-        if ((deleteViewAfterMoving) && (!isVisibleInEnd)) {
+        if (!isVisibleInEnd) {
             tween.call(() => {
-                unitMapView.removeUnit(this);
+                this.setIsVisible(false);
             });
         }
 
-        const endingGridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(endingNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.BwUnitView_MoveAlongExtraPath_03);
+        const isBlockedInEnd    = !!endingNode.getIsBlocked();
+        const endingGridIndex   = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(endingNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.BwUnitView_MoveAlongExtraPath_03);
         return new Promise<void>(resolve => {
             if (!aiming?.length) {
                 tween.call(() => {
@@ -502,9 +488,6 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                         war.getGridVisualEffect().showEffectBlock(endingGridIndex);
                         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
                     }
-                    if (deleteViewAfterMoving) {
-                        unitMapView.removeUnit(this);
-                    }
 
                     Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
 
@@ -512,13 +495,14 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                 });
             } else {
                 const cursor = war.getCursor();
-                tween.call(() => {
-                    cursor.setIsMovableByTouches(false);
-                    cursor.setIsVisible(false);
-                    for (const g of aiming) {
-                        war.getGridVisualEffect().showEffectAiming(g, AIMING_TIME_MS);
-                    }
-                })
+                tween
+                    .call(() => {
+                        cursor.setIsMovableByTouches(false);
+                        cursor.setIsVisible(false);
+                        for (const g of aiming) {
+                            war.getGridVisualEffect().showEffectAiming(g, AIMING_TIME_MS);
+                        }
+                    })
                     .wait(AIMING_TIME_MS)
                     .call(() => {
                         cursor.setIsMovableByTouches(true);
@@ -528,9 +512,6 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                         if ((isBlockedInEnd) && (isVisibleInEnd)) {
                             war.getGridVisualEffect().showEffectBlock(endingGridIndex);
                             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
-                        }
-                        if (deleteViewAfterMoving) {
-                            unitMapView.removeUnit(this);
                         }
 
                         Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);

@@ -203,7 +203,7 @@ async function getBestScoreAndActionPlayerProduceUnitWithGridIndex({ commonParam
                     unitType  : bestScoreAndUnitType.unitType,
                     unitHp    : effectiveCoSkill?.getHpUpperLimit() ?? Units_Constants.Hp.MaxHp,
                     gridIndex : gridIndex.toProto().toJson(),
-                }, 
+                },
             }),
         };
     }
@@ -245,7 +245,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
 
     const player            = war.getPlayerManager().getPlayer(playerIndexInTurn);
     const producingUnitHp   = effectiveCoSkill?.getHpUpperLimit() ?? Units_Constants.Hp.MaxHp;
-    const producingUnit     = new Units_Unit.Unit();
+    const producingUnit     = new Units_Unit.Unit(false);
     producingUnit.init(Units_Utils_Serialization.create({
         unitType    : producingUnitType,
         unitId      : 0,

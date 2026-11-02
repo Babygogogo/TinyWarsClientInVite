@@ -175,7 +175,7 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
         revisedUnitData.setGridIndex(gridIndex.toProto());
         revisedUnitData.setUnitId(unitId);
 
-        const unit = new Units_Unit.Unit();
+        const unit = new Units_Unit.Unit(true);
         unit.init(revisedUnitData, gameConfig);
         unit.startRunning(war);
         unit.startRunningView();

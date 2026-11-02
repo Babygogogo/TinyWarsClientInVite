@@ -71,10 +71,10 @@ async function normalExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitSupplyUnit_00);
-        await war.moveExtraUnit({
-            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
-            aiming                : null,
-            deleteViewAfterMoving : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({

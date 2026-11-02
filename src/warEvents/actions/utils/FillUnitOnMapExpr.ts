@@ -990,7 +990,7 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Interfa
     const gameConfig    = war.getGcData();
     const unitArray     : Units_Unit.Unit[] = [];
     for (const unitData of unitDataArray) {
-        const unit = new Units_Unit.Unit();
+        const unit = new Units_Unit.Unit(true);
         unit.init(unitData, gameConfig);
         unit.startRunning(war);
         unit.startRunningView();

@@ -139,10 +139,10 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
     if (actionExtraData) {
         const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitJoinUnit_00);
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-        await war.moveExtraUnit({
-            movingUnitAndPath,
-            aiming                : null,
-            deleteViewAfterMoving : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : undefined,
         });
 
         const movingPath    = movingUnitAndPath?.getPath();
@@ -276,7 +276,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
             {
                 const view = targetUnit.getView();
                 if (view) {
-                    unitMap.getView().removeUnit(view);
+                    unitMap.getView().deleteUnitView(view);
                 }
             }
             targetUnit.stopRunning();

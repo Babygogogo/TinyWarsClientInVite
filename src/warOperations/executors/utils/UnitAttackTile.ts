@@ -71,7 +71,7 @@ function fastExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
             for (const [, unit] of battleInfo.destroyedUnits) {
                 const view = unit.getView();
                 if (view) {
-                    unitMapView.removeUnit(view);
+                    unitMapView.deleteUnitView(view);
                 }
             }
         }
@@ -88,10 +88,10 @@ async function normalExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, act
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackTile_00);
         const targetGridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(actionExtraData.getTargetGridIndex());
-        await war.moveExtraUnit({
-            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
-            aiming                : targetGridIndex,
-            deleteViewAfterMoving : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : targetGridIndex == null ? null : [targetGridIndex],
+            callback          : undefined,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({

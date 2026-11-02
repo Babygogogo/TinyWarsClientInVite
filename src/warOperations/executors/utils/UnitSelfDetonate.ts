@@ -95,10 +95,10 @@ async function normalExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, a
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData());
-        await war.moveExtraUnit({
-            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
-            aiming                : null,
-            deleteViewAfterMoving : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({

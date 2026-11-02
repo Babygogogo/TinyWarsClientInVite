@@ -55,7 +55,7 @@ export class UnitMap {
         const loadedUnits   = new Map<number, Units_Unit.Unit>();
         const allUnits      = new Map<number, Units_Unit.Unit>();
         for (const unitData of data.getUnits()) {
-            const unit = new Units_Unit.Unit();
+            const unit = new Units_Unit.Unit(true);
             unit.init(unitData, gameConfig);
 
             const gridIndex = unit.getGridIndex();
@@ -378,7 +378,7 @@ export class UnitMap {
 
         const view = unit.getView();
         if (view) {
-            this.getView().addUnit(view, true);
+            this.getView().addUnitView(view, true);
         }
     }
     public setUnitUnloaded(unitId: number, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
@@ -406,7 +406,7 @@ export class UnitMap {
 
         const view = unit.getView();
         if (view) {
-            this.getView().addUnit(view, true);
+            this.getView().addUnitView(view, true);
         }
     }
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
@@ -417,7 +417,7 @@ export class UnitMap {
         if ((removeView) && (unit)) {
             const view = unit.getView();
             if (view) {
-                this.getView().removeUnit(view);
+                this.getView().deleteUnitView(view);
             }
         }
 
@@ -432,7 +432,7 @@ export class UnitMap {
 
         const view = unit.getView();
         if (view) {
-            this.getView().removeUnit(view);
+            this.getView().deleteUnitView(view);
         }
 
         return unit;

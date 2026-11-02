@@ -88,52 +88,42 @@ async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, ac
     const playerInTurn      = war.getPlayerInTurn();
     const isSelfInTurn      = playerInTurn.getUserId() === Users_Model.getSelfUserId();
     if (actionExtraData) {
-        const commonExtraData       = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_00);
-        const movingUnitAndPath     = commonExtraData.getMovingUnitAndPath();
-        const extraUnit             = await war.moveExtraUnit({
-            movingUnitAndPath,
-            aiming                : null,
-            deleteViewAfterMoving : false,
-        });
+        const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_00);
+        const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : async () => {
+                const movingPath    = movingUnitAndPath?.getPath();
+                const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
+                if ((isSelfInTurn) && (lastNode) && (!lastNode.getIsBlocked())) {
+                    const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_01);
+                    const tile                  = tileMap.getTile(gridIndex);
+                    const maxCapturePoint       = Helpers_Misc.getExisted(tile.getMaxCapturePoint(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_02);
+                    const currentCapturePoint   = tile.getCurrentCapturePoint();
+                    const tileDataAfterAction   = Helpers_Misc.getExisted(
+                        commonExtraData
+                            .getTileArrayAfterAction()
+                            .find(v =>
+                                gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
+                            ),
+                        Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_04,
+                    );
+                    const rawNewCapturePoint   = tileDataAfterAction.getCurrentCapturePoint();
 
-        {
-            const movingPath    = movingUnitAndPath?.getPath();
-            const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
-            if ((isSelfInTurn) && (lastNode) && (!lastNode.getIsBlocked())) {
-                const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_01);
-                const tile                  = tileMap.getTile(gridIndex);
-                const maxCapturePoint       = Helpers_Misc.getExisted(tile.getMaxCapturePoint(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_02);
-                const currentCapturePoint   = tile.getCurrentCapturePoint();
-                const tileDataAfterAction   = Helpers_Misc.getExisted(
-                    commonExtraData
-                        .getTileArrayAfterAction()
-                        .find(v =>
-                            gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
-                        ),
-                    Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_04,
-                );
-                const rawNewCapturePoint   = tileDataAfterAction.getCurrentCapturePoint();
-
-                await new Promise<void>(resolve => {
-                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
-                        maxValue     : maxCapturePoint,
-                        currentValue : currentCapturePoint,
-                        newValue     : rawNewCapturePoint > currentCapturePoint
-                            ? rawNewCapturePoint
-                            : Math.max(rawNewCapturePoint, maxCapturePoint),
-                        callbackOnFinish : () => resolve(),
+                    await new Promise<void>(resolve => {
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
+                            maxValue     : maxCapturePoint,
+                            currentValue : currentCapturePoint,
+                            newValue     : rawNewCapturePoint > currentCapturePoint
+                                ? rawNewCapturePoint
+                                : Math.max(rawNewCapturePoint, maxCapturePoint),
+                            callbackOnFinish : () => resolve(),
+                        });
                     });
-                });
-            }
-        }
-
-        if (extraUnit) {
-            const view = extraUnit.getView();
-            if (view) {
-                unitMap.getView().removeUnit(view);
-            }
-            extraUnit.stopRunning();
-        }
+                }
+            },
+        });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,

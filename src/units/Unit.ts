@@ -34,6 +34,7 @@ import {
     Units_Constants,
     Units_Unit,
     Units_UnitView,
+    Units_UnitViewPool,
     Units_Utils_Common,
     Units_Utils_CustomName,
     Units_Utils_Serialization,
@@ -75,12 +76,18 @@ export class Unit {
     private _buffArray                          : UnitBuff[] = [];
     private _customNameId                       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
-    private readonly _view              = new Units_UnitView.UnitView();
-    private _war?                       : BaseWar_Interface_IBwWar.IBwWar;
+    private _view                               : Units_UnitView.UnitView | undefined;
+    private _war?                               : BaseWar_Interface_IBwWar.IBwWar;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Initializers and serializers.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public constructor(needView: boolean) {
+        if (needView) {
+            this._setView(Units_UnitViewPool.UnitViewPool.getInstance().acquire());
+        }
+    }
+
     public init(unitData: SerialUnit, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         const validationError = Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
             unitData              : unitData,
@@ -133,9 +140,16 @@ export class Unit {
     public stopRunning(): void {
         this.getView()?.stopRunning();
     }
+    public dispose(): void {
+        const view = this.getView();
+        if (view) {
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            this._setView(undefined);
+        }
+    }
 
-    public clone(): Units_Unit.Unit {
-        const unit = new Units_Unit.Unit();
+    public clone(needView: boolean): Units_Unit.Unit {
+        const unit = new Units_Unit.Unit(needView);
         unit.init(this.serialize(), this.getGcData());
         unit.startRunning(this.getWar());
 
@@ -221,6 +235,9 @@ export class Unit {
     ////////////////////////////////////////////////////////////////////////////////
     public getView(): Units_UnitView.UnitView | undefined {
         return this._view;
+    }
+    private _setView(view: Units_UnitView.UnitView | undefined): void {
+        this._view = view;
     }
 
     public updateView(): void {

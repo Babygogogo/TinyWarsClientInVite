@@ -1,23 +1,38 @@
 import {
+    AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MapSize,
     BaseWar_Model_BwCommonSettingManager,
     BaseWar_Model_BwDrawVoteManager,
     BaseWar_Model_BwExecutedOperationManager,
     BaseWar_Model_BwRandomNumberManager,
     BaseWar_Model_BwWarStatisticsManager,
     BaseWar_View_BwWarView,
+    BootTimers_Constants,
     Fields_Field,
-    AuxiliaryTypes_GridIndex,
-    Weathers_Manager,
-    AuxiliaryTypes_MapSize,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    NormalMap_Model_NormalMapModel,
+    Players_Constants,
     Players_PlayerManager,
+    Players_Utils_Common,
     SingleCustomWar_Model_ScwWar,
     SingleFreeWar_Model_SfwWar,
+    Sounds_SoundPlayer,
     TaskObjectives_TaskObjectiveManager,
-    BootTimers_Constants,
+    Timer_TimerModel,
     Turns_TurnManager,
+    Units_Constants,
     Units_Unit,
-    type GameConfigs_GameConfig,
+    Units_UnitView,
+    Units_Utils_Common,
+    Users_Model,
+    Users_Utils,
+    Utils_ClientErrorCode,
+    WarTypes_Constants,
+    Weathers_Manager,
     type ActionPlanners_IActionPlanner,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Interface_IBwCommonSettingManager,
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwDrawVoteManager,
@@ -30,29 +45,15 @@ import {
     type BaseWar_Interface_IBwWarView,
     type Fields_IField,
     type FogMaps_IFogMap,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Units_Constants,
-    Players_Constants,
-    Users_Utils,
-    Utils_ClientErrorCode,
-    Helpers_Misc,
-    Lang_Utils,
-    Units_Utils_Common,
-    Players_Utils_Common,
-    NormalMap_Model_NormalMapModel,
-    Users_Model,
-    Timer_TimerModel,
-    Sounds_SoundPlayer,
-    Lang_Constants,
-    WarTypes_Constants,
-    type Weathers_IManager,
+    type GameConfigs_GameConfig,
     type Players_IPlayer,
     type Players_IPlayerManager,
     type TaskObjectives_ITaskObjectiveManager,
     type Tiles_TileMap,
+    type Turns_Constants,
     type Turns_ITurnManager,
     type Units_UnitMap,
-    type Turns_Constants,
+    type Weathers_IManager,
 } from "../../internal.ts";
 
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -578,18 +579,20 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
             }
         }
     }
-    public async moveExtraUnit({ movingUnitAndPath, aiming, deleteViewAfterMoving }: {
-        movingUnitAndPath       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MovingUnitAndPath>;
-        aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex>;
-        deleteViewAfterMoving   : boolean;
-    }): Promise<Units_Unit.Unit | null> {
+    public async showTempUnitMoveAnimation({ movingUnitAndPath, aiming, callback }: {
+        movingUnitAndPath : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MovingUnitAndPath>;
+        aiming            : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
+        callback          : ((tempUnitView: Units_UnitView.UnitView | undefined) => void | Promise<void>) | undefined;
+    }): Promise<void> {
         if (movingUnitAndPath == null) {
-            return null;
+            await callback?.(undefined);
+            return;
         }
 
         const movingUnitData = movingUnitAndPath.getUnit();
         if (movingUnitData == null) {
-            return null;
+            await callback?.(undefined);
+            return;
         }
 
         const movingPath = movingUnitAndPath.getPath();
@@ -597,36 +600,37 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
             throw Helpers_Misc.newError(`Empty movingPath.`, Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_MoveExtraUnit_00);
         }
 
-        const unitMap           = this.getUnitMap();
-        const unitMapView       = unitMap.getView();
-        const movingUnitView    = unitMap.getUnitById(movingUnitData.getUnitId())?.getView();
-        if (movingUnitView) {
-            unitMapView.removeUnit(movingUnitView);
-        }
-
-        const virtualUnit = new Units_Unit.Unit();
-        virtualUnit.init(movingUnitData, this.getGcData());
-        virtualUnit.startRunning(this);
-        virtualUnit.startRunningView();
-
+        const unitMap       = this.getUnitMap();
+        const unitMapView   = unitMap.getView();
         {
-            const virtualUnitView = virtualUnit.getView();
-            if (virtualUnitView) {
-                unitMapView.addUnit(virtualUnitView, true);
-                await virtualUnitView.moveAlongExtraPath({
-                    war                   : this,
-                    path                  : movingPath,
-                    aiming                : aiming ? [aiming] : undefined,
-                    deleteViewAfterMoving : deleteViewAfterMoving,
-                });
+            const existingUnitView = unitMap.getUnitById(movingUnitData.getUnitId())?.getView();
+            if (existingUnitView) {
+                unitMapView.deleteUnitView(existingUnitView);
             }
         }
 
-        if (deleteViewAfterMoving) {
-            virtualUnit.stopRunning();
+        const tempUnit = new Units_Unit.Unit(true);
+        tempUnit.init(movingUnitData, this.getGcData());
+        tempUnit.startRunning(this);
+        tempUnit.startRunningView();
+
+        const tempUnitView = tempUnit.getView();
+        if (!tempUnitView) {
+            await callback?.(undefined);
+        } else {
+            unitMapView.addUnitView(tempUnitView, true);
+
+            await tempUnitView.moveAlongExtraPath({
+                war    : this,
+                path   : movingPath,
+                aiming : aiming,
+            });
+            await callback?.(tempUnitView);
+
+            unitMapView.deleteUnitView(tempUnitView);
         }
 
-        return virtualUnit;
+        tempUnit.dispose();
     }
 
     public checkCanProduceUnitByOpaAndRule(playerIndex: number, unitType: number): boolean {
@@ -732,7 +736,9 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
                     ++idleUnitsCount;
                 }
             }
-            (idleUnitsCount) && (hints.push(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0006, idleUnitsCount)));
+            if (idleUnitsCount) {
+                hints.push(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0006, idleUnitsCount));
+            }
         }
 
         {
@@ -779,7 +785,9 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
                     gridIndexArray.map(v => `(${v.getX()}, ${v.getY()})`).join(`, `)),
                 );
             }
-            (textArrayForBuildings.length) && (hints.push(textArrayForBuildings.join(`\n`)));
+            if (textArrayForBuildings.length) {
+                hints.push(textArrayForBuildings.join(`\n`));
+            }
         }
 
         hints.push(Lang_Utils.getText(Lang_Constants.TextType.A0024));

@@ -1,18 +1,20 @@
 import {
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_Misc,
+    Lang_Constants,
+    MapEditor_Model_MeModel,
+    Tiles_Constants_Common,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
     Ui_Components_UiTileView,
     Units_Unit,
     Units_UnitView,
+    Units_UnitViewPool,
+    Units_Utils_Serialization,
     type GameConfigs_GameConfig,
-    GamePanels_Manager,
-    GamePanels_Dict,
-    Helpers_Misc,
-    MapEditor_Model_MeModel,
-    Tiles_Constants_Common,
-    Lang_Constants,
-    Ui_Components_UiListItemRenderer,
-    Ui_Components_UiPanel,
-    type MapEditor_Model_MeTypes,
     type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeTypes,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -21,7 +23,6 @@ import {
     type Ui_Interfaces_IUiScroller,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
-    Units_Utils_Serialization,
 } from "../../internal.ts";
 
 export interface OpenData {
@@ -258,14 +259,29 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _labelNum!     : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _conUnitView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _unitView   = new Units_UnitView.UnitView();
+    private _unitView               : Units_UnitView.UnitView | undefined;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
-        this._conUnitView.addUiChild(this._unitView);
+    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+
+            this._conUnitView.addUiChild(view);
+        }
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunning();
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
 
         await super._onClosed();
     }
@@ -281,7 +297,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const war       = Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar());
         const gcData    = war.getGcData();
-        const unit      = new Units_Unit.Unit();
+        const unit      = new Units_Unit.Unit(false);
         unit.init(Units_Utils_Serialization.createDefault({
             gridIndex   : { x : 0, y : 0 },
             unitId      : 0,
@@ -292,8 +308,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         unit.startRunning(war);
 
         const unitView = this._unitView;
-        unitView.loadViewDataFromUnit(unit, war, true);
-        unitView.startRunning();
+        unitView?.loadViewDataFromUnit(unit, war, true);
+        unitView?.refreshAllViews();
     }
 
     public onItemTapEvent(): void {

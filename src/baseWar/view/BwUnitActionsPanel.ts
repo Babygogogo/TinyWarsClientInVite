@@ -1,28 +1,29 @@
 import {
-    type BaseWar_Model_BwTypes,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwWar,
-    Units_Unit,
-    Units_UnitView,
-    Units_Constants,
-    Units_Utils_Serialization,
+    type BaseWar_Model_BwTypes,
+    Graphics_Utils,
     Helpers_Misc,
     Keyboard_KbTypes,
-    Tween_Executor,
-    Graphics_Utils,
-    Stages_StageManager,
+    Lang_Constants,
     Lang_Utils,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Stages_StageManager,
+    Timer_TimerModel,
+    Tween_Executor,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiScrollList,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    Lang_Constants,
     type Ui_Types_UiListItemData,
-    Ui_Components_UiListItemRenderer,
-    Ui_Components_UiPanel,
-    Timer_TimerModel,
+    Units_Constants,
+    Units_Unit,
+    Units_UnitView,
+    Units_UnitViewPool,
+    Units_Utils_Serialization,
 } from "../../internal.ts";
 
 const getGridWidth      = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
@@ -128,7 +129,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     costForProduceUnit : data.costForProduceUnit ?? null,
                 });
             } else {
-                const unitForProduce = new Units_Unit.Unit();
+                const unitForProduce = new Units_Unit.Unit(false);
                 unitForProduce.init(Units_Utils_Serialization.createDefault({
                     gridIndex   : { x : 0, y : 0 },
                     unitId      : -1,
@@ -209,24 +210,39 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
     private readonly _labelCost!        : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _conUnitView!      : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _unitView      = new Units_UnitView.UnitView();
+    private _unitView                   : Units_UnitView.UnitView | undefined;
 
     public updateOnLoadedSkin(): void {
-        this._conUnitView.addUiChild(this._unitView);
         this._applySettingsForWholeTouch(undefined, false, undefined, Sounds_Constants.ShortSfxCode.None);
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
 
-        const imgSelected = this._imgSelected;
-        imgSelected.setAlpha(0);
-        Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop : true })
-            .to({ customAlpha : 0.3 }, 500)
-            .to({ customAlpha : 0 }, 500);
+        {
+            const imgSelected = this._imgSelected;
+            imgSelected.setAlpha(0);
+            Tween_Executor.Executor.removeTweens(imgSelected);
+            Tween_Executor.Executor.get(imgSelected, { loop : true })
+                .to({ customAlpha : 0.3 }, 500)
+                .to({ customAlpha : 0 }, 500);
+        }
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+
+            this._conUnitView.addUiChild(view);
+        }
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunning();
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
         Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
@@ -245,7 +261,7 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
         const labelCost = this._labelCost;
         if (unit == null) {
             labelCost.setText("");
-            unitView.setIsVisible(false);
+            unitView?.setIsVisible(false);
         } else {
             if (openData.actionType !== Units_Constants.ActionTypeId.ProduceUnit) {
                 labelCost.setText(``);
@@ -253,9 +269,9 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
                 const cost = openData.costForProduceUnit;
                 labelCost.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0079)}: ${cost != null ? cost : Lang_Constants.UndefinedError}`);
             }
-            unitView.setIsVisible(true);
-            unitView.loadViewDataFromUnit(unit, openData.war, true);
-            unitView.startRunning();
+            unitView?.setIsVisible(true);
+            unitView?.loadViewDataFromUnit(unit, openData.war, true);
+            unitView?.refreshAllViews();
         }
     }
 

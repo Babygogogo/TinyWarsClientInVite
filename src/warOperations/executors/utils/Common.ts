@@ -205,7 +205,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
             }
 
         } else {
-            const unit = new Units_Unit.Unit();
+            const unit = new Units_Unit.Unit(true);
             unit.init(unitData, gameConfig);
 
             if (unit.getLoaderUnitId() == null) {
@@ -388,7 +388,7 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.Battle
         for (const [, unit] of destroyedUnits) {
             const view = unit.getView();
             if (view) {
-                unitMapView.removeUnit(view);
+                unitMapView.deleteUnitView(view);
             }
 
             if (allVisibleUnits.has(unit)) {

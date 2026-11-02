@@ -109,10 +109,10 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Interface_IBwWar.IBwWar, act
     const actionExtraData   = action.getExtraData();
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchSilo_00);
-        await war.moveExtraUnit({
-            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
-            aiming                : null,
-            deleteViewAfterMoving : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
         });
 
         // TODO: 后端没有告诉前端是哪个silo被发射了，所以不知道具体发射参数，只能在配置里瞎找；如果配置里存在多个不同的发射参数，会导致回放播放视觉效果不准确；不过由于部队和地形信息会另外发送，所以不会导致回放数据出错

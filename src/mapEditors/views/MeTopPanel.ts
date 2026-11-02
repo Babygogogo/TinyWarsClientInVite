@@ -1,52 +1,52 @@
 import {
-    type Notifications_Mapping,
-    AuxiliaryTypes_ChatToTarget,
-    Maps_Constants,
-    MapEditors_Constants,
-    ForceSkins_Utils,
-    AuxiliaryTypes_GridIndex,
-    FloatText,
-    Tiles_TileView,
-    Ui_Components_UiTileView,
-    Units_Unit,
-    Units_UnitView,
     type AuxiliaryTypes_AuxiliaryTypes,
-    Tiles_Utils_Serialization,
-    MapEditor_Model_MeHelpers,
-    GamePanels_Dict,
-    Lang_Utils,
-    Helpers_Misc,
-    MapEditor_Model_MeModel,
-    Helpers_PointerInput,
-    Helpers_Collection,
-    Timer_TimerModel,
-    LocalData_Storage,
-    Helpers_GameFlow,
-    Helpers_Compatibility,
-    GamePanels_Manager,
-    Players_Constants,
-    Sounds_SoundPlayer,
-    MapEditor_Model_MeProxy,
-    NormalMap_Model_NormalMapProxy,
-    Sounds_Constants,
-    Lang_Constants,
-    Ui_Components_UiListItemRenderer,
-    Ui_Components_UiPanel,
-    type MapEditor_Model_MeTypes,
+    type Egret_Egret,
     type MapEditor_Interface_IMeDrawer,
     type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeTypes,
+    type Notifications_Mapping,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
+    AuxiliaryTypes_ChatToTarget,
+    AuxiliaryTypes_GridIndex,
+    FloatText,
+    ForceSkins_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_Collection,
+    Helpers_Compatibility,
+    Helpers_GameFlow,
+    Helpers_Misc,
+    Helpers_PointerInput,
+    Lang_Constants,
+    Lang_Utils,
+    LocalData_Storage,
+    MapEditor_Model_MeHelpers,
+    MapEditor_Model_MeModel,
+    MapEditor_Model_MeProxy,
+    MapEditors_Constants,
+    Maps_Constants,
+    NormalMap_Model_NormalMapProxy,
+    Players_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Tiles_TileView,
+    Tiles_Utils_Serialization,
+    Timer_TimerModel,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Components_UiTileView,
+    Units_Unit,
+    Units_UnitView,
+    Units_UnitViewPool,
     Units_Utils_Serialization,
     Users_Model,
     WarTypes_Constants,
-    type Egret_Egret,
 } from "../../internal.ts";
-
 
 const MaxLengthForListRecent = 30;
 
@@ -125,7 +125,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _labelLocation!                : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelMouseHover!              : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView                      = new Units_UnitView.UnitView();
+    private _unitView                               : Units_UnitView.UnitView | undefined;
     private readonly _tileView                      = new Ui_Components_UiTileView.UiTileView();
 
     public updateOnLoadedSkin(): void {
@@ -183,7 +183,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         conTileView.addUiChild(tileView.getImgBase());
         conTileView.addUiChild(tileView.getImgDecoration());
         conTileView.addUiChild(tileView.getImgObject());
-        this._conUnitView.addUiChild(this._unitView);
 
         this._listRecent.setItemRendererClass(RecentRenderer);
         this._labelLocation.setAutoShrinkHeight(12);
@@ -192,10 +191,28 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._initTileView();
         this._initUnitView();
     }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+
+            this._conUnitView.addUiChild(view);
+        }
+    }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
     }
     protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
         await this._listRecent.removeAllItems();
 
         await super._onClosed();
@@ -490,9 +507,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const dataArray = [unit.clone()];
+        const dataArray = [unit.clone(false)];
         for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {
-            dataArray.push(loadedUnit.clone());
+            dataArray.push(loadedUnit.clone(false));
         }
         war.getDrawer().setDataForPasteUnit(dataArray);
         FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0370));
@@ -894,13 +911,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const drawMode  = drawer.getMode();
         if (drawMode === MapEditors_Constants.DrawerMode.DrawUnit) {
             con.setIsVisible(true);
-            unitView.loadViewDataFromUnit(Helpers_Misc.getExisted(drawer.getDrawTargetUnit()), war, true);
-            unitView.refreshAllViews();
+            unitView?.loadViewDataFromUnit(Helpers_Misc.getExisted(drawer.getDrawTargetUnit()), war, true);
+            unitView?.refreshAllViews();
 
         } else if (drawMode === MapEditors_Constants.DrawerMode.PasteUnit) {
             con.setIsVisible(true);
-            unitView.loadViewDataFromUnit(Helpers_Misc.getExisted(drawer.getDataForPasteUnit())[0], war, true);
-            unitView.refreshAllViews();
+            unitView?.loadViewDataFromUnit(Helpers_Misc.getExisted(drawer.getDataForPasteUnit())[0], war, true);
+            unitView?.refreshAllViews();
 
         } else {
             con.setIsVisible(false);
@@ -992,7 +1009,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _initUnitView(): void {
         const war           = this._getWar();
-        const unit          = new Units_Unit.Unit();
+        const unit          = new Units_Unit.Unit(false);
         const gameConfig    = war.getGcData();
         unit.init(Units_Utils_Serialization.createDefault({
             gridIndex   : { x : 0, y : 0 },
@@ -1003,7 +1020,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }), gameConfig);
         unit.startRunning(war);
 
-        this._unitView.loadViewDataFromUnit(unit, war, true);
+        this._unitView?.loadViewDataFromUnit(unit, war, true);
     }
 }
 
@@ -1019,7 +1036,7 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     private readonly _conUnitView!  : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _unitView      = new Units_UnitView.UnitView();
+    private _unitView               : Units_UnitView.UnitView | undefined;
     private readonly _tileView      = new Tiles_TileView.TileView();
 
     public updateOnLoadedSkin(): void {
@@ -1036,9 +1053,18 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         conTileView.addUiChild(tileView.getImgObject());
         conTileView.addUiChild(tileView.getImgBuff());
         conTileView.addUiChild(tileView.getImgHighlight());
-        this._conUnitView.addUiChild(this._unitView);
     }
 
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+
+            this._conUnitView.addUiChild(view);
+        }
+    }
     protected override async _doApplyOpenData(): Promise<void> {
         const openData = this.getOpenData();
         if (openData == null) {
@@ -1054,7 +1080,7 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             conUnitView.setIsVisible(true);
             conTileView.setIsVisible(false);
 
-            const unit = new Units_Unit.Unit();
+            const unit = new Units_Unit.Unit(false);
             unit.init(Units_Utils_Serialization.createDefault({
                 gridIndex   : { x : 0, y : 0 },
                 unitId      : 0,
@@ -1065,8 +1091,8 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             unit.startRunning(war);
 
             const unitView  = this._unitView;
-            unitView.loadViewDataFromUnit(unit, war, true);
-            unitView.startRunning();
+            unitView?.loadViewDataFromUnit(unit, war, true);
+            unitView?.refreshAllViews();
         } else {
             conUnitView.setIsVisible(false);
             conTileView.setIsVisible(true);
@@ -1114,6 +1140,17 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             });
             tileView.updateView();
         }
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        await super._onClosed();
     }
 
     private _onNotifyTileAnimationTick(): void {

@@ -86,50 +86,40 @@ async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, acti
     if (actionExtraData) {
         const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_00);
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-        const extraUnit         = await war.moveExtraUnit({
-            movingUnitAndPath     : movingUnitAndPath,
-            aiming                : null,
-            deleteViewAfterMoving : false,
-        });
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : async () => {
+                const movingPath    = movingUnitAndPath?.getPath();
+                const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
+                if ((isSelfInTurn) && (lastNode) && (!lastNode.getIsBlocked())) {
+                    const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()));
+                    const tile                  = tileMap.getTile(gridIndex);
+                    const maxBuildPoint         = Helpers_Misc.getExisted(tile.getMaxBuildPoint());
+                    const currentBuildPoint     = tile.getCurrentBuildPoint();
+                    const tileDataAfterAction   = Helpers_Misc.getExisted(
+                        commonExtraData
+                            .getTileArrayAfterAction()
+                            .find(v =>
+                                gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
+                            ),
+                        Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01,
+                    );
+                    const rawNewBuildPoint = tileDataAfterAction.getCurrentBuildPoint();
 
-        {
-            const movingPath    = movingUnitAndPath?.getPath();
-            const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
-            if ((isSelfInTurn) && (lastNode) && (!lastNode.getIsBlocked())) {
-                const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()));
-                const tile                  = tileMap.getTile(gridIndex);
-                const maxBuildPoint         = Helpers_Misc.getExisted(tile.getMaxBuildPoint());
-                const currentBuildPoint     = tile.getCurrentBuildPoint();
-                const tileDataAfterAction   = Helpers_Misc.getExisted(
-                    commonExtraData
-                        .getTileArrayAfterAction()
-                        .find(v =>
-                            gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
-                        ),
-                    Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01,
-                );
-                const rawNewBuildPoint = tileDataAfterAction.getCurrentBuildPoint();
-
-                await new Promise<void>(resolve => {
-                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
-                        maxValue     : maxBuildPoint,
-                        currentValue : currentBuildPoint,
-                        newValue     : rawNewBuildPoint > currentBuildPoint
-                            ? rawNewBuildPoint
-                            : Math.max(rawNewBuildPoint, maxBuildPoint),
-                        callbackOnFinish : () => resolve(),
+                    await new Promise<void>(resolve => {
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
+                            maxValue     : maxBuildPoint,
+                            currentValue : currentBuildPoint,
+                            newValue     : rawNewBuildPoint > currentBuildPoint
+                                ? rawNewBuildPoint
+                                : Math.max(rawNewBuildPoint, maxBuildPoint),
+                            callbackOnFinish : () => resolve(),
+                        });
                     });
-                });
-            }
-        }
-
-        if (extraUnit) {
-            const view = extraUnit.getView();
-            if (view) {
-                unitMap.getView().removeUnit(view);
-            }
-            extraUnit.stopRunning();
-        }
+                }
+            },
+        });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,

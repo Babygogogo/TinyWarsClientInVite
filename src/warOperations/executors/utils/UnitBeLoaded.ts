@@ -63,10 +63,10 @@ async function normalExeUnitBeLoaded(war: BaseWar_Interface_IBwWar.IBwWar, actio
     if (actionExtraData) {
         const commonExtraData       = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBeLoaded_00);
         const movingUnitAndPath     = commonExtraData.getMovingUnitAndPath();
-        await war.moveExtraUnit({
-            movingUnitAndPath,
-            aiming                : null,
-            deleteViewAfterMoving : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : undefined,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({

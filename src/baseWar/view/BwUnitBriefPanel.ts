@@ -1,35 +1,35 @@
 import {
+    ActionPlanners_Constants,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    GameVersions_Utils,
+    Graphics_Constants,
     Helpers_Misc,
-    type Notifications_Mapping,
-    type BaseWar_Interface_IBwWar,
+    Helpers_PointerInput,
+    Helpers_Text,
+    Lang_Constants,
+    Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     SinglePlayerWar_Model_SpwWar,
-    ActionPlanners_Constants,
-    Units_UnitView,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Timer_TimerModel,
+    Tween_Executor,
+    Ui_Components_UiContainer,
+    Ui_Components_UiPanel,
+    Ui_Utils_UiSkinHelpers,
+    Units_UnitViewPool,
+    Visibilities_Utils,
+    type BaseWar_Interface_IBwWar,
     type Egret_Egret,
+    type Notifications_Mapping,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Units_Unit,
-    Helpers_PointerInput,
-    Visibilities_Utils,
-    Tween_Executor,
-    GameVersions_Utils,
-    GamePanels_Dict,
-    Helpers_Text,
-    Lang_Utils,
-    Ui_Utils_UiSkinHelpers,
-    GamePanels_Manager,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    Graphics_Constants,
-    Ui_Components_UiContainer,
-    Ui_Components_UiPanel,
-    Lang_Constants,
-    Timer_TimerModel,
 } from "../../internal.ts";
 
 const _CELL_WIDTH   = 70;
@@ -312,7 +312,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
     private readonly _imgState!     : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _labelState!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView      = new Units_UnitView.UnitView();
+    private readonly _unitView      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
 
     private _unit               : Units_Unit.Unit | null = null;
 
@@ -357,7 +357,9 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
     }
 
     public dispose(): void {
-        this._unitView.stopRunning();
+        const view = this._unitView;
+        this._conUnitView.removeUiChild(view);
+        Units_UnitViewPool.UnitViewPool.getInstance().release(view);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -372,7 +374,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
         {
             const unitView = this._unitView;
             unitView.loadViewDataFromUnit(unit, unit.getWar(), true);
-            unitView.startRunning();
+            unitView.refreshAllViews();
         }
 
         this._labelHp.setText(`${unit.getCurrentHp()}`);

@@ -1,25 +1,26 @@
 import {
-    Common_Model_CommonModel,
-    AuxiliaryTypes_GridIndex,
-    ReplayWar_Model_RwWarBase,
     ActionPlanners_Constants,
-    Ui_Components_UiContainer,
-    Ui_Components_UiImage,
-    Units_UnitView,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_IActionPlannerView,
     type AuxiliaryTypes_AuxiliaryTypes,
-    Notifications_Dispatcher,
-    Helpers_Collection,
-    Helpers_Misc,
+    AuxiliaryTypes_GridIndex,
+    Common_Model_CommonModel,
     Geometries_Constants,
-    Helpers_ImageSource,
     Graphics_Utils,
+    Helpers_Collection,
+    Helpers_ImageSource,
+    Helpers_Misc,
+    Notifications_Dispatcher,
+    type Notifications_Types,
+    ReplayWar_Model_RwWarBase,
+    Ui_Components_UiContainer,
+    Ui_Components_UiImage,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
-    type Notifications_Types,
     Units_Constants,
     type Units_Unit,
+    Units_UnitView,
+    Units_UnitViewPool,
 } from "../internal.ts";
 
 const getGridWidth                          = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
@@ -85,12 +86,12 @@ const ALPHA_FOR_VISIBLE_GRIDS_NORMAL    = 0.6;
 export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IActionPlannerView {
     private _actionPlanner?                 : ActionPlanners_IActionPlanner.IActionPlanner;
 
-    private readonly _conForGrids                    = new Ui_Components_UiContainer.UiContainer();
-    private readonly _conForMovableGrids             = new Ui_Components_UiContainer.UiContainer();
-    private readonly _conForMoveDestination          = new Ui_Components_UiContainer.UiContainer();
-    private readonly _conForAttackableGrids          = new Ui_Components_UiContainer.UiContainer();
-    private readonly _conForVisibleGrids             = new Ui_Components_UiContainer.UiContainer();
-    private readonly _conForMovePath                 = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForGrids           = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForMovableGrids    = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForMoveDestination = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForAttackableGrids = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForVisibleGrids    = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForMovePath        = new Ui_Components_UiContainer.UiContainer();
     private _imgsForMovableGrids?           : Ui_Interfaces_IUiImage.IUiImage[][];
     private _imgsForAttackableGrids?        : Ui_Interfaces_IUiImage.IUiImage[][];
     private _imgsForVisibleGrids?           : Ui_Interfaces_IUiImage.IUiImage[][];
@@ -98,8 +99,8 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
         textureSourceName : Helpers_ImageSource.getMovableAreaByTick(0),
     });
 
-    private readonly _conForUnits            = new Ui_Components_UiContainer.UiContainer();
-    private readonly _focusUnitViews         = new Map<number, Units_UnitView.UnitView>();
+    private readonly _conForUnits           = new Ui_Components_UiContainer.UiContainer();
+    private readonly _tempUnitViews         = new Map<number, Units_UnitView.UnitView>();
 
     private readonly _notifyEvents: Notifications_Types.Listener[] = [
         { type : "GridAnimationTick",       callback : this._onNotifyGridAnimationTick },
@@ -114,7 +115,7 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
         conForGrids.addUiChild(this._conForMovePath);
         conForGrids.setIsTouchChildrenEnabled(false);
 
-        this._conForUnits.setIsTouchChildrenEnabled(false);
+        this.getContainerForUnits().setIsTouchChildrenEnabled(false);
     }
 
     public init(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
@@ -747,202 +748,186 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
     }
 
     private _resetConForUnits(): void {
-        const con           = this._conForUnits;
+        const con           = this.getContainerForUnits();
         const actionPlanner = this._getActionPlanner();
         const state         = actionPlanner.getStateId();
 
         if (state === ActionPlanners_Constants.StateId.Idle) {
-            con.removeUiChildren();
             con.setIsVisible(false);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
         } else if (state === ActionPlanners_Constants.StateId.ExecutingAction) {
-            con.removeUiChildren();
             con.setIsVisible(false);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const unitOnMap     = Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
-                this._addUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
             } else {
-                this._addUnitView(unitOnMap, unitOnMap.getGridIndex());
-                this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, unitOnMap.getGridIndex());
+                this._addTempUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const unitOnMap     = Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
-                this._addUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
             } else {
-                this._addUnitView(unitOnMap, unitOnMap.getGridIndex());
-                this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, unitOnMap.getGridIndex());
+                this._addTempUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
             for (const data of actionPlanner.getChosenUnitsForDrop()) {
-                this._addUnitView(data.unit, data.destination);
+                this._addTempUnitView(data.unit, data.destination);
             }
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const unitOnMap     = Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
-                this._addUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
             } else {
-                this._addUnitView(unitOnMap, unitOnMap.getGridIndex());
-                this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, unitOnMap.getGridIndex());
+                this._addTempUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const unitOnMap     = Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
-                this._addUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
             } else {
-                this._addUnitView(unitOnMap, unitOnMap.getGridIndex());
-                this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, unitOnMap.getGridIndex());
+                this._addTempUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const unitOnMap     = Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
-                this._addUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
             } else {
-                this._addUnitView(unitOnMap, unitOnMap.getGridIndex());
-                this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, unitOnMap.getGridIndex());
+                this._addTempUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitDropDestination) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const focusUnitOnMap    = Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap());
             const focusUnitLoaded   = actionPlanner.getFocusUnitLoaded();
             const movePath          = actionPlanner.getMovePath();
             if (!focusUnitLoaded) {
-                this._addUnitView(focusUnitOnMap, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(focusUnitOnMap, movePath[movePath.length - 1].getGridIndex());
             } else {
-                this._addUnitView(focusUnitOnMap, focusUnitOnMap.getGridIndex());
-                this._addUnitView(focusUnitLoaded, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(focusUnitOnMap, focusUnitOnMap.getGridIndex());
+                this._addTempUnitView(focusUnitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
             for (const data of actionPlanner.getChosenUnitsForDrop()) {
-                this._addUnitView(data.unit, data.destination);
+                this._addTempUnitView(data.unit, data.destination);
             }
 
             const cursorGridIndex = actionPlanner.getWar().getCursor().getGridIndex();
             if (actionPlanner.getAvailableDropDestinations()?.some(grid => grid.checkIsEqual(cursorGridIndex))) {
-                this._addUnitView(Helpers_Misc.getExisted(actionPlanner.getChoosingUnitForDrop()), cursorGridIndex);
+                this._addTempUnitView(Helpers_Misc.getExisted(actionPlanner.getChoosingUnitForDrop()), cursorGridIndex);
             }
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitFlareDestination) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const unitOnMap     = Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
-                this._addUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
             } else {
-                this._addUnitView(unitOnMap, unitOnMap.getGridIndex());
-                this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, unitOnMap.getGridIndex());
+                this._addTempUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitRepairTarget) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const unitOnMap     = Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
-                this._addUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
             } else {
-                this._addUnitView(unitOnMap, unitOnMap.getGridIndex());
-                this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, unitOnMap.getGridIndex());
+                this._addTempUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const unitOnMap     = Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
-                this._addUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, movePath[movePath.length - 1].getGridIndex());
             } else {
-                this._addUnitView(unitOnMap, unitOnMap.getGridIndex());
-                this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
+                this._addTempUnitView(unitOnMap, unitOnMap.getGridIndex());
+                this._addTempUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
         } else if (state === ActionPlanners_Constants.StateId.ChoosingTileProductionTarget) {
-            con.removeUiChildren();
             con.setIsVisible(false);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
         } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             for (const [, unit] of actionPlanner.getUnitsForPreviewingAttackableArea()) {
-                this._addUnitView(unit, unit.getGridIndex());
+                this._addTempUnitView(unit, unit.getGridIndex());
             }
 
         } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitMovableArea) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const unit = Helpers_Misc.getExisted(actionPlanner.getUnitForPreviewingMovableArea());
-            this._addUnitView(unit, unit.getGridIndex());
+            this._addTempUnitView(unit, unit.getGridIndex());
 
         } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitVisibleArea) {
-            con.removeUiChildren();
             con.setIsVisible(true);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
             const unit = Helpers_Misc.getExisted(actionPlanner.getUnitForPreviewingVisibleArea());
-            this._addUnitView(unit, unit.getGridIndex());
+            this._addTempUnitView(unit, unit.getGridIndex());
 
         } else if (state === ActionPlanners_Constants.StateId.PreviewingTileAttackableArea) {
-            con.removeUiChildren();
             con.setIsVisible(false);
-            this._clearFocusUnitViews();
+            this._clearTempUnitViews();
 
         } else {
             // TODO
@@ -953,23 +938,29 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    private _addUnitView(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, _alpha = 1): void {
-        const view = new Units_UnitView.UnitView();
+    private _addTempUnitView(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, _alpha = 1): void {
+        const view = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
         view.loadViewDataFromUnit(unit, unit.getWar());
-        view.startRunning();
+        view.loadViewData({
+            gridX           : gridIndex.getX(),
+            gridY           : gridIndex.getY(),
+            animationTypeId : Units_Constants.AnimationTypeId.MoveHorizontal,
+        });
+        view.refreshAllViews();
 
         // view.alpha = alpha;
-        _resetUnitViewXy(view, gridIndex);
-        view.showAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
-        this._focusUnitViews.set(unit.getUnitId(), view);
-        this._conForUnits.addUiChild(view);
+        this._tempUnitViews.set(unit.getUnitId(), view);
+        this.getContainerForUnits().addUiChild(view);
     }
 
-    private _clearFocusUnitViews(): void {
-        for (const [, view] of this._focusUnitViews) {
-            view.stopRunning();
+    private _clearTempUnitViews(): void {
+        this.getContainerForUnits().removeUiChildren();
+
+        const dict = this._tempUnitViews;
+        for (const [, view] of dict) {
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
         }
-        this._focusUnitViews.clear();
+        dict.clear();
     }
 
     private _addMovePathView(): void {
@@ -977,7 +968,9 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
         const path  = this._getActionPlanner().getMovePath();
         for (let i = 0; i < path.length; ++i) {
             const img = _createImgForMovePathGrid(path[i - 1]?.getGridIndex(), path[i].getGridIndex(), path[i + 1]?.getGridIndex());
-            img && con.addUiChild(img);
+            if (img) {
+                con.addUiChild(img);
+            }
         }
     }
 }
@@ -993,9 +986,4 @@ function _createImgForMovePathGrid(prev: AuxiliaryTypes_AuxiliaryTypes.Undefinab
         image.setY(curr.getY() * getGridHeight());
         return image;
     }
-}
-
-function _resetUnitViewXy(view: Units_UnitView.UnitView, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
-    view.setX(gridIndex.getX() * getGridWidth());
-    view.setY(gridIndex.getY() * getGridHeight());
 }

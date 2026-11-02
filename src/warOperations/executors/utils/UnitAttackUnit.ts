@@ -77,7 +77,7 @@ function fastExeUnitAttackUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
             for (const [, unit] of battleInfo.destroyedUnits) {
                 const view = unit.getView();
                 if (view) {
-                    unitMapView.removeUnit(view);
+                    unitMapView.deleteUnitView(view);
                 }
             }
         }
@@ -100,10 +100,10 @@ async function normalExeUnitAttackUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
         const movingUnitData    = movingUnitAndPath?.getUnit();
         const movingPath        = movingUnitAndPath?.getPath();
-        await war.moveExtraUnit({
-            movingUnitAndPath,
-            aiming                : targetGridIndex,
-            deleteViewAfterMoving : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : targetGridIndex == null ? null : [targetGridIndex],
+            callback          : undefined,
         });
 
         const destroyedUnitIdArray  = commonExtraData.getDestroyedUnitIdArray();

@@ -1,8 +1,7 @@
 import {
-    type BaseWar_Model_BwTypes,
-    type GameConfigs_GameConfig,
-    type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwCommonSettingManager,
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwDrawVoteManager,
@@ -12,19 +11,20 @@ import {
     type BaseWar_Interface_IBwWarEventManager,
     type BaseWar_Interface_IBwWarStatisticsManager,
     type BaseWar_Interface_IBwWarView,
+    type BaseWar_Model_BwTypes,
     type Fields_IField,
     type FogMaps_IFogMap,
-    type Weathers_IManager,
+    type GameConfigs_GameConfig,
     type Players_IPlayer,
     type Players_IPlayerManager,
     type TaskObjectives_ITaskObjectiveManager,
     type Tiles_TileMap,
-    type Turns_ITurnManager,
-    type Units_Unit,
-    type Units_UnitMap,
     type Turns_Constants,
-    type AuxiliaryTypes_AuxiliaryTypes,
+    type Turns_ITurnManager,
+    type Units_UnitMap,
+    type Units_UnitView,
     type WarTypes_Constants,
+    type Weathers_IManager,
 } from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { MovingUnitAndPath } from "../../proto/schema/CommonProto/Structure/MovingUnitAndPath.ts";
@@ -116,11 +116,11 @@ export interface IBwWar {
         launchUnitId    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
         fuelConsumption : number;
     }): void;
-    moveExtraUnit({ movingUnitAndPath, aiming, deleteViewAfterMoving }: {
+    showTempUnitMoveAnimation({ movingUnitAndPath, aiming, callback }: {
         movingUnitAndPath       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MovingUnitAndPath>;
-        aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex>;
-        deleteViewAfterMoving   : boolean;
-    }): Promise<Units_Unit.Unit | null>;
+        aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
+        callback                : ((tempUnitView: Units_UnitView.UnitView | undefined) => void | Promise<void>) | undefined;
+    }): Promise<void>;
 
     checkCanProduceUnitByOpaAndRule(playerIndex: number, unitType: number): boolean;
 

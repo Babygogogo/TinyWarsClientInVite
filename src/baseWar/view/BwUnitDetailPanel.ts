@@ -54,7 +54,7 @@ import {
 import { GridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import { WeightedGridIndex } from "../../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 
- 
+
 const enum UnitInfoType {
     Hp,
     ProductionCost,
@@ -1795,7 +1795,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
                 const unitMap   = war.getUnitMap();
                 const unitId    = unitMap.getNextUnitId();
-                const newUnit   = new Units_Unit.Unit();
+                const newUnit   = new Units_Unit.Unit(true);
                 const unitData  = Units_Utils_Serialization.createDefault({
                     gridIndex   : loaderUnit.getGridIndex().getXY(),
                     unitTypeId  : unitType,

@@ -191,7 +191,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
 
     public setModeDrawUnit(data: MapEditor_Model_MeTypes.DataForDrawUnit): void {
         const war           = this._getWar();
-        const unit          = new Units_Unit.Unit();
+        const unit          = new Units_Unit.Unit(false);
         const gameConfig    = war.getGcData();
         unit.init(Units_Utils_Serialization.createDefault({
             gridIndex   : { x : 0, y : 0 },
@@ -833,7 +833,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         const unitMap       = war.getUnitMap();
         const unitId        = unitMap.getNextUnitId();
         const targetUnit    = Helpers_Misc.getExisted(this.getDrawTargetUnit());
-        const unit          = new Units_Unit.Unit();
+        const unit          = new Units_Unit.Unit(true);
         unit.init(Units_Utils_Serialization.createDefault({
             gridIndex   : gridIndex.getXY(),
             playerIndex : targetUnit.getPlayerIndex(),
@@ -1016,7 +1016,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 unitData.setLoaderUnitId(getRevisedUnitIdDict(rawLoaderUnitId));
             }
 
-            const unit = new Units_Unit.Unit();
+            const unit = new Units_Unit.Unit(true);
             unit.init(unitData, gameConfig);
             unit.startRunning(this._getWar());
             addedUnits.push(unit);
