@@ -371,7 +371,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
 
         {
             const unitView = this._unitView;
-            unitView.loadViewDataFromUnit(unit, true);
+            unitView.loadViewDataFromUnit(unit, unit.getWar(), true);
             unitView.startRunning();
         }
 

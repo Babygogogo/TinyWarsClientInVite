@@ -890,15 +890,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const drawer    = this._getDrawer();
         const con       = this._conUnitView;
         const unitView  = this._unitView;
+        const war       = this._getWar();
         const drawMode  = drawer.getMode();
         if (drawMode === MapEditors_Constants.DrawerMode.DrawUnit) {
             con.setIsVisible(true);
-            unitView.loadViewDataFromUnit(Helpers_Misc.getExisted(drawer.getDrawTargetUnit()), true);
+            unitView.loadViewDataFromUnit(Helpers_Misc.getExisted(drawer.getDrawTargetUnit()), war, true);
             unitView.refreshAllViews();
 
         } else if (drawMode === MapEditors_Constants.DrawerMode.PasteUnit) {
             con.setIsVisible(true);
-            unitView.loadViewDataFromUnit(Helpers_Misc.getExisted(drawer.getDataForPasteUnit())[0], true);
+            unitView.loadViewDataFromUnit(Helpers_Misc.getExisted(drawer.getDataForPasteUnit())[0], war, true);
             unitView.refreshAllViews();
 
         } else {
@@ -1002,7 +1003,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }), gameConfig);
         unit.startRunning(war);
 
-        this._unitView.loadViewDataFromUnit(unit, true);
+        this._unitView.loadViewDataFromUnit(unit, war, true);
     }
 }
 
@@ -1064,7 +1065,7 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             unit.startRunning(war);
 
             const unitView  = this._unitView;
-            unitView.loadViewDataFromUnit(unit, true);
+            unitView.loadViewDataFromUnit(unit, war, true);
             unitView.startRunning();
         } else {
             conUnitView.setIsVisible(false);

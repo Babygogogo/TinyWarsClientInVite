@@ -18,8 +18,7 @@ import {
     Ui_Components_UiContainer,
     Ui_Components_UiImage,
     Units_Constants,
-    Units_Types,
-    Units_Utils_Common,
+    Units_UnitViewData,
     Users_Model,
     Utils_ClientErrorCode,
     Visibilities_Utils,
@@ -48,7 +47,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
     private readonly _imgFlash      = new Ui_Components_UiImage.UiImage();
 
     private readonly _cornerIconSources : string[]  = [];
-    private readonly _viewData          = Units_Utils_Common.generateDefaultViewData();
+    private readonly _viewData          = new Units_UnitViewData.UnitViewData();
 
     private readonly _notificationListeners: Notifications_Types.Listener[] = [
         { type : "UnitAnimationTick",            callback : this._onNotifyUnitAnimationTick },
@@ -145,14 +144,14 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         }
     }
 
-    public getViewData(): Units_Types.ViewData {
+    public getViewData(): Units_UnitViewData.UnitViewData {
         return this._viewData;
     }
-    public loadViewData(viewData: Partial<Units_Types.ViewData>): boolean {
-        return Units_Utils_Common.mergeViewDataFrom(this.getViewData(), viewData);
+    public loadViewData(viewData: Partial<Units_UnitViewData.IUnitViewData>): boolean {
+        return this.getViewData().mergeFrom(viewData);
     }
-    public loadViewDataFromUnit(unit: Units_Unit.Unit, ignorePosition = false): boolean {
-        return this.loadViewData(Units_Utils_Common.generateViewData(unit, ignorePosition));
+    public loadViewDataFromUnit(unit: Units_Unit.Unit, war: BaseWar_Interface_IBwWar.IBwWar, ignorePosition = false): boolean {
+        return this.loadViewData(Units_UnitViewData.UnitViewData.generateFromUnit(unit, war, ignorePosition));
     }
 
     public refreshAllViews(): void {

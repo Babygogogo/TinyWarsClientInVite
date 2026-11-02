@@ -127,7 +127,7 @@ export class Unit {
     }
     public startRunningView(): void {
         const view = this.getView();
-        view.loadViewDataFromUnit(this);
+        view.loadViewDataFromUnit(this, this.getWar());
         view.startRunning();
     }
     public stopRunning(): void {
@@ -225,7 +225,7 @@ export class Unit {
 
     public updateView(): void {
         const view = this.getView();
-        view.loadViewDataFromUnit(this);
+        view.loadViewDataFromUnit(this, this.getWar());
         view.refreshAllViews();
     }
     public setViewVisible(visible: boolean): void {

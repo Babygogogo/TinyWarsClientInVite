@@ -407,7 +407,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         {
             const unitView = this._unitView;
-            unitView.loadViewDataFromUnit(unit, true);
+            unitView.loadViewDataFromUnit(unit, unit.getWar(), true);
             unitView.startRunning();
         }
 

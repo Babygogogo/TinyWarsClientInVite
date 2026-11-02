@@ -254,7 +254,7 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
                 labelCost.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0079)}: ${cost != null ? cost : Lang_Constants.UndefinedError}`);
             }
             unitView.setIsVisible(true);
-            unitView.loadViewDataFromUnit(unit, true);
+            unitView.loadViewDataFromUnit(unit, openData.war, true);
             unitView.startRunning();
         }
     }

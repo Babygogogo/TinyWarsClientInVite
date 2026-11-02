@@ -277,7 +277,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             gcData      : gameConfig,
         }), gameConfig);
         unit.startRunning(war);
-        unitView.loadViewDataFromUnit(unit, true);
+        unitView.loadViewDataFromUnit(unit, war, true);
         unitView.startRunning();
     }
 

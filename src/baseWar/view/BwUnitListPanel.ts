@@ -408,7 +408,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const unit      = openData.unit;
         const unitView  = this._unitView;
-        unitView.loadViewDataFromUnit(unit, true);
+        unitView.loadViewDataFromUnit(unit, unit.getWar(), true);
         unitView.startRunning();
 
         this._labelHp.setText(`${unit.getCurrentHp()}`);
