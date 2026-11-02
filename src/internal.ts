@@ -834,6 +834,7 @@ export * as Units_UnitMap from "./units/UnitMap.ts";
 export * as Units_UnitMapView from "./units/UnitMapView.ts";
 export * as Units_UnitView from "./units/UnitView.ts";
 export * as Units_UnitViewData from "./units/UnitViewData.ts";
+export * as Units_UnitViewPool from "./units/UnitViewPool.ts";
 export * as Units_Utils_Common from "./units/utils/Common.ts";
 export * as Units_Utils_CustomName from "./units/utils/CustomName.ts";
 export * as Units_Utils_Filter from "./units/utils/Filter.ts";

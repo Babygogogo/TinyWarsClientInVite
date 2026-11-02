@@ -273,7 +273,12 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
                 aiming              : null,
                 updateViewAfterMove : true,
             });
-            unitMap.getView().removeUnit(targetUnit.getView());
+            {
+                const view = targetUnit.getView();
+                if (view) {
+                    unitMap.getView().removeUnit(view);
+                }
+            }
             targetUnit.stopRunning();
         }
 
@@ -285,7 +290,6 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitJoinUnit): Promise<string | null> {
-
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {

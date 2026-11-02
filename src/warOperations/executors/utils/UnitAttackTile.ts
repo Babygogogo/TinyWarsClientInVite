@@ -69,7 +69,10 @@ function fastExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
 
             const unitMapView = unitMap.getView();
             for (const [, unit] of battleInfo.destroyedUnits) {
-                unitMapView.removeUnit(unit.getView());
+                const view = unit.getView();
+                if (view) {
+                    unitMapView.removeUnit(view);
+                }
             }
         }
 

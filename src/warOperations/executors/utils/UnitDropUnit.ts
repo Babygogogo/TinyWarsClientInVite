@@ -125,7 +125,10 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
                 }
             } else {
                 if (extraUnit) {
-                    unitMapView.removeUnit(extraUnit.getView());
+                    const view = extraUnit.getView();
+                    if (view) {
+                        unitMapView.removeUnit(view);
+                    }
                     extraUnit.stopRunning();
                 }
             }
@@ -138,7 +141,10 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
             deleteViewAfterMoving : true,
         })));
         if (extraUnit) {
-            unitMapView.removeUnit(extraUnit.getView());
+            const view = extraUnit.getView();
+            if (view) {
+                unitMapView.removeUnit(view);
+            }
             extraUnit.stopRunning();
         }
 

@@ -600,21 +600,28 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         const unitMap           = this.getUnitMap();
         const unitMapView       = unitMap.getView();
         const movingUnitView    = unitMap.getUnitById(movingUnitData.getUnitId())?.getView();
-        (movingUnitView) && (unitMapView.removeUnit(movingUnitView));
+        if (movingUnitView) {
+            unitMapView.removeUnit(movingUnitView);
+        }
 
         const virtualUnit = new Units_Unit.Unit();
         virtualUnit.init(movingUnitData, this.getGcData());
         virtualUnit.startRunning(this);
         virtualUnit.startRunningView();
 
-        const virtualUnitView = virtualUnit.getView();
-        unitMapView.addUnit(virtualUnitView, true);
-        await virtualUnitView.moveAlongExtraPath({
-            war                   : this,
-            path                  : movingPath,
-            aiming                : aiming ? [aiming] : undefined,
-            deleteViewAfterMoving : deleteViewAfterMoving,
-        });
+        {
+            const virtualUnitView = virtualUnit.getView();
+            if (virtualUnitView) {
+                unitMapView.addUnit(virtualUnitView, true);
+                await virtualUnitView.moveAlongExtraPath({
+                    war                   : this,
+                    path                  : movingPath,
+                    aiming                : aiming ? [aiming] : undefined,
+                    deleteViewAfterMoving : deleteViewAfterMoving,
+                });
+            }
+        }
+
         if (deleteViewAfterMoving) {
             virtualUnit.stopRunning();
         }

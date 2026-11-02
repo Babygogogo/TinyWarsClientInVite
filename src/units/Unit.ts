@@ -127,11 +127,11 @@ export class Unit {
     }
     public startRunningView(): void {
         const view = this.getView();
-        view.loadViewDataFromUnit(this, this.getWar());
-        view.startRunning();
+        view?.loadViewDataFromUnit(this, this.getWar());
+        view?.startRunning();
     }
     public stopRunning(): void {
-        this.getView().stopRunning();
+        this.getView()?.stopRunning();
     }
 
     public clone(): Units_Unit.Unit {
@@ -219,27 +219,27 @@ export class Unit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////
-    public getView(): Units_UnitView.UnitView {
+    public getView(): Units_UnitView.UnitView | undefined {
         return this._view;
     }
 
     public updateView(): void {
         const view = this.getView();
-        view.loadViewDataFromUnit(this, this.getWar());
-        view.refreshAllViews();
+        view?.loadViewDataFromUnit(this, this.getWar());
+        view?.refreshAllViews();
     }
     public setViewVisible(visible: boolean): void {
-        this.getView().setIsVisible(visible);
+        this.getView()?.setIsVisible(visible);
     }
 
-    public moveViewAlongPath({ pathNodes, isDiving, isBlocked, aiming, updateViewAfterMove }: {
+    public async moveViewAlongPath({ pathNodes, isDiving, isBlocked, aiming, updateViewAfterMove }: {
         pathNodes           : AuxiliaryTypes_GridIndex.GridIndex[];
         isDiving            : boolean;
         isBlocked           : boolean;
         aiming              : AuxiliaryTypes_GridIndex.GridIndex | null;
         updateViewAfterMove : boolean;
     }): Promise<void> {
-        return this.getView().moveAlongPath({
+        await this.getView()?.moveAlongPath({
             unit                : this,
             path                : pathNodes,
             isDiving            : isDiving,

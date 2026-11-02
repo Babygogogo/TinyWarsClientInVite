@@ -128,7 +128,10 @@ async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, ac
         }
 
         if (extraUnit) {
-            unitMap.getView().removeUnit(extraUnit.getView());
+            const view = extraUnit.getView();
+            if (view) {
+                unitMap.getView().removeUnit(view);
+            }
             extraUnit.stopRunning();
         }
 

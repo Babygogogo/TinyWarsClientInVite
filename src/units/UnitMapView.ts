@@ -54,7 +54,10 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
     public startRunningView(): void {
         this._clearAllUnits();
         for (const unit of this._getUnitMap().getAllUnits()) {
-            this.addUnit(unit.getView(), false);
+            const view = unit.getView();
+            if (view) {
+                this.addUnit(view, false);
+            }
         }
 
         Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);

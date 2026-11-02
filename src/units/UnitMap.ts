@@ -375,7 +375,11 @@ export class UnitMap {
         }
 
         loadedUnits.set(unitId, unit);
-        this.getView().addUnit(unit.getView(), true);
+
+        const view = unit.getView();
+        if (view) {
+            this.getView().addUnit(view, true);
+        }
     }
     public setUnitUnloaded(unitId: number, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         const loadedUnits = this.getRawAllUnitsLoaded();
@@ -399,14 +403,23 @@ export class UnitMap {
         }
 
         map[gridIndex.getX()][gridIndex.getY()] = unit;
-        this.getView().addUnit(unit.getView(), true);
+
+        const view = unit.getView();
+        if (view) {
+            this.getView().addUnit(view, true);
+        }
     }
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
     public removeUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, removeView: boolean): Units_Unit.Unit | null {
         const unit = this.getUnitOnMap(gridIndex);
         this._getMap()[gridIndex.getX()][gridIndex.getY()] = null;
 
-        (removeView) && (this.getView().removeUnit(Helpers_Misc.getExisted(unit).getView()));
+        if ((removeView) && (unit)) {
+            const view = unit.getView();
+            if (view) {
+                this.getView().removeUnit(view);
+            }
+        }
 
         return unit;
     }
@@ -416,7 +429,11 @@ export class UnitMap {
         const loadedUnits   = this.getRawAllUnitsLoaded();
         const unit          = Helpers_Misc.getExisted(loadedUnits.get(unitId));
         loadedUnits.delete(unitId);
-        this.getView().removeUnit(unit.getView());
+
+        const view = unit.getView();
+        if (view) {
+            this.getView().removeUnit(view);
+        }
 
         return unit;
     }

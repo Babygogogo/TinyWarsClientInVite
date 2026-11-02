@@ -386,7 +386,10 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.Battle
         const destroyedUnits            = battleInfo.destroyedUnits;
         const destroyedUnitGridIdSet    = new Set<number>();
         for (const [, unit] of destroyedUnits) {
-            unitMapView.removeUnit(unit.getView());
+            const view = unit.getView();
+            if (view) {
+                unitMapView.removeUnit(view);
+            }
 
             if (allVisibleUnits.has(unit)) {
                 isVisibleUnitDestroyed = true;
