@@ -108,7 +108,7 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
     }
 
     const warEventError = WarEvents_FullDatas_Utils.getErrorCodeForWarEventFullData({
-        warEventFullData, gameConfig, mapSize, playersCountUnneutral, 
+        warEventFullData, gameConfig, mapSize, playersCountUnneutral,
     });
     if (warEventError) {
         return warEventError;
@@ -151,7 +151,7 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
         }
     }
 
-    return await new TestWar_Model_TwWar.TwWar().getErrorCodeForInitByMapRawData(mapRawData, gameConfig);
+    return await TestWar_Model_TwWar.TwWar.getErrorCodeForInitByMapRawData(mapRawData, gameConfig);
 }
 function getErrorCodeForMapDesigner(mapDesigner: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): Utils_ClientErrorCode.ClientErrorCode {
     if ((mapDesigner == null)                                       ||

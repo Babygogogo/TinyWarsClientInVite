@@ -1,26 +1,26 @@
 import {
     BaseWar_Model_BwWar,
     BaseWar_Model_BwWarEventManager,
-    Cos_Constants,
     BootTimers_Constants,
+    Cos_Constants,
+    CoSkills_Constants,
     FogMaps_Constants,
     GameConfigs_Provider,
-    CoSkills_Constants,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWarEventManager,
-    Players_Constants,
-    Utils_ClientErrorCode,
-    WarOperations_Constants,
-    WarRules_Utils_Instance,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
     Helpers_SeedRandom,
     PlayerRules_Utils,
-    Helpers_Misc,
-    WarRules_Utils_CommonData,
+    Players_Constants,
     Timer_TimerModel,
-    Helpers_ProtoSchema_WarSerialization_SerialWar,
     Turns_Constants,
+    Utils_ClientErrorCode,
+    WarOperations_Constants,
+    WarRules_Utils_CommonData,
+    WarRules_Utils_Instance,
     WarTypes_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Interface_IBwWarEventManager,
+    type GameConfigs_GameConfig,
     type TestWar_Interface_ITwWar,
 } from "../../internal.ts";
 
@@ -36,7 +36,81 @@ import { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSeriali
 import { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
 
 export class TwWar extends BaseWar_Model_BwWar.BwWar implements TestWar_Interface_ITwWar.ITwWar {
-    private readonly _warEventManager       = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
+    private readonly _warEventManager = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
+
+    public static async getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<Utils_ClientErrorCode.ClientErrorCode> {
+        const war       = new TwWar();
+        let errorCode   = Utils_ClientErrorCode.ClientErrorCode.NoError;
+        try {
+            await war.initByMapRawData(mapRawData, gameConfig);
+        } catch (e) {
+            const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+            errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitByMapRawData_00;
+        } finally {
+            try {
+                war.dispose();
+            } catch (e) {
+                const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+                errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitByMapRawData_01;
+            }
+        }
+
+        return errorCode;
+    }
+    public static getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode {
+        const war       = new TwWar();
+        let errorCode   = Utils_ClientErrorCode.ClientErrorCode.NoError;
+        try {
+            war.init(
+                data,
+                gameConfig,
+                data.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault()
+                    ? WarTypes_Constants.WarTypeId.SfwFog
+                    : WarTypes_Constants.WarTypeId.SfwStd,
+            );
+        } catch(e) {
+            const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+            errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitForSfw_00;
+        } finally {
+            try {
+                war.dispose();
+            } catch (e) {
+                const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+                errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitForSfw_01;
+            }
+        }
+
+        return errorCode;
+    }
+    public static getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode {
+        const war       = new TwWar();
+        let errorCode   = Utils_ClientErrorCode.ClientErrorCode.NoError;
+        try {
+            war.init(
+                data,
+                gameConfig,
+                data.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault()
+                    ? WarTypes_Constants.WarTypeId.MfwFog
+                    : WarTypes_Constants.WarTypeId.MfwStd,
+            );
+        } catch(e) {
+            const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+            errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitForMfw_00;
+        } finally {
+            try {
+                war.dispose();
+            } catch (e) {
+                const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+                errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitForMfw_01;
+            }
+        }
+
+        return errorCode;
+    }
+
+    private constructor() {
+        super();
+    }
 
     public getCanCheat(): boolean {
         return false;
@@ -61,41 +135,6 @@ export class TwWar extends BaseWar_Model_BwWar.BwWar implements TestWar_Interfac
     }
     public async initByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<void> {
         this.init(await _createDataForCreateTwWar(mapRawData, gameConfig), gameConfig);
-    }
-
-    public getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode {
-        try {
-            this.init(
-                data,
-                gameConfig,
-                data.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypes_Constants.WarTypeId.SfwFog : WarTypes_Constants.WarTypeId.SfwStd,
-            );
-        } catch(e) {
-            const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
-            return error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitForSfw_00;
-        }
-
-        return Utils_ClientErrorCode.ClientErrorCode.NoError;
-    }
-    public getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode {
-        try {
-            this.init(
-                data,
-                gameConfig,
-                data.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypes_Constants.WarTypeId.MfwFog : WarTypes_Constants.WarTypeId.MfwStd,
-            );
-        } catch(e) {
-            const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
-            return error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitForMfw_00;
-        }
-
-        return Utils_ClientErrorCode.ClientErrorCode.NoError;
-    }
-    public async getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<Utils_ClientErrorCode.ClientErrorCode> {
-        return await this.initByMapRawData(mapRawData, gameConfig).catch(e => {
-            const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
-            return error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitByMapRawData_00;
-        }) || Utils_ClientErrorCode.ClientErrorCode.NoError;
     }
 
     public getNormalMapId(): number | null {

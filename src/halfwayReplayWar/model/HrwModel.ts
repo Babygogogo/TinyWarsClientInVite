@@ -77,7 +77,7 @@ export async function loadWar(warData: SerialWar): Promise<HalfwayReplayWar_Inte
 
 export function unloadWar(): void {
     if (_war) {
-        _war.stopRunning();
+        _war.dispose();
         _war = null;
     }
 }

@@ -1,16 +1,16 @@
 import {
     AuxiliaryTypes_MapSize,
+    Helpers_Collection,
+    Helpers_Misc,
     Units_Unit,
     Units_UnitMapView,
-    type GameConfigs_GameConfig,
+    Units_Utils_CustomName,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwWar,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Visibilities_Utils,
-    Utils_ClientErrorCode,
-    Helpers_Collection,
-    Units_Utils_CustomName,
-    Helpers_Misc,
+    type GameConfigs_GameConfig,
 } from "../internal.ts";
 
 import type { UnitCustomName } from "../proto/schema/CommonProto/Structure/UnitCustomName.ts";
@@ -18,25 +18,22 @@ import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/Se
 import { SerialUnitMap } from "../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
 
 export class UnitMap {
+    private readonly _map           = new Array<(Units_Unit.Unit | null)[]>();
+    private readonly _loadedUnits   = new Map<number, Units_Unit.Unit>();
+
     private _war?                   : BaseWar_Interface_IBwWar.IBwWar;
     private _nextUnitId?            : number;
-    private _map?                   : (Units_Unit.Unit | null)[][];
     private _mapSize?               : AuxiliaryTypes_MapSize.MapSize;
-    private _loadedUnits?           : Map<number, Units_Unit.Unit>;
     private _unitCustomNameArray?   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitCustomName[]>;
 
     private readonly _view          = new Units_UnitMapView.UnitMapView();
 
     public init({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialUnitMap>;
+        data                    : SerialUnitMap;
         gameConfig              : GameConfigs_GameConfig.GameConfig;
         mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void {
-        if (data == null) {
-            throw Helpers_Misc.newError(`Empty data.`, Utils_ClientErrorCode.ClientErrorCode.BwUnitMap_Init_00);
-        }
-
         const nextUnitId = data.getNextUnitId();
         if (!mapSize.checkIsValid()) {
             throw Helpers_Misc.newError(`Invalid mapSize.`, Utils_ClientErrorCode.ClientErrorCode.BwUnitMap_Init_02);
@@ -120,6 +117,16 @@ export class UnitMap {
             }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        for (const column of this._getMap()) {
+            for (const unit of column) {
+                unit?.dispose();
+            }
+        }
+        for (const [, unit] of this.getRawAllUnitsLoaded()) {
+            unit.dispose();
+        }
+
         this._setMap(map);
         this._setLoadedUnits(loadedUnits);
         this._setMapSize(mapWidth, mapSize.getHeight());
@@ -129,7 +136,7 @@ export class UnitMap {
         this.getView().init(this);
     }
     public fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialUnitMap>;
+        data                    : SerialUnitMap;
         gameConfig              : GameConfigs_GameConfig.GameConfig;
         mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
@@ -152,6 +159,23 @@ export class UnitMap {
     public stopRunning(): void {
         this.getView().stopRunningView();
         this._forEachUnit(unit => unit.stopRunning());
+    }
+    public dispose(): void {
+        this.stopRunning();
+
+        const map = this._getMap();
+        for (const column of map) {
+            for (const unit of column) {
+                unit?.dispose();
+            }
+        }
+        map.length = 0;
+
+        const dict = this.getRawAllUnitsLoaded();
+        for (const [, unit] of dict) {
+            unit.dispose();
+        }
+        dict.clear();
     }
 
     public serialize(): SerialUnitMap {
@@ -221,11 +245,13 @@ export class UnitMap {
         });
     }
 
-    private _setMap(map: (Units_Unit.Unit | null)[][]): void {
-        this._map = map;
+    private _setMap(newMap: (Units_Unit.Unit | null)[][]): void {
+        const map = this._getMap();
+        map.length = 0;
+        map.push(...newMap);
     }
     private _getMap(): (Units_Unit.Unit | null)[][] {
-        return Helpers_Misc.getExisted(this._map);
+        return this._map;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -322,8 +348,12 @@ export class UnitMap {
     public getUnitLoadedById(unitId: number): Units_Unit.Unit | null {
         return this.getRawAllUnitsLoaded().get(unitId) ?? null;
     }
-    private _setLoadedUnits(units: Map<number, Units_Unit.Unit>): void {
-        this._loadedUnits = units;
+    private _setLoadedUnits(newUnits: Map<number, Units_Unit.Unit>): void {
+        const units = this.getRawAllUnitsLoaded();
+        units.clear();
+        for (const [unitId, unit] of newUnits) {
+            units.set(unitId, unit);
+        }
     }
     public getRawAllUnitsLoaded(): Map<number, Units_Unit.Unit> {
         return Helpers_Misc.getExisted(this._loadedUnits);
@@ -333,7 +363,9 @@ export class UnitMap {
         this._forEachUnitLoaded((unit: Units_Unit.Unit) => {
             if (unit.getLoaderUnitId() === loader.getUnitId()) {
                 units.push(unit);
-                (isRecursive) && (units.push(...this.getUnitsLoadedByLoader(unit, isRecursive)));
+                if (isRecursive) {
+                    units.push(...this.getUnitsLoadedByLoader(unit, isRecursive));
+                }
             }
         });
         return units;
@@ -452,18 +484,20 @@ export class UnitMap {
         }
     }
 
-    private _forEachUnit(func: (unit: Units_Unit.Unit) => any): void {
+    private _forEachUnit(func: (unit: Units_Unit.Unit) => unknown): void {
         this._forEachUnitOnMap(func);
         this._forEachUnitLoaded(func);
     }
-    private _forEachUnitOnMap(func: (unit: Units_Unit.Unit) => any): void {
+    private _forEachUnitOnMap(func: (unit: Units_Unit.Unit) => unknown): void {
         for (const column of this._getMap()) {
             for (const unit of column) {
-                (unit) && (func(unit));
+                if (unit) {
+                    func(unit);
+                }
             }
         }
     }
-    private _forEachUnitLoaded(func: (unit: Units_Unit.Unit) => any): void {
+    private _forEachUnitLoaded(func: (unit: Units_Unit.Unit) => unknown): void {
         for (const [, unit] of this.getRawAllUnitsLoaded()) {
             func(unit);
         }
@@ -472,14 +506,18 @@ export class UnitMap {
     public countUnitsOnMapForPlayer(playerIndex: number): number {
         let count = 0;
         this._forEachUnitOnMap(unit => {
-            (unit.getPlayerIndex() === playerIndex) && (++count);
+            if (unit.getPlayerIndex() === playerIndex) {
+                ++count;
+            }
         });
         return count;
     }
     public countUnitsLoadedForPlayer(playerIndex: number): number {
         let count = 0;
         this._forEachUnitLoaded(unit => {
-            (unit.getPlayerIndex() === playerIndex) && (++count);
+            if (unit.getPlayerIndex() === playerIndex) {
+                ++count;
+            }
         });
         return count;
     }

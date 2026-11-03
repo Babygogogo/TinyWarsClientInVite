@@ -54,7 +54,7 @@ function fastExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUni
         } else {
             const targetUnit    = Helpers_Misc.getExisted(unitMap.getUnitOnMap(endingGridIndex));
             const player        = war.getPlayer(focusUnit.getPlayerIndex());
-            unitMap.removeUnitOnMap(endingGridIndex, true)?.stopRunning();
+            unitMap.removeUnitOnMap(endingGridIndex, true)?.dispose();
             war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
@@ -150,7 +150,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
         if ((lastNode?.getIsVisible()) && (!lastNode.getIsBlocked())) {
             const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitJoinUnit_01);
             if (unitMap.getUnitOnMap(gridIndex)) {
-                unitMap.removeUnitOnMap(gridIndex, true)?.stopRunning();
+                unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
             }
         }
 
@@ -273,13 +273,14 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
                 aiming              : null,
                 updateViewAfterMove : true,
             });
+
             {
                 const view = targetUnit.getView();
                 if (view) {
                     unitMap.getView().deleteUnitView(view);
                 }
+                targetUnit.dispose();
             }
-            targetUnit.stopRunning();
         }
 
         WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);

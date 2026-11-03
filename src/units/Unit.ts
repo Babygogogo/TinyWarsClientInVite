@@ -135,14 +135,17 @@ export class Unit {
     public startRunningView(): void {
         const view = this.getView();
         view?.loadViewDataFromUnit(this, this.getWar());
-        view?.startRunning();
+        view?.refreshAllViews();
     }
     public stopRunning(): void {
-        this.getView()?.stopRunning();
+        // nothing to do
     }
     public dispose(): void {
+        this.stopRunning();
+
         const view = this.getView();
         if (view) {
+            view.dispose();
             Units_UnitViewPool.UnitViewPool.getInstance().release(view);
             this._setView(undefined);
         }

@@ -74,7 +74,9 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public addUnitView(view: Units_UnitView.UnitView, needResetZOrder: boolean): void {
         const viewData = view.getViewData();
-        view.setIsVisible(!viewData.isLoadedByUnit);
+        if (viewData.isLoadedByUnit) {
+            view.setIsVisible(false);
+        }
 
         const layer = this._getLayerByUnitType(viewData.unitTypeId);
         layer.addUiChild(view);

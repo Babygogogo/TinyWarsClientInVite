@@ -1,11 +1,11 @@
 import {
-    Notifications_Dispatcher,
-    GamePanels_Dict,
-    GameConfigs_Provider,
-    Lang_Utils,
-    GamePanels_Manager,
     FloatText,
+    GameConfigs_Provider,
+    GamePanels_Dict,
+    GamePanels_Manager,
     Lang_Constants,
+    Lang_Utils,
+    Notifications_Dispatcher,
     Ui_Components_UiPanel,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
@@ -331,8 +331,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback   : async () => {
                 const mapRawData = openData.srcMapRawData.clone();
                 for (const rule of mapRawData.getTemplateWarRuleArray()) {
-                    const ruleAvailability = rule.getRuleAvailability();
-                    (ruleAvailability) && (ruleAvailability.setCanMrw(false));
+                    rule.getRuleAvailability()?.setCanMrw(false);
                 }
                 mapRawData.setCampaignMapData(null);
 
@@ -468,7 +467,7 @@ function importWarEventFullData(srcData: WarEventFullData, dstData: WarEventFull
 
                 {
                     const nodeIdAndFlags = rootNodeAndActions.getNodeIdAndFlags();
-                    (nodeIdAndFlags) && (nodeIdAndFlags.setNodeId(conditionNodeIdMapping.get(nodeIdAndFlags.getNodeId()) ?? 0));
+                    nodeIdAndFlags?.setNodeId(conditionNodeIdMapping.get(nodeIdAndFlags.getNodeId()) ?? 0);
                 }
             }
         }

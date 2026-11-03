@@ -188,7 +188,7 @@ export async function loadWar({ mapRawData, slotIndex, isReview, srcNormalMapIdF
 
 export function unloadWar(): void {
     if (_war) {
-        _war.stopRunning();
+        _war.dispose();
         _war = null;
     }
 }

@@ -62,7 +62,7 @@ export async function loadWar({ warData, slotIndex, slotExtraData }: {
 export function unloadWar(): void {
     const war = getWar();
     if (war) {
-        war.stopRunning();
+        war.dispose();
         setWar(null);
     }
 }

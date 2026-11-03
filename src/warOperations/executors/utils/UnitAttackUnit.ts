@@ -79,6 +79,7 @@ function fastExeUnitAttackUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
                 if (view) {
                     unitMapView.deleteUnitView(view);
                 }
+                unit.dispose();
             }
         }
 

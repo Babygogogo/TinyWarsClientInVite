@@ -59,6 +59,7 @@ export interface IBwWar {
     startRunning(): IBwWar;
     startRunningView(): IBwWar;
     stopRunning(): IBwWar;
+    dispose(): void;
 
     getIsRunning(): boolean;
     getIsExecutingAction(): boolean;

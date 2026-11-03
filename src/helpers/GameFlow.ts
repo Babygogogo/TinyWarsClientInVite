@@ -1,75 +1,75 @@
 import {
-    Chat_Constants,
-    GameConfigs_Provider,
     AutoTourneys_Mains_Gateway,
-    Broadcasts_Gateway,
-    Campaigns_Mains_Gateway,
-    CoopCustomRoom_Model_CcrProxy,
-    ChangeLogs_Gateway,
-    Common_Model_CommonModel,
-    Common_Model_CommonProxy,
-    GameConfigs_Gateway,
-    Campaigns_Managements_Gateway,
-    Chat_Proxy,
     AutoTourneys_Rooms_Gateway,
-    Maps_Constants,
-    FloatText,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Interface_IBwWar,
-    Notifications_Dispatcher,
-    Networks_Manager,
-    SinglePlayerWar_Model_SpwModel,
-    ResManager,
-    GamePanels_Manager,
-    Lang_CommonText,
+    Broadcasts_Gateway,
+    Campaigns_Mains_Gateway,
+    Campaigns_Managements_Gateway,
+    ChangeLogs_Gateway,
+    Chat_Constants,
+    Chat_Proxy,
+    Common_Model_CommonModel,
+    Common_Model_CommonProxy,
+    CoopCustomRoom_Model_CcrProxy,
+    type Egret_Egret,
+    FloatText,
+    GameConfigs_Gateway,
+    GameConfigs_Provider,
     GamePanels_Dict,
-    Lang_Utils,
-    Helpers_Misc,
-    HalfwayReplayWar_Model_HrwModel,
-    MapEditor_Model_MeModel,
-    MapEditor_Model_MeMfwModel,
-    MapEditor_Model_MeSimModel,
-    MultiPlayerWar_Model_MpwModel,
-    ReplayWar_Model_RwModel,
-    LocalData_Storage,
-    Helpers_GameFlow,
-    Helpers_Compatibility,
-    LocalData_DeprecatedStorage,
+    GamePanels_Manager,
     Gm_Model_GmProxy,
+    HalfwayReplayWar_Model_HrwModel,
+    Helpers_Compatibility,
+    Helpers_GameFlow,
+    Helpers_Misc,
     Keyboard_KbManager,
+    Lang_CommonText,
+    Lang_Constants,
+    Lang_Utils,
     Leaderboard_Model_LeaderboardProxy,
+    LocalData_DeprecatedStorage,
+    LocalData_Storage,
     Mail_Model_MailProxy,
-    MultiCustomRoom_Model_McrProxy,
+    MapEditor_Model_MeMfwModel,
+    MapEditor_Model_MeModel,
     MapEditor_Model_MeProxy,
+    MapEditor_Model_MeSimModel,
+    MapEditor_Model_MeWar,
+    Maps_Constants,
+    MultiCustomRoom_Model_McrProxy,
     MultiFreeRoom_Model_MfrProxy,
+    MultiFreeRoom_Model_MfrRoomCreator,
     MultiMatchRoom_Model_MmrProxy,
+    MultiPlayerWar_Model_MpwModel,
     MultiPlayerWar_Model_MpwProxy,
     MultiRankRoom_Model_MrrProxy,
+    Networks_Manager,
+    Networks_MessageCodes,
     NormalMap_Model_NormalMapModel,
     NormalMap_Model_NormalMapProxy,
+    Notifications_Dispatcher,
+    type Notifications_Types,
+    ReplayWar_Model_RwModel,
     ReplayWar_Model_RwProxy,
+    type ReplayWar_View_RwReplayListPanel,
+    ResManager,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
+    SinglePlayerWar_Model_SpwModel,
+    Sounds_SoundPlayer,
     Stages_StageManager,
+    TestWar_Model_TwWar,
     Timer_TimerModel,
     Timer_TimerProxy,
-    Networks_MessageCodes,
-    MultiFreeRoom_Model_MfrRoomCreator,
-    Sounds_SoundPlayer,
-    Lang_Constants,
-    type Notifications_Types,
-    type ReplayWar_View_RwReplayListPanel,
-    Utils_ClientErrorCode,
-    Users_Model,
     Ui_Utils_UiSizerHelpers,
-    Users_Proxy,
-    WatchWar_Model_WwProxy,
-    Wars_Constants,
     Users_Constants,
+    Users_Model,
+    Users_Proxy,
+    Utils_ClientErrorCode,
+    Wars_Constants,
     WarTypes_Constants,
-    type Egret_Egret,
-    MapEditor_Model_MeWar,
-    TestWar_Model_TwWar,
+    WatchWar_Model_WwProxy,
 } from "../internal.ts";
 
 import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -209,7 +209,9 @@ async function doStartGame(stage: Egret_Egret.Stage): Promise<void> {
     gotoLogin();
 
     await ResManager.loadMainRes();
-    (_checkCanFirstGoToLobby()) && (gotoLobby());
+    if (_checkCanFirstGoToLobby()) {
+        gotoLobby();
+    }
 }
 
 export function gotoLogin(): void {
@@ -629,7 +631,9 @@ function _removeLoadingDom(): void {
     const document = window.document;
     if (document) {
         const outLoadingLayer = document.getElementById("outLoadingLayer");
-        (outLoadingLayer) && (document.body.removeChild(outLoadingLayer));
+        if (outLoadingLayer) {
+            document.body.removeChild(outLoadingLayer);
+        }
     }
 }
 
@@ -699,9 +703,21 @@ function showErrorText(text: string): void {
 }
 
 export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<GridMarkData>): Promise<void> {
+    const war = new MapEditor_Model_MeWar.MeWar();
+    await war.initWithMapRawData({
+        mapRawData                : mapRawData,
+        slotIndex                 : 0,
+        gameConfig                : await GameConfigs_Provider.getLatestGameConfig(),
+        srcNormalMapIdForAddEvent : null,
+        gridMarkData              : null,
+    });
+    war.startRunning();
+
     const callbackForChosenWarRule = async () => {
+        war.dispose();
+
         const warData   = MapEditor_Model_MeSimModel.getWarData();
-        const errorCode = new TestWar_Model_TwWar.TwWar().getErrorCodeForInitForSfw(warData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
+        const errorCode = TestWar_Model_TwWar.TwWar.getErrorCodeForInitForSfw(warData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
         if (errorCode) {
             FloatText.show(Lang_Utils.getErrorText(errorCode));
         } else {
@@ -713,7 +729,7 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
                         warData       : warData,
                         slotIndex     : null,
                         slotExtraData : SpmWarSaveSlotExtraData.fromJson({
-                            mpwWarId              : war.getWarId(),
+                            mpwWarId              : undefined,
                             overridingSkinIdArray : [],
                             gridMarkData          : gridMarkData?.toJson(),
                         }),
@@ -723,20 +739,9 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
         }
     };
 
-    const war = new MapEditor_Model_MeWar.MeWar();
-    await war.initWithMapRawData({
-        mapRawData                : mapRawData,
-        slotIndex                 : 0,
-        gameConfig                : await GameConfigs_Provider.getLatestGameConfig(),
-        srcNormalMapIdForAddEvent : null,
-        gridMarkData              : null,
-    });
-    war.startRunning();
-
     const templateWarRuleArray = mapRawData.getTemplateWarRuleArray();
     if (templateWarRuleArray.length <= 1) {
         MapEditor_Model_MeSimModel.resetData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(templateWarRuleArray[0]));
-        war.stopRunning();
         callbackForChosenWarRule();
     } else {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
@@ -749,7 +754,6 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
                 const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
                 if (warRule) {
                     MapEditor_Model_MeSimModel.resetData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(warRule));
-                    war.stopRunning();
                     callbackForChosenWarRule();
                 }
             },
@@ -757,20 +761,6 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
     }
 }
 export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promise<void> {
-    const callbackForChosenWarRule = async () => {
-        MapEditor_Model_MeMfwModel.reviseInstanceWarRuleForAi();
-        const warData   = MapEditor_Model_MeMfwModel.getWarData();
-        const errorCode = new TestWar_Model_TwWar.TwWar().getErrorCodeForInitForMfw(warData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
-        if (errorCode) {
-            FloatText.show(Lang_Utils.getErrorText(errorCode));
-        } else {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
-                callback   : () => gotoMfrCreateSettingsPanel(warData),
-            });
-        }
-    };
-
     const war = new MapEditor_Model_MeWar.MeWar();
     await war.initWithMapRawData({
         mapRawData                : mapRawData,
@@ -781,10 +771,25 @@ export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promis
     });
     war.startRunning();
 
+    const callbackForChosenWarRule = async () => {
+        war.dispose();
+
+        MapEditor_Model_MeMfwModel.reviseInstanceWarRuleForAi();
+        const warData   = MapEditor_Model_MeMfwModel.getWarData();
+        const errorCode = TestWar_Model_TwWar.TwWar.getErrorCodeForInitForMfw(warData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
+        if (errorCode) {
+            FloatText.show(Lang_Utils.getErrorText(errorCode));
+        } else {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
+                callback   : () => gotoMfrCreateSettingsPanel(warData),
+            });
+        }
+    };
+
     const templateWarRuleArray = mapRawData.getTemplateWarRuleArray();
     if (templateWarRuleArray.length <= 1) {
         MapEditor_Model_MeMfwModel.resetData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(templateWarRuleArray[0]));
-        war.stopRunning();
         callbackForChosenWarRule();
     } else {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
@@ -797,7 +802,6 @@ export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promis
                 const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
                 if (warRule) {
                     MapEditor_Model_MeMfwModel.resetData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(warRule));
-                    war.stopRunning();
                     callbackForChosenWarRule();
                 }
             },

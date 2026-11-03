@@ -76,11 +76,11 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
             }
 
             if (unit.getLoaderUnitId()) {
-                unitMap.removeUnitLoaded(unitId).stopRunning();
+                unitMap.removeUnitLoaded(unitId).dispose();
 
             } else {
                 const gridIndex = unit.getGridIndex();
-                unitMap.removeUnitOnMap(gridIndex, true)?.stopRunning();
+                unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
 
                 if (!isFastExecute) {
                     // 这段代码会导致我方自杀式攻击时，在该部队的起点和终点分别出现一个爆炸特效（起点的是多余的）；在第三势力看来，如果进攻方从明处走到暗处进行自杀式攻击，也会在起点出现多余的爆炸特效
@@ -390,6 +390,7 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.Battle
             if (view) {
                 unitMapView.deleteUnitView(view);
             }
+            unit.dispose();
 
             if (allVisibleUnits.has(unit)) {
                 isVisibleUnitDestroyed = true;

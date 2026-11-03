@@ -356,6 +356,11 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
 
         return this;
     }
+    public dispose(): void {
+        this.stopRunning();
+
+        this.getField().dispose();
+    }
 
     private _setIsRunning(isRunning: boolean): void {
         this._isRunning = isRunning;

@@ -1,10 +1,9 @@
 import {
-    type Utils_ClientErrorCode,
-    type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwCommonSettingManager,
     type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarEventManager,
     type BaseWar_Interface_IBwWarStatisticsManager,
+    type GameConfigs_GameConfig,
     type Players_IPlayerManager,
     type WarTypes_Constants,
 } from "../../internal.ts";
@@ -24,10 +23,6 @@ export interface ITwWar extends BaseWar_Interface_IBwWar.IBwWar {
 
     init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig, warType?: WarTypes_Constants.WarTypeId): void;
     initByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<void>;
-
-    getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode;
-    getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode;
-    getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<Utils_ClientErrorCode.ClientErrorCode>;
 
     getNormalMapId(): number | null;
 

@@ -85,10 +85,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         }
     }
 
-    public startRunning(): void {
-        this.refreshAllViews();
-    }
-    public stopRunning(): void {
+    public dispose(): void {
         // nothing to do
     }
 

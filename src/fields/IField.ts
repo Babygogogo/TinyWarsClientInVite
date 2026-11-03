@@ -32,6 +32,7 @@ export interface IField {
     startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
     startRunningView(): void;
     stopRunning(): void;
+    dispose(): void;
 
     serialize(): SerialField;
     serializeForCreateSfw(): SerialField;

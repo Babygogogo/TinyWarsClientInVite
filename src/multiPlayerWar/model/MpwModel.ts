@@ -1212,7 +1212,7 @@ export async function loadWar(data: SerialWar): Promise<MultiPlayerWar_Interface
 export function unloadWar(): void {
     const war = getWar();
     if (war) {
-        war.stopRunning();
+        war.dispose();
         _setWar(null);
         _cachedActions.length = 0;
     }

@@ -1,13 +1,13 @@
 import {
-    Players_Constants,
-    Utils_ClientErrorCode,
-    Helpers_Team,
     Cos_Constants,
-    Helpers_Misc,
-    Visibilities_Utils,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
     CoSkills_Constants,
+    Helpers_Misc,
+    Helpers_Team,
+    Players_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
     type AuxiliaryTypes_BattleInfo,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwWar,
@@ -20,10 +20,10 @@ export function destroyUnitOnMap(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex
     const unit                  = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex), Utils_ClientErrorCode.ClientErrorCode.DestructionHelpers_DestroyUnitOnMap_00);
     const destroyedUnits        = [unit];
     const observerTeamIndexes   = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
-    unitMap.removeUnitOnMap(gridIndex, true)?.stopRunning();
+    unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
     war.getTileMap().getTile(gridIndex).updateOnUnitLeave();
     for (const u of unitMap.getUnitsLoadedByLoader(unit, true)) {
-        unitMap.removeUnitLoaded(u.getUnitId()).stopRunning();
+        unitMap.removeUnitLoaded(u.getUnitId()).dispose();
         destroyedUnits.push(u);
     }
 
@@ -49,11 +49,8 @@ export function destroyUnitOnMap(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex
     updatePlayersOnUnitDestroyed(destroyedUnits);
 
     if (showExplosionEffect) {
-        const gridVisionEffect = war.getGridVisualEffect();
-        (gridVisionEffect) && (gridVisionEffect.showEffectExplosion(gridIndex));
-
-        const warView = war.getView();
-        (warView) && (warView.showVibration());
+        war.getGridVisualEffect().showEffectExplosion(gridIndex);
+        war.getView().showVibration();
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
     }
 
@@ -129,9 +126,9 @@ export function destroyUnitLoaded(war: BaseWar_Interface_IBwWar.IBwWar, unitId: 
     const unitMap           = war.getUnitMap();
     const targetUnit        = Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId));
     const destroyedUnits    = [targetUnit];
-    unitMap.removeUnitLoaded(unitId).stopRunning();
+    unitMap.removeUnitLoaded(unitId).dispose();
     for (const u of unitMap.getUnitsLoadedByLoader(targetUnit, true)) {
-        unitMap.removeUnitLoaded(u.getUnitId()).stopRunning();
+        unitMap.removeUnitLoaded(u.getUnitId()).dispose();
         destroyedUnits.push(u);
     }
 
@@ -226,9 +223,9 @@ export function destroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, playerI
         const gridIndex                     = unit.getGridIndex();
         const observerTeamIndexes           = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
         const groupedObserverTeamIndexes    = observerTeamIndexes != null ? Helpers_Team.encodeTeamIndex(observerTeamIndexes) : null;
-        unitMap.removeUnitOnMap(gridIndex, true)?.stopRunning();
+        unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
         tileMap.getTile(gridIndex).updateOnUnitLeave();
-        (gridVisionEffect) && (gridVisionEffect.showEffectExplosion(gridIndex));
+        gridVisionEffect?.showEffectExplosion(gridIndex);
 
         if (groupedObserverTeamIndexes != null) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
@@ -243,7 +240,7 @@ export function destroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, playerI
         }
 
         for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {
-            unitMap.removeUnitLoaded(loadedUnit.getUnitId()).stopRunning();
+            unitMap.removeUnitLoaded(loadedUnit.getUnitId()).dispose();
 
             if (groupedObserverTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
@@ -259,8 +256,7 @@ export function destroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, playerI
         }
     }
     if ((showExplosionEffect) && (hasRemovedUnit)) {
-        const warView = war.getView();
-        (warView) && (warView.showVibration());
+        war.getView().showVibration();
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
     }
 
@@ -296,9 +292,9 @@ export function removeUnitOnMap(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex:
 
     const unitMap   = war.getUnitMap();
     const unit      = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex));
+    unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
 
-    unitMap.removeUnitOnMap(gridIndex, true)?.stopRunning();
     for (const u of unitMap.getUnitsLoadedByLoader(unit, true)) {
-        unitMap.removeUnitLoaded(u.getUnitId()).stopRunning();
+        unitMap.removeUnitLoaded(u.getUnitId()).dispose();
     }
 }

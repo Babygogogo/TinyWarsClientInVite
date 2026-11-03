@@ -1,23 +1,23 @@
 import {
     ActionPlanners_ActionPlanner,
+    AuxiliaryTypes_MapSize,
     BaseWar_Model_BwCursor,
     BaseWar_Model_BwGridVisualEffect,
     Fields_FieldView,
     FogMaps_FogMap,
-    AuxiliaryTypes_MapSize,
+    Helpers_Misc,
     Tiles_TileMap,
     Units_UnitMap,
-    type GameConfigs_GameConfig,
+    Utils_ClientErrorCode,
     type ActionPlanners_IActionPlanner,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwGridVisualEffect,
     type BaseWar_Interface_IBwWar,
     type Fields_IField,
     type Fields_IFieldView,
     type FogMaps_IFogMap,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Utils_ClientErrorCode,
-    Helpers_Misc,
+    type GameConfigs_GameConfig,
 } from "../internal.ts";
 
 import { SerialField } from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
@@ -61,7 +61,7 @@ export class Field implements Fields_IField.IField {
 
         const unitMap = this.getUnitMap();
         unitMap.init({
-            data                  : data.getUnitMap(),
+            data                  : Helpers_Misc.getExisted(data.getUnitMap()),
             gameConfig            : gameConfig,
             mapSize               : mapSize,
             playersCountUnneutral : playersCountUnneutral,
@@ -101,7 +101,7 @@ export class Field implements Fields_IField.IField {
             playersCountUnneutral : playersCountUnneutral,
         });
         this.getUnitMap().fastInit({
-            data                  : data.getUnitMap(),
+            data                  : Helpers_Misc.getExisted(data.getUnitMap()),
             gameConfig            : gameConfig,
             mapSize               : mapSize,
             playersCountUnneutral : playersCountUnneutral,
@@ -136,6 +136,11 @@ export class Field implements Fields_IField.IField {
         this.getCursor().stopRunning();
         this.getActionPlanner().stopRunning();
         this.getGridVisualEffect().stopRunning();
+    }
+    public dispose(): void {
+        this.stopRunning();
+
+        this.getUnitMap().dispose();
     }
 
     public serialize(): SerialField {

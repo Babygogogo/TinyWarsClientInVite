@@ -1003,10 +1003,10 @@ export async function getCriticalErrorCodeForMapRawData(mapRawData: MapRawData):
         });
         war.startRunning()
             .startRunningView()
-            .stopRunning();
+            .dispose();
     } catch (e) {
         try {
-            war.stopRunning();
+            war.dispose();
         } catch {
             // nothing to do
         }

@@ -124,7 +124,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const warData   = war.serializeForCreateMfr();
-        const errorCode = new TestWar_Model_TwWar.TwWar().getErrorCodeForInitForMfw(warData, war.getGcData());
+        const errorCode = TestWar_Model_TwWar.TwWar.getErrorCodeForInitForMfw(warData, war.getGcData());
         if (errorCode) {
             FloatText.show(Lang_Utils.getErrorText(errorCode));
             return;

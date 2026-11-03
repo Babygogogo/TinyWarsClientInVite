@@ -217,7 +217,7 @@ export async function loadWar(warData: SerialWar, replayId: number): Promise<Rep
 
 export function unloadWar(): void {
     if (_war) {
-        _war.stopRunning();
+        _war.dispose();
         _war = null;
     }
 }
