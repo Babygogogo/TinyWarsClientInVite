@@ -40,7 +40,7 @@ export class TwWar extends BaseWar_Model_BwWar.BwWar implements TestWar_Interfac
 
     public static async getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<Utils_ClientErrorCode.ClientErrorCode> {
         const war       = new TwWar();
-        let errorCode   = Utils_ClientErrorCode.ClientErrorCode.NoError;
+        let errorCode   : Utils_ClientErrorCode.ClientErrorCode = Utils_ClientErrorCode.ClientErrorCode.NoError;
         try {
             await war.initByMapRawData(mapRawData, gameConfig);
         } catch (e) {
@@ -59,7 +59,7 @@ export class TwWar extends BaseWar_Model_BwWar.BwWar implements TestWar_Interfac
     }
     public static getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode {
         const war       = new TwWar();
-        let errorCode   = Utils_ClientErrorCode.ClientErrorCode.NoError;
+        let errorCode   : Utils_ClientErrorCode.ClientErrorCode = Utils_ClientErrorCode.ClientErrorCode.NoError;
         try {
             war.init(
                 data,
@@ -84,7 +84,7 @@ export class TwWar extends BaseWar_Model_BwWar.BwWar implements TestWar_Interfac
     }
     public static getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode {
         const war       = new TwWar();
-        let errorCode   = Utils_ClientErrorCode.ClientErrorCode.NoError;
+        let errorCode   : Utils_ClientErrorCode.ClientErrorCode = Utils_ClientErrorCode.ClientErrorCode.NoError;
         try {
             war.init(
                 data,

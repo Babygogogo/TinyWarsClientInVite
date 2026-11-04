@@ -66,7 +66,7 @@ class NetMessageDispatcher extends Egret_Egret.EventDispatcher {
                 if (errorCode === Utils_ServerErrorCode.ServerErrorCode.Common_RequestTooFrequent_0001) {
                     // Logger.warn(`Request too frequent: ${errorCode}`);
                 } else {
-                    FloatText.show(Lang_Utils.getErrorText(errorCode));
+                    FloatText.show(Lang_Utils.getErrorText(errorCode as Utils_ServerErrorCode.ServerErrorCode));
                 }
             }
         }

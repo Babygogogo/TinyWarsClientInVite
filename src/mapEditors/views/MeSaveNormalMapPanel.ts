@@ -1,26 +1,26 @@
 import {
-    Utils_ClientErrorCode,
-    Graphics_Constants,
-    MapEditor_Model_MeHelpers,
-    GamePanels_Dict,
-    Maps_Utils_MapRawData,
-    Lang_Utils,
-    Helpers_Misc,
-    NormalMap_Model_NormalMapModel,
-    MapEditor_Model_MeModel,
-    GamePanels_Manager,
-    MapEditor_Model_MeProxy,
-    NormalMap_Model_NormalMapProxy,
     FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Graphics_Constants,
+    Helpers_Misc,
     Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeHelpers,
+    MapEditor_Model_MeModel,
+    MapEditor_Model_MeProxy,
+    Maps_Utils_MapRawData,
+    NormalMap_Model_NormalMapModel,
+    NormalMap_Model_NormalMapProxy,
     Ui_Components_UiPanel,
+    Utils_ClientErrorCode,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { WarRuleDialogueInfo } from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/WarRuleDialogueInfo.ts";
@@ -51,7 +51,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _btnSubmitDialogue!        : Ui_Interfaces_IUiButton.IUiButton;
 
     private _mapRawData         : MapRawData | null = null;
-    private _mapErrorCode       = Utils_ClientErrorCode.ClientErrorCode.NoError;
+    private _mapErrorCode       : Utils_ClientErrorCode.ClientErrorCode = Utils_ClientErrorCode.ClientErrorCode.NoError;
     private _canSubmitForReview = false;
 
     public updateOnLoadedSkin(): void {
@@ -328,7 +328,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const srcNormalMapIdForAddEvent = war.getSrcNormalMapIdForAddEvent();
         groupCommand.removeAllItems(false);
         groupCommand.addItem(this._groupSave, false);
-        (srcNormalMapIdForAddEvent != null) && (groupCommand.addItem(this._groupEventAndDialogue, false));
+        if (srcNormalMapIdForAddEvent != null) {
+            groupCommand.addItem(this._groupEventAndDialogue, false);
+        }
         groupCommand.arrangeItems();
 
         const mapRawData            = await war.serializeForMap();

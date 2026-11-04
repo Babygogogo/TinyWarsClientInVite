@@ -1,17 +1,17 @@
 import {
-    Utils_ClientErrorCode,
-    Graphics_Constants,
-    MapEditor_Model_MeHelpers,
-    GamePanels_Dict,
-    Maps_Utils_MapRawData,
-    Lang_Utils,
-    MapEditor_Model_MeModel,
-    GamePanels_Manager,
     Campaigns_Managements_Gateway,
-    MapEditor_Model_MeProxy,
     FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Graphics_Constants,
     Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeHelpers,
+    MapEditor_Model_MeModel,
+    MapEditor_Model_MeProxy,
+    Maps_Utils_MapRawData,
     Ui_Components_UiPanel,
+    Utils_ClientErrorCode,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -41,7 +41,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _btnHelpSubmit!            : Ui_Interfaces_IUiButton.IUiButton;
 
     private _mapRawData         : MapRawData | null = null;
-    private _mapErrorCode       = Utils_ClientErrorCode.ClientErrorCode.NoError;
+    private _mapErrorCode       : Utils_ClientErrorCode.ClientErrorCode = Utils_ClientErrorCode.ClientErrorCode.NoError;
     private _canSubmit = false;
 
     public updateOnLoadedSkin(): void {

@@ -43,6 +43,7 @@ import {
     Units_UnitView,
     Units_UnitViewPool,
     Users_Model,
+    Utils_ClientErrorCode,
     WarTypes_Constants,
 } from "../../internal.ts";
 
@@ -369,7 +370,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const errorCode = data.getMapRawDataErrorCode();
             if (errorCode) {
                 FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0197));
-                FloatText.show(Lang_Utils.getErrorText(errorCode));
+                FloatText.show(Lang_Utils.getErrorText(errorCode as Utils_ClientErrorCode.ClientErrorCode));
             } else {
                 FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0244));
             }
