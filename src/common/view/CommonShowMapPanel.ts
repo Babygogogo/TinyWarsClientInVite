@@ -1,36 +1,36 @@
 import {
-    type Notifications_Mapping,
-    Helpers_GameFlow,
-    GamePanels_Manager,
-    Maps_Constants,
-    Tween_Executor,
+    AuxiliaryTypes_MapSize,
+    AuxiliaryTypes_ReplayFilter,
+    FloatText,
     GamePanels_Dict,
-    Maps_Utils_MapRawData,
+    GamePanels_Manager,
+    Helpers_GameFlow,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    Lang_Constants,
     Lang_Utils,
     MapEditor_Model_MeModel,
-    Users_Model,
-    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    MapEditor_Model_MeProxy,
+    Maps_Constants,
+    Maps_Utils_MapRawData,
     NormalMap_Model_NormalMapModel,
     Timer_TimerModel,
-    AuxiliaryTypes_MapSize,
-    Helpers_Misc,
-    AuxiliaryTypes_ReplayFilter,
-    MapEditor_Model_MeProxy,
-    Users_Proxy,
-    FloatText,
-    Lang_Constants,
-    Ui_Types_UiHorizontalAlign,
+    Tween_Executor,
     Ui_Components_UiPanel,
+    Ui_Types_UiHorizontalAlign,
     Ui_Types_UiVerticalAlign,
+    Users_Model,
+    Users_Proxy,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
     type GameConfigs_GameConfig,
+    type Notifications_Mapping,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiPanel,
     type Ui_Interfaces_IUiZoomableMap,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
@@ -102,6 +102,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._revisedMapRawData = await generateRevisedMapRawData(openData);
 
         this._updateView();
+    }
+    protected async _onClosed(): Promise<void> {
+        this._uiZoomMap.clearMap();
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

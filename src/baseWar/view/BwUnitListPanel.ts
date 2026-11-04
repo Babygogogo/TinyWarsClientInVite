@@ -379,8 +379,9 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         if (this._unitView == null) {
             const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
             this._unitView  = view;
-
             this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
         }
     }
     protected override async _onClosed(): Promise<void> {
@@ -423,12 +424,6 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const unit = openData.unit;
-        {
-            const unitView = this._unitView;
-            unitView?.loadViewDataFromUnit(unit, unit.getWar(), true);
-            unitView?.refreshAllViews();
-        }
-
         this._labelHp.setText(`${unit.getCurrentHp()}`);
         this._labelFuel.setText(`${unit.getCurrentFuel()}`);
         this._labelName.setText(Lang_Utils.getUnitName(unit.getUnitType(), unit.getGcData()) ?? Lang_Constants.UndefinedError);
@@ -462,5 +457,19 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const tileView = this._tileView;
         tileView.setData(openData.dataForTileView);
         tileView.updateView();
+
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const unit      = openData.unit;
+        const unitView  = this._unitView;
+        unitView?.loadViewDataFromUnit(unit, unit.getWar(), true);
+        unitView?.refreshAllViews();
     }
 }

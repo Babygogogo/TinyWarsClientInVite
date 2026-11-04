@@ -1,19 +1,19 @@
 import {
-    Helpers_GameFlow,
-    GamePanels_Manager,
-    Tween_Executor,
-    GamePanels_Dict,
-    Maps_Utils_MapRawData,
-    Lang_Utils,
-    GameConfigs_Provider,
-    MapEditor_Model_MeModel,
-    Helpers_PointerInput,
-    Helpers_Misc,
-    Sounds_SoundPlayer,
-    Maps_Constants,
-    Sounds_Constants,
     FloatText,
+    GameConfigs_Provider,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_GameFlow,
+    Helpers_Misc,
+    Helpers_PointerInput,
     Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeModel,
+    Maps_Constants,
+    Maps_Utils_MapRawData,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -73,6 +73,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateView();
     }
     protected override async _onClosed(): Promise<void> {
+        this._zoomMap.clearMap();
         await this._listSlot.removeAllItems();
 
         await super._onClosed();

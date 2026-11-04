@@ -1,40 +1,9 @@
 import {
-    type Notifications_Mapping,
-    ForceSkins_Utils,
-    Common_Model_CommonModel,
-    MapEditor_Model_MeWar,
-    MultiPlayerWar_Model_MpwWar,
-    ReplayWar_Model_RwWar,
-    ReplayWar_Model_RwWarBase,
-    FloatText,
-    SinglePlayerWar_Model_SpwWar,
-    Tiles_TileView,
-    Ui_Components_UiUnitView,
-    type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
-    GridMarks_Utils,
-    Tiles_Constants_CustomLimits,
-    GamePanels_Manager,
-    Tiles_Utils_Serialization,
-    Helpers_Collection,
-    Tiles_Constants_Common,
-    Notifications_Dispatcher,
-    Lang_Utils,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Helpers_ImageSource,
-    Helpers_Text,
-    GridMarks_Constants,
-    Tiles_Constants_MapWeapon,
-    Players_Constants,
-    Sounds_SoundPlayer,
-    MultiPlayerWar_Model_MpwProxy,
-    Sounds_Constants,
-    Lang_Constants,
-    Ui_Components_UiListItemRenderer,
-    Ui_Components_UiPanel,
-    Ui_Types_UiUnitViewData,
+    type BaseWar_Interface_IBwWar,
+    type Egret_Egret,
+    type GameConfigs_GameConfig,
+    type Notifications_Mapping,
     type Tiles_Tile,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -43,10 +12,39 @@ import {
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
+    FloatText,
+    ForceSkins_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    GridMarks_Constants,
+    GridMarks_Utils,
+    Helpers_Collection,
+    Helpers_ImageSource,
+    Helpers_Misc,
+    Helpers_Text,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwProxy,
+    MultiPlayerWar_Model_MpwWar,
+    Notifications_Dispatcher,
+    Players_Constants,
+    ReplayWar_Model_RwWar,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWar_Model_SpwWar,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Tiles_Constants_Common,
+    Tiles_Constants_CustomLimits,
+    Tiles_Constants_MapWeapon,
+    Tiles_TileView,
+    Tiles_Utils_Serialization,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
     Units_Constants,
+    Units_UnitView,
+    Units_UnitViewPool,
     WarTypes_Utils,
-    Units_Utils_Serialization,
-    type Egret_Egret,
 } from "../../internal.ts";
 
 import type { TileTemplateCfg } from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
@@ -771,101 +769,101 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         if      (infoType === Tiles_Constants_Common.InfoTypeId.DefenseBonus)                            {
-            this._showHelpAsDefenseBonus(); 
+            this._showHelpAsDefenseBonus();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Income)                                  {
-            this._showHelpAsIncome(); 
+            this._showHelpAsIncome();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Vision)                                  {
-            this._showHelpAsVision(); 
+            this._showHelpAsVision();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.HideUnitCategory)                        {
-            this._showHelpAsHideUnitCategory(); 
+            this._showHelpAsHideUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.IsDefeatedOnCapture)                     {
-            this._showHelpAsIsDefeatedOnCapture(); 
+            this._showHelpAsIsDefeatedOnCapture();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.ProduceUnitCategory)                     {
-            this._showHelpAsProduceUnitCategory(); 
+            this._showHelpAsProduceUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.GlobalBonus)                             {
-            this._showHelpAsGlobalBonus(); 
+            this._showHelpAsGlobalBonus();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.RepairUnitCategory)                      {
-            this._showHelpAsRepairUnitCategory(); 
+            this._showHelpAsRepairUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.BlockEnemyUnit)                          {
-            this._showHelpAsBlockEnemyUnit(); 
+            this._showHelpAsBlockEnemyUnit();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CoBoardUnit)                             {
-            this._showHelpAsCoBoardUnit(); 
+            this._showHelpAsCoBoardUnit();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Hp)                                      {
-            this._showHelpAsHp(); 
+            this._showHelpAsHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CapturePoint)                            {
-            this._showHelpAsCapturePoint(); 
+            this._showHelpAsCapturePoint();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.BuildPoint)                              {
-            this._showHelpAsBuildPoint(); 
+            this._showHelpAsBuildPoint();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.IsHighlighted)                           {
-            this._showHelpAsIsHighlighted(); 
+            this._showHelpAsIsHighlighted();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Buff)                                    {
-            this._showHelpAsBuff(); 
+            this._showHelpAsBuff();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalRadius)                           {
-            this._showHelpAsCrystalRadius(); 
+            this._showHelpAsCrystalRadius();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalPriority)                         {
-            this._showHelpAsCrystalPriority(); 
+            this._showHelpAsCrystalPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectSelf)                    {
-            this._showHelpAsCrystalCanAffectSelf(); 
+            this._showHelpAsCrystalCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectAlly)                    {
-            this._showHelpAsCrystalCanAffectAlly(); 
+            this._showHelpAsCrystalCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectEnemy)                   {
-            this._showHelpAsCrystalCanAffectEnemy(); 
+            this._showHelpAsCrystalCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFund)                        {
-            this._showHelpAsCrystalDeltaFund(); 
+            this._showHelpAsCrystalDeltaFund();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaEnergyPercentage)            {
-            this._showHelpAsCrystalDeltaEnergyPercentage(); 
+            this._showHelpAsCrystalDeltaEnergyPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaHp)                          {
-            this._showHelpAsCrystalDeltaHp(); 
+            this._showHelpAsCrystalDeltaHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFuelPercentage)              {
-            this._showHelpAsCrystalDeltaFuelPercentage(); 
+            this._showHelpAsCrystalDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaPrimaryAmmoPercentage)       {
-            this._showHelpAsCrystalDeltaPrimaryAmmoPercentage(); 
+            this._showHelpAsCrystalDeltaPrimaryAmmoPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForUp)                        {
-            this._showHelpAsCannonRangeForUp(); 
+            this._showHelpAsCannonRangeForUp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForRight)                     {
-            this._showHelpAsCannonRangeForRight(); 
+            this._showHelpAsCannonRangeForRight();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForLeft)                      {
-            this._showHelpAsCannonRangeForLeft(); 
+            this._showHelpAsCannonRangeForLeft();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForDown)                      {
-            this._showHelpAsCannonRangeForDown(); 
+            this._showHelpAsCannonRangeForDown();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonPriority)                          {
-            this._showHelpAsCannonPriority(); 
+            this._showHelpAsCannonPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonMaxTargetCount)                    {
-            this._showHelpAsCannonMaxTargetCount(); 
+            this._showHelpAsCannonMaxTargetCount();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectSelf)                     {
-            this._showHelpAsCannonCanAffectSelf(); 
+            this._showHelpAsCannonCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectAlly)                     {
-            this._showHelpAsCannonCanAffectAlly(); 
+            this._showHelpAsCannonCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectEnemy)                    {
-            this._showHelpAsCannonCanAffectEnemy(); 
+            this._showHelpAsCannonCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaHp)                           {
-            this._showHelpAsCannonDeltaHp(); 
+            this._showHelpAsCannonDeltaHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaFuelPercentage)               {
-            this._showHelpAsCannonDeltaFuelPercentage(); 
+            this._showHelpAsCannonDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaPrimaryAmmoPercentage)        {
-            this._showHelpAsCannonDeltaPrimaryAmmoPercentage(); 
+            this._showHelpAsCannonDeltaPrimaryAmmoPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForUp)                   {
-            this._showHelpAsLaserTurretRangeForUp(); 
+            this._showHelpAsLaserTurretRangeForUp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForRight)                {
-            this._showHelpAsLaserTurretRangeForRight(); 
+            this._showHelpAsLaserTurretRangeForRight();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForLeft)                 {
-            this._showHelpAsLaserTurretRangeForLeft(); 
+            this._showHelpAsLaserTurretRangeForLeft();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForDown)                 {
-            this._showHelpAsLaserTurretRangeForDown(); 
+            this._showHelpAsLaserTurretRangeForDown();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretPriority)                     {
-            this._showHelpAsLaserTurretPriority(); 
+            this._showHelpAsLaserTurretPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectSelf)                {
-            this._showHelpAsLaserTurretCanAffectSelf(); 
+            this._showHelpAsLaserTurretCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectAlly)                {
-            this._showHelpAsLaserTurretCanAffectAlly(); 
+            this._showHelpAsLaserTurretCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectEnemy)               {
-            this._showHelpAsLaserTurretCanAffectEnemy(); 
+            this._showHelpAsLaserTurretCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaHp)                      {
-            this._showHelpAsLaserTurretDeltaHp(); 
+            this._showHelpAsLaserTurretDeltaHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaFuelPercentage)          {
-            this._showHelpAsLaserTurretDeltaFuelPercentage(); 
+            this._showHelpAsLaserTurretDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaPrimaryAmmoPercentage)   {
-            this._showHelpAsLaserTurretDeltaPrimaryAmmoPercentage(); 
+            this._showHelpAsLaserTurretDeltaPrimaryAmmoPercentage();
         } else {
             throw Helpers_Misc.newError(`Invalid infoType: ${infoType}`);
         }
@@ -877,101 +875,101 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         if      (infoType === Tiles_Constants_Common.InfoTypeId.DefenseBonus)                            {
-            this._showValueAsDefenseBonus(); 
+            this._showValueAsDefenseBonus();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Income)                                  {
-            this._showValueAsIncome(); 
+            this._showValueAsIncome();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Vision)                                  {
-            this._showValueAsVision(); 
+            this._showValueAsVision();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.HideUnitCategory)                        {
-            this._showValueAsHideUnitCategory(); 
+            this._showValueAsHideUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.IsDefeatedOnCapture)                     {
-            this._showValueAsIsDefeatedOnCapture(); 
+            this._showValueAsIsDefeatedOnCapture();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.ProduceUnitCategory)                     {
-            this._showValueAsProduceUnitCategory(); 
+            this._showValueAsProduceUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.GlobalBonus)                             {
-            this._showValueAsGlobalBonus(); 
+            this._showValueAsGlobalBonus();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.RepairUnitCategory)                      {
-            this._showValueAsRepairUnitCategory(); 
+            this._showValueAsRepairUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.BlockEnemyUnit)                          {
-            this._showValueAsBlockEnemyUnit(); 
+            this._showValueAsBlockEnemyUnit();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CoBoardUnit)                             {
-            this._showValueAsCoBoardUnit(); 
+            this._showValueAsCoBoardUnit();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Hp)                                      {
-            this._showValueAsHp(); 
+            this._showValueAsHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CapturePoint)                            {
-            this._showValueAsCapturePoint(); 
+            this._showValueAsCapturePoint();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.BuildPoint)                              {
-            this._showValueAsBuildPoint(); 
+            this._showValueAsBuildPoint();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.IsHighlighted)                           {
-            this._showValueAsIsHighlighted(); 
+            this._showValueAsIsHighlighted();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Buff)                                    {
-            this._showValueAsBuff(); 
+            this._showValueAsBuff();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalRadius)                           {
-            this._showValueAsCrystalRadius(); 
+            this._showValueAsCrystalRadius();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalPriority)                         {
-            this._showValueAsCrystalPriority(); 
+            this._showValueAsCrystalPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectSelf)                    {
-            this._showValueAsCrystalCanAffectSelf(); 
+            this._showValueAsCrystalCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectAlly)                    {
-            this._showValueAsCrystalCanAffectAlly(); 
+            this._showValueAsCrystalCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectEnemy)                   {
-            this._showValueAsCrystalCanAffectEnemy(); 
+            this._showValueAsCrystalCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFund)                        {
-            this._showValueAsCrystalDeltaFund(); 
+            this._showValueAsCrystalDeltaFund();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaEnergyPercentage)            {
-            this._showValueAsCrystalDeltaEnergyPercentage(); 
+            this._showValueAsCrystalDeltaEnergyPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaHp)                          {
-            this._showValueAsCrystalDeltaHp(); 
+            this._showValueAsCrystalDeltaHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFuelPercentage)              {
-            this._showValueAsCrystalDeltaFuelPercentage(); 
+            this._showValueAsCrystalDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaPrimaryAmmoPercentage)       {
-            this._showValueAsCrystalDeltaPrimaryAmmoPercentage(); 
+            this._showValueAsCrystalDeltaPrimaryAmmoPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForUp)                        {
-            this._showValueAsCannonRangeForUp(); 
+            this._showValueAsCannonRangeForUp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForRight)                     {
-            this._showValueAsCannonRangeForRight(); 
+            this._showValueAsCannonRangeForRight();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForLeft)                      {
-            this._showValueAsCannonRangeForLeft(); 
+            this._showValueAsCannonRangeForLeft();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForDown)                      {
-            this._showValueAsCannonRangeForDown(); 
+            this._showValueAsCannonRangeForDown();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonPriority)                          {
-            this._showValueAsCannonPriority(); 
+            this._showValueAsCannonPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonMaxTargetCount)                    {
-            this._showValueAsCannonMaxTargetCount(); 
+            this._showValueAsCannonMaxTargetCount();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectSelf)                     {
-            this._showValueAsCannonCanAffectSelf(); 
+            this._showValueAsCannonCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectAlly)                     {
-            this._showValueAsCannonCanAffectAlly(); 
+            this._showValueAsCannonCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectEnemy)                    {
-            this._showValueAsCannonCanAffectEnemy(); 
+            this._showValueAsCannonCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaHp)                           {
-            this._showValueAsCannonDeltaHp(); 
+            this._showValueAsCannonDeltaHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaFuelPercentage)               {
-            this._showValueAsCannonDeltaFuelPercentage(); 
+            this._showValueAsCannonDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaPrimaryAmmoPercentage)        {
-            this._showValueAsCannonDeltaPrimaryAmmoPercentage(); 
+            this._showValueAsCannonDeltaPrimaryAmmoPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForUp)                   {
-            this._showValueAsLaserTurretRangeForUp(); 
+            this._showValueAsLaserTurretRangeForUp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForRight)                {
-            this._showValueAsLaserTurretRangeForRight(); 
+            this._showValueAsLaserTurretRangeForRight();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForLeft)                 {
-            this._showValueAsLaserTurretRangeForLeft(); 
+            this._showValueAsLaserTurretRangeForLeft();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForDown)                 {
-            this._showValueAsLaserTurretRangeForDown(); 
+            this._showValueAsLaserTurretRangeForDown();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretPriority)                     {
-            this._showValueAsLaserTurretPriority(); 
+            this._showValueAsLaserTurretPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectSelf)                {
-            this._showValueAsLaserTurretCanAffectSelf(); 
+            this._showValueAsLaserTurretCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectAlly)                {
-            this._showValueAsLaserTurretCanAffectAlly(); 
+            this._showValueAsLaserTurretCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectEnemy)               {
-            this._showValueAsLaserTurretCanAffectEnemy(); 
+            this._showValueAsLaserTurretCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaHp)                      {
-            this._showValueAsLaserTurretDeltaHp(); 
+            this._showValueAsLaserTurretDeltaHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaFuelPercentage)          {
-            this._showValueAsLaserTurretDeltaFuelPercentage(); 
+            this._showValueAsLaserTurretDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaPrimaryAmmoPercentage)   {
-            this._showValueAsLaserTurretDeltaPrimaryAmmoPercentage(); 
+            this._showValueAsLaserTurretDeltaPrimaryAmmoPercentage();
         } else {
             throw Helpers_Misc.newError(`Invalid infoType: ${infoType}`);
         }
@@ -983,101 +981,101 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         if      (infoType === Tiles_Constants_Common.InfoTypeId.DefenseBonus)                            {
-            this._modifyAsDefenseBonus(); 
+            this._modifyAsDefenseBonus();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Income)                                  {
-            this._modifyAsIncome(); 
+            this._modifyAsIncome();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Vision)                                  {
-            this._modifyAsVision(); 
+            this._modifyAsVision();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.HideUnitCategory)                        {
-            this._modifyAsHideUnitCategory(); 
+            this._modifyAsHideUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.IsDefeatedOnCapture)                     {
-            this._modifyAsIsDefeatedOnCapture(); 
+            this._modifyAsIsDefeatedOnCapture();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.ProduceUnitCategory)                     {
-            this._modifyAsProduceUnitCategory(); 
+            this._modifyAsProduceUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.GlobalBonus)                             {
-            this._modifyAsGlobalBonus(); 
+            this._modifyAsGlobalBonus();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.RepairUnitCategory)                      {
-            this._modifyAsRepairUnitCategory(); 
+            this._modifyAsRepairUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.BlockEnemyUnit)                          {
-            this._modifyAsBlockEnemyUnit(); 
+            this._modifyAsBlockEnemyUnit();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CoBoardUnit)                             {
-            this._modifyAsCoBoardUnit(); 
+            this._modifyAsCoBoardUnit();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Hp)                                      {
-            this._modifyAsHp(); 
+            this._modifyAsHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CapturePoint)                            {
-            this._modifyAsCapturePoint(); 
+            this._modifyAsCapturePoint();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.BuildPoint)                              {
-            this._modifyAsBuildPoint(); 
+            this._modifyAsBuildPoint();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.IsHighlighted)                           {
-            this._modifyAsIsHighlighted(); 
+            this._modifyAsIsHighlighted();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Buff)                                    {
-            this._modifyAsBuff(); 
+            this._modifyAsBuff();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalRadius)                           {
-            this._modifyAsCrystalRadius(); 
+            this._modifyAsCrystalRadius();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalPriority)                         {
-            this._modifyAsCrystalPriority(); 
+            this._modifyAsCrystalPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectSelf)                    {
-            this._modifyAsCrystalCanAffectSelf(); 
+            this._modifyAsCrystalCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectAlly)                    {
-            this._modifyAsCrystalCanAffectAlly(); 
+            this._modifyAsCrystalCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectEnemy)                   {
-            this._modifyAsCrystalCanAffectEnemy(); 
+            this._modifyAsCrystalCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFund)                        {
-            this._modifyAsCrystalOffsetFund(); 
+            this._modifyAsCrystalOffsetFund();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaEnergyPercentage)            {
-            this._modifyAsCrystalOffsetEnergyPercentage(); 
+            this._modifyAsCrystalOffsetEnergyPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaHp)                          {
-            this._modifyAsCrystalOffsetHp(); 
+            this._modifyAsCrystalOffsetHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFuelPercentage)              {
-            this._modifyAsCrystalOffsetFuelPercentage(); 
+            this._modifyAsCrystalOffsetFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaPrimaryAmmoPercentage)       {
-            this._modifyAsCrystalDeltaPrimaryAmmoPercentage(); 
+            this._modifyAsCrystalDeltaPrimaryAmmoPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForUp)                        {
-            this._modifyAsCannonRangeForUp(); 
+            this._modifyAsCannonRangeForUp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForRight)                     {
-            this._modifyAsCannonRangeForRight(); 
+            this._modifyAsCannonRangeForRight();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForLeft)                      {
-            this._modifyAsCannonRangeForLeft(); 
+            this._modifyAsCannonRangeForLeft();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForDown)                      {
-            this._modifyAsCannonRangeForDown(); 
+            this._modifyAsCannonRangeForDown();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonPriority)                          {
-            this._modifyAsCannonPriority(); 
+            this._modifyAsCannonPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonMaxTargetCount)                    {
-            this._modifyAsCannonMaxTargetCount(); 
+            this._modifyAsCannonMaxTargetCount();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectSelf)                     {
-            this._modifyAsCannonCanAffectSelf(); 
+            this._modifyAsCannonCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectAlly)                     {
-            this._modifyAsCannonCanAffectAlly(); 
+            this._modifyAsCannonCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectEnemy)                    {
-            this._modifyAsCannonCanAffectEnemy(); 
+            this._modifyAsCannonCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaHp)                           {
-            this._modifyAsCannonOffsetHp(); 
+            this._modifyAsCannonOffsetHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaFuelPercentage)               {
-            this._modifyAsCannonDeltaFuelPercentage(); 
+            this._modifyAsCannonDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaPrimaryAmmoPercentage)        {
-            this._modifyAsCannonDeltaPrimaryAmmoPercentage(); 
+            this._modifyAsCannonDeltaPrimaryAmmoPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForUp)                   {
-            this._modifyAsLaserTurretRangeForUp(); 
+            this._modifyAsLaserTurretRangeForUp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForRight)                {
-            this._modifyAsLaserTurretRangeForRight(); 
+            this._modifyAsLaserTurretRangeForRight();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForLeft)                 {
-            this._modifyAsLaserTurretRangeForLeft(); 
+            this._modifyAsLaserTurretRangeForLeft();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForDown)                 {
-            this._modifyAsLaserTurretRangeForDown(); 
+            this._modifyAsLaserTurretRangeForDown();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretPriority)                     {
-            this._modifyAsLaserTurretPriority(); 
+            this._modifyAsLaserTurretPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectSelf)                {
-            this._modifyAsLaserTurretCanAffectSelf(); 
+            this._modifyAsLaserTurretCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectAlly)                {
-            this._modifyAsLaserTurretCanAffectAlly(); 
+            this._modifyAsLaserTurretCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectEnemy)               {
-            this._modifyAsLaserTurretCanAffectEnemy(); 
+            this._modifyAsLaserTurretCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaHp)                      {
-            this._modifyAsLaserTurretOffsetHp(); 
+            this._modifyAsLaserTurretOffsetHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaFuelPercentage)          {
-            this._modifyAsLaserTurretDeltaFuelPercentage(); 
+            this._modifyAsLaserTurretDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaPrimaryAmmoPercentage)   {
-            this._modifyAsLaserTurretDeltaPrimaryAmmoPercentage(); 
+            this._modifyAsLaserTurretDeltaPrimaryAmmoPercentage();
         } else {
             throw Helpers_Misc.newError(`Invalid infoType: ${infoType}`);
         }
@@ -1096,101 +1094,101 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const infoType = openData.infoType;
         if      (infoType === Tiles_Constants_Common.InfoTypeId.DefenseBonus)                            {
-            this._updateViewAsDefenseBonus(); 
+            this._updateViewAsDefenseBonus();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Income)                                  {
-            this._updateViewAsIncome(); 
+            this._updateViewAsIncome();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Vision)                                  {
-            this._updateViewAsVision(); 
+            this._updateViewAsVision();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.HideUnitCategory)                        {
-            this._updateViewAsHideUnitCategory(); 
+            this._updateViewAsHideUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.IsDefeatedOnCapture)                     {
-            this._updateViewAsIsDefeatedOnCapture(); 
+            this._updateViewAsIsDefeatedOnCapture();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.ProduceUnitCategory)                     {
-            this._updateViewAsProduceUnitCategory(); 
+            this._updateViewAsProduceUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.GlobalBonus)                             {
-            this._updateViewAsGlobalBonus(); 
+            this._updateViewAsGlobalBonus();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.RepairUnitCategory)                      {
-            this._updateViewAsRepairUnitCategory(); 
+            this._updateViewAsRepairUnitCategory();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.BlockEnemyUnit)                          {
-            this._updateViewAsBlockEnemyUnit(); 
+            this._updateViewAsBlockEnemyUnit();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CoBoardUnit)                             {
-            this._updateViewAsCoBoardUnit(); 
+            this._updateViewAsCoBoardUnit();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Hp)                                      {
-            this._updateViewAsHp(); 
+            this._updateViewAsHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CapturePoint)                            {
-            this._updateViewAsCapturePoint(); 
+            this._updateViewAsCapturePoint();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.BuildPoint)                              {
-            this._updateViewAsBuildPoint(); 
+            this._updateViewAsBuildPoint();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.IsHighlighted)                           {
-            this._updateViewAsIsHighlighted(); 
+            this._updateViewAsIsHighlighted();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.Buff)                                    {
-            this._updateViewAsBuff(); 
+            this._updateViewAsBuff();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalRadius)                           {
-            this._updateViewAsCrystalRadius(); 
+            this._updateViewAsCrystalRadius();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalPriority)                         {
-            this._updateViewAsCrystalPriority(); 
+            this._updateViewAsCrystalPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectSelf)                    {
-            this._updateViewAsCrystalCanAffectSelf(); 
+            this._updateViewAsCrystalCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectAlly)                    {
-            this._updateViewAsCrystalCanAffectAlly(); 
+            this._updateViewAsCrystalCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectEnemy)                   {
-            this._updateViewAsCrystalCanAffectEnemy(); 
+            this._updateViewAsCrystalCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFund)                        {
-            this._updateViewAsCrystalDeltaFund(); 
+            this._updateViewAsCrystalDeltaFund();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaEnergyPercentage)            {
-            this._updateViewAsCrystalDeltaEnergyPercentage(); 
+            this._updateViewAsCrystalDeltaEnergyPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaHp)                          {
-            this._updateViewAsCrystalDeltaHp(); 
+            this._updateViewAsCrystalDeltaHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFuelPercentage)              {
-            this._updateViewAsCrystalDeltaFuelPercentage(); 
+            this._updateViewAsCrystalDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaPrimaryAmmoPercentage)       {
-            this._updateViewAsCrystalDeltaPrimaryAmmoPercentage(); 
+            this._updateViewAsCrystalDeltaPrimaryAmmoPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForUp)                        {
-            this._updateViewAsCannonRangeForUp(); 
+            this._updateViewAsCannonRangeForUp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForRight)                     {
-            this._updateViewAsCannonRangeForRight(); 
+            this._updateViewAsCannonRangeForRight();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForLeft)                      {
-            this._updateViewAsCannonRangeForLeft(); 
+            this._updateViewAsCannonRangeForLeft();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForDown)                      {
-            this._updateViewAsCannonRangeForDown(); 
+            this._updateViewAsCannonRangeForDown();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonPriority)                          {
-            this._updateViewAsCannonPriority(); 
+            this._updateViewAsCannonPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonMaxTargetCount)                    {
-            this._updateViewAsCannonMaxTargetCount(); 
+            this._updateViewAsCannonMaxTargetCount();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectSelf)                     {
-            this._updateViewAsCannonCanAffectSelf(); 
+            this._updateViewAsCannonCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectAlly)                     {
-            this._updateViewAsCannonCanAffectAlly(); 
+            this._updateViewAsCannonCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectEnemy)                    {
-            this._updateViewAsCannonCanAffectEnemy(); 
+            this._updateViewAsCannonCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaHp)                           {
-            this._updateViewAsCannonDeltaHp(); 
+            this._updateViewAsCannonDeltaHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaFuelPercentage)               {
-            this._updateViewAsCannonDeltaFuelPercentage(); 
+            this._updateViewAsCannonDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaPrimaryAmmoPercentage)        {
-            this._updateViewAsCannonDeltaPrimaryAmmoPercentage(); 
+            this._updateViewAsCannonDeltaPrimaryAmmoPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForUp)                   {
-            this._updateViewAsLaserTurretRangeForUp(); 
+            this._updateViewAsLaserTurretRangeForUp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForRight)                {
-            this._updateViewAsLaserTurretRangeForRight(); 
+            this._updateViewAsLaserTurretRangeForRight();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForLeft)                 {
-            this._updateViewAsLaserTurretRangeForLeft(); 
+            this._updateViewAsLaserTurretRangeForLeft();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForDown)                 {
-            this._updateViewAsLaserTurretRangeForDown(); 
+            this._updateViewAsLaserTurretRangeForDown();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretPriority)                     {
-            this._updateViewAsLaserTurretPriority(); 
+            this._updateViewAsLaserTurretPriority();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectSelf)                {
-            this._updateViewAsLaserTurretCanAffectSelf(); 
+            this._updateViewAsLaserTurretCanAffectSelf();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectAlly)                {
-            this._updateViewAsLaserTurretCanAffectAlly(); 
+            this._updateViewAsLaserTurretCanAffectAlly();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectEnemy)               {
-            this._updateViewAsLaserTurretCanAffectEnemy(); 
+            this._updateViewAsLaserTurretCanAffectEnemy();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaHp)                      {
-            this._updateViewAsLaserTurretOffsetHp(); 
+            this._updateViewAsLaserTurretOffsetHp();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaFuelPercentage)          {
-            this._updateViewAsLaserTurretDeltaFuelPercentage(); 
+            this._updateViewAsLaserTurretDeltaFuelPercentage();
         } else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaPrimaryAmmoPercentage)   {
-            this._updateViewAsLaserTurretDeltaPrimaryAmmoPercentage(); 
+            this._updateViewAsLaserTurretDeltaPrimaryAmmoPercentage();
         } else {
             throw Helpers_Misc.newError(`Invalid infoType: ${infoType}`);
         }
@@ -2886,7 +2884,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const canBeFatal        = customCrystalData.getCanBeFatal();
         const callback          = (newOffsetHp: number, newCanBeFatal: boolean) => {
             tile.setCustomCrystalOffsetHp(newOffsetHp);
-            tile.setCustomCrystalCanBeFatal(newCanBeFatal),
+            tile.setCustomCrystalCanBeFatal(newCanBeFatal);
             tile.flushDataToView();
             this._updateView();
         };
@@ -3175,7 +3173,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const canBeFatal        = customCannonData.getCanBeFatal();
         const callback          = (newOffsetHp: number, newCanBeFatal: boolean) => {
             tile.setCustomCannonOffsetHp(newOffsetHp);
-            tile.setCustomCannonCanBeFatal(newCanBeFatal),
+            tile.setCustomCannonCanBeFatal(newCanBeFatal);
             tile.flushDataToView();
             this._updateView();
         };
@@ -3439,7 +3437,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const canBeFatal            = customLaserTurretData.getCanBeFatal();
         const callback              = (newOffsetHp: number, newCanBeFatal: boolean) => {
             tile.setCustomLaserTurretOffsetHp(newOffsetHp);
-            tile.setCustomLaserTurretCanBeFatal(newCanBeFatal),
+            tile.setCustomLaserTurretCanBeFatal(newCanBeFatal);
             tile.flushDataToView();
             this._updateView();
         };
@@ -3527,27 +3525,32 @@ class MoveCostRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     private readonly _conView!          : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _labelMoveCost!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView          = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView                   : Units_UnitView.UnitView | undefined;
 
-    public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
-            { type : "StateIndicatorTick",  callback : this._onNotifyUnitStateIndicatorTick },
-        ]);
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        this._conView.addUiChild(this._unitView);
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conView.addUiChild(view);
+
+            this._updateUnitView();
+        }
     }
-
-    private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
-    }
-
-    private _onNotifyUnitStateIndicatorTick(): void {
-        this._unitView.updateOnStateIndicatorTick();
-    }
-
     protected override _doApplyOpenData(): void {
         this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3560,23 +3563,27 @@ class MoveCostRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         }
 
         const gameConfig    = openData.gameConfig;
-        const unitType      = openData.unitType;
         const moveCostCfg   = Helpers_Misc.getExisted(gameConfig.getMoveCostCfg(openData.tileCfg.getTileTypeId()));
-        const moveCost      = moveCostCfg[Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveTypeId())].getCost();
+        const moveCost      = moveCostCfg[Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(openData.unitType)?.getMoveTypeId())].getCost();
         this._imgBg.setIsVisible(openData.index % 4 === 2);
         this._labelMoveCost.setText(moveCost != null ? `${moveCost}` : `--`);
-        this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig       : gameConfig,
-            skinId           : Math.max(Players_Constants.PlayerIndex.First, openData.skinId),
-            overridingSkinId : openData.overridingSkinId,
-            unitData         : Units_Utils_Serialization.createDefault({
-                gridIndex   : { x : 0, y : 0 },
-                playerIndex : openData.playerIndex,
-                unitTypeId  : unitType,
-                unitId      : -1,
-                gcData      : gameConfig,
-            }),
-        }), Common_Model_CommonModel.getUnitAnimationTickCount());
+
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const unitView = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : openData.unitType,
+            playerIndex : openData.playerIndex,
+            skinId      : openData.overridingSkinId ?? Math.max(Players_Constants.PlayerIndex.First, openData.skinId),
+        }, true);
+        unitView?.refreshAllViews();
     }
 }
 
@@ -3596,27 +3603,32 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     private readonly _labelPrimaryAttack!   : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelSecondaryAttack! : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView              = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView                       : Units_UnitView.UnitView | undefined;
 
-    public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type : "UnitAnimationTick",       callback : this._onNotifyUnitAnimationTick },
-            { type : "StateIndicatorTick",      callback : this._onNotifyUnitStateIndicatorTick },
-        ]);
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        this._conView.addUiChild(this._unitView);
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conView.addUiChild(view);
+
+            this._updateUnitView();
+        }
     }
-
-    private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
-    }
-
-    private _onNotifyUnitStateIndicatorTick(): void {
-        this._unitView.updateOnStateIndicatorTick();
-    }
-
     protected override _doApplyOpenData(): void {
         this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3630,29 +3642,30 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         this._imgBg.setIsVisible(openData.index % 4 >= 2);
 
-        const gameConfig        = openData.gameConfig;
-        const attackerUnitType  = openData.attackerUnitType;
-        const unitView          = this._unitView;
-        unitView.setIsVisible(true);
-        unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig       : gameConfig,
-            skinId           : openData.skinId,
-            overridingSkinId : openData.overridingSkinId,
-            unitData         : Units_Utils_Serialization.createDefault({
-                gridIndex   : { x : 0, y : 0 },
-                unitTypeId  : attackerUnitType,
-                playerIndex : openData.playerIndex,
-                unitId      : -1,
-                gcData      : gameConfig,
-            }),
-        }), Common_Model_CommonModel.getUnitAnimationTickCount());
-
-        const attackCfg             = Helpers_Misc.getExisted(gameConfig.getDamageChartCfgs(attackerUnitType));
+        const gameConfig            = openData.gameConfig;
+        const attackCfg             = Helpers_Misc.getExisted(gameConfig.getDamageChartCfgs(openData.attackerUnitType));
         const targetArmorType       = Helpers_Misc.getExisted(gameConfig.getTileTemplateCfg(openData.targetTileType)?.getArmorTypeId());
         const primaryAttackDamage   = attackCfg[targetArmorType][Units_Constants.WeaponTypeId.Primary].getDamage();
         const secondaryAttackDamage = attackCfg[targetArmorType][Units_Constants.WeaponTypeId.Secondary].getDamage();
         this._labelPrimaryAttack.setText(primaryAttackDamage == null ? `--` : `${primaryAttackDamage}`);
         this._labelSecondaryAttack.setText(secondaryAttackDamage == null ? `--` : `${secondaryAttackDamage}`);
+
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const unitView = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : openData.attackerUnitType,
+            playerIndex : openData.playerIndex,
+            skinId      : openData.overridingSkinId ?? openData.skinId,
+        }, true);
+        unitView?.refreshAllViews();
     }
 }
 

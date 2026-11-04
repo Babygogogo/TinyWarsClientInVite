@@ -1,22 +1,25 @@
 import {
     ForceSkins_Utils,
-    Common_Model_CommonModel,
-    MapEditor_Model_MeWar,
-    Ui_Components_UiUnitView,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Tiles_Utils_Filter,
+    GamePanels_Dict,
+    GamePanels_Manager,
     Graphics_Constants,
     Helpers_Collection,
-    Notifications_Dispatcher,
-    GamePanels_Dict,
     Helpers_Misc,
-    Lang_Utils,
-    GamePanels_Manager,
-    Players_Constants,
     Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
+    Notifications_Dispatcher,
+    Players_Constants,
+    Tiles_Utils_Filter,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Types_UiUnitViewData,
+    Units_Constants,
+    Units_UnitView,
+    Units_UnitViewPool,
+    Units_Utils_Common,
+    Units_Utils_Serialization,
+    WarEvents_Actions_Utils_Common,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -25,10 +28,6 @@ import {
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
-    Units_Constants,
-    Units_Utils_Common,
-    Units_Utils_Serialization,
-    WarEvents_Actions_Utils_Common,
 } from "../../internal.ts";
 
 import { WeightedGridIndex } from "../../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
@@ -348,7 +347,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _btnProduceMaterial!       : Ui_Interfaces_IUiButton.IUiButton;
     private readonly _labelProduceMaterial!     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView                  = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView                           : Units_UnitView.UnitView | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -378,12 +377,9 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         ]);
         this._setNotifyListenerArray([
             { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
-            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
         ]);
 
         this._updateComponentsForLanguage();
-
-        this._conUnitView.addUiChild(this._unitView);
     }
 
     private _onTouchedBtnAiMode(): void {
@@ -713,12 +709,31 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         this._updateComponentsForData();
     }
-    private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
-    }
 
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
+        }
+    }
     protected override _doApplyOpenData(): void {
         this._updateComponentsForData();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        await super._onClosed();
     }
 
     private _updateComponentsForLanguage(): void {
@@ -906,19 +921,13 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const unitData      = openData.unitData;
         const playerIndex   = unitData.getPlayerIndex();
-        const gameConfig    = openData.war.getGcData();
-        this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig       : gameConfig,
-            skinId           : ForceSkins_Utils.getDefaultSkinId(playerIndex),
-            overridingSkinId : undefined,
-            unitData         : Units_Utils_Serialization.createDefault({
-                gridIndex   : { x : 0, y : 0 },
-                playerIndex : playerIndex,
-                unitTypeId  : unitData.getUnitType(),
-                unitId      : -1,
-                gcData      : gameConfig,
-            }),
-        }));
+        const unitView      = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : unitData.getUnitType(),
+            playerIndex : playerIndex,
+            skinId      : ForceSkins_Utils.getDefaultSkinId(playerIndex),
+        }, true);
+        unitView?.refreshAllViews();
     }
 }
 

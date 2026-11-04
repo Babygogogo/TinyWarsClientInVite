@@ -111,6 +111,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateOnOpenDataChanged();
     }
     protected override async _onClosed(): Promise<void> {
+        this._zoomMap.clearMap();
         await Promise.all([
             this._uiMapInfo.close(),
             this._listMap.removeAllItems(),

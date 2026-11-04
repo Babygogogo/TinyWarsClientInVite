@@ -11,10 +11,8 @@ import {
     Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Units_Unit,
     Units_UnitView,
     Units_UnitViewPool,
-    Units_Utils_Serialization,
     type GameConfigs_GameConfig,
     type MapEditor_Interface_IMeWar,
     type MapEditor_Model_MeTypes,
@@ -255,8 +253,9 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         if (this._unitView == null) {
             const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
             this._unitView  = view;
-
             this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
         }
     }
     protected override async _onClosed(): Promise<void> {
@@ -272,31 +271,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     }
 
     protected override _doApplyOpenData(): void {
-        const openData = this.getOpenData();
-        if (openData == null) {
-            return;
-        }
-
-        const dataForDrawUnit   = openData.dataForDrawUnit;
-        const unitType          = dataForDrawUnit.unitType;
-        const gameConfig        = openData.gameConfig;
-        const war               = Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar());
-        this._labelName.setText(Lang_Utils.getUnitName(unitType, gameConfig) ?? Lang_Constants.UndefinedError);
-
-        const unitView = this._unitView;
-        if (unitView) {
-            const unit = new Units_Unit.Unit(false);
-            unit.init(Units_Utils_Serialization.createDefault({
-                gridIndex   : { x : 0, y : 0 },
-                unitId      : 0,
-                unitTypeId  : unitType,
-                playerIndex : dataForDrawUnit.playerIndex,
-                gcData      : gameConfig,
-            }), gameConfig);
-            unit.startRunning(war);
-            unitView.loadViewDataFromUnit(unit, war, true);
-            unitView.refreshAllViews();
-        }
+        this._updateView();
     }
 
     public onItemTapEvent(): void {
@@ -310,5 +285,32 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         panel.updateOnChooseUnit(dataForDrawUnit);
         panel.closePanel();
         Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar()).getDrawer().setModeDrawUnit(dataForDrawUnit);
+    }
+
+    private _updateView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        this._labelName.setText(Lang_Utils.getUnitName(openData.dataForDrawUnit.unitType, openData.gameConfig) ?? Lang_Constants.UndefinedError);
+
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const dataForDrawUnit   = openData.dataForDrawUnit;
+        const unitView          = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : dataForDrawUnit.unitType,
+            playerIndex : dataForDrawUnit.playerIndex,
+            skinId      : dataForDrawUnit.playerIndex,
+        }, true);
+        unitView?.refreshAllViews();
     }
 }

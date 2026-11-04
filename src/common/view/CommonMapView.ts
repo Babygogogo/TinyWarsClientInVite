@@ -1,33 +1,33 @@
 import {
-    Notifications_Dispatcher,
-    Helpers_Misc,
-    Common_Model_CommonModel,
-    Campaigns_Mains_Provider,
-    Graphics_Utils,
-    ForceSkins_Utils,
-    GameConfigs_Provider,
-    Helpers_ProtoSchema_WarSerialization_SerialWar,
-    NormalMap_Model_NormalMapModel,
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_MapSize,
+    Campaigns_Mains_Provider,
+    Common_Model_CommonModel,
     ForceSkins_Constants,
+    GameConfigs_Provider,
+    Graphics_Utils,
+    Helpers_Collection,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    NormalMap_Model_NormalMapModel,
+    Notifications_Dispatcher,
     Tiles_Constants_Common,
-    Ui_Types_UiCommonEventType,
     Ui_Components_UiContainer,
     Ui_Components_UiContainerBase,
     Ui_Components_UiImage,
-    Ui_Components_UiUnitView,
-    Ui_Types_UiUnitViewData,
+    Ui_Types_UiCommonEventType,
+    Units_Constants,
+    Units_UnitView,
+    Units_UnitViewData,
+    Units_UnitViewPool,
+    Users_Model,
+    Utils_ClientErrorCode,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type Egret_Egret,
     type GameConfigs_GameConfig,
+    type Notifications_Types,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
-    type Ui_Interfaces_IUiUnitView,
-    type Notifications_Types,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Utils_ClientErrorCode,
-    Units_Constants,
-    Users_Model,
-    type Egret_Egret,
 } from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
@@ -501,14 +501,10 @@ class TileObjectLayer extends TileLayerBase {
 }
 
 class WarMapUnitMapView extends Ui_Components_UiContainer.UiContainer {
-    private readonly _unitViews             : Ui_Interfaces_IUiUnitView.IUiUnitView[] = [];
-    private readonly _airLayer              = new Ui_Components_UiContainer.UiContainer();
-    private readonly _groundLayer           = new Ui_Components_UiContainer.UiContainer();
-    private readonly _seaLayer              = new Ui_Components_UiContainer.UiContainer();
-    private readonly _notifyListenerArray   : Notifications_Types.Listener[] = [
-        { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
-        { type : "StateIndicatorTick",  callback : this._onNotifyUnitStateIndicatorTick },
-    ];
+    private readonly _unitViews     : Units_UnitView.UnitView[] = [];
+    private readonly _airLayer      = new Ui_Components_UiContainer.UiContainer();
+    private readonly _groundLayer   = new Ui_Components_UiContainer.UiContainer();
+    private readonly _seaLayer      = new Ui_Components_UiContainer.UiContainer();
 
     public constructor() {
         super();
@@ -516,12 +512,6 @@ class WarMapUnitMapView extends Ui_Components_UiContainer.UiContainer {
         this.addUiChild(this._seaLayer);
         this.addUiChild(this._groundLayer);
         this.addUiChild(this._airLayer);
-
-        {
-            const agent = this.getEventAgent();
-            agent.addUiCommonEventListener(Ui_Types_UiCommonEventType.UiCommonEventType.AddedToStage, this._onAddedToStage, this);
-            agent.addUiCommonEventListener(Ui_Types_UiCommonEventType.UiCommonEventType.RemovedFromStage, this._onRemovedFromStage, this);
-        }
     }
 
     public showUnitMap({ unitDataArray, players, gameConfig }: {
@@ -529,40 +519,23 @@ class WarMapUnitMapView extends Ui_Components_UiContainer.UiContainer {
         players         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayer[]>;
         gameConfig      : GameConfigs_GameConfig.GameConfig;
     }): void {
-        this._initWithDataList(_createUnitViewDataList({ unitDataArray, players, gameConfig }));
+        this._initWithDataList(_createUnitViewDataList({ unitDataArray, players, gameConfig }), gameConfig);
     }
-    private _initWithDataList(dataList: Ui_Types_UiUnitViewData.UiUnitViewData[]): void {
+    private _initWithDataList(dataList: Units_UnitViewData.UnitViewData[], gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this.clear();
 
-        const tickCount = Common_Model_CommonModel.getUnitAnimationTickCount();
         for (const data of dataList) {
-            this._addUnit(data, tickCount);
+            this._addUnit(data, gameConfig);
         }
         this._reviseZOrderForAllUnits();
     }
     public clear(): void {
+        const pool = Units_UnitViewPool.UnitViewPool.getInstance();
         for (const view of this._unitViews) {
             view.getParent()?.removeChild(view as unknown as Egret_Egret.DisplayObject);
+            pool.release(view);
         }
         this._unitViews.length = 0;
-    }
-
-    private _onAddedToStage(): void {
-        Notifications_Dispatcher.addEventListeners(this._notifyListenerArray, this);
-    }
-    private _onRemovedFromStage(): void {
-        Notifications_Dispatcher.removeEventListeners(this._notifyListenerArray, this);
-    }
-    private _onNotifyUnitAnimationTick(): void {
-        const tickCount = Common_Model_CommonModel.getUnitAnimationTickCount();
-        for (const view of this._unitViews) {
-            view.updateOnAnimationTick(tickCount);
-        }
-    }
-    private _onNotifyUnitStateIndicatorTick(): void {
-        for (const view of this._unitViews) {
-            view.updateOnStateIndicatorTick();
-        }
     }
 
     private _reviseZOrderForAllUnits(): void {
@@ -572,16 +545,18 @@ class WarMapUnitMapView extends Ui_Components_UiContainer.UiContainer {
     }
     private _reviseZOrderForSingleLayer(layer: Ui_Interfaces_IUiContainer.IUiContainer): void {
         const unitsCount    = layer.getUiChildren().length;
-        const unitViews     : Ui_Interfaces_IUiUnitView.IUiUnitView[] = [];
+        const unitViews     : Units_UnitView.UnitView[] = [];
         for (let i = 0; i < unitsCount; ++i) {
-            unitViews.push(layer.getUiChildAt(i) as Ui_Interfaces_IUiUnitView.IUiUnitView);
+            unitViews.push(layer.getUiChildAt(i) as Units_UnitView.UnitView);
         }
         unitViews.sort((v1, v2): number => {
-            const g1 = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v1.getViewData()?.unitData.getGridIndex()));
-            const g2 = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v2.getViewData()?.unitData.getGridIndex()));
-            const y1 = g1.getY();
-            const y2 = g2.getY();
-            return y1 !== y2 ? y1 - y2 : g1.getX() - g2.getX();
+            const d1 = v1.getViewData();
+            const d2 = v2.getViewData();
+            const y1 = d1.gridY;
+            const y2 = d2.gridY;
+            return (y1 !== y2)
+                ? (y1 - y2)
+                : (d1.gridX - d2.gridX);
         });
 
         for (let i = 0; i < unitsCount; ++i) {
@@ -589,15 +564,17 @@ class WarMapUnitMapView extends Ui_Components_UiContainer.UiContainer {
         }
     }
 
-    private _addUnit(data: Ui_Types_UiUnitViewData.UiUnitViewData, tickCount: number): void {
-        const view = new Ui_Components_UiUnitView.UiUnitView(data, tickCount);
+    private _addUnit(viewData: Units_UnitViewData.UnitViewData, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        const view = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+        view.loadViewData(viewData);
+        view.refreshAllViews();
         this._unitViews.push(view);
 
-        switch (data.gameConfig.getUnitTemplateCfg(data.unitData.getUnitType())?.getLayer()) {
+        switch (gameConfig.getUnitTemplateCfg(viewData.unitTypeId)?.getLayer()) {
             case Units_Constants.DisplayLayerId.Air     : this._airLayer.addUiChild(view);                                                    break;
             case Units_Constants.DisplayLayerId.Ground  : this._groundLayer.addUiChild(view);                                                 break;
             case Units_Constants.DisplayLayerId.Sea     : this._seaLayer.addUiChild(view);                                                    break;
-            default                         : throw Helpers_Misc.newError(`Invalid layer`, Utils_ClientErrorCode.ClientErrorCode.WarMapView_AddUnit_00);
+            default                                     : throw Helpers_Misc.newError(`Invalid layer`, Utils_ClientErrorCode.ClientErrorCode.WarMapView_AddUnit_00);
         }
     }
 }
@@ -606,36 +583,16 @@ function _createUnitViewDataList({ unitDataArray, players, gameConfig }: {
     unitDataArray   : SerialUnit[];
     players         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayer[]>;
     gameConfig      : GameConfigs_GameConfig.GameConfig;
-}): Ui_Types_UiUnitViewData.UiUnitViewData[] {
-    const dataArray: Ui_Types_UiUnitViewData.UiUnitViewData[] = [];
+}): Units_UnitViewData.UnitViewData[] {
+    const viewDataArray: Units_UnitViewData.UnitViewData[] = [];
     if (unitDataArray) {
-        const loaderUnitIdSet = new Set<number>();
+        const loaderUnitIdSet = new Set(Helpers_Collection.getNonNullElements(unitDataArray.map(v => v.getLoaderUnitId())));
         for (const unitData of unitDataArray) {
-            const loaderUnitId = unitData.getLoaderUnitId();
-            if (loaderUnitId == null) {
-                dataArray.push(new Ui_Types_UiUnitViewData.UiUnitViewData({
-                    gameConfig       : gameConfig,
-                    skinId           : ForceSkins_Utils.getDefaultSkinId(unitData.getPlayerIndex()),
-                    overridingSkinId : undefined,
-                    unitData         : unitData.clone(),
-                }));
-            } else {
-                loaderUnitIdSet.add(loaderUnitId);
-            }
-        }
-
-        for (const unitData of dataArray) {
-            if (loaderUnitIdSet.has(unitData.unitData.getUnitId())) {
-                unitData.hasLoadedUnit = true;
-            }
-
-            const playerData = players ? players.find(v => v.getPlayerIndex() === unitData.unitData.getPlayerIndex()) : null;
-            if (playerData) {
-                unitData.coUsingSkillType   = playerData.getCoUsingSkillType();
-                unitData.skinId             = playerData.getUnitAndTileSkinId();
-            }
+            const unitViewData          = Units_UnitViewData.UnitViewData.generateFromSerialUnit(unitData, gameConfig, players?.find(v => v.getPlayerIndex() === unitData.getPlayerIndex()));
+            unitViewData.hasLoadedUnits = loaderUnitIdSet.has(unitData.getUnitId());
+            viewDataArray.push(unitViewData);
         }
     }
 
-    return dataArray;
+    return viewDataArray;
 }

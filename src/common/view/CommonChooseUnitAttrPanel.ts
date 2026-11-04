@@ -1,28 +1,26 @@
 import {
+    FloatText,
+    ForceSkins_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
     Graphics_Constants,
     Helpers_Collection,
-    GamePanels_Dict,
     Helpers_Misc,
-    ForceSkins_Utils,
-    Lang_Utils,
-    Common_Model_CommonModel,
-    GamePanels_Manager,
-    Players_Constants,
-    FloatText,
     Lang_Constants,
+    Lang_Utils,
+    Players_Constants,
     Ui_Components_UiPanel,
-    Ui_Components_UiUnitView,
-    Ui_Types_UiUnitViewData,
+    Units_Constants,
+    Units_UnitView,
+    Units_UnitViewPool,
+    Units_Utils_Common,
+    Units_Utils_Serialization,
     type BaseWar_Interface_IBwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
-    Units_Constants,
-    Units_Utils_Common,
-    Units_Utils_Serialization,
 } from "../../internal.ts";
-import { GridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import { WeightedGridIndex } from "../../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 
@@ -87,7 +85,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _btnProduceMaterial!       : Ui_Interfaces_IUiButton.IUiButton;
     private readonly _labelProduceMaterial!     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView                  = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView                           : Units_UnitView.UnitView | undefined;
     private _unitData?                          : SerialUnit;
 
     public updateOnLoadedSkin(): void {
@@ -119,14 +117,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         ]);
         this._setNotifyListenerArray([
             { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
-            { type : "UnitAnimationTick",           callback : this._onNotifyUnitAnimationTick },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
+    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        this._conUnitView.addUiChild(this._unitView);
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
+        }
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
@@ -145,6 +151,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         this._updateComponentsForUnitData();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -440,9 +457,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this._updateComponentsForUnitData();
     }
-    private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
-    }
 
     ////////////////////////////////////////////////////////////////////////////////
     // View functions.
@@ -650,16 +664,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const unitData      = this._getUnitData().clone();
+        const unitData      = this._getUnitData();
         const playerIndex   = unitData.getPlayerIndex();
-        const war           = openData.war;
-        unitData.setGridIndex(GridIndex.fromJson({ x : 0, y : 0 }));
-        this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig       : war.getGcData(),
-            skinId           : war.getPlayer(playerIndex).getUnitAndTileSkinId(),
-            overridingSkinId : ForceSkins_Utils.getRawOverridingSkinId(war, playerIndex),
-            unitData         : unitData,
-        }));
+        const unitView      = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : unitData.getUnitType(),
+            playerIndex : playerIndex,
+            skinId      : ForceSkins_Utils.getFinalSkinId(openData.war, playerIndex),
+        }, true);
+        unitView?.refreshAllViews();
     }
 
     private _getUnitData(): SerialUnit {

@@ -230,8 +230,9 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
         if (this._unitView == null) {
             const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
             this._unitView  = view;
-
             this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
         }
     }
     protected override async _onClosed(): Promise<void> {
@@ -249,30 +250,7 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
     }
 
     protected override _doApplyOpenData(): void {
-        const openData = this.getOpenData();
-        if (openData == null) {
-            return;
-        }
-
-        this._labelAction.setText(Lang_Utils.getUnitActionName(openData.actionType) || Lang_Constants.UndefinedError);
-
-        const unit      = openData.unit;
-        const unitView  = this._unitView;
-        const labelCost = this._labelCost;
-        if (unit == null) {
-            labelCost.setText("");
-            unitView?.setIsVisible(false);
-        } else {
-            if (openData.actionType !== Units_Constants.ActionTypeId.ProduceUnit) {
-                labelCost.setText(``);
-            } else {
-                const cost = openData.costForProduceUnit;
-                labelCost.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0079)}: ${cost != null ? cost : Lang_Constants.UndefinedError}`);
-            }
-            unitView?.setIsVisible(true);
-            unitView?.loadViewDataFromUnit(unit, openData.war, true);
-            unitView?.refreshAllViews();
-        }
+        this._updateView();
     }
 
     public onItemTapEvent(): void {
@@ -286,6 +264,47 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
         } else {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
             openData.callback();
+        }
+    }
+
+    private _updateView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        this._labelAction.setText(Lang_Utils.getUnitActionName(openData.actionType) || Lang_Constants.UndefinedError);
+
+        const unit      = openData.unit;
+        const labelCost = this._labelCost;
+        if (unit == null) {
+            labelCost.setText("");
+        } else {
+            if (openData.actionType !== Units_Constants.ActionTypeId.ProduceUnit) {
+                labelCost.setText(``);
+            } else {
+                const cost = openData.costForProduceUnit;
+                labelCost.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0079)}: ${cost != null ? cost : Lang_Constants.UndefinedError}`);
+            }
+        }
+
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const unit      = openData.unit;
+        const unitView  = this._unitView;
+        if (unit == null) {
+            unitView?.setIsVisible(false);
+        } else {
+            unitView?.setIsVisible(true);
+            unitView?.loadViewDataFromUnit(unit, openData.war, true);
+            unitView?.refreshAllViews();
         }
     }
 }

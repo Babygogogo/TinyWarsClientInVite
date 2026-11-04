@@ -1,40 +1,38 @@
 import {
-    type Notifications_Mapping,
-    AuxiliaryTypes_DamageCalculatorPlayerData,
-    Common_Model_CommonModel,
-    ForceSkins_Utils,
-    ActionPlanners_States_Idle,
-    MultiPlayerWar_Model_MpwWar,
-    ActionPlanners_States_RequestingPlayerDeleteUnit,
-    FloatText,
-    CoSkills_Constants,
-    ForceSkins_Constants,
-    SinglePlayerWar_Model_SpwWar,
     ActionPlanners_Constants,
-    Ui_Components_UiTileView,
-    Ui_Components_UiUnitView,
-    Units_Unit,
-    Common_View_CommonDamageCalculatorPanel,
-    type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
+    ActionPlanners_States_Idle,
+    ActionPlanners_States_RequestingPlayerDeleteUnit,
     type AuxiliaryTypes_AuxiliaryTypes,
-    GamePanels_Manager,
-    Helpers_Misc,
-    Helpers_Collection,
-    Locations_Utils,
-    Notifications_Dispatcher,
-    Lang_Utils,
+    AuxiliaryTypes_DamageCalculatorPlayerData,
+    type BaseWar_Interface_IBwWar,
+    Common_Model_CommonModel,
+    Common_View_CommonDamageCalculatorPanel,
+    CoSkills_Constants,
+    type Egret_Egret,
+    FloatText,
+    ForceSkins_Constants,
+    ForceSkins_Utils,
+    type GameConfigs_GameConfig,
     GamePanels_Dict,
-    Turns_Constants,
-    Players_Constants,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    Lang_Constants,
-    Tiles_Constants_Common,
+    GamePanels_Manager,
     GameVersions_Constants,
+    Helpers_Collection,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    Locations_Utils,
+    MultiPlayerWar_Model_MpwWar,
+    Notifications_Dispatcher,
+    type Notifications_Mapping,
+    Players_Constants,
+    SinglePlayerWar_Model_SpwWar,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Tiles_Constants_Common,
+    Turns_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Types_UiUnitViewData,
+    Ui_Components_UiTileView,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -43,17 +41,17 @@ import {
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
     Units_Constants,
-    WarTypes_Utils,
-    Units_Utils_Serialization,
+    Units_Unit,
+    Units_UnitView,
+    Units_UnitViewPool,
     Units_Utils_Common,
+    Units_Utils_Serialization,
     Users_Model,
     WarTypes_Constants,
-    type Egret_Egret,
+    WarTypes_Utils,
 } from "../../internal.ts";
 
-import { GridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import { WeightedGridIndex } from "../../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
-
 
 const enum UnitInfoType {
     Hp,
@@ -124,15 +122,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _labelMoveCost2!       : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _listMoveCost!         : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForMoveCostRenderer>;
 
-    private readonly _unitView              = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView                       : Units_UnitView.UnitView | undefined;
     private _isShowDamage                   = true;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
-            { type : "UnitAnimationTick",           callback : this._onNotifyUnitAnimationTick },
-            { type : "StateIndicatorTick",          callback : this._onNotifyUnitStateIndicatorTick },
-            { type : "ActionPlannerStateSet",     callback : this._onNotifyBwPlannerStateChanged },
+            { type : "ActionPlannerStateSet",       callback : this._onNotifyBwPlannerStateChanged },
             { type : "BwUnitBuffChanged",           callback : this._onNotifyBwUnitBuffChanged },
             { type : "BwUnitCustomNameIdChanged",   callback : this._onNotifyUnitCustomNameIdChanged },
         ]);
@@ -153,12 +149,30 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._listDamageChart.setItemRendererClass(DamageRenderer);
         this._listInfo.setItemRendererClass(InfoRenderer);
         this._listMoveCost.setItemRendererClass(MoveCostRenderer);
-        this._conUnitView.addUiChild(this._unitView);
+    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conUnitView.addUiChild(view);
+
+            this.updateUnitView();
+        }
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
     }
     protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
         await Promise.all([
             this._listDamageChart.removeAllItems(),
             this._listInfo.removeAllItems(),
@@ -173,14 +187,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
-    }
-
-    private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
-    }
-
-    private _onNotifyUnitStateIndicatorTick(): void {
-        this._unitView.updateOnStateIndicatorTick();
     }
 
     private _onNotifyBwPlannerStateChanged(): void {
@@ -483,15 +489,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const unitData = unit.serialize();
-        unitData.setGridIndex(GridIndex.fromJson({ x : 0, y : 0 }));
-
-        this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig       : unit.getGcData(),
-            skinId           : unit.getSkinId(),
-            overridingSkinId : ForceSkins_Utils.getRawOverridingSkinId(unit.getWar(), unit.getPlayerIndex()),
-            unitData         : unitData,
-        }), Common_Model_CommonModel.getUnitAnimationTickCount());
+        const unitView = this._unitView;
+        unitView?.loadViewDataFromUnit(unit, unit.getWar(), true);
+        unitView?.refreshAllViews();
     }
 
     private _updateLabelName(): void {
@@ -1988,27 +1988,32 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     private readonly _labelPrimaryDefend!   : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelSecondaryDefend! : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView              = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView                       : Units_UnitView.UnitView | undefined;
 
-    public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type : "UnitAnimationTick",       callback : this._onNotifyUnitAnimationTick },
-            { type : "StateIndicatorTick",      callback : this._onNotifyUnitStateIndicatorTick },
-        ]);
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        this._conView.addUiChild(this._unitView);
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conView.addUiChild(view);
+
+            this._updateUnitView();
+        }
     }
-
-    private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
-    }
-
-    private _onNotifyUnitStateIndicatorTick(): void {
-        this._unitView.updateOnStateIndicatorTick();
-    }
-
     protected override _doApplyOpenData(): void {
         this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2026,21 +2031,7 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const attackUnitType    = openData.attackUnitType;
         const targetUnitType    = openData.targetUnitType;
         if (targetUnitType != null) {
-            const playerIndex = openData.playerIndex;
-            this._unitView.setIsVisible(true);
             this._tileView.setIsVisible(false);
-            this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-                gameConfig       : gameConfig,
-                skinId           : openData.skinId,
-                overridingSkinId : openData.overridingSkinId,
-                unitData         : Units_Utils_Serialization.createDefault({
-                    gridIndex   : { x : 0, y : 0 },
-                    unitTypeId  : targetUnitType,
-                    unitId      : -1,
-                    playerIndex : playerIndex,
-                    gcData      : gameConfig,
-                }),
-            }), Common_Model_CommonModel.getUnitAnimationTickCount());
 
             const attackCfg                 = Helpers_Misc.getExisted(gameConfig.getDamageChartCfgs(attackUnitType));
             const targetArmorType           = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(targetUnitType)?.getArmorTypeId());
@@ -2057,7 +2048,6 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             this._labelSecondaryDefend.setText(secondaryDefendDamage == null ? `--` : `${secondaryDefendDamage}`);
 
         } else {
-            this._unitView.setIsVisible(false);
             this._tileView.setIsVisible(true);
 
             const targetTileType            = Helpers_Misc.getExisted(openData.targetTileType);
@@ -2079,6 +2069,29 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             this._labelSecondaryAttack.setText(secondaryAttackDamage == null ? `--` : `${secondaryAttackDamage}`);
             this._labelPrimaryDefend.setText(`--`);
             this._labelSecondaryDefend.setText(`--`);
+        }
+
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const unitView          = this._unitView;
+        const targetUnitType    = openData.targetUnitType;
+        if (targetUnitType == null) {
+            unitView?.$setVisible(false);
+        } else {
+            unitView?.setIsVisible(true);
+            unitView?.loadViewData({
+                unitTypeId  : targetUnitType,
+                playerIndex : openData.playerIndex,
+                skinId      : openData.overridingSkinId ?? openData.skinId,
+            }, true);
+            unitView?.refreshAllViews();
         }
     }
 }

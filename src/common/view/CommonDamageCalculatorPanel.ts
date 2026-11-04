@@ -1,47 +1,45 @@
 import {
-    Tiles_Utils_Common,
-    TileObjects_Utils,
-    GamePanels_Manager,
-    Cos_Constants,
-    Helpers_Misc,
+    type AuxiliaryTypes_AuxiliaryTypes,
     AuxiliaryTypes_DamageCalculatorPlayerData,
-    PlayerRules_Constants,
-    Helpers_Text,
-    GameConfigs_GameConfig,
-    Helpers_ImageSource,
-    Lang_Utils,
-    DamageCalculators_Utils,
-    ForceSkins_Utils,
-    TileBases_Utils,
-    GamePanels_Dict,
-    GameConfigs_Provider,
+    type BaseWar_Interface_IBwWar,
+    Cos_Constants,
+    CoSkills_Constants,
     CoSkills_Utils_Persistent_SelfUnitDefense,
     CoSkills_Utils_Persistent_SelfUnitLuckRange,
     CoSkills_Utils_Persistent_SelfUnitOffense,
-    Tiles_Constants_Common,
-    Players_Constants,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
+    DamageCalculators_Utils,
     FloatText,
-    CoSkills_Constants,
+    ForceSkins_Utils,
+    GameConfigs_GameConfig,
+    GameConfigs_Provider,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_ImageSource,
+    Helpers_Misc,
+    Helpers_Text,
     Lang_Constants,
+    Lang_Utils,
+    PlayerRules_Constants,
+    Players_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    TileBases_Utils,
+    TileObjects_Utils,
+    Tiles_Constants_Common,
+    Tiles_Utils_Common,
     Ui_Components_UiPanel,
     Ui_Components_UiTileView,
-    Ui_Components_UiUnitView,
-    Ui_Types_UiUnitViewData,
-    type BaseWar_Interface_IBwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Ui_Types_UiTileViewData,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Units_Utils_Serialization,
-    Units_Utils_Common,
-    Common_Model_CommonModel,
     Units_Constants,
     type Units_Unit,
+    Units_UnitView,
+    Units_UnitViewPool,
+    Units_Utils_Common,
 } from "../../internal.ts";
 import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 
@@ -160,8 +158,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _labelDefendTitle!     : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelDefendDamage!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView1             = new Ui_Components_UiUnitView.UiUnitView();
-    private readonly _unitView2             = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView1                      : Units_UnitView.UnitView | undefined;
+    private _unitView2                      : Units_UnitView.UnitView | undefined;
     private readonly _tileView1             = new Ui_Components_UiTileView.UiTileView();
     private readonly _tileView2             = new Ui_Components_UiTileView.UiTileView();
 
@@ -209,7 +207,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         ]);
         this._setNotifyListenerArray([
             { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
-            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
             { type : "TileAnimationTick",   callback : this._onNotifyTileAnimationTick },
         ]);
 
@@ -220,8 +217,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this._imgCo1.setIsTouchEnabled(true);
         this._imgCo2.setIsTouchEnabled(true);
-        this._conUnitView1.addUiChild(this._unitView1);
-        this._conUnitView2.addUiChild(this._unitView2);
 
         {
             const conTileView   = this._conTileView1;
@@ -239,6 +234,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             conTileView.addUiChild(tileView.getImgObject());
         }
     }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        if (this._unitView1 == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView1 = view;
+            this._conUnitView1.addUiChild(view);
+
+            this._updateUnitView1();
+        }
+        if (this._unitView2 == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView2 = view;
+            this._conUnitView2.addUiChild(view);
+
+            this._updateUnitView2();
+        }
+    }
     protected override async _doApplyOpenData(): Promise<void> {
         const openData = this.getOpenData();
         if (openData == null) {
@@ -252,6 +265,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView1) {
+            const view = this._unitView1;
+            this._conUnitView1.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView1;
+        }
+        if (this._unitView2) {
+            const view = this._unitView2;
+            this._conUnitView2.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView2;
+        }
+
+        await super._onClosed();
     }
 
     public static createDefaultPlayerData(gameConfig: GameConfigs_GameConfig.GameConfig): AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData {
@@ -697,11 +728,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyUnitAnimationTick(): void {
-        const tickCount = Common_Model_CommonModel.getUnitAnimationTickCount();
-        this._unitView1.updateOnAnimationTick(tickCount);
-        this._unitView2.updateOnAnimationTick(tickCount);
-    }
     private _onNotifyTileAnimationTick(): void {
         this._tileView1.updateOnAnimationTick();
         this._tileView2.updateOnAnimationTick();
@@ -742,8 +768,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelWeapon1.setText(getWeaponTypeName(attackerData.unitWeaponType));
         this._labelWeapon2.setText(getWeaponTypeName(defenderData.unitWeaponType));
         this._labelWeather.setText(Lang_Utils.getWeatherName(data.weatherType, gameConfig) ?? Lang_Constants.UndefinedError);
-        this._unitView1.update(createUnitViewData(war, attackerData.unitType, 1, gameConfig));
-        this._unitView2.update(createUnitViewData(war, defenderData.unitType, 2, gameConfig));
         this._tileView1.init(createTileViewData(war, attackerData.tileType, 1, gameConfig)).updateView();
         this._tileView2.init(createTileViewData(war, defenderData.tileType, 2, gameConfig)).updateView();
 
@@ -754,7 +778,43 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this._btnSkill2.setText(coSkillType2 == null ? Lang_Utils.getText(Lang_Constants.TextType.B0829) : (Lang_Utils.getCoSkillTypeName(coSkillType2) ?? Lang_Constants.UndefinedError));
         }
 
+        this._updateUnitView1();
+        this._updateUnitView2();
         this._updateComponentsForDamage();
+    }
+
+    private _updateUnitView1(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const war           = openData.war;
+        const playerIndex   = 1;
+        const unitView1     = this._unitView1;
+        unitView1?.loadViewData({
+            unitTypeId  : this._getCalculatorData().attackerData.unitType,
+            playerIndex : playerIndex,
+            skinId      : war == null ? ForceSkins_Utils.getDefaultSkinId(playerIndex) : ForceSkins_Utils.getFinalSkinId(war, playerIndex),
+        }, true);
+        unitView1?.refreshAllViews();
+    }
+
+    private _updateUnitView2(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const war           = openData.war;
+        const playerIndex   = 2;
+        const unitView2     = this._unitView2;
+        unitView2?.loadViewData({
+            unitTypeId  : this._getCalculatorData().defenderData.unitType,
+            playerIndex : playerIndex,
+            skinId      : war == null ? ForceSkins_Utils.getDefaultSkinId(playerIndex) : ForceSkins_Utils.getFinalSkinId(war, playerIndex),
+        }, true);
+        unitView2?.refreshAllViews();
     }
 
     private _updateComponentsForLanguage(): void {
@@ -908,20 +968,6 @@ function getNextUnitWeaponType(gameConfig: GameConfigs_GameConfig.GameConfig, un
     } else {
         return null;
     }
-}
-function createUnitViewData(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>, unitType: number, playerIndex: number, gameConfig: GameConfigs_GameConfig.GameConfig): Ui_Types_UiUnitViewData.UiUnitViewData {
-    return new Ui_Types_UiUnitViewData.UiUnitViewData({
-        gameConfig       : gameConfig,
-        skinId           : war?.getPlayer(playerIndex).getUnitAndTileSkinId() ?? ForceSkins_Utils.getDefaultSkinId(playerIndex),
-        overridingSkinId : war == null ? undefined : ForceSkins_Utils.getRawOverridingSkinId(war, playerIndex),
-        unitData         : Units_Utils_Serialization.createDefault({
-            gridIndex   : { x : 0, y : 0 },
-            unitTypeId  : unitType,
-            playerIndex : playerIndex,
-            unitId      : -1,
-            gcData      : gameConfig,
-        }),
-    });
 }
 function createTileViewData(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>, tileType: number, playerIndex: number, gameConfig: GameConfigs_GameConfig.GameConfig): Ui_Types_UiTileViewData.UiTileViewData {
     const objectType    = Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType));

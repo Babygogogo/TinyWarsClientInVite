@@ -411,11 +411,7 @@ export class Unit {
     }
 
     public checkIsPrimaryWeaponAmmoInShort(): boolean {
-        const maxAmmo       = this.getPrimaryWeaponMaxAmmo();
-        const currentAmmo   = this.getPrimaryWeaponCurrentAmmo();
-        return (maxAmmo != null)
-            && (currentAmmo != null)
-            && (currentAmmo <= maxAmmo * 0.4);
+        return Units_Utils_Common.checkIsPrimaryAmmoInShort(this.getPrimaryWeaponCurrentAmmo(), this.getPrimaryWeaponMaxAmmo());
     }
 
     public getPrimaryWeaponBaseDamage(armorType: number): number | null {
@@ -1148,11 +1144,7 @@ export class Unit {
     }
 
     public checkIsFuelInShort(): boolean {
-        const currentFuel   = this.getCurrentFuel();
-        const maxFuel       = this.getMaxFuel();
-        return (currentFuel != null)
-            && (maxFuel != null)
-            && (currentFuel <= maxFuel * 0.4);
+        return Units_Utils_Common.checkIsFuelInShort(this.getCurrentFuel(), this.getMaxFuel());
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -1215,17 +1207,7 @@ export class Unit {
     }
 
     public checkIsFlareAmmoInShort(): boolean {
-        const maxAmmo = this.getFlareMaxAmmo();
-        if (maxAmmo == null) {
-            return false;
-        } else {
-            const currentAmmo = this.getFlareCurrentAmmo();
-            if (currentAmmo == null) {
-                throw Helpers_Misc.newError(`Empty currentAmmo.`);
-            }
-
-            return currentAmmo <= maxAmmo * 0.4;
-        }
+        return Units_Utils_Common.checkIsFlareAmmoInShort(this.getFlareCurrentAmmo(), this.getFlareMaxAmmo());
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -1310,17 +1292,7 @@ export class Unit {
     }
 
     public checkIsProduceMaterialInShort(): boolean {
-        const maxMaterial = this.getMaxProduceMaterial();
-        if (maxMaterial == null) {
-            return false;
-        } else {
-            const currentMaterial = this.getCurrentProduceMaterial();
-            if (currentMaterial == null) {
-                throw Helpers_Misc.newError(`Unit.checkIsProduceMaterialInShort() empty currentMaterial.`);
-            }
-
-            return currentMaterial / maxMaterial <= 0.4;
-        }
+        return Units_Utils_Common.checkIsProduceMaterialInShort(this.getCurrentProduceMaterial(), this.getMaxProduceMaterial());
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -1542,18 +1514,7 @@ export class Unit {
     }
 
     public checkIsBuildMaterialInShort(): boolean {
-        const maxMaterial = this.getMaxBuildMaterial();
-        if (maxMaterial == null) {
-            return false;
-        } else {
-            const currentMaterial = this.getCurrentBuildMaterial();
-            if (currentMaterial == null) {
-                throw Helpers_Misc.newError(`Unit.checkIsBuildMaterialInShort() empty currentMaterial.`);
-                return false;
-            }
-
-            return currentMaterial / maxMaterial <= 0.4;
-        }
+        return Units_Utils_Common.checkIsBuildMaterialInShort(this.getCurrentBuildMaterial(), this.getMaxBuildMaterial());
     }
 
     ////////////////////////////////////////////////////////////////////////////////

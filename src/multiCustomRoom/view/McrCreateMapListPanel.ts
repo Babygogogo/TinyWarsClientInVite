@@ -1,23 +1,25 @@
 import {
-    type Helpers_PointerInput,
     Egret_Egret,
-    NormalMap_Model_NormalMapModel,
-    Tween_Executor,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Lang_Utils,
-    GameConfigs_Provider,
-    Numbers_Utils,
-    MultiCustomRoom_Model_McrRoomCreator,
-    GamePanels_Manager,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
     FloatText,
-    Maps_Constants,
+    GameConfigs_Provider,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_Misc,
     Lang_Constants,
+    Lang_Utils,
+    Maps_Constants,
+    MultiCustomRoom_Model_McrRoomCreator,
+    NormalMap_Model_NormalMapModel,
+    Numbers_Utils,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Timer_TimerModel,
+    Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Timer_TimerModel,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapFilter,
+    type Helpers_PointerInput,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiLabel,
@@ -25,8 +27,6 @@ import {
     type Ui_Interfaces_IUiMapInfo,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Interfaces_IUiZoomableMap,
-    type AuxiliaryTypes_MapFilter,
-    type AuxiliaryTypes_AuxiliaryTypes,
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
 
@@ -110,6 +110,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateOnOpenDataChanged();
     }
     protected override async _onClosed(): Promise<void> {
+        this._zoomMap.clearMap();
         await Promise.all([
             this._uiMapInfo.close(),
             this._listMap.removeAllItems(),

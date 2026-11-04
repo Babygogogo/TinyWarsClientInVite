@@ -1,18 +1,18 @@
 import {
-    Tween_Executor,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Lang_Utils,
+    FloatText,
     GameConfigs_Provider,
-    NormalMap_Model_NormalMapModel,
-    Helpers_GameFlow,
-    Helpers_PointerInput,
+    GamePanels_Dict,
     GamePanels_Manager,
-    Sounds_SoundPlayer,
+    Helpers_GameFlow,
+    Helpers_Misc,
+    Helpers_PointerInput,
+    Lang_Constants,
+    Lang_Utils,
+    NormalMap_Model_NormalMapModel,
     NormalMap_Model_NormalMapProxy,
     Sounds_Constants,
-    FloatText,
-    Lang_Constants,
+    Sounds_SoundPlayer,
+    Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -69,6 +69,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForMaps();
     }
     protected override async _onClosed(): Promise<void> {
+        this._zoomMap.clearMap();
         await this._listMap.removeAllItems();
 
         await super._onClosed();

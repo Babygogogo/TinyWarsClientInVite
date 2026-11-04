@@ -1,19 +1,21 @@
 import {
-    NormalMap_Model_NormalMapModel,
-    Tween_Executor,
-    GamePanels_Dict,
-    Lang_Utils,
-    GameConfigs_Provider,
-    Numbers_Utils,
-    Helpers_PointerInput,
-    GamePanels_Manager,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
     FloatText,
-    Maps_Constants,
+    GameConfigs_Provider,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_PointerInput,
     Lang_Constants,
+    Lang_Utils,
+    Maps_Constants,
+    NormalMap_Model_NormalMapModel,
+    Numbers_Utils,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapFilter,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -22,8 +24,6 @@ import {
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Interfaces_IUiZoomableMap,
-    type AuxiliaryTypes_MapFilter,
-    type AuxiliaryTypes_AuxiliaryTypes,
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
 
@@ -91,6 +91,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateView();
     }
     protected override async _onClosed(): Promise<void> {
+        this._zoomMap.clearMap();
         await this._listMap.removeAllItems();
 
         await super._onClosed();

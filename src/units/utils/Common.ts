@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_AuxiliaryTypes,
     Helpers_Misc,
     Numbers_Utils,
     Units_Constants,
@@ -100,6 +101,7 @@ export function checkIsValidProduceMaterial(material: number): boolean {
         && (material >= Units_Constants.ProduceMaterialHardLimit.Min)
         && (material <= Units_Constants.ProduceMaterialHardLimit.Max);
 }
+
 export function getValidProduceMaterial(material: number): number {
     return Numbers_Utils.getValueInRange({
         minValue : Units_Constants.ProduceMaterialHardLimit.Min,
@@ -108,16 +110,45 @@ export function getValidProduceMaterial(material: number): number {
     });
 }
 
+export function checkIsProduceMaterialInShort(currentMaterial: number, maxMaterial: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
+    return (maxMaterial != null)
+        && (currentMaterial < maxMaterial * 0.4);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function checkIsValidPrimaryAmmo(ammo: number): boolean {
     return (ammo === Math.floor(ammo))
         && (ammo >= Units_Constants.PrimaryAmmoHardLimit.Min)
         && (ammo <= Units_Constants.PrimaryAmmoHardLimit.Max);
 }
+
 export function getValidPrimaryAmmo(ammo: number): number {
     return Numbers_Utils.getValueInRange({
         minValue : Units_Constants.PrimaryAmmoHardLimit.Min,
         maxValue : Units_Constants.PrimaryAmmoHardLimit.Max,
         rawValue : Math.floor(ammo),
     });
+}
+
+export function checkIsPrimaryAmmoInShort(currentAmmo: number, maxAmmo: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
+    return (maxAmmo != null)
+        && (currentAmmo < maxAmmo * 0.4);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function checkIsFuelInShort(currentFuel: number, maxFuel: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
+    return (maxFuel != null)
+        && (currentFuel < maxFuel * 0.4);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function checkIsFlareAmmoInShort(currentAmmo: number, maxAmmo: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
+    return (maxAmmo != null)
+        && (currentAmmo < maxAmmo * 0.4);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function checkIsBuildMaterialInShort(currentMaterial: number, maxMaterial: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
+    return (maxMaterial != null)
+        && (currentMaterial < maxMaterial * 0.4);
 }

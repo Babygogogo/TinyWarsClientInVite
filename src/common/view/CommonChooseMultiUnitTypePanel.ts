@@ -1,19 +1,18 @@
 import {
-    Stages_Constants,
     ForceSkins_Utils,
     GamePanels_Dict,
-    Lang_Utils,
-    Common_Model_CommonModel,
-    Numbers_Utils,
     GamePanels_Manager,
-    Players_Constants,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
     Lang_Constants,
+    Lang_Utils,
+    Numbers_Utils,
+    Players_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Stages_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiUnitView,
-    Ui_Types_UiUnitViewData,
+    Units_UnitView,
+    Units_UnitViewPool,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -22,7 +21,6 @@ import {
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
-    Units_Utils_Serialization,
 } from "../../internal.ts";
 
 export interface OpenData {
@@ -110,7 +108,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray = list.getBoundDataArray() ?? [];
         if (!this._imgSelectAll.getIsVisible()) {
             for (const data of dataArray) {
-                (data != null) && (selectedNumberSet.add(data.unitType));
+                if (data != null) {
+                    selectedNumberSet.add(data.unitType);
+                }
             }
         }
         for (let i = 0; i < dataArray.length; ++i) {
@@ -231,33 +231,49 @@ class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     private readonly _labelType!        : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelName!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView          = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView                   : Units_UnitView.UnitView | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
-            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
-
-        this._conUnitView.addUiChild(this._unitView);
     }
 
     private _onNotifyLanguageChanged(): void {        // DONE
         this._updateComponentsForLanguage();
-    }
-    private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
     }
     public override onItemTapEvent(): void {
         const openData = this.getOpenData();
         openData?.panel.updateOnSelectNumber(openData.unitType);
     }
 
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
+        }
+    }
     protected override _doApplyOpenData(): void {
         this._updateComponentsForLanguage();
-
+        this._updateImgSelected();
         this._updateUnitView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        await super._onClosed();
     }
 
     private _updateComponentsForLanguage(): void {
@@ -272,27 +288,28 @@ class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         this._layoutName.arrangeItems();
     }
 
+    private _updateImgSelected(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        this._imgSelected.setIsVisible(openData.panel.checkHasSelectedNumber(openData.unitType));
+    }
+
     private _updateUnitView(): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
         }
 
-        const unitType      = openData.unitType;
         const playerIndex   = Players_Constants.PlayerIndex.First;
-        const gameConfig    = openData.gameConfig;
-        this._imgSelected.setIsVisible(openData.panel.checkHasSelectedNumber(unitType));
-        this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig       : gameConfig,
-            skinId           : ForceSkins_Utils.getDefaultSkinId(playerIndex),
-            overridingSkinId : undefined,
-            unitData         : Units_Utils_Serialization.createDefault({
-                gridIndex   : { x : 0, y : 0 },
-                playerIndex : playerIndex,
-                unitTypeId  : unitType,
-                unitId      : -1,
-                gcData      : gameConfig,
-            }),
-        }));
+        const unitView      = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : openData.unitType,
+            skinId      : ForceSkins_Utils.getDefaultSkinId(playerIndex),
+            playerIndex : playerIndex,
+        }, true);
+        unitView?.refreshAllViews();
     }
 }

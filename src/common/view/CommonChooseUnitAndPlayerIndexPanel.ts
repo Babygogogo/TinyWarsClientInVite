@@ -1,12 +1,12 @@
 import {
     Helpers_ImageSource,
-    Common_Model_CommonModel,
-    Lang_Utils,
     Lang_Constants,
+    Lang_Utils,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiUnitView,
-    Ui_Types_UiUnitViewData,
+    Units_UnitView,
+    Units_UnitViewPool,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -16,8 +16,6 @@ import {
     type Ui_Interfaces_IUiListItemRenderer,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Units_Utils_Serialization,
 } from "../../internal.ts";
 
 export interface OpenData {
@@ -207,30 +205,46 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _labelType!    : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelTypeId!  : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView      = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView               : Units_UnitView.UnitView | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
-            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
-
-        this._conUnitView.addUiChild(this._unitView);
     }
 
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
+        }
+    }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
 
         this._updateLabelType();
         this._updateUnitView();
     }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        await super._onClosed();
+    }
 
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
-    }
-    private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
     }
 
     private _updateComponentsForLanguage(): void {
@@ -254,17 +268,11 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig       : openData.gameConfig,
-            skinId           : openData.finalSkinId,
-            overridingSkinId : undefined,
-            unitData         : Units_Utils_Serialization.createDefault({
-                gridIndex   : { x : 0, y : 0 },
-                playerIndex : openData.playerIndex,
-                unitTypeId  : openData.unitType,
-                unitId      : -1,
-                gcData      : openData.gameConfig,
-            }),
-        }));
+        const unitView = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : openData.unitType,
+            playerIndex : openData.playerIndex,
+            skinId      : openData.finalSkinId,
+        }, true);
     }
 }

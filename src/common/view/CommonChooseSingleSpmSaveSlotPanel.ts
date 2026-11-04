@@ -1,19 +1,19 @@
 import {
-    type Helpers_PointerInput,
-    GamePanels_Manager,
-    Tween_Executor,
     GamePanels_Dict,
-    WarTypes_Utils,
-    SinglePlayerMode_Model_SpmModel,
-    Lang_Utils,
+    GamePanels_Manager,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    SinglePlayerWars_Constants,
     Lang_Constants,
+    Lang_Utils,
+    SinglePlayerMode_Model_SpmModel,
+    SinglePlayerWars_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
+    WarTypes_Utils,
     type Egret_Egret,
+    type Helpers_PointerInput,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -73,6 +73,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateOnOpenDataChanged();
     }
     protected override async _onClosed(): Promise<void> {
+        this._zoomMap.clearMap();
         await this._srlSaveSlot.removeAllItems();
 
         await super._onClosed();

@@ -3,12 +3,16 @@ import {
     CoSkills_Constants,
     ForceSkins_Constants,
     ForceSkins_Utils,
+    GameConfigs_GameConfig,
     Helpers_Collection,
     Numbers_Constants,
     Players_Constants,
     Units_Constants,
     Units_Unit,
+    Units_Utils_Common,
 } from "../internal";
+import type { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer";
+import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit";
 
 export interface IUnitViewData {
     unitTypeId              : number;
@@ -88,6 +92,43 @@ export class UnitViewData implements IUnitViewData {
             isBuildingTile     : unit.checkIsBuildingTile(),
             hasLoadedUnits     : unit.getLoadedUnitsCount() > 0,
             buffTypeIdList     : unit.getBuffList().map(v => v.getBuffTypeId()),
+        });
+    }
+
+    public static generateFromSerialUnit(unit: SerialUnit, gameConfig: GameConfigs_GameConfig.GameConfig, player?: SerialPlayer): UnitViewData {
+        const playerIndex               = unit.getPlayerIndex();
+        const unitTypeId                = unit.getUnitType();
+        const gridIndex                 = unit.getGridIndex();
+        const unitTemplateCfg           = gameConfig.getUnitTemplateCfg(unitTypeId);
+        const isFuelInShort             = Units_Utils_Common.checkIsFuelInShort(unit.getCurrentFuel(), unitTemplateCfg?.getMaxFuel());
+        const isPrimaryAmmoInShort      = Units_Utils_Common.checkIsPrimaryAmmoInShort(unit.getPrimaryWeaponCurrentAmmo(), unitTemplateCfg?.getPrimaryWeaponMaxAmmo());
+        const isFlareAmmoInShort        = Units_Utils_Common.checkIsFlareAmmoInShort(unit.getFlareCurrentAmmo(), unitTemplateCfg?.getFlareMaxAmmo());
+        const isProduceMaterialInShort  = Units_Utils_Common.checkIsProduceMaterialInShort(unit.getCurrentProduceMaterial(), unitTemplateCfg?.getMaxProduceMaterial());
+        const isBuildMaterialInShort    = Units_Utils_Common.checkIsBuildMaterialInShort(unit.getCurrentBuildMaterial(), unitTemplateCfg?.getMaxBuildMaterial());
+
+        return new UnitViewData({
+            unitTypeId           : unitTypeId,
+            gridX                : gridIndex?.getX() ?? 0,
+            gridY                : gridIndex?.getY() ?? 0,
+            playerIndex          : playerIndex,
+            skinId               : player ? player.getUnitAndTileSkinId() : ForceSkins_Utils.getDefaultSkinId(playerIndex),
+            normalizedHp         : Units_Utils_Common.getNormalizedHp(unit.getCurrentHp()),
+            animationTypeId      : Units_Constants.AnimationTypeId.Stand,
+            isDark               : unit.getActionState() === Units_Constants.ActionStateId.Acted,
+            isLoadedByUnit       : unit.getLoaderUnitId() != null,
+            isActiveCoSkillReady : false,   // TODO
+
+            promotion          : unit.getCurrentPromotion(),
+            coSkillTypeIdInUse : player?.getCoUsingSkillType() ?? CoSkills_Constants.SkillTypeId.Passive,
+            isCoOnboard        : unit.getIsCoOnboard(),
+            isFuelInShort      : isFuelInShort,
+            isAmmoInShort      : isPrimaryAmmoInShort || isFlareAmmoInShort,
+            isMaterialInShort  : isProduceMaterialInShort || isBuildMaterialInShort,
+            isDived            : unit.getIsDiving(),
+            isCapturingTile    : false,     // TODO
+            isBuildingTile     : false,     // TODO
+            hasLoadedUnits     : false,     // TODO
+            buffTypeIdList     : unit.getBuffArray().map(v => v.getBuffTypeId()),
         });
     }
 

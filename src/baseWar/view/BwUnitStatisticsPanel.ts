@@ -1,26 +1,24 @@
 import {
-    Helpers_Text,
-    GamePanels_Dict,
     ForceSkins_Utils,
-    Lang_Utils,
-    Common_Model_CommonModel,
+    GamePanels_Dict,
     GamePanels_Manager,
+    Helpers_Text,
     Lang_Constants,
+    Lang_Utils,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiUnitView,
-    Ui_Types_UiUnitViewData,
-    type GameConfigs_GameConfig,
+    Units_Constants,
+    Units_UnitView,
+    Units_UnitViewPool,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Interface_IBwWar,
+    type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Units_Utils_Serialization,
-    Units_Constants,
 } from "../../internal.ts";
 import type { Info } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/Info.ts";
 
@@ -283,31 +281,47 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _labelNormalizedHpLoss1!   : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelNormalizedHpRemain1! : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView0                 = new Ui_Components_UiUnitView.UiUnitView();
-    private readonly _unitView1                 = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView0                          : Units_UnitView.UnitView | undefined;
+    private _unitView1                          : Units_UnitView.UnitView | undefined;
 
-    public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type : "UnitAnimationTick",       callback : this._onNotifyUnitAnimationTick },
-            { type : "StateIndicatorTick",      callback : this._onNotifyUnitStateIndicatorTick },
-        ]);
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        this._conUnitView0.addUiChild(this._unitView0);
-        this._conUnitView1.addUiChild(this._unitView1);
+        if (this._unitView0 == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView0 = view;
+            this._conUnitView0.addUiChild(view);
+
+            this._updateUnitView0();
+        }
+        if (this._unitView1 == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView1 = view;
+            this._conUnitView1.addUiChild(view);
+
+            this._updateUnitView1();
+        }
     }
-
     protected override _doApplyOpenData(): void {
         this._updateView();
     }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView0) {
+            const view = this._unitView0;
+            this._conUnitView0.removeUiChild(view);
 
-    private _onNotifyUnitAnimationTick(): void {
-        const tick = Common_Model_CommonModel.getUnitAnimationTickCount();
-        this._unitView0.updateOnAnimationTick(tick);
-        this._unitView1.updateOnAnimationTick(tick);
-    }
-    private _onNotifyUnitStateIndicatorTick(): void {
-        this._unitView0.updateOnStateIndicatorTick();
-        this._unitView1.updateOnStateIndicatorTick();
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView0;
+        }
+        if (this._unitView1) {
+            const view = this._unitView1;
+            this._conUnitView1.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView1;
+        }
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -319,9 +333,6 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        const gameConfig        = openData.gameConfig;
-        const skinId            = openData.skinId;
-        const overridingSkinId  = openData.overridingSkinId;
         this._imgBackground.setIsVisible(openData.index % 2 == 1);
 
         {
@@ -332,18 +343,6 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             this._labelUnitGain0.setText(`${data.unitGain}`);
             this._labelUnitLoss0.setText(`${data.unitLoss}`);
             this._labelUnitRemain0.setText(`${data.unitGain - data.unitLoss}`);
-            this._unitView0.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-                gameConfig       : gameConfig,
-                skinId           : skinId,
-                overridingSkinId : overridingSkinId,
-                unitData         : Units_Utils_Serialization.createDefault({
-                    gridIndex   : { x : 0, y : 0 },
-                    unitTypeId  : data.unitType,
-                    unitId      : -1,
-                    playerIndex : openData.playerIndex,
-                    gcData      : gameConfig,
-                }),
-            }), Common_Model_CommonModel.getUnitAnimationTickCount());
         }
 
         {
@@ -354,7 +353,6 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             const labelUnitGain1            = this._labelUnitGain1;
             const labelUnitLoss1            = this._labelUnitLoss1;
             const labelUnitRemain1          = this._labelUnitRemain1;
-            const unitView1                 = this._unitView1;
             if (data == null) {
                 labelNormalizedHpGain1.setIsVisible(false);
                 labelNormalizedHpLoss1.setIsVisible(false);
@@ -362,7 +360,6 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 labelUnitGain1.setIsVisible(false);
                 labelUnitLoss1.setIsVisible(false);
                 labelUnitRemain1.setIsVisible(false);
-                unitView1.setIsVisible(false);
             } else {
                 labelNormalizedHpGain1.setIsVisible(true);
                 labelNormalizedHpLoss1.setIsVisible(true);
@@ -370,7 +367,6 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 labelUnitGain1.setIsVisible(true);
                 labelUnitLoss1.setIsVisible(true);
                 labelUnitRemain1.setIsVisible(true);
-                unitView1.setIsVisible(true);
 
                 labelNormalizedHpGain1.setText(getNumShortText(data.normalizedHpGain, !IsShowHp));
                 labelNormalizedHpLoss1.setText(getNumShortText(data.normalizedHpLoss, !IsShowHp));
@@ -378,19 +374,46 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 labelUnitGain1.setText(`${data.unitGain}`);
                 labelUnitLoss1.setText(`${data.unitLoss}`);
                 labelUnitRemain1.setText(`${data.unitGain - data.unitLoss}`);
-                unitView1.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-                    gameConfig       : gameConfig,
-                    skinId           : skinId,
-                    overridingSkinId : overridingSkinId,
-                    unitData         : Units_Utils_Serialization.createDefault({
-                        gridIndex   : { x : 0, y : 0 },
-                        unitTypeId  : data.unitType,
-                        playerIndex : openData.playerIndex,
-                        unitId      : -1,
-                        gcData      : gameConfig,
-                    }),
-                }), Common_Model_CommonModel.getUnitAnimationTickCount());
             }
+        }
+
+        this._updateUnitView0();
+        this._updateUnitView1();
+    }
+
+    private _updateUnitView0(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const unitView0 = this._unitView0;
+        unitView0?.loadViewData({
+            unitTypeId  : openData.singleData0.unitType,
+            skinId      : openData.overridingSkinId ?? openData.skinId,
+            playerIndex : openData.playerIndex,
+        }, true);
+        unitView0?.refreshAllViews();
+    }
+
+    private _updateUnitView1(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const data      = openData.singleData1;
+        const unitView1 = this._unitView1;
+        if (data == null) {
+            unitView1?.setIsVisible(false);
+        } else {
+            unitView1?.setIsVisible(true);
+            unitView1?.loadViewData({
+                unitTypeId  : data.unitType,
+                skinId      : openData.overridingSkinId ?? openData.skinId,
+                playerIndex : openData.playerIndex,
+            }, true);
+            unitView1?.refreshAllViews();
         }
     }
 }

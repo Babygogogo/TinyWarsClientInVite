@@ -40,10 +40,8 @@ import {
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTileView,
-    Units_Unit,
     Units_UnitView,
     Units_UnitViewPool,
-    Units_Utils_Serialization,
     Users_Model,
     WarTypes_Constants,
 } from "../../internal.ts";
@@ -189,7 +187,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelMouseHover.setAutoShrinkHeight(12);
 
         this._initTileView();
-        this._initUnitView();
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
@@ -197,8 +194,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (this._unitView == null) {
             const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
             this._unitView  = view;
-
             this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
         }
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -1007,21 +1005,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
         tileView.startRunningView();
     }
-    private _initUnitView(): void {
-        const war           = this._getWar();
-        const unit          = new Units_Unit.Unit(false);
-        const gameConfig    = war.getGcData();
-        unit.init(Units_Utils_Serialization.createDefault({
-            gridIndex   : { x : 0, y : 0 },
-            unitId      : 0,
-            unitTypeId  : gameConfig.getFirstUnitType(),
-            playerIndex : Players_Constants.PlayerIndex.First,
-            gcData      : gameConfig,
-        }), gameConfig);
-        unit.startRunning(war);
-
-        this._unitView?.loadViewDataFromUnit(unit, war, true);
-    }
 }
 
 interface DataForRecentRenderer extends Ui_Types_UiListItemData.UiListItemData {
@@ -1061,85 +1044,13 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         if (this._unitView == null) {
             const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
             this._unitView  = view;
-
             this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
         }
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        const openData = this.getOpenData();
-        if (openData == null) {
-            return;
-        }
-
-        const conUnitView       = this._conUnitView;
-        const conTileView       = this._conTileView;
-        const war               = openData.war;
-        const gameConfig        = war.getGcData();
-        const dataForDrawUnit   = openData.dataForDrawUnit;
-        if (dataForDrawUnit != null) {
-            conUnitView.setIsVisible(true);
-            conTileView.setIsVisible(false);
-
-            const unit = new Units_Unit.Unit(false);
-            unit.init(Units_Utils_Serialization.createDefault({
-                gridIndex   : { x : 0, y : 0 },
-                unitId      : 0,
-                unitTypeId  : dataForDrawUnit.unitType,
-                playerIndex : dataForDrawUnit.playerIndex,
-                gcData      : gameConfig,
-            }), gameConfig);
-            unit.startRunning(war);
-
-            const unitView  = this._unitView;
-            unitView?.loadViewDataFromUnit(unit, war, true);
-            unitView?.refreshAllViews();
-        } else {
-            conUnitView.setIsVisible(false);
-            conTileView.setIsVisible(true);
-
-            const dataForDrawTileBase       = openData.dataForDrawTileBase;
-            const dataForDrawTileDecoration = openData.dataForDrawTileDecoration;
-            const dataForDrawTileObject     = openData.dataForDrawTileObject;
-            const playerIndex               = dataForDrawTileObject?.playerIndex ?? Players_Constants.PlayerIndex.Neutral;
-            const tileData                  = Tiles_Utils_Serialization.create({
-                baseType          : dataForDrawTileBase?.baseType ?? null,
-                baseShapeId       : dataForDrawTileBase?.shapeId ?? null,
-                decorationType    : dataForDrawTileDecoration?.decorationType ?? null,
-                decorationShapeId : dataForDrawTileDecoration?.shapeId ?? null,
-                objectType        : dataForDrawTileObject?.objectType ?? null,
-                objectShapeId     : dataForDrawTileObject?.shapeId ?? null,
-                playerIndex       : playerIndex,
-
-                gridIndex              : { x : 0, y : 0 },
-                isHighlighted          : null,
-                customNameId           : null,
-                groupedLocationIdArray : [],
-                unfixedBuffArray       : [],
-
-                currentBuildPoint   : null,
-                currentCapturePoint : null,
-                currentHp           : null,
-
-                customBuildingData    : null,
-                customCannonData      : null,
-                customCrystalData     : null,
-                customLaserTurretData : null,
-            });
-            Tiles_Utils_Serialization.fillNonTrivialDefaultValues(tileData, gameConfig);
-
-            const tileView = this._tileView;
-            tileView.setData({
-                tileData         : tileData,
-                skinId           : playerIndex,
-                overridingSkinId : undefined,
-                hasFog           : false,
-                isFullReplay     : true,
-                gameConfig       : gameConfig,
-                themeType        : war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
-                    ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme()),
-            });
-            tileView.updateView();
-        }
+        this._updateView();
     }
     protected override async _onClosed(): Promise<void> {
         if (this._unitView) {
@@ -1183,6 +1094,93 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             drawer.setModeDrawTileDecoration(dataForDrawTileDecoration);
         } else if (dataForDrawTileObject) {
             drawer.setModeDrawTileObject(dataForDrawTileObject);
+        }
+    }
+
+    private _updateView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const dataForDrawUnit   = openData.dataForDrawUnit;
+        const conTileView       = this._conTileView;
+        if (dataForDrawUnit != null) {
+            conTileView.setIsVisible(false);
+
+        } else {
+            conTileView.setIsVisible(true);
+
+            const war                       = openData.war;
+            const gameConfig                = war.getGcData();
+            const dataForDrawTileBase       = openData.dataForDrawTileBase;
+            const dataForDrawTileDecoration = openData.dataForDrawTileDecoration;
+            const dataForDrawTileObject     = openData.dataForDrawTileObject;
+            const playerIndex               = dataForDrawTileObject?.playerIndex ?? Players_Constants.PlayerIndex.Neutral;
+            const tileData                  = Tiles_Utils_Serialization.create({
+                baseType          : dataForDrawTileBase?.baseType ?? null,
+                baseShapeId       : dataForDrawTileBase?.shapeId ?? null,
+                decorationType    : dataForDrawTileDecoration?.decorationType ?? null,
+                decorationShapeId : dataForDrawTileDecoration?.shapeId ?? null,
+                objectType        : dataForDrawTileObject?.objectType ?? null,
+                objectShapeId     : dataForDrawTileObject?.shapeId ?? null,
+                playerIndex       : playerIndex,
+
+                gridIndex              : { x : 0, y : 0 },
+                isHighlighted          : null,
+                customNameId           : null,
+                groupedLocationIdArray : [],
+                unfixedBuffArray       : [],
+
+                currentBuildPoint   : null,
+                currentCapturePoint : null,
+                currentHp           : null,
+
+                customBuildingData    : null,
+                customCannonData      : null,
+                customCrystalData     : null,
+                customLaserTurretData : null,
+            });
+            Tiles_Utils_Serialization.fillNonTrivialDefaultValues(tileData, gameConfig);
+
+            const tileView = this._tileView;
+            tileView.setData({
+                tileData         : tileData,
+                skinId           : playerIndex,
+                overridingSkinId : undefined,
+                hasFog           : false,
+                isFullReplay     : true,
+                gameConfig       : gameConfig,
+                themeType        : war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
+                    ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme()),
+            });
+            tileView.updateView();
+        }
+
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const dataForDrawUnit   = openData.dataForDrawUnit;
+        const conUnitView       = this._conUnitView;
+        if (dataForDrawUnit != null) {
+            conUnitView.setIsVisible(true);
+
+            const unitView = this._unitView;
+            unitView?.loadViewData({
+                unitTypeId  : dataForDrawUnit.unitType,
+                playerIndex : dataForDrawUnit.playerIndex,
+                skinId      : dataForDrawUnit.playerIndex,
+            }, true);
+            unitView?.refreshAllViews();
+
+        } else {
+            conUnitView.setIsVisible(false);
         }
     }
 }

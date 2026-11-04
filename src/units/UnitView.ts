@@ -132,8 +132,14 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
     public getViewData(): Units_UnitViewData.UnitViewData {
         return this._viewData;
     }
-    public loadViewData(viewData: Partial<Units_UnitViewData.IUnitViewData>): boolean {
-        return this.getViewData().mergeFrom(viewData);
+    public loadViewData(viewData: Partial<Units_UnitViewData.IUnitViewData>, useDefaultValues = false): boolean {
+        if (useDefaultValues) {
+            const defaultData = new Units_UnitViewData.UnitViewData();
+            defaultData.mergeFrom(viewData);
+            return this.getViewData().mergeFrom(defaultData);
+        } else {
+            return this.getViewData().mergeFrom(viewData);
+        }
     }
     public loadViewDataFromUnit(unit: Units_Unit.Unit, war: BaseWar_Interface_IBwWar.IBwWar, ignorePosition = false): boolean {
         return this.loadViewData(Units_UnitViewData.UnitViewData.generateFromUnit(unit, war, ignorePosition));

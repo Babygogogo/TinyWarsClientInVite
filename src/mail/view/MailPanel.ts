@@ -1,31 +1,32 @@
 import {
-    type Notifications_Mapping,
-    GamePanels_Manager,
-    Cos_Constants,
-    Mail_Model_MailModel,
     Campaigns_Mains_Provider,
-    ForceSkins_Utils,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Lang_Utils,
-    GameConfigs_Provider,
-    NormalMap_Model_NormalMapModel,
-    Helpers_ProtoSchema_WarSerialization_SerialWar,
-    ReplayWar_Model_RwModel,
-    Users_Model,
-    WatchWar_Model_WwModel,
-    Helpers_GameFlow,
-    Sounds_SoundPlayer,
     CoopCustomRoom_Model_CcrProxy,
+    Cos_Constants,
+    FloatText,
+    ForceSkins_Utils,
+    GameConfigs_Provider,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_GameFlow,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    Lang_Constants,
+    Lang_Utils,
+    Mail_Model_MailModel,
     Mail_Model_MailProxy,
     MultiCustomRoom_Model_McrProxy,
     MultiFreeRoom_Model_MfrProxy,
+    NormalMap_Model_NormalMapModel,
+    ReplayWar_Model_RwModel,
     Sounds_Constants,
-    FloatText,
-    Lang_Constants,
+    Sounds_SoundPlayer,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
+    Users_Model,
+    WatchWar_Model_WwModel,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
+    type Notifications_Mapping,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -35,7 +36,6 @@ import {
     type Ui_Interfaces_IUiScroller,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Interfaces_IUiZoomableMap,
-    type AuxiliaryTypes_AuxiliaryTypes,
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
 import type { PlayerInfo } from "../../proto/schema/CommonProto/Mail/MailEndWarNotification/PlayerInfo.ts";
@@ -103,6 +103,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateView();
     }
     protected override async _onClosed(): Promise<void> {
+        this._zoomMap.clearMap();
         await this._listMail.removeAllItems();
 
         await super._onClosed();

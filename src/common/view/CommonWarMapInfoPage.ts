@@ -82,6 +82,7 @@ export class Page
         this._updateComponentsForRoomInfo();
     }
     protected async _onClosed(): Promise<void> {
+        this._zoomMap.clearMap();
         await this._uiMapInfo.close();
 
         await super._onClosed();

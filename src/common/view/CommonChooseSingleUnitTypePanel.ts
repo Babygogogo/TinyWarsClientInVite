@@ -1,16 +1,16 @@
 import {
+    Lang_Constants,
+    Lang_Utils,
+    Numbers_Utils,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     Stages_Constants,
     Tween_Executor,
-    Lang_Utils,
-    Common_Model_CommonModel,
-    Numbers_Utils,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiUnitView,
-    Ui_Types_UiUnitViewData,
+    Units_UnitView,
+    Units_UnitViewPool,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -19,8 +19,6 @@ import {
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Units_Utils_Serialization,
 } from "../../internal.ts";
 
 export interface OpenData {
@@ -145,49 +143,57 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView      = new Ui_Components_UiUnitView.UiUnitView();
+    private _unitView               : Units_UnitView.UnitView | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
-            { type : "UnitAnimationTick",   callback : this._onNotifyUnitAnimationTick },
-            { type : "StateIndicatorTick",  callback : this._onNotifyUnitStateIndicatorTick },
         ]);
         this._applySettingsForWholeTouch(undefined, undefined, undefined, Sounds_Constants.ShortSfxCode.None);
-
-        this._conUnitView.addUiChild(this._unitView);
     }
+
     protected async _onOpened(): Promise<void> {
         await super._onOpened();
 
-        const imgSelected = this._imgSelected;
-        imgSelected.setAlpha(0);
-        Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop : true })
-            .to({ customAlpha : 0.6 }, 500)
-            .to({ customAlpha : 0 }, 500);
+        {
+            const imgSelected = this._imgSelected;
+            imgSelected.setAlpha(0);
+            Tween_Executor.Executor.removeTweens(imgSelected);
+            Tween_Executor.Executor.get(imgSelected, { loop : true })
+                .to({ customAlpha : 0.6 }, 500)
+                .to({ customAlpha : 0 }, 500);
+        }
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
+        }
+    }
+    protected override async _doApplyOpenData(): Promise<void> {
+        this._updateComponentsForLanguage();
+
+        this._updateLabelNameAndId();
+        this._updateUnitView();
     }
     protected async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
         Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
     }
 
-    protected override async _doApplyOpenData(): Promise<void> {
-        this._updateComponentsForLanguage();
-
-        this._updateLabelName();
-        this._updateUnitView();
-    }
-
     private _onNotifyLanguageChanged(): void {        // DONE
         this._updateComponentsForLanguage();
-    }
-    private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
-    }
-    private _onNotifyUnitStateIndicatorTick(): void {
-        this._unitView.updateOnStateIndicatorTick();
     }
 
     public onItemTapEvent(): void {
@@ -196,16 +202,18 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     }
 
     private _updateComponentsForLanguage(): void {
-        this._updateLabelName();
+        this._updateLabelNameAndId();
     }
 
-    private _updateLabelName(): void {
+    private _updateLabelNameAndId(): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
         }
 
-        this._labelName.setText(Lang_Utils.getUnitName(openData.unitType, openData.gameConfig) ?? Lang_Constants.UndefinedError);
+        const unitType = openData.unitType;
+        this._labelId.setText(`#${unitType}`);
+        this._labelName.setText(Lang_Utils.getUnitName(unitType, openData.gameConfig) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
     private _updateUnitView(): void {
@@ -214,22 +222,12 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        const gameConfig    = openData.gameConfig;
-        const unitType      = openData.unitType;
-        const playerIndex   = openData.playerIndex;
-        this._labelId.setText(`#${unitType}`);
-        this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig       : gameConfig,
-            skinId           : openData.skinId,
-            overridingSkinId : openData.overridingSkinId,
-            unitData         : Units_Utils_Serialization.createDefault({
-                gridIndex   : { x : 0, y : 0 },
-                unitTypeId  : unitType,
-                playerIndex : playerIndex,
-                unitId      : -1,
-                gcData      : gameConfig,
-            }),
-        }), Common_Model_CommonModel.getUnitAnimationTickCount());
-        this._layoutName.arrangeItems();
+        const unitView = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : openData.unitType,
+            playerIndex : openData.playerIndex,
+            skinId      : openData.overridingSkinId ?? openData.skinId,
+        }, true);
+        unitView?.refreshAllViews();
     }
 }

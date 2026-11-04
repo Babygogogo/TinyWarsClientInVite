@@ -349,8 +349,9 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         if (this._unitView == null) {
             const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
             this._unitView  = view;
-
             this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
         }
     }
     protected override async _onClosed(): Promise<void> {
@@ -419,14 +420,21 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         labelProduce.setLangText(Lang_Constants.TextType.B0691);
         this._imgProduce.loadSource(isFundEnough ? `uncompressedColorYellow0001` : `uncompressedColorGrey0002`);
         this._imgBottom.loadSource(isFundEnough ? `uncompressedColorYellow0001` : `uncompressedColorGrey0002`);
+        this._layoutName.arrangeItems();
 
-        {
-            const unitView = this._unitView;
-            unitView?.loadViewDataFromUnit(unit, unit.getWar(), true);
-            unitView?.refreshAllViews();
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
         }
 
-        this._layoutName.arrangeItems();
+        const unit      = openData.unit;
+        const unitView  = this._unitView;
+        unitView?.loadViewDataFromUnit(unit, unit.getWar(), true);
+        unitView?.refreshAllViews();
     }
 }
 

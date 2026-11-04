@@ -8,10 +8,8 @@ import {
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTileView,
-    Units_Unit,
     Units_UnitView,
     Units_UnitViewPool,
-    Units_Utils_Serialization,
     type GameConfigs_GameConfig,
     type MapEditor_Interface_IMeWar,
     type MapEditor_Model_MeTypes,
@@ -270,8 +268,9 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         if (this._unitView == null) {
             const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
             this._unitView  = view;
-
             this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
         }
     }
     protected override async _onClosed(): Promise<void> {
@@ -287,29 +286,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     }
 
     protected override _doApplyOpenData(): void {
-        const openData = this.getOpenData();
-        if (openData == null) {
-            return;
-        }
-
-        const dataForDrawUnit = openData.dataForDrawUnit;
-        this._labelNum.setText(`${openData.count}`);
-
-        const war       = Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar());
-        const gcData    = war.getGcData();
-        const unit      = new Units_Unit.Unit(false);
-        unit.init(Units_Utils_Serialization.createDefault({
-            gridIndex   : { x : 0, y : 0 },
-            unitId      : 0,
-            unitTypeId  : dataForDrawUnit.unitType,
-            playerIndex : dataForDrawUnit.playerIndex,
-            gcData      : gcData,
-        }), gcData);
-        unit.startRunning(war);
-
-        const unitView = this._unitView;
-        unitView?.loadViewDataFromUnit(unit, war, true);
-        unitView?.refreshAllViews();
+        this._updateView();
     }
 
     public onItemTapEvent(): void {
@@ -320,5 +297,32 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().MeChooseUnitPanel);
         Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar()).getDrawer().setModeDrawUnit(openData.dataForDrawUnit);
+    }
+
+    private _updateView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        this._labelNum.setText(`${openData.count}`);
+
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const dataForDrawUnit   = openData.dataForDrawUnit;
+        const unitView          = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : dataForDrawUnit.unitType,
+            playerIndex : dataForDrawUnit.playerIndex,
+            skinId      : dataForDrawUnit.playerIndex,
+        }, true);
+        unitView?.refreshAllViews();
     }
 }
