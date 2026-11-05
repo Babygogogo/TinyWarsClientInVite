@@ -137,7 +137,6 @@ interface QQBrowser {
     execWebFn?: { postX5GamePlayerMessage?: (event: { type: string }) => void };
 }
 interface LegacyNavigator extends Navigator {
-    msPointerEnabled?: boolean;
     browserLanguage?: string;
 }
 interface LegacyDocument extends Document {
@@ -153,14 +152,6 @@ interface SmoothingContext extends CanvasRenderingContext2D {
     webkitImageSmoothingEnabled?: boolean;
     mozImageSmoothingEnabled?: boolean;
     msImageSmoothingEnabled?: boolean;
-}
-interface TouchLocation {
-    pageX: number;
-    pageY: number;
-    identifier?: number;
-}
-interface PointerTouchEvent extends PointerEvent {
-    identifier: number;
 }
 interface PreventableEvent extends globalThis.Event {
     isScroll?: boolean;
@@ -1604,86 +1595,65 @@ export class WebTouchHandler extends Egret_Egret.HashObject {
         this.touch = new Egret_Sys.TouchHandler(stage);
         this.addListeners();
     }
-    public onTouchBegin: (event: TouchLocation) => void = (event: TouchLocation): void => {
-        const location: Egret_Egret.Point = this.getLocation(event);
-        this.touch.onTouchBegin(location.x, location.y, event.identifier!);
-    };
-    public onMouseMove: (event: MouseEvent) => void = (event: MouseEvent): void => {
-        if (event.buttons == 0) {
-            this.onTouchEnd(event);
-        } else {
-            this.onTouchMove(event);
-        }
-    };
-    public onTouchMove: (event: TouchLocation) => void = (event: TouchLocation): void => {
+    // public onTouchBegin(event: TouchLocation): void {
+    //     const location: Egret_Egret.Point = this.getLocation(event);
+    //     this.touch.onTouchBegin(location.x, location.y, event.identifier!);
+    // }
+    // public onMouseMove(event: MouseEvent): void {
+    //     if (event.buttons == 0) {
+    //         this.onTouchEnd(event);
+    //     } else {
+    //         this.onTouchMove(event);
+    //     }
+    // }
+    // public onTouchEnd(event: TouchLocation): void {
+    //     const location: Egret_Egret.Point = this.getLocation(event);
+    //     this.touch.onTouchEnd(location.x, location.y, event.identifier!);
+    // }
+    public onTouchMove(event: Touch): void {
         const location: Egret_Egret.Point = this.getLocation(event);
         this.touch.onTouchMove(location.x, location.y, event.identifier!);
-    };
-    public onTouchEnd: (event: TouchLocation) => void = (event: TouchLocation): void => {
-        const location: Egret_Egret.Point = this.getLocation(event);
-        this.touch.onTouchEnd(location.x, location.y, event.identifier!);
-    };
+    }
     public addListeners(): void {
-        if (WebMiscHelper.browserNavigator.msPointerEnabled) {
-            this.canvas.addEventListener("MSPointerDown", (event: globalThis.Event): void => {
-                const pointer: PointerTouchEvent = event as PointerTouchEvent;
-                pointer.identifier = pointer.pointerId;
-                this.onTouchBegin(pointer);
-                this.prevent(pointer);
-            }, false);
-            this.canvas.addEventListener("MSPointerMove", (event: globalThis.Event): void => {
-                const pointer: PointerTouchEvent = event as PointerTouchEvent;
-                pointer.identifier = pointer.pointerId;
-                this.onTouchMove(pointer);
-                this.prevent(pointer);
-            }, false);
-            this.canvas.addEventListener("MSPointerUp", (event: globalThis.Event): void => {
-                const pointer: PointerTouchEvent = event as PointerTouchEvent;
-                pointer.identifier = pointer.pointerId;
-                this.onTouchEnd(pointer);
-                this.prevent(pointer);
-            }, false);
-        } else {
-            if (!Egret_Egret.Capabilities.isMobile) {
-                this.addMouseListener();
-            }
-            this.addTouchListener();
-        }
+        // if (!Egret_Egret.Capabilities.isMobile) {
+        //     this.addMouseListener();
+        // }
+        this.addTouchListener();
     }
-    public addMouseListener(): void {
-        this.canvas.addEventListener("mousedown", this.onTouchBegin);
-        this.canvas.addEventListener("mousemove", this.onMouseMove);
-        this.canvas.addEventListener("mouseup", this.onTouchEnd);
-    }
+    // public addMouseListener(): void {
+    //     this.canvas.addEventListener("mousedown", this.onTouchBegin);
+    //     this.canvas.addEventListener("mousemove", this.onMouseMove);
+    //     this.canvas.addEventListener("mouseup", this.onTouchEnd);
+    // }
     public addTouchListener(): void {
-        this.canvas.addEventListener("touchstart", (event: globalThis.TouchEvent): void => {
-            const length: number = event.changedTouches.length;
-            for (let i: number = 0; i < length; i++) {
-                this.onTouchBegin(event.changedTouches[i]!);
+        // this.canvas.addEventListener("touchstart", (event: TouchEvent): void => {
+        //     const length: number = event.changedTouches.length;
+        //     for (let i: number = 0; i < length; i++) {
+        //         this.onTouchBegin(event.changedTouches[i]!);
+        //     }
+        //     this.prevent(event);
+        // }, false);
+        this.canvas.addEventListener("touchmove", e => {
+            const length = e.changedTouches.length;
+            for (let i = 0; i < length; i++) {
+                this.onTouchMove(e.changedTouches[i]);
             }
-            this.prevent(event);
+            this.prevent(e);
         }, false);
-        this.canvas.addEventListener("touchmove", (event: globalThis.TouchEvent): void => {
-            const length: number = event.changedTouches.length;
-            for (let i: number = 0; i < length; i++) {
-                this.onTouchMove(event.changedTouches[i]!);
-            }
-            this.prevent(event);
-        }, false);
-        this.canvas.addEventListener("touchend", (event: globalThis.TouchEvent): void => {
-            const length: number = event.changedTouches.length;
-            for (let i: number = 0; i < length; i++) {
-                this.onTouchEnd(event.changedTouches[i]!);
-            }
-            this.prevent(event);
-        }, false);
-        this.canvas.addEventListener("touchcancel", (event: globalThis.TouchEvent): void => {
-            const length: number = event.changedTouches.length;
-            for (let i: number = 0; i < length; i++) {
-                this.onTouchEnd(event.changedTouches[i]!);
-            }
-            this.prevent(event);
-        }, false);
+        // this.canvas.addEventListener("touchend", (event: TouchEvent): void => {
+        //     const length: number = event.changedTouches.length;
+        //     for (let i: number = 0; i < length; i++) {
+        //         this.onTouchEnd(event.changedTouches[i]!);
+        //     }
+        //     this.prevent(event);
+        // }, false);
+        // this.canvas.addEventListener("touchcancel", (event: TouchEvent): void => {
+        //     const length: number = event.changedTouches.length;
+        //     for (let i: number = 0; i < length; i++) {
+        //         this.onTouchEnd(event.changedTouches[i]!);
+        //     }
+        //     this.prevent(event);
+        // }, false);
     }
     public prevent(event: PreventableEvent): void {
         event.stopPropagation();
@@ -1691,8 +1661,8 @@ export class WebTouchHandler extends Egret_Egret.HashObject {
             event.preventDefault();
         }
     }
-    public getLocation(event: TouchLocation): Egret_Egret.Point {
-        event.identifier = +event.identifier! || 0;
+    public getLocation(event: Touch | PointerEvent | WheelEvent): Egret_Egret.Point {
+        // event.identifier = +event.identifier! || 0;
         const doc: HTMLElement = document.documentElement;
         const box: DOMRect = this.canvas.getBoundingClientRect();
         const left: number = box.left + window.pageXOffset - doc.clientLeft;

@@ -1,24 +1,24 @@
 import {
-    Notifications_Dispatcher,
-    Lang_Utils,
+    Egret_Web,
     FloatText,
     Lang_Constants,
-    type Egret_Egret,
+    Lang_Utils,
+    Notifications_Dispatcher,
 } from "../internal.ts";
 
 export const isMobileOrTablet   = checkIsMobileOrTablet();
 export const isPc               = !isMobileOrTablet;
 
-export type WebTouchHandler = {
-    onTouchBegin    : (e: Event) => void;
-    onMouseMove     : (e: Event) => void;
-    onTouchMove     : (e: Event) => void;
-    onTouchEnd      : (e: Event) => void;
-    getLocation     : (e: MouseEvent) => Egret_Egret.Point;
-};
+// export type WebTouchHandler = {
+//     onTouchBegin    : (e: Event) => void;
+//     onMouseMove     : (e: Event) => void;
+//     onTouchMove     : (e: Event) => void;
+//     onTouchEnd      : (e: Event) => void;
+//     getLocation     : (e: MouseEvent) => Egret_Egret.Point;
+// };
 export type WebPlayer = {
     canvas          : HTMLCanvasElement;
-    webTouchHandler : WebTouchHandler;
+    webTouchHandler : Egret_Web.WebTouchHandler;
 };
 
 export function init(): void {

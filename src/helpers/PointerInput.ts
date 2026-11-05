@@ -1,12 +1,13 @@
 import {
     Egret_Egret,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Helpers_Compatibility,
-    Notifications_Dispatcher,
-    Helpers_Misc,
+    Egret_Web,
     Geometries_Utils,
+    Helpers_Compatibility,
+    Helpers_Misc,
+    Notifications_Dispatcher,
     Stages_StageManager,
     Ui_Utils_UiHelpers,
+    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 
 /**
@@ -38,7 +39,7 @@ import {
  *   - 否则（一个sub都未命中），返回DisplayObject.$hitTest的值
  */
 
- 
+
 export const enum MouseStyleType {
     Auto,
     Default,
@@ -67,7 +68,7 @@ const PointerMoveTimeDict       = new Map<number, number>();
 
 let _stage                      : Egret_Egret.Stage;
 let _webPlayer                  : Helpers_Compatibility.WebPlayer;
-let _webTouchHandler            : Helpers_Compatibility.WebTouchHandler;
+let _webTouchHandler            : Egret_Web.WebTouchHandler;
 let _canvas                     : HTMLCanvasElement;
 
 let _isEnabled                  = false;
@@ -89,7 +90,7 @@ export type PointerUnifiedEventData = {
     rawEvent        : PointerEvent | WheelEvent;
     dispatcher      : Egret_Egret.DisplayObject | undefined;
 };
- 
+
 export const enum PointerEventType {
     Press       = "PointerPress",
     ReleaseIn   = "PointerReleaseIn",
@@ -123,7 +124,7 @@ export function enable(): void {
         }
 
         const revisedValue = value > 0 ? -100 : 100;
-        Notifications_Dispatcher.dispatch("MouseWheel", { num: revisedValue });
+        Notifications_Dispatcher.dispatch("MouseWheel", { num : revisedValue });
 
         const point         = getStagePoint(e);
         const targetObject  = getPointerTargetObject(point);
@@ -464,15 +465,15 @@ export function enable(): void {
         //     }
         // }
 
-        {
-            // 不再需要egret自带的点击监听，因此全部屏蔽，egret.web.js第2827行
-            _canvas.removeEventListener("mousedown", _webTouchHandler.onTouchBegin);
-            _canvas.removeEventListener("mousemove", _webTouchHandler.onMouseMove);
-            _canvas.removeEventListener("mouseup", _webTouchHandler.onTouchEnd);
-            _webTouchHandler.onTouchBegin   = () => { /* nothing to do  */ };
-            _webTouchHandler.onMouseMove    = () => { /* nothing to do  */ };
-            _webTouchHandler.onTouchEnd     = () => { /* nothing to do  */ };
-        }
+        // {
+        //     // 不再需要egret自带的点击监听，因此全部屏蔽，egret.web.js第2827行
+        //     _canvas.removeEventListener("mousedown", _webTouchHandler.onTouchBegin);
+        //     _canvas.removeEventListener("mousemove", _webTouchHandler.onMouseMove);
+        //     _canvas.removeEventListener("mouseup", _webTouchHandler.onTouchEnd);
+        //     _webTouchHandler.onTouchBegin   = () => { /* nothing to do  */ };
+        //     _webTouchHandler.onMouseMove    = () => { /* nothing to do  */ };
+        //     _webTouchHandler.onTouchEnd     = () => { /* nothing to do  */ };
+        // }
     }
 
     {

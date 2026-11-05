@@ -1273,10 +1273,10 @@ export class BitmapFillMode {
 }
 
 export class OrientationMode {
-    public static readonly AUTO: "auto";
-    public static readonly PORTRAIT: "portrait";
-    public static readonly LANDSCAPE: "landscape";
-    public static readonly LANDSCAPE_FLIPPED: "landscapeFlipped";
+    public static readonly AUTO = "auto";
+    public static readonly PORTRAIT = "portrait";
+    public static readonly LANDSCAPE = "landscape";
+    public static readonly LANDSCAPE_FLIPPED = "landscapeFlipped";
 }
 
 export class RuntimeType {

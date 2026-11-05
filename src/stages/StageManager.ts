@@ -11,7 +11,7 @@ import {
     Egret_Sys,
 } from "../internal.ts";
 
-// The game is in landscape mode, which means that its design max height equals its design width, 960.
+// Expand either dimension to fit the viewport while preserving the minimum design size.
 const RATIO_FOR_MIN_HEIGHT = Stages_Constants.Dimension.DesignWidth / Stages_Constants.Dimension.DesignMinHeight;
 
 const _canvasBoundsInfo = {
@@ -30,9 +30,7 @@ export function init(stg: Egret_Egret.Stage): void {
 
     Helpers_PointerInput.enable();
 
-    if (!Egret_Egret.Capabilities.isMobile) {
-        stg.orientation = Egret_Egret.OrientationMode.AUTO;
-    }
+    stg.orientation = Egret_Egret.OrientationMode.AUTO;
     Egret_Sys.ScreenAdapterHelper.screenAdapter = new ScreenAdapter();
     _stage.setContentSize(_stage.stageWidth, _stage.stageHeight);
     _stage.addEventListener(Egret_Egret.Event.RESIZE, _onStageResize, undefined);
