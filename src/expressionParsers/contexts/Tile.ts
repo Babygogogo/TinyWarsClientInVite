@@ -86,7 +86,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -112,7 +112,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -138,7 +138,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -164,7 +164,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -190,7 +190,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -217,7 +217,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
 
                     for (let i = 0; i < argArray.length; ++i) {
                         const argType = argArray[i].getResultType({
-                            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                         });
                         if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                             throw Helpers_Misc.newError(
@@ -244,7 +244,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -287,7 +287,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -329,8 +329,8 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
             case Tile.VnTeamIndex      : return new ExpressionParsers_Results_Num.Num(war, tile.getTeamIndex());
             case Tile.VnType           : return new ExpressionParsers_Results_Num.Num(war, tile.getTileTypeId());
             case Tile.VnCustomNameId   : return new ExpressionParsers_Results_Num.Num(war, tile.getCustomNameId() ?? -1);
-            case Tile.VnBaseType       : return new ExpressionParsers_Results_Num.Num(war, tile.getBaseType());
-            case Tile.VnObjectType     : return new ExpressionParsers_Results_Num.Num(war, tile.getObjectType());
+            case Tile.VnBaseType       : return new ExpressionParsers_Results_Num.Num(war, tile.getBaseTypeId());
+            case Tile.VnObjectType     : return new ExpressionParsers_Results_Num.Num(war, tile.getObjectTypeId());
             case Tile.VnHighlighted    : return new ExpressionParsers_Results_Num.Num(war, tile.getIsHighlighted() ? 1 : 0);
             case Tile.VnLocationIds    : return new ExpressionParsers_Results_NumArray.NumArray(war, tile.getLocationIdList(true));
             case Tile.VnHasUnit        : return new ExpressionParsers_Results_Num.Num(war, war.getUnitMap().getUnitOnMap(gridIndex) ? 1 : 0);

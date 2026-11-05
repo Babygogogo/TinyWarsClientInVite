@@ -1,36 +1,34 @@
 import {
-    CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction,
-    GameConfigs_GameConfig,
-    ForceSkins_Utils,
-    CoSkills_Utils_Persistent_SelfTileIncome,
     AuxiliaryTypes_GridIndex,
-    ReplayWar_Model_RwWar,
+    CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction,
+    CoSkills_Utils_Persistent_SelfTileIncome,
+    GameConfigs_GameConfig,
+    Helpers_Collection,
+    Helpers_Misc,
+    Lang_Utils,
+    Locations_Constants,
+    Locations_Utils,
+    Maps_Constants,
+    Notifications_Dispatcher,
+    Players_Constants,
+    TileBases_Utils,
+    TileBuffs_Constants,
+    TileBuffs_Utils_Common,
+    TileDecorations_Utils,
+    TileObjects_Utils,
+    Tiles_Constants_Common,
+    Tiles_Constants_DefaultCustomTileData,
+    Tiles_Constants_MapWeapon,
     Tiles_TileView,
+    Tiles_Utils_Common,
+    Tiles_Utils_CustomTileData,
+    Tiles_Utils_Serialization,
+    Units_Constants,
+    Units_Utils_Common,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Interface_IBwWar,
-    Tiles_Constants_MapWeapon,
-    TileBuffs_Constants,
-    Tiles_Utils_CustomTileData,
-    Tiles_Constants_DefaultCustomTileData,
-    Units_Constants,
-    Tiles_Utils_Common,
-    Locations_Utils,
-    TileBuffs_Utils_Common,
-    Visibilities_Utils,
-    TileObjects_Utils,
-    TileBases_Utils,
-    TileDecorations_Utils,
-    Utils_ClientErrorCode,
-    Maps_Constants,
-    Tiles_Utils_Serialization,
-    Helpers_Misc,
-    Helpers_Collection,
-    Notifications_Dispatcher,
-    Lang_Utils,
-    Units_Utils_Common,
-    Locations_Constants,
-    Tiles_Constants_Common,
-    Players_Constants,
     type Notifications_Mapping,
     type Players_IPlayer,
     type Units_Unit,
@@ -185,9 +183,9 @@ export class Tile {
         this._setTemplateCfg(templateCfg);
         this._setGridX(gridX);
         this._setGridY(gridY);
-        this.setBaseType(baseType);
-        this.setDecorationType(decorationType);
-        this.setObjectType(objectType);
+        this.setBaseTypeId(baseType);
+        this.setDecorationTypeId(decorationType);
+        this.setObjectTypeId(objectType);
         this.setPlayerIndex(playerIndex);
         this.setCustomBuildingData(customBuildingData?.clone());
 
@@ -210,9 +208,9 @@ export class Tile {
         return Tiles_Utils_Serialization.create({
             gridIndex : this.getGridIndex().toProto().toJson(),
 
-            baseType       : this.getBaseType(),
-            objectType     : this.getObjectType(),
-            decorationType : this.getDecorationType(),
+            baseType       : this.getBaseTypeId(),
+            objectType     : this.getObjectTypeId(),
+            decorationType : this.getDecorationTypeId(),
             playerIndex    : this.getPlayerIndex(),
 
             currentBuildPoint   : this.getCurrentBuildPoint(),
@@ -252,9 +250,9 @@ export class Tile {
         } else {
             return Tiles_Utils_Serialization.create({
                 gridIndex      : gridIndex.toProto().toJson(),
-                baseType       : this.getBaseType(),
-                objectType     : this.getObjectType(),
-                decorationType : this.getDecorationType(),
+                baseType       : this.getBaseTypeId(),
+                objectType     : this.getObjectTypeId(),
+                decorationType : this.getDecorationTypeId(),
                 playerIndex    : this.getTemplateCfg().getIsAlwaysShowOwner() ? this.getPlayerIndex() : Players_Constants.PlayerIndex.Neutral,
 
                 currentHp           : this.getCurrentHp(),
@@ -311,38 +309,29 @@ export class Tile {
         return this._view;
     }
     public flushDataToView(): void {
-        const view  = this.getView();
-        const war   = this.getWar();
-        view.setData({
-            gameConfig       : this.getGameConfig(),
-            tileData         : this.serialize(),
-            hasFog           : this.getHasFog(),
-            skinId           : this.getSkinId(),
-            overridingSkinId : ForceSkins_Utils.getRawOverridingSkinId(war, this.getPlayerIndex()),
-            themeType        : this.getTileThemeType(),
-            isFullReplay     : war instanceof ReplayWar_Model_RwWar.RwWar,
-        });
-        view.updateView();
+        const view = this.getView();
+        view.loadViewDataFromTile(this, this.getWar());
+        view.refreshAllViews();
     }
 
-    public setBaseType(baseType: number): void {
+    public setBaseTypeId(baseType: number): void {
         this._baseType = baseType;
     }
-    public getBaseType(): number {
+    public getBaseTypeId(): number {
         return this._baseType;
     }
 
-    public setObjectType(objectType: number): void {
+    public setObjectTypeId(objectType: number): void {
         this._objectType = objectType;
     }
-    public getObjectType(): number {
+    public getObjectTypeId(): number {
         return this._objectType;
     }
 
-    public setDecorationType(decorationType: number): void {
+    public setDecorationTypeId(decorationType: number): void {
         this._decorationType = decorationType;
     }
-    public getDecorationType(): number {
+    public getDecorationTypeId(): number {
         return this._decorationType;
     }
 
@@ -487,7 +476,7 @@ export class Tile {
             groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % Locations_Constants.GroupSize));
         }
 
-        Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile: this } satisfies Notifications_Mapping.Mapping["BwTileHasLocationIdSet"]);
+        Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile : this } satisfies Notifications_Mapping.Mapping["BwTileHasLocationIdSet"]);
     }
     public setHasLocationIdWithLocationIdArray(locationIdArray: number[], hasId: boolean): void {
         const groupedLocationIdArray = this._groupedLocationIdArray ??= new Array<number>(Locations_Constants.GroupCount).fill(0);
@@ -500,7 +489,7 @@ export class Tile {
             }
         }
 
-        Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile: this } satisfies Notifications_Mapping.Mapping["BwTileHasLocationIdSet"]);
+        Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile : this } satisfies Notifications_Mapping.Mapping["BwTileHasLocationIdSet"]);
     }
     public getLocationIdList(hasId: boolean): number[] {
         const locationIdArray: number[] = [];
@@ -521,7 +510,7 @@ export class Tile {
     public setIsHighlighted(isHighlighted: boolean): void {
         if (this._isHighlighted !== isHighlighted) {
             this._isHighlighted = isHighlighted;
-            Notifications_Dispatcher.dispatch("BwTileIsHighlightedChanged", { tile: this } satisfies Notifications_Mapping.Mapping["BwTileIsHighlightedChanged"]);
+            Notifications_Dispatcher.dispatch("BwTileIsHighlightedChanged", { tile : this } satisfies Notifications_Mapping.Mapping["BwTileIsHighlightedChanged"]);
         }
     }
 
@@ -720,9 +709,9 @@ export class Tile {
             objectType             : objectType,
             baseType               : baseType,
             playerIndex            : playerIndex,
-            baseShapeId            : baseType === this.getBaseType() ? this.getBaseShapeId() : null,
-            objectShapeId          : objectType === this.getObjectType() ? this.getObjectShapeId() : null,
-            decorationType         : this.getDecorationType(),
+            baseShapeId            : baseType === this.getBaseTypeId() ? this.getBaseShapeId() : null,
+            objectShapeId          : objectType === this.getObjectTypeId() ? this.getObjectShapeId() : null,
+            decorationType         : this.getDecorationTypeId(),
             decorationShapeId      : this.getDecorationShapeId(),
             groupedLocationIdArray : this.getGroupedLocationIdArray(),
 
@@ -746,7 +735,7 @@ export class Tile {
 
     public resetOnTileObjectDestroyed(): void {
         const gameConfig    = this.getGameConfig();
-        const baseType      = this.getBaseType();
+        const baseType      = this.getBaseTypeId();
         const objectType    = Tiles_Constants_Common.ObjectTypeId.Empty;
         const newCfg        = Helpers_Misc.getExisted(gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(baseType, objectType));
 
@@ -756,8 +745,8 @@ export class Tile {
             baseType               : baseType,
             baseShapeId            : this.getBaseShapeId(),
             objectType             : objectType,
-            objectShapeId          : getNewObjectShapeIdOnObjectDestroyed(this.getObjectType(), this.getObjectShapeId()),
-            decorationType         : this.getDecorationType(),
+            objectShapeId          : getNewObjectShapeIdOnObjectDestroyed(this.getObjectTypeId(), this.getObjectShapeId()),
+            decorationType         : this.getDecorationTypeId(),
             decorationShapeId      : this.getDecorationShapeId(),
             groupedLocationIdArray : this.getGroupedLocationIdArray(),
 
@@ -780,7 +769,7 @@ export class Tile {
     }
 
     public deleteTileDecoration(): void {
-        this.setDecorationType(0);
+        this.setDecorationTypeId(0);
         this.setDecorationShapeId(0);
     }
 
@@ -1393,9 +1382,9 @@ export class Tile {
 
         const data = Tiles_Utils_Serialization.create({
             gridIndex              : this.getGridIndex().toProto().toJson(),
-            baseType               : this.getBaseType(),
-            decorationType         : this.getDecorationType(),
-            objectType             : this.getObjectType(),
+            baseType               : this.getBaseTypeId(),
+            decorationType         : this.getDecorationTypeId(),
+            objectType             : this.getObjectTypeId(),
             playerIndex            : this.getTemplateCfg().getIsAlwaysShowOwner() ? this.getPlayerIndex() : Players_Constants.PlayerIndex.Neutral,
             baseShapeId            : this.getBaseShapeId(),
             decorationShapeId      : this.getDecorationShapeId(),
@@ -1419,7 +1408,7 @@ export class Tile {
         this.deserialize(data, this.getGameConfig());
     }
 
-    public getTileThemeType(): number {
+    public getThemeTypeId(): number {
         const war = this.getWar();
         return war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
             ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme());

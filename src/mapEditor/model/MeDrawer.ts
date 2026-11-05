@@ -286,7 +286,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            const tileBaseType = tile.getBaseType();
+            const tileBaseType = tile.getBaseTypeId();
             if (tileBaseType !== Tiles_Constants_Common.BaseTypeId.River) {
                 continue;
             }
@@ -310,7 +310,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            const tileBaseType = tile.getBaseType();
+            const tileBaseType = tile.getBaseTypeId();
             if (tileBaseType !== Tiles_Constants_Common.BaseTypeId.Beach) {
                 continue;
             }
@@ -334,7 +334,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            const tileBaseType = tile.getBaseType();
+            const tileBaseType = tile.getBaseTypeId();
             if (tileBaseType !== Tiles_Constants_Common.BaseTypeId.Sea) {
                 continue;
             }
@@ -361,7 +361,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            if (tile.getObjectType() !== Tiles_Constants_Common.ObjectTypeId.Road) {
+            if (tile.getObjectTypeId() !== Tiles_Constants_Common.ObjectTypeId.Road) {
                 continue;
             }
 
@@ -387,7 +387,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            if (tile.getObjectType() !== Tiles_Constants_Common.ObjectTypeId.Bridge) {
+            if (tile.getObjectTypeId() !== Tiles_Constants_Common.ObjectTypeId.Bridge) {
                 continue;
             }
 
@@ -410,7 +410,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            if (tile.getObjectType() !== Tiles_Constants_Common.ObjectTypeId.Plasma) {
+            if (tile.getObjectTypeId() !== Tiles_Constants_Common.ObjectTypeId.Plasma) {
                 continue;
             }
 
@@ -433,7 +433,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            if (tile.getObjectType() !== Tiles_Constants_Common.ObjectTypeId.Pipe) {
+            if (tile.getObjectTypeId() !== Tiles_Constants_Common.ObjectTypeId.Pipe) {
                 continue;
             }
 
@@ -461,9 +461,9 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             const decorationType        = targetDecorationData.decorationType;
             const decorationShapeId     = targetDecorationData.shapeId;
 
-            if ((decorationType !== tile.getDecorationType()) || (decorationShapeId !== tile.getDecorationShapeId())) {
+            if ((decorationType !== tile.getDecorationTypeId()) || (decorationShapeId !== tile.getDecorationShapeId())) {
                 ++adjustCount;
-                tile.setDecorationType(decorationType);
+                tile.setDecorationTypeId(decorationType);
                 tile.setDecorationShapeId(decorationShapeId);
                 tile.startRunning(war);
                 tile.flushDataToView();
@@ -542,9 +542,9 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
 
         {
             const tile          = tileMap.getTile(gridIndex);
-            const objectType    = tile.getObjectType();
+            const objectType    = tile.getObjectTypeId();
             if (tile.getTileTypeId() === gameConfig.getTileType(baseType, objectType)) {
-                tile.setBaseType(baseType);
+                tile.setBaseTypeId(baseType);
                 tile.setBaseShapeId(baseShapeId);
             } else {
                 const data = Tiles_Utils_Serialization.create({
@@ -552,7 +552,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                     playerIndex            : tile.getPlayerIndex(),
                     objectType             : objectType,
                     objectShapeId          : tile.getObjectShapeId(),
-                    decorationType         : tile.getDecorationType(),
+                    decorationType         : tile.getDecorationTypeId(),
                     decorationShapeId      : tile.getDecorationShapeId(),
                     baseType               : baseType,
                     baseShapeId            : baseShapeId,
@@ -595,10 +595,10 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             const symGridIndex = MapEditor_Model_MeHelpers.getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile          = tileMap.getTile(symGridIndex);
-                const objectType    = tile.getObjectType();
+                const objectType    = tile.getObjectTypeId();
                 const baseShapeId2  = TileBases_Utils.getSymmetricalTileBaseShapeId(baseType, baseShapeId, symmetryType) ?? 0;
                 if (tile.getTileTypeId() === gameConfig.getTileType(baseType, objectType)) {
-                    tile.setBaseType(baseType);
+                    tile.setBaseTypeId(baseType);
                     tile.setBaseShapeId(baseShapeId2);
                 } else {
                     const data = Tiles_Utils_Serialization.create({
@@ -606,7 +606,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                         playerIndex            : tile.getPlayerIndex(),
                         objectType             : objectType,
                         objectShapeId          : tile.getObjectShapeId(),
-                        decorationType         : tile.getDecorationType(),
+                        decorationType         : tile.getDecorationTypeId(),
                         decorationShapeId      : tile.getDecorationShapeId(),
                         baseType               : baseType,
                         baseShapeId            : baseShapeId2,
@@ -656,7 +656,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
 
         {
             const tile = tileMap.getTile(gridIndex);
-            tile.setDecorationType(decorationType);
+            tile.setDecorationTypeId(decorationType);
             tile.setDecorationShapeId(decorationShapeId);
             tile.startRunning(war);
             tile.flushDataToView();
@@ -679,7 +679,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             const symGridIndex = MapEditor_Model_MeHelpers.getSymmetricalGridIndex(gridIndex, symmetryType, mapSize);
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile = tileMap.getTile(symGridIndex);
-                tile.setDecorationType(decorationType);
+                tile.setDecorationTypeId(decorationType);
                 tile.setDecorationShapeId(TileDecorations_Utils.getSymmetricalTileDecorationShapeId(decorationType, decorationShapeId, symmetryType) ?? 0);
                 tile.startRunning(war);
                 tile.flushDataToView();
@@ -712,18 +712,18 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
 
         {
             const tile      = tileMap.getTile(gridIndex);
-            const baseType  = tile.getBaseType();
+            const baseType  = tile.getBaseTypeId();
             const tileType  = Helpers_Misc.getExisted(gameConfig.getTileType(baseType, objectType));
             if (tileType === tile.getTileTypeId()) {
                 tile.setPlayerIndex(playerIndex);
-                tile.setObjectType(objectType);
+                tile.setObjectTypeId(objectType);
                 tile.setObjectShapeId(objectShapeId);
             } else {
                 const data = Tiles_Utils_Serialization.create({
                     gridIndex              : tile.getGridIndex().toProto().toJson(),
                     baseType               : baseType,
                     baseShapeId            : tile.getBaseShapeId(),
-                    decorationType         : tile.getDecorationType(),
+                    decorationType         : tile.getDecorationTypeId(),
                     decorationShapeId      : tile.getDecorationShapeId(),
                     playerIndex            : playerIndex,
                     objectType             : objectType,
@@ -767,7 +767,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             const symGridIndex  = MapEditor_Model_MeHelpers.getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile          = tileMap.getTile(symGridIndex);
-                const baseType      = tile.getBaseType();
+                const baseType      = tile.getBaseTypeId();
                 const objectType2   = TileObjects_Utils.getSymmetricalTileObjectType(objectType, symmetryType);
                 const tileType      = Helpers_Misc.getExisted(gameConfig.getTileType(baseType, objectType2));
                 if ((!!gameConfig.getTileTemplateCfg(tileType)?.getMaxHp()) && (unitMap.getUnitOnMap(symGridIndex))) {
@@ -778,14 +778,14 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 const playerIndex2      = this.getIsSymmetricalPlayerIndexEnabled() ? this.getSymmetricalPlayerIndex(playerIndex) : playerIndex;
                 if (tileType === tile.getTileTypeId()) {
                     tile.setPlayerIndex(playerIndex2);
-                    tile.setObjectType(objectType2);
+                    tile.setObjectTypeId(objectType2);
                     tile.setObjectShapeId(objectShapeId2 ?? 0);
                 } else {
                     const data = Tiles_Utils_Serialization.create({
                         gridIndex              : tile.getGridIndex().toProto().toJson(),
-                        baseType               : tile.getBaseType(),
+                        baseType               : tile.getBaseTypeId(),
                         baseShapeId            : tile.getBaseShapeId(),
-                        decorationType         : tile.getDecorationType(),
+                        decorationType         : tile.getDecorationTypeId(),
                         decorationShapeId      : tile.getDecorationShapeId(),
                         playerIndex            : playerIndex2,
                         objectType             : objectType2,
@@ -1043,7 +1043,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         const war               = this._getWar();
         const tileMap           = war.getTileMap();
         const tile              = tileMap.getTile(gridIndex);
-        const baseType          = tile.getBaseType();
+        const baseType          = tile.getBaseTypeId();
         const oldBaseShapeId    = tile.getBaseShapeId();
         let newBaseShapeId      = oldBaseShapeId;
         if (baseType === Tiles_Constants_Common.BaseTypeId.River) {
@@ -1055,7 +1055,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         }
         tile.setBaseShapeId(newBaseShapeId);
 
-        const objectType        = tile.getObjectType();
+        const objectType        = tile.getObjectTypeId();
         const oldObjectShapeId  = tile.getObjectShapeId();
         let newObjectShapeId    = oldObjectShapeId;
         if (objectType === Tiles_Constants_Common.ObjectTypeId.Road) {
@@ -1069,13 +1069,13 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         }
         tile.setObjectShapeId(newObjectShapeId);
 
-        const oldDecorationType     = tile.getDecorationType();
+        const oldDecorationType     = tile.getDecorationTypeId();
         const oldDecorationShapeId  = tile.getDecorationShapeId();
         const {
             decorationType  : newDecorationType,
             shapeId         : newDecorationShapeId,
         } = MapEditor_Model_MeHelpers.getAutoTileDecorationTypeAndShapeId(tileMap, gridIndex);
-        tile.setDecorationType(newDecorationType);
+        tile.setDecorationTypeId(newDecorationType);
         tile.setDecorationShapeId(newDecorationShapeId);
 
         if ((newBaseShapeId != oldBaseShapeId)              ||

@@ -169,7 +169,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 const tileMap   = war.getTileMap();
                 const allTiles  = tileMap.getAllTiles();
                 for (const tile of allTiles) {
-                    tile.setBaseType(Math.floor(Math.random() * 4) + 1);
+                    tile.setBaseTypeId(Math.floor(Math.random() * 4) + 1);
                 }
                 for (const tile of allTiles) {
                     const shapeId = MapEditor_Model_MeHelpers.getAutoTileBaseShapeId(tileMap, tile) ?? 0;
@@ -179,8 +179,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 }
                 for (const tile of allTiles) {
                     const { decorationType, shapeId } = MapEditor_Model_MeHelpers.getAutoTileDecorationTypeAndShapeId(tileMap, tile.getGridIndex());
-                    if ((tile.getDecorationType() !== decorationType) || (tile.getDecorationShapeId() !== shapeId)) {
-                        tile.setDecorationType(decorationType);
+                    if ((tile.getDecorationTypeId() !== decorationType) || (tile.getDecorationShapeId() !== shapeId)) {
+                        tile.setDecorationTypeId(decorationType);
                         tile.setDecorationShapeId(shapeId);
                     }
                 }

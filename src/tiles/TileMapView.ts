@@ -518,7 +518,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
         }
 
         for (const view of this._tileViewArray) {
-            view.updateTileAnimation();
+            view.updateOnNotifyTileAnimationTick();
         }
     }
     private _onNotifyStateIndicatorTick(): void {
@@ -528,7 +528,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
         }
 
         for (const view of this._tileViewArray) {
-            view.updateImgBuff();
+            view.updateOnNotifyStateIndicatorTick();
         }
     }
 

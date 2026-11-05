@@ -295,7 +295,7 @@ export async function applyWithoutExtraData(data: WeaSetTileTypeSimple, isFastEx
                 ? 0
                 : (data.getActChangeTileObject()
                     ? (data.getActTileObjectType() ?? 0)
-                    : tile.getObjectType()
+                    : tile.getObjectTypeId()
                 );
             const newTileObjectCfg = TileObjects_Utils.getTileObjectCfg(newTileObjectType);
             if (newTileObjectCfg == null) {
@@ -304,7 +304,7 @@ export async function applyWithoutExtraData(data: WeaSetTileTypeSimple, isFastEx
 
             const newTileBaseType = data.getActChangeTileBase()
                 ? (data.getActTileBaseType() ?? 0)
-                : tile.getBaseType();
+                : tile.getBaseTypeId();
             const newTileTemplateCfg = gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(newTileBaseType, newTileObjectType);
             if (newTileTemplateCfg == null) {
                 continue;
@@ -330,7 +330,7 @@ export async function applyWithoutExtraData(data: WeaSetTileTypeSimple, isFastEx
                     ? 0
                     : (data.getActChangeTileDecoration()
                         ? (data.getActTileDecorationType() ?? 0)
-                        : tile.getDecorationType()
+                        : tile.getDecorationTypeId()
                     ),
                 decorationShapeId : data.getActDeleteTileDecoration()
                     ? 0

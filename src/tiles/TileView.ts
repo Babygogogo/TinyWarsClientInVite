@@ -1,13 +1,14 @@
 import {
-    Helpers_Misc,
+    BaseWar_Interface_IBwWar,
     Common_Model_CommonModel,
-    Graphics_Utils,
-    Players_Constants,
     ForceSkins_Constants,
+    Graphics_Utils,
+    Helpers_Misc,
+    Tiles_Tile,
+    Tiles_TileViewData,
     Ui_Components_UiImage,
-    type BaseWar_Model_BwTypes,
-    type Ui_Interfaces_IUiImage,
     Users_Model,
+    type Ui_Interfaces_IUiImage,
 } from "../internal.ts";
 
 const getGridWidth  = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
@@ -20,8 +21,8 @@ export class TileView {
     private readonly _imgBuff       = new Ui_Components_UiImage.UiImage();
     private readonly _imgHighlight  = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorWhite0000` });
 
-    private _data           : BaseWar_Model_BwTypes.DataForTileView | null = null;
-    private _framesForBuff  : string[] | null = null;
+    private readonly _viewData          = new Tiles_TileViewData.TileViewData();
+    private readonly _buffIconSources   = new Array<string>();
 
     public constructor() {
         {
@@ -58,72 +59,68 @@ export class TileView {
         }
     }
 
-    public setData(data: BaseWar_Model_BwTypes.DataForTileView): void {
-        this._data = data;
-
-        this._resetFramesForBuff();
+    public dispose(): void {
+        // nothing to do
     }
-    public getData(): BaseWar_Model_BwTypes.DataForTileView | null {
-        return this._data;
-    }
-    private _resetFramesForBuff(): void {
-        const data = this.getData();
-        if (data == null) {
-            this._framesForBuff = null;
-            return;
-        }
 
-        const buffTypeArray = [...new Set(data.tileData.getUnfixedBuffArray().map(v => v.getBuffTypeId()))];
-        if (!buffTypeArray.length) {
-            this._framesForBuff = null;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public updateOnNotifyTileAnimationTick(): void {
+        this._refreshAnimation();
+    }
+    public updateOnNotifyStateIndicatorTick(): void {
+        this._refreshImgBuff();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public getViewData(): Tiles_TileViewData.TileViewData {
+        return this._viewData;
+    }
+    public loadViewData(viewData: Partial<Tiles_TileViewData.ITileViewData>, useDefaultValues = false): boolean {
+        if (useDefaultValues) {
+            const defaultData = new Tiles_TileViewData.TileViewData();
+            defaultData.mergeFrom(viewData);
+            return this.getViewData().mergeFrom(defaultData);
         } else {
-            const version       = Users_Model.getSelfSettingsTextureVersion();
-            const hasFog        = data.hasFog;
-            this._framesForBuff = buffTypeArray.map(v => Common_Model_CommonModel.getCachedTileBuffImageSource({
-                version  : version,
-                buffType : v,
-                isDark   : hasFog,
-            }));
+            return this.getViewData().mergeFrom(viewData);
         }
     }
-
-    public updateView(): void {
-        this.updateTileAnimation();
-        this.updateImgBuff();
+    public loadViewDataFromTile(tile: Tiles_Tile.Tile, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+        return this.loadViewData(Tiles_TileViewData.TileViewData.generateFromTile(tile, war));
     }
-    public updateTileAnimation(): void {
-        const data = this.getData();
-        if (data == null) {
-            return;
-        }
 
-        const skinId        = data.skinId;
-        const hasFog        = data.hasFog;
-        const tileData      = data.tileData;
-        const themeType     = data.themeType;
-        const gameConfig    = data.gameConfig;
+    private _getBuffIconSources(): string[] {
+        return this._buffIconSources;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public refreshAllViews(): void {
+        this._refreshBuffIconSources();
+        this._refreshAnimation();
+        this._refreshImgBuff();
+        this._refreshImgHighlight();
+    }
+
+    private _refreshAnimation(): void {
+        const viewData      = this.getViewData();
+        const hasFog        = viewData.hasFog;
+        const themeTypeId   = viewData.themeTypeId;
         const version       = Users_Model.getSelfSettingsTextureVersion();
         const tickCount     = Common_Model_CommonModel.getTileAnimationTickCount();
-        const tileBaseType  = tileData.getBaseType();
 
         {
-            const objectType    = tileData.getObjectType();
+            const objectTypeId  = viewData.objectTypeId;
+            const objectShapeId = viewData.objectShapeId;
             const imgObject     = this.getImgObject();
-            const shapeId       = tileData.getObjectShapeId();
-            if ((objectType == 0) && (shapeId == 0)) {
+            if ((objectTypeId == 0) && (objectShapeId == 0)) {
                 imgObject.setIsVisible(false);
             } else {
                 imgObject.setIsVisible(true);
-
-                const overridingSkinId = data.overridingSkinId ?? -1;
                 imgObject.loadSource(Common_Model_CommonModel.getCachedTileObjectImageSource({
-                    version   : version,
-                    themeType : themeType,
-                    skinId    : ((hasFog) && (!data.isFullReplay) && (!gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(tileBaseType, objectType)?.getIsAlwaysShowOwner()))
-                        ? ForceSkins_Constants.SkinId.Neutral
-                        : (overridingSkinId >= Players_Constants.PlayerIndex.First ? overridingSkinId : skinId),
-                    shapeId    : shapeId,
-                    objectType : objectType,
+                    version    : version,
+                    themeType  : themeTypeId,
+                    skinId     : viewData.skinId,
+                    shapeId    : objectShapeId,
+                    objectType : objectTypeId,
                     isDark     : hasFog,
                     tickCount  : tickCount,
                 }));
@@ -131,61 +128,79 @@ export class TileView {
         }
 
         {
-            const imgBase   = this.getImgBase();
-            if (tileBaseType == 0) {
+            const baseTypeId    = viewData.baseTypeId;
+            const imgBase       = this.getImgBase();
+            if ((baseTypeId as number) == 0) {
                 imgBase.setIsVisible(false);
             } else {
                 imgBase.setIsVisible(true);
                 imgBase.loadSource(Common_Model_CommonModel.getCachedTileBaseImageSource({
-                    version,
-                    themeType,
-                    skinId   : ForceSkins_Constants.SkinId.Neutral,
-                    shapeId  : tileData.getBaseShapeId(),
-                    baseType : tileBaseType,
-                    isDark   : hasFog,
-                    tickCount,
+                    version   : version,
+                    themeType : themeTypeId,
+                    skinId    : ForceSkins_Constants.SkinId.Neutral,
+                    shapeId   : viewData.baseShapeId,
+                    baseType  : baseTypeId,
+                    isDark    : hasFog,
+                    tickCount : tickCount,
                 }));
             }
         }
 
         {
-            const decorationType    = tileData.getDecorationType();
+            const decorationTypeId  = viewData.decorationTypeId;
             const imgDecoration     = this.getImgDecoration();
-            if (decorationType == 0) {
+            if (decorationTypeId == 0) {
                 imgDecoration.setIsVisible(false);
             } else {
                 imgDecoration.setIsVisible(true);
                 imgDecoration.loadSource(Common_Model_CommonModel.getCachedTileDecorationImageSource({
-                    version,
-                    themeType,
+                    version            : version,
+                    themeType          : themeTypeId,
                     skinId             : ForceSkins_Constants.SkinId.Neutral,
-                    tileDecorationType : decorationType,
-                    shapeId            : tileData.getDecorationShapeId(),
+                    tileDecorationType : decorationTypeId,
+                    shapeId            : viewData.decorationShapeId,
                     isDark             : hasFog,
-                    tickCount,
+                    tickCount          : tickCount,
                 }));
             }
         }
 
-        this.getImgHighlight().setIsVisible(tileData.getIsHighlighted());
     }
-    public updateImgBuff(): void {
-        const img           = this.getImgBuff();
-        const framesForBuff = this._framesForBuff;
-        if (framesForBuff == null) {
-            img.setIsVisible(false);
-            return;
-        }
 
-        const length = framesForBuff.length;
+    private _refreshImgBuff(): void {
+        const img               = this.getImgBuff();
+        const buffIconSources   = this._getBuffIconSources();
+        const length            = buffIconSources.length;
         if (!length) {
             img.setIsVisible(false);
         } else {
             img.setIsVisible(true);
-            img.loadSource(framesForBuff[Common_Model_CommonModel.getStateIndicatorTickCount() % length]);
+            img.loadSource(buffIconSources[Common_Model_CommonModel.getStateIndicatorTickCount() % length]);
         }
     }
 
+    private _refreshImgHighlight(): void {
+        this.getImgHighlight().setIsVisible(this.getViewData().isHighlighted);
+    }
+
+    private _refreshBuffIconSources(): void {
+        const buffIconSources   = this._getBuffIconSources();
+        buffIconSources.length  = 0;
+
+        const viewData          = this.getViewData();
+        const buffTypeIdList    = viewData.buffTypeIdList;
+        if (buffTypeIdList.length) {
+            const version   = Users_Model.getSelfSettingsTextureVersion();
+            const hasFog    = viewData.hasFog;
+            buffIconSources.push(...buffTypeIdList.map(v => Common_Model_CommonModel.getCachedTileBuffImageSource({
+                version  : version,
+                buffType : v,
+                isDark   : hasFog,
+            })));
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getImgHighlight(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgHighlight;
     }

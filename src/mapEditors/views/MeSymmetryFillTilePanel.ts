@@ -531,10 +531,10 @@ function autoFillTile(war: MapEditor_Interface_IMeWar.IMeWar, dstGridIndex: Auxi
     const drawer            = war.getDrawer();
     const dstTile           = tileMap.getTile(dstGridIndex);
     const srcTile           = tileMap.getTile(Helpers_Misc.getExisted(MapEditor_Model_MeHelpers.getSymmetricalGridIndex(dstGridIndex, symmetryType, tileMap.getMapSize())));
-    const decorationType    = srcTile.getDecorationType();
+    const decorationType    = srcTile.getDecorationTypeId();
     const decorationShapeId = srcTile.getDecorationShapeId();
-    const objectType        = srcTile.getObjectType();
-    const baseType          = srcTile.getBaseType();
+    const objectType        = srcTile.getObjectTypeId();
+    const baseType          = srcTile.getBaseTypeId();
 
     const tileData = Tiles_Utils_Serialization.create({
         gridIndex              : dstGridIndex.toProto().toJson(),

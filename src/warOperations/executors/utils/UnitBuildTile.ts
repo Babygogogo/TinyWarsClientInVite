@@ -60,7 +60,7 @@ function fastExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
             } else {
                 focusUnit.setCurrentBuildMaterial(focusUnit.getCurrentBuildMaterial() - 1);
 
-                const targetTileCfg = Helpers_Misc.getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseType(), tile.getObjectType()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBuildTile_01);
+                const targetTileCfg = Helpers_Misc.getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseTypeId(), tile.getObjectTypeId()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBuildTile_01);
                 tile.resetByTypeAndPlayerIndex({
                     baseType    : targetTileCfg.getDstTileBaseTypeId(),
                     objectType  : targetTileCfg.getDstTileObjectTypeId(),
@@ -158,7 +158,7 @@ async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, acti
             } else {
                 focusUnit.setCurrentBuildMaterial(focusUnit.getCurrentBuildMaterial() - 1);
 
-                const targetTileCfg = Helpers_Misc.getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseType(), tile.getObjectType()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01);
+                const targetTileCfg = Helpers_Misc.getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseTypeId(), tile.getObjectTypeId()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01);
                 tile.resetByTypeAndPlayerIndex({
                     baseType    : targetTileCfg.getDstTileBaseTypeId(),
                     objectType  : targetTileCfg.getDstTileObjectTypeId(),

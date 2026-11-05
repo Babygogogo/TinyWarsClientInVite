@@ -651,12 +651,12 @@ export function getSymmetricalGridIndex(gridIndex: AuxiliaryTypes_GridIndex.Grid
     }
 }
 function checkIsSymmetrical(tile1: Tiles_Tile.Tile, tile2: Tiles_Tile.Tile, symmetryType: Geometries_Constants.SymmetryTypeId): boolean {
-    const baseType          = tile1.getBaseType();
-    const objectType        = tile1.getObjectType();
-    const decorationType    = tile1.getDecorationType();
-    return (baseType === tile2.getBaseType())
-        && (TileObjects_Utils.getSymmetricalTileObjectType(objectType, symmetryType) === tile2.getObjectType())
-        && (decorationType == tile2.getDecorationType())
+    const baseType          = tile1.getBaseTypeId();
+    const objectType        = tile1.getObjectTypeId();
+    const decorationType    = tile1.getDecorationTypeId();
+    return (baseType === tile2.getBaseTypeId())
+        && (TileObjects_Utils.getSymmetricalTileObjectType(objectType, symmetryType) === tile2.getObjectTypeId())
+        && (decorationType == tile2.getDecorationTypeId())
         && (TileBases_Utils.checkIsTileBaseSymmetrical({
             baseType,
             shapeId1 : tile1.getBaseShapeId(),
@@ -691,7 +691,7 @@ function checkCanRiverLinkToTile(tileMap: Tiles_TileMap.TileMap, gridIndex1: Aux
         return true;
     }
 
-    const baseType = tileMap.getTile(gridIndex2).getBaseType();
+    const baseType = tileMap.getTile(gridIndex2).getBaseTypeId();
     // return (baseType === GameConfig.Tile.TileBaseType.River);
     return (baseType === Tiles_Constants_Common.BaseTypeId.River) || (baseType === Tiles_Constants_Common.BaseTypeId.Sea);
 }
@@ -709,7 +709,7 @@ function checkCanBeachLinkToTile(tileMap: Tiles_TileMap.TileMap, gridIndex1: Aux
         return true;
     }
 
-    const tileBaseType = tileMap.getTile(gridIndex2).getBaseType();
+    const tileBaseType = tileMap.getTile(gridIndex2).getBaseTypeId();
     return (tileBaseType === Tiles_Constants_Common.BaseTypeId.Beach) || (tileBaseType === Tiles_Constants_Common.BaseTypeId.Sea);
 }
 
@@ -725,7 +725,7 @@ function checkIsRiver(tileMap: Tiles_TileMap.TileMap, gridIndex: AuxiliaryTypes_
     if (!gridIndex.checkIsInsideMap(tileMap.getMapSize())) {
         return false;
     }
-    return tileMap.getTile(gridIndex).getBaseType() === Tiles_Constants_Common.BaseTypeId.River;
+    return tileMap.getTile(gridIndex).getBaseTypeId() === Tiles_Constants_Common.BaseTypeId.River;
 }
 
 export function getAutoRoadShapeId(tileMap: Tiles_TileMap.TileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, connectTileTypeArray: number[]): number {
@@ -758,7 +758,7 @@ export function getAutoPlasmaShapeId(tileMap: Tiles_TileMap.TileMap, gridIndex: 
     const isAdjacent3           = checkIsPlasma(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x + 1, y     )) ? 1 : 0;
     const isAdjacent2           = checkIsPlasma(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x,     y + 1 )) ? 1 : 0;
     const isAdjacent1           = checkIsPlasma(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x,     y - 1 )) ? 1 : 0;
-    const isAdjacentToMeteor    = gridIndex.getAdjacentGrids(tileMap.getMapSize()).some(v => tileMap.getTile(v).getObjectType() === Tiles_Constants_Common.ObjectTypeId.Meteor);
+    const isAdjacentToMeteor    = gridIndex.getAdjacentGrids(tileMap.getMapSize()).some(v => tileMap.getTile(v).getObjectTypeId() === Tiles_Constants_Common.ObjectTypeId.Meteor);
     return Helpers_Misc.getExisted(TilePlasmaAutoShapeIdMap.get(isAdjacentToMeteor))[isAdjacent1 + isAdjacent2 * 2 + isAdjacent3 * 4 + isAdjacent4 * 8];
 }
 function checkIsPlasma(tileMap: Tiles_TileMap.TileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean {
@@ -766,7 +766,7 @@ function checkIsPlasma(tileMap: Tiles_TileMap.TileMap, gridIndex: AuxiliaryTypes
         return true;
     }
 
-    return tileMap.getTile(gridIndex).getObjectType() === Tiles_Constants_Common.ObjectTypeId.Plasma;
+    return tileMap.getTile(gridIndex).getObjectTypeId() === Tiles_Constants_Common.ObjectTypeId.Plasma;
 }
 
 export function getAutoPipeShapeId(tileMap: Tiles_TileMap.TileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
@@ -783,7 +783,7 @@ function checkCanLinkToPipe(tileMap: Tiles_TileMap.TileMap, origin: AuxiliaryTyp
     }
 
     const tile          = tileMap.getTile(gridIndex);
-    const objectType    = tile.getObjectType();
+    const objectType    = tile.getObjectTypeId();
     const objectShapeId = tile.getObjectShapeId();
     if (objectType === Tiles_Constants_Common.ObjectTypeId.Empty) {
         return ((objectShapeId === 1) && ((direction === Geometries_Constants.DirectionId.Left) || (direction === Geometries_Constants.DirectionId.Right)))
@@ -800,7 +800,7 @@ function checkCanLinkToPipe(tileMap: Tiles_TileMap.TileMap, origin: AuxiliaryTyp
 
 export function getAutoTileBaseShapeId(tileMap: Tiles_TileMap.TileMap, tile: Tiles_Tile.Tile): number | null {
     const gridIndex = tile.getGridIndex();
-    switch (tile.getBaseType()) {
+    switch (tile.getBaseTypeId()) {
         case Tiles_Constants_Common.BaseTypeId.Sea   : return getAutoSeaShapeId(tileMap, gridIndex);
         case Tiles_Constants_Common.BaseTypeId.River : return getAutoRiverShapeId(tileMap, gridIndex);
         case Tiles_Constants_Common.BaseTypeId.Beach : return getAutoBeachShapeId(tileMap, gridIndex);
@@ -810,7 +810,7 @@ export function getAutoTileBaseShapeId(tileMap: Tiles_TileMap.TileMap, tile: Til
 
 export function getAutoTileDecorationTypeAndShapeId(tileMap: Tiles_TileMap.TileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): { decorationType: number, shapeId: number } {
     const tile      = tileMap.getTile(gridIndex);
-    const baseType  = tile.getBaseType();
+    const baseType  = tile.getBaseTypeId();
     if (baseType === Tiles_Constants_Common.BaseTypeId.Sea) {
         const mapSize   = tileMap.getMapSize();
         let weight      = Math.pow(2, 7);
@@ -822,7 +822,7 @@ export function getAutoTileDecorationTypeAndShapeId(tileMap: Tiles_TileMap.TileM
                 }
 
                 const g = AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(offsetX, offsetY));
-                const t = g.checkIsInsideMap(mapSize) ? tileMap.getTile(g).getBaseType() : null;
+                const t = g.checkIsInsideMap(mapSize) ? tileMap.getTile(g).getBaseTypeId() : null;
                 if (t === Tiles_Constants_Common.BaseTypeId.Plain) {
                     index += weight;
                 } else if (t === Tiles_Constants_Common.BaseTypeId.River) {
@@ -948,7 +948,7 @@ export function getAutoTileDecorationTypeAndShapeId(tileMap: Tiles_TileMap.TileM
                     }
 
                     const g = AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(offsetX, offsetY));
-                    const t = g.checkIsInsideMap(mapSize) ? tileMap.getTile(g).getBaseType() : null;
+                    const t = g.checkIsInsideMap(mapSize) ? tileMap.getTile(g).getBaseTypeId() : null;
                     if ((t != null)                                 &&
                         (t !== Tiles_Constants_Common.BaseTypeId.Sea)    &&
                         (t !== Tiles_Constants_Common.BaseTypeId.Beach)
@@ -981,7 +981,7 @@ function checkIsSeaOrBeachOrEmpty(tileMap: Tiles_TileMap.TileMap, gridIndex: Aux
     if (!gridIndex.checkIsInsideMap(tileMap.getMapSize())) {
         return true;
     } else {
-        const tileBaseType = tileMap.getTile(gridIndex).getBaseType();
+        const tileBaseType = tileMap.getTile(gridIndex).getBaseTypeId();
         return (tileBaseType === Tiles_Constants_Common.BaseTypeId.Sea) || (tileBaseType === Tiles_Constants_Common.BaseTypeId.Beach);
     }
 }

@@ -91,7 +91,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public updateOnNotifyUnitAnimationTick(): void {
-        this._tickUnitAnimationFrame();
+        this._refreshAnimation();
     }
     public updateOnNotifyUnitStateIndicatorTick(): void {
         this._refreshCornerIcon();
@@ -147,7 +147,8 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
 
     public refreshAllViews(): void {
         // this.showUnitAnimation(Units_Constants.AnimationTypeId.Stand);
-        this.showAnimation(this.getViewData().animationTypeId);
+        // this.showAnimation(this.getViewData().animationTypeId);
+        this._refreshAnimation();
         this._refreshPosition();
         this._refreshImgUnitFlippedX();
         this._refreshCornerIconSources();
@@ -156,9 +157,9 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
 
     public showAnimation(typeId: Units_Constants.AnimationTypeId): void {
         this.loadViewData({ animationTypeId : typeId });
-        this._tickUnitAnimationFrame();
+        this._refreshAnimation();
     }
-    private _tickUnitAnimationFrame(): void {
+    private _refreshAnimation(): void {
         const viewData = this.getViewData();
         this._imgUnit.loadSource(Common_Model_CommonModel.getCachedUnitImageSource({
             version       : Users_Model.getSelfSettingsTextureVersion(),

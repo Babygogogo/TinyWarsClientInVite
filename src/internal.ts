@@ -706,6 +706,7 @@ export * as TileObjects_Utils from "./tileObjects/Utils.ts";
 export * as Tiles_Tile from "./tiles/Tile.ts";
 export * as Tiles_TileMap from "./tiles/TileMap.ts";
 export * as Tiles_TileMapView from "./tiles/TileMapView.ts";
+export * as Tiles_TileViewData from "./tiles/TileViewData.ts";
 export * as Tiles_TileView from "./tiles/TileView.ts";
 export * as Tiles_Types from "./tiles/Types.ts";
 export * as Tiles_Constants_Common from "./tiles/constants/Common.ts";

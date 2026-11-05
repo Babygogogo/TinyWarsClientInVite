@@ -29,7 +29,6 @@ import {
     MultiPlayerWar_Model_MpwWar,
     Notifications_Dispatcher,
     Players_Constants,
-    ReplayWar_Model_RwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     Sounds_Constants,
@@ -163,10 +162,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         // this.close();
     }
     private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateTileAnimation();
+        this._tileView.updateOnNotifyTileAnimationTick();
     }
     private _onNotifyStateIndicatorTick(): void {
-        this._tileView.updateImgBuff();
+        this._tileView.updateOnNotifyStateIndicatorTick();
     }
     private _onNotifyTileIsHighlightedChanged(): void {
         this._updateTileView();
@@ -211,11 +210,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             finalSkinIdArray : ForceSkins_Utils.getFinalSkinIdArray(war, true),
             currentTileInfo  : {
                 tileBaseShapeId       : tile.getBaseShapeId(),
-                tileBaseType          : tile.getBaseType(),
+                tileBaseType          : tile.getBaseTypeId(),
                 tileDecorationShapeId : tile.getDecorationShapeId(),
-                tileDecorationType    : tile.getDecorationType(),
+                tileDecorationType    : tile.getDecorationTypeId(),
                 tileObjectShapeId     : tile.getObjectShapeId(),
-                tileObjectType        : tile.getObjectType(),
+                tileObjectType        : tile.getObjectTypeId(),
                 tilePlayerIndex       : tile.getPlayerIndex(),
             },
             callback : tileInfo => {
@@ -559,18 +558,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const tileView  = this._tileView;
-        const war       = tile.getWar();
-        tileView.setData({
-            gameConfig       : tile.getGameConfig(),
-            tileData         : tile.serialize(),
-            hasFog           : tile.getHasFog(),
-            skinId           : tile.getSkinId(),
-            overridingSkinId : ForceSkins_Utils.getRawOverridingSkinId(war, tile.getPlayerIndex()),
-            themeType        : tile.getTileThemeType(),
-            isFullReplay     : war instanceof ReplayWar_Model_RwWar.RwWar,
-        });
-        tileView.updateView();
+        const tileView = this._tileView;
+        tileView.loadViewDataFromTile(tile, tile.getWar());
+        tileView.refreshAllViews();
     }
 
     private _updateBtnModifyType(): void {

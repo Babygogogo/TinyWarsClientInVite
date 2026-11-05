@@ -443,11 +443,11 @@ export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretState
             const newData   = Tiles_Utils_Serialization.create({
                 gridIndex         : tile.getGridIndex().toProto().toJson(),
                 playerIndex       : tile.getPlayerIndex(),
-                baseType          : tile.getBaseType(),
+                baseType          : tile.getBaseTypeId(),
                 baseShapeId       : tile.getBaseShapeId(),
-                decorationType    : tile.getDecorationType(),
+                decorationType    : tile.getDecorationTypeId(),
                 decorationShapeId : tile.getDecorationShapeId(),
-                objectType        : tile.getObjectType(),
+                objectType        : tile.getObjectTypeId(),
                 objectShapeId     : tile.getObjectShapeId(),
 
                 customNameId           : tile.getCustomNameId() ?? null,

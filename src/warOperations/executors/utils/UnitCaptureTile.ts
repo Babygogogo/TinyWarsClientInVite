@@ -65,8 +65,8 @@ function fastExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
                 }
 
                 tile.resetByTypeAndPlayerIndex({
-                    baseType    : tile.getBaseType(),
-                    objectType  : tile.getTemplateCfg().getTileObjectTypeIdAfterOwnerChanged() ?? tile.getObjectType(),
+                    baseType    : tile.getBaseTypeId(),
+                    objectType  : tile.getTemplateCfg().getTileObjectTypeIdAfterOwnerChanged() ?? tile.getObjectTypeId(),
                     playerIndex : focusUnit.getPlayerIndex(),
                 });
                 tile.setCurrentCapturePoint(0);
@@ -165,8 +165,8 @@ async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, ac
                 }
 
                 tile.resetByTypeAndPlayerIndex({
-                    baseType    : tile.getBaseType(),
-                    objectType  : tile.getTemplateCfg().getTileObjectTypeIdAfterOwnerChanged() ?? tile.getObjectType(),
+                    baseType    : tile.getBaseTypeId(),
+                    objectType  : tile.getTemplateCfg().getTileObjectTypeIdAfterOwnerChanged() ?? tile.getObjectTypeId(),
                     playerIndex : focusUnit.getPlayerIndex(),
                 });
                 tile.setCurrentCapturePoint(0);

@@ -266,8 +266,8 @@ export function destroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, playerI
             const buildPoint        = tile.getCurrentBuildPoint();
             const capturePoint      = tile.getCurrentCapturePoint();
             tile.resetByTypeAndPlayerIndex({
-                baseType    : tile.getBaseType(),
-                objectType  : tile.getTemplateCfg().getTileObjectTypeIdAfterOwnerChanged() ?? tile.getObjectType(),
+                baseType    : tile.getBaseTypeId(),
+                objectType  : tile.getTemplateCfg().getTileObjectTypeIdAfterOwnerChanged() ?? tile.getObjectTypeId(),
                 playerIndex : Players_Constants.PlayerIndex.Neutral,
             });
             tile.setCurrentHp(hp);

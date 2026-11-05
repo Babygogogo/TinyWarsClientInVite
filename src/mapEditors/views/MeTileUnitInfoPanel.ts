@@ -102,8 +102,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dictForTileObjects    = new Map<number, DataForTileRenderer>();
         const gameConfig            = war.getGcData();
         for (const tile of war.getTileMap().getAllTiles()) {
-            const tileObjectType    = tile.getObjectType();
-            const tileBaseType      = tile.getBaseType();
+            const tileObjectType    = tile.getObjectTypeId();
+            const tileBaseType      = tile.getBaseTypeId();
             const tileType          = tile.getTileTypeId();
             const playerIndex       = tile.getPlayerIndex();
 

@@ -1,10 +1,8 @@
 import {
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwWar,
-    type BaseWar_Model_BwTypes,
     Common_Model_CommonModel,
     FloatText,
-    ForceSkins_Utils,
     GamePanels_Dict,
     GamePanels_Manager,
     Lang_Constants,
@@ -15,6 +13,7 @@ import {
     ReplayWar_Model_RwWarBase,
     Sounds_Constants,
     Tiles_TileView,
+    Tiles_TileViewData,
     Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -265,25 +264,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return [];
         }
 
-        const cursor                = war.getCursor();
-        const unitMap               = war.getUnitMap();
-        const tileMap               = war.getTileMap();
-        const gameConfig            = war.getGcData();
-        const teamIndexes           = war.getPlayerManager().getWatcherTeamIndexesForSelf();
-        const dataList              : DataForUnitRenderer[]= [];
-        const playerIndex           = this._playerIndex;
+        const cursor        = war.getCursor();
+        const unitMap       = war.getUnitMap();
+        const tileMap       = war.getTileMap();
+        const teamIndexes   = war.getPlayerManager().getWatcherTeamIndexesForSelf();
+        const dataList      : DataForUnitRenderer[]= [];
+        const playerIndex   = this._playerIndex;
         for (const unit of Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, teamIndexes)) {
             if (unit.getPlayerIndex() === playerIndex) {
-                const tile              = tileMap.getTile(unit.getGridIndex());
-                const dataForTileView   : BaseWar_Model_BwTypes.DataForTileView = {
-                    gameConfig       : gameConfig,
-                    hasFog           : tile.getHasFog(),
-                    skinId           : tile.getSkinId(),
-                    overridingSkinId : ForceSkins_Utils.getRawOverridingSkinId(war, tile.getPlayerIndex()),
-                    themeType        : tile.getTileThemeType(),
-                    tileData         : tile.serializeForTeamIndexes(teamIndexes),
-                    isFullReplay     : war instanceof ReplayWar_Model_RwWar.RwWar,
-                };
+                const dataForTileView = Tiles_TileViewData.TileViewData.generateFromTile(tileMap.getTile(unit.getGridIndex()), war);
                 dataList.push({
                     cursor          : cursor,
                     unit            : unit,
@@ -326,7 +315,7 @@ const _IMAGE_SOURCE_FLARE       = `c03_t99_s02_f02`;
 
 interface DataForUnitRenderer extends Ui_Types_UiListItemData.UiListItemData {
     unit                    : Units_Unit.Unit;
-    dataForTileView         : BaseWar_Model_BwTypes.DataForTileView;
+    dataForTileView         : Tiles_TileViewData.TileViewData;
     cursor                  : BaseWar_Interface_IBwCursor.IBwCursor;
     panel                   : Panel;
 }
@@ -399,10 +388,10 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     }
 
     private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateTileAnimation();
+        this._tileView.updateOnNotifyTileAnimationTick();
     }
     private _onNotifyStateIndicatorTick(): void {
-        this._tileView.updateImgBuff();
+        this._tileView.updateOnNotifyStateIndicatorTick();
     }
 
     protected override _doApplyOpenData(): void {
@@ -455,8 +444,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const tileView = this._tileView;
-        tileView.setData(openData.dataForTileView);
-        tileView.updateView();
+        tileView.loadViewData(openData.dataForTileView);
+        tileView.refreshAllViews();
 
         this._updateUnitView();
     }

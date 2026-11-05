@@ -1,26 +1,24 @@
 import {
-    Helpers_Misc,
-    type Notifications_Mapping,
-    Destructions_Utils,
-    ForceSkins_Utils,
-    ReplayWar_Model_RwWar,
     ActionPlanners_Constants,
-    Tiles_TileView,
-    Units_Unit,
-    type BaseWar_Interface_IBwWar,
-    WarTypes_Utils,
-    Notifications_Dispatcher,
-    Tween_Executor,
+    Destructions_Utils,
     GamePanels_Dict,
-    Lang_Utils,
     GamePanels_Manager,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
+    Helpers_Misc,
     Lang_Constants,
-    Ui_Components_UiPanel,
+    Lang_Utils,
+    Notifications_Dispatcher,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Tiles_TileView,
     Timer_TimerModel,
+    Tween_Executor,
+    Ui_Components_UiPanel,
+    Units_Unit,
     WarTypes_Constants,
+    WarTypes_Utils,
+    type BaseWar_Interface_IBwWar,
     type Egret_Egret,
+    type Notifications_Mapping,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
@@ -118,10 +116,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateTileAnimation();
+        this._tileView.updateOnNotifyTileAnimationTick();
     }
     private _onNotifyStateIndicatorTick(): void {
-        this._tileView.updateImgBuff();
+        this._tileView.updateOnNotifyStateIndicatorTick();
     }
     private _onNotifyTileIsHighlightedChanged(): void {
         this._updateTileView();
@@ -252,18 +250,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const tile      = war.getTileMap().getTile(war.getCursor().getGridIndex());
-        const tileView  = this._tileView;
-        tileView.setData({
-            gameConfig       : tile.getGameConfig(),
-            tileData         : tile.serialize(),
-            hasFog           : tile.getHasFog(),
-            skinId           : tile.getSkinId(),
-            overridingSkinId : ForceSkins_Utils.getRawOverridingSkinId(war, tile.getPlayerIndex()),
-            themeType        : tile.getTileThemeType(),
-            isFullReplay     : war instanceof ReplayWar_Model_RwWar.RwWar,
-        });
-        tileView.updateView();
+        const tileView = this._tileView;
+        tileView.loadViewDataFromTile(war.getTileMap().getTile(war.getCursor().getGridIndex()), war);
+        tileView.refreshAllViews();
     }
 
     // private async _adjustPositionOnTouch(e: egret.TouchEvent): Promise<void> {

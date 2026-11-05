@@ -59,7 +59,7 @@ function fastExeUnitLaunchSilo(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
             const tile                  = war.getTileMap().getTile(pathNodes[pathNodes.length - 1]);
             const launchSiloParams      = tile.getTemplateCfg().getLaunchSiloParams();
             tile.resetByTypeAndPlayerIndex({
-                baseType    : tile.getBaseType(),
+                baseType    : tile.getBaseTypeId(),
                 objectType  : Helpers_Misc.getExisted(launchSiloParams[1]),
                 playerIndex : Players_Constants.PlayerIndex.Neutral,
             });
@@ -154,7 +154,7 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Interface_IBwWar.IBwWar, act
             const tile              = war.getTileMap().getTile(pathNodes[pathNodes.length - 1]);
             const launchSiloParams  = tile.getTemplateCfg().getLaunchSiloParams();
             tile.resetByTypeAndPlayerIndex({
-                baseType    : tile.getBaseType(),
+                baseType    : tile.getBaseTypeId(),
                 objectType  : Helpers_Misc.getExisted(launchSiloParams[1]),
                 playerIndex : Players_Constants.PlayerIndex.Neutral,
             });

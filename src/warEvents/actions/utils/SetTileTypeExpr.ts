@@ -317,7 +317,7 @@ function checkIsMeetConditionForTile(action: WeaSetTileTypeExpr, tile: Tiles_Til
     }
 }
 function evalActBaseType(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): number {
-    const defaultValue  = tile.getBaseType();
+    const defaultValue  = tile.getBaseTypeId();
     const act           = action.getActBaseType();
     if (!act) {
         return defaultValue;
@@ -358,7 +358,7 @@ function evalActBaseShapeId(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile, n
     }
 }
 function evalActObjectType(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): number {
-    const defaultValue  = tile.getObjectType();
+    const defaultValue  = tile.getObjectTypeId();
     const act           = action.getActObjectType();
     if (!act) {
         return defaultValue;
@@ -399,7 +399,7 @@ function evalActObjectShapeId(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile,
     }
 }
 function evalActDecorationType(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): number {
-    const defaultValue  = tile.getDecorationType();
+    const defaultValue  = tile.getDecorationTypeId();
     const act           = action.getActDecorationType();
     if (!act) {
         return defaultValue;
@@ -504,7 +504,7 @@ function checkShouldDestroyUnit(
 
 function getAutoTileObjectShapeId(tileMap: Tiles_TileMap.TileMap, tile: Tiles_Tile.Tile): number | null {
     const gridIndex = tile.getGridIndex();
-    switch (tile.getObjectType()) {
+    switch (tile.getObjectTypeId()) {
         case Tiles_Constants_Common.ObjectTypeId.Bridge    : return MapEditor_Model_MeHelpers.getAutoBridgeShapeId(tileMap, gridIndex, BridgeConnectTileTypeArray);
         case Tiles_Constants_Common.ObjectTypeId.Road      : return MapEditor_Model_MeHelpers.getAutoRoadShapeId(tileMap, gridIndex, RoadConnectTileTypeArray);
         case Tiles_Constants_Common.ObjectTypeId.Plasma    : return MapEditor_Model_MeHelpers.getAutoPlasmaShapeId(tileMap, gridIndex);
@@ -547,11 +547,11 @@ function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): N
     const shouldDestroyUnit     = checkShouldDestroyUnit(action, unitHandler, newCfg, unit);
     const newDecorationType     = evalActDecorationType(action, tile);
     const newDecorationShapeId  = evalActDecorationShapeId(action, tile, newDecorationType);
-    if ((newBaseType            === tile.getBaseType())             &&
+    if ((newBaseType            === tile.getBaseTypeId())             &&
         (newBaseShapeId         === tile.getBaseShapeId())          &&
-        (newObjectType          === tile.getObjectType())           &&
+        (newObjectType          === tile.getObjectTypeId())           &&
         (newObjectShapeId       === tile.getObjectShapeId())        &&
-        (newDecorationType      === tile.getDecorationType())       &&
+        (newDecorationType      === tile.getDecorationTypeId())       &&
         (newDecorationShapeId   === tile.getDecorationShapeId())
     ) {
         return {
@@ -649,11 +649,11 @@ function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: Base
         }
 
         const { decorationType, shapeId } = MapEditor_Model_MeHelpers.getAutoTileDecorationTypeAndShapeId(tileMap, tile.getGridIndex());
-        if ((tile.getDecorationType() == decorationType) && (tile.getDecorationShapeId() == shapeId)) {
+        if ((tile.getDecorationTypeId() == decorationType) && (tile.getDecorationShapeId() == shapeId)) {
             continue;
         }
 
-        tile.setDecorationType(decorationType);
+        tile.setDecorationTypeId(decorationType);
         tile.setDecorationShapeId(shapeId);
         affectedTiles.add(tile);
     }

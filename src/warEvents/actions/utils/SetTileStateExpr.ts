@@ -250,7 +250,7 @@ function evalActPlayerIndex(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile):
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const newValue = Math.floor(epResult.num);
-            return (tile.getWar().getPlayerManager().checkHasPlayer(newValue)) && (TileObjects_Utils.checkIsValidPlayerIndexForTileObject({ playerIndex : newValue, tileObjectType : tile.getObjectType() }))
+            return (tile.getWar().getPlayerManager().checkHasPlayer(newValue)) && (TileObjects_Utils.checkIsValidPlayerIndexForTileObject({ playerIndex : newValue, tileObjectType : tile.getObjectTypeId() }))
                 ? newValue
                 : defaultValue;
         } else {
@@ -417,11 +417,11 @@ function createNewTileData(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): 
     const customNameId              = evalActCustomNameId(action, tile);
 
     return Tiles_Utils_Serialization.create({
-        baseType          : tile.getBaseType(),
+        baseType          : tile.getBaseTypeId(),
         baseShapeId       : tile.getBaseShapeId(),
-        objectType        : tile.getObjectType(),
+        objectType        : tile.getObjectTypeId(),
         objectShapeId     : tile.getObjectShapeId(),
-        decorationType    : tile.getDecorationType(),
+        decorationType    : tile.getDecorationTypeId(),
         decorationShapeId : tile.getDecorationShapeId(),
         gridIndex         : tile.getGridIndex().toProto().toJson(),
         unfixedBuffArray  : tile.getUnfixedBuffList().map(v => v.toJson()),

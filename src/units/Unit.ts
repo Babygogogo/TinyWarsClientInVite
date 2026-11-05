@@ -1472,12 +1472,12 @@ export class Unit {
         return this._getBuildableTileCfg() != null;
     }
     public checkCanBuildOnTile(tile: Tiles_Tile.Tile): boolean {
-        const tileObjectType = tile.getObjectType();
+        const tileObjectType = tile.getObjectTypeId();
         if (tileObjectType == null) {
             throw Helpers_Misc.newError(`Unit.checkCanBuildOnTile() tileObjectType is empty.`);
         }
 
-        const tileBaseType = tile.getBaseType();
+        const tileBaseType = tile.getBaseTypeId();
         if (tileBaseType == null) {
             throw Helpers_Misc.newError(`Unit.checkCanBuildOnTile() empty tileBaseType.`);
         }

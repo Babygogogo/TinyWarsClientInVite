@@ -35,7 +35,6 @@ import {
     Sounds_Constants,
     Sounds_SoundPlayer,
     Tiles_TileView,
-    Tiles_Utils_Serialization,
     Timer_TimerModel,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -1067,12 +1066,12 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     private _onNotifyTileAnimationTick(): void {
         if (!this.getOpenData()?.dataForDrawUnit) {
-            this._tileView.updateTileAnimation();
+            this._tileView.updateOnNotifyTileAnimationTick();
         }
     }
     private _onNotifyStateIndicatorTick(): void {
         if (!this.getOpenData()?.dataForDrawUnit) {
-            this._tileView.updateImgBuff();
+            this._tileView.updateOnNotifyStateIndicatorTick();
         }
     }
 
@@ -1113,49 +1112,23 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             conTileView.setIsVisible(true);
 
             const war                       = openData.war;
-            const gameConfig                = war.getGcData();
             const dataForDrawTileBase       = openData.dataForDrawTileBase;
             const dataForDrawTileDecoration = openData.dataForDrawTileDecoration;
             const dataForDrawTileObject     = openData.dataForDrawTileObject;
-            const playerIndex               = dataForDrawTileObject?.playerIndex ?? Players_Constants.PlayerIndex.Neutral;
-            const tileData                  = Tiles_Utils_Serialization.create({
-                baseType          : dataForDrawTileBase?.baseType ?? null,
-                baseShapeId       : dataForDrawTileBase?.shapeId ?? null,
-                decorationType    : dataForDrawTileDecoration?.decorationType ?? null,
-                decorationShapeId : dataForDrawTileDecoration?.shapeId ?? null,
-                objectType        : dataForDrawTileObject?.objectType ?? null,
-                objectShapeId     : dataForDrawTileObject?.shapeId ?? null,
-                playerIndex       : playerIndex,
+            const tileView                  = this._tileView;
+            tileView.loadViewData({
+                baseTypeId        : dataForDrawTileBase?.baseType,
+                baseShapeId       : dataForDrawTileBase?.shapeId,
+                decorationTypeId  : dataForDrawTileDecoration?.decorationType,
+                decorationShapeId : dataForDrawTileDecoration?.shapeId,
+                objectTypeId      : dataForDrawTileObject?.objectType,
+                objectShapeId     : dataForDrawTileObject?.shapeId,
 
-                gridIndex              : { x : 0, y : 0 },
-                isHighlighted          : null,
-                customNameId           : null,
-                groupedLocationIdArray : [],
-                unfixedBuffArray       : [],
-
-                currentBuildPoint   : null,
-                currentCapturePoint : null,
-                currentHp           : null,
-
-                customBuildingData    : null,
-                customCannonData      : null,
-                customCrystalData     : null,
-                customLaserTurretData : null,
-            });
-            Tiles_Utils_Serialization.fillNonTrivialDefaultValues(tileData, gameConfig);
-
-            const tileView = this._tileView;
-            tileView.setData({
-                tileData         : tileData,
-                skinId           : playerIndex,
-                overridingSkinId : undefined,
-                hasFog           : false,
-                isFullReplay     : true,
-                gameConfig       : gameConfig,
-                themeType        : war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
+                skinId      : dataForDrawTileObject?.playerIndex ?? Players_Constants.PlayerIndex.Neutral,
+                themeTypeId : war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
                     ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme()),
-            });
-            tileView.updateView();
+            }, true);
+            tileView.refreshAllViews();
         }
 
         this._updateUnitView();

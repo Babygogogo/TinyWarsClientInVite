@@ -323,11 +323,11 @@ export async function applyWithoutExtraData(data: WeaSetTileStateSimple, isFastE
     {
         for (const tile of targetTileArray) {
             const tileData = Tiles_Utils_Serialization.create({
-                baseType          : tile.getBaseType(),
+                baseType          : tile.getBaseTypeId(),
                 baseShapeId       : tile.getBaseShapeId(),
-                objectType        : tile.getObjectType(),
+                objectType        : tile.getObjectTypeId(),
                 objectShapeId     : tile.getObjectShapeId(),
-                decorationType    : tile.getDecorationType(),
+                decorationType    : tile.getDecorationTypeId(),
                 decorationShapeId : tile.getDecorationShapeId(),
                 gridIndex         : tile.getGridIndex().toProto().toJson(),
                 unfixedBuffArray  : tile.getUnfixedBuffList().map(v => v.toJson()),
@@ -371,7 +371,7 @@ function evalActPlayerIndex(action: WeaSetTileStateSimple, tile: Tiles_Tile.Tile
 
     const newValue = MultiplierAndOffsets_Utils.getResultValue(act, defaultValue);
     if ((tile.getWar().getPlayerManager().checkHasPlayer(newValue)) &&
-        (TileObjects_Utils.checkIsValidPlayerIndexForTileObject({ playerIndex : newValue, tileObjectType : tile.getObjectType() }))
+        (TileObjects_Utils.checkIsValidPlayerIndexForTileObject({ playerIndex : newValue, tileObjectType : tile.getObjectTypeId() }))
     ) {
         return newValue;
     } else {
