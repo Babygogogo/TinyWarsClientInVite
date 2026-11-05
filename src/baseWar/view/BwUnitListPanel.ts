@@ -12,7 +12,8 @@ import {
     ReplayWar_Model_RwWar,
     ReplayWar_Model_RwWarBase,
     Sounds_Constants,
-    Tiles_TileView,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
     Tiles_TileViewData,
     Tween_Executor,
     Ui_Components_UiListItemRenderer,
@@ -272,7 +273,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const playerIndex   = this._playerIndex;
         for (const unit of Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, teamIndexes)) {
             if (unit.getPlayerIndex() === playerIndex) {
-                const dataForTileView = Tiles_TileViewData.TileViewData.generateFromTile(tileMap.getTile(unit.getGridIndex()), war);
+                const dataForTileView = Tiles_TileViewData.TileViewData.generateFromTile(tileMap.getTile(unit.getGridIndex()), war, true);
                 dataList.push({
                     cursor          : cursor,
                     unit            : unit,
@@ -334,24 +335,13 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _imgState!         : Ui_Interfaces_IUiImage.IUiImage;
 
     private _unitView                   : Units_UnitView.UnitView | undefined;
-    private readonly _tileView          = new Tiles_TileView.TileView();
+    private _tileView                   : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type : "TileAnimationTick",       callback : this._onNotifyTileAnimationTick },
-            { type : "StateIndicatorTick",      callback : this._onNotifyStateIndicatorTick },
-        ]);
         this._applySettingsForWholeTouch(undefined, undefined, undefined, Sounds_Constants.ShortSfxCode.None);
 
         this._imgHp.loadSource(Common_Model_CommonModel.getUnitAndTileTexturePrefix(Users_Model.getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_HP);
         this._imgFuel.loadSource(Common_Model_CommonModel.getUnitAndTileTexturePrefix(Users_Model.getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_FUEL);
-
-        const tileView      = this._tileView;
-        const conTileView   = this._conTileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgBuff());
-        conTileView.addUiChild(tileView.getImgObject());
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
@@ -372,8 +362,24 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
             this._updateUnitView();
         }
+
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
     protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
         if (this._unitView) {
             const view = this._unitView;
             this._conUnitView.removeUiChild(view);
@@ -385,13 +391,6 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
-    }
-
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnNotifyTileAnimationTick();
-    }
-    private _onNotifyStateIndicatorTick(): void {
-        this._tileView.updateOnNotifyStateIndicatorTick();
     }
 
     protected override _doApplyOpenData(): void {
@@ -443,11 +442,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             this._labelState.setIsVisible(false);
         }
 
-        const tileView = this._tileView;
-        tileView.loadViewData(openData.dataForTileView);
-        tileView.refreshAllViews();
-
         this._updateUnitView();
+        this._updateTileView();
     }
 
     private _updateUnitView(): void {
@@ -460,5 +456,16 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const unitView  = this._unitView;
         unitView?.loadViewDataFromUnit(unit, unit.getWar(), true);
         unitView?.refreshAllViews();
+    }
+
+    private _updateTileView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const tileView = this._tileView?.getView();
+        tileView?.loadViewData(openData.dataForTileView, true);
+        tileView?.refreshAllViews();
     }
 }

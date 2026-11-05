@@ -124,6 +124,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         if (this.loadViewData({
             skinId : ForceSkins_Utils.getFinalSkinId(war, this.getViewData().playerIndex),
         })) {
+            this._refreshAnimation();
             this._refreshCornerIconSources();
         }
     }

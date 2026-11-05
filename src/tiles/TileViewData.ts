@@ -16,7 +16,10 @@ export interface ITileViewData {
     objectShapeId       : number;
     decorationTypeId    : number;
     decorationShapeId   : number;
+    gridX               : number;
+    gridY               : number;
 
+    playerIndex         : number;
     themeTypeId         : number;
     skinId              : number;
     hasFog              : boolean;
@@ -31,27 +34,33 @@ export class TileViewData implements ITileViewData {
     public objectShapeId            = 0;
     public decorationTypeId         = Tiles_Constants_Common.DecorationTypeId.Empty;
     public decorationShapeId        = 0;
+    public gridX                    = 0;
+    public gridY                    = 0;
 
+    public playerIndex              = Players_Constants.PlayerIndex.Neutral;
     public themeTypeId              = Tiles_Constants_Common.ThemeTypeId.Normal;
     public skinId                   = ForceSkins_Constants.SkinId.Neutral;
     public hasFog                   = false;
     public isHighlighted            = false;
     public readonly buffTypeIdList  = new Array<number>();
 
-    public static generateFromTile(tile: Tiles_Tile.Tile, war: BaseWar_Interface_IBwWar.IBwWar): TileViewData {
-        const hasFog            = tile.getHasFog();
-        const isFullReplay      = war instanceof ReplayWar_Model_RwWar.RwWar;
-        const overridingSkinId  = ForceSkins_Utils.getRawOverridingSkinId(war, tile.getPlayerIndex()) ?? -1;
-        const baseTypeId        = tile.getBaseTypeId();
-        const objectTypeId      = tile.getObjectTypeId();
-        const skinId            = ((hasFog) && (!isFullReplay) && (!war.getGcData().getTileTemplateCfgByBaseTypeAndObjectType(baseTypeId, objectTypeId)?.getIsAlwaysShowOwner()))
-            ? ForceSkins_Constants.SkinId.Neutral
-            : (overridingSkinId >= Players_Constants.PlayerIndex.First
-                ? overridingSkinId
-                : tile.getSkinId()
-            );
+    public static generateFromTile(tile: Tiles_Tile.Tile, war: BaseWar_Interface_IBwWar.IBwWar, ignorePosition: boolean): TileViewData {
+        const playerIndex   = tile.getPlayerIndex();
+        const baseTypeId    = tile.getBaseTypeId();
+        const objectTypeId  = tile.getObjectTypeId();
+        const hasFog        = tile.getHasFog();
+        const skinId        = TileViewData.getNewSkinId({
+            war          : war,
+            playerIndex  : playerIndex,
+            baseTypeId   : baseTypeId,
+            objectTypeId : objectTypeId,
+            hasFog       : hasFog,
+            skinId       : tile.getSkinId(),
+        });
 
         return new TileViewData({
+            gridX             : ignorePosition ? 0 : tile.getGridX(),
+            gridY             : ignorePosition ? 0 : tile.getGridY(),
             baseTypeId        : baseTypeId,
             baseShapeId       : tile.getBaseShapeId(),
             objectTypeId      : objectTypeId,
@@ -59,12 +68,32 @@ export class TileViewData implements ITileViewData {
             decorationTypeId  : tile.getDecorationTypeId(),
             decorationShapeId : tile.getDecorationShapeId(),
 
+            playerIndex    : playerIndex,
             themeTypeId    : tile.getThemeTypeId(),
             skinId         : skinId,
             hasFog         : hasFog,
             isHighlighted  : tile.getIsHighlighted(),
             buffTypeIdList : [...new Set(tile.getUnfixedBuffList().map(v => v.getBuffTypeId()))],
         });
+    }
+
+    public static getNewSkinId({ war, playerIndex, baseTypeId, objectTypeId, hasFog, skinId }: {
+        war          : BaseWar_Interface_IBwWar.IBwWar;
+        playerIndex  : number;
+        baseTypeId   : number;
+        objectTypeId : number;
+        hasFog       : boolean;
+        skinId       : number;
+    }): number {
+        const isFullReplay      = war instanceof ReplayWar_Model_RwWar.RwWar;
+        const isAlwaysShowOwner = war.getGcData().getTileTemplateCfgByBaseTypeAndObjectType(baseTypeId, objectTypeId)?.getIsAlwaysShowOwner();
+        const overridingSkinId  = ForceSkins_Utils.getRawOverridingSkinId(war, playerIndex) ?? -1;
+        return ((hasFog) && (!isFullReplay) && (!isAlwaysShowOwner))
+            ? ForceSkins_Constants.SkinId.Neutral
+            : (overridingSkinId >= Players_Constants.PlayerIndex.First
+                ? overridingSkinId
+                : skinId
+            );
     }
 
     public constructor(source?: Partial<ITileViewData>) {
@@ -112,7 +141,25 @@ export class TileViewData implements ITileViewData {
             this.decorationShapeId = source.decorationShapeId;
             hasChanged = true;
         }
+        if ((source.gridX !== undefined) &&
+            (this.gridX !== source.gridX)
+        ) {
+            this.gridX = source.gridX;
+            hasChanged = true;
+        }
+        if ((source.gridY !== undefined) &&
+            (this.gridY !== source.gridY)
+        ) {
+            this.gridY = source.gridY;
+            hasChanged = true;
+        }
 
+        if ((source.playerIndex != null) &&
+            (source.playerIndex !== this.playerIndex)
+        ) {
+            this.playerIndex = source.playerIndex;
+            hasChanged = true;
+        }
         if ((source.themeTypeId != null) &&
             (source.themeTypeId !== this.themeTypeId)
         ) {

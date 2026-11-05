@@ -111,7 +111,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
             highlightLayer.removeUiChildren();
 
             for (const tile of tileMap.getAllTiles()) {
-                const view  = tile.getView();
+                const view  = Helpers_Misc.getExisted(tile.getView());
                 const x     = getGridWidth() * tile.getGridX();
                 const y     = getGridHeight() * (tile.getGridY() + 1);
                 tileViewArray.push(view);

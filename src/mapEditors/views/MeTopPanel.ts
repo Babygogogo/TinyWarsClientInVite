@@ -34,7 +34,8 @@ import {
     Players_Constants,
     Sounds_Constants,
     Sounds_SoundPlayer,
-    Tiles_TileView,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
     Timer_TimerModel,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -1020,22 +1021,10 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
     private _unitView               : Units_UnitView.UnitView | undefined;
-    private readonly _tileView      = new Tiles_TileView.TileView();
+    private _tileView               : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type : "TileAnimationTick",               callback : this._onNotifyTileAnimationTick },
-            { type : "StateIndicatorTick",              callback : this._onNotifyStateIndicatorTick },
-        ]);
         this._applySettingsForWholeTouch();
-
-        const tileView      = this._tileView;
-        const conTileView   = this._conTileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
-        conTileView.addUiChild(tileView.getImgBuff());
-        conTileView.addUiChild(tileView.getImgHighlight());
     }
 
     protected override async _onOpened(): Promise<void> {
@@ -1048,11 +1037,27 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
             this._updateUnitView();
         }
+
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
     }
     protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
         if (this._unitView) {
             const view = this._unitView;
             this._conUnitView.removeUiChild(view);
@@ -1062,17 +1067,6 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         }
 
         await super._onClosed();
-    }
-
-    private _onNotifyTileAnimationTick(): void {
-        if (!this.getOpenData()?.dataForDrawUnit) {
-            this._tileView.updateOnNotifyTileAnimationTick();
-        }
-    }
-    private _onNotifyStateIndicatorTick(): void {
-        if (!this.getOpenData()?.dataForDrawUnit) {
-            this._tileView.updateOnNotifyStateIndicatorTick();
-        }
     }
 
     public onItemTapEvent(): void {
@@ -1103,35 +1097,8 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const dataForDrawUnit   = openData.dataForDrawUnit;
-        const conTileView       = this._conTileView;
-        if (dataForDrawUnit != null) {
-            conTileView.setIsVisible(false);
-
-        } else {
-            conTileView.setIsVisible(true);
-
-            const war                       = openData.war;
-            const dataForDrawTileBase       = openData.dataForDrawTileBase;
-            const dataForDrawTileDecoration = openData.dataForDrawTileDecoration;
-            const dataForDrawTileObject     = openData.dataForDrawTileObject;
-            const tileView                  = this._tileView;
-            tileView.loadViewData({
-                baseTypeId        : dataForDrawTileBase?.baseType,
-                baseShapeId       : dataForDrawTileBase?.shapeId,
-                decorationTypeId  : dataForDrawTileDecoration?.decorationType,
-                decorationShapeId : dataForDrawTileDecoration?.shapeId,
-                objectTypeId      : dataForDrawTileObject?.objectType,
-                objectShapeId     : dataForDrawTileObject?.shapeId,
-
-                skinId      : dataForDrawTileObject?.playerIndex ?? Players_Constants.PlayerIndex.Neutral,
-                themeTypeId : war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
-                    ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme()),
-            }, true);
-            tileView.refreshAllViews();
-        }
-
         this._updateUnitView();
+        this._updateTileView();
     }
 
     private _updateUnitView(): void {
@@ -1155,6 +1122,41 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         } else {
             conUnitView.setIsVisible(false);
+        }
+    }
+
+    private _updateTileView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const dataForDrawUnit   = openData.dataForDrawUnit;
+        const conTileView       = this._conTileView;
+        if (dataForDrawUnit != null) {
+            conTileView.setIsVisible(false);
+
+        } else {
+            conTileView.setIsVisible(true);
+
+            const war                       = openData.war;
+            const dataForDrawTileBase       = openData.dataForDrawTileBase;
+            const dataForDrawTileDecoration = openData.dataForDrawTileDecoration;
+            const dataForDrawTileObject     = openData.dataForDrawTileObject;
+            const tileView                  = this._tileView?.getView();
+            tileView?.loadViewData({
+                baseTypeId        : dataForDrawTileBase?.baseType,
+                baseShapeId       : dataForDrawTileBase?.shapeId,
+                decorationTypeId  : dataForDrawTileDecoration?.decorationType,
+                decorationShapeId : dataForDrawTileDecoration?.shapeId,
+                objectTypeId      : dataForDrawTileObject?.objectType,
+                objectShapeId     : dataForDrawTileObject?.shapeId,
+
+                skinId      : dataForDrawTileObject?.playerIndex ?? Players_Constants.PlayerIndex.Neutral,
+                themeTypeId : war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
+                    ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme()),
+            }, true);
+            tileView?.refreshAllViews();
         }
     }
 }

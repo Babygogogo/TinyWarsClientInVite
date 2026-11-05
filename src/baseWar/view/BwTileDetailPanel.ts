@@ -36,7 +36,8 @@ import {
     Tiles_Constants_Common,
     Tiles_Constants_CustomLimits,
     Tiles_Constants_MapWeapon,
-    Tiles_TileView,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
     Tiles_Utils_Serialization,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -98,14 +99,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _btnUnmark!            : Ui_Interfaces_IUiButton.IUiButton;
     private readonly _btnBatchMark!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _tileView              = new Tiles_TileView.TileView();
+    private _tileView                       : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
-            { type : "ActionPlannerStateChanged",     callback : this._onNotifyBwPlannerStateChanged },
-            { type : "TileAnimationTick",               callback : this._onNotifyTileAnimationTick },
-            { type : "StateIndicatorTick",              callback : this._onNotifyStateIndicatorTick },
+            { type : "ActionPlannerStateChanged",       callback : this._onNotifyBwPlannerStateChanged },
             { type : "BwTileIsHighlightedChanged",      callback : this._onNotifyTileIsHighlightedChanged },
             { type : "BwTileBuffChanged",               callback : this._onNotifyTileBuffChanged },
             { type : "BwTileCustomNameIdChanged",       callback : this._onNotifyTileCustomNameIdChanged },
@@ -130,19 +129,30 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._listInfo.setItemRendererClass(InfoRenderer);
         this._listMoveCost.setItemRendererClass(MoveCostRenderer);
         this._listDamageChart.setItemRendererClass(DamageRenderer);
+    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        const tileView      = this._tileView;
-        const conTileView   = this._conTileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
-        conTileView.addUiChild(tileView.getImgBuff());
-        conTileView.addUiChild(tileView.getImgHighlight());
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
     }
     protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
         await Promise.all([
             this._listDamageChart.removeAllItems(),
             this._listInfo.removeAllItems(),
@@ -160,12 +170,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onNotifyBwPlannerStateChanged(): void {
         // this.close();
-    }
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnNotifyTileAnimationTick();
-    }
-    private _onNotifyStateIndicatorTick(): void {
-        this._tileView.updateOnNotifyStateIndicatorTick();
     }
     private _onNotifyTileIsHighlightedChanged(): void {
         this._updateTileView();
@@ -558,9 +562,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const tileView = this._tileView;
-        tileView.loadViewDataFromTile(tile, tile.getWar());
-        tileView.refreshAllViews();
+        const tileView = this._tileView?.getView();
+        tileView?.loadViewDataFromTile(tile, tile.getWar(), true);
+        tileView?.refreshAllViews();
     }
 
     private _updateBtnModifyType(): void {

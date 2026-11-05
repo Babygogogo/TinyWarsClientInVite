@@ -9,7 +9,8 @@ import {
     Notifications_Dispatcher,
     Sounds_Constants,
     Sounds_SoundPlayer,
-    Tiles_TileView,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
     Timer_TimerModel,
     Tween_Executor,
     Ui_Components_UiPanel,
@@ -50,7 +51,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgState!         : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _labelState!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _tileView          = new Tiles_TileView.TileView();
+    private _tileView                   : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
@@ -59,8 +60,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { type : "BwCursorGridIndexChanged",        callback : this._onNotifyBwCursorGridIndexChanged },
             { type : "ActionPlannerStateSet",           callback : this._onNotifyActionPlannerStateChanged },
             { type : "BwTileChanged",                   callback : this._onNotifyMeTileChanged },
-            { type : "TileAnimationTick",               callback : this._onNotifyTileAnimationTick },
-            { type : "StateIndicatorTick",              callback : this._onNotifyStateIndicatorTick },
             { type : "BwTileIsHighlightedChanged",      callback : this._onNotifyTileIsHighlightedChanged },
             { type : "BwTileBuffChanged",               callback : this._onNotifyTileBuffChanged },
             { type : "BwOverridingSkinIdChanged",       callback : this._onNotifyBwOverridingSkinIdChanged },
@@ -71,17 +70,31 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._setUiListenerArray([
             { ui : this._group, callback : this._onTouchedGroup },
         ]);
+    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        const tileView      = this._tileView;
-        const conTileView   = this._conTileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
-        conTileView.addUiChild(tileView.getImgBuff());
-        conTileView.addUiChild(tileView.getImgHighlight());
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,12 +127,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if ((war?.getIsRunning()) && (data.gridIndex.checkIsEqual(war.getCursor().getGridIndex()))) {
             this._updateView();
         }
-    }
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnNotifyTileAnimationTick();
-    }
-    private _onNotifyStateIndicatorTick(): void {
-        this._tileView.updateOnNotifyStateIndicatorTick();
     }
     private _onNotifyTileIsHighlightedChanged(): void {
         this._updateTileView();
@@ -250,9 +257,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const tileView = this._tileView;
-        tileView.loadViewDataFromTile(war.getTileMap().getTile(war.getCursor().getGridIndex()), war);
-        tileView.refreshAllViews();
+        const tileView = this._tileView?.getView();
+        tileView?.loadViewDataFromTile(war.getTileMap().getTile(war.getCursor().getGridIndex()), war, true);
+        tileView?.refreshAllViews();
     }
 
     // private async _adjustPositionOnTouch(e: egret.TouchEvent): Promise<void> {

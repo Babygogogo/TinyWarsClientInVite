@@ -28,25 +28,26 @@ export class TileView {
         {
             const imgBase = this.getImgBase();
             imgBase.setIsSmoothing(false);
-            imgBase.setAnchorOffsetY(getGridHeight());
+            // imgBase.setAnchorOffsetY(getGridHeight());
         }
 
         {
             const imgDecoration = this.getImgDecoration();
             imgDecoration.setIsSmoothing(false);
-            imgDecoration.setAnchorOffsetY(getGridHeight());
+            // imgDecoration.setAnchorOffsetY(getGridHeight());
         }
 
         {
             const imgObject = this.getImgObject();
             imgObject.setIsSmoothing(false);
-            imgObject.setAnchorOffsetY(getGridHeight() * 2);
+            // imgObject.setAnchorOffsetY(getGridHeight() * 2);
+            imgObject.setAnchorOffsetY(getGridHeight());
         }
 
         {
             const imgBuff = this.getImgBuff();
             imgBuff.setIsSmoothing(false);
-            imgBuff.setAnchorOffsetY(getGridHeight());
+            // imgBuff.setAnchorOffsetY(getGridHeight());
         }
 
         {
@@ -55,7 +56,7 @@ export class TileView {
             imgHighlight.setUnscaledManualWidth(getGridWidth());
             imgHighlight.setUnscaledManualHeight(getGridHeight());
             imgHighlight.setAlpha(0.6);
-            imgHighlight.setAnchorOffsetY(getGridHeight());
+            // imgHighlight.setAnchorOffsetY(getGridHeight());
         }
     }
 
@@ -69,6 +70,21 @@ export class TileView {
     }
     public updateOnNotifyStateIndicatorTick(): void {
         this._refreshImgBuff();
+    }
+    public updateOnNotifyBwOverridingSkinIdChanged(war: BaseWar_Interface_IBwWar.IBwWar): void {
+        const viewData = this.getViewData();
+        if (this.loadViewData({
+            skinId : Tiles_TileViewData.TileViewData.getNewSkinId({
+                war          : war,
+                playerIndex  : viewData.playerIndex,
+                baseTypeId   : viewData.baseTypeId,
+                objectTypeId : viewData.objectTypeId,
+                hasFog       : viewData.hasFog,
+                skinId       : viewData.skinId,
+            }),
+        })) {
+            this._refreshAnimation();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,8 +100,8 @@ export class TileView {
             return this.getViewData().mergeFrom(viewData);
         }
     }
-    public loadViewDataFromTile(tile: Tiles_Tile.Tile, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
-        return this.loadViewData(Tiles_TileViewData.TileViewData.generateFromTile(tile, war));
+    public loadViewDataFromTile(tile: Tiles_Tile.Tile, war: BaseWar_Interface_IBwWar.IBwWar, ignorePosition = false): boolean {
+        return this.loadViewData(Tiles_TileViewData.TileViewData.generateFromTile(tile, war, ignorePosition));
     }
 
     private _getBuffIconSources(): string[] {
@@ -95,6 +111,7 @@ export class TileView {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public refreshAllViews(): void {
         this._refreshBuffIconSources();
+        this._refreshPosition();
         this._refreshAnimation();
         this._refreshImgBuff();
         this._refreshImgHighlight();
@@ -200,6 +217,17 @@ export class TileView {
         }
     }
 
+    private _refreshPosition(): void {
+        const viewData  = this.getViewData();
+        const x         = getGridWidth() * viewData.gridX;
+        const y         = getGridHeight() * viewData.gridY;
+        setXy(this.getImgBase(), x, y);
+        setXy(this.getImgObject(), x, y);
+        setXy(this.getImgDecoration(), x, y);
+        setXy(this.getImgBuff(), x, y);
+        setXy(this.getImgHighlight(), x, y);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getImgHighlight(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgHighlight;
@@ -216,4 +244,9 @@ export class TileView {
     public getImgBase(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgBase;
     }
+}
+
+function setXy(img: Ui_Interfaces_IUiImage.IUiImage, x: number, y: number): void {
+    img.setX(x);
+    img.setY(y);
 }

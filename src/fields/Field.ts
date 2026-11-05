@@ -140,6 +140,7 @@ export class Field implements Fields_IField.IField {
     public dispose(): void {
         this.stopRunning();
 
+        this.getTileMap().dispose();
         this.getUnitMap().dispose();
     }
 

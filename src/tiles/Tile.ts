@@ -20,6 +20,7 @@ import {
     Tiles_Constants_DefaultCustomTileData,
     Tiles_Constants_MapWeapon,
     Tiles_TileView,
+    Tiles_TileViewPool,
     Tiles_Utils_Common,
     Tiles_Utils_CustomTileData,
     Tiles_Utils_Serialization,
@@ -70,9 +71,15 @@ export class Tile {
     private _customLaserTurretData      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomLaserTurretData>;
     private _customBuildingData         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomBuildingData>;
 
-    private readonly _view  = new Tiles_TileView.TileView();
+    private _view           : Tiles_TileView.TileView | undefined;
     private _hasFog         = false;
     private _war?           : BaseWar_Interface_IBwWar.IBwWar;
+
+    public constructor(needView: boolean) {
+        if (needView) {
+            this._setView(Tiles_TileViewPool.TileViewPool.getInstance().acquire());
+        }
+    }
 
     public init(data: SerialTile, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this.deserialize(data, gameConfig);
@@ -87,6 +94,19 @@ export class Tile {
     }
     public startRunningView(): void {
         this.flushDataToView();
+    }
+    public stopRunning(): void {
+        // nothing to do
+    }
+    public dispose(): void {
+        this.stopRunning();
+
+        const view = this.getView();
+        if (view) {
+            view.dispose();
+            Tiles_TileViewPool.TileViewPool.getInstance().release(view);
+            this._setView(undefined);
+        }
     }
 
     public getErrorCodeForTileData(data: SerialTile, playersCountUnneutral: number, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode {
@@ -305,13 +325,16 @@ export class Tile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////
-    public getView(): Tiles_TileView.TileView {
+    public getView(): Tiles_TileView.TileView | undefined {
         return this._view;
+    }
+    private _setView(view: Tiles_TileView.TileView | undefined): void {
+        this._view = view;
     }
     public flushDataToView(): void {
         const view = this.getView();
-        view.loadViewDataFromTile(this, this.getWar());
-        view.refreshAllViews();
+        view?.loadViewDataFromTile(this, this.getWar());
+        view?.refreshAllViews();
     }
 
     public setBaseTypeId(baseType: number): void {

@@ -1,21 +1,21 @@
 import {
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_MapSize,
-    Tiles_Tile,
-    Tiles_TileMapView,
-    type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Utils_ClientErrorCode,
     Helpers_Collection,
-    Notifications_Dispatcher,
-    Locations_Utils,
-    Visibilities_Utils,
-    Tiles_Utils_CustomName,
     Helpers_Misc,
     Locations_Constants,
+    Locations_Utils,
+    Notifications_Dispatcher,
     Players_Constants,
     Tiles_Constants_Common,
+    Tiles_Tile,
+    Tiles_TileMapView,
+    Tiles_Utils_CustomName,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Interface_IBwWar,
+    type GameConfigs_GameConfig,
 } from "../internal.ts";
 
 import type { TileCustomName } from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
@@ -23,7 +23,8 @@ import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/Se
 import { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
 
 export class TileMap {
-    private _map?                           : Tiles_Tile.Tile[][];
+    private readonly _map                   = new Array<Tiles_Tile.Tile[]>();
+
     private _tileCustomNameArray?           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomName[]>;
     private _mapSize?                       : AuxiliaryTypes_MapSize.MapSize;
     private _visibleGroupedLocationIdArray  : number[] = [];
@@ -71,7 +72,7 @@ export class TileMap {
                 throw Helpers_Misc.newError(`Duplicated gridIndex: ${gridX}, ${gridY}`, Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_05);
             }
 
-            const tile = new Tiles_Tile.Tile();
+            const tile = new Tiles_Tile.Tile(true);
             tile.init(tileData, gameConfig);
 
             const playerIndex = tile.getPlayerIndex();
@@ -83,6 +84,13 @@ export class TileMap {
             }
 
             map[gridX][gridY] = tile;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        for (const column of this.getMap()) {
+            for (const tile of column) {
+                tile.dispose();
+            }
         }
 
         this._setMap(map);
@@ -117,6 +125,18 @@ export class TileMap {
     }
     public stopRunning(): void {
         this.getView().stopRunningView();
+        this.forEachTile(tile => tile.stopRunning());
+    }
+    public dispose(): void {
+        this.stopRunning();
+
+        const map = this.getMap();
+        for (const column of map) {
+            for (const tile of column) {
+                tile.dispose();
+            }
+        }
+        map.length = 0;
     }
 
     public serialize(): SerialTileMap {
@@ -169,11 +189,13 @@ export class TileMap {
         return Helpers_Misc.getExisted(this._war);
     }
 
-    private _setMap(map: Tiles_Tile.Tile[][]): void {
-        this._map = map;
+    private _setMap(newMap: Tiles_Tile.Tile[][]): void {
+        const map   = this.getMap();
+        map.length  = 0;
+        map.push(...newMap);
     }
     public getMap(): Tiles_Tile.Tile[][] {
-        return Helpers_Misc.getExisted(this._map);
+        return this._map;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -183,7 +205,7 @@ export class TileMap {
         return this._view;
     }
 
-    public forEachTile(func: (t: Tiles_Tile.Tile) => any): void {
+    public forEachTile(func: (t: Tiles_Tile.Tile) => unknown): void {
         for (const column of this.getMap()) {
             for (const tile of column) {
                 func(tile);
