@@ -1,14 +1,15 @@
 import {
-    Tween_Executor,
     GameConfigs_GameConfig,
-    TileBases_Utils,
     Helpers_Misc,
+    Lang_Constants,
     Lang_Utils,
     Players_Constants,
-    Lang_Constants,
+    TileBases_Utils,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
+    Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiTileView,
     type MapEditor_Model_MeTypes,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -198,45 +199,35 @@ class TileBaseRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _tileView   = new Ui_Components_UiTileView.UiTileView();
+    private _tileView               : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type : "TileAnimationTick",  callback : this._onNotifyTileAnimationTick },
-        ]);
         this._applySettingsForWholeTouch();
-
-        const tileView      = this._tileView;
-        const conTileView   = this._conTileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
-        tileView.startRunningView();
     }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnAnimationTick();
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
-
     protected override _doApplyOpenData(): void {
-        const openData = this.getOpenData();
-        if (openData == null) {
-            return;
+        this._updateTileView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
         }
 
-        const dataForDrawTileBase = openData.dataForDrawTileBase;
-        this._tileView.init({
-            tileBaseShapeId       : dataForDrawTileBase.shapeId,
-            tileBaseType          : dataForDrawTileBase.baseType,
-            tileDecorationType    : null,
-            tileDecorationShapeId : null,
-            tileObjectShapeId     : null,
-            tileObjectType        : null,
-            skinId                : Players_Constants.PlayerIndex.Neutral,
-            overridingSkinId      : undefined,
-            gameConfig            : openData.gameConfig,
-        });
-        this._tileView.updateView();
+        await super._onClosed();
     }
 
     public onItemTapEvent(): void {
@@ -249,5 +240,21 @@ class TileBaseRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const dataForDrawTileBase   = openData.dataForDrawTileBase;
         openData.callback(dataForDrawTileBase.baseType, dataForDrawTileBase.shapeId);
         panel.closePanel();
+    }
+
+    private _updateTileView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const dataForDrawTileBase = openData.dataForDrawTileBase;
+        const tileView = this._tileView?.getView();
+        tileView?.loadViewData({
+            baseShapeId : dataForDrawTileBase.shapeId,
+            baseTypeId  : dataForDrawTileBase.baseType,
+            skinId      : Players_Constants.PlayerIndex.Neutral,
+        }, true);
+        tileView?.refreshAllViews();
     }
 }

@@ -13,9 +13,10 @@ import {
     Sounds_Constants,
     Sounds_SoundPlayer,
     Tiles_Constants_Common,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiTileView,
     Units_Constants,
     Units_UnitView,
     Units_UnitViewPool,
@@ -977,27 +978,36 @@ class MoveCostRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     private readonly _conView!          : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _labelMoveCost!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _tileView          = new Ui_Components_UiTileView.UiTileView();
+    private _tileView                   : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type : "TileAnimationTick",   callback : this._onNotifyTileAnimationTick },
-        ]);
         this.setIsTouchChildrenEnabled(false);
-
-        const conView   = this._conView;
-        const tileView  = this._tileView;
-        conView.addUiChild(tileView.getImgBase());
-        conView.addUiChild(tileView.getImgDecoration());
-        conView.addUiChild(tileView.getImgObject());
     }
 
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnAnimationTick();
-    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conView.addUiChild(view);
+
+            this._updateTileView();
+        }
+    }
     protected override _doApplyOpenData(): void {
         this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1012,24 +1022,30 @@ class MoveCostRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         this._imgBg.setIsVisible(openData.index % 4 === 2);
 
         const gameConfig    = openData.gameConfig;
-        const tileType      = openData.tileType;
-        const moveCostCfg   = Helpers_Misc.getExisted(gameConfig.getMoveCostCfg(tileType));
+        const moveCostCfg   = Helpers_Misc.getExisted(gameConfig.getMoveCostCfg(openData.tileType));
         const moveCost      = moveCostCfg[Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(openData.unitType)?.getMoveTypeId())].getCost();
         this._labelMoveCost.setText(moveCost != null ? `${moveCost}` : `--`);
 
-        const tileView          = this._tileView;
+        this._updateTileView();
+    }
+
+    private _updateTileView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const gameConfig    = openData.gameConfig;
+        const tileType      = openData.tileType;
         const tileTemplateCfg   = gameConfig.getTileTemplateCfg(tileType);
-        tileView.init({
-            tileBaseType          : tileTemplateCfg?.getToTileBaseTypeId() ?? null,
-            tileBaseShapeId       : 0,
-            tileDecorationType    : null,
-            tileDecorationShapeId : null,
-            tileObjectType        : tileTemplateCfg?.getToTileObjectTypeId() ?? null,
-            tileObjectShapeId     : 0,
-            skinId                : Players_Constants.PlayerIndex.Neutral,
-            overridingSkinId      : undefined,
-            gameConfig            : gameConfig,
-        });
-        tileView.updateView();
+        const tileView          = this._tileView?.getView();
+        tileView?.loadViewData({
+            baseTypeId    : tileTemplateCfg?.getToTileBaseTypeId() ?? -1,
+            baseShapeId   : 0,
+            objectTypeId  : tileTemplateCfg?.getToTileObjectTypeId() ?? -1,
+            objectShapeId : 0,
+            skinId        : Players_Constants.PlayerIndex.Neutral,
+        }, true);
+        tileView?.refreshAllViews();
     }
 }

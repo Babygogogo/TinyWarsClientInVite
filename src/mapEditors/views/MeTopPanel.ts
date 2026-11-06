@@ -39,7 +39,6 @@ import {
     Timer_TimerModel,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiTileView,
     Units_UnitView,
     Units_UnitViewPool,
     Users_Model,
@@ -125,13 +124,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _labelMouseHover!              : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _unitView                               : Units_UnitView.UnitView | undefined;
-    private readonly _tileView                      = new Ui_Components_UiTileView.UiTileView();
+    private _tileView                               : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
             { type : "TimeTick",                            callback : this._onNotifyTimeTick },
-            { type : "TileAnimationTick",                   callback : this._onNotifyTileAnimationTick },
             { type : "MeDrawerModeChanged",                 callback : this._onNotifyMeDrawerModeChanged },
             { type : "MeAutoAdjustToggleVisibilityChanged", callback : this._onNotifyMeAutoAdjustToggleVisibilityChanged },
             { type : "MeRealTimeAdjustChanged",             callback : this._onNotifyMeRealTimeAdjustChanged },
@@ -177,12 +175,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         ]);
         this.getEventAgent().addAutoEnterFrameListener(this._onEnterFrame, this);
 
-        const tileView      = this._tileView;
-        const conTileView   = this._conTileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
-
         this._listRecent.setItemRendererClass(RecentRenderer);
         this._labelLocation.setAutoShrinkHeight(12);
         this._labelMouseHover.setAutoShrinkHeight(12);
@@ -199,6 +191,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             this._updateUnitView();
         }
+
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
@@ -210,6 +210,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             Units_UnitViewPool.UnitViewPool.getInstance().release(view);
             delete this._unitView;
+        }
+
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
         }
 
         await this._listRecent.removeAllItems();
@@ -264,9 +272,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 gridMarkData              : war.getGridMarkData(),
             });
         }
-    }
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnAnimationTick();
     }
     private async _onNotifyMeDrawerModeChanged(): Promise<void> {
         this._updateGroupRight();
@@ -827,75 +832,54 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const drawer        = this._getDrawer();
         const mode          = drawer.getMode();
         const con           = this._conTileView;
-        const tileView      = this._tileView;
-        const gameConfig    = this._getWar().getGcData();
+        const tileView      = this._tileView?.getView();
         if (mode === MapEditors_Constants.DrawerMode.DrawTileBase) {
             con.setIsVisible(true);
 
             const tileBaseData = Helpers_Misc.getExisted(drawer.getDrawTargetTileBaseData());
-            tileView.init({
-                tileBaseShapeId       : tileBaseData.shapeId,
-                tileBaseType          : tileBaseData.baseType,
-                tileDecorationType    : null,
-                tileDecorationShapeId : null,
-                tileObjectShapeId     : null,
-                tileObjectType        : null,
-                skinId                : Players_Constants.PlayerIndex.Neutral,
-                overridingSkinId      : undefined,
-                gameConfig            : gameConfig,
-            });
-            tileView.updateView();
+            tileView?.loadViewData({
+                baseShapeId : tileBaseData.shapeId,
+                baseTypeId  : tileBaseData.baseType,
+                skinId      : Players_Constants.PlayerIndex.Neutral,
+            }, true);
+            tileView?.refreshAllViews();
 
         } else if (mode === MapEditors_Constants.DrawerMode.DrawTileDecoration) {
             con.setIsVisible(true);
 
             const tileDecorationData = Helpers_Misc.getExisted(drawer.getDrawTargetTileDecorationData());
-            tileView.init({
-                tileBaseShapeId       : null,
-                tileBaseType          : null,
-                tileDecorationType    : tileDecorationData.decorationType,
-                tileDecorationShapeId : tileDecorationData.shapeId,
-                tileObjectShapeId     : null,
-                tileObjectType        : null,
-                skinId                : Players_Constants.PlayerIndex.Neutral,
-                overridingSkinId      : undefined,
-                gameConfig            : gameConfig,
-            });
-            tileView.updateView();
+            tileView?.loadViewData({
+                decorationTypeId  : tileDecorationData.decorationType,
+                decorationShapeId : tileDecorationData.shapeId,
+                skinId            : Players_Constants.PlayerIndex.Neutral,
+            }, true);
+            tileView?.refreshAllViews();
 
         } else if (mode === MapEditors_Constants.DrawerMode.DrawTileObject) {
             con.setIsVisible(true);
 
             const tileObjectData = Helpers_Misc.getExisted(drawer.getDrawTargetTileObjectData());
-            tileView.init({
-                tileBaseShapeId       : null,
-                tileBaseType          : null,
-                tileDecorationType    : null,
-                tileDecorationShapeId : null,
-                tileObjectShapeId     : tileObjectData.shapeId,
-                tileObjectType        : tileObjectData.objectType,
-                skinId                : tileObjectData.playerIndex,
-                overridingSkinId      : undefined,
-                gameConfig            : gameConfig,
-            });
-            tileView.updateView();
+            tileView?.loadViewData({
+                objectShapeId : tileObjectData.shapeId,
+                objectTypeId  : tileObjectData.objectType,
+                skinId        : tileObjectData.playerIndex,
+            }, true);
+            tileView?.refreshAllViews();
 
         } else if (mode === MapEditors_Constants.DrawerMode.PasteTile) {
             con.setIsVisible(true);
 
             const data = Helpers_Misc.getExisted(drawer.getDataForPasteTile());
-            tileView.init({
-                tileBaseShapeId       : data.getBaseShapeId(),
-                tileBaseType          : data.getBaseType(),
-                tileDecorationType    : data.getDecorationType(),
-                tileDecorationShapeId : data.getDecorationShapeId(),
-                tileObjectShapeId     : data.getObjectShapeId(),
-                tileObjectType        : data.getObjectType(),
-                skinId                : ForceSkins_Utils.getDefaultSkinId(data.getPlayerIndex()),
-                overridingSkinId      : undefined,
-                gameConfig            : gameConfig,
-            });
-            tileView.updateView();
+            tileView?.loadViewData({
+                baseShapeId       : data.getBaseShapeId(),
+                baseTypeId        : data.getBaseType(),
+                decorationTypeId  : data.getDecorationType(),
+                decorationShapeId : data.getDecorationShapeId(),
+                objectShapeId     : data.getObjectShapeId(),
+                objectTypeId      : data.getObjectType(),
+                skinId            : ForceSkins_Utils.getDefaultSkinId(data.getPlayerIndex()),
+            }, true);
+            tileView?.refreshAllViews();
 
         } else {
             con.setIsVisible(false);
@@ -992,19 +976,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Util functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _initTileView(): void {
-        const tileView = this._tileView;
-        tileView.init({
-            tileBaseType          : null,
-            tileBaseShapeId       : null,
-            tileDecorationType    : null,
-            tileDecorationShapeId : null,
-            tileObjectType        : null,
-            tileObjectShapeId     : null,
-            skinId                : Players_Constants.PlayerIndex.Neutral,
-            overridingSkinId      : undefined,
-            gameConfig            : this._getWar().getGcData(),
-        });
-        tileView.startRunningView();
+        const tileView = this._tileView?.getView();
+        tileView?.loadViewData({
+            skinId : Players_Constants.PlayerIndex.Neutral,
+        }, true);
+        tileView?.refreshAllViews();
     }
 }
 

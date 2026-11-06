@@ -1,15 +1,16 @@
 import {
-    Stages_Constants,
-    Tween_Executor,
     ForceSkins_Utils,
     Helpers_Misc,
+    Lang_Constants,
     Lang_Utils,
     Numbers_Utils,
     Players_Constants,
-    Lang_Constants,
+    Stages_Constants,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
+    Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiTileView,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -146,32 +147,43 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _labelType!    : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _tileView      = new Ui_Components_UiTileView.UiTileView();
+    private _tileView               : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
-            { type : "TileAnimationTick",   callback : this._onNotifyTileAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
-
-        const conTileView   = this._conTileView;
-        const tileView      = this._tileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
 
-        const imgSelected = this._imgSelected;
-        imgSelected.setAlpha(0);
-        Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop : true })
-            .to({ customAlpha : 0.6 }, 500)
-            .to({ customAlpha : 0 }, 500);
+        {
+            const imgSelected = this._imgSelected;
+            imgSelected.setAlpha(0);
+            Tween_Executor.Executor.removeTweens(imgSelected);
+            Tween_Executor.Executor.get(imgSelected, { loop : true })
+                .to({ customAlpha : 0.6 }, 500)
+                .to({ customAlpha : 0 }, 500);
+        }
+
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
     protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
         Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
@@ -193,9 +205,6 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     private _onNotifyLanguageChanged(): void {        // DONE
         this._updateComponentsForLanguage();
-    }
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnAnimationTick();
     }
 
     private _updateComponentsForLanguage(): void {
@@ -223,17 +232,15 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const tileType      = openData.tileType;
         const gameConfig    = openData.gameConfig;
-        this._tileView.init({
-            tileBaseType          : Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType)),
-            tileBaseShapeId       : 0,
-            tileDecorationType    : null,
-            tileDecorationShapeId : null,
-            tileObjectType        : Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType)),
-            tileObjectShapeId     : 0,
-            skinId                : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
-            overridingSkinId      : undefined,
-            gameConfig            : gameConfig,
-        });
+        const tileView      = this._tileView?.getView();
+        tileView?.loadViewData({
+            baseTypeId    : Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType)),
+            baseShapeId   : 0,
+            objectTypeId  : Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType)),
+            objectShapeId : 0,
+            skinId        : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
+        }, true);
+        tileView?.refreshAllViews();
     }
     private _updateImgSelected(): void {
         const openData = this.getOpenData();

@@ -1,9 +1,7 @@
 import {
-    AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_MapSize,
     Campaigns_Mains_Provider,
-    Common_Model_CommonModel,
-    ForceSkins_Constants,
+    ForceSkins_Utils,
     GameConfigs_Provider,
     Graphics_Utils,
     Helpers_Collection,
@@ -11,7 +9,8 @@ import {
     Helpers_ProtoSchema_WarSerialization_SerialWar,
     NormalMap_Model_NormalMapModel,
     Notifications_Dispatcher,
-    Tiles_Constants_Common,
+    Tiles_TileView,
+    Tiles_TileViewPool,
     Ui_Components_UiContainer,
     Ui_Components_UiContainerBase,
     Ui_Components_UiImage,
@@ -27,7 +26,6 @@ import {
     type GameConfigs_GameConfig,
     type Notifications_Types,
     type Ui_Interfaces_IUiContainer,
-    type Ui_Interfaces_IUiImage,
 } from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
@@ -58,7 +56,7 @@ export class CommonMapView extends Ui_Components_UiContainerBase.UiContainerBase
     }): void {
         this.setUnscaledManualWidth(getGridWidth()  * mapRawData.getMapWidth());
         this.setUnscaledManualHeight(getGridHeight() * mapRawData.getMapHeight());
-        this._tileMapView.showTileMap(gameConfig, mapRawData.getTileDataArray(), overridingPlayers);
+        this._tileMapView.showTileMap(mapRawData.getTileDataArray(), overridingPlayers);
         this._unitMapView.showUnitMap({
             unitDataArray : mapRawData.getUnitDataArray(),
             players       : overridingPlayers,
@@ -133,7 +131,7 @@ export class CommonMapView extends Ui_Components_UiContainerBase.UiContainerBase
         this.setUnscaledManualHeight(getGridHeight() * mapSize.getHeight());
 
         overridingPlayers ??= Helpers_Misc.getExisted(warData.getPlayerManager()?.getPlayers());
-        this._tileMapView.showTileMap(gameConfig, tileMap.getTiles(), overridingPlayers);
+        this._tileMapView.showTileMap(tileMap.getTiles(), overridingPlayers);
         this._unitMapView.showUnitMap({
             unitDataArray : field.getUnitMap()?.getUnits() ?? [],
             players       : overridingPlayers,
@@ -158,13 +156,14 @@ class TileMapView extends Ui_Components_UiContainer.UiContainer {
     private readonly _imgBorderD            = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0002` });
     private readonly _imgBorderL            = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0003` });
 
-    private readonly _baseLayer             = new TileBaseLayer();
-    private readonly _decorationLayer       = new TileDecorationLayer();
+    private readonly _baseLayer             = new Ui_Components_UiContainer.UiContainer();
+    private readonly _decorationLayer       = new Ui_Components_UiContainer.UiContainer();
     private readonly _gridBorderLayer       = new Ui_Components_UiContainer.UiContainer();
-    private readonly _objectLayer           = new TileObjectLayer();
+    private readonly _objectLayer           = new Ui_Components_UiContainer.UiContainer();
+
+    private readonly _tileViewList          = new Array<Tiles_TileView.TileView>();
 
     private readonly _notifyListenerArray   : Notifications_Types.Listener[] = [
-        { type : "TileAnimationTick",                   callback : this._onNotifyTileAnimationTick },
         { type : "UserSettingsIsShowGridBorderChanged", callback : this._onNotifyIsShowGridBorderChanged },
     ];
 
@@ -185,17 +184,13 @@ class TileMapView extends Ui_Components_UiContainer.UiContainer {
         }
     }
 
-    public showTileMap(gameConfig: GameConfigs_GameConfig.GameConfig, dataList: SerialTile[], players?: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayer[]>): void {
-        this._baseLayer.updateWithTileDataList(gameConfig, dataList, players);
-        this._decorationLayer.updateWithTileDataList(gameConfig, dataList, players);
-        this._objectLayer.updateWithTileDataList(gameConfig, dataList, players);
-        this._resetGridBorderLayer(dataList);
-        this._updateBorderLayer(dataList);
+    public showTileMap(tileDataList: SerialTile[], players?: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayer[]>): void {
+        this._resetTileViews(tileDataList, players);
+        this._resetGridBorderLayer(tileDataList);
+        this._updateBorderLayer(tileDataList);
     }
     public clear(): void {
-        this._baseLayer.clear();
-        this._decorationLayer.clear();
-        this._objectLayer.clear();
+        this._resetTileViews([], undefined);
         this._resetGridBorderLayer([]);
         this._updateBorderLayer([]);
     }
@@ -206,14 +201,52 @@ class TileMapView extends Ui_Components_UiContainer.UiContainer {
     private _onRemovedFromStage(): void {
         Notifications_Dispatcher.removeEventListeners(this._notifyListenerArray, this);
     }
-    private _onNotifyTileAnimationTick(): void {
-        this._baseLayer.updateViewOnTick();
-        this._decorationLayer.updateViewOnTick();
-        this._objectLayer.updateViewOnTick();
-    }
 
     private _onNotifyIsShowGridBorderChanged(): void {
         this._updateGridBorderLayerVisible();
+    }
+
+    private _resetTileViews(tileDataArray: SerialTile[], players: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayer[]>): void {
+        const tileViewList = this._tileViewList;
+        const tileViewPool = Tiles_TileViewPool.TileViewPool.getInstance();
+        for (const tileView of tileViewList) {
+            tileView.dispose();
+            tileViewPool.release(tileView);
+        }
+        tileViewList.length = 0;
+
+        const baseLayer         = this._baseLayer;
+        const decorationLayer   = this._decorationLayer;
+        const objectLayer       = this._objectLayer;
+        baseLayer.removeUiChildren();
+        decorationLayer.removeUiChildren();
+        objectLayer.removeUiChildren();
+
+        for (const tileData of tileDataArray) {
+            const tileView      = tileViewPool.acquire();
+            const gridIndex     = tileData.getGridIndex();
+            const playerIndex   = tileData.getPlayerIndex();
+            tileView.loadViewData({
+                baseTypeId        : tileData.getBaseType(),
+                baseShapeId       : tileData.getBaseShapeId(),
+                decorationTypeId  : tileData.getDecorationType(),
+                decorationShapeId : tileData.getDecorationShapeId(),
+                objectTypeId      : tileData.getObjectType(),
+                objectShapeId     : tileData.getObjectShapeId(),
+                gridX             : gridIndex?.getX() ?? 0,
+                gridY             : gridIndex?.getY() ?? 0,
+
+                playerIndex : playerIndex,
+                skinId      : players?.find(v => v.getPlayerIndex() === playerIndex)?.getUnitAndTileSkinId() ?? ForceSkins_Utils.getDefaultSkinId(playerIndex),
+            });
+            tileView.refreshAllViews();
+
+            baseLayer.addUiChild(tileView.getImgBase());
+            decorationLayer.addUiChild(tileView.getImgDecoration());
+            objectLayer.addUiChild(tileView.getImgObject());
+
+            tileViewList.push(tileView);
+        }
     }
 
     private _resetGridBorderLayer(tileDataArray: SerialTile[]): void {
@@ -336,167 +369,6 @@ class TileMapView extends Ui_Components_UiContainer.UiContainer {
             imgBorderL.setY(-1);
             imgBorderL.setUnscaledManualHeight(verticalPixels + 2);
         }
-    }
-}
-
-abstract class TileLayerBase extends Ui_Components_UiContainer.UiContainer {
-    private _gameConfig             : GameConfigs_GameConfig.GameConfig | null = null;
-    private readonly _tileDataMap   : AuxiliaryTypes_AuxiliaryTypes.WarMapTileViewData[][] = [];
-    private readonly _imageMap      : Ui_Interfaces_IUiImage.IUiImage[][] = [];
-
-    public updateWithTileDataList(gameConfig: GameConfigs_GameConfig.GameConfig, tileDataArray: SerialTile[], players?: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayer[]>): void {
-        const mapSize       = AuxiliaryTypes_MapSize.MapSize.createWithTileArray(tileDataArray);
-        this._gameConfig    = gameConfig;
-        this._resetTileDataMap(mapSize, tileDataArray, players);
-        this._resetImageMap(mapSize);
-
-        this.updateViewOnTick();
-    }
-
-    public updateViewOnTick(): void {
-        const gameConfig = this._gameConfig;
-        if (gameConfig == null) {
-            return;
-        }
-
-        const imageMap      = this._imageMap;
-        const tileDataMap   = this._tileDataMap;
-        const width         = tileDataMap.length;
-        const height        = width > 0 ? tileDataMap[0].length : 0;
-        const tickCount     = Common_Model_CommonModel.getTileAnimationTickCount();
-        for (let x = 0; x < width; ++x) {
-            for (let y = 0; y < height; ++y) {
-                imageMap[x][y].loadSource(this._getImageSource(gameConfig, tileDataMap[x][y], tickCount));
-            }
-        }
-    }
-
-    public clear(): void {
-        const mapSize       = new AuxiliaryTypes_MapSize.MapSize(0, 0);
-        this._gameConfig    = null;
-        this._resetTileDataMap(mapSize, [], []);
-        this._resetImageMap(mapSize);
-    }
-
-    private _resetTileDataMap(mapSize: AuxiliaryTypes_MapSize.MapSize, tileDataArray: SerialTile[], players?: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayer[]>): void {
-        const map       = this._tileDataMap;
-        const width     = mapSize.getWidth();
-        const height    = mapSize.getHeight();
-        map.length      = width;
-        for (let x = 0; x < width; ++x) {
-            if (map[x] == null) {
-                map[x] = [];
-            }
-
-            const column    = map[x];
-            column.length   = height;
-        }
-
-        for (const rawTileData of tileDataArray) {
-            const tileData                          = rawTileData.clone() as AuxiliaryTypes_AuxiliaryTypes.WarMapTileViewData;
-            const gridIndex                         = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(tileData.getGridIndex()));
-            const player                            = players?.find(v => v.getPlayerIndex() === tileData.getPlayerIndex());
-            tileData.skinId                         = player ? player.getUnitAndTileSkinId() : null;
-            map[gridIndex.getX()][gridIndex.getY()] = tileData;
-        }
-    }
-    private _resetImageMap(mapSize: AuxiliaryTypes_MapSize.MapSize): void {
-        const map       = this._imageMap;
-        const width     = mapSize.getWidth();
-        const height    = mapSize.getHeight();
-        for (let x = width; x < map.length; ++x) {
-            for (const img of map[x] || []) {
-                img?.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject);
-            }
-        }
-        map.length = width;
-
-        for (let x = 0; x < width; ++x) {
-            if (map[x] == null) {
-                map[x] = [];
-            }
-
-            const column = map[x];
-            for (let y = height; y < column.length; ++y) {
-                const img = column[y];
-                img?.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject);
-            }
-            column.length = height;
-
-            for (let y = 0; y < height; ++y) {
-                if (column[y] == null) {
-                    const img = new Ui_Components_UiImage.UiImage();
-                    img.setIsSmoothing(false);
-                    img.setX(getGridWidth() * x);
-                    img.setY(this._getImageY(y));
-                    column[y] = img;
-                    this.addUiChild(img);
-                }
-            }
-        }
-    }
-
-    protected abstract _getImageSource(gameConfig: GameConfigs_GameConfig.GameConfig, tileData: AuxiliaryTypes_AuxiliaryTypes.WarMapTileViewData, tickCount: number): string;
-    protected abstract _getImageY(gridY: number): number;
-}
-
-class TileBaseLayer extends TileLayerBase {
-    protected _getImageSource(gameConfig: GameConfigs_GameConfig.GameConfig, tileData: SerialTile, tickCount: number): string {
-        return tileData == null
-            ? ``
-            : Common_Model_CommonModel.getCachedTileBaseImageSource({
-                version   : Users_Model.getSelfSettingsTextureVersion(),
-                themeType : Tiles_Constants_Common.ThemeTypeId.Normal,
-                baseType  : tileData.getBaseType(),
-                shapeId   : tileData.getBaseShapeId(),
-                isDark    : false,
-                skinId    : ForceSkins_Constants.SkinId.Neutral,
-                tickCount,
-            });
-    }
-
-    protected _getImageY(gridY: number): number {
-        return getGridHeight() * gridY;
-    }
-}
-
-class TileDecorationLayer extends TileLayerBase {
-    protected _getImageSource(gameConfig: GameConfigs_GameConfig.GameConfig, tileData: SerialTile, tickCount: number): string {
-        return tileData == null
-            ? ``
-            : Common_Model_CommonModel.getCachedTileDecorationImageSource({
-                version            : Users_Model.getSelfSettingsTextureVersion(),
-                themeType          : Tiles_Constants_Common.ThemeTypeId.Normal,
-                tileDecorationType : tileData.getDecorationType(),
-                shapeId            : tileData.getDecorationShapeId(),
-                isDark             : false,
-                skinId             : ForceSkins_Constants.SkinId.Neutral,
-                tickCount,
-            });
-    }
-
-    protected _getImageY(gridY: number): number {
-        return getGridHeight() * gridY;
-    }
-}
-
-class TileObjectLayer extends TileLayerBase {
-    protected _getImageSource(gameConfig: GameConfigs_GameConfig.GameConfig, tileData: AuxiliaryTypes_AuxiliaryTypes.WarMapTileViewData, tickCount: number): string {
-        return tileData == null
-            ? ``
-            : Common_Model_CommonModel.getCachedTileObjectImageSource({
-                version    : Users_Model.getSelfSettingsTextureVersion(),
-                themeType  : Tiles_Constants_Common.ThemeTypeId.Normal,
-                objectType : tileData.getObjectType(),
-                shapeId    : tileData.getObjectShapeId(),
-                isDark     : false,
-                skinId     : (tileData.skinId || tileData.getPlayerIndex()),
-                tickCount,
-            });
-    }
-
-    protected _getImageY(gridY: number): number {
-        return getGridHeight() * (gridY - 1);
     }
 }
 

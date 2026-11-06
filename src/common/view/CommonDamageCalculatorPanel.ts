@@ -26,15 +26,16 @@ import {
     TileBases_Utils,
     TileObjects_Utils,
     Tiles_Constants_Common,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
+    Tiles_TileViewData,
     Tiles_Utils_Common,
     Ui_Components_UiPanel,
-    Ui_Components_UiTileView,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
-    type Ui_Types_UiTileViewData,
     Units_Constants,
     type Units_Unit,
     Units_UnitView,
@@ -160,8 +161,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _unitView1                      : Units_UnitView.UnitView | undefined;
     private _unitView2                      : Units_UnitView.UnitView | undefined;
-    private readonly _tileView1             = new Ui_Components_UiTileView.UiTileView();
-    private readonly _tileView2             = new Ui_Components_UiTileView.UiTileView();
+    private _tileView1                      : Tiles_TileViewBox.TileViewBox | undefined;
+    private _tileView2                      : Tiles_TileViewBox.TileViewBox | undefined;
 
     private _calculatorData?                : CalculatorData;
 
@@ -207,7 +208,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         ]);
         this._setNotifyListenerArray([
             { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
-            { type : "TileAnimationTick",   callback : this._onNotifyTileAnimationTick },
         ]);
 
         this._setIsTouchMaskEnabled();
@@ -217,22 +217,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this._imgCo1.setIsTouchEnabled(true);
         this._imgCo2.setIsTouchEnabled(true);
-
-        {
-            const conTileView   = this._conTileView1;
-            const tileView      = this._tileView1;
-            conTileView.addUiChild(tileView.getImgBase());
-            conTileView.addUiChild(tileView.getImgDecoration());
-            conTileView.addUiChild(tileView.getImgObject());
-        }
-
-        {
-            const conTileView   = this._conTileView2;
-            const tileView      = this._tileView2;
-            conTileView.addUiChild(tileView.getImgBase());
-            conTileView.addUiChild(tileView.getImgDecoration());
-            conTileView.addUiChild(tileView.getImgObject());
-        }
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
@@ -250,6 +234,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this._conUnitView2.addUiChild(view);
 
             this._updateUnitView2();
+        }
+        if (this._tileView1 == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView1  = view;
+            this._conTileView1.addUiChild(view);
+
+            this._updateTileView1();
+        }
+        if (this._tileView2 == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView2  = view;
+            this._conTileView2.addUiChild(view);
+
+            this._updateTileView2();
         }
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -280,6 +278,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             Units_UnitViewPool.UnitViewPool.getInstance().release(view);
             delete this._unitView2;
+        }
+        if (this._tileView1) {
+            const view = this._tileView1;
+            this._conTileView1.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView1;
+        }
+        if (this._tileView2) {
+            const view = this._tileView2;
+            this._conTileView2.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView2;
         }
 
         await super._onClosed();
@@ -728,10 +740,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView1.updateOnAnimationTick();
-        this._tileView2.updateOnAnimationTick();
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateView(): void {
@@ -768,8 +776,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelWeapon1.setText(getWeaponTypeName(attackerData.unitWeaponType));
         this._labelWeapon2.setText(getWeaponTypeName(defenderData.unitWeaponType));
         this._labelWeather.setText(Lang_Utils.getWeatherName(data.weatherType, gameConfig) ?? Lang_Constants.UndefinedError);
-        this._tileView1.init(createTileViewData(war, attackerData.tileType, 1, gameConfig)).updateView();
-        this._tileView2.init(createTileViewData(war, defenderData.tileType, 2, gameConfig)).updateView();
 
         {
             const coSkillType1  = attackerData.coSkillType;
@@ -780,6 +786,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this._updateUnitView1();
         this._updateUnitView2();
+        this._updateTileView1();
+        this._updateTileView2();
         this._updateComponentsForDamage();
     }
 
@@ -815,6 +823,30 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             skinId      : war == null ? ForceSkins_Utils.getDefaultSkinId(playerIndex) : ForceSkins_Utils.getFinalSkinId(war, playerIndex),
         }, true);
         unitView2?.refreshAllViews();
+    }
+
+    private _updateTileView1(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const calculatorData    = this._getCalculatorData();
+        const tileView1         = this._tileView1?.getView();
+        tileView1?.loadViewData(createTileViewData(openData.war, calculatorData.attackerData.tileType, 1, calculatorData.gameConfig));
+        tileView1?.refreshAllViews();
+    }
+
+    private _updateTileView2(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const calculatorData    = this._getCalculatorData();
+        const tileView2         = this._tileView2?.getView();
+        tileView2?.loadViewData(createTileViewData(openData.war, calculatorData.defenderData.tileType, 2, calculatorData.gameConfig));
+        tileView2?.refreshAllViews();
     }
 
     private _updateComponentsForLanguage(): void {
@@ -969,36 +1001,30 @@ function getNextUnitWeaponType(gameConfig: GameConfigs_GameConfig.GameConfig, un
         return null;
     }
 }
-function createTileViewData(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>, tileType: number, playerIndex: number, gameConfig: GameConfigs_GameConfig.GameConfig): Ui_Types_UiTileViewData.UiTileViewData {
+function createTileViewData(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>, tileType: number, playerIndex: number, gameConfig: GameConfigs_GameConfig.GameConfig): Tiles_TileViewData.TileViewData {
     const objectType    = Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType));
     const baseType      = Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType));
     if (TileObjects_Utils.checkIsValidPlayerIndexForTileObject({
         playerIndex    : playerIndex,
         tileObjectType : objectType,
     })) {
-        return {
-            tileBaseType          : baseType,
-            tileBaseShapeId       : 0,
-            tileDecorationType    : null,
-            tileDecorationShapeId : null,
-            tileObjectType        : objectType,
-            tileObjectShapeId     : 0,
-            skinId                : war?.getPlayer(playerIndex).getUnitAndTileSkinId() ?? ForceSkins_Utils.getDefaultSkinId(playerIndex),
-            overridingSkinId      : war == null ? undefined : ForceSkins_Utils.getRawOverridingSkinId(war, playerIndex),
-            gameConfig            : gameConfig,
-        };
+        return new Tiles_TileViewData.TileViewData({
+            baseTypeId    : baseType,
+            baseShapeId   : 0,
+            objectTypeId  : objectType,
+            objectShapeId : 0,
+            skinId        : war == null
+                ? ForceSkins_Utils.getDefaultSkinId(playerIndex)
+                : ForceSkins_Utils.getFinalSkinId(war, playerIndex),
+        });
     } else {
-        return {
-            tileBaseType          : baseType,
-            tileBaseShapeId       : 0,
-            tileDecorationType    : null,
-            tileDecorationShapeId : null,
-            tileObjectType        : objectType,
-            tileObjectShapeId     : 0,
-            skinId                : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
-            overridingSkinId      : undefined,
-            gameConfig            : gameConfig,
-        };
+        return new Tiles_TileViewData.TileViewData({
+            baseTypeId    : baseType,
+            baseShapeId   : 0,
+            objectTypeId  : objectType,
+            objectShapeId : 0,
+            skinId        : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
+        });
     }
 }
 

@@ -1,11 +1,15 @@
 import {
     GameConfigs_GameConfig,
-    TileObjects_Utils,
-    Players_Constants,
     Lang_Constants,
+    Players_Constants,
+    TileObjects_Utils,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiTileView,
+    Ui_Utils_UiSizerHelpers,
+    Visibilities_Utils,
+    type BaseWar_Interface_IBwWar,
     type Tiles_Tile,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -13,9 +17,6 @@ import {
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiScrollList,
     type Ui_Types_UiListItemData,
-    Ui_Utils_UiSizerHelpers,
-    Visibilities_Utils,
-    type BaseWar_Interface_IBwWar,
 } from "../../internal.ts";
 
 export interface OpenData {
@@ -183,25 +184,32 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _labelP7!          : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelP8!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _tileView          = new Ui_Components_UiTileView.UiTileView();
+    private _tileView                   : Tiles_TileViewBox.TileViewBox | undefined;
 
-    public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type : "TileAnimationTick",       callback : this._onNotifyTileAnimationTick },
-        ]);
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        const conTileView   = this._conTileView;
-        const tileView      = this._tileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnAnimationTick();
-    }
-
     protected override _doApplyOpenData(): void {
         this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,24 +221,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        const gameConfig = openData.gameConfig;
         this._imgBackground.setIsVisible(openData.index % 2 == 1);
-
-        {
-            const tileView = this._tileView;
-            tileView.init({
-                tileBaseType          : null,
-                tileBaseShapeId       : null,
-                tileDecorationType    : null,
-                tileDecorationShapeId : null,
-                tileObjectType        : openData.tileObjectType,
-                tileObjectShapeId     : 0,
-                skinId                : Players_Constants.PlayerIndex.Neutral,
-                overridingSkinId      : undefined,
-                gameConfig            : gameConfig,
-            });
-            tileView.updateView();
-        }
 
         {
             const playersCountUnneutral  = openData.playersCountUnneutral;
@@ -248,5 +239,22 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
             Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this._groupValue, false);
         }
+
+        this._updateTileView();
+    }
+
+    private _updateTileView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const tileView = this._tileView?.getView();
+        tileView?.loadViewData({
+            objectTypeId  : openData.tileObjectType,
+            objectShapeId : 0,
+            skinId        : Players_Constants.PlayerIndex.Neutral,
+        }, true);
+        tileView?.refreshAllViews();
     }
 }

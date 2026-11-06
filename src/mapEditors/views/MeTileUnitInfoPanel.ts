@@ -5,9 +5,10 @@ import {
     Lang_Constants,
     MapEditor_Model_MeModel,
     Tiles_Constants_Common,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiTileView,
     Units_UnitView,
     Units_UnitViewPool,
     type GameConfigs_GameConfig,
@@ -208,43 +209,59 @@ class TileRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _labelNum!     : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _tileView   = new Ui_Components_UiTileView.UiTileView();
+    private _tileView               : Tiles_TileViewBox.TileViewBox | undefined;
 
-    public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type : "TileAnimationTick",  callback : this._onNotifyTileAnimationTick },
-        ]);
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        const tileView      = this._tileView;
-        const conTileView   = this._conTileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
-        tileView.startRunningView();
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
-
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnAnimationTick();
-    }
-
     protected override _doApplyOpenData(): void {
+        this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        await super._onClosed();
+    }
+
+    private _updateView(): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
         }
         this._labelNum.setText(`${openData.count}`);
-        this._tileView.init({
-            tileBaseType          : openData.baseType,
-            tileBaseShapeId       : 0,
-            tileDecorationType    : null,
-            tileDecorationShapeId : null,
-            tileObjectType        : openData.objectType,
-            tileObjectShapeId     : 0,
-            skinId                : openData.playerIndex,
-            overridingSkinId      : undefined,
-            gameConfig            : openData.gameConfig,
-        });
-        this._tileView.updateView();
+
+        this._updateTileView();
+    }
+
+    private _updateTileView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const tileView = this._tileView?.getView();
+        tileView?.loadViewData({
+            baseTypeId    : openData.baseType ?? -1,
+            baseShapeId   : 0,
+            objectTypeId  : openData.objectType ?? -1,
+            objectShapeId : 0,
+            skinId        : openData.playerIndex,
+        }, true);
+        tileView?.refreshAllViews();
     }
 }
 

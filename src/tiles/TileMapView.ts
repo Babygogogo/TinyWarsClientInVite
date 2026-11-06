@@ -57,8 +57,6 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
     private readonly _markLayer                 = new Ui_Components_UiContainer.UiContainer();
 
     private readonly _notifyListeners: Notifications_Types.Listener[] = [
-        { type : "TileAnimationTick",                                   callback : this._onNotifyTileAnimationTick },
-        { type : "StateIndicatorTick",                                  callback : this._onNotifyStateIndicatorTick },
         { type : "UserSettingsIsShowGridBorderChanged",                 callback : this._onNotifyIsShowGridBorderChanged },
         { type : "BwTileHasLocationIdSet",                              callback : this._onNotifyBwTileHasLocationIdSet },
         { type : "BwOverridingSkinIdChanged",                           callback : this._onNotifyBwOverridingSkinIdChanged },
@@ -509,27 +507,6 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
     }
     private _stopCoZoneAnimation(): void {
         Tween_Executor.Executor.removeTweens(this._coZoneContainer);
-    }
-
-    private _onNotifyTileAnimationTick(): void {
-        const war = this._tileMap?.getWar();
-        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction())){
-            return;
-        }
-
-        for (const view of this._tileViewArray) {
-            view.updateOnNotifyTileAnimationTick();
-        }
-    }
-    private _onNotifyStateIndicatorTick(): void {
-        const war = this._tileMap?.getWar();
-        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction())){
-            return;
-        }
-
-        for (const view of this._tileViewArray) {
-            view.updateOnNotifyStateIndicatorTick();
-        }
     }
 
     private _onNotifyIsShowGridBorderChanged(): void {

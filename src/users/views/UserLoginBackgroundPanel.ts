@@ -1,24 +1,24 @@
 import {
-    Graphics_Utils,
-    Helpers_Gzip,
-    Notifications_Dispatcher,
-    Tween_Executor,
-    Lang_Utils,
-    GamePanels_Dict,
     Common_Model_CommonModel,
-    LocalData_Storage,
-    Sounds_SoundPlayer,
-    Helpers_Compatibility,
-    Lang_Constants,
-    Helpers_PointerInput,
-    GamePanels_Manager,
-    Users_Proxy,
     FloatText,
-    LocalData_DeprecatedStorage,
+    GamePanels_Dict,
+    GamePanels_Manager,
     Graphics_Constants,
+    Graphics_Utils,
+    Helpers_Compatibility,
+    Helpers_Gzip,
+    Helpers_PointerInput,
+    Lang_Constants,
+    Lang_Utils,
+    LocalData_DeprecatedStorage,
+    LocalData_Storage,
+    Notifications_Dispatcher,
+    Sounds_SoundPlayer,
+    Timer_TimerModel,
+    Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Timer_TimerModel,
+    Users_Proxy,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -60,7 +60,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",                callback : this._onNotifyLanguageChanged },
-            { type : "UnitAnimationTick",              callback : this._onNotifyUnitAnimationTick },
             { type : "MsgCommonLatestConfigVersion",   callback : this._onMsgCommonLatestConfigVersion },
         ]);
         this._setUiListenerArray([
@@ -112,13 +111,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyUnitAnimationTick(): void {
-        // const group = this._groupUnits;
-        // const tick  = Common.CommonModel.getUnitAnimationTickCount();
-        // for (let i = group.numChildren - 1; i >= 0; --i) {
-        //     ((group.getChildAt(i) as eui.Component).getChildAt(0) as Common.CommonMapUnitView).updateOnAnimationTick(tick);
-        // }
-    }
     private _onMsgCommonLatestConfigVersion(): void {
         // this._initGroupUnits();
     }
@@ -138,7 +130,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 getContent : () => Lang_Utils.getText(Helpers_Compatibility.isPc ? Lang_Constants.TextType.A0416 : Lang_Constants.TextType.A0417),
             });
         } else {
-            let currentRotation: number | null = null;
+            let currentRotation: number | undefined;
             try {
                 currentRotation = inject.getScreenOrientation();
             } catch {

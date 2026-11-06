@@ -128,7 +128,10 @@ export class TileView {
             const objectTypeId  = viewData.objectTypeId;
             const objectShapeId = viewData.objectShapeId;
             const imgObject     = this.getImgObject();
-            if ((objectTypeId == 0) && (objectShapeId == 0)) {
+            if ((objectTypeId < 0)                          ||
+                (objectShapeId < 0)                         ||
+                ((objectTypeId == 0) && (objectShapeId == 0))
+            ) {
                 imgObject.setIsVisible(false);
             } else {
                 imgObject.setIsVisible(true);
@@ -146,8 +149,9 @@ export class TileView {
 
         {
             const baseTypeId    = viewData.baseTypeId;
+            const baseShapeId   = viewData.baseShapeId;
             const imgBase       = this.getImgBase();
-            if ((baseTypeId as number) == 0) {
+            if ((baseTypeId <= 0) || (baseShapeId < 0)) {
                 imgBase.setIsVisible(false);
             } else {
                 imgBase.setIsVisible(true);
@@ -155,7 +159,7 @@ export class TileView {
                     version   : version,
                     themeType : themeTypeId,
                     skinId    : ForceSkins_Constants.SkinId.Neutral,
-                    shapeId   : viewData.baseShapeId,
+                    shapeId   : baseShapeId,
                     baseType  : baseTypeId,
                     isDark    : hasFog,
                     tickCount : tickCount,
@@ -165,8 +169,9 @@ export class TileView {
 
         {
             const decorationTypeId  = viewData.decorationTypeId;
+            const decorationShapeId = viewData.decorationShapeId;
             const imgDecoration     = this.getImgDecoration();
-            if (decorationTypeId == 0) {
+            if ((decorationTypeId <= 0) || (decorationShapeId < 0)) {
                 imgDecoration.setIsVisible(false);
             } else {
                 imgDecoration.setIsVisible(true);
@@ -175,7 +180,7 @@ export class TileView {
                     themeType          : themeTypeId,
                     skinId             : ForceSkins_Constants.SkinId.Neutral,
                     tileDecorationType : decorationTypeId,
-                    shapeId            : viewData.decorationShapeId,
+                    shapeId            : decorationShapeId,
                     isDark             : hasFog,
                     tickCount          : tickCount,
                 }));

@@ -28,12 +28,12 @@ export interface ITileViewData {
 }
 
 export class TileViewData implements ITileViewData {
-    public baseTypeId               = Tiles_Constants_Common.BaseTypeId.Plain;
-    public baseShapeId              = 0;
-    public objectTypeId             = Tiles_Constants_Common.ObjectTypeId.Empty;
-    public objectShapeId            = 0;
-    public decorationTypeId         = Tiles_Constants_Common.DecorationTypeId.Empty;
-    public decorationShapeId        = 0;
+    public baseTypeId               = -1;
+    public baseShapeId              = -1;
+    public objectTypeId             = -1;
+    public objectShapeId            = -1;
+    public decorationTypeId         = -1;
+    public decorationShapeId        = -1;
     public gridX                    = 0;
     public gridY                    = 0;
 
@@ -59,14 +59,14 @@ export class TileViewData implements ITileViewData {
         });
 
         return new TileViewData({
-            gridX             : ignorePosition ? 0 : tile.getGridX(),
-            gridY             : ignorePosition ? 0 : tile.getGridY(),
             baseTypeId        : baseTypeId,
             baseShapeId       : tile.getBaseShapeId(),
             objectTypeId      : objectTypeId,
             objectShapeId     : tile.getObjectShapeId(),
             decorationTypeId  : tile.getDecorationTypeId(),
             decorationShapeId : tile.getDecorationShapeId(),
+            gridX             : ignorePosition ? 0 : tile.getGridX(),
+            gridY             : ignorePosition ? 0 : tile.getGridY(),
 
             playerIndex    : playerIndex,
             themeTypeId    : tile.getThemeTypeId(),

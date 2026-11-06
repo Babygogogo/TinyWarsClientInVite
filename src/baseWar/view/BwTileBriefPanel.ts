@@ -62,7 +62,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { type : "BwTileChanged",                   callback : this._onNotifyMeTileChanged },
             { type : "BwTileIsHighlightedChanged",      callback : this._onNotifyTileIsHighlightedChanged },
             { type : "BwTileBuffChanged",               callback : this._onNotifyTileBuffChanged },
-            { type : "BwOverridingSkinIdChanged",       callback : this._onNotifyBwOverridingSkinIdChanged },
             { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
             { type : "BwTileCustomNameArrayChanged",    callback : this._onNotifyBwTileCustomNameArrayChanged },
             { type : "BwTileCustomNameIdChanged",       callback : this._onNotifyBwTileCustomNameIdChanged },
@@ -136,9 +135,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if ((Helpers_Misc.getExisted(e.data)).tile === war?.getTileMap().getTile(war.getCursor().getGridIndex())) {
             this._updateTileView();
         }
-    }
-    private _onNotifyBwOverridingSkinIdChanged(): void {
-        this._updateTileView();
     }
     private _onNotifyLanguageChanged(): void {
         this._updateLabelName();

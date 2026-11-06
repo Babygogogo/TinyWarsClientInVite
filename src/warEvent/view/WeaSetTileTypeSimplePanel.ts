@@ -1,24 +1,25 @@
 import {
-    Graphics_Constants,
-    Notifications_Dispatcher,
-    Lang_Utils,
     ForceSkins_Utils,
     GamePanels_Dict,
     GamePanels_Manager,
-    Players_Constants,
+    Graphics_Constants,
     Lang_Constants,
+    Lang_Utils,
+    Notifications_Dispatcher,
+    Players_Constants,
+    Tiles_TileView,
+    Tiles_TileViewPool,
     Ui_Components_UiPanel,
-    Ui_Components_UiTileView,
+    ValueAndComparators_Constants,
+    ValueAndComparators_Utils,
+    WarEvents_Actions_Utils_Common,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    ValueAndComparators_Constants,
-    ValueAndComparators_Utils,
-    WarEvents_Actions_Utils_Common,
 } from "../../internal.ts";
 import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
@@ -72,7 +73,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _btnActDeleteTileObject!                   : Ui_Interfaces_IUiButton.IUiButton;
     private readonly _labelActDeleteTileObject!                 : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _tileView                                  = new Ui_Components_UiTileView.UiTileView();
+    private _tileView                                           : Tiles_TileView.TileView | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -98,20 +99,40 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
             { type : "WarEventFullDataChanged",         callback : this._onNotifyWarEventFullDataChanged },
-            { type : "TileAnimationTick",               callback : this._onNotifyTileAnimationTick },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
+    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        const tileView = this._tileView;
-        this._conTileBase.addUiChild(tileView.getImgBase());
-        this._conTileObject.addUiChild(tileView.getImgObject());
-        this._conTileDecoration.addUiChild(tileView.getImgDecoration());
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewPool.TileViewPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileBase.addUiChild(view.getImgBase());
+            this._conTileObject.addUiChild(view.getImgObject());
+            this._conTileDecoration.addUiChild(view.getImgDecoration());
+
+            this._updateTileView();
+        }
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileBase.removeUiChild(view.getImgBase());
+            this._conTileObject.removeUiChild(view.getImgObject());
+            this._conTileDecoration.removeUiChild(view.getImgDecoration());
+
+            Tiles_TileViewPool.TileViewPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -123,10 +144,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onNotifyWarEventFullDataChanged(): void {
         this._updateView();
-    }
-
-    private _onNotifyTileAnimationTick(): void {
-        this._updateTileView();
     }
 
     private _onTouchedBtnType(): void {
@@ -497,19 +514,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const tileView  = this._tileView;
-        tileView.init({
-            tileBaseType          : action.getActTileBaseType(),
-            tileBaseShapeId       : action.getActTileBaseShapeId(),
-            tileObjectType        : action.getActTileObjectType(),
-            tileObjectShapeId     : action.getActTileObjectShapeId(),
-            tileDecorationType    : action.getActTileDecorationType(),
-            tileDecorationShapeId : action.getActTileDecorationShapeId(),
-            skinId                : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
-            overridingSkinId      : undefined,
-            gameConfig            : war.getGcData(),
-        });
-        tileView.updateView();
+        const tileView = this._tileView;
+        tileView?.loadViewData({
+            baseTypeId        : action.getActTileBaseType() ?? -1,
+            baseShapeId       : action.getActTileBaseShapeId() ?? -1,
+            objectTypeId      : action.getActTileObjectType() ?? -1,
+            objectShapeId     : action.getActTileObjectShapeId() ?? -1,
+            decorationTypeId  : action.getActTileDecorationType() ?? -1,
+            decorationShapeId : action.getActTileDecorationShapeId() ?? -1,
+            skinId            : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
+        }, true);
+        tileView?.refreshAllViews();
     }
 
     private _getAction(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetTileTypeSimple> {

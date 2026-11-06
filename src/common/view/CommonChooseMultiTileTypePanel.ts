@@ -1,17 +1,18 @@
 import {
-    Stages_Constants,
     GamePanels_Dict,
+    GamePanels_Manager,
     Helpers_Misc,
+    Lang_Constants,
     Lang_Utils,
     Numbers_Utils,
-    GamePanels_Manager,
     Players_Constants,
-    Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Sounds_SoundPlayer,
+    Stages_Constants,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    Ui_Components_UiTileView,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -106,7 +107,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray = list.getBoundDataArray() ?? [];
         if (!this._imgSelectAll.getIsVisible()) {
             for (const data of dataArray) {
-                (data != null) && (selectedNumberSet.add(data.tileType));
+                if (data != null) {
+                    selectedNumberSet.add(data.tileType);
+                }
             }
         }
         for (let i = 0; i < dataArray.length; ++i) {
@@ -227,37 +230,49 @@ class TileTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     private readonly _labelType!        : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelName!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _tileView          = new Ui_Components_UiTileView.UiTileView();
+    private _tileView                   : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
-            { type : "TileAnimationTick",   callback : this._onNotifyTileAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
-
-        const conTileView   = this._conTileView;
-        const tileView      = this._tileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
     }
 
     private _onNotifyLanguageChanged(): void {        // DONE
         this._updateComponentsForLanguage();
-    }
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnAnimationTick();
     }
     public override onItemTapEvent(): void {
         const openData = this.getOpenData();
         openData?.panel.updateOnSelectNumber(openData.tileType);
     }
 
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
+    }
     protected override _doApplyOpenData(): void {
         this._updateComponentsForLanguage();
 
-        this._updateTileView();
+        this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        await super._onClosed();
     }
 
     private _updateComponentsForLanguage(): void {
@@ -272,6 +287,17 @@ class TileTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         this._layoutName.arrangeItems();
     }
 
+    private _updateView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        this._imgSelected.setIsVisible(openData.panel.checkHasSelectedNumber(openData.tileType));
+
+        this._updateTileView();
+    }
+
     private _updateTileView(): void {
         const openData = this.getOpenData();
         if (openData == null) {
@@ -280,20 +306,14 @@ class TileTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
         const tileType      = openData.tileType;
         const gameConfig    = openData.gameConfig;
-        const objectType    = Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType));
-        const baseType      = Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType));
-        this._imgSelected.setIsVisible(openData.panel.checkHasSelectedNumber(tileType));
-
-        this._tileView.init({
-            tileBaseType          : baseType,
-            tileBaseShapeId       : 0,
-            tileDecorationType    : null,
-            tileDecorationShapeId : null,
-            tileObjectType        : objectType,
-            tileObjectShapeId     : 0,
-            skinId                : Players_Constants.PlayerIndex.Neutral,
-            overridingSkinId      : undefined,
-            gameConfig            : gameConfig,
-        });
+        const tileView      = this._tileView?.getView();
+        tileView?.loadViewData({
+            baseTypeId    : Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType)),
+            baseShapeId   : 0,
+            objectTypeId  : Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType)),
+            objectShapeId : 0,
+            skinId        : Players_Constants.PlayerIndex.Neutral,
+        }, true);
+        tileView?.refreshAllViews();
     }
 }

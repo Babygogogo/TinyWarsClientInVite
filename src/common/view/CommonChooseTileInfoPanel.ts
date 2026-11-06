@@ -1,11 +1,12 @@
 import {
     GameConfigs_GameConfig,
     GamePanels_Dict,
-    TileObjects_Utils,
     GamePanels_Manager,
     Lang_Constants,
+    TileObjects_Utils,
+    Tiles_TileView,
+    Tiles_TileViewPool,
     Ui_Components_UiPanel,
-    Ui_Components_UiTileView,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -47,7 +48,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private readonly _btnConfirm!               : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _tileView                  = new Ui_Components_UiTileView.UiTileView();
+    private _tileView                           : Tiles_TileView.TileView | undefined;
     private readonly _tileInfo                  : TileInfo = {
         tileBaseType          : 0,
         tileBaseShapeId       : 0,
@@ -61,7 +62,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
-            { type : "TileAnimationTick",           callback : this._onNotifyTileAnimationTick },
         ]);
         this._setUiListenerArray([
             { ui : this._btnClose,                           callback : this.closePanel },
@@ -80,11 +80,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._setIsCloseOnTouchedMask();
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
+    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        const tileView = this._tileView;
-        this._conTileBase.addUiChild(tileView.getImgBase());
-        this._conTileObject.addUiChild(tileView.getImgObject());
-        this._conTileDecorator.addUiChild(tileView.getImgDecoration());
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewPool.TileViewPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileBase.addUiChild(view.getImgBase());
+            this._conTileObject.addUiChild(view.getImgObject());
+            this._conTileDecorator.addUiChild(view.getImgDecoration());
+
+            this._updateTileView();
+        }
     }
     protected override async _doApplyOpenData(): Promise<void> {
         const currentTileInfo = this.getOpenData()?.currentTileInfo;
@@ -103,12 +111,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this._updateView();
     }
+    protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileBase.removeUiChild(view.getImgBase());
+            this._conTileObject.removeUiChild(view.getImgObject());
+            this._conTileDecorator.removeUiChild(view.getImgDecoration());
+
+            Tiles_TileViewPool.TileViewPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        await super._onClosed();
+    }
 
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
-    }
-    private _onNotifyTileAnimationTick(): void {
-        this._updateTileView();
     }
 
     private _onTouchedBtnTileBase(): void {
@@ -214,17 +232,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const tileView  = this._tileView;
         const tileInfo  = this._tileInfo;
-        tileView.init({
-            tileBaseType          : tileInfo.tileBaseType,
-            tileBaseShapeId       : tileInfo.tileBaseShapeId,
-            tileObjectType        : tileInfo.tileObjectType,
-            tileObjectShapeId     : tileInfo.tileObjectShapeId,
-            tileDecorationType    : tileInfo.tileDecorationType,
-            tileDecorationShapeId : tileInfo.tileDecorationShapeId,
-            skinId                : openData.finalSkinIdArray[tileInfo.tilePlayerIndex],
-            overridingSkinId      : undefined,
-            gameConfig            : openData.gameConfig,
-        });
-        tileView.updateView();
+        tileView?.loadViewData({
+            baseTypeId        : tileInfo.tileBaseType,
+            baseShapeId       : tileInfo.tileBaseShapeId,
+            objectTypeId      : tileInfo.tileObjectType,
+            objectShapeId     : tileInfo.tileObjectShapeId,
+            decorationTypeId  : tileInfo.tileDecorationType,
+            decorationShapeId : tileInfo.tileDecorationShapeId,
+            skinId            : openData.finalSkinIdArray[tileInfo.tilePlayerIndex],
+        }, true);
+        tileView?.refreshAllViews();
     }
 }
