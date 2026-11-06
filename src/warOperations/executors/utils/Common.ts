@@ -151,7 +151,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
         const hasMaxHpBeforeAction  = tile.getMaxHp() != null;
         tile.init(tileData, gameConfig);
         tile.startRunning(war);
-        tile.startRunningView();
+        tile.flushDataToView();
 
         if (!isFastExecute) {
             if (hasMaxHpBeforeAction) {
@@ -186,7 +186,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
                 }
             }
             existingUnit.startRunning(war);
-            existingUnit.startRunningView();
+            existingUnit.flushDataToView();
             updatedViewUnits.add(existingUnit);
 
             if (!isFastExecute) {
@@ -222,7 +222,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
                 }
             }
             unit.startRunning(war);
-            unit.startRunningView();
+            unit.flushDataToView();
             updatedViewUnits.add(unit);
         }
     }

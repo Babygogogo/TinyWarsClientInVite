@@ -47,7 +47,7 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
         this._resetZOrderForAllLayers();
     }
 
-    public startRunningView(): void {
+    public startRunning(): void {
         this._clearAllUnits();
         for (const unit of this._getUnitMap().getAllUnits()) {
             const view = unit.getView();
@@ -58,7 +58,7 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
 
         Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);
     }
-    public stopRunningView(): void {
+    public stopRunning(): void {
         Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
     }
 

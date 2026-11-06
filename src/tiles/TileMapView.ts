@@ -1,30 +1,32 @@
 import {
-    type Notifications_Mapping,
-    ForceSkins_Utils,
-    AuxiliaryTypes_GridIndex,
-    MapEditor_Model_MeWar,
-    MultiPlayerWar_Model_MpwWar,
-    ReplayWar_Model_RwWar,
-    ReplayWar_Model_RwWarBase,
-    SinglePlayerWar_Model_SpwWar,
-    Ui_Components_UiImage,
     type BaseWar_Interface_IBwWar,
-    Notifications_Dispatcher,
-    Helpers_Misc,
-    Tween_Executor,
-    Graphics_Utils,
-    Helpers_ImageSource,
-    Helpers_Text,
-    Locations_Constants,
-    Players_Constants,
-    Ui_Components_UiContainer,
+    type Egret_Egret,
+    type Notifications_Mapping,
+    type Notifications_Types,
     type Tiles_TileMap,
     type Tiles_TileView,
     type Ui_Interfaces_IUiImage,
-    type Notifications_Types,
-    Visibilities_Utils,
+    AuxiliaryTypes_GridIndex,
+    ForceSkins_Utils,
+    Graphics_Utils,
+    Helpers_ImageSource,
+    Helpers_Misc,
+    Helpers_Text,
+    Locations_Constants,
+    MapEditor_Model_MeWar,
+    Maps_Views_GridBorder,
+    Maps_Views_MapBorder,
+    MultiPlayerWar_Model_MpwWar,
+    Notifications_Dispatcher,
+    Players_Constants,
+    ReplayWar_Model_RwWar,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWar_Model_SpwWar,
+    Tween_Executor,
+    Ui_Components_UiContainer,
+    Ui_Components_UiImage,
     Users_Model,
-    type Egret_Egret,
+    Visibilities_Utils,
 } from "../internal.ts";
 
 import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
@@ -33,20 +35,11 @@ const getGridWidth  = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurren
 const getGridHeight = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
 export class TileMapView extends Ui_Components_UiContainer.UiContainer {
-    private readonly _borderLayer               = new Ui_Components_UiContainer.UiContainer();
-    private readonly _imgCornerUL               = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0000` });
-    private readonly _imgCornerUR               = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0001` });
-    private readonly _imgCornerDR               = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0002` });
-    private readonly _imgCornerDL               = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0003` });
-    private readonly _imgBorderU                = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0000` });
-    private readonly _imgBorderR                = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0001` });
-    private readonly _imgBorderD                = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0002` });
-    private readonly _imgBorderL                = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0003` });
-
+    private readonly _mapBorder                 = new Maps_Views_MapBorder.MapBorder();
     private readonly _tileViewArray             : Tiles_TileView.TileView[] = [];
     private readonly _baseLayer                 = new Ui_Components_UiContainer.UiContainer();
     private readonly _decorationLayer           = new Ui_Components_UiContainer.UiContainer();
-    private readonly _gridBorderLayer           = new Ui_Components_UiContainer.UiContainer();
+    private readonly _gridBorder                = new Maps_Views_GridBorder.GridBorder();
     private readonly _objectLayer               = new Ui_Components_UiContainer.UiContainer();
     private readonly _buffLayer                 = new Ui_Components_UiContainer.UiContainer();
     private readonly _highlightLayer            = new Ui_Components_UiContainer.UiContainer();
@@ -73,10 +66,10 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
     public constructor() {
         super();
 
-        this._initBorderLayer();
+        this.addUiChild(this._mapBorder);
         this.addUiChild(this._baseLayer);
         this.addUiChild(this._decorationLayer);
-        this.addUiChild(this._gridBorderLayer);
+        this.addUiChild(this._gridBorder);
         this.addUiChild(this._objectLayer);
         this.addUiChild(this._buffLayer);
         this.addUiChild(this._highlightLayer);
@@ -84,7 +77,6 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
         this.addUiChild(this._coZoneContainer);
         this.addUiChild(this._markLayer);
         this._locationLayer.setAlpha(0.6);
-        this._gridBorderLayer.setAlpha(0.3);
 
         this._updateOpacityForTileLayers();
 
@@ -151,31 +143,11 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
             }
         }
 
-        const { width: mapWidth, height: mapHeight } = tileMap.getMapSize().getWH();
-        {
-            const borderWidth       = mapWidth * getGridWidth();
-            const borderHeight      = mapHeight * getGridHeight();
-            const gridBorderLayer   = this._gridBorderLayer;
-            gridBorderLayer.removeUiChildren();
-            for (let x = 1; x < mapWidth; ++x) {
-                const img       = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorBlack0000` });
-                img.setIsSmoothing(false);
-                img.setUnscaledManualWidth(1);
-                img.setUnscaledManualHeight(borderHeight);
-                img.setX((x * getGridWidth()) - 0.5);
-                gridBorderLayer.addUiChild(img);
-            }
-            for (let y = 1; y < mapHeight; ++y) {
-                const img       = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorBlack0000` });
-                img.setIsSmoothing(false);
-                img.setUnscaledManualWidth(borderWidth);
-                img.setUnscaledManualHeight(1);
-                img.setY((y * getGridHeight()) - 0.5);
-                gridBorderLayer.addUiChild(img);
-            }
-            this._updateGridBorderLayerVisible();
-        }
+        const mapSize = tileMap.getMapSize();
+        this._gridBorder.refresh(mapSize);
+        this._updateGridBorderLayerVisible();
 
+        const { width: mapWidth, height: mapHeight } = mapSize.getWH();
         {
             const locationLayer = this._locationLayer;
             locationLayer.removeUiChildren();
@@ -216,7 +188,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
         this._tileMap = tileMap;
     }
 
-    public startRunningView(): void {
+    public startRunning(): void {
         Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);
 
         this.resetLocationLayer();
@@ -225,7 +197,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
         this._startCoZoneAnimation();
         this.updateCoZone();
     }
-    public stopRunningView(): void {
+    public stopRunning(): void {
         Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
 
         this._stopCoZoneAnimation();
@@ -565,7 +537,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
     }
 
     private _updateGridBorderLayerVisible(): void {
-        this._gridBorderLayer.setIsVisible(Users_Model.getSelfSettingsIsShowGridBorder());
+        this._gridBorder.setIsVisible(Users_Model.getSelfSettingsIsShowGridBorder());
     }
 
     private _updateOpacityForTileLayers(): void {
@@ -575,95 +547,13 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
         this._decorationLayer.setAlpha((opacitySettings?.getTileDecorationOpacity() ?? 100) / 100);
     }
 
-    private _initBorderLayer(): void {
-        const borderLayer   = this._borderLayer;
-        const imgCornerUL   = this._imgCornerUL;
-        const imgCornerUR   = this._imgCornerUR;
-        const imgCornerDL   = this._imgCornerDL;
-        const imgCornerDR   = this._imgCornerDR;
-        const imgBorderU    = this._imgBorderU;
-        const imgBorderD    = this._imgBorderD;
-        const imgBorderL    = this._imgBorderL;
-        const imgBorderR    = this._imgBorderR;
-        imgCornerUL.setIsSmoothing(false);
-        imgCornerUR.setIsSmoothing(false);
-        imgCornerDL.setIsSmoothing(false);
-        imgCornerDR.setIsSmoothing(false);
-        imgBorderU.setIsSmoothing(false);
-        imgBorderD.setIsSmoothing(false);
-        imgBorderL.setIsSmoothing(false);
-        imgBorderR.setIsSmoothing(false);
-        borderLayer.addUiChild(imgBorderU);
-        borderLayer.addUiChild(imgBorderD);
-        borderLayer.addUiChild(imgBorderL);
-        borderLayer.addUiChild(imgBorderR);
-        borderLayer.addUiChild(imgCornerUL);
-        borderLayer.addUiChild(imgCornerUR);
-        borderLayer.addUiChild(imgCornerDL);
-        borderLayer.addUiChild(imgCornerDR);
-        this.addUiChild(borderLayer);
-    }
-
     private _updateBorderLayer(): void {
         const tileMap = this._tileMap;
         if (tileMap == null) {
             return;
         }
 
-        const mapSize           = tileMap.getMapSize();
-        const horizontalPixels  = mapSize.getWidth() * getGridWidth();
-        const verticalPixels    = mapSize.getHeight() * getGridHeight();
-        {
-            const imgCornerUL   = this._imgCornerUL;
-            imgCornerUL.setX(-4);
-            imgCornerUL.setY(-4);
-        }
-
-        {
-            const imgCornerUR   = this._imgCornerUR;
-            imgCornerUR.setX(horizontalPixels);
-            imgCornerUR.setY(-4);
-        }
-
-        {
-            const imgCornerDR   = this._imgCornerDR;
-            imgCornerDR.setX(horizontalPixels);
-            imgCornerDR.setY(verticalPixels);
-        }
-
-        {
-            const imgCornerDL   = this._imgCornerDL;
-            imgCornerDL.setX(-4);
-            imgCornerDL.setY(verticalPixels);
-        }
-
-        {
-            const imgBorderU    = this._imgBorderU;
-            imgBorderU.setX(-0.5);
-            imgBorderU.setY(-4);
-            imgBorderU.setUnscaledManualWidth(horizontalPixels + 1);
-        }
-
-        {
-            const imgBorderR    = this._imgBorderR;
-            imgBorderR.setX(horizontalPixels);
-            imgBorderR.setY(-0.5);
-            imgBorderR.setUnscaledManualHeight(verticalPixels + 1);
-        }
-
-        {
-            const imgBorderD    = this._imgBorderD;
-            imgBorderD.setX(-0.5);
-            imgBorderD.setY(verticalPixels);
-            imgBorderD.setUnscaledManualWidth(horizontalPixels + 1);
-        }
-
-        {
-            const imgBorderL    = this._imgBorderL;
-            imgBorderL.setX(-4);
-            imgBorderL.setY(-0.5);
-            imgBorderL.setUnscaledManualHeight(verticalPixels + 1);
-        }
+        this._mapBorder.refresh(tileMap.getMapSize());
     }
 }
 

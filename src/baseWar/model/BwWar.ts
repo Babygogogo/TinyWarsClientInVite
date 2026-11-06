@@ -617,7 +617,7 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         const tempUnit = new Units_Unit.Unit(true);
         tempUnit.init(movingUnitData, this.getGcData());
         tempUnit.startRunning(this);
-        tempUnit.startRunningView();
+        tempUnit.flushDataToView();
 
         const tempUnitView = tempUnit.getView();
         if (!tempUnitView) {

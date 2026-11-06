@@ -183,7 +183,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             unitData.setGridIndex(gridIndex.toProto());
                             unit.init(unitData, war.getGcData());
                             unit.startRunning(war);
-                            unit.startRunningView();
+                            unit.flushDataToView();
                             unitMap.setUnitOnMap(unit);
                             unitMap.setNextUnitId(unitId + 1);
                             war.updateTilesAndUnitsOnVisibilityChanged(false);

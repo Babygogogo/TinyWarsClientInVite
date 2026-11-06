@@ -92,9 +92,6 @@ export class Tile {
     public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._setWar(war);
     }
-    public startRunningView(): void {
-        this.flushDataToView();
-    }
     public stopRunning(): void {
         // nothing to do
     }

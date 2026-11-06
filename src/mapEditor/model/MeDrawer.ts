@@ -842,7 +842,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             gcData      : gameConfig,
         }), gameConfig);
         unit.startRunning(this._getWar());
-        unit.startRunningView();
+        unit.flushDataToView();
 
         unitMap.setUnitOnMap(unit);
         unitMap.setNextUnitId(unitId + 1);
@@ -1028,7 +1028,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             }
         }
         for (const unit of addedUnits) {
-            unit.startRunningView();
+            unit.flushDataToView();
         }
         if (addedUnits.some(v => v.getIsCoOnboard())) {
             tileMap.getView().updateCoZone();

@@ -153,7 +153,7 @@ function handlePlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: W
         const unit = new Units_Unit.Unit(true);
         unit.init(unitData, gameConfig);
         unit.startRunning(war);
-        unit.startRunningView();
+        unit.flushDataToView();
         unitMap.setUnitOnMap(unit);
         unitMap.setNextUnitId(unitId + 1);
         playerInTurn.setFund(playerInTurn.getFund() - cost);

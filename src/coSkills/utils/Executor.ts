@@ -256,7 +256,7 @@ function exeSelfAddUnitWithoutExtraData({ skillCfg, player, coGridIndexList, isF
         }), gameConfig);
 
         unit.startRunning(war);
-        unit.startRunningView();
+        unit.flushDataToView();
         unitMap.setNextUnitId(unitId + 1);
         unitMap.setUnitOnMap(unit);
 

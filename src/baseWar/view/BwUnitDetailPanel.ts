@@ -1808,7 +1808,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
                 newUnit.init(unitData, gameConfig);
                 newUnit.startRunning(war);
-                newUnit.startRunningView();
+                newUnit.flushDataToView();
 
                 unitMap.setUnitLoaded(newUnit);
                 unitMap.setNextUnitId(unitId + 1);

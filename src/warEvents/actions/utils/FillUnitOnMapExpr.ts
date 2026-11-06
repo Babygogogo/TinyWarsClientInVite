@@ -993,7 +993,7 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Interfa
         const unit = new Units_Unit.Unit(true);
         unit.init(unitData, gameConfig);
         unit.startRunning(war);
-        unit.startRunningView();
+        unit.flushDataToView();
         unitMap.setUnitOnMap(unit);
         (!isFast) && (unit.updateView());
 

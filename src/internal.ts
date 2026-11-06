@@ -562,6 +562,8 @@ export * as MapTags_Constants from "./mapTags/Constants.ts";
 export * as MapTags_Utils from "./mapTags/Utils.ts";
 export * as Maps_Utils_Common from "./maps/utils/Common.ts";
 export * as Maps_Utils_MapRawData from "./maps/utils/MapRawData.ts";
+export * as Maps_Views_MapBorder from "./maps/views/MapBorder.ts";
+export * as Maps_Views_GridBorder from "./maps/views/GridBorder.ts";
 export * as Medals_Constants from "./medals/Constants.ts";
 export * as Medals_Types from "./medals/Types.ts";
 export * as Medals_Utils from "./medals/Utils.ts";

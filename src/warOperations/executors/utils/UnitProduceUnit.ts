@@ -204,7 +204,7 @@ async function normalExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, ac
                 loaderUnitId             : focusUnit.getUnitId(),
             }), gameConfig);
             producedUnit.startRunning(war);
-            producedUnit.startRunningView();
+            producedUnit.flushDataToView();
 
             const player = war.getPlayerInTurn();
             player.setFund(player.getFund() - focusUnit.getProduceUnitCost());

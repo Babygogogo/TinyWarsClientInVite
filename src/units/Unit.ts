@@ -132,11 +132,6 @@ export class Unit {
 
         this._setWar(war);
     }
-    public startRunningView(): void {
-        const view = this.getView();
-        view?.loadViewDataFromUnit(this, this.getWar());
-        view?.refreshAllViews();
-    }
     public stopRunning(): void {
         // nothing to do
     }
@@ -241,6 +236,11 @@ export class Unit {
     }
     private _setView(view: Units_UnitView.UnitView | undefined): void {
         this._view = view;
+    }
+    public flushDataToView(): void {
+        const view = this.getView();
+        view?.loadViewDataFromUnit(this, this.getWar());
+        view?.refreshAllViews();
     }
 
     public updateView(): void {

@@ -152,12 +152,12 @@ export class UnitMap {
         this._forEachUnitLoaded(unit => unit.startRunning(war));
     }
     public startRunningView(): void {
-        this._forEachUnitOnMap(unit => unit.startRunningView());
-        this._forEachUnitLoaded(unit => unit.startRunningView());
-        this.getView().startRunningView();
+        this._forEachUnitOnMap(unit => unit.flushDataToView());
+        this._forEachUnitLoaded(unit => unit.flushDataToView());
+        this.getView().startRunning();
     }
     public stopRunning(): void {
-        this.getView().stopRunningView();
+        this.getView().stopRunning();
         this._forEachUnit(unit => unit.stopRunning());
     }
     public dispose(): void {

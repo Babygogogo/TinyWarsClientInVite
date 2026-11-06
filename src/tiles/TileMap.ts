@@ -120,11 +120,11 @@ export class TileMap {
         this.forEachTile(tile => tile.startRunning(war));
     }
     public startRunningView(): void {
-        this.getView().startRunningView();
-        this.forEachTile(tile => tile.startRunningView());
+        this.getView().startRunning();
+        this.forEachTile(tile => tile.flushDataToView());
     }
     public stopRunning(): void {
-        this.getView().stopRunningView();
+        this.getView().stopRunning();
         this.forEachTile(tile => tile.stopRunning());
     }
     public dispose(): void {
