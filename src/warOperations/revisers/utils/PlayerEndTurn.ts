@@ -3,14 +3,14 @@ import {
     Utils_ClientErrorCode,
     Helpers_Misc,
     Turns_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerEndTurn } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
 
  
-export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoPlayerEndTurn, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoPlayerEndTurn, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
         throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerEndTurn_00);
     }

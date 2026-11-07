@@ -13,9 +13,9 @@ import {
     Numbers_Utils,
     Numbers_Constants,
     CoSkills_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
@@ -42,7 +42,7 @@ export class Player implements Players_IPlayer.IPlayer {
     private readonly _hiddenGridMarkTypeIdList   = new Array<number>();
     private _isSkipTurn                 = false;
 
-    private _war?                       : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                       : BaseWar_Model_War.War;
 
      
     public init(data: SerialPlayer, gcData: GameConfigs_GameConfig.GameConfig): void {
@@ -121,7 +121,7 @@ export class Player implements Players_IPlayer.IPlayer {
         this.setIsSkipTurn(data.getIsSkipTurn());
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
     }
 
@@ -200,10 +200,10 @@ export class Player implements Players_IPlayer.IPlayer {
         });
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 

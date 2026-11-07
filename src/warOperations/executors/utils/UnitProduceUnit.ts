@@ -6,7 +6,6 @@ import {
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
     Units_Unit,
-    type BaseWar_Interface_IBwWar,
     Units_Constants,
     Utils_ClientErrorCode,
     Units_Utils_Serialization,
@@ -18,13 +17,14 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoUnitProduceUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitProduceUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitProduceUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitProduceUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitProduceUnit(war, action);
     } else {
@@ -32,7 +32,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitProduceUnit): void {
+function fastExeUnitProduceUnit(war: BaseWar_Model_War.War, action: WoUnitProduceUnit): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -116,7 +116,7 @@ function fastExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitProduceUnit): Promise<void> {
+async function normalExeUnitProduceUnit(war: BaseWar_Model_War.War, action: WoUnitProduceUnit): Promise<void> {
     // const desc = await war.getDescForExeUnitProduceUnit(action);
     // (desc) && (FloatText.show(desc));
 
@@ -248,7 +248,7 @@ async function normalExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, ac
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
-function getPromotionForUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, producerUnit: Units_Unit.Unit, targetUnitType: number): number {
+function getPromotionForUnitProduceUnit(war: BaseWar_Model_War.War, producerUnit: Units_Unit.Unit, targetUnitType: number): number {
     const player                    = producerUnit.getPlayer();
     const coZoneRadius              = player.getCoZoneRadius();
     const gridIndex                 = producerUnit.getGridIndex();
@@ -274,7 +274,7 @@ function getPromotionForUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, pr
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitProduceUnit): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoUnitProduceUnit): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

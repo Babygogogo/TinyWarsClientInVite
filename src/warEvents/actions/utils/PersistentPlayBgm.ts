@@ -4,8 +4,8 @@ import {
     Helpers_Misc,
     Sounds_SoundPlayer,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaPersistentPlayBgm } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentPlayBgm.ts";
@@ -38,10 +38,10 @@ export function getErrorTip(data: WeaPersistentPlayBgm): string | null {
         : null;
 }
 
-export function applyWithExtraData(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Interface_IBwWar.IBwWar): void {
+export function applyWithExtraData(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Model_War.War): void {
     return applyWithoutExtraData(action, isFastExecute, actionId, war);
 }
-export function applyWithoutExtraData(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Interface_IBwWar.IBwWar): void {
+export function applyWithoutExtraData(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Model_War.War): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 
     if (!isFastExecute) {

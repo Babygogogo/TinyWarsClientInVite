@@ -5,7 +5,6 @@ import {
     type AuxiliaryTypes_GridIndexAndWeight,
     AuxiliaryTypes_MovableArea,
     AuxiliaryTypes_UnitVisionInfo,
-    type BaseWar_Interface_IBwWar,
     Cos_Constants,
     CoSkills_Constants,
     CoSkills_Utils_Common,
@@ -18,6 +17,7 @@ import {
     CoSkills_Utils_Persistent_SelfUnitMoveRange,
     CoSkills_Utils_Persistent_SelfUnitOffense,
     CoSkills_Utils_Persistent_SelfUnitVision,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     Helpers_Collection,
     Helpers_Misc,
@@ -34,6 +34,7 @@ import {
     Units_Constants,
     Units_Unit,
     Units_UnitView,
+    Units_UnitViewData,
     Units_UnitViewPool,
     Units_Utils_Common,
     Units_Utils_CustomName,
@@ -77,7 +78,7 @@ export class Unit {
     private _customNameId                       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     private _view                               : Units_UnitView.UnitView | undefined;
-    private _war?                               : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                               : BaseWar_Model_War.War;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Initializers and serializers.
@@ -123,9 +124,11 @@ export class Unit {
         this.setAiWeightedDestinationWithProto(unitData.getAiWeightedDestination());
         this.setBuffList(unitData.getBuffArray());
         this.setCustomNameId(unitData.getCustomNameId());
+
+        this.getView()?.loadViewData(Units_UnitViewData.UnitViewData.generateFromSerialUnit(unitData, gameConfig));
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         if (war.getGcData() !== this.getGcData()) {
             throw Helpers_Misc.newError(`Unit.startRunning() invalid gameConfig.`);
         }
@@ -190,10 +193,10 @@ export class Unit {
         return this.serializeForCreateSfw();
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 
@@ -238,12 +241,6 @@ export class Unit {
         this._view = view;
     }
     public flushDataToView(): void {
-        const view = this.getView();
-        view?.loadViewDataFromUnit(this, this.getWar());
-        view?.refreshAllViews();
-    }
-
-    public updateView(): void {
         const view = this.getView();
         view?.loadViewDataFromUnit(this, this.getWar());
         view?.refreshAllViews();
@@ -2203,7 +2200,7 @@ export class Unit {
 
         if (isUpdated) {
             if (updateView) {
-                this.updateView();
+                this.flushDataToView();
             }
             Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
                 unit : this,
@@ -2221,7 +2218,7 @@ export class Unit {
         }
 
         if (updateView) {
-            this.updateView();
+            this.flushDataToView();
         }
         if (needNotify) {
             Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
@@ -2240,7 +2237,7 @@ export class Unit {
         }
 
         if (updateView) {
-            this.updateView();
+            this.flushDataToView();
         }
         Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
             unit : this,

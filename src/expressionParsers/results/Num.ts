@@ -2,13 +2,13 @@ import {
     ExpressionParsers_Results_Base,
     Helpers_Misc,
     ExpressionParsers_Enums,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 
 export class Num extends ExpressionParsers_Results_Base.Base {
     public readonly num: number;
 
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, num: number) {
+    public constructor(war: BaseWar_Model_War.War, num: number) {
         super(war);
 
         if (!isFinite(num)) {

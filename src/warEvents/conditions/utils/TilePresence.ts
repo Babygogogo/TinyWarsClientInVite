@@ -5,8 +5,8 @@ import {
     ValueAndComparators_Utils,
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
@@ -150,7 +150,7 @@ export function checkIsValid(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
     return (data != null) && (getErrorTip(data, playersCountUnneutral, mapSize, gameConfig) == null);
 }
 
-export function checkIsMeet(data: WecTilePresence, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+export function checkIsMeet(data: WecTilePresence, war: BaseWar_Model_War.War): boolean {
     const tileComparator = data.getConTileComparator();
     if (tileComparator == null) {
         return false;

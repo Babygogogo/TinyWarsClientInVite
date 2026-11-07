@@ -1,11 +1,11 @@
 import {
+    type BaseWar_Model_War,
     type Notifications_Mapping,
     BaseWar_View_BwCursorView,
     AuxiliaryTypes_GridIndex,
     ReplayWar_Model_RwWarBase,
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwCursorView,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_MapSize,
     Notifications_Dispatcher,
     Helpers_Misc,
@@ -23,7 +23,7 @@ export class BwCursor implements BaseWar_Interface_IBwCursor.IBwCursor {
     private _isMovableByTouches = true;
     private readonly _view      = new BaseWar_View_BwCursorView.BwCursorView();
 
-    private _war?               : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?               : BaseWar_Model_War.War;
 
     private readonly _notifyListeners: Notifications_Types.Listener[] = [
         { type : "BwCursorTapped",          callback : this._onNotifyBwCursorTapped },
@@ -41,7 +41,7 @@ export class BwCursor implements BaseWar_Interface_IBwCursor.IBwCursor {
         this.getView().fastInit(this);
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._war = war;
 
         Notifications_Dispatcher.addEventListeners(this._notifyListeners, this, false, 10);
@@ -85,7 +85,7 @@ export class BwCursor implements BaseWar_Interface_IBwCursor.IBwCursor {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 

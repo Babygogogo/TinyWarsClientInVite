@@ -1,5 +1,5 @@
 import {
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Weathers_IView,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
@@ -14,11 +14,11 @@ export interface IManager {
     serializeForCreateMfr(): SerialWeatherManager;
     serializeForCreateSfw(): SerialWeatherManager;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
     startRunningView(): void;
     stopRunning(): void;
 
-    getWar(): BaseWar_Interface_IBwWar.IBwWar;
+    getWar(): BaseWar_Model_War.War;
 
     getView(): Weathers_IView.IView;
 

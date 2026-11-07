@@ -6,7 +6,6 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_UnitVisionInfo,
     Units_Constants,
     Utils_ClientErrorCode,
@@ -16,13 +15,14 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
+    type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
 
 import type { WoUnitDropUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitDropUnit.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitDropUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitDropUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitDropUnit(war, action);
     } else {
@@ -30,7 +30,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitDropUnit): void {
+function fastExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitDropUnit): void {
     const fogMap            = war.getFogMap();
     const actionExtraData   = action.getExtraData();
     const unitMap           = war.getUnitMap();
@@ -98,7 +98,7 @@ function fastExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUni
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitDropUnit): Promise<void> {
+async function normalExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitDropUnit): Promise<void> {
     // const desc = await war.getDescForExeUnitDropUnit(action);
     // (desc) && (FloatText.show(desc));
 
@@ -151,7 +151,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
                 }
             }
             for (const unit of affectedLoaderUnits) {
-                unit?.updateView();
+                unit?.flushDataToView();
             }
         }
 
@@ -232,7 +232,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitDropUnit): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoUnitDropUnit): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

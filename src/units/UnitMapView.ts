@@ -44,24 +44,26 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
         this._setUnitMap(unitMap);
 
         this._clearAllUnits();
-        this._resetZOrderForAllLayers();
-    }
-
-    public startRunning(): void {
-        this._clearAllUnits();
         for (const unit of this._getUnitMap().getAllUnits()) {
             const view = unit.getView();
             if (view) {
                 this.addUnitView(view, false);
             }
         }
+        this._resetZOrderForAllLayers();
+    }
 
+    public startRunning(): void {
         Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);
     }
     public stopRunning(): void {
         Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
     }
+    public dispose(): void {
+        this.stopRunning();
+    }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _getUnitMap(): Units_UnitMap.UnitMap {
         return Helpers_Misc.getExisted(this._unitMap);
     }
@@ -213,11 +215,11 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
     }
 
     private _getLayerByUnitType(unitType: number): Ui_Interfaces_IUiContainer.IUiContainer {
-        switch (this._getUnitMap().getWar().getGcData().getUnitTemplateCfg(unitType)?.getLayer()) {
+        switch (this._getUnitMap().getGameConfig()?.getUnitTemplateCfg(unitType)?.getLayer()) {
             case Units_Constants.DisplayLayerId.Air     : return this._layerForAir;
             case Units_Constants.DisplayLayerId.Ground  : return this._layerForGround;
             case Units_Constants.DisplayLayerId.Sea     : return this._layerForNaval;
-            default                         : throw Helpers_Misc.newError(`Invalid layer.`, Utils_ClientErrorCode.ClientErrorCode.BwUnitMapView_GetLayerByUnitType_00);
+            default                                     : throw Helpers_Misc.newError(`Invalid layer.`, Utils_ClientErrorCode.ClientErrorCode.BwUnitMapView_GetLayerByUnitType_00);
         }
     }
 

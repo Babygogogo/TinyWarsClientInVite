@@ -12,6 +12,10 @@ import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/
 export class ScwWar extends SinglePlayerWar_Model_SpwWar.SpwWar {
     private _settingsForScw?    : SettingsForScw;
 
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
     public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
         this._setSettingsForScw(Helpers_Misc.getExisted(data.getSettingsForScw(), Utils_ClientErrorCode.ClientErrorCode.ScwWar_Init_00));

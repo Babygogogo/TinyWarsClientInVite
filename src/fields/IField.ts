@@ -1,9 +1,9 @@
 import {
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type ActionPlanners_IActionPlanner,
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwGridVisualEffect,
-    type BaseWar_Interface_IBwWar,
     type Fields_IFieldView,
     type FogMaps_IFogMap,
     type Tiles_TileMap,
@@ -29,7 +29,7 @@ export interface IField {
         playersCountUnneutral   : number;
     }): void;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
     startRunningView(): void;
     stopRunning(): void;
     dispose(): void;

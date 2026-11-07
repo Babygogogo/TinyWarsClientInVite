@@ -1,4 +1,5 @@
 import {
+    type BaseWar_Model_War,
     type Notifications_Mapping,
     ActionPlanners_ActionPlannerView,
     AuxiliaryTypes_AttackableArea,
@@ -60,7 +61,6 @@ import {
     type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_IActionPlannerView,
-    type BaseWar_Interface_IBwWar,
     type ActionPlanners_States_IState,
     type BaseWar_View_BwUnitActionsPanel,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -87,7 +87,7 @@ import { MovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
 export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlanner {
     private readonly _view                      = new ActionPlanners_ActionPlannerView.ActionPlannerView();
 
-    private _war?                               : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                               : BaseWar_Model_War.War;
     private _mapSize?                           : AuxiliaryTypes_MapSize.MapSize;
 
     private _stateId                            = ActionPlanners_Constants.StateId.Idle;
@@ -134,7 +134,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         this.getView().fastInit(this);
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._war = war;
 
         ActionPlanners_States_Idle.Idle.getInstance().apply(this);
@@ -149,7 +149,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         this.getView().stopRunningView();
     }
 
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war, Utils_ClientErrorCode.ClientErrorCode.ActionPlanner_GetWar_00);
     }
 
@@ -247,7 +247,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         const war       = this.getWar();
         const gridIndex = war.getCursor().getGridIndex();
         if (Users_Model.getSelfSettingsIsAutoScrollMap()) {
-            war.getView().tweenGridToCentralArea(gridIndex);
+            war.getView()?.tweenGridToCentralArea(gridIndex);
         }
 
         const currStateId = this.getStateId();
@@ -266,7 +266,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     private _onNotifyBwCursorDragged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorDragged"]>): void {
         const war = this.getWar();
         if (Users_Model.getSelfSettingsIsAutoScrollMap()) {
-            war.getView().tweenGridToCentralArea((Helpers_Misc.getExisted(e.data)).draggedTo);
+            war.getView()?.tweenGridToCentralArea((Helpers_Misc.getExisted(e.data)).draggedTo);
         }
 
         const currStateId = this.getStateId();

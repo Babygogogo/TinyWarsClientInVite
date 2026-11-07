@@ -1,5 +1,5 @@
 import {
-    BaseWar_Interface_IBwWar,
+    BaseWar_Model_War,
     CoSkills_Constants,
     ForceSkins_Constants,
     ForceSkins_Utils,
@@ -63,7 +63,7 @@ export class UnitViewData implements IUnitViewData {
     public hasLoadedUnits           = false;
     public readonly buffTypeIdList  = new Array<number>();
 
-    public static generateFromUnit(unit: Units_Unit.Unit, war: BaseWar_Interface_IBwWar.IBwWar, ignorePosition: boolean): UnitViewData {
+    public static generateFromUnit(unit: Units_Unit.Unit, war: BaseWar_Model_War.War, ignorePosition: boolean): UnitViewData {
         const player            = unit.getPlayer();
         const playerIndex       = unit.getPlayerIndex();
         const coUsingSkillType  = player.getCoUsingSkillType();

@@ -16,6 +16,10 @@ import type { SettingsForCaw } from "../../proto/schema/CommonProto/WarSettings/
 export class War extends SinglePlayerWar_Model_SpwWar.SpwWar implements Campaigns_Wars_IWar.IWar {
     private _settingsForCaw?    : SettingsForCaw;
 
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
     public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
         this._setSettingsForCaw(Helpers_Misc.getExisted(data.getSettingsForCaw(), Utils_ClientErrorCode.ClientErrorCode.CawWar_Init_00));

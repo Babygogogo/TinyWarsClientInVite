@@ -8,7 +8,7 @@ import {
     WarOperations_Executors_Utils_Common,
     Turns_Constants,
     Tiles_Constants_MapWeapon,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Tiles_Tile,
     type Turns_ITurnManager,
 } from "../../internal.ts";
@@ -105,7 +105,7 @@ function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_ITurnManager.ITurnMana
 function runPhaseRepairUnitByUnit(turnManager: Turns_ITurnManager.ITurnManager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
     // nothing to do
 }
- 
+
 async function runPhaseActivateMapWeapon(turnManager: Turns_ITurnManager.ITurnManager, data: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
     const war               = turnManager.getWar();
     const playerIndex       = war.getPlayerIndexInTurn();
@@ -217,7 +217,7 @@ function runPhaseResetSkillState(turnManager: Turns_ITurnManager.ITurnManager, d
 function runPhaseResetVotesForDraw(turnManager: Turns_ITurnManager.ITurnManager, data: WoPlayerEndTurn, isFastExecute: boolean): void {
     turnManager.getWar().getDrawVoteManager().handleTurnPhaseResetVotesForDraw();
 }
- 
+
 function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_ITurnManager.ITurnManager, data: WoPlayerEndTurn, isFastExecute: boolean): void {
     const war               = turnManager.getWar();
     const weatherManager    = war.getWeatherManager();
@@ -242,18 +242,18 @@ function runPhaseResetVisionForNextPlayer(turnManager: Turns_ITurnManager.ITurnM
     //     turnManager.getWar().updateTilesAndUnitsOnVisibilityChanged();
     // }
 }
- 
+
 function runPhaseWaitBeginTurn(turnManager: Turns_ITurnManager.ITurnManager, data: WoPlayerEndTurn, isFastExecute: boolean): void {
     if (!isFastExecute) {
         turnManager.getWar().getTileMap().getView().resetMarkLayer();
     }
 }
 
-async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
-        war.getView().moveGridToCenter(tileGridIndex);
+        war.getView()?.moveGridToCenter(tileGridIndex);
         gridVisualEffect.showEffectCharge(tileGridIndex);
         await Timer_TimerModel.wait(400);
     }
@@ -279,20 +279,20 @@ async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: BaseWar_
         await Timer_TimerModel.wait(400);
     }
 }
-async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
-        war.getView().moveGridToCenter(tileGridIndex);
+        war.getView()?.moveGridToCenter(tileGridIndex);
         gridVisualEffect.showEffectCharge(tileGridIndex);
         await Timer_TimerModel.wait(400);
     }
 }
-async function handleMapWeaponTileLaserTurret(data: WoSystemBeginTurn, war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileLaserTurret(data: WoSystemBeginTurn, war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
-        war.getView().moveGridToCenter(tileGridIndex);
+        war.getView()?.moveGridToCenter(tileGridIndex);
         gridVisualEffect.showEffectCharge(tileGridIndex);
         await Timer_TimerModel.wait(400);
     }

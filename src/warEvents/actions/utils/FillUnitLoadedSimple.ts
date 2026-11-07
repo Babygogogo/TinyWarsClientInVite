@@ -1,7 +1,7 @@
 import {
     Units_Unit,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
     Players_Utils_Filter,
@@ -138,7 +138,7 @@ export function getErrorTip(data: WeaFillUnitLoadedSimple, mapSize: AuxiliaryTyp
 export async function applyWithExtraData(_action: WeaFillUnitLoadedSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     const conUnitFilter     = data.getConUnitFilter();
@@ -200,7 +200,7 @@ export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFas
             unit.flushDataToView();
             unitMap.setNextUnitId(unitId + 1);
             unitMap.setUnitLoaded(unit);
-            (!isFastExecute) && (unit.updateView());
+            (!isFastExecute) && (unit.flushDataToView());
 
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({

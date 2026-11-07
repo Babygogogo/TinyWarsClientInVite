@@ -4,7 +4,7 @@ import {
     ValueArrayAndPredicates_Utils,
     Lang_Utils,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 import type { TileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
 import type { TileBuffFilter } from "../../proto/schema/CommonProto/Structure/TileBuffFilter.ts";
@@ -22,7 +22,7 @@ export function checkIsValid(data: TileBuffFilter): boolean {
     return getErrorTip(data) == null;
 }
 
-export function checkIsMeet(data: TileBuffFilter, buff: TileBuff, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+export function checkIsMeet(data: TileBuffFilter, buff: TileBuff, war: BaseWar_Model_War.War): boolean {
     {
         const con = data.getConBuffTypeId();
         if ((con != null) &&

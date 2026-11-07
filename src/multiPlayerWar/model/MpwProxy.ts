@@ -5,8 +5,8 @@ import {
     Networks_MessageCodes,
     Wars_Constants,
     MultiPlayerWar_Model_MpwModel,
+    type BaseWar_Model_War,
     type Egret_Egret,
-    type BaseWar_Interface_IBwWar,
 } from "../../internal.ts";
 import type { GridIdAndMarkTypeId } from "../../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -91,7 +91,7 @@ async function _onMsgMpwCommonContinueWar(e: Egret_Egret.Event<Networks_Manager.
     }
 }
 
-export function reqMpwCommonSyncWar(war: BaseWar_Interface_IBwWar.IBwWar, requestType: Wars_Constants.SyncRequestTypeId): void {
+export function reqMpwCommonSyncWar(war: BaseWar_Model_War.War, requestType: Wars_Constants.SyncRequestTypeId): void {
     Networks_Manager.send({
         MsgMpwCommonSyncWar : {
             c : {
@@ -260,7 +260,7 @@ function _onMsgMpwCommonHandleBoot(e: Egret_Egret.Event<Networks_Manager.Respons
     }
 }
 
-export function reqMpwExecuteWarOperation(war: BaseWar_Interface_IBwWar.IBwWar, actionContainer: WoContainer): void {
+export function reqMpwExecuteWarOperation(war: BaseWar_Model_War.War, actionContainer: WoContainer): void {
     Networks_Manager.send({
         MsgMpwExecuteWarOperation : {
             c : {

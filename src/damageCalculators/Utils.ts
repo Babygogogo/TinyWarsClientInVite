@@ -15,8 +15,8 @@ import {
     AuxiliaryTypes_GridIndex,
     Numbers_Constants,
     Units_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type Tiles_Tile,
     type Units_Unit,
@@ -40,7 +40,7 @@ function checkIsInAttackRange({ gridIndex1, gridIndex2, minAttackRange1, maxAtta
     }
 }
 
-function getLuckValue(war: BaseWar_Interface_IBwWar.IBwWar, attackerUnit: Units_Unit.Unit, attackerGridIndex: AuxiliaryTypes_GridIndex.GridIndex, isEstimated: boolean): number {
+function getLuckValue(war: BaseWar_Model_War.War, attackerUnit: Units_Unit.Unit, attackerGridIndex: AuxiliaryTypes_GridIndex.GridIndex, isEstimated: boolean): number {
     const playerIndex               = attackerUnit.getPlayerIndex();
     const playerRule                = war.getCommonSettingManager().getPlayerRule(playerIndex);
     const lowerLimitForSettings     = playerRule.getLuckLowerLimit();
@@ -80,7 +80,7 @@ export function getDamageMultiplierForDefenseBonus(gcData: GameConfigs_GameConfi
 }
 
 function getAttackBonusMultiplier({ war, attacker, attackerGridIndex, isCounter, observerTeamIndexSet, useDamagePreviewSettings }: {
-    war                         : BaseWar_Interface_IBwWar.IBwWar;
+    war                         : BaseWar_Model_War.War;
     attacker                    : Units_Unit.Unit;
     attackerGridIndex           : AuxiliaryTypes_GridIndex.GridIndex;
     targetUnit                  : Units_Unit.Unit | null;
@@ -112,7 +112,7 @@ function getAttackBonusMultiplier({ war, attacker, attackerGridIndex, isCounter,
 }
 
 function getDefenseBonusMultiplierForUnit({ war, attacker, attackerGridIndex, target, targetGridIndex, observerTeamIndexSet, useDamagePreviewSettings }: {
-    war                         : BaseWar_Interface_IBwWar.IBwWar;
+    war                         : BaseWar_Model_War.War;
     attacker                    : Units_Unit.Unit;
     attackerGridIndex           : AuxiliaryTypes_GridIndex.GridIndex;
     target                      : Units_Unit.Unit;
@@ -224,7 +224,7 @@ function checkCanAttackUnit({ unit1, movePath1, maxAttackRange1, canAttackAfterM
 }
 
 function getAttackDamageForAttackUnit({ war, unit1, unit2, isCounter, isEstimated, observerTeamIndexSet, useDamagePreviewSettings }: {
-    war                         : BaseWar_Interface_IBwWar.IBwWar;
+    war                         : BaseWar_Model_War.War;
     unit1                       : Units_Unit.Unit;
     unit2                       : Units_Unit.Unit;
     isCounter                   : boolean;
@@ -274,7 +274,7 @@ function getAttackDamageForAttackUnit({ war, unit1, unit2, isCounter, isEstimate
     });
 }
 function getAttackDamageForAttackTile({ war, unit1, tile2, isCounter, isEstimated, observerTeamIndexSet, useDamagePreviewSettings }: {
-    war                         : BaseWar_Interface_IBwWar.IBwWar;
+    war                         : BaseWar_Model_War.War;
     unit1                       : Units_Unit.Unit;
     tile2                       : Tiles_Tile.Tile;
     isCounter                   : boolean;
@@ -326,7 +326,7 @@ function getAttackDamageForAttackTile({ war, unit1, tile2, isCounter, isEstimate
 /// </summary>
 function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, maxAttackRange1, canAttackAfterMoving1, gridIndex2, maxAttackRange2, canAttackAfterMoving2, isEstimated, observerTeamIndexSet, useDamagePreviewSettings }: {
     battleInfo                  : AuxiliaryTypes_BattleInfo.BattleInfo;
-    war                         : BaseWar_Interface_IBwWar.IBwWar;
+    war                         : BaseWar_Model_War.War;
     movePath1                   : AuxiliaryTypes_GridIndex.GridIndex[];
     launchUnitId1               : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     maxAttackRange1             : number | null;
@@ -435,7 +435,7 @@ function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, m
 }
 function handleAttackUnit({ battleInfo, war, unit1, unit2, damage, isEstimated }: {
     battleInfo  : AuxiliaryTypes_BattleInfo.BattleInfo;
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
     unit1       : Units_Unit.Unit;
     unit2       : Units_Unit.Unit;
     damage      : number;
@@ -678,7 +678,7 @@ function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, atta
 function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlayer, targetPlayer, targetLostNormalizedHp, targetCfgEnergyValue, isAttackerInAttackerCoZone, isTargetInTargetCoZone }: {
     battleInfo                  : AuxiliaryTypes_BattleInfo.BattleInfo;
     isEstimated                 : boolean;
-    war                         : BaseWar_Interface_IBwWar.IBwWar;
+    war                         : BaseWar_Model_War.War;
     attackerPlayer              : Players_IPlayer.IPlayer;
     targetPlayer                : Players_IPlayer.IPlayer;
     targetLostNormalizedHp      : number;
@@ -769,7 +769,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
 }
 function handleDestructionForAttackUnit({ battleInfo, war, unit, isUnitDestroyed, isEstimated }: {
     battleInfo      : AuxiliaryTypes_BattleInfo.BattleInfo;
-    war             : BaseWar_Interface_IBwWar.IBwWar;
+    war             : BaseWar_Model_War.War;
     unit            : Units_Unit.Unit;
     isUnitDestroyed : boolean;
     isEstimated     : boolean;
@@ -795,7 +795,7 @@ function handleDestructionForAttackUnit({ battleInfo, war, unit, isUnitDestroyed
 /// </summary>
 function doRunBattleForAttackTile({ battleInfo, war, movePath1, launchUnitId1, maxAttackRange1, canAttackAfterMoving1, gridIndex2, isEstimated, observerTeamIndexSet, useDamagePreviewSettings }: {
     battleInfo                  : AuxiliaryTypes_BattleInfo.BattleInfo;
-    war                         : BaseWar_Interface_IBwWar.IBwWar;
+    war                         : BaseWar_Model_War.War;
     movePath1                   : AuxiliaryTypes_GridIndex.GridIndex[];
     launchUnitId1               : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     maxAttackRange1             : number | null;
@@ -863,7 +863,7 @@ function doRunBattleForAttackTile({ battleInfo, war, movePath1, launchUnitId1, m
 }
 function handleAttackTile({ battleInfo, war, unit1, tile2, damage, isEstimated }: {
     battleInfo  : AuxiliaryTypes_BattleInfo.BattleInfo;
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
     unit1       : Units_Unit.Unit;
     tile2       : Tiles_Tile.Tile;
     damage      : number;
@@ -937,7 +937,7 @@ function handleHpForAttackTile({ battleInfo, isEstimated, tile2, tileNewHp2 }: {
 function handleDestructionForAttackTile({ battleInfo, isEstimated, war, tile2 }: {
     battleInfo  : AuxiliaryTypes_BattleInfo.BattleInfo;
     isEstimated : boolean;
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
     tile2       : Tiles_Tile.Tile;
 }): void {
     const hp = tile2.getCurrentHp();
@@ -989,7 +989,7 @@ export function getEstimatedBattleInfo({
     useDamagePreviewSettings,
     isAttackUnit,
 }: {
-    war                         : BaseWar_Interface_IBwWar.IBwWar;
+    war                         : BaseWar_Model_War.War;
     movePath1                   : AuxiliaryTypes_GridIndex.GridIndex[];
     launchUnitId1               : number | null;
     gridIndex2                  : AuxiliaryTypes_GridIndex.GridIndex;
@@ -1134,7 +1134,7 @@ export function runBattleForAttackUnit({
     maxAttackRange2,
     canAttackAfterMoving2,
 }: {
-    war                     : BaseWar_Interface_IBwWar.IBwWar;
+    war                     : BaseWar_Model_War.War;
     movePath1               : AuxiliaryTypes_GridIndex.GridIndex[];
     launchUnitId1           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     maxAttackRange1         : number | null;
@@ -1174,7 +1174,7 @@ export function runBattleForAttackTile({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     canAttackAfterMoving2,
 }: {
-    war                     : BaseWar_Interface_IBwWar.IBwWar;
+    war                     : BaseWar_Model_War.War;
     movePath1               : AuxiliaryTypes_GridIndex.GridIndex[];
     launchUnitId1           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     maxAttackRange1         : number | null;

@@ -6,7 +6,7 @@ import {
     AuxiliaryTypes_GridIndex,
     Units_Constants,
     AuxiliaryTypes_MapSize,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Players_IPlayer,
     type Units_UnitMap,
 } from "../../internal.ts";
@@ -27,7 +27,7 @@ interface ValueMaps {
 }
 
 export function generate({ war, player, skillType, skillIndex }: {
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
     player      : Players_IPlayer.IPlayer;
     skillType   : number;
     skillIndex  : number;
@@ -58,7 +58,7 @@ export function generate({ war, player, skillType, skillIndex }: {
     return dataForUseCoSkill;
 }
 
-function getFixedAreaDamageCenter(war: BaseWar_Interface_IBwWar.IBwWar, player: Players_IPlayer.IPlayer, cfg: FixedAreaDamage): AuxiliaryTypes_GridIndex.GridIndex | null {
+function getFixedAreaDamageCenter(war: BaseWar_Model_War.War, player: Players_IPlayer.IPlayer, cfg: FixedAreaDamage): AuxiliaryTypes_GridIndex.GridIndex | null {
     const targetType        = cfg.getTargetTypeId();
     const radius            = cfg.getRadius();
     const hpDamage          = cfg.getDamage();
@@ -102,7 +102,7 @@ function getFixedAreaDamageCenter(war: BaseWar_Interface_IBwWar.IBwWar, player: 
 }
 
 function getFixedAreaDamageCenterForType1({ war, valueMaps, radius, hpDamage, isIndiscriminate }: {
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     valueMaps           : ValueMaps;
     radius              : number;
     hpDamage            : number;
@@ -118,7 +118,7 @@ function getFixedAreaDamageCenterForType1({ war, valueMaps, radius, hpDamage, is
 }
 
 function getFixedAreaDamageCenterForType2({ war, valueMaps, radius, hpDamage, isIndiscriminate }: {
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     valueMaps           : ValueMaps;
     radius              : number;
     hpDamage            : number;
@@ -134,7 +134,7 @@ function getFixedAreaDamageCenterForType2({ war, valueMaps, radius, hpDamage, is
 }
 
 function getFixedAreaDamageCenterForType3({ war, valueMaps, radius, hpDamage, isIndiscriminate }: {
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     valueMaps           : ValueMaps;
     radius              : number;
     hpDamage            : number;
@@ -150,7 +150,7 @@ function getFixedAreaDamageCenterForType3({ war, valueMaps, radius, hpDamage, is
 }
 
 function getFixedAreaDamageCenterForType4({ war, valueMaps, radius, hpDamage, isIndiscriminate }: {
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     valueMaps           : ValueMaps;
     radius              : number;
     hpDamage            : number;
@@ -166,7 +166,7 @@ function getFixedAreaDamageCenterForType4({ war, valueMaps, radius, hpDamage, is
 }
 
 function getFixedAreaDamageCenterForType5({ war, valueMaps, radius, hpDamage, isIndiscriminate }: {
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     valueMaps           : ValueMaps;
     radius              : number;
     hpDamage            : number;

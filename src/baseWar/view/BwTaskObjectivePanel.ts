@@ -5,7 +5,7 @@ import {
     Ui_Components_UiImage,
     Ui_Components_UiLabel,
     Ui_Components_UiPanel,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -17,7 +17,7 @@ import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjective
 import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 
 export interface OpenData {
-    war     : BaseWar_Interface_IBwWar.IBwWar;
+    war     : BaseWar_Model_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
@@ -133,7 +133,7 @@ function createSeparator(): Ui_Interfaces_IUiImage.IUiImage {
     img.setIsVisible(false);
     return img;
 }
-function getDataArrayForTaskObjectiveRenderer(war: BaseWar_Interface_IBwWar.IBwWar, allTaskObjectiveArray: TaskObjective[], stateArray: TaskObjectiveState[], isMain: boolean): DataForTaskObjectiveRenderer[] {
+function getDataArrayForTaskObjectiveRenderer(war: BaseWar_Model_War.War, allTaskObjectiveArray: TaskObjective[], stateArray: TaskObjectiveState[], isMain: boolean): DataForTaskObjectiveRenderer[] {
     const dataArray: DataForTaskObjectiveRenderer[] = [];
     for (const taskObjective of allTaskObjectiveArray.filter(v => isMain === !!v.getIsMain())) {
         const objectiveId = taskObjective.getObjectiveId();
@@ -149,7 +149,7 @@ function getDataArrayForTaskObjectiveRenderer(war: BaseWar_Interface_IBwWar.IBwW
 
 interface DataForTaskObjectiveRenderer {
     taskObjective   : TaskObjective;
-    war             : BaseWar_Interface_IBwWar.IBwWar;
+    war             : BaseWar_Model_War.War;
 }
 class TaskObjectiveRenderer extends Ui_Components_UiContainer.UiContainer {
     private readonly _groupCompleted!   : Ui_Interfaces_IUiContainer.IUiContainer;

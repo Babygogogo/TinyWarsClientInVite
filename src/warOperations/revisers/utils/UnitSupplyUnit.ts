@@ -5,7 +5,7 @@ import {
     Helpers_Misc,
     AuxiliaryTypes_GridIndex,
     Turns_Constants,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Units_Unit,
     type Units_UnitMap,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -13,7 +13,7 @@ import {
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitSupplyUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSupplyUnit.ts";
 
-export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitSupplyUnit, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitSupplyUnit, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
         throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_00);
     }

@@ -14,8 +14,8 @@ import {
     ExpressionParsers_Results_Tile,
     ExpressionParsers_Results_TileArray,
     ExpressionParsers_Contexts_War,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WeaSetViewpointExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointExpr.ts";
 
@@ -140,10 +140,10 @@ export function getErrorTip(data: WeaSetViewpointExpr, customCounterNameSet: Set
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     return applyWithoutExtraData(action, isFast, war);
 }
-export async function applyWithoutExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     return doApply({
         gridIndexArray    : getTargetGridIndexArray(action.getTargets() ?? ``, war),
         isNeedFocusEffect : getIsNeedFocusEffect(action.getNeedFocusEffect(), war),
@@ -158,7 +158,7 @@ export async function doApply({ gridIndexArray, isNeedFocusEffect, isOneByOne, i
     isNeedFocusEffect   : boolean;
     isOneByOne          : boolean;
     interval            : number;
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     isFastExecute       : boolean;
 }): Promise<void> {
     if (isFastExecute) {
@@ -175,7 +175,7 @@ export async function doApply({ gridIndexArray, isNeedFocusEffect, isOneByOne, i
         for (const gridIndex of gridIndexArray) {
             cursor.setGridIndex(gridIndex);
             cursor.updateView();
-            warView.moveGridToCenter(gridIndex);
+            warView?.moveGridToCenter(gridIndex);
 
             if (isNeedFocusEffect) {
                 visualEffect.showEffectAiming(gridIndex, interval);
@@ -187,7 +187,7 @@ export async function doApply({ gridIndexArray, isNeedFocusEffect, isOneByOne, i
     } else {
         cursor.setGridIndex(gridIndexArray[0]);
         cursor.updateView();
-        warView.moveGridToCenter(getCenterGridIndex(gridIndexArray));
+        warView?.moveGridToCenter(getCenterGridIndex(gridIndexArray));
 
         if (isNeedFocusEffect) {
             for (const gridIndex of gridIndexArray) {
@@ -199,7 +199,7 @@ export async function doApply({ gridIndexArray, isNeedFocusEffect, isOneByOne, i
         }
     }
 }
-function getTargetGridIndexArray(str: string, war: BaseWar_Interface_IBwWar.IBwWar): AuxiliaryTypes_GridIndex.GridIndex[] {
+function getTargetGridIndexArray(str: string, war: BaseWar_Model_War.War): AuxiliaryTypes_GridIndex.GridIndex[] {
     const gridIdSet = new Set<number>();
     const mapSize   = war.getTileMap().getMapSize();
     try {
@@ -255,7 +255,7 @@ function getCenterGridIndex(gridIndexArray: AuxiliaryTypes_GridIndex.GridIndex[]
         Math.floor(y / length),
     );
 }
-function getIsOneByOne(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+function getIsOneByOne(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, war: BaseWar_Model_War.War): boolean {
     if (!str) {
         return false;
     }
@@ -267,7 +267,7 @@ function getIsOneByOne(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, w
         return false;
     }
 }
-function getInterval(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, war: BaseWar_Interface_IBwWar.IBwWar): number {
+function getInterval(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, war: BaseWar_Model_War.War): number {
     if (!str) {
         return 1000;
     }
@@ -287,7 +287,7 @@ function getInterval(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, war
         return 1000;
     }
 }
-function getIsNeedFocusEffect(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+function getIsNeedFocusEffect(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, war: BaseWar_Model_War.War): boolean {
     if (!str) {
         return false;
     }

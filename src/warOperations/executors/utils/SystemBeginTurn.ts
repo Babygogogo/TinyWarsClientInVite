@@ -1,22 +1,23 @@
 import {
-    MapEditor_Model_MeWar,
-    MultiPlayerWar_Model_MpwWar,
-    ReplayWar_Model_RwWarBase,
     FloatText,
-    SinglePlayerWar_Model_SpwWar,
-    TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
-    Players_Constants,
     GamePanels_Dict,
-    Lang_Utils,
     GamePanels_Manager,
     Lang_Constants,
+    Lang_Utils,
+    LocalData_Storage,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    Players_Constants,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWar_Model_SpwWar,
+    TestWar_Model_TwWar,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoSystemBeginTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemBeginTurn, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoSystemBeginTurn, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeSystemBeginTurn(war, action);
     } else {
@@ -24,12 +25,12 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSy
     }
 }
 
-async function fastExeSystemBeginTurn(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemBeginTurn): Promise<void> {
+async function fastExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
     await war.getTurnManager().endPhaseStandby(action, true);
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeSystemBeginTurn(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemBeginTurn): Promise<void> {
+async function normalExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
     // const desc = await war.getDescForExeSystemBeginTurn(action);
     // (desc) && (FloatText.show(desc));
 
@@ -41,7 +42,7 @@ async function normalExeSystemBeginTurn(war: BaseWar_Interface_IBwWar.IBwWar, ac
         (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Dead)
     ) {
         const nickname = await playerInTurn.getNickname();
-        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (!war.getIsShowTurnStartPopUp())) {
+        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (!LocalData_Storage.getIsShowReplayTurnStartPopup())) {
             FloatText.show(`[P${playerIndex} ${nickname}] ${Lang_Utils.getText(Lang_Constants.TextType.B0679)}`);
         } else {
             await new Promise<void>(resolve => {
@@ -63,7 +64,7 @@ async function normalExeSystemBeginTurn(war: BaseWar_Interface_IBwWar.IBwWar, ac
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemBeginTurn): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

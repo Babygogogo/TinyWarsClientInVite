@@ -3,8 +3,8 @@ import {
     AuxiliaryTypes_GridIndex,
     Units_Unit,
     type AuxiliaryTypes_BattleInfo,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     TileBuffs_Constants,
     Utils_ClientErrorCode,
     Helpers_Misc,
@@ -22,7 +22,7 @@ import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerializat
  * @return the war view is vibrated or not
  */
 export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isUnitJoinUnit = false }: {
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     commonExtraData     : CommonExtraDataForWarOperation;
     isFastExecute       : boolean;
     isUnitJoinUnit?     : boolean;
@@ -180,7 +180,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
                 if (!isFastExecute) {
                     const loaderUnit = unitMap.getUnitOnMap(existingUnit.getGridIndex());
                     if (loaderUnit) {
-                        loaderUnit.updateView();
+                        loaderUnit.flushDataToView();
                         updatedViewUnits.add(loaderUnit);
                     }
                 }
@@ -216,7 +216,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
                 if (!isFastExecute) {
                     const loaderUnit = unitMap.getUnitOnMap(unit.getGridIndex());
                     if (loaderUnit) {
-                        loaderUnit.updateView();
+                        loaderUnit.flushDataToView();
                         updatedViewUnits.add(loaderUnit);
                     }
                 }
@@ -232,7 +232,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
             const unit = unitMap.getUnitById(loaderUnitId);
             if ((unit) && (!updatedViewUnits.has(unit))) {
                 updatedViewUnits.add(unit);
-                unit.updateView();
+                unit.flushDataToView();
             }
         }
     }
@@ -295,13 +295,13 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
             if ((!updatedViewUnits.has(unit))                                               &&
                 (playerArrayAfterAction.some(v => v.getPlayerIndex() === unit.getPlayerIndex()))
             ) {
-                unit.updateView();
+                unit.flushDataToView();
             }
         }
     }
 
     if ((!isFastExecute) && (isShownExplosionEffect)) {
-        war.getView().showVibration();
+        war.getView()?.showVibration();
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
         return true;
     } else {
@@ -375,7 +375,7 @@ function checkIsUnitDamaged(oldUnitData: SerialUnit, newUnitData: SerialUnit): b
     return (newUnitData.getCurrentHp()) < (oldUnitData.getCurrentHp());
 }
 
-export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.BattleInfo, war: BaseWar_Interface_IBwWar.IBwWar, allVisibleUnits: Set<Units_Unit.Unit>): void {
+export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.BattleInfo, war: BaseWar_Model_War.War, allVisibleUnits: Set<Units_Unit.Unit>): void {
     const gridVisualEffect      = war.getGridVisualEffect();
     let isVisibleUnitDestroyed  = false;
     let isVisibleUnitDamaged    = false;
@@ -404,7 +404,7 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.Battle
                 continue;
             }
 
-            unit.updateView();
+            unit.flushDataToView();
 
             if (allVisibleUnits.has(unit)) {
                 isVisibleUnitDamaged = true;
@@ -439,7 +439,7 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.Battle
     }
 
     if ((isVisibleUnitDestroyed) || (destroyedTiles.size)) {
-        war.getView().showVibration();
+        war.getView()?.showVibration();
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
     } else {
         if ((isVisibleUnitDamaged) || (damagedTiles.size)) {
@@ -489,7 +489,7 @@ export function handleSelfUnitHpAfterWait(focusUnit: Units_Unit.Unit, isFastExec
         focusUnit.setCurrentHp(newHp);
 
         if (!isFastExecute) {
-            focusUnit.updateView();
+            focusUnit.flushDataToView();
         }
     }
 }

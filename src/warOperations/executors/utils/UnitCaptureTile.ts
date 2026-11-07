@@ -6,7 +6,6 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Units_Constants,
     Players_Constants,
     Utils_ClientErrorCode,
@@ -17,12 +16,13 @@ import {
     WarOperations_Executors_Utils_Common,
     GamePanels_Manager,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoUnitCaptureTile } from "../../../proto/schema/CommonProto/WarOperation/WoUnitCaptureTile.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitCaptureTile, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitCaptureTile, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitCaptureTile(war, action);
     } else {
@@ -30,7 +30,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitCaptureTile): void {
+function fastExeUnitCaptureTile(war: BaseWar_Model_War.War, action: WoUnitCaptureTile): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -78,7 +78,7 @@ function fastExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitCaptureTile): Promise<void> {
+async function normalExeUnitCaptureTile(war: BaseWar_Model_War.War, action: WoUnitCaptureTile): Promise<void> {
     // const desc = await war.getDescForExeUnitCaptureTile(action);
     // (desc) && (FloatText.show(desc));
 
@@ -189,7 +189,7 @@ async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, ac
                     });
                 });
             }
-            focusUnit.updateView();
+            focusUnit.flushDataToView();
             tile.flushDataToView();
         }
 
@@ -200,7 +200,7 @@ async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, ac
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitCaptureTile): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoUnitCaptureTile): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

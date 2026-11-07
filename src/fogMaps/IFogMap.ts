@@ -1,8 +1,8 @@
 import {
     Visibilities_Constants,
+    type BaseWar_Model_War,
     type FogMaps_Constants,
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
     type Units_Unit,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -11,7 +11,7 @@ import {
 import type { SerialFogMap } from "../proto/schema/CommonProto/WarSerialization/SerialFogMap.ts";
 
 export interface IFogMap {
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     init({ data, mapSize, playersCountUnneutral }: {
         data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialFogMap>;
@@ -28,7 +28,7 @@ export interface IFogMap {
     serializeForCreateSfw(): SerialFogMap;
     serializeForCreateMfr(): SerialFogMap;
 
-    getWar(): BaseWar_Interface_IBwWar.IBwWar;
+    getWar(): BaseWar_Model_War.War;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.

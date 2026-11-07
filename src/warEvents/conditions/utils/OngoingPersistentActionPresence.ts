@@ -3,8 +3,8 @@ import {
     WarEvents_Actions_Utils_Common,
     Lang_Utils,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WecOngoingPersistentActionPresence } from "../../../proto/schema/CommonProto/WarEvent/WecOngoingPersistentActionPresence.ts";
 
@@ -96,7 +96,7 @@ export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinabl
     return true;
 }
 
-export function checkIsMeet(condition: WecOngoingPersistentActionPresence, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+export function checkIsMeet(condition: WecOngoingPersistentActionPresence, war: BaseWar_Model_War.War): boolean {
     const conActionIdArray  = condition.getOngoingActionIdArray();
     const opaIdArray        = war.getWarEventManager().getOpaIdArray();
     let counter                 = 0;

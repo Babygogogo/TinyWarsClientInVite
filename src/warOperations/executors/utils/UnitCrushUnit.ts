@@ -6,12 +6,12 @@ import {
     AuxiliaryTypes_GridIndex,
     WarOperations_Executors_Utils_Common,
     AuxiliaryTypes_MovePath,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WoUnitCrushUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitCrushUnit.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitCrushUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitCrushUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitCrushUnit(war, action);
     } else {
@@ -19,7 +19,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitCrushUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitCrushUnit): void {
+function fastExeUnitCrushUnit(war: BaseWar_Model_War.War, action: WoUnitCrushUnit): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -64,7 +64,7 @@ function fastExeUnitCrushUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitCrushUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitCrushUnit): Promise<void> {
+async function normalExeUnitCrushUnit(war: BaseWar_Model_War.War, action: WoUnitCrushUnit): Promise<void> {
     // const desc = await war.getDescForExeUnitCrushUnit(action);
     // (desc) && (FloatText.show(desc));
 

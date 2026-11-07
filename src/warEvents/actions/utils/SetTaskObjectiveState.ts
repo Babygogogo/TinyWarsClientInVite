@@ -6,8 +6,8 @@ import {
     ExpressionParsers_Parser,
     ExpressionParsers_Contexts_TaskObjective,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { TaskObjectiveState } from "../../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 import type { WeaSetTaskObjectiveState } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTaskObjectiveState.ts";
@@ -133,7 +133,7 @@ export function getErrorTip(data: WeaSetTaskObjectiveState, customCounterNameSet
     return null;
 }
 
-function checkIsMeetConditionForTaskObjective(action: WeaSetTaskObjectiveState, war: BaseWar_Interface_IBwWar.IBwWar, objectiveId: number): boolean {
+function checkIsMeetConditionForTaskObjective(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War, objectiveId: number): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTaskObjectiveFilter() ?? ``).eval(new ExpressionParsers_Contexts_TaskObjective.TaskObjective(war, objectiveId), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -142,7 +142,7 @@ function checkIsMeetConditionForTaskObjective(action: WeaSetTaskObjectiveState, 
     }
 }
 
-function evalActProgress(action: WeaSetTaskObjectiveState, war: BaseWar_Interface_IBwWar.IBwWar, objectiveId: number): number {
+function evalActProgress(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War, objectiveId: number): number {
     const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) === objectiveId)?.getCurrentProgress() ?? 0;
     const act           = action.getActProgress();
     if (!act) {
@@ -161,7 +161,7 @@ function evalActProgress(action: WeaSetTaskObjectiveState, war: BaseWar_Interfac
     }
 }
 
-function evalActIsHidden(action: WeaSetTaskObjectiveState, war: BaseWar_Interface_IBwWar.IBwWar, objectiveId: number): boolean {
+function evalActIsHidden(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War, objectiveId: number): boolean {
     const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) === objectiveId)?.getIsHidden() ?? false;
     const act           = action.getActIsHidden();
     if (!act) {
@@ -180,7 +180,7 @@ function evalActIsHidden(action: WeaSetTaskObjectiveState, war: BaseWar_Interfac
     }
 }
 
-function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war: BaseWar_Interface_IBwWar.IBwWar, objectiveId: number): boolean {
+function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War, objectiveId: number): boolean {
     const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) === objectiveId)?.getIsProgressUpdaterDisabled() ?? false;
     const act           = action.getActIsProgressUpdaterDisabled();
     if (!act) {
@@ -203,7 +203,7 @@ function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war:
 export function applyWithExtraData(_action: WeaSetTaskObjectiveState): void {
     // nothing to do
 }
-export function applyWithoutExtraData(action: WeaSetTaskObjectiveState, war: BaseWar_Interface_IBwWar.IBwWar): void {
+export function applyWithoutExtraData(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War): void {
     const newStateArray: TaskObjectiveState[] = [];
     for (const objectiveId of war.getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray().map(v => v.getObjectiveId()).sort((v1, v2) => v1 - v2) ?? []) {
         if (checkIsMeetConditionForTaskObjective(action, war, objectiveId)) {
@@ -217,7 +217,7 @@ export function applyWithoutExtraData(action: WeaSetTaskObjectiveState, war: Bas
     }
 }
 
-function createNewTaskObjectiveState(action: WeaSetTaskObjectiveState, war: BaseWar_Interface_IBwWar.IBwWar, objectiveId: number): TaskObjectiveState {
+function createNewTaskObjectiveState(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War, objectiveId: number): TaskObjectiveState {
     const progress                  = evalActProgress(action, war, objectiveId);
     const isHidden                  = evalActIsHidden(action, war, objectiveId);
     const isProgressUpdaterDisabled = evalActIsProgressUpdaterDisabled(action, war, objectiveId);

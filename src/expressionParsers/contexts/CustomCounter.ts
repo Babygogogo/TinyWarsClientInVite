@@ -6,8 +6,8 @@ import {
     ExpressionParsers_Results_War,
     Lang_Constants,
     ExpressionParsers_Contexts_War,
+    type BaseWar_Model_War,
     type ExpressionParsers_Types,
-    type BaseWar_Interface_IBwWar,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 
@@ -41,7 +41,7 @@ export class CustomCounter extends ExpressionParsers_Contexts_Base.Base {
     private readonly _customCounterId    : number;
     private _contextWar         : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(customCounterId: number, war: BaseWar_Interface_IBwWar.IBwWar) {
+    public constructor(customCounterId: number, war: BaseWar_Model_War.War) {
         super(war);
 
         this._customCounterId = customCounterId;

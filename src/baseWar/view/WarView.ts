@@ -1,12 +1,11 @@
 import {
+    type BaseWar_Model_War,
     type Notifications_Mapping,
     MapEditor_Model_MeWar,
     ReplayWar_Model_RwWarBase,
     Ui_Components_UiLabel,
     Ui_Components_UiZoomableComponent,
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
-    type BaseWar_Interface_IBwWarView,
     type AuxiliaryTypes_AuxiliaryTypes,
     Notifications_Dispatcher,
     Helpers_Misc,
@@ -35,7 +34,7 @@ type Padding = {
     bottom  : number;
     top     : number;
 };
- 
+
 const enum PaddingType {
     Default,
     Replay,
@@ -43,17 +42,17 @@ const enum PaddingType {
 }
 const PADDINGS = new Map<PaddingType, Padding>([
     [PaddingType.Default,   {
-        left : 150,    right : 150,     top : 120,   bottom : 20, 
+        left : 150,    right : 150,     top : 120,   bottom : 20,
     }],
     [PaddingType.MapEditor, {
-        left : 90,     right : 90,      top : 120,   bottom : 120, 
+        left : 90,     right : 90,      top : 120,   bottom : 120,
     }],
     [PaddingType.Replay,    {
-        left : 150,    right : 150,     top : 60,    bottom : 20, 
+        left : 150,    right : 150,     top : 60,    bottom : 20,
     }],
 ]);
 
-export class BwWarView extends Ui_Components_UiContainer.UiContainer implements BaseWar_Interface_IBwWarView.IBwWarView {
+export class WarView extends Ui_Components_UiContainer.UiContainer {
     private readonly _fieldContainer         = new Ui_Components_UiZoomableComponent.UiZoomableComponent();
     private readonly _weatherContainer       = new Ui_Components_UiContainer.UiContainer();
     private readonly _labelPersistentText    = new Ui_Components_UiLabel.UiLabel();
@@ -62,7 +61,7 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
     private _vibrationMaxOffset = 4;
     private _vibrationTimeoutId : number | null = null;
 
-    private _war? : BaseWar_Interface_IBwWar.IBwWar;
+    private _war? : BaseWar_Model_War.War;
 
     private readonly _notifyListeners: Notifications_Types.Listener[] = [
         { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
@@ -109,7 +108,7 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
         }
     }
 
-    public init(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public init(war: BaseWar_Model_War.War): void {
         const mapSize           = war.getTileMap().getMapSize();
         const fieldContainer    = this._fieldContainer;
         const padding           = getPadding(war);
@@ -126,7 +125,7 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
         this._weatherContainer.addUiChild(war.getWeatherManager().getView());
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public fastInit(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public fastInit(war: BaseWar_Model_War.War): void {
         // nothing to do
     }
 
@@ -147,6 +146,9 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
         }
 
         this._fieldContainer.setMouseWheelListenerEnabled(false);
+    }
+    public dispose(): void {
+        this.stopRunning();
     }
 
     public getFieldContainer(): Ui_Interfaces_IUiZoomableComponent.IUiZoomableComponent {
@@ -291,7 +293,7 @@ function resetContainer(container: Ui_Interfaces_IUiComponent.IUiComponent): voi
     });
 }
 
-function getPadding(war: BaseWar_Interface_IBwWar.IBwWar): Padding {
+function getPadding(war: BaseWar_Model_War.War): Padding {
     if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
         return Helpers_Misc.getExisted(PADDINGS.get(PaddingType.Replay));
     } else if (war instanceof MapEditor_Model_MeWar.MeWar) {

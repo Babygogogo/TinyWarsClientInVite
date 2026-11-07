@@ -323,11 +323,15 @@ class WarMapUnitMapView extends Ui_Components_UiContainer.UiContainer {
         view.refreshAllViews();
         this._unitViews.push(view);
 
-        switch (gameConfig.getUnitTemplateCfg(viewData.unitTypeId)?.getLayer()) {
-            case Units_Constants.DisplayLayerId.Air     : this._airLayer.addUiChild(view);                                                    break;
-            case Units_Constants.DisplayLayerId.Ground  : this._groundLayer.addUiChild(view);                                                 break;
-            case Units_Constants.DisplayLayerId.Sea     : this._seaLayer.addUiChild(view);                                                    break;
-            default                                     : throw Helpers_Misc.newError(`Invalid layer`, Utils_ClientErrorCode.ClientErrorCode.WarMapView_AddUnit_00);
+        const layerId = gameConfig.getUnitTemplateCfg(viewData.unitTypeId)?.getLayer();
+        if (layerId === Units_Constants.DisplayLayerId.Air) {
+            this._airLayer.addUiChild(view);
+        } else if (layerId === Units_Constants.DisplayLayerId.Ground) {
+            this._groundLayer.addUiChild(view);
+        } else if (layerId === Units_Constants.DisplayLayerId.Sea) {
+            this._seaLayer.addUiChild(view);
+        } else {
+            throw Helpers_Misc.newError(`Invalid layer`, Utils_ClientErrorCode.ClientErrorCode.WarMapView_AddUnit_00);
         }
     }
 }
@@ -341,6 +345,10 @@ function _createUnitViewDataList({ unitDataArray, players, gameConfig }: {
     if (unitDataArray) {
         const loaderUnitIdSet = new Set(Helpers_Collection.getNonNullElements(unitDataArray.map(v => v.getLoaderUnitId())));
         for (const unitData of unitDataArray) {
+            if (unitData.getLoaderUnitId() != null) {
+                continue;
+            }
+
             const unitViewData          = Units_UnitViewData.UnitViewData.generateFromSerialUnit(unitData, gameConfig, players?.find(v => v.getPlayerIndex() === unitData.getPlayerIndex()));
             unitViewData.hasLoadedUnits = loaderUnitIdSet.has(unitData.getUnitId());
             viewDataArray.push(unitViewData);

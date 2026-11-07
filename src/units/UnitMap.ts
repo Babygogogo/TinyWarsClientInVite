@@ -9,7 +9,7 @@ import {
     Visibilities_Utils,
     type AuxiliaryTypes_AuxiliaryTypes,
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
 } from "../internal.ts";
 
@@ -21,7 +21,8 @@ export class UnitMap {
     private readonly _map           = new Array<(Units_Unit.Unit | null)[]>();
     private readonly _loadedUnits   = new Map<number, Units_Unit.Unit>();
 
-    private _war?                   : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                   : BaseWar_Model_War.War;
+    private _gameConfig?            : GameConfigs_GameConfig.GameConfig;
     private _nextUnitId?            : number;
     private _mapSize?               : AuxiliaryTypes_MapSize.MapSize;
     private _unitCustomNameArray?   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitCustomName[]>;
@@ -127,6 +128,7 @@ export class UnitMap {
             unit.dispose();
         }
 
+        this._setGameConfig(gameConfig);
         this._setMap(map);
         this._setLoadedUnits(loadedUnits);
         this._setMapSize(mapWidth, mapSize.getHeight());
@@ -146,7 +148,7 @@ export class UnitMap {
         });
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
         this._forEachUnitOnMap(unit => unit.startRunning(war));
         this._forEachUnitLoaded(unit => unit.startRunning(war));
@@ -261,11 +263,18 @@ export class UnitMap {
         return this._view;
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
+    }
+
+    public getGameConfig(): GameConfigs_GameConfig.GameConfig | undefined {
+        return this._gameConfig;
+    }
+    private _setGameConfig(gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._gameConfig = gameConfig;
     }
 
     private _setMapSize(width: number, height: number): void {

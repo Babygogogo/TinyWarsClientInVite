@@ -33,8 +33,8 @@ import {
     ExpressionParsers_Results_UnitStatisticArray,
     ExpressionParsers_Results_WarOperation,
     ExpressionParsers_Results_WeatherManager,
+    type BaseWar_Model_War,
     type ExpressionParsers_Types,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type Tiles_Tile,
     type ExpressionParsers_Results_Base,
@@ -1133,7 +1133,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar) {
+    public constructor(war: BaseWar_Model_War.War) {
         super(war);
     }
 

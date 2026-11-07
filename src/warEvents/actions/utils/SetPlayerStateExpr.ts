@@ -11,7 +11,7 @@ import {
     ExpressionParsers_Contexts_Player,
     AuxiliaryTypes_PlayerDataForWeaSetPlayerState,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Players_IPlayer,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -243,7 +243,7 @@ function checkIsMeetConditionForPlayer(action: WeaSetPlayerStateExpr, player: Pl
 export async function applyWithExtraData(_action: WeaSetPlayerStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetPlayerStateExpr, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetPlayerStateExpr, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const playerList: Players_IPlayer.IPlayer[] = [];
     for (const player of [...war.getPlayerManager().getAllPlayersDict().values()].sort((v1, v2) => v1.getPlayerIndex() - v2.getPlayerIndex())) {
         if (checkIsMeetConditionForPlayer(action, player)) {

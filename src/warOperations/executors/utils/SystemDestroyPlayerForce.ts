@@ -6,18 +6,18 @@ import {
     ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Utils_ClientErrorCode,
     Helpers_Misc,
     Lang_Utils,
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoSystemDestroyPlayerForce } from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemDestroyPlayerForce, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeSystemDestroyPlayerForce(war, action);
     } else {
@@ -25,7 +25,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSy
     }
 }
 
-function fastExeSystemDestroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemDestroyPlayerForce): void {
+function fastExeSystemDestroyPlayerForce(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -40,7 +40,7 @@ function fastExeSystemDestroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, a
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeSystemDestroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemDestroyPlayerForce): Promise<void> {
+async function normalExeSystemDestroyPlayerForce(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): Promise<void> {
     // const desc = await war.getDescForExeSystemDestroyPlayerForce(action);
     // (desc) && (FloatText.show(desc));
 
@@ -68,7 +68,7 @@ async function normalExeSystemDestroyPlayerForce(war: BaseWar_Interface_IBwWar.I
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemDestroyPlayerForce): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): Promise<string | null> {
 
     if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
         const playerIndex = Helpers_Misc.getExisted(action.getExtraData()?.getTargetPlayerIndex());

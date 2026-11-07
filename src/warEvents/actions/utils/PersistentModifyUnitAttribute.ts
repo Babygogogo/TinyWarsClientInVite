@@ -4,11 +4,11 @@ import {
     ExpressionParsers_Results_Num,
     ExpressionParsers_Parser,
     ExpressionParsers_Contexts_Unit,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
     WarEvents_Actions_Constants_PersistentModifyUnitAttribute,
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
 
@@ -576,9 +576,9 @@ export function getCanAttackAfterMovingForUnit(action: WeaPersistentModifyUnitAt
     }
 }
 
-export function applyWithExtraData(_action: WeaPersistentModifyUnitAttribute, war: BaseWar_Interface_IBwWar.IBwWar, actionId: number): void {
+export function applyWithExtraData(_action: WeaPersistentModifyUnitAttribute, war: BaseWar_Model_War.War, actionId: number): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyWithoutExtraData(_action: WeaPersistentModifyUnitAttribute, war: BaseWar_Interface_IBwWar.IBwWar, actionId: number): void {
+export function applyWithoutExtraData(_action: WeaPersistentModifyUnitAttribute, war: BaseWar_Model_War.War, actionId: number): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }

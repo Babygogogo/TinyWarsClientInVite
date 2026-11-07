@@ -397,7 +397,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                 } else {
                     cursor.setGridIndex(gridIndex);
                     cursor.updateView();
-                    war.getView().tweenGridToCentralArea(gridIndex);
+                    war.getView()?.tweenGridToCentralArea(gridIndex);
                     war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
                     Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
                 }
@@ -419,7 +419,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                 } else {
                     cursor.setGridIndex(gridIndex);
                     cursor.updateView();
-                    war.getView().tweenGridToCentralArea(gridIndex);
+                    war.getView()?.tweenGridToCentralArea(gridIndex);
                     war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
                     Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
                 }
@@ -457,7 +457,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                 ((!zoomOut) && (zoomIn))
             ) {
                 const point = this._conForNormal.localToGlobal(getGridWidth() / 2, getGridHeight() / 2);
-                war.getView().zoomField(point.x, point.y, zoomIn);
+                war.getView()?.zoomField(point.x, point.y, zoomIn);
             }
 
         } else if (Keyboard_KbManager.checkHasDirectionKeys(allKeys)) {
@@ -840,7 +840,9 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
             .wait(_TARGET_FRAME_DURATION)
             .call(() => {
                 ++this._frameIndexForImgTarget;
-                (this._frameIndexForImgTarget >= totalFramesCount) && (this._frameIndexForImgTarget = 0);
+                if (this._frameIndexForImgTarget >= totalFramesCount) {
+                    this._frameIndexForImgTarget = 0;
+                }
                 this._imgTarget.loadSource(getImageSourcesForCursorAiming()[this._frameIndexForImgTarget]);
             });
     }

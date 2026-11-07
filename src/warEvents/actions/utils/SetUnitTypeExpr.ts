@@ -10,7 +10,7 @@ import {
     ExpressionParsers_Parser,
     Lang_Constants,
     ExpressionParsers_Contexts_Unit,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -163,7 +163,7 @@ function evalActUnitType(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): num
 export async function applyWithExtraData(_action: WeaSetUnitTypeExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetUnitTypeExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetUnitTypeExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newUnitDataDict = new Map<Units_Unit.Unit, SerialUnit>();
     for (const unit of war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId())) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -186,7 +186,7 @@ function createNewUnitData(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): S
 
     return Units_Utils_Serialization.createNewUnitDataForChangeType(unit, newUnitType);
 }
-function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseWar_Model_War.War, isFast: boolean): void {
     const mapSize                 = war.getTileMap().getMapSize();
     const observerTeamIndexesDict = new Map<number, number[] | null>();
     for (const [unit] of dict) {
@@ -230,7 +230,7 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseW
         unit.init(unitData, gameConfig);
         unit.startRunning(war);
         if (!isFast) {
-            unit.updateView();
+            unit.flushDataToView();
         }
     }
 }

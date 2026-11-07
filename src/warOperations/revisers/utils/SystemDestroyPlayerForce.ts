@@ -3,13 +3,13 @@ import {
     Utils_ClientErrorCode,
     Helpers_Misc,
     Turns_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemDestroyPlayerForce } from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
 
-export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoSystemDestroyPlayerForce, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoSystemDestroyPlayerForce, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     if (requesterUserId != null) {
         throw Helpers_Misc.newError(`Invalid requesterUserId.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_00);
     }

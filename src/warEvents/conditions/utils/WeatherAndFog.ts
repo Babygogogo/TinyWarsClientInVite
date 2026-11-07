@@ -1,8 +1,8 @@
 import {
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WecWeatherAndFog } from "../../../proto/schema/CommonProto/WarEvent/WecWeatherAndFog.ts";
@@ -45,7 +45,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         ...subTextArray,
     ].join(`\n`);
 }
-export function getErrorTip(data: WecWeatherAndFog, war: BaseWar_Interface_IBwWar.IBwWar): string | null {
+export function getErrorTip(data: WecWeatherAndFog, war: BaseWar_Model_War.War): string | null {
     const gameConfig = war.getGcData();
     {
         const weatherTypeArray = data.getWeatherTypeArray();
@@ -69,7 +69,7 @@ export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinabl
     return true;
 }
 
-export function checkIsMeet(condition: WecWeatherAndFog, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+export function checkIsMeet(condition: WecWeatherAndFog, war: BaseWar_Model_War.War): boolean {
     const weatherTypeArray  = condition.getWeatherTypeArray();
     if ((weatherTypeArray?.length) && (weatherTypeArray.indexOf(war.getWeatherManager().getCurrentWeatherType()) < 0)) {
         return false;

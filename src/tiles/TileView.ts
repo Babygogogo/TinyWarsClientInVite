@@ -1,5 +1,5 @@
 import {
-    BaseWar_Interface_IBwWar,
+    BaseWar_Model_War,
     Common_Model_CommonModel,
     ForceSkins_Constants,
     Graphics_Utils,
@@ -71,7 +71,7 @@ export class TileView {
     public updateOnNotifyStateIndicatorTick(): void {
         this._refreshImgBuff();
     }
-    public updateOnNotifyBwOverridingSkinIdChanged(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public updateOnNotifyBwOverridingSkinIdChanged(war: BaseWar_Model_War.War): void {
         const viewData = this.getViewData();
         if (this.loadViewData({
             skinId : Tiles_TileViewData.TileViewData.getNewSkinId({
@@ -100,7 +100,7 @@ export class TileView {
             return this.getViewData().mergeFrom(viewData);
         }
     }
-    public loadViewDataFromTile(tile: Tiles_Tile.Tile, war: BaseWar_Interface_IBwWar.IBwWar, ignorePosition = false): boolean {
+    public loadViewDataFromTile(tile: Tiles_Tile.Tile, war: BaseWar_Model_War.War, ignorePosition = false): boolean {
         return this.loadViewData(Tiles_TileViewData.TileViewData.generateFromTile(tile, war, ignorePosition));
     }
 

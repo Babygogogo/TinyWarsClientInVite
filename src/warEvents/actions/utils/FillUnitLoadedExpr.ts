@@ -6,8 +6,8 @@ import {
     ExpressionParsers_Results_NumArray,
     ExpressionParsers_Parser,
     ExpressionParsers_Contexts_Unit,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
     Units_Constants,
     Units_Utils_Common,
     Units_Utils_Serialization,
@@ -837,7 +837,7 @@ function evalActAiWeightedDestination(action: WeaFillUnitLoadedExpr, unit: Units
 export async function applyWithExtraData(_action: WeaFillUnitLoadedExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaFillUnitLoadedExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaFillUnitLoadedExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap           = war.getUnitMap();
     const allUnits          = war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
     let nextUnitId          = unitMap.getNextUnitId();
@@ -917,7 +917,7 @@ function createNewUnitData(action: WeaFillUnitLoadedExpr, loaderUnit: Units_Unit
     });
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_War.War, isFast: boolean): void {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
     const unitArray     : Units_Unit.Unit[] = [];

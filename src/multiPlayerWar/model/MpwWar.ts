@@ -1,5 +1,5 @@
 import {
-    BaseWar_Model_BwWar,
+    BaseWar_Model_War,
     BaseWar_Model_BwWarEventManager,
     Destructions_Utils,
     type BaseWar_Interface_IBwWarEventManager,
@@ -12,7 +12,7 @@ import {
     type Players_IPlayer,
 } from "../../internal.ts";
 
-export abstract class MpwWar extends BaseWar_Model_BwWar.BwWar implements MultiPlayerWar_Interface_IMpwWar.IMpwWar {
+export abstract class MpwWar extends BaseWar_Model_War.War implements MultiPlayerWar_Interface_IMpwWar.IMpwWar {
     private readonly _warEventManager       = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
 
     private _visionTeamIndex    : number | null = null;

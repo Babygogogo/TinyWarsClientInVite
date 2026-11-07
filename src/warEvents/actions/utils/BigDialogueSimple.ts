@@ -7,8 +7,8 @@ import {
     GamePanels_Manager,
     Players_Constants,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaBigDialogueSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple.ts";
@@ -231,10 +231,10 @@ export function getErrorTipForWeaDialogueData(dialogueData: DataForDialogue, pla
     return Lang_Utils.getText(Lang_Constants.TextType.A0230);
 }
 
-export async function applyWithExtraData(action: WeaBigDialogueSimple, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithExtraData(action: WeaBigDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     return applyWithoutExtraData(action, isFast, war);
 }
-export async function applyWithoutExtraData(action: WeaBigDialogueSimple, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaBigDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     if (isFast) {
         return;
     }

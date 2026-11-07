@@ -8,8 +8,8 @@ import {
     ExpressionParsers_Parser,
     Lang_Constants,
     ExpressionParsers_Contexts_War,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WeaSetCustomCounters } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCounters.ts";
 
@@ -89,7 +89,7 @@ export async function applyWithExtraData(_action: WeaSetCustomCounters): Promise
     // nothing to do
 }
  
-export async function applyWithoutExtraData(action: WeaSetCustomCounters, _isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetCustomCounters, _isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const customCounterIdArray: number[] = [];
     try {
         const idResult = ExpressionParsers_Parser.Parser.getParseResult(action.getIdExpression() ?? "").eval(new ExpressionParsers_Contexts_War.War(war), false);

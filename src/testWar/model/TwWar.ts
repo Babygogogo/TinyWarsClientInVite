@@ -1,5 +1,5 @@
 import {
-    BaseWar_Model_BwWar,
+    BaseWar_Model_War,
     BaseWar_Model_BwWarEventManager,
     BootTimers_Constants,
     Cos_Constants,
@@ -35,7 +35,7 @@ import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/Seria
 import { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
 import { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
 
-export class TwWar extends BaseWar_Model_BwWar.BwWar implements TestWar_Interface_ITwWar.ITwWar {
+export class TwWar extends BaseWar_Model_War.War implements TestWar_Interface_ITwWar.ITwWar {
     private readonly _warEventManager = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
 
     public static async getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<Utils_ClientErrorCode.ClientErrorCode> {
@@ -109,7 +109,7 @@ export class TwWar extends BaseWar_Model_BwWar.BwWar implements TestWar_Interfac
     }
 
     private constructor() {
-        super();
+        super(false);
     }
 
     public getCanCheat(): boolean {

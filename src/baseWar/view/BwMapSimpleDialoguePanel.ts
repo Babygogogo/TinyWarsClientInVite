@@ -13,7 +13,7 @@ import {
     Lang_Constants,
     Ui_Components_UiPanel,
     Timer_TimerModel,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -22,7 +22,7 @@ import {
 import type { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
 
 export type OpenData = {
-    war             : BaseWar_Interface_IBwWar.IBwWar;
+    war             : BaseWar_Model_War.War;
     dialogueData    : MapSimpleDialogue;
     callbackOnClose : () => void;
 };

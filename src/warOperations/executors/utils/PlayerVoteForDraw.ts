@@ -5,18 +5,18 @@ import {
     FloatText,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Utils_ClientErrorCode,
     Helpers_Misc,
     Lang_Utils,
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoPlayerVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerVoteForDraw, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExePlayerVoteForDraw(war, action);
     } else {
@@ -24,7 +24,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPl
     }
 }
 
-function fastExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerVoteForDraw): void {
+function fastExePlayerVoteForDraw(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -40,7 +40,7 @@ function fastExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, action: 
     );
 }
 
-async function normalExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerVoteForDraw): Promise<void> {
+async function normalExePlayerVoteForDraw(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): Promise<void> {
     const desc = await getDesc(war, action);
     (desc) && (FloatText.show(desc));
 
@@ -67,7 +67,7 @@ async function normalExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, 
 }
 
 
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerVoteForDraw): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

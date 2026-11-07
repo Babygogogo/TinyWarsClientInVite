@@ -11,6 +11,10 @@ import type { SettingsForCcw } from "../../proto/schema/CommonProto/WarSettings/
 export class CcwWar extends MultiPlayerWar_Model_MpwWar.MpwWar {
     private _settingsForCcw?: SettingsForCcw;
 
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
     public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
         this._setSettingsForCcw(Helpers_Misc.getExisted(data.getSettingsForCcw(), Utils_ClientErrorCode.ClientErrorCode.CcwWar_Init_00));

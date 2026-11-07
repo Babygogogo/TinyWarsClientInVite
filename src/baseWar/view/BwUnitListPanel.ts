@@ -1,6 +1,5 @@
 import {
     type BaseWar_Interface_IBwCursor,
-    type BaseWar_Interface_IBwWar,
     Common_Model_CommonModel,
     FloatText,
     GamePanels_Dict,
@@ -18,6 +17,7 @@ import {
     Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -34,7 +34,7 @@ import {
 } from "../../internal.ts";
 
 export interface OpenData {
-    war                     : BaseWar_Interface_IBwWar.IBwWar;
+    war                     : BaseWar_Model_War.War;
     callbackForMoveCursor   : (unit: Units_Unit.Unit) => void;
     callbackForSelectUnit   : (unit: Units_Unit.Unit) => void;
 }

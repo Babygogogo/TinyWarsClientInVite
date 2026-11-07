@@ -1,14 +1,14 @@
 import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 export class WarOperation extends ExpressionParsers_Results_Base.Base {
     public readonly woContainer: WoContainer | null;
 
-    public constructor(woContainer: WoContainer | null, war: BaseWar_Interface_IBwWar.IBwWar) {
+    public constructor(woContainer: WoContainer | null, war: BaseWar_Model_War.War) {
         super(war);
 
         this.woContainer = woContainer;

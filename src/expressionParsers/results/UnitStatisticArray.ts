@@ -1,14 +1,14 @@
 import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type ExpressionParsers_Results_UnitStatistic,
 } from "../../internal.ts";
 
 export class UnitStatisticArray extends ExpressionParsers_Results_Base.Base {
     public readonly dataArray: ExpressionParsers_Results_UnitStatistic.UnitStatistic[];
 
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, dataArray: ExpressionParsers_Results_UnitStatistic.UnitStatistic[]) {
+    public constructor(war: BaseWar_Model_War.War, dataArray: ExpressionParsers_Results_UnitStatistic.UnitStatistic[]) {
         super(war);
 
         this.dataArray = dataArray;

@@ -1,8 +1,8 @@
 import {
     AuxiliaryTypes_GridIndex,
     Units_Unit,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
     Tiles_Utils_Filter,
@@ -123,7 +123,7 @@ export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: AuxiliaryType
 export async function applyWithExtraData(_action: WeaFillUnitOnMapSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const rawUnitData = Helpers_Misc.getExisted(action.getActUnitData());
     if (rawUnitData.getLoaderUnitId() != null) {
         throw Helpers_Misc.newError(`non-null loaderUnitId.`);
@@ -169,7 +169,7 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
         unit.flushDataToView();
         unitMap.setNextUnitId(unitId + 1);
         unitMap.setUnitOnMap(unit);
-        (!isFastExecute) && (unit.updateView());
+        (!isFastExecute) && (unit.flushDataToView());
 
         {
             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });

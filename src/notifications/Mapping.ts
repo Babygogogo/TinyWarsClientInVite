@@ -2,7 +2,7 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwCursor,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Helpers_PointerInput,
     type PlayerRules_Constants,
     type Players_IPlayer,
@@ -307,18 +307,18 @@ export type Mapping = {
     BwTurnPhaseCodeChanged: undefined;
     BwPlayerIndexInTurnChanged: undefined;
 
-    GridMarkAdded: { war: BaseWar_Interface_IBwWar.IBwWar, gridId: number };
-    GridMarkDeleted: { war: BaseWar_Interface_IBwWar.IBwWar, gridId: number };
-    HiddenGridMarkTypeIdListChanged: { war: BaseWar_Interface_IBwWar.IBwWar };
+    GridMarkAdded: { war: BaseWar_Model_War.War, gridId: number };
+    GridMarkDeleted: { war: BaseWar_Model_War.War, gridId: number };
+    HiddenGridMarkTypeIdListChanged: { war: BaseWar_Model_War.War };
 
     BwPlayerFundChanged: { player: Players_IPlayer.IPlayer };
-    GridMarkListChanged: { war: BaseWar_Interface_IBwWar.IBwWar };
+    GridMarkListChanged: { war: BaseWar_Model_War.War };
     BwPlayerPlayerIndexArrayForShowMarkedGridUpdated: { player: Players_IPlayer.IPlayer };
     BwCoEnergyChanged: undefined;
     BwCoUsingSkillTypeChanged: undefined;
     BwCoIdChanged: { player: Players_IPlayer.IPlayer };
     BwForceWeatherTypeChanged: undefined;
-    BwOverridingSkinIdChanged: { war: BaseWar_Interface_IBwWar.IBwWar };
+    BwOverridingSkinIdChanged: { war: BaseWar_Model_War.War };
     BwCustomCountersChanged: undefined;
 
     BwCursorTapped: { current: AuxiliaryTypes_GridIndex.GridIndex, tappedOn: AuxiliaryTypes_GridIndex.GridIndex };

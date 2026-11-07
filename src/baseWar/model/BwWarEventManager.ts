@@ -75,8 +75,8 @@ import {
     Helpers_Misc,
     WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarEventManager,
+    type BaseWar_Model_War,
     type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
     type WarEvents_Types,
@@ -94,7 +94,7 @@ import { DataForWarEventCalledCount } from "../../proto/schema/CommonProto/WarSe
 import { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
 
 export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
-    private _war?                           : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                           : BaseWar_Model_War.War;
     private _calledCountList?               : DataForWarEventCalledCount[] | null;
     private _customCounterArray?            : CustomCounter[] | null;
     private _opaIdArray?                    : number[];
@@ -151,14 +151,14 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
         return this.serializeForCreateSfw();
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    private _getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    private _getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 

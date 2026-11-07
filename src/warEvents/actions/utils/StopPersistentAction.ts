@@ -1,8 +1,8 @@
 import {
     Lang_Utils,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WarEventFullData } from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaStopPersistentAction } from "../../../proto/schema/CommonProto/WarEvent/WeaStopPersistentAction.ts";
@@ -48,10 +48,10 @@ export function getErrorTip(data: WeaStopPersistentAction, fullData: WarEventFul
 }
 
  
-export async function applyWithExtraData(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithExtraData(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     war.getWarEventManager().updateOpaIdArrayOnDeleteAction(action.getActionIdArray());
 }
  
-export async function applyWithoutExtraData(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     war.getWarEventManager().updateOpaIdArrayOnDeleteAction(action.getActionIdArray());
 }

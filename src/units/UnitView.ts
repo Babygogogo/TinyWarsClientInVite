@@ -1,6 +1,6 @@
 import {
     AuxiliaryTypes_GridIndex,
-    BaseWar_Interface_IBwWar,
+    BaseWar_Model_War,
     Common_Model_CommonModel,
     CoSkills_Constants,
     ForceSkins_Utils,
@@ -120,7 +120,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
             unitType : viewData.unitTypeId,
         }));
     }
-    public updateOnNotifyBwOverridingSkinIdChanged(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public updateOnNotifyBwOverridingSkinIdChanged(war: BaseWar_Model_War.War): void {
         if (this.loadViewData({
             skinId : ForceSkins_Utils.getFinalSkinId(war, this.getViewData().playerIndex),
         })) {
@@ -142,7 +142,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
             return this.getViewData().mergeFrom(viewData);
         }
     }
-    public loadViewDataFromUnit(unit: Units_Unit.Unit, war: BaseWar_Interface_IBwWar.IBwWar, ignorePosition = false): boolean {
+    public loadViewDataFromUnit(unit: Units_Unit.Unit, war: BaseWar_Model_War.War, ignorePosition = false): boolean {
         return this.loadViewData(Units_UnitViewData.UnitViewData.generateFromUnit(unit, war, ignorePosition));
     }
 
@@ -410,7 +410,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
         });
     }
     public moveAlongExtraPath({ war, path, aiming }: {
-        war     : BaseWar_Interface_IBwWar.IBwWar;
+        war     : BaseWar_Model_War.War;
         path    : GridIndexAndPathInfo[];
         aiming  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
     }): Promise<void> {

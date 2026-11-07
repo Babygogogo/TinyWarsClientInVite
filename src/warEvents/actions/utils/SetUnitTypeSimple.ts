@@ -9,8 +9,8 @@ import {
     Units_Utils_Common,
     Visibilities_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type Tiles_Tile,
     type Units_Unit,
@@ -118,7 +118,7 @@ export function getErrorTip(data: WeaSetUnitTypeSimple, mapSize: AuxiliaryTypes_
 export async function applyWithExtraData(_action: WeaSetUnitTypeSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetUnitArray       : Units_Unit.Unit[] = [];
     const unitMap               = war.getUnitMap();
     const newUnitType           = data.getActUnitType();
@@ -231,7 +231,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastEx
             unit.startRunning(war);
 
             if (!isFastExecute) {
-                unit.updateView();
+                unit.flushDataToView();
             }
         }
     }

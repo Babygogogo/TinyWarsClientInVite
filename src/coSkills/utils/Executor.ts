@@ -354,7 +354,7 @@ function exeSelfHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFa
                     }
                 }
 
-                (!isFastExecute) && (unit.updateView());
+                (!isFastExecute) && (unit.flushDataToView());
             }
         }
 
@@ -436,7 +436,7 @@ function exeEnemyHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isF
                     }
                 }
 
-                (!isFastExecute) && (unit.updateView());
+                (!isFastExecute) && (unit.flushDataToView());
             }
         }
     }
@@ -486,7 +486,7 @@ function exeSelfFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, is
                         Math.floor(currentFuel * (100 + modifier) / 100),
                     ));
                 }
-                (!isFastExecute) && (unit.updateView());
+                (!isFastExecute) && (unit.flushDataToView());
             }
         }
     }
@@ -541,7 +541,7 @@ function exeEnemyFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, i
                     Math.floor(currentFuel * (100 + modifier) / 100),
                 ));
             }
-            (!isFastExecute) && (unit.updateView());
+            (!isFastExecute) && (unit.flushDataToView());
         }
     }
 }
@@ -596,7 +596,7 @@ function exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList
                             Math.floor(currentBuildMaterial * (100 + modifier) / 100),
                         ));
                     }
-                    (!isFastExecute) && (unit.updateView());
+                    (!isFastExecute) && (unit.flushDataToView());
                 }
 
                 if (maxProduceMaterial != null) {
@@ -606,7 +606,7 @@ function exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList
                     } else {
                         unit.addAndValidateCurrentProduceMaterial(currentProduceMaterial * modifier / 100);
                     }
-                    (!isFastExecute) && (unit.updateView());
+                    (!isFastExecute) && (unit.flushDataToView());
                 }
             }
         }
@@ -663,7 +663,7 @@ function exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                             Math.floor(currentBuildMaterial * (100 + modifier) / 100),
                         ));
                     }
-                    (!isFastExecute) && (unit.updateView());
+                    (!isFastExecute) && (unit.flushDataToView());
                 }
 
                 if (maxProduceMaterial != null) {
@@ -673,7 +673,7 @@ function exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                     } else {
                         unit.addAndValidateCurrentProduceMaterial(currentProduceMaterial * modifier / 100);
                     }
-                    (!isFastExecute) && (unit.updateView());
+                    (!isFastExecute) && (unit.flushDataToView());
                 }
             }
         }
@@ -722,7 +722,7 @@ function exeSelfPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexL
                 } else {
                     unit.addAndValidatePrimaryWeaponCurrentAmmo(currentAmmo * modifier / 100);
                 }
-                (!isFastExecute) && (unit.updateView());
+                (!isFastExecute) && (unit.flushDataToView());
             }
         }
     }
@@ -770,7 +770,7 @@ function exeEnemyPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndex
                 } else {
                     unit.addAndValidatePrimaryWeaponCurrentAmmo(currentAmmo * modifier / 100);
                 }
-                (!isFastExecute) && (unit.updateView());
+                (!isFastExecute) && (unit.flushDataToView());
             }
         }
     }
@@ -829,7 +829,7 @@ function exeSelfUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexList
                 }), false, true);
             }
 
-            (!isFastExecute) && (unit.updateView());
+            (!isFastExecute) && (unit.flushDataToView());
         }
     }
 }
@@ -888,7 +888,7 @@ function exeEnemyUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                 }), false, true);
             }
 
-            (!isFastExecute) && (unit.updateView());
+            (!isFastExecute) && (unit.flushDataToView());
         }
     }
 }
@@ -998,7 +998,7 @@ function exeFixedAreaDamageWithoutExtraData({ skillCfg, player, skillData, targe
                         }
                     }
 
-                    (!isFastExecute) && (unit.updateView());
+                    (!isFastExecute) && (unit.flushDataToView());
                 }
             }
 
@@ -1051,7 +1051,7 @@ function exeSelfPromotionGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                         currentPromotion + modifier,
                     ),
                 ));
-                (!isFastExecute) && (unit.updateView());
+                (!isFastExecute) && (unit.flushDataToView());
             }
         }
     }
@@ -1095,7 +1095,7 @@ function exeSelfUnitActionStateWithoutExtraData({ skillCfg, player, coGridIndexL
                 }))
             ) {
                 unit.setActionState(actionState);
-                (!isFastExecute) && (unit.updateView());
+                (!isFastExecute) && (unit.flushDataToView());
             }
         }
     }
@@ -1149,7 +1149,7 @@ function exeSelfFlareAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                         Math.floor(currentAmmo * (100 + modifier) / 100),
                     ));
                 }
-                (!isFastExecute) && (unit.updateView());
+                (!isFastExecute) && (unit.flushDataToView());
             }
         }
     }
@@ -1251,7 +1251,7 @@ function exeSelfCoOnboardWithoutExtraData({ skillCfg, player, coGridIndexList, i
             }))
         ) {
             unit.setIsCoOnboard(isCoOnboard);
-            (!isFastExecute) && (unit.updateView());
+            (!isFastExecute) && (unit.flushDataToView());
         }
     }
 }

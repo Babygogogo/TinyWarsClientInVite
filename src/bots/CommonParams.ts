@@ -5,7 +5,7 @@ import {
     Visibilities_Utils,
     Helpers_Misc,
     Players_Constants,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Tiles_Tile,
     type Units_Unit,
     type AuxiliaryTypes_MapSize,
@@ -20,7 +20,7 @@ interface UnitsInfo {
     idleCountOnMap  : number;
 }
 export class CommonParams {
-    private readonly _war                       : BaseWar_Interface_IBwWar.IBwWar;
+    private readonly _war                       : BaseWar_Model_War.War;
     private readonly _playerIndexInTurn         : number;
     private readonly _mapSize                   : AuxiliaryTypes_MapSize.MapSize;
     private readonly _unitsInfoDict             : Map<number, UnitsInfo>;
@@ -35,7 +35,7 @@ export class CommonParams {
     private readonly _canAttackAfterMovingDict  = new Map<Units_Unit.Unit, boolean>();
     private readonly _unitVisionInfoDict        = new Map<Units_Unit.Unit, AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo>();
 
-    public static async create(war: BaseWar_Interface_IBwWar.IBwWar): Promise<CommonParams> {
+    public static async create(war: BaseWar_Model_War.War): Promise<CommonParams> {
         const playerIndexInTurn     = war.getPlayerIndexInTurn();
         const unitsInfoDict         = await CommonParams.generateUnitsInfoDict(war);
         return new CommonParams({
@@ -48,7 +48,7 @@ export class CommonParams {
             settingsLuckValueDict : await CommonParams.generateSettingsLuckValueDict(war),
         });
     }
-    private static async generateUnitsInfoDict(war: BaseWar_Interface_IBwWar.IBwWar): Promise<Map<number, UnitsInfo>> {
+    private static async generateUnitsInfoDict(war: BaseWar_Model_War.War): Promise<Map<number, UnitsInfo>> {
         await Timer_TimerModel.checkAndCallLater();
 
         const unitsInfoDict = new Map<number, UnitsInfo>();
@@ -83,7 +83,7 @@ export class CommonParams {
 
         return unitsInfoDict;
     }
-    private static async generateUnitValueRatio(war: BaseWar_Interface_IBwWar.IBwWar, unitsInfoDict: Map<number, UnitsInfo>, playerIndexInTurn: number): Promise<number> {
+    private static async generateUnitValueRatio(war: BaseWar_Model_War.War, unitsInfoDict: Map<number, UnitsInfo>, playerIndexInTurn: number): Promise<number> {
         await Timer_TimerModel.checkAndCallLater();
 
         const playerManager = war.getPlayerManager();
@@ -102,7 +102,7 @@ export class CommonParams {
         }
         return enemyValue > 0 ? selfValue / enemyValue : 1;
     }
-    private static async generateGlobalOffenseBonuses(war: BaseWar_Interface_IBwWar.IBwWar): Promise<Map<number, number>> {
+    private static async generateGlobalOffenseBonuses(war: BaseWar_Model_War.War): Promise<Map<number, number>> {
         await Timer_TimerModel.checkAndCallLater();
 
         const globalOffenseBonuses  = new Map<number, number>();
@@ -131,7 +131,7 @@ export class CommonParams {
 
         return globalOffenseBonuses;
     }
-    private static async generateGlobalDefenseBonuses(war: BaseWar_Interface_IBwWar.IBwWar): Promise<Map<number, number>> {
+    private static async generateGlobalDefenseBonuses(war: BaseWar_Model_War.War): Promise<Map<number, number>> {
         await Timer_TimerModel.checkAndCallLater();
 
         const globalDefenseBonuses  = new Map<number, number>();
@@ -155,7 +155,7 @@ export class CommonParams {
 
         return globalDefenseBonuses;
     }
-    private static async generateSettingsLuckValueDict(war: BaseWar_Interface_IBwWar.IBwWar): Promise<Map<number, number>> {
+    private static async generateSettingsLuckValueDict(war: BaseWar_Model_War.War): Promise<Map<number, number>> {
         await Timer_TimerModel.checkAndCallLater();
 
         const luckValues            = new Map<number, number>();
@@ -169,7 +169,7 @@ export class CommonParams {
     }
 
     private constructor({ war, unitsInfoDict, unitValueRatio, visibleUnits, globalOffenseBonuses, globalDefenseBonuses, settingsLuckValueDict }: {
-        war                     : BaseWar_Interface_IBwWar.IBwWar;
+        war                     : BaseWar_Model_War.War;
         unitsInfoDict           : Map<number, UnitsInfo>;
         unitValueRatio          : number;
         visibleUnits            : Set<Units_Unit.Unit>;
@@ -188,7 +188,7 @@ export class CommonParams {
         this._settingsLuckValueDict = settingsLuckValueDict;
     }
 
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return this._war;
     }
     public getPlayerIndexInTurn(): number {

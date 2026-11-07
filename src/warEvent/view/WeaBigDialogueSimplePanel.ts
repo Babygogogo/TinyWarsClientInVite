@@ -19,7 +19,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -238,7 +238,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForDialogueRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    war             : BaseWar_Interface_IBwWar.IBwWar;
+    war             : BaseWar_Model_War.War;
     action          : WarEventAction;
     dataForDialogue : DataForDialogue;
 }

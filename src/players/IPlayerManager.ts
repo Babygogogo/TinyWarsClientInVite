@@ -1,6 +1,6 @@
 import {
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
@@ -14,7 +14,7 @@ export interface IPlayerManager {
     fastInit(data: SerialPlayerManager, gameConfig: GameConfigs_GameConfig.GameConfig): void;
     initWatcherTeamIndexesForHrw(warData: SerialWar): void;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     serialize(): SerialPlayerManager;
     serializeForCreateSfw(): SerialPlayerManager;

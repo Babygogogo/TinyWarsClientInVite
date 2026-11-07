@@ -1,6 +1,6 @@
 import {
     type AuxiliaryTypes_AuxiliaryTypes,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Egret_Egret,
     type GameConfigs_GameConfig,
     type Notifications_Mapping,
@@ -290,7 +290,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTileCustomNameListPanel, { war : war });
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel);
             },
-            callbackOnConfirm : num => tile.setCustomNameId(num == 0 ? null : num),
+            callbackOnConfirm : num => tile.setCustomNameId(num == 0 ? null : num, true),
         });
     }
     private _onTouchedBtnMarkType(): void {
@@ -729,7 +729,7 @@ interface DataForInfoRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index       : number;
     infoType    : Tiles_Constants_Common.InfoTypeId;
     tile        : Tiles_Tile.Tile;
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
 }
 class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForInfoRenderer> {
     private readonly _imgBg!            : Ui_Interfaces_IUiImage.IUiImage;
@@ -2688,7 +2688,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        tile.setIsHighlighted(!tile.getIsHighlighted());
+        tile.setIsHighlighted(!tile.getIsHighlighted(), true);
         tile.flushDataToView();
         this._updateView();
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
@@ -3663,7 +3663,7 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     }
 }
 
-function createInfoDefenseBonus(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoDefenseBonus(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return ((tile.getTemplateCfg().getDefenseUnitCategoryId() === Units_Constants.CategoryId.None) && (!tile.getIsCustomizableBuilding()))
         ? null
         : {
@@ -3673,7 +3673,7 @@ function createInfoDefenseBonus(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tile
             tile     : tile,
         };
 }
-function createInfoIncome(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoIncome(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getIncomePerTurn() === 0) && (!tile.getIsCustomizableBuilding())
         ? null
         : {
@@ -3683,7 +3683,7 @@ function createInfoIncome(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile
             tile,
         };
 }
-function createInfoVision(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoVision(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return ((tile.getCfgVisionRange() == 0) && (!tile.getIsVisionEnabledForAllPlayers()) && (!tile.getIsCustomizableBuilding()))
         ? null
         : {
@@ -3693,7 +3693,7 @@ function createInfoVision(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile
             tile,
         };
 }
-function createInfoHideUnitCategory(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoHideUnitCategory(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return ((tile.getTemplateCfg().getHideUnitCategoryId() == null) && (!tile.getIsCustomizableBuilding()))
         ? null
         : {
@@ -3703,7 +3703,7 @@ function createInfoHideUnitCategory(war: BaseWar_Interface_IBwWar.IBwWar, tile: 
             tile     : tile,
         };
 }
-function createInfoIsDefeatOnCapture(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoIsDefeatOnCapture(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return ((!tile.getIsDefeatedOnCapture()) && (!tile.getIsCustomizableBuilding()))
         ? null
         : {
@@ -3713,7 +3713,7 @@ function createInfoIsDefeatOnCapture(war: BaseWar_Interface_IBwWar.IBwWar, tile:
             tile,
         };
 }
-function createInfoProduceUnitCategory(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoProduceUnitCategory(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return ((tile.getTemplateCfg().getProduceUnitCategoryId() == null) && (!tile.getIsCustomizableBuilding()))
         ? null
         : {
@@ -3723,7 +3723,7 @@ function createInfoProduceUnitCategory(war: BaseWar_Interface_IBwWar.IBwWar, til
             tile,
         };
 }
-function createInfoGlobalBonus(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoGlobalBonus(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return ((tile.getGlobalAttackBonus() === 0) && (tile.getGlobalDefenseBonus() === 0) && (!tile.getIsCustomizableBuilding()))
         ? null
         : {
@@ -3733,7 +3733,7 @@ function createInfoGlobalBonus(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles
             tile     : tile,
         };
 }
-function createInfoRepairUnitCategory(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoRepairUnitCategory(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return ((tile.getTemplateCfg().getRepairUnitCategoryId() == Units_Constants.CategoryId.None) && (!tile.getIsCustomizableBuilding()))
         ? null
         : {
@@ -3743,7 +3743,7 @@ function createInfoRepairUnitCategory(war: BaseWar_Interface_IBwWar.IBwWar, tile
             tile,
         };
 }
-function createInfoBlockEnemyUnit(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoBlockEnemyUnit(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return ((!tile.getTemplateCfg().getBlockEnemyUnitCategoryId()) && (!tile.getIsCustomizableBuilding()))
         ? null
         : {
@@ -3753,7 +3753,7 @@ function createInfoBlockEnemyUnit(war: BaseWar_Interface_IBwWar.IBwWar, tile: Ti
             tile,
         };
 }
-function createInfoCoBoardUnit(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCoBoardUnit(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return ((!tile.getTemplateCfg().getCoBoardUnitCategoryId()) && (!tile.getIsCustomizableBuilding()))
         ? null
         : {
@@ -3763,7 +3763,7 @@ function createInfoCoBoardUnit(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles
             tile,
         };
 }
-function createInfoHp(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoHp(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getMaxHp() == null)
         ? null
         : {
@@ -3773,7 +3773,7 @@ function createInfoHp(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Til
             tile,
         };
 }
-function createInfoCapturePoint(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCapturePoint(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return ((tile.getMaxCapturePoint() == null) && (!tile.getIsCustomizableBuilding()))
         ? null
         : {
@@ -3783,7 +3783,7 @@ function createInfoCapturePoint(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tile
             tile,
         };
 }
-function createInfoBuildPoint(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoBuildPoint(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getMaxBuildPoint() == null)
         ? null
         : {
@@ -3793,7 +3793,7 @@ function createInfoBuildPoint(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_
             tile,
         };
 }
-function createInfoIsHighlighted(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoIsHighlighted(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return {
         index    : 0,
         infoType : Tiles_Constants_Common.InfoTypeId.IsHighlighted,
@@ -3801,7 +3801,7 @@ function createInfoIsHighlighted(war: BaseWar_Interface_IBwWar.IBwWar, tile: Til
         tile,
     };
 }
-function createInfoBuff(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoBuff(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return {
         index    : 0,
         infoType : Tiles_Constants_Common.InfoTypeId.Buff,
@@ -3809,7 +3809,7 @@ function createInfoBuff(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.T
         tile     : tile,
     };
 }
-function createInfoCrystalRadius(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCrystalRadius(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getFinalCrystalData() == null)
         ? null
         : {
@@ -3819,7 +3819,7 @@ function createInfoCrystalRadius(war: BaseWar_Interface_IBwWar.IBwWar, tile: Til
             tile,
         };
 }
-function createInfoCrystalPriority(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCrystalPriority(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
@@ -3829,7 +3829,7 @@ function createInfoCrystalPriority(war: BaseWar_Interface_IBwWar.IBwWar, tile: T
             tile,
         };
 }
-function createInfoCrystalCanAffectSelf(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCrystalCanAffectSelf(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
@@ -3839,7 +3839,7 @@ function createInfoCrystalCanAffectSelf(war: BaseWar_Interface_IBwWar.IBwWar, ti
             tile,
         };
 }
-function createInfoCrystalCanAffectAlly(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCrystalCanAffectAlly(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
@@ -3849,7 +3849,7 @@ function createInfoCrystalCanAffectAlly(war: BaseWar_Interface_IBwWar.IBwWar, ti
             tile,
         };
 }
-function createInfoCrystalCanAffectEnemy(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCrystalCanAffectEnemy(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
@@ -3859,7 +3859,7 @@ function createInfoCrystalCanAffectEnemy(war: BaseWar_Interface_IBwWar.IBwWar, t
             tile,
         };
 }
-function createInfoCrystalDeltaFund(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCrystalDeltaFund(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
@@ -3869,7 +3869,7 @@ function createInfoCrystalDeltaFund(war: BaseWar_Interface_IBwWar.IBwWar, tile: 
             tile,
         };
 }
-function createInfoCrystalDeltaEnergyPercentage(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCrystalDeltaEnergyPercentage(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
@@ -3879,7 +3879,7 @@ function createInfoCrystalDeltaEnergyPercentage(war: BaseWar_Interface_IBwWar.IB
             tile,
         };
 }
-function createInfoCrystalDeltaHp(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCrystalDeltaHp(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getFinalCrystalData() == null)
         ? null
         : {
@@ -3889,7 +3889,7 @@ function createInfoCrystalDeltaHp(war: BaseWar_Interface_IBwWar.IBwWar, tile: Ti
             tile,
         };
 }
-function createInfoCrystalDeltaFuelPercentage(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCrystalDeltaFuelPercentage(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
@@ -3899,7 +3899,7 @@ function createInfoCrystalDeltaFuelPercentage(war: BaseWar_Interface_IBwWar.IBwW
             tile,
         };
 }
-function createInfoCrystalDeltaPrimaryAmmoPercentage(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCrystalDeltaPrimaryAmmoPercentage(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
@@ -3909,7 +3909,7 @@ function createInfoCrystalDeltaPrimaryAmmoPercentage(war: BaseWar_Interface_IBwW
             tile,
         };
 }
-function createInfoCannonRangeForUp(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonRangeForUp(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
     return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCannon) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonUp))
         ? null
@@ -3920,7 +3920,7 @@ function createInfoCannonRangeForUp(war: BaseWar_Interface_IBwWar.IBwWar, tile: 
             tile,
         };
 }
-function createInfoCannonRangeForDown(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonRangeForDown(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
     return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCannon) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonDown))
         ? null
@@ -3931,7 +3931,7 @@ function createInfoCannonRangeForDown(war: BaseWar_Interface_IBwWar.IBwWar, tile
             tile,
         };
 }
-function createInfoCannonRangeForLeft(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonRangeForLeft(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
     return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCannon) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonLeft))
         ? null
@@ -3942,7 +3942,7 @@ function createInfoCannonRangeForLeft(war: BaseWar_Interface_IBwWar.IBwWar, tile
             tile,
         };
 }
-function createInfoCannonRangeForRight(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonRangeForRight(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
     return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCannon) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonRight))
         ? null
@@ -3953,7 +3953,7 @@ function createInfoCannonRangeForRight(war: BaseWar_Interface_IBwWar.IBwWar, til
             tile,
         };
 }
-function createInfoCannonPriority(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonPriority(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
@@ -3963,7 +3963,7 @@ function createInfoCannonPriority(war: BaseWar_Interface_IBwWar.IBwWar, tile: Ti
             tile,
         };
 }
-function createInfoCannonMaxTargetCount(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonMaxTargetCount(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
@@ -3973,7 +3973,7 @@ function createInfoCannonMaxTargetCount(war: BaseWar_Interface_IBwWar.IBwWar, ti
             tile,
         };
 }
-function createInfoCannonCanAffectSelf(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonCanAffectSelf(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
@@ -3983,7 +3983,7 @@ function createInfoCannonCanAffectSelf(war: BaseWar_Interface_IBwWar.IBwWar, til
             tile,
         };
 }
-function createInfoCannonCanAffectAlly(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonCanAffectAlly(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
@@ -3993,7 +3993,7 @@ function createInfoCannonCanAffectAlly(war: BaseWar_Interface_IBwWar.IBwWar, til
             tile,
         };
 }
-function createInfoCannonCanAffectEnemy(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonCanAffectEnemy(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
@@ -4003,7 +4003,7 @@ function createInfoCannonCanAffectEnemy(war: BaseWar_Interface_IBwWar.IBwWar, ti
             tile,
         };
 }
-function createInfoCannonDeltaHp(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonDeltaHp(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getFinalCannonData() == null)
         ? null
         : {
@@ -4013,7 +4013,7 @@ function createInfoCannonDeltaHp(war: BaseWar_Interface_IBwWar.IBwWar, tile: Til
             tile,
         };
 }
-function createInfoCannonDeltaFuelPercentage(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonDeltaFuelPercentage(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
@@ -4023,7 +4023,7 @@ function createInfoCannonDeltaFuelPercentage(war: BaseWar_Interface_IBwWar.IBwWa
             tile,
         };
 }
-function createInfoCannonDeltaPrimaryAmmoPercentage(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoCannonDeltaPrimaryAmmoPercentage(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
@@ -4033,7 +4033,7 @@ function createInfoCannonDeltaPrimaryAmmoPercentage(war: BaseWar_Interface_IBwWa
             tile,
         };
 }
-function createInfoLaserTurretRangeForUp(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForUp(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
     return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.LaserTurret))
         ? null
@@ -4044,7 +4044,7 @@ function createInfoLaserTurretRangeForUp(war: BaseWar_Interface_IBwWar.IBwWar, t
             tile,
         };
 }
-function createInfoLaserTurretRangeForDown(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForDown(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
     return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.LaserTurret))
         ? null
@@ -4055,7 +4055,7 @@ function createInfoLaserTurretRangeForDown(war: BaseWar_Interface_IBwWar.IBwWar,
             tile,
         };
 }
-function createInfoLaserTurretRangeForLeft(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForLeft(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
     return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.LaserTurret))
         ? null
@@ -4066,7 +4066,7 @@ function createInfoLaserTurretRangeForLeft(war: BaseWar_Interface_IBwWar.IBwWar,
             tile,
         };
 }
-function createInfoLaserTurretRangeForRight(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForRight(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
     return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.LaserTurret))
         ? null
@@ -4077,7 +4077,7 @@ function createInfoLaserTurretRangeForRight(war: BaseWar_Interface_IBwWar.IBwWar
             tile,
         };
 }
-function createInfoLaserTurretPriority(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretPriority(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
@@ -4087,7 +4087,7 @@ function createInfoLaserTurretPriority(war: BaseWar_Interface_IBwWar.IBwWar, til
             tile,
         };
 }
-function createInfoLaserTurretCanAffectSelf(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretCanAffectSelf(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
@@ -4097,7 +4097,7 @@ function createInfoLaserTurretCanAffectSelf(war: BaseWar_Interface_IBwWar.IBwWar
             tile,
         };
 }
-function createInfoLaserTurretCanAffectAlly(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretCanAffectAlly(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
@@ -4107,7 +4107,7 @@ function createInfoLaserTurretCanAffectAlly(war: BaseWar_Interface_IBwWar.IBwWar
             tile,
         };
 }
-function createInfoLaserTurretCanAffectEnemy(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretCanAffectEnemy(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
@@ -4117,7 +4117,7 @@ function createInfoLaserTurretCanAffectEnemy(war: BaseWar_Interface_IBwWar.IBwWa
             tile,
         };
 }
-function createInfoLaserTurretDeltaHp(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretDeltaHp(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getFinalLaserTurretData() == null)
         ? null
         : {
@@ -4127,7 +4127,7 @@ function createInfoLaserTurretDeltaHp(war: BaseWar_Interface_IBwWar.IBwWar, tile
             tile,
         };
 }
-function createInfoLaserTurretDeltaFuelPercentage(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretDeltaFuelPercentage(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
@@ -4137,7 +4137,7 @@ function createInfoLaserTurretDeltaFuelPercentage(war: BaseWar_Interface_IBwWar.
             tile,
         };
 }
-function createInfoLaserTurretDeltaPrimaryAmmoPercentage(war: BaseWar_Interface_IBwWar.IBwWar, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
+function createInfoLaserTurretDeltaPrimaryAmmoPercentage(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): DataForInfoRenderer | null {
     return (tile.getTemplateCfg().getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {

@@ -6,8 +6,8 @@ import {
     ExpressionParsers_Parser,
     Lang_Constants,
     ExpressionParsers_Contexts_War,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WecExpression } from "../../../proto/schema/CommonProto/WarEvent/WecExpression.ts";
 
@@ -76,7 +76,7 @@ export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinabl
     });
 }
 
-export function checkIsMeet(condition: WecExpression, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+export function checkIsMeet(condition: WecExpression, war: BaseWar_Model_War.War): boolean {
     try {
         const value = ExpressionParsers_Parser.Parser.getParseResult(condition.getExpression() ?? "").eval(new ExpressionParsers_Contexts_War.War(war), false);
         return (value instanceof ExpressionParsers_Results_Num.Num) && (value.num !== 0);

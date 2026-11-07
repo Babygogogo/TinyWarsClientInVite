@@ -1,8 +1,8 @@
 import {
     type BaseWar_Interface_IBwCommonSettingManager,
-    type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarEventManager,
     type BaseWar_Interface_IBwWarStatisticsManager,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type Players_IPlayerManager,
     type WarTypes_Constants,
@@ -10,7 +10,7 @@ import {
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export interface ITwWar extends BaseWar_Interface_IBwWar.IBwWar {
+export interface ITwWar extends BaseWar_Model_War.War {
     getCanCheat(): boolean;
     getShouldSerializeFullInfoForFreeModeGames(): boolean;
     getPlayerManager(): Players_IPlayerManager.IPlayerManager;

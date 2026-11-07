@@ -10,7 +10,7 @@ import {
     ExpressionParsers_Contexts_Player,
     Lang_Constants,
     ExpressionParsers_Contexts_Unit,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Players_IPlayer,
     type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -125,7 +125,7 @@ function evalActPlayerAliveState(action: WeaDestroyUnitExpr, player: Players_IPl
 export async function applyWithExtraData(_action: WeaDestroyUnitExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaDestroyUnitExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaDestroyUnitExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap                   = war.getUnitMap();
     const allLoadedUnits            = [...unitMap.getRawAllUnitsLoaded().values()].sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
     const targetLoadedUnitIdList    : number[] = [];

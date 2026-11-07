@@ -1,14 +1,14 @@
 import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type ExpressionParsers_Results_NullableUnit,
 } from "../../internal.ts";
 
 export class NullableUnitArray extends ExpressionParsers_Results_Base.Base {
     public readonly array: ExpressionParsers_Results_NullableUnit.NullableUnit[];
 
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, array: ExpressionParsers_Results_NullableUnit.NullableUnit[]) {
+    public constructor(war: BaseWar_Model_War.War, array: ExpressionParsers_Results_NullableUnit.NullableUnit[]) {
         super(war);
 
         this.array = array;

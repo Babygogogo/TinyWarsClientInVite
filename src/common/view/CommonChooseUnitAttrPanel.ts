@@ -15,7 +15,7 @@ import {
     Units_UnitViewPool,
     Units_Utils_Common,
     Units_Utils_Serialization,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -25,7 +25,7 @@ import { WeightedGridIndex } from "../../proto/schema/CommonProto/Structure/Weig
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 
 export interface OpenData {
-    war             : BaseWar_Interface_IBwWar.IBwWar;
+    war             : BaseWar_Model_War.War;
     getTitleText    : () => string;
     callback        : (unitData: SerialUnit) => void;
 }
@@ -682,7 +682,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
 function getErrorTipsForAddUnit({ unitData, war }: {
     unitData    : SerialUnit;
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
 }): string | null {
     const gameConfig    = war.getGcData();
     const unitCfg       = gameConfig.getUnitTemplateCfg(unitData.getUnitType());

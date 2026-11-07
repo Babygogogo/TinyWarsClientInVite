@@ -1,14 +1,14 @@
 import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type ExpressionParsers_Results_Position,
 } from "../../internal.ts";
 
 export class PositionArray extends ExpressionParsers_Results_Base.Base {
     public readonly positionArray: ExpressionParsers_Results_Position.Position[];
 
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, positionArray: ExpressionParsers_Results_Position.Position[]) {
+    public constructor(war: BaseWar_Model_War.War, positionArray: ExpressionParsers_Results_Position.Position[]) {
         super(war);
 
         this.positionArray = positionArray;

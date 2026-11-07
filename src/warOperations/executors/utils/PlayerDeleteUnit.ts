@@ -6,18 +6,18 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Utils_ClientErrorCode,
     Helpers_Misc,
     Lang_Utils,
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoPlayerDeleteUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerDeleteUnit.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerDeleteUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExePlayerDeleteUnit(war, action);
     } else {
@@ -25,7 +25,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPl
     }
 }
 
-function fastExePlayerDeleteUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerDeleteUnit): void {
+function fastExePlayerDeleteUnit(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -52,7 +52,7 @@ function fastExePlayerDeleteUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: W
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExePlayerDeleteUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerDeleteUnit): Promise<void> {
+async function normalExePlayerDeleteUnit(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): Promise<void> {
     // const desc = await war.getDescForExePlayerDeleteUnit(action);
     // (desc) && (FloatText.show(desc));
 
@@ -91,7 +91,7 @@ async function normalExePlayerDeleteUnit(war: BaseWar_Interface_IBwWar.IBwWar, a
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerDeleteUnit): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

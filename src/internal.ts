@@ -86,7 +86,7 @@ export * as Ui_Components_UiTabItemRenderer from "./ui/components/UiTabItemRende
 export * as AutoTourneys_Rooms_Views_AtrPreviewMapListPanel from "./autoTourneys/rooms/views/AtrPreviewMapListPanel.ts";
 export * as AutoTourneys_Rooms_Views_AtrRoomInfoPanel from "./autoTourneys/rooms/views/AtrRoomInfoPanel.ts";
 export * as AutoTourneys_Wars_IWar from "./autoTourneys/wars/IWar.ts";
-export * as BaseWar_Model_BwWar from "./baseWar/model/BwWar.ts";
+export * as BaseWar_Model_War from "./baseWar/model/War.ts";
 export * as MultiPlayerWar_Model_MpwWar from "./multiPlayerWar/model/MpwWar.ts";
 export * as AutoTourneys_Wars_War from "./autoTourneys/wars/War.ts";
 export * as AuxiliaryTypes_AttackableArea from "./auxiliaryTypes/AttackableArea.ts";
@@ -124,10 +124,8 @@ export * as BaseWar_Interface_IBwExecutedOperationManager from "./baseWar/interf
 export * as BaseWar_Interface_IBwGridVisualEffect from "./baseWar/interface/IBwGridVisualEffect.ts";
 export * as BaseWar_Interface_IBwGridVisualEffectView from "./baseWar/interface/IBwGridVisualEffectView.ts";
 export * as BaseWar_Interface_IBwRandomNumberManager from "./baseWar/interface/IBwRandomNumberManager.ts";
-export * as BaseWar_Interface_IBwWar from "./baseWar/interface/IBwWar.ts";
 export * as BaseWar_Interface_IBwWarEventManager from "./baseWar/interface/IBwWarEventManager.ts";
 export * as BaseWar_Interface_IBwWarStatisticsManager from "./baseWar/interface/IBwWarStatisticsManager.ts";
-export * as BaseWar_Interface_IBwWarView from "./baseWar/interface/IBwWarView.ts";
 export * as BaseWar_Model_BwCommonSettingManager from "./baseWar/model/BwCommonSettingManager.ts";
 export * as BaseWar_Model_BwCursor from "./baseWar/model/BwCursor.ts";
 export * as BaseWar_Model_BwDrawVoteManager from "./baseWar/model/BwDrawVoteManager.ts";
@@ -168,7 +166,7 @@ export * as Players_Constants from "./players/Constants.ts";
 export * as PlayerRules_Constants from "./playerRules/Constants.ts";
 export * as BaseWar_View_BwWarInfoPanel from "./baseWar/view/BwWarInfoPanel.ts";
 export * as BaseWar_View_BwWarPanel from "./baseWar/view/BwWarPanel.ts";
-export * as BaseWar_View_BwWarView from "./baseWar/view/BwWarView.ts";
+export * as BaseWar_View_WarView from "./baseWar/view/WarView.ts";
 export * as BootTimers_Constants from "./bootTimers/Constants.ts";
 export * as Bots_Bot from "./bots/Bot.ts";
 export * as Bots_CommonParams from "./bots/CommonParams.ts";

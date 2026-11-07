@@ -14,7 +14,7 @@ import {
     ValueAndComparators_Utils,
     Turns_Constants,
     Ui_Components_UiPanel,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -27,7 +27,7 @@ import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/W
 import type { WecManualActionStatistics } from "../../proto/schema/CommonProto/WarEvent/WecManualActionStatistics.ts";
 
 export interface OpenData {
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
     fullData    : WarEventFullData;
     condition   : WarEventCondition;
 }

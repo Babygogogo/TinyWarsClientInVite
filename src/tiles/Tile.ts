@@ -29,7 +29,7 @@ import {
     Utils_ClientErrorCode,
     Visibilities_Utils,
     type AuxiliaryTypes_AuxiliaryTypes,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Notifications_Mapping,
     type Players_IPlayer,
     type Units_Unit,
@@ -73,7 +73,7 @@ export class Tile {
 
     private _view           : Tiles_TileView.TileView | undefined;
     private _hasFog         = false;
-    private _war?           : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?           : BaseWar_Model_War.War;
 
     public constructor(needView: boolean) {
         if (needView) {
@@ -89,7 +89,7 @@ export class Tile {
         this.init(data, gameConfig);
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
     }
     public stopRunning(): void {
@@ -215,7 +215,7 @@ export class Tile {
         this.setGroupedLocationIdArray(data.getGroupedLocationIdArray());
         this.setIsHighlighted(data.getIsHighlighted());
         this.setUnfixedBuffList(unfixedBuffArray.map(v => v.clone()));
-        this.setCustomNameId(data.getCustomNameId());
+        this.setCustomNameId(data.getCustomNameId(), false);
 
         this._setCustomCrystalData(customCrystalData?.clone());
         this._setCustomCannonData(customCannonData?.clone());
@@ -293,10 +293,10 @@ export class Tile {
         }
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 
@@ -527,10 +527,12 @@ export class Tile {
     public getIsHighlighted(): boolean {
         return this._isHighlighted;
     }
-    public setIsHighlighted(isHighlighted: boolean): void {
+    public setIsHighlighted(isHighlighted: boolean, needNotify = false): void {
         if (this._isHighlighted !== isHighlighted) {
             this._isHighlighted = isHighlighted;
-            Notifications_Dispatcher.dispatch("BwTileIsHighlightedChanged", { tile : this } satisfies Notifications_Mapping.Mapping["BwTileIsHighlightedChanged"]);
+            if (needNotify) {
+                Notifications_Dispatcher.dispatch("BwTileIsHighlightedChanged", { tile : this });
+            }
         }
     }
 
@@ -1128,7 +1130,7 @@ export class Tile {
     public getCustomNameId(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
         return this._customNameId;
     }
-    public setCustomNameId(nameId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void {
+    public setCustomNameId(nameId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>, needNotify: boolean): void {
         if ((nameId != null)                                        &&
             ((!Tiles_Utils_Common.checkIsValidCustomNameId(nameId)))
         ) {
@@ -1137,7 +1139,10 @@ export class Tile {
 
         if (this.getCustomNameId() !== nameId) {
             this._customNameId = nameId;
-            Notifications_Dispatcher.dispatch("BwTileCustomNameIdChanged");
+
+            if (needNotify) {
+                Notifications_Dispatcher.dispatch("BwTileCustomNameIdChanged");
+            }
         }
     }
 

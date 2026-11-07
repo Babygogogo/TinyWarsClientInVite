@@ -1,7 +1,7 @@
 import {
     MapEditor_Model_MeWar,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarStatisticsManager,
     type AuxiliaryTypes_AuxiliaryTypes,
     WarStatistics_Utils,
@@ -24,7 +24,7 @@ import { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerializatio
 export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager {
     private _playerStatisticsArray?     : WsPlayerStatistics[];
     private _unitStatisticsArray?       : WsUnitStatistics[];
-    private _war?                       : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                       : BaseWar_Model_War.War;
     private _hasHandledPreDeployedUnits = false;
 
     public init({ data, playersCountUnneutral, currentTurnIndex, gameConfiguration }: {
@@ -42,12 +42,12 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
         this._setPlayerStatisticsArray(data?.getPlayerStatisticsArray() ?? []);
         this._setUnitStatisticsArray(data?.getUnitStatisticsArray() ?? []);
     }
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._war = war;
         this._checkAndHandlePreDeployedUnits();
     }
 
-    private _getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    private _getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war, Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_GetWar_00);
     }
 

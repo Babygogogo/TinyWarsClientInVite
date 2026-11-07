@@ -6,7 +6,6 @@ import {
     ReplayWar_Model_RwWarBase,
     FloatText,
     SinglePlayerWar_Model_SpwWar,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_PositionFilter,
     GridMarks_Constants,
     Tiles_Utils_Filter,
@@ -26,6 +25,7 @@ import {
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     GridMarks_Utils,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -43,7 +43,7 @@ import type { UnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFi
 let _selectedMarkTypeId     = GridMarks_Constants.TypeId.MinMarkTypeId;
 
 export interface OpenData {
-    war     : BaseWar_Interface_IBwWar.IBwWar;
+    war     : BaseWar_Model_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;

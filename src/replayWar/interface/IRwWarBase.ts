@@ -1,9 +1,9 @@
 import {
     type BaseWar_Interface_IBwCommonSettingManager,
-    type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarEventManager,
     type BaseWar_Interface_IBwWarStatisticsManager,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -17,7 +17,7 @@ import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/
 import type { SettingsForSfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
 import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
 
-export interface IRwWarBase extends BaseWar_Interface_IBwWar.IBwWar {
+export interface IRwWarBase extends BaseWar_Model_War.War {
     serializeForCheckpoint(): AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData;
     tickVisionTeamIndex(): number | null;
 
@@ -53,9 +53,6 @@ export interface IRwWarBase extends BaseWar_Interface_IBwWar.IBwWar {
     setIsBatchExecuteAction(isFast: boolean): void;
 
     getVisionTeamIndex(): number | null;
-
-    getIsShowTurnStartPopUp(): boolean;
-    setIsShowTurnStartPopUp(isShow: boolean): void;
 
     getIsAutoReplay(): boolean;
     setIsAutoReplay(isAuto: boolean): void;

@@ -1,5 +1,5 @@
 import {
-    BaseWar_Model_BwWar,
+    BaseWar_Model_War,
     BaseWar_Model_BwWarEventManager,
     FloatText,
     BootTimers_Constants,
@@ -40,7 +40,7 @@ type TurnIndexAndPlayerIndex = {
     playerIndex : number;
 };
 
-export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements ReplayWar_Interface_IRwWarBase.IRwWarBase {
+export abstract class RwWarBase extends BaseWar_Model_War.War implements ReplayWar_Interface_IRwWarBase.IRwWarBase {
     private readonly _warEventManager               = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
     private _srcExecutedOperationArray              : WoContainer[] | null = null;
 
@@ -57,7 +57,6 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
     private _visionTeamIndex                        : number | null = null;
     private _isTickingReplay                        = false;
     private _isBatchExecuteAction                   = false;    // 用于在批量运行战局操作（比如切换到下一回合或战局终止状态）时，省略不必要的计算
-    private _isShowTurnStartPopUp                   = true;
     private _isAutoReplay                           = false;
     private _firstOperationId                       = 0;
     private _nextOperationId                        = 0;
@@ -243,13 +242,6 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
     }
     protected _setVisionTeamIndex(index: number | null): void {
         this._visionTeamIndex = index;
-    }
-
-    public getIsShowTurnStartPopUp(): boolean {
-        return this._isShowTurnStartPopUp;
-    }
-    public setIsShowTurnStartPopUp(isShow: boolean): void {
-        this._isShowTurnStartPopUp = isShow;
     }
 
     public getIsAutoReplay(): boolean {
@@ -453,7 +445,7 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         this._fastInitView();
         this.startRunning().startRunningView();
         this.updateTilesAndUnitsOnVisibilityChanged(false);
-        this.getView().updatePersistentText();
+        this.getView()?.updatePersistentText();
         Sounds_SoundPlayer.playCoBgmWithWar({
             war                            : this,
             force                          : false,
@@ -479,7 +471,7 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         this._fastInitView();
         this.startRunning().startRunningView();
         this.updateTilesAndUnitsOnVisibilityChanged(false);
-        this.getView().updatePersistentText();
+        this.getView()?.updatePersistentText();
         Sounds_SoundPlayer.playCoBgmWithWar({
             war                            : this,
             force                          : false,

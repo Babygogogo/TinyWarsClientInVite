@@ -1,12 +1,12 @@
 import {
     SinglePlayerWar_Model_SpwWar,
-    type BaseWar_Interface_IBwWar,
     Stages_Constants,
     NormalMap_Model_NormalMapModel,
     Lang_Utils,
     Numbers_Utils,
     Lang_Constants,
     Ui_Components_UiPanel,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -16,7 +16,7 @@ import {
 } from "../../internal.ts";
 
 export interface OpenData {
-    war     : BaseWar_Interface_IBwWar.IBwWar;
+    war     : BaseWar_Model_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;

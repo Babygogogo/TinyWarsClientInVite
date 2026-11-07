@@ -2,7 +2,6 @@ import {
     AutoTourneys_Mains_Gateway,
     AutoTourneys_Rooms_Gateway,
     type AuxiliaryTypes_AuxiliaryTypes,
-    type BaseWar_Interface_IBwWar,
     Broadcasts_Gateway,
     Campaigns_Mains_Gateway,
     Campaigns_Managements_Gateway,
@@ -12,6 +11,7 @@ import {
     Common_Model_CommonModel,
     Common_Model_CommonProxy,
     CoopCustomRoom_Model_CcrProxy,
+    type BaseWar_Model_War,
     type Egret_Egret,
     FloatText,
     GameConfigs_Gateway,
@@ -665,7 +665,7 @@ function _gotoSpmWarListPanel(): void {
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpmWarListPanel, void 0);
 }
 
-export function getOngoingWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar> {
+export function getOngoingWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Model_War.War> {
     return (MultiPlayerWar_Model_MpwModel.getWar())
         ?? (ReplayWar_Model_RwModel.getWar())
         ?? (HalfwayReplayWar_Model_HrwModel.getWar())
@@ -703,7 +703,7 @@ function showErrorText(text: string): void {
 }
 
 export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<GridMarkData>): Promise<void> {
-    const war = new MapEditor_Model_MeWar.MeWar();
+    const war = new MapEditor_Model_MeWar.MeWar(false);
     await war.initWithMapRawData({
         mapRawData                : mapRawData,
         slotIndex                 : 0,
@@ -761,7 +761,7 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
     }
 }
 export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promise<void> {
-    const war = new MapEditor_Model_MeWar.MeWar();
+    const war = new MapEditor_Model_MeWar.MeWar(false);
     await war.initWithMapRawData({
         mapRawData                : mapRawData,
         slotIndex                 : 0,

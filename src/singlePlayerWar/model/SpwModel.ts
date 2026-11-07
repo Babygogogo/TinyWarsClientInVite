@@ -278,13 +278,13 @@ function checkAndEndWar(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): boolean
 
 function createWarByWarData(warData: SerialWar): SinglePlayerWar_Interface_ISpwWar.ISpwWar {
     if (warData.getSettingsForScw()) {
-        return new SingleCustomWar_Model_ScwWar.ScwWar();
+        return new SingleCustomWar_Model_ScwWar.ScwWar(true);
     } else if (warData.getSettingsForSfw()) {
-        return new SingleFreeWar_Model_SfwWar.SfwWar();
+        return new SingleFreeWar_Model_SfwWar.SfwWar(true);
     } else if (warData.getSettingsForSrw()) {
-        return new SingleRankWar_Model_SrwWar.SrwWar();
+        return new SingleRankWar_Model_SrwWar.SrwWar(true);
     } else if (warData.getSettingsForCaw()) {
-        return new Campaigns_Wars_War.War();
+        return new Campaigns_Wars_War.War(true);
     } else {
         throw Helpers_Misc.newError(`Invalid warData.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_CreateWarByWarData_00);
     }

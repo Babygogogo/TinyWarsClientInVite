@@ -6,8 +6,8 @@ import {
     ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
     Players_Constants,
     Utils_ClientErrorCode,
@@ -24,7 +24,7 @@ import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/Ser
 
 export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
     private readonly _players                    = new Map<number, Players_IPlayer.IPlayer>();
-    private _war?                       : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                       : BaseWar_Model_War.War;
     private _watcherTeamIndexesForHrw?  : Set<number>;
 
     public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayerManager>, gameConfig: GameConfigs_GameConfig.GameConfig): void {
@@ -95,7 +95,7 @@ export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
         this._watcherTeamIndexesForHrw = teamIndexes;
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
         for (const [, player] of this._players) {
             player.startRunning(war);
@@ -161,10 +161,10 @@ export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
         }
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    protected _getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    protected _getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 

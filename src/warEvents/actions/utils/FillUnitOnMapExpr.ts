@@ -6,7 +6,6 @@ import {
     ExpressionParsers_Parser,
     ExpressionParsers_Contexts_Tile,
     Units_Unit,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
     Units_Constants,
     Units_Utils_Common,
@@ -21,6 +20,7 @@ import {
     Locations_Constants,
     Players_Constants,
     Lang_Constants,
+    type BaseWar_Model_War,
     type Tiles_Tile,
 } from "../../../internal.ts";
 
@@ -906,7 +906,7 @@ function evalActAiWeightedDestination(action: WeaFillUnitOnMapExpr, tile: Tiles_
 export async function applyWithExtraData(_action: WeaFillUnitOnMapExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaFillUnitOnMapExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaFillUnitOnMapExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap         = war.getUnitMap();
     let nextUnitId      = unitMap.getNextUnitId();
     const newUnitDataList : SerialUnit[] = [];
@@ -985,7 +985,7 @@ function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, 
         loaderUnitId             : null,
     });
 }
-function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_War.War, isFast: boolean): void {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
     const unitArray     : Units_Unit.Unit[] = [];
@@ -995,7 +995,7 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Interfa
         unit.startRunning(war);
         unit.flushDataToView();
         unitMap.setUnitOnMap(unit);
-        (!isFast) && (unit.updateView());
+        (!isFast) && (unit.flushDataToView());
 
         unitArray.push(unit);
     }

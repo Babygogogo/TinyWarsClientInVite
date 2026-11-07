@@ -1,5 +1,5 @@
 import {
-    type BaseWar_Model_BwWar,
+    type BaseWar_Model_War,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 import type { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
@@ -14,9 +14,9 @@ export interface ITaskObjectiveManager {
     serializeForCreateMfr(): SerialTaskObjectiveManager;
     serializeForCreateSfw(): SerialTaskObjectiveManager;
 
-    startRunning(war: BaseWar_Model_BwWar.BwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
-    getWar(): BaseWar_Model_BwWar.BwWar;
+    getWar(): BaseWar_Model_War.War;
 
     getStateArray(): TaskObjectiveState[];
     updateState(state: TaskObjectiveState): boolean;

@@ -14,7 +14,7 @@ import {
     Utils_ClientErrorCode,
     Visibilities_Utils,
     type AuxiliaryTypes_AuxiliaryTypes,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
 } from "../internal.ts";
 
@@ -28,7 +28,7 @@ export class TileMap {
     private _tileCustomNameArray?           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomName[]>;
     private _mapSize?                       : AuxiliaryTypes_MapSize.MapSize;
     private _visibleGroupedLocationIdArray  : number[] = [];
-    private _war?                           : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                           : BaseWar_Model_War.War;
 
     private readonly _view                  = new Tiles_TileMapView.TileMapView();
 
@@ -115,7 +115,7 @@ export class TileMap {
         this.getView().fastInit(this);
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
         this.forEachTile(tile => tile.startRunning(war));
     }
@@ -182,10 +182,10 @@ export class TileMap {
         });
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 

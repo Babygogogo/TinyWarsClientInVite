@@ -1,12 +1,12 @@
 import {
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type ExpressionParsers_Enums,
 } from "../../internal.ts";
 
 export abstract class Base {
-    public readonly war: BaseWar_Interface_IBwWar.IBwWar;
+    public readonly war: BaseWar_Model_War.War;
 
-    protected constructor(war: BaseWar_Interface_IBwWar.IBwWar) {
+    protected constructor(war: BaseWar_Model_War.War) {
         this.war = war;
     }
 

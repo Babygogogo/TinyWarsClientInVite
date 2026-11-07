@@ -13,7 +13,7 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwGridVisualEffect,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Fields_IField,
     type Fields_IFieldView,
     type FogMaps_IFogMap,
@@ -113,7 +113,7 @@ export class Field implements Fields_IField.IField {
         this.getView().fastInit(this);
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this.getTileMap().startRunning(war);
         this.getUnitMap().startRunning(war);
         this.getFogMap().startRunning(war);

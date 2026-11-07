@@ -5,8 +5,8 @@ import {
     Destructions_Utils,
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type Tiles_Tile,
     type Units_Unit,
@@ -98,7 +98,7 @@ export function getErrorTip(data: WeaDestroyUnitSimple, mapSize: AuxiliaryTypes_
 export async function applyWithExtraData(_action: WeaDestroyUnitSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaDestroyUnitSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(data: WeaDestroyUnitSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     const conUnitFilter     = data.getConUnitFilter();

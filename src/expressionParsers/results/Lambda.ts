@@ -1,14 +1,14 @@
 import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type ExpressionParsers_Nodes_Base,
 } from "../../internal.ts";
 
 export class Lambda extends ExpressionParsers_Results_Base.Base {
     public readonly node: ExpressionParsers_Nodes_Base.Base;
 
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, node: ExpressionParsers_Nodes_Base.Base) {
+    public constructor(war: BaseWar_Model_War.War, node: ExpressionParsers_Nodes_Base.Base) {
         super(war);
 
         this.node = node;

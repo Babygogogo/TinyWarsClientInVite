@@ -6,7 +6,6 @@ import {
     CoSkills_Constants,
     SinglePlayerWar_Model_SpwWar,
     ActionPlanners_Constants,
-    type BaseWar_Interface_IBwWar,
     Helpers_Misc,
     Graphics_Utils,
     GamePanels_Dict,
@@ -20,6 +19,7 @@ import {
     Lang_Constants,
     Ui_Components_UiPanel,
     Units_Constants,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -31,7 +31,7 @@ const getGridWidth          = Helpers_Misc.createLazyFunc(() => Graphics_Utils.g
 const getGridHeight         = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
 export interface OpenData {
-    war: BaseWar_Interface_IBwWar.IBwWar;
+    war: BaseWar_Model_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
@@ -444,7 +444,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const container     = war.getView().getFieldContainer();
+        const container = war.getView()?.getFieldContainer();
+        if (container == null) {
+            return;
+        }
+
         const gridIndex     = war.getCursor().getGridIndex();
         const stage         = Stages_StageManager.getStage();
         const group         = this._group;

@@ -12,7 +12,7 @@ import {
     ExpressionParsers_Parser,
     Lang_Constants,
     ExpressionParsers_Contexts_Tile,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -393,7 +393,7 @@ function evalActCustomNameId(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile)
 export async function applyWithExtraData(_action: WeaSetTileStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetTileStateExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetTileStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, SerialTile>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!checkIsMeetConditionForTile(action, tile)) {
@@ -440,7 +440,7 @@ function createNewTileData(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): 
         customNameId           : customNameId ?? null,
     });
 }
-function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, SerialTile>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, SerialTile>, war: BaseWar_Model_War.War, isFast: boolean): void {
     for (const [tile, newTileData] of dict) {
         tile.init(newTileData, tile.getGameConfig());
         tile.startRunning(war);

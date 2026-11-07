@@ -1,11 +1,11 @@
 import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 
 export class War extends ExpressionParsers_Results_Base.Base {
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar) {
+    public constructor(war: BaseWar_Model_War.War) {
         super(war);
     }
 

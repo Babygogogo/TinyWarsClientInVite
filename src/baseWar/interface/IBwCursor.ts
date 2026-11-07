@@ -1,22 +1,22 @@
 import {
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwCursorView,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_MapSize,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 
 export interface IBwCursor {
     init(mapSize: AuxiliaryTypes_MapSize.MapSize): void;
     fastInit(): void;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
     startRunningView(): void;
     stopRunning(): void;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getWar(): BaseWar_Interface_IBwWar.IBwWar;
+    getWar(): BaseWar_Model_War.War;
 
     getView(): BaseWar_Interface_IBwCursorView.IBwCursorView;
     updateView(): void;

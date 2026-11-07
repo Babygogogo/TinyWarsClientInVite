@@ -19,8 +19,8 @@ import {
     Helpers_Misc,
     WarEvents_FullDatas_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type MapEditor_Interface_IMeWar,
     type AuxiliaryTypes_MapSize,
 } from "../../../internal.ts";
@@ -216,7 +216,7 @@ export function getDetailedDescForCondition(con: WarEventCondition, gameConfig: 
         || (WarEvents_Conditions_Utils_OngoingPersistentActionPresence.getDetailedDesc(con.getWecOngoingPersistentActionPresence()))
         || (WarEvents_Conditions_Utils_ManualActionStatistics.getDetailedDesc(con.getWecManualActionStatistics()));
 }
-export function getErrorTipForCondition(fullData: WarEventFullData, condition: WarEventCondition, war: BaseWar_Interface_IBwWar.IBwWar): string | null {
+export function getErrorTipForCondition(fullData: WarEventFullData, condition: WarEventCondition, war: BaseWar_Model_War.War): string | null {
     const conditionsCount = fullData.getConditionArray().length;
     if (conditionsCount > WarEvents_Conditions_Constants.MaxCountPerMap) {
         return `${Lang_Utils.getText(Lang_Constants.TextType.A0185)} (${conditionsCount}/${WarEvents_Conditions_Constants.MaxCountPerMap})`;

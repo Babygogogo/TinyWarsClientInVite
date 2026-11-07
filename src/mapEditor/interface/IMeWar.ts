@@ -1,6 +1,6 @@
 import {
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarEventManager,
     type MapEditor_Interface_IMeDrawer,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -14,7 +14,7 @@ import type { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskO
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export interface IMeWar extends BaseWar_Interface_IBwWar.IBwWar {
+export interface IMeWar extends BaseWar_Model_War.War {
     init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void;
     initWithMapRawData({ mapRawData, slotIndex, gameConfig, srcNormalMapIdForAddEvent, gridMarkData }: {
         mapRawData                  : MapRawData;

@@ -1,8 +1,8 @@
 import {
     MapEditor_Model_MeWar,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type BaseWar_Interface_IBwCommonSettingManager,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_MapSize,
     Turns_Utils,
     WarOperations_Utils,
@@ -24,7 +24,7 @@ import type { WarRuleCommonData } from "../../proto/schema/CommonProto/WarRule/W
 import { SettingsForCommon } from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
 
 export class BwCommonSettingManager implements BaseWar_Interface_IBwCommonSettingManager.IBwCommonSettingManager {
-    private _war?               : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?               : BaseWar_Model_War.War;
     private _settingsForCommon? : SettingsForCommon;
 
     public init({ settings, warType, playersCountUnneutral, gameConfig, mapSize }: {
@@ -148,14 +148,14 @@ export class BwCommonSettingManager implements BaseWar_Interface_IBwCommonSettin
         }
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    protected _getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    protected _getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 

@@ -14,6 +14,10 @@ import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/
 export class SrwWar extends SinglePlayerWar_Model_SpwWar.SpwWar implements SingleRankWar_Interface_ISrwWar.ISrwWar {
     private _settingsForSrw?    : SettingsForSrw;
 
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
     public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
         this._setSettingsForSrw(Helpers_Misc.getExisted(data.getSettingsForSrw(), Utils_ClientErrorCode.ClientErrorCode.SrwWar_Init_00));

@@ -1,6 +1,6 @@
 import {
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 import type { Info } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/Info.ts";
@@ -15,7 +15,7 @@ export interface IBwWarStatisticsManager {
         gameConfiguration       : GameConfigs_GameConfig.GameConfig;
     }): void;
     fastInit(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWarStatisticsManager>): void;
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     serialize(): SerialWarStatisticsManager;
     serializeForCreateSfw(): SerialWarStatisticsManager;

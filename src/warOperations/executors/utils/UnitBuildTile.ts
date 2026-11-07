@@ -6,7 +6,6 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Units_Constants,
     Utils_ClientErrorCode,
     GamePanels_Dict,
@@ -17,12 +16,13 @@ import {
     GamePanels_Manager,
     Players_Constants,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoUnitBuildTile } from "../../../proto/schema/CommonProto/WarOperation/WoUnitBuildTile.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitBuildTile, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitBuildTile, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitBuildTile(war, action);
     } else {
@@ -30,7 +30,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitBuildTile): void {
+function fastExeUnitBuildTile(war: BaseWar_Model_War.War, action: WoUnitBuildTile): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -75,7 +75,7 @@ function fastExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitBuildTile): Promise<void> {
+async function normalExeUnitBuildTile(war: BaseWar_Model_War.War, action: WoUnitBuildTile): Promise<void> {
     // const desc = await war.getDescForExeUnitBuildTile(action);
     // (desc) && (FloatText.show(desc));
 
@@ -184,7 +184,7 @@ async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, acti
                     });
                 });
             }
-            focusUnit.updateView();
+            focusUnit.flushDataToView();
         }
 
         WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
@@ -194,7 +194,7 @@ async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, acti
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitBuildTile): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoUnitBuildTile): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

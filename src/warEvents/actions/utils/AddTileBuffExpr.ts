@@ -8,7 +8,7 @@ import {
     ExpressionParsers_Parser,
     Lang_Constants,
     ExpressionParsers_Contexts_Tile,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -227,11 +227,11 @@ function evalActExtraParams(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): 
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(action: WeaAddTileBuffExpr, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): Promise<void> {
+export async function applyWithExtraData(action: WeaAddTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithoutExtraData(action: WeaAddTileBuffExpr, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): Promise<void> {
+export async function applyWithoutExtraData(action: WeaAddTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     const newBuffDict = new Map<Tiles_Tile.Tile, TileBuff>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {

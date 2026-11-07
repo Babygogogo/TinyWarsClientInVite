@@ -1448,17 +1448,17 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Interface_IM
 
 function createWarByWarData(data: SerialWar): MultiPlayerWar_Interface_IMpwWar.IMpwWar {
     if (data.getSettingsForMcw()) {
-        return new MultiCustomWar_Model_McwWar.McwWar();
+        return new MultiCustomWar_Model_McwWar.McwWar(true);
     } else if (data.getSettingsForMrw()) {
-        return new MultiRankWar_Model_MrwWar.MrwWar();
+        return new MultiRankWar_Model_MrwWar.MrwWar(true);
     } else if (data.getSettingsForMfw()) {
-        return new MultiFreeWar_Model_MfwWar.MfwWar();
+        return new MultiFreeWar_Model_MfwWar.MfwWar(true);
     } else if (data.getSettingsForCcw()) {
-        return new CoopCustomWar_Model_CcwWar.CcwWar();
+        return new CoopCustomWar_Model_CcwWar.CcwWar(true);
     } else if (data.getSettingsForMmw()) {
-        return new MultiMatchWar_Model_MmwWar.MmwWar();
+        return new MultiMatchWar_Model_MmwWar.MmwWar(true);
     } else if (data.getSettingsForAtw()) {
-        return new AutoTourneys_Wars_War.War();
+        return new AutoTourneys_Wars_War.War(true);
     } else {
         throw Helpers_Misc.newError(`Invalid data.`);
     }

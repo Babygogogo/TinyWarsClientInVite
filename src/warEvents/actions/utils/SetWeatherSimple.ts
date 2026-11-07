@@ -1,8 +1,8 @@
 import {
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetWeatherSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherSimple.ts";
@@ -46,10 +46,10 @@ export function getErrorTip(data: WeaSetWeatherSimple, gameConfig: GameConfigs_G
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     return applyWithoutExtraData(action, isFast, war);
 }
-export async function applyWithoutExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const weatherManager = war.getWeatherManager();
     weatherManager.setForceWeatherType(action.getWeatherType());
 

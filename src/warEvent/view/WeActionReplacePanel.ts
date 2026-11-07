@@ -9,7 +9,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -20,7 +20,7 @@ import {
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 
 export interface OpenData {
-    war             : BaseWar_Interface_IBwWar.IBwWar;
+    war             : BaseWar_Model_War.War;
     fullData        : WarEventFullData;
     eventId         : number;
     nodeId          : number;
@@ -104,7 +104,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForActionRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     eventId             : number;
     nodeId              : number;
     oldActionId         : number | null;

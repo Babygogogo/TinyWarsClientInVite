@@ -3,7 +3,7 @@ import {
     type ActionPlanners_Types,
     type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlannerView,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Tiles_Tile,
     type Units_Unit,
     type AuxiliaryTypes_MapSize,
@@ -18,11 +18,11 @@ export interface IActionPlanner {
     init(mapSize: AuxiliaryTypes_MapSize.MapSize): void;
     fastInit(): void;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
     startRunningView(): void;
     stopRunning(): void;
 
-    getWar(): BaseWar_Interface_IBwWar.IBwWar;
+    getWar(): BaseWar_Model_War.War;
 
     getPlayerIndexLoggedIn(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     getSelfPlayerIndexSet(): Set<number>;

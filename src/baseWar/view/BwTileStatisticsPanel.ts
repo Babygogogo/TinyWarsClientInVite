@@ -9,7 +9,7 @@ import {
     Ui_Components_UiPanel,
     Ui_Utils_UiSizerHelpers,
     Visibilities_Utils,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Tiles_Tile,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -20,7 +20,7 @@ import {
 } from "../../internal.ts";
 
 export interface OpenData {
-    war             : BaseWar_Interface_IBwWar.IBwWar;
+    war             : BaseWar_Model_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;

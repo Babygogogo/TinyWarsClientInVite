@@ -401,6 +401,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onEnterFrame(): void {
+        const war       = this._getWar();
+        const warView   = war.getView();
+        if (warView == null) {
+            return;
+        }
+
         const label = this._labelMouseHover;
         if (!Helpers_Compatibility.isPc) {
             label.setIsVisible(false);
@@ -414,8 +420,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const war       = this._getWar();
-        const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.createGridIndexByPoint(war.getView().getFieldContainer().getContentsContainerGlobalToLocal({ x, y }));
+        const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.createGridIndexByPoint(warView.getFieldContainer().getContentsContainerGlobalToLocal({ x, y }));
         label.setIsVisible(true);
         if (!gridIndex.checkIsInsideMap(war.getTileMap().getMapSize())) {
             label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1112)}: --`);

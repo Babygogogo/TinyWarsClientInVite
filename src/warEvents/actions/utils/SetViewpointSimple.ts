@@ -7,9 +7,9 @@ import {
     WarEvents_Actions_Utils_SetViewpointExpr,
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -130,10 +130,10 @@ export function getErrorTip(data: WeaSetViewpointSimple, mapSize: AuxiliaryTypes
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetViewpointSimple, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithExtraData(action: WeaSetViewpointSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     return applyWithoutExtraData(action, isFast, war);
 }
-export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetGridIndexArray: AuxiliaryTypes_GridIndex.GridIndex[] = [];
     {
         const unitMap           = war.getUnitMap();

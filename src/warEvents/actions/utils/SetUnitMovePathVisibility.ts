@@ -9,8 +9,8 @@ import {
     ExpressionParsers_Contexts_Position,
     ExpressionParsers_Results_Position,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WeaSetUnitMovePathVisibility } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitMovePathVisibility.ts";
 
@@ -89,7 +89,7 @@ export function getErrorTip(data: WeaSetUnitMovePathVisibility, customCounterNam
     return null;
 }
 
-function checkIsMeetConditionForPosition(action: WeaSetUnitMovePathVisibility, war: BaseWar_Interface_IBwWar.IBwWar, x: number, y: number): boolean {
+function checkIsMeetConditionForPosition(action: WeaSetUnitMovePathVisibility, war: BaseWar_Model_War.War, x: number, y: number): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConPositionFilter() ?? ``)
             .eval(new ExpressionParsers_Contexts_Position.Position(new ExpressionParsers_Results_Position.Position(war, x, y)), false);
@@ -99,7 +99,7 @@ function checkIsMeetConditionForPosition(action: WeaSetUnitMovePathVisibility, w
     }
 }
 
-function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: BaseWar_Interface_IBwWar.IBwWar, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number[] {
+function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: BaseWar_Model_War.War, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number[] {
     const defaultValue  = war.getFogMap().getRawVisibilityFromPathsForAllPlayers(gridIndex);
     const act           = action.getActVisibilityArray();
     if (!act) {
@@ -123,7 +123,7 @@ function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: BaseW
 export function applyWithExtraData(_action: WeaSetUnitMovePathVisibility): void {
     // nothing to do
 }
-export function applyWithoutExtraData(action: WeaSetUnitMovePathVisibility, war: BaseWar_Interface_IBwWar.IBwWar): void {
+export function applyWithoutExtraData(action: WeaSetUnitMovePathVisibility, war: BaseWar_Model_War.War): void {
     const fogMap            = war.getFogMap();
     const { width, height } = fogMap.getMapSize().getWH();
     const newVisibilityDict = new Map<AuxiliaryTypes_GridIndex.GridIndex, number[]>();

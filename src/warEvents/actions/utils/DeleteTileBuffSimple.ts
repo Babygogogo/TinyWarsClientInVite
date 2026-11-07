@@ -7,8 +7,8 @@ import {
     Lang_Utils,
     Numbers_Constants,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
@@ -148,7 +148,7 @@ export async function applyWithExtraData(_action: WeaDeleteTileBuffSimple): Prom
     // nothing to do
 }
 
-export async function applyWithoutExtraData(action: WeaDeleteTileBuffSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaDeleteTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetTileDict = new Map<Tiles_Tile.Tile, TileBuff[]>();
     {
         const unitMap               = war.getUnitMap();

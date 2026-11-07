@@ -8,8 +8,8 @@ import {
     ExpressionParsers_Parser,
     Lang_Constants,
     ExpressionParsers_Contexts_War,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WeaSetForceFogCodeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeExpr.ts";
 
@@ -93,7 +93,7 @@ export async function applyWithExtraData(_action: WeaSetForceFogCodeExpr): Promi
     // nothing to do
 }
  
-export async function applyWithoutExtraData(action: WeaSetForceFogCodeExpr, _isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetForceFogCodeExpr, _isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const forceFogCode = getForceFogCode(action.getForceFogCode() ?? ``, war);
     if (forceFogCode == null) {
         return;
@@ -123,7 +123,7 @@ export async function applyWithoutExtraData(action: WeaSetForceFogCodeExpr, _isF
         fogMap.setForceExpireTurnIndex(expireTurnIndex);
     }
 }
-function getForceFogCode(str: string, war: BaseWar_Interface_IBwWar.IBwWar): number | null {
+function getForceFogCode(str: string, war: BaseWar_Model_War.War): number | null {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(str).eval(new ExpressionParsers_Contexts_War.War(war), false);
         if (result instanceof ExpressionParsers_Results_Num.Num) {
@@ -138,7 +138,7 @@ function getForceFogCode(str: string, war: BaseWar_Interface_IBwWar.IBwWar): num
         return null;
     }
 }
-function getTurnsCount(str: string, war: BaseWar_Interface_IBwWar.IBwWar): number | null {
+function getTurnsCount(str: string, war: BaseWar_Model_War.War): number | null {
     if (!str) {
         return 0;
     }

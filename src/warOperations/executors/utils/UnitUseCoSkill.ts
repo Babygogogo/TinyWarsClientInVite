@@ -8,8 +8,8 @@ import {
     CoSkills_Constants,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
     Units_Constants,
     Players_Constants,
     Utils_ClientErrorCode,
@@ -23,7 +23,7 @@ import {
 import type { WoUnitUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoUnitUseCoSkill.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitUseCoSkill, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitUseCoSkill, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitUseCoSkill(war, action);
     } else {
@@ -31,7 +31,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitUseCoSkill): void {
+function fastExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUnitUseCoSkill): void {
     const playerInTurn      = war.getPlayerInTurn();
     const actionExtraData   = action.getExtraData();
     if (actionExtraData) {
@@ -118,7 +118,7 @@ function fastExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitUseCoSkill): Promise<void> {
+async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUnitUseCoSkill): Promise<void> {
     const unitMap           = war.getUnitMap();
     const gridVisualEffect  = war.getGridVisualEffect();
     const playerInTurn      = war.getPlayerInTurn();
@@ -157,7 +157,7 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, act
         if (skillType != null) {
             for (const unit of unitMap.getAllUnitsOnMap()) {
                 if (unit.getPlayerIndex() === playerIndex) {
-                    unit.updateView();
+                    unit.flushDataToView();
 
                     if (skillType === CoSkills_Constants.SkillTypeId.Power) {
                         gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
@@ -230,7 +230,7 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, act
 
             for (const unit of unitMap.getAllUnitsOnMap()) {
                 if (unit.getPlayerIndex() === playerIndex) {
-                    unit.updateView();
+                    unit.flushDataToView();
 
                     if (skillType === CoSkills_Constants.SkillTypeId.Power) {
                         gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
@@ -248,7 +248,7 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, act
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitUseCoSkill): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoUnitUseCoSkill): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

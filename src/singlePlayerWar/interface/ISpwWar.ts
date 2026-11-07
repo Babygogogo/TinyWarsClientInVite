@@ -1,8 +1,8 @@
 import {
     type BaseWar_Interface_IBwCommonSettingManager,
-    type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarEventManager,
     type BaseWar_Interface_IBwWarStatisticsManager,
+    type BaseWar_Model_War,
     type Players_IPlayer,
     type SinglePlayerWar_Interface_ISpwRetractManager,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -10,7 +10,7 @@ import {
 import type { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export interface ISpwWar extends BaseWar_Interface_IBwWar.IBwWar {
+export interface ISpwWar extends BaseWar_Model_War.War {
     serialize(): SerialWar;
 
     updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void;

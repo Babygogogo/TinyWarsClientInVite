@@ -1,5 +1,5 @@
 import {
-    BaseWar_Model_BwWar,
+    BaseWar_Model_War,
     BaseWar_Model_BwWarEventManager,
     MapEditor_Model_MeDrawer,
     BootTimers_Constants,
@@ -30,7 +30,7 @@ import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/Tem
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export class MeWar extends BaseWar_Model_BwWar.BwWar implements MapEditor_Interface_IMeWar.IMeWar {
+export class MeWar extends BaseWar_Model_War.War implements MapEditor_Interface_IMeWar.IMeWar {
     private readonly _drawer                = new MapEditor_Model_MeDrawer.MeDrawer();
     private readonly _warEventManager       = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
 
@@ -49,6 +49,10 @@ export class MeWar extends BaseWar_Model_BwWar.BwWar implements MapEditor_Interf
     private _campaignMapData                : CampaignMapData | null = null;
     private _taskObjectiveFullData          : TaskObjectiveFullData | null = null;
     private readonly _gridMarkData          = new GridMarkData();
+
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
 
     public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this._baseInit(data, gameConfig, WarTypes_Constants.WarTypeId.Me);

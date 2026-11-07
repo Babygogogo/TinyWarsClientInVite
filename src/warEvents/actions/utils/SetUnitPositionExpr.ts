@@ -12,7 +12,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_Tile,
     ExpressionParsers_Contexts_Unit,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Tiles_Tile,
     type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -169,7 +169,7 @@ function evalActAlternativeTileFilter(action: WeaSetUnitPositionExpr, tile: Tile
 export async function applyWithExtraData(_action: WeaSetUnitPositionExpr): Promise<void> {
     // nothing to do
 }
-export function applyWithoutExtraData(action: WeaSetUnitPositionExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export function applyWithoutExtraData(action: WeaSetUnitPositionExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const destinationDict = new Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>();
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -185,7 +185,7 @@ export function applyWithoutExtraData(action: WeaSetUnitPositionExpr, isFast: bo
     return applyDestinationDict(destinationDict, war, action, isFast);
 }
  
-async function applyDestinationDict(dict: Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>, war: BaseWar_Interface_IBwWar.IBwWar, action: WeaSetUnitPositionExpr, isFast: boolean): Promise<void> {
+async function applyDestinationDict(dict: Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>, war: BaseWar_Model_War.War, action: WeaSetUnitPositionExpr, isFast: boolean): Promise<void> {
     const unitMap       = war.getUnitMap();
     const tileMap       = war.getTileMap();
     const mapSize       = tileMap.getMapSize();

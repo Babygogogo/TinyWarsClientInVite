@@ -6,11 +6,11 @@ import {
     ExpressionParsers_Contexts_Player,
     ExpressionParsers_Results_NumArray,
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
     WarEvents_Actions_Constants_PersistentModifyPlayerAttribute,
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type Players_IPlayer,
 } from "../../../internal.ts";
 
@@ -207,7 +207,7 @@ export function getErrorTip(data: WeaPersistentModifyPlayerAttribute, customCoun
     return null;
 }
 
-function checkIsMeetConditionForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+function checkIsMeetConditionForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Model_War.War): boolean {
     if ((!action.getIsEffectiveInMpw()) && (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar)) {
         return false;
     }
@@ -220,7 +220,7 @@ function checkIsMeetConditionForPlayer(action: WeaPersistentModifyPlayerAttribut
     }
 }
 
-export function checkCanActivateCoSkillForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Interface_IBwWar.IBwWar): boolean | null {
+export function checkCanActivateCoSkillForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Model_War.War): boolean | null {
     const actCanActivate = action.getActCanActivateCoSkill();
     if (!actCanActivate) {
         return null;
@@ -242,7 +242,7 @@ export function checkCanActivateCoSkillForPlayer(action: WeaPersistentModifyPlay
     }
 }
 
-export function checkCanProduceUnitForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, unitType: number, war: BaseWar_Interface_IBwWar.IBwWar): boolean | null {
+export function checkCanProduceUnitForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, unitType: number, war: BaseWar_Model_War.War): boolean | null {
     const actBannedUnitTypeArray    = action.getActBannedUnitTypeArray();
     const actUnbannedUnitTypeArray  = action.getActUnbannedUnitTypeArray();
     if ((!actBannedUnitTypeArray) && (!actUnbannedUnitTypeArray)) {
@@ -262,7 +262,7 @@ export function checkCanProduceUnitForPlayer(action: WeaPersistentModifyPlayerAt
         );
 }
 
-export function getActEnergyGrowthMultiplierModifierForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Interface_IBwWar.IBwWar): number {
+export function getActEnergyGrowthMultiplierModifierForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Model_War.War): number {
     const exp = action.getActEnergyGrowthMultiplierModifier();
     if (!exp) {
         return 0;
@@ -284,7 +284,7 @@ export function getActEnergyGrowthMultiplierModifierForPlayer(action: WeaPersist
     }
 }
 
-export function getActCoZoneRadiusModifierForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Interface_IBwWar.IBwWar): number {
+export function getActCoZoneRadiusModifierForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Model_War.War): number {
     const exp = action.getActCoZoneRadiusModifier();
     if (!exp) {
         return 0;
@@ -309,7 +309,7 @@ export function getActCoZoneRadiusModifierForPlayer(action: WeaPersistentModifyP
 export function getActAiUnitProductionBonusScore({ action, playerIndex, war, unitTypeId, gridIndex }: {
     action      : WeaPersistentModifyPlayerAttribute;
     playerIndex : number;
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
     unitTypeId  : number;
     gridIndex   : AuxiliaryTypes_GridIndex.GridIndex;
  }): number {
@@ -354,9 +354,9 @@ function getEpResultNumberArray(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<s
     }
 }
 
-export function applyWithExtraData(_action: WeaPersistentModifyPlayerAttribute, war: BaseWar_Interface_IBwWar.IBwWar, actionId: number): void {
+export function applyWithExtraData(_action: WeaPersistentModifyPlayerAttribute, war: BaseWar_Model_War.War, actionId: number): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyWithoutExtraData(_action: WeaPersistentModifyPlayerAttribute, war: BaseWar_Interface_IBwWar.IBwWar, actionId: number): void {
+export function applyWithoutExtraData(_action: WeaPersistentModifyPlayerAttribute, war: BaseWar_Model_War.War, actionId: number): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }

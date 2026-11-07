@@ -11,6 +11,10 @@ import {
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
 export class HrwWar extends ReplayWar_Model_RwWarBase.RwWarBase implements HalfwayReplayWar_Interface_IHrwWar.IHrwWar {
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
     public init(warData: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         super.init(warData, gameConfig);
 

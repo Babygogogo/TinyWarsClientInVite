@@ -5,19 +5,19 @@ import {
     FloatText,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Players_Constants,
     Utils_ClientErrorCode,
     Helpers_Misc,
     Lang_Utils,
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoSystemHandleBootPlayer } from "../../../proto/schema/CommonProto/WarOperation/WoSystemHandleBootPlayer.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemHandleBootPlayer, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeSystemHandleBootPlayer(war, action);
     } else {
@@ -25,7 +25,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSy
     }
 }
 
-function fastExeSystemHandleBootPlayer(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemHandleBootPlayer): void {
+function fastExeSystemHandleBootPlayer(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -38,7 +38,7 @@ function fastExeSystemHandleBootPlayer(war: BaseWar_Interface_IBwWar.IBwWar, act
     }
 }
 
-async function normalExeSystemHandleBootPlayer(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemHandleBootPlayer): Promise<void> {
+async function normalExeSystemHandleBootPlayer(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): Promise<void> {
     const desc = await getDesc(war, action);
     (desc) && (FloatText.show(desc));
 
@@ -63,7 +63,7 @@ async function normalExeSystemHandleBootPlayer(war: BaseWar_Interface_IBwWar.IBw
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemHandleBootPlayer): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

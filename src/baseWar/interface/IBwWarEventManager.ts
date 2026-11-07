@@ -1,6 +1,6 @@
 import {
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
     type WarEvents_Types,
@@ -19,7 +19,7 @@ export interface IBwWarEventManager {
     serializeForCreateSfw(): SerialWarEventManager;
     serializeForCreateMfr(): SerialWarEventManager;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     getWarEventFullData(): WarEventFullData | null;
     setWarEventFullData(data: WarEventFullData | null): void;

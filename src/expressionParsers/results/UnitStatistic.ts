@@ -2,7 +2,7 @@ import {
     ExpressionParsers_Results_Base,
     Helpers_Collection,
     ExpressionParsers_Enums,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 
 export class UnitStatistic extends ExpressionParsers_Results_Base.Base {
@@ -14,7 +14,7 @@ export class UnitStatistic extends ExpressionParsers_Results_Base.Base {
     public readonly normalizedHpGain                : number;
     public readonly normalizedHpLoss                : number;
 
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, data: { playerIndexArray: number[], unitTypeArray: number[], groupedObserverTeamIndexesArray: number[], unitGain: number, unitLoss: number, normalizedHpGain: number, normalizedHpLoss: number }) {
+    public constructor(war: BaseWar_Model_War.War, data: { playerIndexArray: number[], unitTypeArray: number[], groupedObserverTeamIndexesArray: number[], unitGain: number, unitLoss: number, normalizedHpGain: number, normalizedHpLoss: number }) {
         super(war);
 
         this.playerIndexArray                   = data.playerIndexArray;

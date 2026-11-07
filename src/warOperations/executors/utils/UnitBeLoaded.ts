@@ -6,19 +6,19 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Units_Constants,
     Utils_ClientErrorCode,
     Helpers_Misc,
     Lang_Utils,
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoUnitBeLoaded } from "../../../proto/schema/CommonProto/WarOperation/WoUnitBeLoaded.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitBeLoaded, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitBeLoaded, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitBeLoaded(war, action);
     } else {
@@ -26,7 +26,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitBeLoaded(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitBeLoaded): void {
+function fastExeUnitBeLoaded(war: BaseWar_Model_War.War, action: WoUnitBeLoaded): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -54,7 +54,7 @@ function fastExeUnitBeLoaded(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUni
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
-async function normalExeUnitBeLoaded(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitBeLoaded): Promise<void> {
+async function normalExeUnitBeLoaded(war: BaseWar_Model_War.War, action: WoUnitBeLoaded): Promise<void> {
     // const desc = await war.getDescForExeUnitBeLoaded(action);
     // (desc) && (FloatText.show(desc));
 
@@ -80,7 +80,7 @@ async function normalExeUnitBeLoaded(war: BaseWar_Interface_IBwWar.IBwWar, actio
             const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
             if ((lastNode) && (lastNode.getIsVisible()) && (!lastNode.getIsBlocked())) {
                 const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBeLoaded_01);
-                unitMap.getUnitOnMap(gridIndex)?.updateView();
+                unitMap.getUnitOnMap(gridIndex)?.flushDataToView();
             }
         }
 
@@ -116,7 +116,7 @@ async function normalExeUnitBeLoaded(war: BaseWar_Interface_IBwWar.IBwWar, actio
                 updateViewAfterMove : true,
             });
             focusUnit.setViewVisible(false);
-            loaderUnit.updateView();
+            loaderUnit.flushDataToView();
         }
 
         WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
@@ -126,7 +126,7 @@ async function normalExeUnitBeLoaded(war: BaseWar_Interface_IBwWar.IBwWar, actio
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitBeLoaded): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoUnitBeLoaded): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

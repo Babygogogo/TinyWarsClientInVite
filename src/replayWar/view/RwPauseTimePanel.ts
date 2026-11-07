@@ -71,7 +71,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        war.setIsShowTurnStartPopUp(!war.getIsShowTurnStartPopUp());
+        LocalData_Storage.setIsShowReplayTurnStartPopup(!LocalData_Storage.getIsShowReplayTurnStartPopup());
         this._updateLabelTurnStart();
     }
 
@@ -94,6 +94,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelTurnStart(): void {
-        this._labelTurnStart.setLangText(this.getOpenData()?.war.getIsShowTurnStartPopUp() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTurnStart.setLangText(LocalData_Storage.getIsShowReplayTurnStartPopup() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
     }
 }

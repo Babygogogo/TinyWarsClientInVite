@@ -1,7 +1,6 @@
 import {
     type AuxiliaryTypes_AuxiliaryTypes,
     AuxiliaryTypes_DamageCalculatorPlayerData,
-    type BaseWar_Interface_IBwWar,
     Cos_Constants,
     CoSkills_Constants,
     CoSkills_Utils_Persistent_SelfUnitDefense,
@@ -31,6 +30,7 @@ import {
     Tiles_TileViewData,
     Tiles_Utils_Common,
     Ui_Components_UiPanel,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -62,7 +62,7 @@ type DamageRange = {
 let _savedData: CalculatorData | null = null;
 
 export interface OpenData {
-    war                     : BaseWar_Interface_IBwWar.IBwWar | null;
+    war                     : BaseWar_Model_War.War | null;
     data                    : CalculatorData | null;
     needReviseWeaponType    : boolean;
 }
@@ -451,7 +451,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnUnitView2(): void {
         this._handleTouchedConUnitView(this.getOpenData()?.war, this._getCalculatorData().defenderData, 2);
     }
-    private _handleTouchedConUnitView(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>, playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData, playerIndex: number): void {
+    private _handleTouchedConUnitView(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Model_War.War>, playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData, playerIndex: number): void {
         const gameConfig = this._getCalculatorData().gameConfig;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleUnitTypePanel, {
             gameConfig       : gameConfig,
@@ -1001,7 +1001,7 @@ function getNextUnitWeaponType(gameConfig: GameConfigs_GameConfig.GameConfig, un
         return null;
     }
 }
-function createTileViewData(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>, tileType: number, playerIndex: number, gameConfig: GameConfigs_GameConfig.GameConfig): Tiles_TileViewData.TileViewData {
+function createTileViewData(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Model_War.War>, tileType: number, playerIndex: number, gameConfig: GameConfigs_GameConfig.GameConfig): Tiles_TileViewData.TileViewData {
     const objectType    = Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType));
     const baseType      = Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType));
     if (TileObjects_Utils.checkIsValidPlayerIndexForTileObject({

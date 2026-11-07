@@ -68,7 +68,7 @@ export async function loadWar(warData: SerialWar): Promise<HalfwayReplayWar_Inte
         unloadWar();
     }
 
-    const war = new HalfwayReplayWar_Model_HrwWar.HrwWar();
+    const war = new HalfwayReplayWar_Model_HrwWar.HrwWar(true);
     war.init(warData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
     war.startRunning().startRunningView();
     _war = war;

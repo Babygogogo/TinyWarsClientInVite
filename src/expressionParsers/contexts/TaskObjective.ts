@@ -7,8 +7,8 @@ import {
     ExpressionParsers_Results_War,
     Lang_Constants,
     ExpressionParsers_Contexts_War,
+    type BaseWar_Model_War,
     type ExpressionParsers_Types,
-    type BaseWar_Interface_IBwWar,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 import type { TaskObjective as ProtoTaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
@@ -50,7 +50,7 @@ export class TaskObjective extends ExpressionParsers_Contexts_Base.Base {
     private readonly _state         : TaskObjectiveState | null;
     private _contextWar             : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, objectiveId: number) {
+    public constructor(war: BaseWar_Model_War.War, objectiveId: number) {
         super(war);
 
         this._taskObjective = war.getInstanceWarRule()?.getTaskObjectiveFullData()?.getTaskObjectiveArray().find(v => (v.getObjectiveId()) === objectiveId) ?? null;

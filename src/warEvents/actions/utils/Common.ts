@@ -72,8 +72,8 @@ import {
     TileBuffs_Constants,
     UnitBuffs_Constants,
     Units_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type MapEditor_Interface_IMeWar,
     type AuxiliaryTypes_MapSize,
 } from "../../../internal.ts";
@@ -544,7 +544,7 @@ export function getDetailDescForAction(action: WarEventAction, gameConfig: GameC
         || (WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getDetailDesc(action.getWeaPersistentModifyUnitAttribute()));
 }
 
-export function getErrorTipForAction(fullData: WarEventFullData, action: WarEventAction, war: BaseWar_Interface_IBwWar.IBwWar): string | null {
+export function getErrorTipForAction(fullData: WarEventFullData, action: WarEventAction, war: BaseWar_Model_War.War): string | null {
     const actionsCountTotal = fullData.getActionArray().length;
     if (actionsCountTotal > WarEvents_Actions_Constants_Common.MaxCounts.PerMap) {
         return `${Lang_Utils.getText(Lang_Constants.TextType.A0184)} (${actionsCountTotal}/${WarEvents_Actions_Constants_Common.MaxCounts.PerMap})`;

@@ -4,8 +4,8 @@ import {
     Lang_Utils,
     Players_Constants,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WecTurnAndPlayer } from "../../../proto/schema/CommonProto/WarEvent/WecTurnAndPlayer.ts";
 
@@ -59,7 +59,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         ...subTextArray,
     ].join(`\n`);
 }
-export function getErrorTip(data: WecTurnAndPlayer, war: BaseWar_Interface_IBwWar.IBwWar): string | null {
+export function getErrorTip(data: WecTurnAndPlayer, war: BaseWar_Model_War.War): string | null {
     {
         const comparator = data.getTurnIndexComparator();
         if ((comparator == null) || (!ValueAndComparators_Utils.checkIsValidValueComparatorId(comparator))) {
@@ -162,7 +162,7 @@ export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinabl
     return true;
 }
 
-export function checkIsMeet(condition: WecTurnAndPlayer, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+export function checkIsMeet(condition: WecTurnAndPlayer, war: BaseWar_Model_War.War): boolean {
     const turnManager   = war.getTurnManager();
     const turnIndex     = turnManager.getTurnIndex();
     {

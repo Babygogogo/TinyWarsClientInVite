@@ -11,7 +11,7 @@ import {
     Units_UnitView,
     Units_UnitViewPool,
     type AuxiliaryTypes_AuxiliaryTypes,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -25,7 +25,7 @@ import type { Info } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommo
 let IsShowHp = true;
 
 export interface OpenData {
-    war             : BaseWar_Interface_IBwWar.IBwWar;
+    war             : BaseWar_Model_War.War;
     infoArray       : Info[];
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {

@@ -7,14 +7,14 @@ import {
     Visibilities_Utils,
     WarOperations_Executors_Utils_Common,
     AuxiliaryTypes_MovePath,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
 import type { WoUnitSelfDetonate } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSelfDetonate.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSelfDetonate, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitSelfDetonate, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitSelfDetonate(war, action);
     } else {
@@ -22,7 +22,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSelfDetonate): void {
+function fastExeUnitSelfDetonate(war: BaseWar_Model_War.War, action: WoUnitSelfDetonate): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -88,7 +88,7 @@ function fastExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, action: W
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSelfDetonate): Promise<void> {
+async function normalExeUnitSelfDetonate(war: BaseWar_Model_War.War, action: WoUnitSelfDetonate): Promise<void> {
     // const desc = await war.getDescForExeUnitSelfDetonate(action);
     // (desc) && (FloatText.show(desc));
 
@@ -179,7 +179,7 @@ async function normalExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, a
 
             const gridVisionEffect = war.getGridVisualEffect();
             for (const unit of targetUnits) {
-                unit.updateView();
+                unit.flushDataToView();
                 gridVisionEffect.showEffectDamage(unit.getGridIndex());
             }
         }

@@ -3,8 +3,8 @@ import {
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwGridVisualEffect,
     type BaseWar_Interface_IBwGridVisualEffectView,
-    type BaseWar_Interface_IBwWar,
     Notifications_Dispatcher,
+    type BaseWar_Model_War,
     type Notifications_Types,
 } from "../../internal.ts";
 
@@ -29,7 +29,7 @@ export class BwGridVisualEffect implements BaseWar_Interface_IBwGridVisualEffect
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         Notifications_Dispatcher.addEventListeners(this._notifyListeners, this, false, 1);
     }
     public startRunningView(): void {

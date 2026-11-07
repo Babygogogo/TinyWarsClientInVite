@@ -7,8 +7,8 @@ import {
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
     Units_Unit,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_MapSize,
     Units_Constants,
     TileBuffs_Constants,
@@ -31,7 +31,7 @@ import type { WoPlayerProduceUnit } from "../../../proto/schema/CommonProto/WarO
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerProduceUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExePlayerProduceUnit(war, action);
     } else {
@@ -39,11 +39,11 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPl
     }
 }
 
-function fastExePlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerProduceUnit): void {
+function fastExePlayerProduceUnit(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit): void {
     handlePlayerProduceUnit(war, action, true);
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
-function normalExePlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerProduceUnit): void {
+function normalExePlayerProduceUnit(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit): void {
     // const desc = await war.getDescForExePlayerProduceUnit(action);
     // (desc) && (FloatText.show(desc));
 
@@ -51,7 +51,7 @@ function normalExePlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
-function handlePlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerProduceUnit, isFastExecute: boolean): void {
+function handlePlayerProduceUnit(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit, isFastExecute: boolean): void {
     const extraData = action.getExtraData();
     if (extraData) {
         const commonExtraData = Helpers_Misc.getExisted(extraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_HandlePlayerProduceUnit_00);
@@ -183,7 +183,7 @@ function handlePlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: W
     }
 }
 
-function getPromotionForPlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, unitType: number): number {
+function getPromotionForPlayerProduceUnit(war: BaseWar_Model_War.War, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, unitType: number): number {
     const player                    = war.getPlayerInTurn();
     const coZoneRadius              = player.getCoZoneRadius();
     const gameConfig                = war.getGcData();
@@ -206,7 +206,7 @@ function getPromotionForPlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, 
     return promotion;
 }
 
-function getTeleportDestinationForPlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, player: Players_IPlayer.IPlayer, unitTypeId: number, tileGridIndex: AuxiliaryTypes_GridIndex.GridIndex, conCoUnitActionStateId: number | null): AuxiliaryTypes_GridIndex.GridIndex | null {
+function getTeleportDestinationForPlayerProduceUnit(war: BaseWar_Model_War.War, player: Players_IPlayer.IPlayer, unitTypeId: number, tileGridIndex: AuxiliaryTypes_GridIndex.GridIndex, conCoUnitActionStateId: number | null): AuxiliaryTypes_GridIndex.GridIndex | null {
     const tileMap           = war.getTileMap();
     const unitMap           = war.getUnitMap();
     const mapSize           = tileMap.getMapSize();
@@ -297,7 +297,7 @@ function compareDistanceList(list1: number[], list2: number[]): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerProduceUnit, gcData: GameConfigs_GameConfig.GameConfig): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit, gcData: GameConfigs_GameConfig.GameConfig): Promise<string | null> {
 
     if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
         return `${Lang_Utils.getText(Lang_Constants.TextType.B0095)} ${war.getWarOperationDescSuffix()}`;

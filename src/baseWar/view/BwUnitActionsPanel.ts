@@ -1,6 +1,5 @@
 import {
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
     type BaseWar_Model_BwTypes,
     Graphics_Utils,
     Helpers_Misc,
@@ -14,6 +13,7 @@ import {
     Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
@@ -30,7 +30,7 @@ const getGridWidth      = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCu
 const getGridHeight     = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
 export interface OpenData {
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
     destination : AuxiliaryTypes_GridIndex.GridIndex;
     actionList  : BaseWar_Model_BwTypes.DataForUnitAction[];
 }
@@ -161,7 +161,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const container = openData.war.getView().getFieldContainer();
+        const container = openData.war.getView()?.getFieldContainer();
+        if (container == null) {
+            return;
+        }
+
         const gridIndex = openData.destination;
         const stage     = Stages_StageManager.getStage();
         const group     = this._group;
@@ -197,7 +201,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForUnitActionRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     actionType          : Units_Constants.ActionTypeId;
     callback            : () => void;
     unit?               : Units_Unit.Unit;

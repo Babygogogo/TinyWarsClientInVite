@@ -21,7 +21,7 @@ import {
     Ui_Utils_UiSkinHelpers,
     Units_UnitViewPool,
     Visibilities_Utils,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Egret_Egret,
     type Notifications_Mapping,
     type Ui_Interfaces_IUiButton,
@@ -35,7 +35,7 @@ import {
 const _CELL_WIDTH   = 70;
 
 export interface OpenData {
-    war : BaseWar_Interface_IBwWar.IBwWar;
+    war : BaseWar_Model_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
@@ -454,7 +454,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
     }
 }
 
-function getObserverTeamIndexSet(war: BaseWar_Interface_IBwWar.IBwWar): Set<number> | null {
+function getObserverTeamIndexSet(war: BaseWar_Model_War.War): Set<number> | null {
     if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
         const set           = new Set<number>();
         const playerInTurn  = war.getPlayerInTurn();

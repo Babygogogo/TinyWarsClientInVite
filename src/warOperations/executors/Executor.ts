@@ -3,7 +3,6 @@ import {
     ActionPlanners_States_Idle,
     ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
-    type BaseWar_Interface_IBwWar,
     Utils_ClientErrorCode,
     Notifications_Dispatcher,
     WarOperations_Executors_Utils_Unknown,
@@ -40,11 +39,12 @@ import {
     WarOperations_Executors_Utils_UnitSurface,
     WarOperations_Executors_Utils_UnitUseCoSkill,
     WarOperations_Executors_Utils_UnitWait,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export async function checkAndExecute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoContainer, isFast: boolean): Promise<void> {
+export async function checkAndExecute(war: BaseWar_Model_War.War, action: WoContainer, isFast: boolean): Promise<void> {
     if (!war.getIsRunning()) {
         throw Helpers_Misc.newError(`!war.getIsRunning().`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_CheckAndExecute_00);
     }
@@ -89,7 +89,7 @@ export async function checkAndExecute(war: BaseWar_Interface_IBwWar.IBwWar, acti
     }
 }
 
-async function executeAction(war: BaseWar_Interface_IBwWar.IBwWar, action: WoContainer, isFast: boolean): Promise<void> {
+async function executeAction(war: BaseWar_Model_War.War, action: WoContainer, isFast: boolean): Promise<void> {
     const woPlayerDeleteUnit = action.getWoPlayerDeleteUnit();
     if (woPlayerDeleteUnit) {
         return await WarOperations_Executors_Utils_PlayerDeleteUnit.execute(war, woPlayerDeleteUnit, isFast);

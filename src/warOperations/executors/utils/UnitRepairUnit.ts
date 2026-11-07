@@ -6,13 +6,13 @@ import {
     AuxiliaryTypes_GridIndex,
     WarOperations_Executors_Utils_Common,
     AuxiliaryTypes_MovePath,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WoUnitRepairUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitRepairUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitRepairUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitRepairUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitRepairUnit(war, action);
     } else {
@@ -20,7 +20,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitRepairUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitRepairUnit): void {
+function fastExeUnitRepairUnit(war: BaseWar_Model_War.War, action: WoUnitRepairUnit): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -64,7 +64,7 @@ function fastExeUnitRepairUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitRepairUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitRepairUnit): Promise<void> {
+async function normalExeUnitRepairUnit(war: BaseWar_Model_War.War, action: WoUnitRepairUnit): Promise<void> {
     // const desc = await war.getDescForExeUnitRepairUnit(action);
     // (desc) && (FloatText.show(desc));
 
@@ -143,7 +143,7 @@ async function normalExeUnitRepairUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
                 }
             }
 
-            targetUnit.updateView();
+            targetUnit.flushDataToView();
             war.getGridVisualEffect().showEffectRepair(targetGridIndex);
         }
 

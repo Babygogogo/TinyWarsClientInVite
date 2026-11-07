@@ -1,6 +1,6 @@
 import {
     Ui_Components_UiPanel,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
@@ -10,7 +10,7 @@ import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 
 export type OpenData = {
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
     fullData    : WarEventFullData;
     condition   : WarEventCondition;
 };

@@ -9,8 +9,8 @@ import {
     ExpressionParsers_Parser,
     Lang_Constants,
     ExpressionParsers_Contexts_Weather,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WeaSetWeatherExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherExpr.ts";
 
@@ -89,7 +89,7 @@ export function getErrorTip(data: WeaSetWeatherExpr, customCounterNameSet: Set<s
 export async function applyWithExtraData(action: WeaSetWeatherExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetWeatherExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetWeatherExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const weatherManager = war.getWeatherManager();
     try {
         const context           = new ExpressionParsers_Contexts_Weather.Weather(weatherManager);

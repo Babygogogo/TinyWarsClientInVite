@@ -6,7 +6,7 @@ import {
     ExpressionParsers_Results_Num,
     ExpressionParsers_Parser,
     ExpressionParsers_Contexts_TaskObjective,
-    type BaseWar_Model_BwWar,
+    type BaseWar_Model_War,
     type TaskObjectives_ITaskObjectiveManager,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
@@ -16,7 +16,7 @@ import { SerialTaskObjectiveManager } from "../proto/schema/CommonProto/WarSeria
 
 export class TaskObjectiveManager implements TaskObjectives_ITaskObjectiveManager.ITaskObjectiveManager {
     private readonly _stateArray             : TaskObjectiveState[] = [];
-    private _war?                   : BaseWar_Model_BwWar.BwWar;
+    private _war?                   : BaseWar_Model_War.War;
 
     public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TaskObjectiveFullData>): void {
         if (data == null) {
@@ -56,14 +56,14 @@ export class TaskObjectiveManager implements TaskObjectives_ITaskObjectiveManage
         return this.serialize();
     }
 
-    public startRunning(war: BaseWar_Model_BwWar.BwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
     }
 
-    private _setWar(war: BaseWar_Model_BwWar.BwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    public getWar(): BaseWar_Model_BwWar.BwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war, Utils_ClientErrorCode.ClientErrorCode.BwWeatherManager_GetWar_00);
     }
 
@@ -173,7 +173,7 @@ export class TaskObjectiveManager implements TaskObjectives_ITaskObjectiveManage
     }
 }
 
-function evalProgress(war: BaseWar_Model_BwWar.BwWar, updater: string, objectiveId: number, defaultValue: number): number {
+function evalProgress(war: BaseWar_Model_War.War, updater: string, objectiveId: number, defaultValue: number): number {
     try {
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(updater).eval(new ExpressionParsers_Contexts_TaskObjective.TaskObjective(war, objectiveId), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {

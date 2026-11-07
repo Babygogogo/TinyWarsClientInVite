@@ -5,19 +5,19 @@ import {
     FloatText,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Players_Constants,
     Utils_ClientErrorCode,
     Helpers_Misc,
     Lang_Utils,
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoPlayerSurrender } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerSurrender.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerSurrender, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoPlayerSurrender, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExePlayerSurrender(war, action);
     } else {
@@ -25,7 +25,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPl
     }
 }
 
-function fastExePlayerSurrender(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerSurrender): void {
+function fastExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPlayerSurrender): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -38,7 +38,7 @@ function fastExePlayerSurrender(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
     }
 }
 
-async function normalExePlayerSurrender(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerSurrender): Promise<void> {
+async function normalExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPlayerSurrender): Promise<void> {
     const desc = await getDesc(war, action);
     (desc) && (FloatText.show(desc));
 
@@ -63,7 +63,7 @@ async function normalExePlayerSurrender(war: BaseWar_Interface_IBwWar.IBwWar, ac
 }
 
 
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerSurrender): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerSurrender): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

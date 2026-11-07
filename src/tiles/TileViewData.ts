@@ -1,5 +1,5 @@
 import {
-    BaseWar_Interface_IBwWar,
+    BaseWar_Model_War,
     ForceSkins_Constants,
     ForceSkins_Utils,
     Helpers_Collection,
@@ -44,7 +44,7 @@ export class TileViewData implements ITileViewData {
     public isHighlighted            = false;
     public readonly buffTypeIdList  = new Array<number>();
 
-    public static generateFromTile(tile: Tiles_Tile.Tile, war: BaseWar_Interface_IBwWar.IBwWar, ignorePosition: boolean): TileViewData {
+    public static generateFromTile(tile: Tiles_Tile.Tile, war: BaseWar_Model_War.War, ignorePosition: boolean): TileViewData {
         const playerIndex   = tile.getPlayerIndex();
         const baseTypeId    = tile.getBaseTypeId();
         const objectTypeId  = tile.getObjectTypeId();
@@ -78,7 +78,7 @@ export class TileViewData implements ITileViewData {
     }
 
     public static getNewSkinId({ war, playerIndex, baseTypeId, objectTypeId, hasFog, skinId }: {
-        war          : BaseWar_Interface_IBwWar.IBwWar;
+        war          : BaseWar_Model_War.War;
         playerIndex  : number;
         baseTypeId   : number;
         objectTypeId : number;

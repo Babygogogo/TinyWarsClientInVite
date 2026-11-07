@@ -1,9 +1,9 @@
 import {
+    type BaseWar_Model_War,
     type Players_Constants,
     type Cos_Constants,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
     type CoSkills_Constants,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
@@ -15,13 +15,13 @@ export interface IPlayer {
      
     init(data: SerialPlayer, gameConfig: GameConfigs_GameConfig.GameConfig): void;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     serialize(): SerialPlayer;
     serializeForCreateSfw(): SerialPlayer;
     serializeForCreateMfr(): SerialPlayer;
 
-    getWar(): BaseWar_Interface_IBwWar.IBwWar;
+    getWar(): BaseWar_Model_War.War;
 
     setFund(fund: number): void;
     getFund(): number;

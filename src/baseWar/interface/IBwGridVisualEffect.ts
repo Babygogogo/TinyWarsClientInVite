@@ -1,14 +1,14 @@
 import {
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwGridVisualEffectView,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 
 export interface IBwGridVisualEffect {
     init(): void;
     fastInit(): void;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
     startRunningView(): void;
     stopRunning(): void;
 

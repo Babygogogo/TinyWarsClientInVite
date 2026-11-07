@@ -992,7 +992,7 @@ export async function getCriticalErrorCodeForMapRawData(mapRawData: MapRawData):
         return Utils_ClientErrorCode.ClientErrorCode.MeUtility_GetSevereErrorCodeForMapRawData_00;
     }
 
-    const war = new MapEditor_Model_MeWar.MeWar();
+    const war = new MapEditor_Model_MeWar.MeWar(false);
     try {
         await war.initWithMapRawData({
             mapRawData                : mapRawData,

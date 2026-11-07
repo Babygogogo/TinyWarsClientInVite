@@ -1,7 +1,6 @@
 import {
     Cos_Constants,
     ForceSkins_Utils,
-    type BaseWar_Interface_IBwWar,
     MultiMatchWar_Model_MmwWar,
     MultiRankWar_Model_MrwWar,
     ReplayWar_Model_RwWar,
@@ -26,6 +25,7 @@ import {
     WarRules_Utils_CommonData,
     Users_Model,
     PlayerRules_Constants,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -42,7 +42,7 @@ import {
     WarTypes_Constants,
 } from "../../internal.ts";
 
- 
+
 const enum InfoType {
     Player,
     TeamIndex,
@@ -112,7 +112,7 @@ const CommonInfoTypes = [   // 需要和 CommonPlayerRuleTypes 保持一一对�
 ];
 
 export interface OpenData {
-    war : BaseWar_Interface_IBwWar.IBwWar;
+    war : BaseWar_Model_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
@@ -263,7 +263,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 const cursor    = war.getCursor();
                 cursor.setGridIndex(gridIndex);
                 cursor.updateView();
-                war.getView().tweenGridToCentralArea(gridIndex);
+                war.getView()?.tweenGridToCentralArea(gridIndex);
                 war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             },
@@ -518,7 +518,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 interface DataForRuleTitleRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index       : number;
     infoType    : InfoType;
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
 }
 class RuleTitleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForRuleTitleRenderer> {
     private readonly _imgBg!        : Ui_Interfaces_IUiImage.IUiImage;
@@ -591,7 +591,7 @@ class RuleTitleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 // InfoRenderer
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 interface DataForInfoRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     infoType            : InfoType;
     playerIndex         : number;
 }
@@ -960,7 +960,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     }
 }
 
-function getInfoTypesForTitleList(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>): InfoType[] {
+function getInfoTypesForTitleList(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Model_War.War>): InfoType[] {
     if (war == null) {
         return [];
     }
@@ -970,7 +970,7 @@ function getInfoTypesForTitleList(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable
         ...CommonInfoTypes,
     ];
 }
-function getInfoTypesForInfoList(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>): InfoType[] {
+function getInfoTypesForInfoList(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Model_War.War>): InfoType[] {
     if (war == null) {
         return [];
     }
@@ -1032,14 +1032,14 @@ function getInfoTypeName(type: InfoType): string | null {
         default                                 : return null;
     }
 }
-function checkCanModifyPlayerInfo(war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+function checkCanModifyPlayerInfo(war: BaseWar_Model_War.War): boolean {
     const warType = war.getWarType();
     return (warType === WarTypes_Constants.WarTypeId.ScwFog)
         || (warType === WarTypes_Constants.WarTypeId.ScwStd)
         || (warType === WarTypes_Constants.WarTypeId.SfwFog)
         || (warType === WarTypes_Constants.WarTypeId.SfwStd);
 }
-function getBannedCoCategoryIdArray(war: BaseWar_Interface_IBwWar.IBwWar, playerIndex: number): number[] | null {
+function getBannedCoCategoryIdArray(war: BaseWar_Model_War.War, playerIndex: number): number[] | null {
     const bannedCoIdArray = getBannedCoIdArray(war, playerIndex);
     if (bannedCoIdArray == null) {
         return null;
@@ -1048,7 +1048,7 @@ function getBannedCoCategoryIdArray(war: BaseWar_Interface_IBwWar.IBwWar, player
         return bannedCoIdArray.map(v => gameConfig.getCoBasicCfg(v)?.getCoCategoryId() ?? 0);
     }
 }
-function getBannedCoIdArray(war: BaseWar_Interface_IBwWar.IBwWar, playerIndex: number): number[] | null {
+function getBannedCoIdArray(war: BaseWar_Model_War.War, playerIndex: number): number[] | null {
     if (war instanceof AutoTourneys_Wars_War.War) {
         return war.getSettingsForAtw().getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex()) === playerIndex)?.getBannedCoIdArray() ?? [];
     } else if (war instanceof MultiRankWar_Model_MrwWar.MrwWar) {

@@ -12,6 +12,10 @@ import type { SettingsForMrw } from "../../proto/schema/CommonProto/WarSettings/
 export class MrwWar extends MultiPlayerWar_Model_MpwWar.MpwWar implements MultiRankWar_Interface_IMrwWar.IMrwWar {
     private _settingsForMrw?    : SettingsForMrw;
 
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
     public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
         this._setSettingsForMrw(Helpers_Misc.getExisted(data.getSettingsForMrw(), Utils_ClientErrorCode.ClientErrorCode.MrwWar_Init_00));

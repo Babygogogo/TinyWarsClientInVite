@@ -5,15 +5,15 @@ import {
     FloatText,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoSystemEndWar } from "../../../proto/schema/CommonProto/WarOperation/WoSystemEndWar.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndWar, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoSystemEndWar, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeSystemEndWar(war, action);
     } else {
@@ -22,11 +22,11 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSy
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function fastExeSystemEndWar(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndWar): void {
+function fastExeSystemEndWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): void {
     war.setIsEnded(true);
 }
 
-async function normalExeSystemEndWar(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndWar): Promise<void> {
+async function normalExeSystemEndWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): Promise<void> {
     const desc = await getDesc(war, action);
     (desc) && (FloatText.show(desc));
 
@@ -34,7 +34,7 @@ async function normalExeSystemEndWar(war: BaseWar_Interface_IBwWar.IBwWar, actio
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndWar): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoSystemEndWar): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

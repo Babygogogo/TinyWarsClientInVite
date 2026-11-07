@@ -5,7 +5,6 @@ import {
     ReplayWar_Model_RwWar,
     FloatText,
     SinglePlayerWar_Model_SpwWar,
-    type BaseWar_Interface_IBwWar,
     Notifications_Dispatcher,
     GamePanels_Dict,
     Helpers_ImageSource,
@@ -15,6 +14,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -27,7 +27,7 @@ import {
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 
 export interface OpenData {
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
     callback?   : (overridingSkinIdArray: number[] | undefined) => void;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {

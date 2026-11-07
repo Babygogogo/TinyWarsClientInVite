@@ -6,7 +6,6 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Units_Constants,
     Visibilities_Utils,
     Utils_ClientErrorCode,
@@ -14,12 +13,13 @@ import {
     Lang_Utils,
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoUnitSurface } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSurface.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSurface, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitSurface, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitSurface(war, action);
     } else {
@@ -27,7 +27,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitSurface(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSurface): void {
+function fastExeUnitSurface(war: BaseWar_Model_War.War, action: WoUnitSurface): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -52,7 +52,7 @@ function fastExeUnitSurface(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnit
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitSurface(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSurface): Promise<void> {
+async function normalExeUnitSurface(war: BaseWar_Model_War.War, action: WoUnitSurface): Promise<void> {
     // const desc = await war.getDescForExeUnitSurface(action);
     // (desc) && (FloatText.show(desc));
 
@@ -120,7 +120,7 @@ async function normalExeUnitSurface(war: BaseWar_Interface_IBwWar.IBwWar, action
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSurface): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoUnitSurface): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

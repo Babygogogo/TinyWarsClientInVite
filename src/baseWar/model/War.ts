@@ -6,7 +6,7 @@ import {
     BaseWar_Model_BwExecutedOperationManager,
     BaseWar_Model_BwRandomNumberManager,
     BaseWar_Model_BwWarStatisticsManager,
-    BaseWar_View_BwWarView,
+    BaseWar_View_WarView,
     BootTimers_Constants,
     Fields_Field,
     Helpers_Misc,
@@ -39,10 +39,8 @@ import {
     type BaseWar_Interface_IBwExecutedOperationManager,
     type BaseWar_Interface_IBwGridVisualEffect,
     type BaseWar_Interface_IBwRandomNumberManager,
-    type BaseWar_Interface_IBwWar,
     type BaseWar_Interface_IBwWarEventManager,
     type BaseWar_Interface_IBwWarStatisticsManager,
-    type BaseWar_Interface_IBwWarView,
     type Fields_IField,
     type FogMaps_IFogMap,
     type GameConfigs_GameConfig,
@@ -70,7 +68,7 @@ type DamagePreviewSettings = {
     }[];
 };
 
-export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
+export abstract class War {
     private readonly _weatherManager        = new Weathers_Manager.Manager();
     private readonly _turnManager           = new Turns_TurnManager.TurnManager();
     private readonly _executedActionManager = new BaseWar_Model_BwExecutedOperationManager.BwExecutedOperationManager();
@@ -81,7 +79,9 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
     private readonly _warStatisticsManager  = new BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager();
     private readonly _commonSettingManager  = new BaseWar_Model_BwCommonSettingManager.BwCommonSettingManager();
     private readonly _playerManager         = new Players_PlayerManager.PlayerManager();
-    private readonly _view                  = new BaseWar_View_BwWarView.BwWarView();
+
+    private _isNeedView             = false;
+    private _view                   : BaseWar_View_WarView.WarView | undefined;
 
     private _gameConfig             : GameConfigs_GameConfig.GameConfig | null = null;
     private _warId                  : number | null = null;
@@ -91,6 +91,14 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
     private _isEnded                = false;
     private _isViewingWarInfo       = false;
     private _overridingBgmCode      : number | null = null;
+
+    protected constructor(isNeedView: boolean) {
+        this._setIsNeedView(isNeedView);
+
+        if (isNeedView) {
+            this._setView(new BaseWar_View_WarView.WarView());
+        }
+    }
 
     private readonly _damagePreviewSettings  : DamagePreviewSettings = {
         isEnabled : false,
@@ -203,10 +211,10 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         this.setIsEnded(!!warData.getIsEnded());
 
         const warView = this.getView();
-        warView.fastInit(this);
+        warView?.fastInit(this);
         this.startRunning().startRunningView();
         this.updateTilesAndUnitsOnVisibilityChanged(false);
-        warView.updatePersistentText();
+        warView?.updatePersistentText();
 
         Sounds_SoundPlayer.playCoBgmWithWar({
             war                            : this,
@@ -216,13 +224,24 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
     }
 
     protected _initView(): void {
-        this.getView().init(this);
+        this.getView()?.init(this);
     }
     protected _fastInitView(): void {
-        this.getView().fastInit(this);
+        this.getView()?.fastInit(this);
     }
-    public getView(): BaseWar_Interface_IBwWarView.IBwWarView {
+
+    public getIsNeedView(): boolean {
+        return this._isNeedView;
+    }
+    private _setIsNeedView(isNeedView: boolean): void {
+        this._isNeedView = isNeedView;
+    }
+
+    public getView(): BaseWar_View_WarView.WarView | undefined {
         return this._view;
+    }
+    private _setView(view: BaseWar_View_WarView.WarView | undefined): void {
+        this._view = view;
     }
 
     public serializeForCreateSfw(): SerialWar {
@@ -325,7 +344,7 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         });
     }
 
-    public startRunning(): BaseWar_Interface_IBwWar.IBwWar {
+    public startRunning(): War {
         this.getCommonSettingManager().startRunning(this);
         this.getWeatherManager().startRunning(this);
         this.getWarEventManager().startRunning(this);
@@ -340,16 +359,16 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
 
         return this;
     }
-    public startRunningView(): BaseWar_Interface_IBwWar.IBwWar {
-        this.getView().startRunningView();
+    public startRunningView(): War {
+        this.getView()?.startRunningView();
         this.getField().startRunningView();
         this.getWeatherManager().startRunningView();
 
         return this;
     }
-    public stopRunning(): BaseWar_Interface_IBwWar.IBwWar {
+    public stopRunning(): War {
         this.getField().stopRunning();
-        this.getView().stopRunning();
+        this.getView()?.stopRunning();
         this.getWeatherManager().stopRunning();
 
         this._setIsRunning(false);
@@ -360,6 +379,12 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         this.stopRunning();
 
         this.getField().dispose();
+
+        const view = this.getView();
+        if (view) {
+            view.dispose();
+            this._setView(undefined);
+        }
     }
 
     private _setIsRunning(isRunning: boolean): void {

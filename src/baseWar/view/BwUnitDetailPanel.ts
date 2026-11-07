@@ -4,10 +4,10 @@ import {
     ActionPlanners_States_RequestingPlayerDeleteUnit,
     type AuxiliaryTypes_AuxiliaryTypes,
     AuxiliaryTypes_DamageCalculatorPlayerData,
-    type BaseWar_Interface_IBwWar,
     Common_Model_CommonModel,
     Common_View_CommonDamageCalculatorPanel,
     CoSkills_Constants,
+    type BaseWar_Model_War,
     type Egret_Egret,
     FloatText,
     ForceSkins_Constants,
@@ -347,7 +347,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         war.getTileMap().getView().updateCoZone();
                     }
 
-                    unit.getLoaderUnit()?.updateView();
+                    unit.getLoaderUnit()?.flushDataToView();
                     ActionPlanners_States_Idle.Idle.getInstance().apply(war.getActionPlanner());
                     Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex });
 
@@ -565,7 +565,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._btnDelete.setIsVisible(!!this.getOpenData()?.canDelete);
     }
 
-    private _createInfoHp(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
+    private _createInfoHp(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Hp,
@@ -574,7 +574,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoProductionCost(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
+    private _createInfoProductionCost(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.ProductionCost,
@@ -583,7 +583,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoEnergyPerNormalizedHp(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoEnergyPerNormalizedHp(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         const gameVersion = window.GAME_VERSION;
         if ((gameVersion !== GameVersions_Constants.TypeName.Test) &&
             (gameVersion !== GameVersions_Constants.TypeName.Trilogy)
@@ -599,7 +599,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             };
         }
     }
-    private _createInfoMovement(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
+    private _createInfoMovement(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Movement,
@@ -608,7 +608,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoFuel(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
+    private _createInfoFuel(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Fuel,
@@ -617,7 +617,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoPromotion(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
+    private _createInfoPromotion(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Promotion,
@@ -626,7 +626,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoAttackRange(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoAttackRange(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getMinAttackRange() == null
             ? null
             : {
@@ -637,7 +637,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoVision(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
+    private _createInfoVision(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Vision,
@@ -646,7 +646,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoPrimaryWeaponAmmo(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoPrimaryWeaponAmmo(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getPrimaryWeaponMaxAmmo() == null
             ? null
             : {
@@ -657,7 +657,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoBuildMaterial(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoBuildMaterial(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getMaxBuildMaterial() == null
             ? null
             : {
@@ -668,7 +668,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoProduceMaterial(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoProduceMaterial(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getMaxProduceMaterial() == null
             ? null
             : {
@@ -679,7 +679,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoFlareAmmo(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoFlareAmmo(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getFlareMaxAmmo() == null
             ? null
             : {
@@ -690,7 +690,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoActionState(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
+    private _createInfoActionState(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.ActionState,
@@ -699,7 +699,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoDiving(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoDiving(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return !unit.checkIsDiver()
             ? null
             : {
@@ -710,7 +710,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoIsCoOnboard(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoIsCoOnboard(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return {
             index    : 0,
             infoType : UnitInfoType.IsCoOnboard,
@@ -719,7 +719,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoLoadUnit(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoLoadUnit(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return unit.getLoadUnitCategoryId() == null
             ? null
             : {
@@ -730,7 +730,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoTag(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
+    private _createInfoTag(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Tag,
@@ -739,7 +739,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoAiMode(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoAiMode(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return ((war.getWarType() !== WarTypes_Constants.WarTypeId.Me) && (unit.getPlayer().getUserId() != null))
             ? null
             : {
@@ -750,7 +750,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoAiWeightedDestination(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer | null {
+    private _createInfoAiWeightedDestination(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer | null {
         return ((war.getWarType() !== WarTypes_Constants.WarTypeId.Me) && (unit.getPlayer().getUserId() != null))
             ? null
             : {
@@ -761,7 +761,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 panel    : this,
             };
     }
-    private _createInfoForbiddenLocation(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
+    private _createInfoForbiddenLocation(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.ForbiddenLocations,
@@ -770,7 +770,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             panel    : this,
         };
     }
-    private _createInfoForBuff(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_Unit.Unit): DataForInfoRenderer {
+    private _createInfoForBuff(war: BaseWar_Model_War.War, unit: Units_Unit.Unit): DataForInfoRenderer {
         return {
             index    : 0,
             infoType : UnitInfoType.Buff,
@@ -851,7 +851,7 @@ function sorterForDataForList(a: DataForDamageRenderer, b: DataForDamageRenderer
 interface DataForInfoRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index       : number;
     infoType    : UnitInfoType;
-    war         : BaseWar_Interface_IBwWar.IBwWar;
+    war         : BaseWar_Model_War.War;
     unit        : Units_Unit.Unit;
     panel       : Panel;
 }
@@ -1486,7 +1486,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0113),
             callback   : () => {
                 unit.setActionState(state === Units_Constants.ActionStateId.Acted ? Units_Constants.ActionStateId.Idle : Units_Constants.ActionStateId.Acted);
-                unit.updateView();
+                unit.flushDataToView();
                 ActionPlanners_States_Idle.Idle.getInstance().apply(war.getActionPlanner());
                 this._updateView();
                 openData.panel.updateUnitView();
@@ -1517,7 +1517,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             maxValue,
             callback     : value => {
                 unit.setCurrentBuildMaterial(value);
-                unit.updateView();
+                unit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
             },
@@ -1544,7 +1544,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             maxValue,
             callback     : value => {
                 unit.setFlareCurrentAmmo(value);
-                unit.updateView();
+                unit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
             },
@@ -1572,7 +1572,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             maxValue,
             callback     : value => {
                 unit.setCurrentFuel(value);
-                unit.updateView();
+                unit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
             },
@@ -1596,7 +1596,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0243),
             callback   : () => {
                 unit.setIsCoOnboard(!isCoOnboard);
-                unit.updateView();
+                unit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
 
@@ -1626,7 +1626,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             maxValue,
             callback     : value => {
                 unit.setCurrentHp(value);
-                unit.updateView();
+                unit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
             },
@@ -1649,7 +1649,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0114),
             callback   : () => {
                 unit.setIsDiving(!isDiving);
-                unit.updateView();
+                unit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
             },
@@ -1680,7 +1680,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             maxValue     : maxValue,
             callback     : value => {
                 unit.setAndValidatePrimaryWeaponCurrentAmmo(value);
-                unit.updateView();
+                unit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
             },
@@ -1708,7 +1708,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             maxValue     : maxValue,
             callback     : value => {
                 unit.setAndValidateCurrentProduceMaterial(value);
-                unit.updateView();
+                unit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
             },
@@ -1742,7 +1742,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             maxValue,
             callback     : value => {
                 unit.setCurrentPromotion(value);
-                unit.updateView();
+                unit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
             },
@@ -1813,7 +1813,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 unitMap.setUnitLoaded(newUnit);
                 unitMap.setNextUnitId(unitId + 1);
 
-                loaderUnit.updateView();
+                loaderUnit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
                 ActionPlanners_States_Idle.Idle.getInstance().apply(war.getActionPlanner());

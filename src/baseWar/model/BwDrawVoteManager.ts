@@ -3,8 +3,8 @@ import {
     Utils_ClientErrorCode,
     Helpers_Misc,
     type BaseWar_Interface_IBwDrawVoteManager,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 import type { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import type { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
@@ -12,7 +12,7 @@ import type { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSeri
 export class BwDrawVoteManager implements BaseWar_Interface_IBwDrawVoteManager.IBwDrawVoteManager {
     private _remainingVotes     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     private _drawVoteData       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager>;
-    private _war?               : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?               : BaseWar_Model_War.War;
 
     public init(
         playerManagerData   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayerManager>,
@@ -47,7 +47,7 @@ export class BwDrawVoteManager implements BaseWar_Interface_IBwDrawVoteManager.I
         this._setDrawVoteData(drawVoteManagerData);
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
     }
 
@@ -160,10 +160,10 @@ export class BwDrawVoteManager implements BaseWar_Interface_IBwDrawVoteManager.I
         }
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    private _getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    private _getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 

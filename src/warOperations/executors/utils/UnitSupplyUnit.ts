@@ -5,20 +5,20 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Units_Constants,
     Utils_ClientErrorCode,
     Helpers_Misc,
     Lang_Utils,
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
+    type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
 
 import type { WoUnitSupplyUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSupplyUnit.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSupplyUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitSupplyUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitSupplyUnit(war, action);
     } else {
@@ -26,7 +26,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSupplyUnit): void {
+function fastExeUnitSupplyUnit(war: BaseWar_Model_War.War, action: WoUnitSupplyUnit): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -64,7 +64,7 @@ function fastExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSupplyUnit): Promise<void> {
+async function normalExeUnitSupplyUnit(war: BaseWar_Model_War.War, action: WoUnitSupplyUnit): Promise<void> {
     // const desc = await war.getDescForExeUnitSupplyUnit(action);
     // (desc) && (FloatText.show(desc));
 
@@ -132,7 +132,7 @@ async function normalExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
 
             const gridVisionEffect = war.getGridVisualEffect();
             for (const unit of suppliedUnits) {
-                unit.updateView();
+                unit.flushDataToView();
                 gridVisionEffect.showEffectSupply(unit.getGridIndex());
             }
         }
@@ -144,7 +144,7 @@ async function normalExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSupplyUnit): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoUnitSupplyUnit): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

@@ -10,8 +10,8 @@ import {
     Numbers_Constants,
     Helpers_Misc,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type Units_Unit,
     type AuxiliaryTypes_MapSize,
@@ -272,7 +272,7 @@ export async function applyWithExtraData(_action: WeaModifyUnitBuffSimple): Prom
     // nothing to do
 }
 
-export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetUnitDict = new Map<Units_Unit.Unit, UnitBuff[]>();
     {
         const tileMap               = war.getTileMap();
@@ -354,7 +354,7 @@ export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isF
             targetUnit.setBuffList(newBuffList);
 
             if (!isFastExecute) {
-                targetUnit.updateView();
+                targetUnit.flushDataToView();
             }
         }
     }

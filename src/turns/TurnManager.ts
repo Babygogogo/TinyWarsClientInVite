@@ -6,7 +6,7 @@ import {
     Turns_Constants,
     Turns_PhaseHandlers_WithExtraData,
     Turns_PhaseHandlers_WithoutExtraData,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Turns_ITurnManager,
     type Turns_Types,
 } from "../internal.ts";
@@ -20,7 +20,7 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
     private _phaseCode?             : Turns_Constants.PhaseCode;
     private _enterTurnTime?         : number;
 
-    private _war?                   : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                   : BaseWar_Model_War.War;
     private _hasUnitOnBeginningTurn = false;
 
     public init(data: SerialTurnManager, playersCountUnneutral: number): void {
@@ -47,7 +47,7 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
         this.init(data, playersCountUnneutral);
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
     }
 
@@ -66,10 +66,10 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
         return this.serializeForCreateSfw();
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 

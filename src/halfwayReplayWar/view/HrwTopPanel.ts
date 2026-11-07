@@ -260,7 +260,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 const cursor    = war.getCursor();
                 cursor.setGridIndex(gridIndex);
                 cursor.updateView();
-                war.getView().tweenGridToCentralArea(gridIndex);
+                war.getView()?.tweenGridToCentralArea(gridIndex);
                 war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             },

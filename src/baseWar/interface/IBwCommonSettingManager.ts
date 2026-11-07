@@ -1,6 +1,6 @@
 import {
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_MapSize,
     type WarTypes_Constants,
 } from "../../internal.ts";
@@ -24,7 +24,7 @@ export interface IBwCommonSettingManager {
     serializeForCreateSfwWithTemplateWarRule(templateWarRule: TemplateWarRule): SettingsForCommon;
     serializeForCreateMfwWithTemplateWarRule(templateWarRule: TemplateWarRule): SettingsForCommon;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     getSettingsForCommon(): SettingsForCommon;
     getTurnsLimit(): number;

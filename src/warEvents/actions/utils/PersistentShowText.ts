@@ -2,8 +2,8 @@ import {
     Lang_Utils,
     WarEvents_Actions_Constants_PersistentShowText,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WeaPersistentShowText } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentShowText.ts";
 
@@ -53,9 +53,9 @@ export function getErrorTip(data: WeaPersistentShowText): string | null {
     return null;
 }
 
-export function applyWithExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Interface_IBwWar.IBwWar): void {
+export function applyWithExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyWithoutExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Interface_IBwWar.IBwWar): void {
+export function applyWithoutExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }

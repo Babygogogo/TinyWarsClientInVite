@@ -17,7 +17,7 @@ import {
     Units_Unit,
     WarTypes_Constants,
     WarTypes_Utils,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Egret_Egret,
     type Notifications_Mapping,
     type Ui_Interfaces_IUiContainer,
@@ -35,7 +35,7 @@ const _IMAGE_SOURCE_CAPTURE = `c04_t10_s04_f00`;
 // const _CELL_WIDTH           = 80;
 
 export interface OpenData {
-    war : BaseWar_Interface_IBwWar.IBwWar;
+    war : BaseWar_Model_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;

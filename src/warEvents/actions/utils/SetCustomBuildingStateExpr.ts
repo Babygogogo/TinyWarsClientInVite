@@ -12,7 +12,7 @@ import {
     ExpressionParsers_Parser,
     Lang_Constants,
     ExpressionParsers_Contexts_Tile,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -808,7 +808,7 @@ function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateExpr, t
 export async function applyWithExtraData(action: WeaSetCustomBuildingStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomBuildingData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if ((!tile.getIsCustomizableBuilding()) || (!checkIsMeetConditionForTile(action, tile))) {
@@ -855,7 +855,7 @@ function createNewTileCustomBuildingData(action: WeaSetCustomBuildingStateExpr, 
         blockEnemyUnitTypeArray      : blockEnemyUnitTypeArray,
     });
 }
-function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, TileCustomBuildingData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, TileCustomBuildingData>, war: BaseWar_Model_War.War, isFast: boolean): void {
     for (const [tile, tileCustomBuildingData] of dict) {
         const cfg       = tile.getTemplateCfg();
         const newData   = Tiles_Utils_Serialization.create({

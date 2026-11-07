@@ -7,14 +7,14 @@ import {
     Helpers_Misc,
     AuxiliaryTypes_GridIndex,
     Turns_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_MovePath,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitDropUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitDropUnit.ts";
 
-export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitDropUnit, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitDropUnit, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
         throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitDropUnit_00);
     }
@@ -51,7 +51,7 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitDr
     });
 }
 
-function checkIsDropDestinationsValid(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitDropUnit): boolean {
+function checkIsDropDestinationsValid(war: BaseWar_Model_War.War, action: WoUnitDropUnit): boolean {
     const destinations = action.getDropDestinations();
     if (destinations == null) {
         return false;
@@ -159,7 +159,7 @@ function checkIsDropDestinationsValid(war: BaseWar_Interface_IBwWar.IBwWar, acti
     return true;
 }
 
-function getRevisedDropDestinations(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitDropUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): AuxiliaryTypes_DropDestination.DropDestination[] {
+function getRevisedDropDestinations(war: BaseWar_Model_War.War, action: WoUnitDropUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): AuxiliaryTypes_DropDestination.DropDestination[] {
     const destinations: AuxiliaryTypes_DropDestination.DropDestination[] = [];
     if (!revisedPath.isBlocked) {
         const unitMap       = war.getUnitMap();

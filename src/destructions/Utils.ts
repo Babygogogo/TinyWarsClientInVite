@@ -10,12 +10,12 @@ import {
     Visibilities_Utils,
     type AuxiliaryTypes_BattleInfo,
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Units_Unit,
 } from "../internal.ts";
 import { WsUnitStatistics } from "../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
-export function destroyUnitOnMap(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, showExplosionEffect: boolean): Units_Unit.Unit[] {
+export function destroyUnitOnMap(war: BaseWar_Model_War.War, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, showExplosionEffect: boolean): Units_Unit.Unit[] {
     const unitMap               = war.getUnitMap();
     const unit                  = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex), Utils_ClientErrorCode.ClientErrorCode.DestructionHelpers_DestroyUnitOnMap_00);
     const destroyedUnits        = [unit];
@@ -50,7 +50,7 @@ export function destroyUnitOnMap(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex
 
     if (showExplosionEffect) {
         war.getGridVisualEffect().showEffectExplosion(gridIndex);
-        war.getView().showVibration();
+        war.getView()?.showVibration();
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
     }
 
@@ -58,7 +58,7 @@ export function destroyUnitOnMap(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex
 }
 export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIndex, isEstimated }: {
     battleInfo          : AuxiliaryTypes_BattleInfo.BattleInfo;
-    war                 : BaseWar_Interface_IBwWar.IBwWar;
+    war                 : BaseWar_Model_War.War;
     gridIndex           : AuxiliaryTypes_GridIndex.GridIndex;
     isEstimated         : boolean;
 }): void {
@@ -122,7 +122,7 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
         battleInfo.destroyedUnits.set(u.getUnitId(), u);
     }
 }
-export function destroyUnitLoaded(war: BaseWar_Interface_IBwWar.IBwWar, unitId: number): Units_Unit.Unit[] {
+export function destroyUnitLoaded(war: BaseWar_Model_War.War, unitId: number): Units_Unit.Unit[] {
     const unitMap           = war.getUnitMap();
     const targetUnit        = Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId));
     const destroyedUnits    = [targetUnit];
@@ -178,7 +178,7 @@ function updatePlayersOnUnitDestroyed(destroyedUnits: Units_Unit.Unit[]): void {
     }
 }
 /** @param destroyedUnits 必须属于同一个玩家 */
-function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: AuxiliaryTypes_BattleInfo.BattleInfo, isEstimated: boolean, destroyedUnits: Units_Unit.Unit[], war: BaseWar_Interface_IBwWar.IBwWar): void {
+function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: AuxiliaryTypes_BattleInfo.BattleInfo, isEstimated: boolean, destroyedUnits: Units_Unit.Unit[], war: BaseWar_Model_War.War): void {
     const destroyedCoUnitsCount = destroyedUnits.filter(u => u.getIsCoOnboard()).length;
     if (destroyedCoUnitsCount > 0) {
         const player      = destroyedUnits[0].getPlayer();
@@ -207,7 +207,7 @@ function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: Auxiliar
     }
 }
 
-export function destroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, playerIndex: number, showExplosionEffect: boolean): void {
+export function destroyPlayerForce(war: BaseWar_Model_War.War, playerIndex: number, showExplosionEffect: boolean): void {
     const unitMap               = war.getUnitMap();
     const tileMap               = war.getTileMap();
     const warStatisticsManager  = war.getWarStatisticsManager();
@@ -256,7 +256,7 @@ export function destroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, playerI
         }
     }
     if ((showExplosionEffect) && (hasRemovedUnit)) {
-        war.getView().showVibration();
+        war.getView()?.showVibration();
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
     }
 
@@ -287,7 +287,7 @@ export function destroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, playerI
     war.getDrawVoteManager().handlePlayerForceDestruction();
 }
 
-export function removeUnitOnMap(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
+export function removeUnitOnMap(war: BaseWar_Model_War.War, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
     war.getTileMap().getTile(gridIndex).updateOnUnitLeave();
 
     const unitMap   = war.getUnitMap();

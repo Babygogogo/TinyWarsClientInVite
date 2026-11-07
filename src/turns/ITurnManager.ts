@@ -1,5 +1,5 @@
 import {
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Turns_Constants,
     type Turns_Types,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -13,13 +13,13 @@ export interface ITurnManager {
     init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTurnManager>, playersCountUnneutral: number): void;
     fastInit(data: SerialTurnManager, playersCountUnneutral: number): void;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     serialize(): SerialTurnManager;
     serializeForCreateSfw(): SerialTurnManager;
     serializeForCreateMfr(): SerialTurnManager;
 
-    getWar(): BaseWar_Interface_IBwWar.IBwWar;
+    getWar(): BaseWar_Model_War.War;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The functions for running turn.

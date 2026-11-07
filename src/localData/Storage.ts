@@ -47,6 +47,7 @@ const KEY_STAGE_SCALE                           = KEY_PREFIX + "StageScale";
 // const KEY_STAGE_CAN_ROTATE                      = KEY_PREFIX + "StageCanRotate";
 const KEY_AUTO_TOURNEY_NOTIFICATION             = KEY_PREFIX + "AutoTourneyNotification";
 const KEY_REPLAY_PAUSE_TIME                     = KEY_PREFIX + "ReplayPauseTime";
+const KEY_SHOW_REPLAY_TURN_START_POPUP          = KEY_PREFIX + "ShowReplayTurnStartPopup";
 const KEY_MPW_OVERRIDING_SKIN_ID_ARRAY          = KEY_PREFIX + "MpwOverridingSkinIdArray";
 const KEY_RW_OVERRIDING_SKIN_ID_ARRAY           = KEY_PREFIX + "RwOverridingSkinIdArray";
 
@@ -217,13 +218,22 @@ export function getIsAutoTourneyNotified(tourneyId: number): boolean {
     return getString(`${KEY_AUTO_TOURNEY_NOTIFICATION}${tourneyId}`) === VALUE_TRUE;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 export function setReplayPauseTime(pauseTime: number): void {
     setValue(KEY_REPLAY_PAUSE_TIME, `${pauseTime}`);
 }
 export function getReplayPauseTime(): number {
-    return getInt(KEY_REPLAY_PAUSE_TIME) || 500;
+    return getInt(KEY_REPLAY_PAUSE_TIME) ?? 500;
 }
 
+export function getIsShowReplayTurnStartPopup(): boolean {
+    return getString(KEY_SHOW_REPLAY_TURN_START_POPUP) !== VALUE_FALSE;
+}
+export function setIsShowReplayTurnStartPopup(isShow: boolean): void {
+    setValue(KEY_SHOW_REPLAY_TURN_START_POPUP, isShow ? VALUE_TRUE : VALUE_FALSE);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 export function getMpwOverridingSkinIdArray(warId: number): number[] | undefined {
     const str = getString(`${KEY_MPW_OVERRIDING_SKIN_ID_ARRAY}${warId}`);
     return !str ? undefined : str.split(`,`).map(v => parseInt(v));

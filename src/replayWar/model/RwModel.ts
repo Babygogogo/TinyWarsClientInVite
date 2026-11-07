@@ -207,7 +207,7 @@ export async function loadWar(warData: SerialWar, replayId: number): Promise<Rep
         }
     }
 
-    const war = new ReplayWar_Model_RwWar.RwWar();
+    const war = new ReplayWar_Model_RwWar.RwWar(true);
     war.setReplayId(replayId);
     war.init(warData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
     war.startRunning().startRunningView();

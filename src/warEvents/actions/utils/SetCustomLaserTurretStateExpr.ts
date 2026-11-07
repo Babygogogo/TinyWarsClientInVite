@@ -9,7 +9,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_Tile,
     Tiles_Constants_Common,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -604,7 +604,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretState
 export async function applyWithExtraData(_action: WeaSetCustomLaserTurretStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretStateExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomLaserTurretData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customLaserTurretData = tile.getFinalLaserTurretData();
@@ -650,7 +650,7 @@ function createNewTileCustomLaserTurretData(action: WeaSetCustomLaserTurretState
         offsetPrimaryAmmoPercentage : offsetPrimaryAmmoPercentage,
     });
 }
-function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, TileCustomLaserTurretData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, TileCustomLaserTurretData>, war: BaseWar_Model_War.War, isFast: boolean): void {
     for (const [tile, tileCustomLaserTurretData] of dict) {
         const cfg       = tile.getTemplateCfg();
         const newData   = Tiles_Utils_Serialization.create({

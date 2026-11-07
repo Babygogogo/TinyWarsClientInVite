@@ -2,25 +2,25 @@ import {
     Tween_Executor,
     Ui_Components_UiPanel,
     Timer_TimerModel,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiContainer,
 } from "../../internal.ts";
 
 export interface OpenData {
-    war: BaseWar_Interface_IBwWar.IBwWar;
+    war: BaseWar_Model_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _groupAll! : Ui_Interfaces_IUiContainer.IUiContainer;
 
     protected override async _doApplyOpenData(): Promise<void> {
-        const openData = this.getOpenData();
-        if (openData == null) {
+        const warView = this.getOpenData()?.war.getView();
+        if (warView == null) {
             return;
         }
 
         const groupAll = this._groupAll;
         groupAll.removeUiChildren();
-        groupAll.addUiChild(openData.war.getView());
+        groupAll.addUiChild(warView);
     }
     protected override async _onClosed(): Promise<void> {
         this._groupAll.removeUiChildren();

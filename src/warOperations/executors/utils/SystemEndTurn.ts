@@ -4,15 +4,15 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoSystemEndTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemEndTurn.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndTurn, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoSystemEndTurn, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeSystemEndTurn(war, action);
     } else {
@@ -20,12 +20,12 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSy
     }
 }
 
-function fastExeSystemEndTurn(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndTurn): void {
+function fastExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
     war.getTurnManager().endPhaseMain(action, true);
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-function normalExeSystemEndTurn(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndTurn): void {
+function normalExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
     // const desc = await war.getDescForExeSystemEndTurn(action);
     // (desc) && (FloatText.show(desc));
 
@@ -34,7 +34,7 @@ function normalExeSystemEndTurn(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndTurn): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoSystemEndTurn): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

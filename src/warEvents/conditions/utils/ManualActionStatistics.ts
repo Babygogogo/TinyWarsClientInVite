@@ -4,8 +4,8 @@ import {
     Lang_Utils,
     Helpers_Misc,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WecManualActionStatistics } from "../../../proto/schema/CommonProto/WarEvent/WecManualActionStatistics.ts";
 
@@ -68,7 +68,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         ...subTextArray,
     ].join(`\n`);
 }
-export function getErrorTip(data: WecManualActionStatistics, war: BaseWar_Interface_IBwWar.IBwWar): string | null {
+export function getErrorTip(data: WecManualActionStatistics, war: BaseWar_Model_War.War): string | null {
     {
         const playerIndexArray = data.getPlayerIndexArray();
         if ((playerIndexArray) && (!Players_Utils_Common.checkIsValidPlayerIndexSubset(playerIndexArray, war.getPlayersCountUnneutral()))) {
@@ -108,7 +108,7 @@ export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinabl
     return true;
 }
 
-export function checkIsMeet(condition: WecManualActionStatistics, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+export function checkIsMeet(condition: WecManualActionStatistics, war: BaseWar_Model_War.War): boolean {
     const conPlayerIndexArray       = condition.getPlayerIndexArray();
     const revisedConPlayerIndexSet  = conPlayerIndexArray?.length
         ? new Set(conPlayerIndexArray)

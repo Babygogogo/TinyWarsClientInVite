@@ -13,8 +13,8 @@ import {
     Numbers_Utils,
     AuxiliaryTypes_PlayerDataForWeaSetPlayerState,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -266,7 +266,7 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: AuxiliaryTyp
 export async function applyWithExtraData(_action: WeaSetPlayerStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetPlayerArray: Players_IPlayer.IPlayer[] = [];
     {
         const getAllTiles       = Helpers_Misc.createLazyFunc(() => war.getTileMap().getAllTiles());

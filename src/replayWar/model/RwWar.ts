@@ -13,6 +13,10 @@ export class RwWar extends ReplayWar_Model_RwWarBase.RwWarBase {
     private _replayId?              : number;
     private _isShowAllUnits         = true;
 
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
     public init(warData: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         super.init(warData, gameConfig);
 
@@ -35,7 +39,7 @@ export class RwWar extends ReplayWar_Model_RwWarBase.RwWarBase {
             // 处理发动技能的co挂掉后，剩余部队的技能角标不消失的问题
             const allUnitsOnMap = this.getUnitMap().getAllUnitsOnMap();
             for (const unit of allUnitsOnMap) {
-                unit.updateView();
+                unit.flushDataToView();
             }
 
             if (this.getIsShowAllUnits()) {

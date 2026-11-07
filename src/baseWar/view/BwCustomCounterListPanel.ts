@@ -2,7 +2,6 @@ import {
     CustomCounters_Constants,
     SingleCustomWar_Model_ScwWar,
     SingleFreeWar_Model_SfwWar,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
     Tween_Executor,
     GamePanels_Dict,
@@ -11,6 +10,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
+    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -21,7 +21,7 @@ import {
 } from "../../internal.ts";
 
 export interface OpenData {
-    war     : BaseWar_Interface_IBwWar.IBwWar;
+    war     : BaseWar_Model_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
@@ -97,7 +97,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
 interface DataForCustomCounterRenderer extends Ui_Types_UiListItemData.UiListItemData {
     id      : number;
-    war     : BaseWar_Interface_IBwWar.IBwWar;
+    war     : BaseWar_Model_War.War;
 }
 class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForCustomCounterRenderer> {
     private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
@@ -174,7 +174,7 @@ class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
     }
 }
 
-function checkCanModify(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>): boolean {
+function checkCanModify(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Model_War.War>): boolean {
     return (war instanceof SingleCustomWar_Model_ScwWar.ScwWar)
         || (war instanceof SingleFreeWar_Model_SfwWar.SfwWar);
 }

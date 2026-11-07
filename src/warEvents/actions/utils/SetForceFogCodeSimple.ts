@@ -2,8 +2,8 @@ import {
     FogMaps_Utils,
     Lang_Utils,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WeaSetForceFogCodeSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeSimple.ts";
 
@@ -46,14 +46,14 @@ export function getErrorTip(data: WeaSetForceFogCodeSimple): string | null {
     return null;
 }
 
-export function applyWithExtraData(action: WeaSetForceFogCodeSimple, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): Promise<void> {
+export function applyWithExtraData(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     return apply(action, war, isFast);
 }
-export function applyWithoutExtraData(action: WeaSetForceFogCodeSimple, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): Promise<void> {
+export function applyWithoutExtraData(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     return apply(action, war, isFast);
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function apply(action: WeaSetForceFogCodeSimple, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): Promise<void> {
+async function apply(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     const fogMap = war.getFogMap();
     fogMap.setForceFogCode(action.getForceFogCode());
 

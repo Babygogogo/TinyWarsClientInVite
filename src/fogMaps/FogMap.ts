@@ -7,7 +7,7 @@ import {
     ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type FogMaps_IFogMap,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -31,7 +31,7 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
     private _forceExpireTurnIndex?      : number | null;
     private _mapSize?                   : AuxiliaryTypes_MapSize.MapSize;
     private _allMapsFromPath?           : Map<number, Visibilities_Constants.VisibilityTypeId[][]>;
-    private _war?                       : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                       : BaseWar_Model_War.War;
 
     public init({ data, mapSize, playersCountUnneutral }: {
         data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialFogMap>;
@@ -99,7 +99,7 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
         });
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
 
         if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
@@ -232,10 +232,10 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
         return this.serializeForCreateSfw();
     }
 
-    protected _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    protected _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
     }
 

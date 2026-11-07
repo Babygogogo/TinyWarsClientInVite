@@ -2,13 +2,13 @@ import {
     Players_Constants,
     Utils_ClientErrorCode,
     Helpers_Misc,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
 
-export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoPlayerVoteForDraw, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoPlayerVoteForDraw, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     const playerIndex = rawAction.getPlayerIndex();
     if (playerIndex == null) {
         throw Helpers_Misc.newError(`Empty playerIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_00);

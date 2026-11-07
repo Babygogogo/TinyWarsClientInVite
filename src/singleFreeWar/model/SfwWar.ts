@@ -13,6 +13,10 @@ import type { SettingsForSfw } from "../../proto/schema/CommonProto/WarSettings/
 export class SfwWar extends SinglePlayerWar_Model_SpwWar.SpwWar implements SingleFreeWar_Interface_ISfwWar.ISfwWar {
     private _settingsForSfw?    : SettingsForSfw;
 
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
     public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
         this._setSettingsForSfw(Helpers_Misc.getExisted(data.getSettingsForSfw(), Utils_ClientErrorCode.ClientErrorCode.SfwWar_Init_00));

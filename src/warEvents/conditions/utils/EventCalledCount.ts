@@ -4,8 +4,8 @@ import {
     Lang_Utils,
     Helpers_Misc,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WarEventFullData } from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WecEventCalledCount } from "../../../proto/schema/CommonProto/WarEvent/WecEventCalledCount.ts";
@@ -145,7 +145,7 @@ export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinabl
     return true;
 }
 
-export function checkIsMeet(condition: WecEventCalledCount, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+export function checkIsMeet(condition: WecEventCalledCount, war: BaseWar_Model_War.War): boolean {
     const eventIdArray          = condition.getEventIdArray();
     const timesInTurn           = condition.getTimesInTurn();
     const timesTotal            = condition.getTimesTotal();

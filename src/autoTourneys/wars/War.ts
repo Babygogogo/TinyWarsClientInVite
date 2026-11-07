@@ -11,6 +11,10 @@ import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/
 export class War extends MultiPlayerWar_Model_MpwWar.MpwWar implements AutoTourneys_Wars_IWar.IWar {
     private _settingsForAtw?    : SettingsForAtw;
 
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
     public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
         this._setSettingsForAtw(Helpers_Misc.getExisted(data.getSettingsForAtw()));

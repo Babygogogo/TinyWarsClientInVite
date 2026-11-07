@@ -1,6 +1,6 @@
 import {
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 import type { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import type { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
@@ -16,7 +16,7 @@ export interface IBwDrawVoteManager {
         drawVoteManagerData : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager>,
     ): void;
 
-    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     getRemainingVotes(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 

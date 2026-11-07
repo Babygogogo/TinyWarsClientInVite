@@ -7,7 +7,6 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Interface_IBwWar,
     Units_Constants,
     Utils_ClientErrorCode,
     Visibilities_Utils,
@@ -17,12 +16,13 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Lang_Constants,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoUnitAttackUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitAttackUnit.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitAttackUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitAttackUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitAttackUnit(war, action);
     } else {
@@ -30,7 +30,7 @@ export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
     }
 }
 
-function fastExeUnitAttackUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitAttackUnit): void {
+function fastExeUnitAttackUnit(war: BaseWar_Model_War.War, action: WoUnitAttackUnit): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -88,11 +88,10 @@ function fastExeUnitAttackUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitAttackUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitAttackUnit): Promise<void> {
+async function normalExeUnitAttackUnit(war: BaseWar_Model_War.War, action: WoUnitAttackUnit): Promise<void> {
     // const desc = await war.getDescForExeUnitAttackUnit(action);
     // (desc) && (FloatText.show(desc));
 
-    const warView           = war.getView();
     const gridVisualEffect  = war.getGridVisualEffect();
     const actionExtraData   = action.getExtraData();
     if (actionExtraData) {
@@ -122,7 +121,7 @@ async function normalExeUnitAttackUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
         ) {
             gridVisualEffect.showEffectExplosion(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackUnit_01));
             if (!isWarViewVibrated) {
-                warView.showVibration();
+                war.getView()?.showVibration();
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
             }
         }
@@ -188,7 +187,7 @@ async function normalExeUnitAttackUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitAttackUnit): Promise<string | null> {
+async function getDesc(war: BaseWar_Model_War.War, action: WoUnitAttackUnit): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;

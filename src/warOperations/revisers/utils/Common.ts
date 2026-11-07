@@ -6,13 +6,13 @@ import {
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_MovePath,
     Turns_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { MovePath as ProtoMovePath } from "../../../proto/schema/CommonProto/Structure/MovePath.ts";
 
 export function getRevisedPath({ war, rawPath, launchUnitId, requesterUserId }: {
-    war             : BaseWar_Interface_IBwWar.IBwWar;
+    war             : BaseWar_Model_War.War;
     rawPath         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ProtoMovePath>;
     launchUnitId    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     requesterUserId : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
@@ -96,7 +96,7 @@ export function getRevisedPath({ war, rawPath, launchUnitId, requesterUserId }: 
     return new AuxiliaryTypes_MovePath.MovePath(revisedNodes, revisedTotalFuelConsumption, isBlocked);
 }
 
-export function checkIsPathDestinationOccupiedByOtherVisibleUnit(war: BaseWar_Interface_IBwWar.IBwWar, rawPath: AuxiliaryTypes_GridIndex.GridIndex[]): boolean {
+export function checkIsPathDestinationOccupiedByOtherVisibleUnit(war: BaseWar_Model_War.War, rawPath: AuxiliaryTypes_GridIndex.GridIndex[]): boolean {
     if (rawPath.length == 1) {
         return false;
     } else {

@@ -16,7 +16,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_Tile,
     ExpressionParsers_Contexts_Unit,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Tiles_Tile,
     type Tiles_TileMap,
     type Units_Unit,
@@ -517,7 +517,7 @@ function getAutoTileObjectShapeId(tileMap: Tiles_TileMap.TileMap, tile: Tiles_Ti
 export async function applyWithExtraData(_action: WeaSetTileTypeExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetTileTypeExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetTileTypeExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, NewTileData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!checkIsMeetConditionForTile(action, tile)) {
@@ -604,7 +604,7 @@ function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): N
         destroyUnit          : shouldDestroyUnit,
     };
 }
-function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: BaseWar_Model_War.War, isFast: boolean): void {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
     const affectedTiles = new Set<Tiles_Tile.Tile>();

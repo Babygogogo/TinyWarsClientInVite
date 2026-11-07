@@ -4,7 +4,7 @@ import {
     ValueArrayAndPredicates_Utils,
     Lang_Utils,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 import type { UnitBuff } from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
 import type { UnitBuffFilter } from "../../proto/schema/CommonProto/Structure/UnitBuffFilter.ts";
@@ -22,7 +22,7 @@ export function checkIsValid(data: UnitBuffFilter): boolean {
     return getErrorTip(data) == null;
 }
 
-export function checkIsMeet(data: UnitBuffFilter, buff: UnitBuff, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+export function checkIsMeet(data: UnitBuffFilter, buff: UnitBuff, war: BaseWar_Model_War.War): boolean {
     {
         const con = data.getConBuffTypeId();
         if ((con != null) &&

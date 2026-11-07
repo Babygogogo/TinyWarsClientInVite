@@ -6,8 +6,8 @@ import {
     ValueAndComparators_Utils,
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
@@ -198,7 +198,7 @@ export function getErrorTip(
 export async function applyWithExtraData(_action: WeaAddTileBuffSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaAddTileBuffSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(data: WeaAddTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newBuff = generateNewBuff(data, war);
     if (newBuff == null) {
         return;
@@ -279,7 +279,7 @@ function calculateExpiringTime(
 
     return [turnIndex, playerIndex];
 }
-function generateNewBuff(action: WeaAddTileBuffSimple, war: BaseWar_Interface_IBwWar.IBwWar): TileBuff | null {
+function generateNewBuff(action: WeaAddTileBuffSimple, war: BaseWar_Model_War.War): TileBuff | null {
     const turnManager           = war.getTurnManager();
     const currentTurnIndex      = turnManager.getTurnIndex();
     const currentPlayerIndex    = turnManager.getPlayerIndexInTurn();

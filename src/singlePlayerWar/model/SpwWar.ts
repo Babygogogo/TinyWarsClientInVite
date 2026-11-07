@@ -1,5 +1,5 @@
 import {
-    BaseWar_Model_BwWar,
+    BaseWar_Model_War,
     BaseWar_Model_BwWarEventManager,
     SinglePlayerWar_Model_SpwRetractManager,
     type BaseWar_Interface_IBwWarEventManager,
@@ -14,7 +14,7 @@ import {
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export abstract class SpwWar extends BaseWar_Model_BwWar.BwWar implements SinglePlayerWar_Interface_ISpwWar.ISpwWar {
+export abstract class SpwWar extends BaseWar_Model_War.War implements SinglePlayerWar_Interface_ISpwWar.ISpwWar {
     private readonly _warEventManager       = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
     private readonly _retractManager        = new SinglePlayerWar_Model_SpwRetractManager.SpwRetractManager();
 
@@ -32,7 +32,7 @@ export abstract class SpwWar extends BaseWar_Model_BwWar.BwWar implements Single
                 const isVisible = visibleUnits.has(unit);
                 unit.setViewVisible(isVisible);
                 if (isVisible) {
-                    unit.updateView();
+                    unit.flushDataToView();
                 }
             }
         }

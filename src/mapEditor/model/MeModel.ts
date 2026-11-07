@@ -170,7 +170,7 @@ export async function loadWar({ mapRawData, slotIndex, isReview, srcNormalMapIdF
     }
 
     const gameConfig    = await GameConfigs_Provider.getLatestGameConfig();
-    _war                = new MapEditor_Model_MeWar.MeWar();
+    _war                = new MapEditor_Model_MeWar.MeWar(true);
     await _war.initWithMapRawData({
         mapRawData                : mapRawData ?? await MapEditor_Model_MeHelpers.createDefaultMapRawData(slotIndex, gameConfig),
         slotIndex                 : slotIndex,

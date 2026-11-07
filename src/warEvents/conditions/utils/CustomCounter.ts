@@ -7,8 +7,8 @@ import {
     Helpers_Misc,
     Helpers_Collection,
     Lang_Constants,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WecCustomCounter } from "../../../proto/schema/CommonProto/WarEvent/WecCustomCounter.ts";
 
@@ -145,7 +145,7 @@ export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinabl
     return true;
 }
 
-export function checkIsMeet(condition: WecCustomCounter, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+export function checkIsMeet(condition: WecCustomCounter, war: BaseWar_Model_War.War): boolean {
     const counterIdArray        = condition.getCounterIdArray();
     const targetValue           = condition.getValue();
     const valueComparator       = Helpers_Misc.getExisted(condition.getValueComparator(), Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_CheckIsMeetConCustomCounter_00);

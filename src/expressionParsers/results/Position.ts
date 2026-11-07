@@ -2,14 +2,14 @@ import {
     ExpressionParsers_Results_Base,
     Helpers_Misc,
     ExpressionParsers_Enums,
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
 } from "../../internal.ts";
 
 export class Position extends ExpressionParsers_Results_Base.Base {
     public readonly x: number;
     public readonly y: number;
 
-    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, x: number, y: number) {
+    public constructor(war: BaseWar_Model_War.War, x: number, y: number) {
         super(war);
 
         const newX = Math.floor(x);

@@ -1,5 +1,5 @@
 import {
-    type BaseWar_Interface_IBwWar,
+    type BaseWar_Model_War,
     type Egret_Egret,
     type Notifications_Mapping,
     type Notifications_Types,
@@ -202,7 +202,11 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
 
         this._stopCoZoneAnimation();
     }
+    public dispose(): void {
+        this.stopRunning();
+    }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     public setBaseLayerVisible(visible: boolean): void {
         this._baseLayer.setIsVisible(visible);
     }
@@ -557,7 +561,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
     }
 }
 
-function getGridMarkDataArray(war: BaseWar_Interface_IBwWar.IBwWar): GridIdAndMarkTypeId[] {
+function getGridMarkDataArray(war: BaseWar_Model_War.War): GridIdAndMarkTypeId[] {
     if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         const player = war.getPlayerLoggedIn();
         if (player == null) {

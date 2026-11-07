@@ -35,8 +35,8 @@ import {
     AuxiliaryTypes_MovableArea,
     Players_Constants,
     Teams_Constants,
+    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWar,
     type Players_IPlayer,
     type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
@@ -983,7 +983,7 @@ const funcArray = [
     Bots_Phases_Phase11.getActionForPhase11,
     Bots_Phases_Phase12.getActionForPhase12,
 ];
-export async function doGetNextOperation(war: BaseWar_Interface_IBwWar.IBwWar): Promise<WoContainer> {
+export async function doGetNextOperation(war: BaseWar_Model_War.War): Promise<WoContainer> {
     if (war.getPlayerIndexInTurn() === Players_Constants.PlayerIndex.Neutral) {
         throw Helpers_Misc.newError(`Invalid playerIndexInTurn.`, Utils_ClientErrorCode.ClientErrorCode.SpwRobot_DoGetNextAction_00);
     }

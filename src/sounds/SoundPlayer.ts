@@ -12,8 +12,8 @@ import {
     FloatText,
     CoSkills_Constants,
     Lang_Constants,
+    type BaseWar_Model_War,
     type Sounds_Types,
-    type BaseWar_Interface_IBwWar,
     type Notifications_Types,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
@@ -152,7 +152,7 @@ export function pause(): void {
 }
 
 export function playCoBgmWithWar({ war, force, coBgmCodeArrayFromUserSettings }: {
-    war                             : BaseWar_Interface_IBwWar.IBwWar;
+    war                             : BaseWar_Model_War.War;
     force                           : boolean;
     coBgmCodeArrayFromUserSettings  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
 }): void {

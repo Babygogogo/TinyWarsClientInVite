@@ -1,12 +1,12 @@
 import {
     Weathers_View,
-    type BaseWar_Interface_IBwWar,
     type AuxiliaryTypes_AuxiliaryTypes,
     Utils_ClientErrorCode,
     Notifications_Dispatcher,
     Helpers_Misc,
     Lang_Utils,
     Lang_Constants,
+    type BaseWar_Model_War,
     type Weathers_IManager,
     type Weathers_IView,
 } from "../internal.ts";
@@ -18,7 +18,7 @@ export class Manager implements Weathers_IManager.IManager {
     private _forceWeatherType?      : number | null;
     private _expirePlayerIndex?     : number | null;
     private _expireTurnIndex?       : number | null;
-    private _war?                   : BaseWar_Interface_IBwWar.IBwWar;
+    private _war?                   : BaseWar_Model_War.War;
 
     private readonly _view = new Weathers_View.View();
 
@@ -47,7 +47,7 @@ export class Manager implements Weathers_IManager.IManager {
         return this.serialize();
     }
 
-    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
     }
     public startRunningView(): void {
@@ -57,10 +57,10 @@ export class Manager implements Weathers_IManager.IManager {
         this.getView().stopRunningView();
     }
 
-    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+    public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war, Utils_ClientErrorCode.ClientErrorCode.BwWeatherManager_GetWar_00);
     }
 
