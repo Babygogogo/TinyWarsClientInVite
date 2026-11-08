@@ -1,35 +1,35 @@
 import {
-    GameConfigs_Provider,
     Campaigns_Mains_Gateway,
+    Campaigns_Wars_War,
+    FloatText,
+    GameConfigs_Provider,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_GameFlow,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    Logger,
+    MultiPlayerWar_Model_MpwModel,
+    Players_Constants,
     SingleCustomWar_Model_ScwWar,
     SingleFreeWar_Model_SfwWar,
-    FloatText,
-    SingleRankWar_Model_SrwWar,
-    Campaigns_Wars_War,
-    Players_Constants,
-    WarOperations_Executors_Executor,
-    Utils_ClientErrorCode,
-    GamePanels_Manager,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Lang_Utils,
-    WarOperations_Utils,
-    MultiPlayerWar_Model_MpwModel,
-    Users_Model,
-    Helpers_GameFlow,
-    SinglePlayerWars_Constants,
     SinglePlayerMode_Model_SpmProxy,
+    SinglePlayerWars_War,
+    SinglePlayerWars_Constants,
+    SingleRankWar_Model_SrwWar,
+    Users_Model,
+    Utils_ClientErrorCode,
+    WarOperations_Executors_Executor,
     WarOperations_Revisers_Reviser,
-    Lang_Constants,
-    Logger,
-    type SinglePlayerWar_Interface_ISpwWar,
-} from "../../internal.ts";
+    WarOperations_Utils,
+} from "../internal.ts";
 
-import type { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
+import type { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-let _war: SinglePlayerWar_Interface_ISpwWar.ISpwWar | null = null;
+let _war: SinglePlayerWars_War.War | null = null;
 
 export function init(): void {
     // nothing to do.
@@ -42,7 +42,7 @@ export async function loadWar({ warData, slotIndex, slotExtraData }: {
     warData         : SerialWar;
     slotIndex       : number | null;
     slotExtraData   : SpmWarSaveSlotExtraData | null;
-}): Promise<SinglePlayerWar_Interface_ISpwWar.ISpwWar> {
+}): Promise<SinglePlayerWars_War.War> {
     if (getWar()) {
         Logger.warn(`SpwModel.loadWar() another war has been loaded already!`);
         unloadWar();
@@ -67,19 +67,19 @@ export function unloadWar(): void {
     }
 }
 
-export function getWar(): SinglePlayerWar_Interface_ISpwWar.ISpwWar | null {
+export function getWar(): SinglePlayerWars_War.War | null {
     return _war;
 }
-function setWar(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar | null): void {
+function setWar(war: SinglePlayerWars_War.War | null): void {
     _war = war;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Util functions.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-const _warsWithRobotRunning = new Set<SinglePlayerWar_Interface_ISpwWar.ISpwWar>();
+const _warsWithRobotRunning = new Set<SinglePlayerWars_War.War>();
 
-export async function handlePlayerActionAndAutoActions(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar, action: WoContainer): Promise<void> {
+export async function handlePlayerActionAndAutoActions(war: SinglePlayerWars_War.War, action: WoContainer): Promise<void> {
     if (war.getIsEnded()) {
         throw Helpers_Misc.newError(`war.getIsEnded() is true.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_00);
     }
@@ -99,7 +99,7 @@ export async function handlePlayerActionAndAutoActions(war: SinglePlayerWar_Inte
     await checkAndHandleAutoActionsAndRobotRecursively(war);
 }
 
-export async function checkAndHandleAutoActionsAndRobotRecursively(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): Promise<void> {
+export async function checkAndHandleAutoActionsAndRobotRecursively(war: SinglePlayerWars_War.War): Promise<void> {
     if (_warsWithRobotRunning.has(war)) {
         return;
     }
@@ -145,7 +145,7 @@ export async function checkAndHandleAutoActionsAndRobotRecursively(war: SinglePl
     _warsWithRobotRunning.delete(war);
 }
 
-function checkAndEndWar(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): boolean {
+function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
     if (!war.getIsEnded()) {
         return false;
     }
@@ -276,7 +276,7 @@ function checkAndEndWar(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): boolean
     return true;
 }
 
-function createWarByWarData(warData: SerialWar): SinglePlayerWar_Interface_ISpwWar.ISpwWar {
+function createWarByWarData(warData: SerialWar): SinglePlayerWars_War.War {
     if (warData.getSettingsForScw()) {
         return new SingleCustomWar_Model_ScwWar.ScwWar(true);
     } else if (warData.getSettingsForSfw()) {

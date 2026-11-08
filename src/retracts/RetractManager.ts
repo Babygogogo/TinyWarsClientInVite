@@ -1,12 +1,11 @@
 import {
     Helpers_Misc,
-    type SinglePlayerWar_Interface_ISpwRetractManager,
-} from "../../internal.ts";
+} from "../internal.ts";
 
-export class SpwRetractManager implements SinglePlayerWar_Interface_ISpwRetractManager.ISpwRetractManager {
-    private _canRetract         = false;
-    private readonly _retractStateArray  : Uint8Array[] = [];
-    private _nextRetractId      = 0;
+export class RetractManager {
+    private readonly _retractStateArray : Uint8Array[] = [];
+    private _canRetract                 = false;
+    private _nextRetractId              = 0;
 
     public setCanRetract(canRetract: boolean): void {
         this._canRetract = canRetract;

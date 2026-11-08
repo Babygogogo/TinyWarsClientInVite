@@ -25,7 +25,7 @@ import {
     Notifications_Dispatcher,
     type Notifications_Mapping,
     Players_Constants,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Tiles_Constants_Common,
@@ -396,7 +396,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
 
             if ((war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) ||
-                (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar)
+                (war instanceof SinglePlayerWars_War.War)
             ) {
                 actionPlanner?.cancelCurrentState();
                 war.getCursor()?.setGridIndex(gridIndex);

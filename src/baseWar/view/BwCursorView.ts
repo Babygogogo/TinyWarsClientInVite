@@ -22,7 +22,7 @@ import {
     MultiPlayerWar_Model_MpwWar,
     Notifications_Dispatcher,
     Numbers_Utils,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Tween_Executor,
@@ -390,7 +390,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
         } else if (newKeys.has(Keyboard_KbTypes.KeyCode.I)) {
             data.isHandled = true;
 
-            if (((war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) && (war.getPlayerInTurn().getUserId() != null))                    ||
+            if (((war instanceof SinglePlayerWars_War.War) && (war.getPlayerInTurn().getUserId() != null))                    ||
                 ((war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) && (war.getPlayerIndexLoggedIn() === war.getPlayerIndexInTurn()))
             ) {
                 ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
@@ -412,7 +412,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
         } else if (newKeys.has(Keyboard_KbTypes.KeyCode.U)) {
             data.isHandled = true;
 
-            if (((war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) && (war.getPlayerInTurn().getUserId() != null))                    ||
+            if (((war instanceof SinglePlayerWars_War.War) && (war.getPlayerInTurn().getUserId() != null))                    ||
                 ((war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) && (war.getPlayerIndexLoggedIn() === war.getPlayerIndexInTurn()))
             ) {
                 ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
@@ -434,7 +434,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
         } else if (newKeys.has(Keyboard_KbTypes.KeyCode.Y)) {
             data.isHandled = true;
 
-            if (((war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) && (war.getPlayerInTurn().getUserId() != null))                    ||
+            if (((war instanceof SinglePlayerWars_War.War) && (war.getPlayerInTurn().getUserId() != null))                    ||
                 ((war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) && (war.getPlayerIndexLoggedIn() === war.getPlayerIndexInTurn()))
             ) {
                 if (war.getDrawVoteManager().checkNeedVoteBeforeEndTurn(war.getPlayerIndexInTurn())) {

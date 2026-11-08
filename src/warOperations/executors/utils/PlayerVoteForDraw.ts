@@ -3,7 +3,7 @@ import {
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     FloatText,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Utils_ClientErrorCode,
     Helpers_Misc,
@@ -100,7 +100,7 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw):
                 return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0019, playerIndex, nickname)} ${suffix}`;
             }
         }
-    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+    } else if (war instanceof SinglePlayerWars_War.War) {
         const extraData     = action.getExtraData();
         const playerIndex   = (extraData ? extraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn();
         const nickname      = await war.getPlayer(playerIndex).getNickname();

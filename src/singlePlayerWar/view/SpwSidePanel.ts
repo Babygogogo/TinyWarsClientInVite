@@ -12,6 +12,7 @@ import {
     GamePanels_Manager,
     Lang_Constants,
     Lang_Utils,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Turns_Constants,
@@ -22,7 +23,6 @@ import {
     Units_Constants,
     Users_Model,
     type BaseWar_Model_War,
-    type SinglePlayerWar_Interface_ISpwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -38,7 +38,7 @@ import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/Seria
 let _showTaskObjective = false;
 
 export interface OpenData {
-    war : SinglePlayerWar_Interface_ISpwWar.ISpwWar;
+    war : SinglePlayerWars_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _groupLeft!                : Ui_Interfaces_IUiContainer.IUiContainer;

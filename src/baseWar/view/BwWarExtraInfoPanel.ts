@@ -1,5 +1,5 @@
 import {
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Stages_Constants,
     NormalMap_Model_NormalMapModel,
     Lang_Utils,
@@ -115,7 +115,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const layoutScorePreview    = this._layoutScorePreview;
             layoutContent.removeItem(layoutScorePreview, false);
 
-            if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+            if (war instanceof SinglePlayerWars_War.War) {
                 layoutContent.addItem(layoutScorePreview, false);
                 this._labelScorePreview.setText(`${war.calculateTotalScore()}`);
                 layoutScorePreview.arrangeItems();

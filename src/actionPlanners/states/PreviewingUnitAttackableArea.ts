@@ -4,7 +4,7 @@ import {
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     ActionPlanners_Constants,
     TestWar_Model_TwWar,
     type AuxiliaryTypes_GridIndex,
@@ -130,7 +130,7 @@ export class PreviewingUnitAttackableArea implements ActionPlanners_States_IStat
                 }
             }
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             const turnManager       = war.getTurnManager();
             const unit              = war.getUnitMap().getVisibleUnitOnMap(gridIndex);
             const selfPlayerIndex   = war.getPlayerIndexInTurn();

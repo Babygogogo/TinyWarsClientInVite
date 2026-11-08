@@ -59,7 +59,7 @@ import {
     MultiPlayerWar_Model_MpwWar,
     Notifications_Dispatcher,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Units_Constants,
     Users_Model,
@@ -176,7 +176,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             return new Set();
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             const playerIndexSet = new Set<number>();
             for (const [playerIndex, player] of this.getWar().getPlayerManager().getAllPlayersDict()) {
                 if ((!player.checkIsNeutral()) && (player.getUserId() != null)) {
@@ -209,7 +209,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             return false;
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             const playerInTurn = war.getPlayerInTurn();
             return (unit.getPlayerIndex() === playerInTurn.getPlayerIndex())
                 && (playerInTurn.getUserId() != null);
@@ -392,7 +392,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwDamagePreviewPanel);
             }
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             this.getView().updateView();
 
             const currState = this.getStateId();

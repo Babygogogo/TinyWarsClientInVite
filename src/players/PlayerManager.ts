@@ -4,7 +4,7 @@ import {
     MultiPlayerWar_Model_MpwWar,
     Players_Player,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     TestWar_Model_TwWar,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
@@ -365,7 +365,7 @@ export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
         } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             return this.getAliveTeamIndexes(false);
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             const humanPlayers = this.getHumanPlayers();
             if (!humanPlayers.length) {
                 return this.getAliveTeamIndexes(false);

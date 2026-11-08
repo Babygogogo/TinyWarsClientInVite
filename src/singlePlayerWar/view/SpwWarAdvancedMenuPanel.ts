@@ -14,6 +14,7 @@ import {
     MapEditor_Model_MeProxy,
     Maps_Constants,
     SinglePlayerMode_Model_SpmProxy,
+    SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Turns_Constants,
     Ui_Components_UiPanel,
@@ -22,7 +23,6 @@ import {
     Users_Proxy,
     type Egret_Egret,
     type Notifications_Mapping,
-    type SinglePlayerWar_Interface_ISpwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -32,7 +32,7 @@ import {
 
 
 export interface OpenData {
-    war     : SinglePlayerWar_Interface_ISpwWar.ISpwWar;
+    war     : SinglePlayerWars_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;

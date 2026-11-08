@@ -11,7 +11,7 @@ import {
     MultiPlayerWar_Model_MpwWar,
     Notifications_Dispatcher,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
@@ -197,7 +197,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        if (war instanceof SinglePlayerWars_War.War) {
             const extraData = war.getSaveSlotExtraData();
             if (extraData != null) {
                 extraData.setOverridingSkinIdArray(arr ?? []);

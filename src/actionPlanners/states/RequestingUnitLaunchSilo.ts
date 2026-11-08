@@ -1,13 +1,13 @@
 import {
     MultiPlayerWar_Model_MpwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     ActionPlanners_Constants,
     type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
     Helpers_Misc,
     MultiPlayerWar_Model_MpwProxy,
-    SinglePlayerWar_Model_SpwLocalProxy,
+    SinglePlayerWars_LocalGateway,
 } from "../../internal.ts";
 
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -59,11 +59,11 @@ export class RequestingUnitLaunchSilo implements ActionPlanners_States_IState.IS
             actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitLaunchSilo);
             actionPlanner.updateView();
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitLaunchSilo);
             actionPlanner.updateView();
 
-            SinglePlayerWar_Model_SpwLocalProxy.reqUnitLaunchSilo({
+            SinglePlayerWars_LocalGateway.reqUnitLaunchSilo({
                 war             : war,
                 path            : actionPlanner.generateProtoMovePath(),
                 launchUnitId    : actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,

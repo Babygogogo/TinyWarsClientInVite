@@ -1,11 +1,11 @@
 import {
-    Players_Constants,
-    Users_Utils,
-    WarOperations_Constants,
     Bots_Bot,
     Helpers_Misc,
+    Players_Constants,
     Turns_Constants,
-    type SinglePlayerWar_Interface_ISpwWar,
+    Users_Utils,
+    WarOperations_Constants,
+    type SinglePlayerWars_War,
     type WarOperations_Types,
 } from "../internal.ts";
 import { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -15,7 +15,7 @@ export function checkIsValidWarOperationsLimit(warOperationsLimit: number): bool
         && (warOperationsLimit <= WarOperations_Constants.Common.MaxLimit);
 }
 
-export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): Promise<WarOperations_Types.WarOperationAndUserId | undefined> {
+export async function getNextSystemOrBotOperation(war: SinglePlayerWars_War.War): Promise<WarOperations_Types.WarOperationAndUserId | undefined> {
     if ((war == null) || (war.getIsEnded())) {
         return undefined;
     }

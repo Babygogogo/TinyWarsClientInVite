@@ -4,7 +4,7 @@ import {
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Units_Unit,
     type BaseWar_Model_War,
@@ -307,7 +307,7 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit, 
         return null;
     } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
         return `${Lang_Utils.getText(Lang_Constants.TextType.B0095)} ${Lang_Utils.getUnitName(Helpers_Misc.getExisted(action.getUnitType()), gcData)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+    } else if (war instanceof SinglePlayerWars_War.War) {
         return null;
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;

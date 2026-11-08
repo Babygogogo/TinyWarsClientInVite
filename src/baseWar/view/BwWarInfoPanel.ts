@@ -19,8 +19,8 @@ import {
     ReplayWar_Model_RwWarBase,
     SingleCustomWar_Model_ScwWar,
     SingleFreeWar_Model_SfwWar,
-    SinglePlayerWar_Model_SpwModel,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_Provider,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Ui_Components_UiListItemRenderer,
@@ -204,8 +204,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war = this.getOpenData()?.war;
         war?.setIsViewingWarInfo(false);
 
-        if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
-            SinglePlayerWar_Model_SpwModel.checkAndHandleAutoActionsAndRobotRecursively(war);
+        if (war instanceof SinglePlayerWars_War.War) {
+            SinglePlayerWars_Provider.checkAndHandleAutoActionsAndRobotRecursively(war);
         }
 
         await Promise.all([

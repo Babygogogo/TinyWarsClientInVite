@@ -2,7 +2,7 @@ import {
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Lang_Utils,
     Lang_Constants,
@@ -42,7 +42,7 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoSystemEndTurn): Pro
         return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0030, await war.getPlayerInTurn().getNickname(), war.getPlayerIndexInTurn());
     } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
         return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0030, await war.getPlayerInTurn().getNickname(), war.getPlayerIndexInTurn());
-    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+    } else if (war instanceof SinglePlayerWars_War.War) {
         return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0030, await war.getPlayerInTurn().getNickname(), war.getPlayerIndexInTurn());
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;

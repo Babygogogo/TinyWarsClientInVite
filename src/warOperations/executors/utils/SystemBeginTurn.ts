@@ -9,7 +9,7 @@ import {
     MultiPlayerWar_Model_MpwWar,
     Players_Constants,
     ReplayWar_Model_RwWarBase,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     TestWar_Model_TwWar,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -77,7 +77,7 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): P
         }
     } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
         return `P${war.getPlayerIndexInTurn()} ${await war.getPlayerInTurn().getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0094)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+    } else if (war instanceof SinglePlayerWars_War.War) {
         const playerIndex = war.getPlayerIndexInTurn();
         if (playerIndex === Players_Constants.PlayerIndex.Neutral) {
             return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0022, Lang_Utils.getText(Lang_Constants.TextType.B0111), playerIndex);

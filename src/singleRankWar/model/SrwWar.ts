@@ -2,16 +2,15 @@ import {
     Utils_ClientErrorCode,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     BootTimers_Constants,
     type GameConfigs_GameConfig,
-    type SingleRankWar_Interface_ISrwWar,
 } from "../../internal.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
 
-export class SrwWar extends SinglePlayerWar_Model_SpwWar.SpwWar implements SingleRankWar_Interface_ISrwWar.ISrwWar {
+export class SrwWar extends SinglePlayerWars_War.War {
     private _settingsForSrw?    : SettingsForSrw;
 
     public constructor(isNeedView: boolean) {

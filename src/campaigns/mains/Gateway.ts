@@ -1,15 +1,15 @@
 import {
+    Campaigns_Mains_Provider,
+    Campaigns_Wars_War,
+    Helpers_Gzip,
     Helpers_Misc,
     Networks_Manager,
-    Helpers_Gzip,
-    Notifications_Dispatcher,
     Networks_MessageCodes,
-    Campaigns_Mains_Provider,
+    Notifications_Dispatcher,
     SinglePlayerMode_Model_SpmModel,
+    SinglePlayerWars_War,
     Users_Model,
     type Egret_Egret,
-    type SinglePlayerWar_Interface_ISpwWar,
-    type Campaigns_Wars_IWar,
 } from "../../internal.ts";
 import type { PlayerCoInfo } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/PlayerCoInfo.ts";
 import type { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
@@ -46,53 +46,53 @@ export function reqCampaignCreateWar({ slotIndex, slotExtraData, campaignId, cam
                 campaignId        : campaignId,
                 campaignMapId     : campaignMapId,
                 playerCoInfoArray : playerCoInfoArray.map(v => v.toJson()),
-            }, 
-        }, 
+            },
+        },
     });
 }
 async function _onMsgCampaignCreateWar(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCampaignCreateWar"]>): Promise<void> {
     const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
-        Notifications_Dispatcher.dispatch("MsgCampaignCreateWarFailed", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignCreateWarFailed", { msg : data });
     } else {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgCampaignCreateWar(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignCreateWar", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignCreateWar", { msg : data });
     }
 }
 
-export function reqCampaignSaveWar(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): void {
+export function reqCampaignSaveWar(war: SinglePlayerWars_War.War): void {
     Networks_Manager.send({
         MsgCampaignSaveWar : {
             c : {
                 slotIndex         : war.getSaveSlotIndex(),
                 slotExtraData     : war.getSaveSlotExtraData()?.toJson(),
                 compressedWarData : Helpers_Gzip.compress(war.serialize().encode()),
-            }, 
-        }, 
+            },
+        },
     });
 }
 async function _onMsgCampaignSaveWar(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCampaignSaveWar"]>): Promise<void> {
     const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await SinglePlayerMode_Model_SpmModel.updateOnMsgCampaignSaveWar(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignSaveWar", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignSaveWar", { msg : data });
     }
 }
 
-export function reqCampaignValidateWar(war: Campaigns_Wars_IWar.IWar): void {
+export function reqCampaignValidateWar(war: Campaigns_Wars_War.War): void {
     Networks_Manager.send({
         MsgCampaignValidateWar : {
             c : {
                 warData : war.serializeForValidation().toJson(),
-            }, 
-        }, 
+            },
+        },
     });
 }
 function _onMsgCampaignValidateWar(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCampaignValidateWar"]>): void {
     const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgCampaignValidateWar(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignValidateWar", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignValidateWar", { msg : data });
     }
 }
 
@@ -101,8 +101,8 @@ export function reqCampaignGetCampaignInfo(campaignId: number): void {
         MsgCampaignGetCampaignInfo : {
             c : {
                 campaignId : campaignId,
-            }, 
-        }, 
+            },
+        },
     });
 }
 function _onMsgCampaignGetCampaignInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCampaignGetCampaignInfo"]>): void {
@@ -111,7 +111,7 @@ function _onMsgCampaignGetCampaignInfo(e: Egret_Egret.Event<Networks_Manager.Res
         Campaigns_Mains_Provider.updateOnFailedMsgCampaignGetCampaignInfo(data);
     } else {
         Campaigns_Mains_Provider.updateOnMsgCampaignGetCampaignInfo(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignGetCampaignInfo", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignGetCampaignInfo", { msg : data });
     }
 }
 
@@ -126,7 +126,7 @@ function _onMsgCampaignGetEnabledCampaignIdArray(e: Egret_Egret.Event<Networks_M
         Campaigns_Mains_Provider.updateOnFailedMsgCampaignGetEnabledCampaignIdArray(data);
     } else {
         Campaigns_Mains_Provider.updateOnMsgCampaignGetEnabledCampaignIdArray(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignGetEnabledCampaignIdArray", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignGetEnabledCampaignIdArray", { msg : data });
     }
 }
 
@@ -136,7 +136,7 @@ export function reqCampaignGetMapRawData(campaignId: number, campaignMapId: numb
             c : {
                 campaignId    : campaignId,
                 campaignMapId : campaignMapId,
-            }, 
+            },
         },
     });
 }
@@ -146,7 +146,7 @@ async function _onMsgCampaignGetMapRawData(e: Egret_Egret.Event<Networks_Manager
         Campaigns_Mains_Provider.updateOnFailedMsgCampaignGetMapRawData(data);
     } else {
         await Campaigns_Mains_Provider.updateOnMsgCampaignGetMapRawData(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignGetMapRawData", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignGetMapRawData", { msg : data });
     }
 }
 
@@ -156,8 +156,8 @@ export function reqCampaignGetMapRawDataArray(campaignId: number, campaignMapIdA
             c : {
                 campaignId         : campaignId,
                 campaignMapIdArray : campaignMapIdArray,
-            }, 
-        }, 
+            },
+        },
     });
 }
 async function _onMsgCampaignGetMapRawDataArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCampaignGetMapRawDataArray"]>): Promise<void> {
@@ -166,7 +166,7 @@ async function _onMsgCampaignGetMapRawDataArray(e: Egret_Egret.Event<Networks_Ma
         // CampaignModel.updateOnFailedMsgCampaignGetMapRawDataArray(data);
     } else {
         await Campaigns_Mains_Provider.updateOnMsgCampaignGetMapRawDataArray(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignGetMapRawDataArray", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignGetMapRawDataArray", { msg : data });
     }
 }
 
@@ -176,15 +176,15 @@ export function reqCampaignGetMapTimestamp(campaignId: number, campaignMapId: nu
             c : {
                 campaignId    : campaignId,
                 campaignMapId : campaignMapId,
-            }, 
-        }, 
+            },
+        },
     });
 }
 async function _onMsgCampaignGetMapTimestamp(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCampaignGetMapTimestamp"]>): Promise<void> {
     const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         await Campaigns_Mains_Provider.updateOnMsgCampaignGetMapTimestamp(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignGetMapTimestamp", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignGetMapTimestamp", { msg : data });
     }
 }
 
@@ -193,8 +193,8 @@ export function reqCampaignGetAllMapTimestampArray(campaignId: number): void {
         MsgCampaignGetAllMapTimestampArray : {
             c : {
                 campaignId : campaignId,
-            }, 
-        }, 
+            },
+        },
     });
 }
 async function _onMsgCampaignGetAllMapTimestampArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCampaignGetAllMapTimestampArray"]>): Promise<void> {
@@ -203,7 +203,7 @@ async function _onMsgCampaignGetAllMapTimestampArray(e: Egret_Egret.Event<Networ
         Campaigns_Mains_Provider.updateOnFailedMsgCampaignGetAllMapTimestampArray(data);
     } else {
         await Campaigns_Mains_Provider.updateOnMsgCampaignGetAllMapTimestampArray(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignGetAllMapTimestampArray", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignGetAllMapTimestampArray", { msg : data });
     }
 }
 
@@ -212,8 +212,8 @@ export function reqCampaignGetCampaignLeaderboard(campaignId: number): void {
         MsgCampaignGetCampaignLeaderboard : {
             c : {
                 campaignId : campaignId,
-            }, 
-        }, 
+            },
+        },
     });
 }
 function _onMsgCampaignGetCampaignLeaderboard(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCampaignGetCampaignLeaderboard"]>): void {
@@ -222,7 +222,7 @@ function _onMsgCampaignGetCampaignLeaderboard(e: Egret_Egret.Event<Networks_Mana
         Campaigns_Mains_Provider.updateOnFailedMsgCampaignGetCampaignLeaderboard(data);
     } else {
         Campaigns_Mains_Provider.updateOnMsgCampaignGetCampaignLeaderboard(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignGetCampaignLeaderboard", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignGetCampaignLeaderboard", { msg : data });
     }
 }
 
@@ -232,8 +232,8 @@ export function reqCampaignGetCampaignMapLeaderboard(campaignId: number, campaig
             c : {
                 campaignId    : campaignId,
                 campaignMapId : campaignMapId,
-            }, 
-        }, 
+            },
+        },
     });
 }
 function _onMsgCampaignGetCampaignMapLeaderboard(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCampaignGetCampaignMapLeaderboard"]>): void {
@@ -242,7 +242,7 @@ function _onMsgCampaignGetCampaignMapLeaderboard(e: Egret_Egret.Event<Networks_M
         Campaigns_Mains_Provider.updateOnFailedMsgCampaignGetCampaignMapLeaderboard(data);
     } else {
         Campaigns_Mains_Provider.updateOnMsgCampaignGetCampaignMapLeaderboard(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignGetCampaignMapLeaderboard", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignGetCampaignMapLeaderboard", { msg : data });
     }
 }
 
@@ -250,6 +250,6 @@ function _onMsgCampaignGetScore(e: Egret_Egret.Event<Networks_Manager.ResponseMa
     const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
         Users_Model.updateOnMsgCampaignGetScore(data);
-        Notifications_Dispatcher.dispatch("MsgCampaignGetScore", { msg: data });
+        Notifications_Dispatcher.dispatch("MsgCampaignGetScore", { msg : data });
     }
 }

@@ -3,7 +3,7 @@ import {
     HalfwayReplayWar_Model_HrwWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     LocalData_Storage,
@@ -37,7 +37,7 @@ export function getRawOverridingSkinIdArray(war: BaseWar_Model_War.War): Auxilia
         return LocalData_Storage.getRwOverridingSkinIdArray(replayId);
     }
 
-    if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+    if (war instanceof SinglePlayerWars_War.War) {
         return war.getSaveSlotExtraData()?.getOverridingSkinIdArray();
     }
 

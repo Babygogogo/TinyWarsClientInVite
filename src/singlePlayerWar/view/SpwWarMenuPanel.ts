@@ -11,11 +11,11 @@ import {
     MultiPlayerWar_Model_MpwModel,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
+    SinglePlayerWars_War,
     Turns_Constants,
     Ui_Components_UiPanel,
     Utils_ClientErrorCode,
     WarTypes_Constants,
-    type SinglePlayerWar_Interface_ISpwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -25,7 +25,7 @@ import {
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 
 export interface OpenData {
-    war     : SinglePlayerWar_Interface_ISpwWar.ISpwWar;
+    war     : SinglePlayerWars_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;

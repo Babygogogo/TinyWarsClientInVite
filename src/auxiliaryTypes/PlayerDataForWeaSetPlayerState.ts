@@ -2,7 +2,7 @@ import {
     CoSkills_Constants,
     CoSkills_Utils_DataGeneratorForUseCoSkill,
     CoSkills_Utils_Executor,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Visibilities_Utils,
     type BaseWar_Model_War,
 } from "../internal.ts";
@@ -92,7 +92,7 @@ export class PlayerDataForWeaSetPlayerState {
                 if (!isFastExecute) {
                     const playerIndex       = player.getPlayerIndex();
                     const gridVisualEffect  = war.getGridVisualEffect();
-                    if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+                    if (war instanceof SinglePlayerWars_War.War) {
                         const teamIndexes = new Set(war.getHumanPlayers().map(v => v.getTeamIndex()));
                         for (const unit of Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, teamIndexes)) {
                             if (unit.getPlayerIndex() === playerIndex) {

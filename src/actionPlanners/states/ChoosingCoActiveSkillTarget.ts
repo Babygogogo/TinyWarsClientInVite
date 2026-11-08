@@ -7,7 +7,7 @@ import {
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     TestWar_Model_TwWar,
@@ -43,7 +43,7 @@ export class ChoosingCoActiveSkillTarget implements ActionPlanners_States_IState
 
         } else if (
             (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) ||
-            (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar)
+            (war instanceof SinglePlayerWars_War.War)
         ) {
             if (actionPlanner.getCoActiveSkillTypeId() == null) {
                 return ActionPlanners_Constants.StateId.Idle;

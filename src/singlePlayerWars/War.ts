@@ -1,22 +1,21 @@
 import {
-    BaseWar_Model_War,
+    AuxiliaryTypes_AuxiliaryTypes,
     BaseWar_Model_BwWarEventManager,
-    SinglePlayerWar_Model_SpwRetractManager,
-    type BaseWar_Interface_IBwWarEventManager,
-    Visibilities_Utils,
+    BaseWar_Model_War,
     Numbers_Utils,
+    Retracts_RetractManager,
     SinglePlayerWars_Constants,
+    Visibilities_Utils,
+    type BaseWar_Interface_IBwWarEventManager,
     type Players_IPlayer,
-    type SinglePlayerWar_Interface_ISpwRetractManager,
-    type SinglePlayerWar_Interface_ISpwWar,
-} from "../../internal.ts";
+} from "../internal.ts";
 
-import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
+import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export abstract class SpwWar extends BaseWar_Model_War.War implements SinglePlayerWar_Interface_ISpwWar.ISpwWar {
+export abstract class War extends BaseWar_Model_War.War {
     private readonly _warEventManager       = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
-    private readonly _retractManager        = new SinglePlayerWar_Model_SpwRetractManager.SpwRetractManager();
+    private readonly _retractManager        = new Retracts_RetractManager.RetractManager();
 
     private _isAiPaused                 = false;
     private _saveSlotIndex              : number | null = null;
@@ -55,7 +54,7 @@ export abstract class SpwWar extends BaseWar_Model_War.War implements SinglePlay
     public getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
         return this._warEventManager;
     }
-    public getRetractManager(): SinglePlayerWar_Interface_ISpwRetractManager.ISpwRetractManager {
+    public getRetractManager(): Retracts_RetractManager.RetractManager {
         return this._retractManager;
     }
 
@@ -81,7 +80,7 @@ export abstract class SpwWar extends BaseWar_Model_War.War implements SinglePlay
         return this._saveSlotIndex;
     }
 
-    public setSaveSlotExtraData(extraData: SpmWarSaveSlotExtraData | null): void {
+    public setSaveSlotExtraData(extraData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SpmWarSaveSlotExtraData>): void {
         this._saveSlotExtraData.loadJson(extraData?.toJson() ?? {
             overridingSkinIdArray : [],
         });

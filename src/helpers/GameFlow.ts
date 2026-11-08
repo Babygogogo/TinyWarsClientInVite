@@ -56,7 +56,7 @@ import {
     ResManager,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
-    SinglePlayerWar_Model_SpwModel,
+    SinglePlayerWars_Provider,
     Sounds_SoundPlayer,
     Stages_StageManager,
     TestWar_Model_TwWar,
@@ -189,7 +189,7 @@ async function doStartGame(stage: Egret_Egret.Stage): Promise<void> {
     HalfwayReplayWar_Model_HrwModel.init();
     SinglePlayerMode_Model_SpmProxy.init();
     SinglePlayerMode_Model_SpmModel.init();
-    SinglePlayerWar_Model_SpwModel.init();
+    SinglePlayerWars_Provider.init();
     MapEditor_Model_MeProxy.init();
     MapEditor_Model_MeModel.init();
     Chat_Proxy.init();
@@ -218,7 +218,7 @@ export function gotoLogin(): void {
     MultiPlayerWar_Model_MpwModel.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
-    SinglePlayerWar_Model_SpwModel.unloadWar();
+    SinglePlayerWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -238,7 +238,7 @@ export function gotoLobby(): void {
     MultiPlayerWar_Model_MpwModel.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
-    SinglePlayerWar_Model_SpwModel.unloadWar();
+    SinglePlayerWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
     GamePanels_Manager.closeAllPanelsExcept([
         GamePanels_Dict.getDict().BroadcastPanel,
@@ -262,7 +262,7 @@ export async function gotoMultiPlayerWar(data: SerialWar): Promise<void> {
     const war = await MultiPlayerWar_Model_MpwModel.loadWar(data);
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
-    SinglePlayerWar_Model_SpwModel.unloadWar();
+    SinglePlayerWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -288,7 +288,7 @@ export async function gotoReplayWar(warData: SerialWar, replayId: number): Promi
     const war = await ReplayWar_Model_RwModel.loadWar(warData, replayId);
     HalfwayReplayWar_Model_HrwModel.unloadWar();
     MultiPlayerWar_Model_MpwModel.unloadWar();
-    SinglePlayerWar_Model_SpwModel.unloadWar();
+    SinglePlayerWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -313,7 +313,7 @@ export async function gotoHalfwayReplayWar(warData: SerialWar): Promise<void> {
     const war = await HalfwayReplayWar_Model_HrwModel.loadWar(warData);
     ReplayWar_Model_RwModel.unloadWar();
     MultiPlayerWar_Model_MpwModel.unloadWar();
-    SinglePlayerWar_Model_SpwModel.unloadWar();
+    SinglePlayerWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -340,7 +340,7 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
     warData             : SerialWar;
     overridingBgmCode?  : number | null;
 }): Promise<void> {
-    const war = await SinglePlayerWar_Model_SpwModel.loadWar({ warData, slotIndex, slotExtraData });
+    const war = await SinglePlayerWars_Provider.loadWar({ warData, slotIndex, slotExtraData });
     war.setOverridingBgmCode(overridingBgmCode ?? null);
 
     MultiPlayerWar_Model_MpwModel.unloadWar();
@@ -367,7 +367,7 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
         coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 
-    await SinglePlayerWar_Model_SpwModel.checkAndHandleAutoActionsAndRobotRecursively(war);
+    await SinglePlayerWars_Provider.checkAndHandleAutoActionsAndRobotRecursively(war);
 }
 export async function gotoMapEditorWar({ mapRawData, slotIndex, isReview, srcNormalMapIdForAddEvent, gridMarkData }: {
     mapRawData                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapRawData>;
@@ -384,7 +384,7 @@ export async function gotoMapEditorWar({ mapRawData, slotIndex, isReview, srcNor
         gridMarkData              : gridMarkData,
     });
     MultiPlayerWar_Model_MpwModel.unloadWar();
-    SinglePlayerWar_Model_SpwModel.unloadWar();
+    SinglePlayerWars_Provider.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
 
@@ -518,7 +518,7 @@ export async function gotoMfrCreateSettingsPanel(warData: SerialWar): Promise<vo
     MultiPlayerWar_Model_MpwModel.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
-    SinglePlayerWar_Model_SpwModel.unloadWar();
+    SinglePlayerWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -641,7 +641,7 @@ export function unloadAllWarsAndOpenCommonPanels(): void {
     MultiPlayerWar_Model_MpwModel.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
-    SinglePlayerWar_Model_SpwModel.unloadWar();
+    SinglePlayerWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -669,7 +669,7 @@ export function getOngoingWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseW
     return (MultiPlayerWar_Model_MpwModel.getWar())
         ?? (ReplayWar_Model_RwModel.getWar())
         ?? (HalfwayReplayWar_Model_HrwModel.getWar())
-        ?? (SinglePlayerWar_Model_SpwModel.getWar())
+        ?? (SinglePlayerWars_Provider.getWar())
         ?? (MapEditor_Model_MeModel.getWar());
 }
 

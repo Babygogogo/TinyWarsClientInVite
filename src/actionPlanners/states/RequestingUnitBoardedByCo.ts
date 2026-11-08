@@ -1,12 +1,12 @@
 import {
     MultiPlayerWar_Model_MpwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     ActionPlanners_Constants,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
     Helpers_Misc,
     MultiPlayerWar_Model_MpwProxy,
-    SinglePlayerWar_Model_SpwLocalProxy,
+    SinglePlayerWars_LocalGateway,
 } from "../../internal.ts";
 
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -69,11 +69,11 @@ export class RequestingUnitBoardedByCo implements ActionPlanners_States_IState.I
             actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitBoardedByCo);
             actionPlanner.updateView();
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitBoardedByCo);
             actionPlanner.updateView();
 
-            SinglePlayerWar_Model_SpwLocalProxy.reqUnitBoardedByCo(
+            SinglePlayerWars_LocalGateway.reqUnitBoardedByCo(
                 war,
                 actionPlanner.generateProtoMovePath(),
                 actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,

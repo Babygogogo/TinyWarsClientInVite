@@ -4,7 +4,7 @@ import {
     Helpers_Misc,
     Notifications_Dispatcher,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Utils_ClientErrorCode,
     WarOperations_Executors_Utils_PlayerDeleteUnit,
     WarOperations_Executors_Utils_PlayerEndTurn,
@@ -76,7 +76,7 @@ export async function checkAndExecute(war: BaseWar_Model_War.War, action: WoCont
             war.getWarStatisticsManager().tickPlayerManualActionsCount(turnIndex, playerIndex);
         }
 
-        if ((war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) ||
+        if ((war instanceof SinglePlayerWars_War.War) ||
             (war instanceof ReplayWar_Model_RwWar.RwWar)
         ) {
             war.getTaskObjectiveManager().autoUpdateAllCurrentProgresses();

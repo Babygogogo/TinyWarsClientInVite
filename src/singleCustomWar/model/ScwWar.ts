@@ -2,14 +2,14 @@ import {
     Utils_ClientErrorCode,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     BootTimers_Constants,
     type GameConfigs_GameConfig,
 } from "../../internal.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
 
-export class ScwWar extends SinglePlayerWar_Model_SpwWar.SpwWar {
+export class ScwWar extends SinglePlayerWars_War.War {
     private _settingsForScw?    : SettingsForScw;
 
     public constructor(isNeedView: boolean) {

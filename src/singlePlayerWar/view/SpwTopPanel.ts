@@ -20,7 +20,8 @@ import {
     SingleFreeWar_Model_SfwWar,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
-    SinglePlayerWar_Model_SpwModel,
+    SinglePlayerWars_Provider,
+    SinglePlayerWars_War,
     SingleRankWar_Model_SrwWar,
     Sounds_Constants,
     Sounds_SoundPlayer,
@@ -35,7 +36,6 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
     type Notifications_Mapping,
-    type SinglePlayerWar_Interface_ISpwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -54,7 +54,7 @@ enum PanelSkinState {
 }
 
 export interface OpenData {
-    war     : SinglePlayerWar_Interface_ISpwWar.ISpwWar;
+    war     : SinglePlayerWars_War.War;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _listPlayer!           : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForListPlayer>;
@@ -434,7 +434,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateGroupPauseAi();
 
         if (!isPaused) {
-            SinglePlayerWar_Model_SpwModel.checkAndHandleAutoActionsAndRobotRecursively(war);
+            SinglePlayerWars_Provider.checkAndHandleAutoActionsAndRobotRecursively(war);
         }
     }
 
@@ -642,7 +642,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForListPlayer extends Ui_Types_UiListItemData.UiListItemData {
-    war         : SinglePlayerWar_Interface_ISpwWar.ISpwWar;
+    war         : SinglePlayerWars_War.War;
     playerIndex : number;
 }
 class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForListPlayer> {

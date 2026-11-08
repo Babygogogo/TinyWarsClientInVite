@@ -5,7 +5,7 @@ import {
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     TestWar_Model_TwWar,
@@ -60,7 +60,7 @@ export class ChoosingUnitFlareDestination implements ActionPlanners_States_IStat
                 return ActionPlanners_Constants.StateId.ChoosingUnitFlareDestination;
             }
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             const destination = actionPlanner.getMovePathDestination().getGridIndex();
             if (destination.getDistance(gridIndex) > Helpers_Misc.getExisted(Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).getFlareMaxRange(destination))) {
                 return ActionPlanners_Constants.StateId.ChoosingUnitAction;

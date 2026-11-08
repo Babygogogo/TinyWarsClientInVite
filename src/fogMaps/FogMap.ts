@@ -8,7 +8,7 @@ import {
     MultiPlayerWar_Model_MpwWar,
     Players_Constants,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Utils_ClientErrorCode,
     Visibilities_Constants,
@@ -130,7 +130,7 @@ export class FogMap {
                 tile.setHasFog(!visibleTiles.has(tile));
             }
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             const teamIndexes   = war.getPlayerManager().getWatcherTeamIndexesForSelf();
             const visibleUnits  = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, teamIndexes);
             for (const unit of war.getUnitMap().getAllUnitsOnMap()) {

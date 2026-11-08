@@ -30,7 +30,7 @@ import {
     Notifications_Dispatcher,
     Players_Constants,
     ReplayWar_Model_RwWarBase,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Tiles_Constants_Common,
@@ -334,7 +334,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             }
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             if (GridMarks_Utils.addGridMark(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), gridId, _selectedMarkTypeId)) {
                 Notifications_Dispatcher.dispatch("GridMarkAdded", {
                     war    : war,
@@ -390,7 +390,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             }
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             if (GridMarks_Utils.deleteGridMark(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), gridId)) {
                 Notifications_Dispatcher.dispatch("GridMarkDeleted", {
                     war    : war,
@@ -519,7 +519,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             btnMark.setIsVisible(canMark);
             btnUnmark.setIsVisible(!canMark);
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             const canMark = war.getSaveSlotExtraData().getGridMarkData()?.getGridIdAndMarkTypeIdList().find(v => v.getGridId() === gridId)?.getMarkTypeId() !== _selectedMarkTypeId;
             btnMark.setIsVisible(canMark);
             btnUnmark.setIsVisible(!canMark);

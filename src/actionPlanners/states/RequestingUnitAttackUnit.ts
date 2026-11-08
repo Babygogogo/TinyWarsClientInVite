@@ -1,6 +1,6 @@
 import {
     MultiPlayerWar_Model_MpwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     ActionPlanners_Constants,
     type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
@@ -8,7 +8,7 @@ import {
     Helpers_Misc,
     Sounds_SoundPlayer,
     MultiPlayerWar_Model_MpwProxy,
-    SinglePlayerWar_Model_SpwLocalProxy,
+    SinglePlayerWars_LocalGateway,
     Sounds_Constants,
 } from "../../internal.ts";
 
@@ -62,12 +62,12 @@ export class RequestingUnitAttackUnit implements ActionPlanners_States_IState.IS
             actionPlanner.updateView();
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitAttackUnit);
             actionPlanner.updateView();
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
 
-            SinglePlayerWar_Model_SpwLocalProxy.reqUnitAttackUnit({
+            SinglePlayerWars_LocalGateway.reqUnitAttackUnit({
                 war             : war,
                 path            : actionPlanner.generateProtoMovePath(),
                 launchUnitId    : actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,

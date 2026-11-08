@@ -13,7 +13,7 @@ import {
     Turns_Constants,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
 } from "../../internal.ts";
 
 export class Idle implements ActionPlanners_States_IState.IState {
@@ -109,11 +109,11 @@ export class Idle implements ActionPlanners_States_IState.IState {
                 }
             }
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             const turnManager       = war.getTurnManager();
             const playerIndexInTurn = turnManager.getPlayerIndexInTurn();
 
-            if (((war as SinglePlayerWar_Model_SpwWar.SpwWar).getHumanPlayerIndexes().indexOf(playerIndexInTurn) < 0) ||
+            if (((war as SinglePlayerWars_War.War).getHumanPlayerIndexes().indexOf(playerIndexInTurn) < 0) ||
                 (turnManager.getPhaseCode() !== Turns_Constants.PhaseCode.Main)
             ) {
                 return ActionPlanners_Constants.StateId.Idle;

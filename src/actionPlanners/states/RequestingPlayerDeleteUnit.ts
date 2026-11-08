@@ -5,8 +5,8 @@ import {
     Helpers_Misc,
     MultiPlayerWar_Model_MpwProxy,
     MultiPlayerWar_Model_MpwWar,
-    SinglePlayerWar_Model_SpwLocalProxy,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_LocalGateway,
+    SinglePlayerWars_War,
 } from "../../internal.ts";
 
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -71,11 +71,11 @@ export class RequestingPlayerDeleteUnit implements ActionPlanners_States_IState.
             actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingPlayerDeleteUnit);
             actionPlanner.updateView();
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingPlayerDeleteUnit);
 
             actionPlanner.updateView();
-            SinglePlayerWar_Model_SpwLocalProxy.reqPlayerDeleteUnit(war, gridIndex);
+            SinglePlayerWars_LocalGateway.reqPlayerDeleteUnit(war, gridIndex);
         }
     }
 }

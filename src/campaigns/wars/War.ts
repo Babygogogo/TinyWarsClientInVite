@@ -4,16 +4,15 @@ import {
     Numbers_Utils,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
     SinglePlayerWars_Constants,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     BootTimers_Constants,
     type GameConfigs_GameConfig,
-    type Campaigns_Wars_IWar,
 } from "../../internal.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForCaw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCaw.ts";
 
-export class War extends SinglePlayerWar_Model_SpwWar.SpwWar implements Campaigns_Wars_IWar.IWar {
+export class War extends SinglePlayerWars_War.War {
     private _settingsForCaw?    : SettingsForCaw;
 
     public constructor(isNeedView: boolean) {

@@ -214,8 +214,7 @@ export * as Campaigns_Views_CampaignInfoPage from "./campaigns/views/CampaignInf
 export * as Campaigns_Views_CampaignMapInfoPage from "./campaigns/views/CampaignMapInfoPage.ts";
 export * as Campaigns_Views_CampaignMapRankPage from "./campaigns/views/CampaignMapRankPage.ts";
 export * as Campaigns_Views_CampaignRankPage from "./campaigns/views/CampaignRankPage.ts";
-export * as Campaigns_Wars_IWar from "./campaigns/wars/IWar.ts";
-export * as SinglePlayerWar_Model_SpwWar from "./singlePlayerWar/model/SpwWar.ts";
+export * as SinglePlayerWars_War from "./singlePlayerWars/War.ts";
 export * as Campaigns_Wars_War from "./campaigns/wars/War.ts";
 export * as ChangeLogs_ChangeLogPanel from "./changeLogs/ChangeLogPanel.ts";
 export * as ChangeLogs_Constants from "./changeLogs/Constants.ts";
@@ -649,7 +648,6 @@ export * as SingleCustomRoom_View_ScrCreateMapListPanel from "./singleCustomRoom
 export * as SingleCustomRoom_View_ScrCreatePlayerInfoPage from "./singleCustomRoom/view/ScrCreatePlayerInfoPage.ts";
 export * as SingleCustomRoom_View_ScrCreateSettingsPanel from "./singleCustomRoom/view/ScrCreateSettingsPanel.ts";
 export * as SingleCustomWar_Model_ScwWar from "./singleCustomWar/model/ScwWar.ts";
-export * as SingleFreeWar_Interface_ISfwWar from "./singleFreeWar/interface/ISfwWar.ts";
 export * as SingleFreeWar_Model_SfwWar from "./singleFreeWar/model/SfwWar.ts";
 export * as SinglePlayerMode_Model_SpmModel from "./singlePlayerMode/model/SpmModel.ts";
 export * as SinglePlayerMode_Model_SpmProxy from "./singlePlayerMode/model/SpmProxy.ts";
@@ -657,11 +655,9 @@ export * as SinglePlayerMode_View_SpmMainMenuPanel from "./singlePlayerMode/view
 export * as SinglePlayerMode_View_SpmMyWarRoomRecordPanel from "./singlePlayerMode/view/SpmMyWarRoomRecordPanel.ts";
 export * as SinglePlayerMode_View_SpmRankPage from "./singlePlayerMode/view/SpmRankPage.ts";
 export * as SinglePlayerMode_View_SpmWarListPanel from "./singlePlayerMode/view/SpmWarListPanel.ts";
-export * as SinglePlayerWar_Interface_ISpwRetractManager from "./singlePlayerWar/interface/ISpwRetractManager.ts";
-export * as SinglePlayerWar_Interface_ISpwWar from "./singlePlayerWar/interface/ISpwWar.ts";
-export * as SinglePlayerWar_Model_SpwLocalProxy from "./singlePlayerWar/model/SpwLocalProxy.ts";
-export * as SinglePlayerWar_Model_SpwModel from "./singlePlayerWar/model/SpwModel.ts";
-export * as SinglePlayerWar_Model_SpwRetractManager from "./singlePlayerWar/model/SpwRetractManager.ts";
+export * as SinglePlayerWars_LocalGateway from "./singlePlayerWars/LocalGateway.ts";
+export * as SinglePlayerWars_Provider from "./singlePlayerWars/Provider.ts";
+export * as Retracts_RetractManager from "./retracts/RetractManager.ts";
 export * as SinglePlayerWar_View_SpwSidePanel from "./singlePlayerWar/view/SpwSidePanel.ts";
 export * as SinglePlayerWar_View_SpwTopPanel from "./singlePlayerWar/view/SpwTopPanel.ts";
 export * as SinglePlayerWar_View_SpwWarAdvancedMenuPanel from "./singlePlayerWar/view/SpwWarAdvancedMenuPanel.ts";
@@ -672,7 +668,6 @@ export * as SingleRankRoom_View_SrrCreateMapListPanel from "./singleRankRoom/vie
 export * as SingleRankRoom_View_SrrCreatePlayerInfoPage from "./singleRankRoom/view/SrrCreatePlayerInfoPage.ts";
 export * as SingleRankRoom_View_SrrCreateQuickSettingsPanel from "./singleRankRoom/view/SrrCreateQuickSettingsPanel.ts";
 export * as SingleRankRoom_View_SrrCreateSettingsPanel from "./singleRankRoom/view/SrrCreateSettingsPanel.ts";
-export * as SingleRankWar_Interface_ISrwWar from "./singleRankWar/interface/ISrwWar.ts";
 export * as SingleRankWar_Model_SrwWar from "./singleRankWar/model/SrwWar.ts";
 export * as SingleRankedWars_Constants from "./singleRankedWars/Constants.ts";
 export * as Sounds_Constants from "./sounds/Constants.ts";

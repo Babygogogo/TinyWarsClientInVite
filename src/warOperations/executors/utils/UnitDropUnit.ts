@@ -7,7 +7,7 @@ import {
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     TestWar_Model_TwWar,
@@ -240,7 +240,7 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoUnitDropUnit): Prom
         return null;
     } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
         return `${Lang_Utils.getText(Lang_Constants.TextType.B0102)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+    } else if (war instanceof SinglePlayerWars_War.War) {
         return null;
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;

@@ -1,6 +1,6 @@
 import {
     MultiPlayerWar_Model_MpwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     ActionPlanners_Constants,
     type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
@@ -8,7 +8,7 @@ import {
     type CoSkills_Constants,
     Helpers_Misc,
     MultiPlayerWar_Model_MpwProxy,
-    SinglePlayerWar_Model_SpwLocalProxy,
+    SinglePlayerWars_LocalGateway,
 } from "../../internal.ts";
 
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -77,11 +77,11 @@ export class RequestingUnitUseCoActiveSkill implements ActionPlanners_States_ISt
             actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitUseCoActiveSkill);
             actionPlanner.updateView();
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitUseCoActiveSkill);
             actionPlanner.updateView();
 
-            SinglePlayerWar_Model_SpwLocalProxy.reqUnitUseCoActiveSkill({
+            SinglePlayerWars_LocalGateway.reqUnitUseCoActiveSkill({
                 war                  : war,
                 skillType            : coSkillTypeId,
                 path                 : actionPlanner.generateProtoMovePath(),

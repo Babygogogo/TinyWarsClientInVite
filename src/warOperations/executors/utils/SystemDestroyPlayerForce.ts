@@ -4,7 +4,7 @@ import {
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Utils_ClientErrorCode,
     Helpers_Misc,
@@ -81,7 +81,7 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayer
     } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
         const playerIndex = Helpers_Misc.getExisted(action.getTargetPlayerIndex());
         return `P${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0450)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+    } else if (war instanceof SinglePlayerWars_War.War) {
         const playerIndex = Helpers_Misc.getExisted(action.getTargetPlayerIndex());
         return `p${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0450)}`;
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {

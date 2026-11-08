@@ -11,7 +11,7 @@ import {
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Timer_TimerModel,
@@ -148,7 +148,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const war       = this.getOpenData()?.war;
         const canDelete = (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar)
-            || (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar)
+            || (war instanceof SinglePlayerWars_War.War)
             || (war instanceof MapEditor_Model_MeWar.MeWar);
         for (let i = 0; i < this._cellList.length; ++i) {
             if (this._cellList[i] === dispatcher) {
@@ -460,7 +460,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
 }
 
 function getObserverTeamIndexSet(war: BaseWar_Model_War.War): Set<number> | null {
-    if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+    if (war instanceof SinglePlayerWars_War.War) {
         const set           = new Set<number>();
         const playerInTurn  = war.getPlayerInTurn();
         if (playerInTurn.getUserId() != null) {

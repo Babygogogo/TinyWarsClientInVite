@@ -5,7 +5,7 @@ import {
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     TestWar_Model_TwWar,
@@ -96,7 +96,7 @@ export class ChoosingUnitDropDestination implements ActionPlanners_States_IState
                 return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             }
 
-        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        } else if (war instanceof SinglePlayerWars_War.War) {
             if (Helpers_Misc.getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
                 return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {

@@ -21,7 +21,7 @@ import {
     Players_Constants,
     ReplayWar_Model_RwWar,
     ReplayWar_Model_RwWarBase,
-    SinglePlayerWar_Model_SpwWar,
+    SinglePlayerWars_War,
     Tween_Executor,
     Ui_Components_UiContainer,
     Ui_Components_UiImage,
@@ -576,7 +576,7 @@ function getGridMarkDataArray(war: BaseWar_Model_War.War): GridIdAndMarkTypeId[]
         const hiddenGridMarkTypeIdList  = data.getHiddenMarkTypeIdList();
         return data.getGridIdAndMarkTypeIdList().filter(v => !hiddenGridMarkTypeIdList.includes(v.getMarkTypeId()));
 
-    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+    } else if (war instanceof SinglePlayerWars_War.War) {
         const data                      = war.getSaveSlotExtraData().getGridMarkData();
         const hiddenGridMarkTypeIdList  = data?.getHiddenMarkTypeIdList() ?? [];
         return data?.getGridIdAndMarkTypeIdList().filter(v => !hiddenGridMarkTypeIdList.includes(v.getMarkTypeId())) ?? [];
