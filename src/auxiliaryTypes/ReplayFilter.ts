@@ -1,4 +1,6 @@
-import type { Undefinable } from "./AuxiliaryTypes.ts";
+import {
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
 export class ReplayFilter {
     public replayId?                   : number | null;
@@ -10,18 +12,18 @@ export class ReplayFilter {
     public hasFog?                     : boolean | null;
     public gameMode?                   : number | null;
     public isFavorite?                 : boolean | null;
-    public minPlayersCountUnneutral?   : Undefinable<number>;
-    public maxPlayersCountUnneutral?   : Undefinable<number>;
-    public minMapWidth?                : Undefinable<number>;
-    public maxMapWidth?                : Undefinable<number>;
-    public minMapHeight?               : Undefinable<number>;
-    public maxMapHeight?               : Undefinable<number>;
-    public minRankScore?               : Undefinable<number>;
-    public maxRankScore?               : Undefinable<number>;
-    public minTurnsCount?              : Undefinable<number>;
-    public maxTurnsCount?              : Undefinable<number>;
-    public minWarOperationsCount?      : Undefinable<number>;
-    public maxWarOperationsCount?      : Undefinable<number>;
+    public minPlayersCountUnneutral?   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public maxPlayersCountUnneutral?   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public minMapWidth?                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public maxMapWidth?                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public minMapHeight?               : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public maxMapHeight?               : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public minRankScore?               : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public maxRankScore?               : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public minTurnsCount?              : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public maxTurnsCount?              : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public minWarOperationsCount?      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public maxWarOperationsCount?      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     public constructor(obj: Partial<ReplayFilter> = {}) {
         Object.assign(this, obj);

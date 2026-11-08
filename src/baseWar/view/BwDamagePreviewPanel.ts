@@ -1,73 +1,75 @@
-import { StateId } from "../../actionPlanners/Constants.ts";
-import { DamageCalculatorPlayerData } from "../../auxiliaryTypes/DamageCalculatorPlayerData.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import { getCachedTileObjectImageSource, getTileAnimationTickCount } from "../../common/model/CommonModel.ts";
-import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { getEstimatedBattleInfo, getAttackAndCounterDamage } from "../../damageCalculators/Utils.ts";
-import { getSpwWarClass, getRwWarBaseClass } from "../../gameHelpers/GhFactory.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { getStage } from "../../stages/StageManager.ts";
-import { TileTypeId, ThemeTypeId, ObjectTypeId } from "../../tiles/constants/Common.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { WeaponTypeId } from "../../units/Constants.ts";
-import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
+import {
+    ActionPlanners_Constants,
+    AuxiliaryTypes_DamageCalculatorPlayerData,
+    Common_Model_CommonModel,
+    CoSkills_Constants,
+    DamageCalculators_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Graphics_Utils,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWars_War,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Stages_StageManager,
+    Tiles_Constants_Common,
+    Ui_Components_UiPanel,
+    Units_Constants,
+    Users_Model,
+    type BaseWar_Model_War,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
-const getGridWidth          = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight         = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
+const getGridWidth          = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight         = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
 export interface OpenData {
-    war: IBwWar;
+    war: BaseWar_Model_War.War;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _group!                : IUiContainer;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _layoutAttack!         : IUiLayout;
-    private readonly _labelAttackTitle!     : IUiLabel;
-    private readonly _labelAttackValue!     : IUiLabel;
-    private readonly _layoutCounter!        : IUiLayout;
-    private readonly _labelCounterTitle!    : IUiLabel;
-    private readonly _labelCounterValue!    : IUiLabel;
+    private readonly _layoutAttack!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelAttackTitle!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelAttackValue!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _layoutCounter!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelCounterTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCounterValue!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupCalculator!      : IUiContainer;
-    private readonly _groupSettingsSwitch!  : IUiContainer;
+    private readonly _groupCalculator!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupSettingsSwitch!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _groupSettings!        : IUiContainer;
-    private readonly _groupCoz!             : IUiContainer;
-    private readonly _imgCoz!               : IUiImage;
-    private readonly _groupCommandTower!    : IUiLayout;
-    private readonly _btnSubCommandTower!   : IUiButton;
-    private readonly _labelCommandTower!    : IUiLabel;
-    private readonly _imgCommandTower!      : IUiImage;
-    private readonly _btnAddCommandTower!   : IUiButton;
+    private readonly _groupSettings!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupCoz!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgCoz!               : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _groupCommandTower!    : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnSubCommandTower!   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelCommandTower!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgCommandTower!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _btnAddCommandTower!   : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.ZoomableContentsMoved,               callback: this._onNotifyZoomableContentsMoved },
-            { type: TypeId.TileAnimationTick,                   callback: this._onNotifyTileAnimationTick },
-            { type: TypeId.UnitAndTileTextureVersionChanged,    callback: this._onNotifyUnitAndTileTextureVersionChanged },
-            { type: TypeId.BwCursorGridIndexChanged,            callback: this._onNotifyBwCursorGridIndexChanged },
-            { type: TypeId.ActionPlannerMovePathChanged,        callback: this._onNotifyActionPlannerMovePathChanged },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "ZoomableContentsMoved",               callback : this._onNotifyZoomableContentsMoved },
+            { type : "TileAnimationTick",                   callback : this._onNotifyTileAnimationTick },
+            { type : "UnitAndTileTextureVersionChanged",    callback : this._onNotifyUnitAndTileTextureVersionChanged },
+            { type : "BwCursorGridIndexChanged",            callback : this._onNotifyBwCursorGridIndexChanged },
+            { type : "ActionPlannerMovePathChanged",        callback : this._onNotifyActionPlannerMovePathChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupCalculator,            callback: this._onTouchedGroupCalculator },
-            { ui: this._groupSettingsSwitch,        callback: this._onTouchedGroupSettingsSwitch },
-            { ui: this._groupCoz,                   callback: this._onTouchedGroupCoz },
-            { ui: this._btnSubCommandTower,         callback: this._onTouchedBtnSubCommandTower },
-            { ui: this._btnAddCommandTower,         callback: this._onTouchedBtnAddCommandTower },
+            { ui : this._groupCalculator,            callback : this._onTouchedGroupCalculator },
+            { ui : this._groupSettingsSwitch,        callback : this._onTouchedGroupSettingsSwitch },
+            { ui : this._groupCoz,                   callback : this._onTouchedGroupCoz },
+            { ui : this._btnSubCommandTower,         callback : this._onTouchedBtnSubCommandTower },
+            { ui : this._btnAddCommandTower,         callback : this._onTouchedBtnAddCommandTower },
         ]);
         this._btnAddCommandTower.setText(`+`);
         this._btnSubCommandTower.setText(`-`);
@@ -104,21 +106,29 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const defenderGridIndex = war.getCursor().getGridIndex();
-        const defenderUnit      = war.getUnitMap().getUnitOnMap(defenderGridIndex);
-        if (defenderUnit == null) {
-            playShortSfx(ShortSfxCode.ButtonForbidden01);
+        const actionPlanner = war.getActionPlanner();
+        if (actionPlanner == null) {
             return;
         }
 
-        const actionPlanner         = war.getActionPlanner();
+        const defenderGridIndex = war.getCursor()?.getGridIndex();
+        if (defenderGridIndex == null) {
+            return;
+        }
+
+        const defenderUnit = war.getUnitMap().getUnitOnMap(defenderGridIndex);
+        if (defenderUnit == null) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
+            return;
+        }
+
         const tileMap               = war.getTileMap();
         const commonSettingsManager = war.getCommonSettingManager();
         const gameConfig            = war.getGcData();
         const allTiles              = tileMap.getAllTiles();
-        const allCities             = allTiles.filter(v => v.getTileTypeId() === TileTypeId.City);
-        const allCommandTowers      = allTiles.filter(v => v.getTileTypeId() === TileTypeId.CommandTower);
-        const attackerUnit          = getExisted(actionPlanner.getFocusUnit());
+        const allCities             = allTiles.filter(v => v.getTileTypeId() === Tiles_Constants_Common.TileTypeId.City);
+        const allCommandTowers      = allTiles.filter(v => v.getTileTypeId() === Tiles_Constants_Common.TileTypeId.CommandTower);
+        const attackerUnit          = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
         const attackerPlayer        = attackerUnit.getPlayer();
         const attackerGridIndex     = actionPlanner.getMovePathDestination().getGridIndex();
         const attackerPlayerIndex   = attackerUnit.getPlayerIndex();
@@ -134,7 +144,7 @@ export class Panel extends UiPanel<OpenData> {
         const canSeeHiddenInfo2     = (!hasFog) || (watcherTeamIndexes.has(defenderPlayer.getTeamIndex()));
         const coSkillType1          = attackerPlayer.getCoUsingSkillType();
         const coSkillType2          = defenderPlayer.getCoUsingSkillType();
-        const getIsAffectedByCo1    = createLazyFunc((): boolean => {
+        const getIsAffectedByCo1    = Helpers_Misc.createLazyFunc((): boolean => {
             if ((attackerUnit.getIsCoOnboard()) || (!gameConfig.getCoBasicCfg(attackerPlayer.getCoId())?.getMaxBoardCount())) {
                 return true;
             }
@@ -142,7 +152,7 @@ export class Panel extends UiPanel<OpenData> {
             const distance = attackerGridIndex.getMinDistance(attackerPlayer.getCoGridIndexListOnMap());
             return (distance != null) && (distance <= attackerPlayer.getCoZoneRadius());
         });
-        const getIsAffectedByCo2    = createLazyFunc((): boolean => {
+        const getIsAffectedByCo2    = Helpers_Misc.createLazyFunc((): boolean => {
             if ((defenderUnit.getIsCoOnboard())  || (!gameConfig.getCoBasicCfg(defenderPlayer.getCoId())?.getMaxBoardCount())) {
                 return true;
             }
@@ -158,67 +168,67 @@ export class Panel extends UiPanel<OpenData> {
         const attackerLowerLuck = attackerRule.getLuckLowerLimit() + warEventManager.getOpaLuckLowerLimitModifier(attackerUnit, attackerGridIndex);
         const defenderUpperLuck = defenderRule.getLuckUpperLimit() + warEventManager.getOpaLuckUpperLimitModifier(defenderUnit, defenderGridIndex);
         const defenderLowerLuck = defenderRule.getLuckLowerLimit() + warEventManager.getOpaLuckLowerLimitModifier(defenderUnit, defenderGridIndex);
-        openPanel(getDict().CommonDamageCalculatorPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageCalculatorPanel, {
             war,
-            needReviseWeaponType    : false,
-            data                    : {
+            needReviseWeaponType : false,
+            data                 : {
                 gameConfig,
-                weatherType     : war.getWeatherManager().getCurrentWeatherType(),
-                attackerData    : new DamageCalculatorPlayerData({
-                    coId                    : attackerPlayer.getCoId(),
-                    coSkillType             : attackerPlayer.checkCoIsUsingActiveSkill()
+                weatherType  : war.getWeatherManager().getCurrentWeatherType(),
+                attackerData : new AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData({
+                    coId        : attackerPlayer.getCoId(),
+                    coSkillType : attackerPlayer.checkCoIsUsingActiveSkill()
                         ? coSkillType1
-                        : (getIsAffectedByCo1() ? SkillTypeId.Passive : null),
-                    unitType                : attackerUnit.getUnitType(),
-                    unitHp                  : attackerUnit.getCurrentHp(),
-                    unitWeaponType          : (attackerUnit.getPrimaryWeaponBaseDamage(defenderArmorType) != null)
-                        ? (WeaponTypeId.Primary)
+                        : (getIsAffectedByCo1() ? CoSkills_Constants.SkillTypeId.Passive : null),
+                    unitType       : attackerUnit.getUnitType(),
+                    unitHp         : attackerUnit.getCurrentHp(),
+                    unitWeaponType : (attackerUnit.getPrimaryWeaponBaseDamage(defenderArmorType) != null)
+                        ? (Units_Constants.WeaponTypeId.Primary)
                         : (attackerUnit.getSecondaryWeaponBaseDamage(defenderArmorType) != null
-                            ? WeaponTypeId.Secondary
+                            ? Units_Constants.WeaponTypeId.Secondary
                             : null
                         ),
-                    unitPromotion           : attackerUnit.getCurrentPromotion(),
-                    tileType                : attackerTile.getTileTypeId(),
-                    tileCustomBuildingData  : attackerTile.getCustomBuildingData(),
-                    towersCount             : allCommandTowers.filter(v => v.getPlayerIndex() === attackerPlayerIndex).length,
-                    offenseBonus            : attackerRule.getAttackPowerModifier() + warEventManager.getOpaAttackPowerModifier(attackerUnit, attackerGridIndex),
-                    defenseBonus            : attackerRule.getDefenseModifier() + warEventManager.getOpaDefenseModifier(attackerUnit, attackerGridIndex),
-                    upperLuck               : Math.max(attackerUpperLuck, attackerLowerLuck),
-                    lowerLuck               : Math.min(attackerUpperLuck, attackerLowerLuck),
-                    hasPrimaryAmmo          : !!attackerUnit.getPrimaryWeaponCurrentAmmo(),
-                    coOnboard               : attackerUnit.getIsCoOnboard(),
-                    fund                    : canSeeHiddenInfo1 ? attackerPlayer.getFund() : 0,
-                    citiesCount             : canSeeHiddenInfo1 ? allCities.filter(v => v.getPlayerIndex() === attackerPlayerIndex).length : 0,
+                    unitPromotion          : attackerUnit.getCurrentPromotion(),
+                    tileType               : attackerTile.getTileTypeId(),
+                    tileCustomBuildingData : attackerTile.getCustomBuildingData(),
+                    towersCount            : allCommandTowers.filter(v => v.getPlayerIndex() === attackerPlayerIndex).length,
+                    offenseBonus           : attackerRule.getAttackPowerModifier() + warEventManager.getOpaAttackPowerModifier(attackerUnit, attackerGridIndex),
+                    defenseBonus           : attackerRule.getDefenseModifier() + warEventManager.getOpaDefenseModifier(attackerUnit, attackerGridIndex),
+                    upperLuck              : Math.max(attackerUpperLuck, attackerLowerLuck),
+                    lowerLuck              : Math.min(attackerUpperLuck, attackerLowerLuck),
+                    hasPrimaryAmmo         : !!attackerUnit.getPrimaryWeaponCurrentAmmo(),
+                    coOnboard              : attackerUnit.getIsCoOnboard(),
+                    fund                   : canSeeHiddenInfo1 ? attackerPlayer.getFund() : 0,
+                    citiesCount            : canSeeHiddenInfo1 ? allCities.filter(v => v.getPlayerIndex() === attackerPlayerIndex).length : 0,
                 }),
-                defenderData    : new DamageCalculatorPlayerData({
-                    coId                    : defenderPlayer.getCoId(),
-                    coSkillType             : defenderPlayer.checkCoIsUsingActiveSkill()
+                defenderData : new AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData({
+                    coId        : defenderPlayer.getCoId(),
+                    coSkillType : defenderPlayer.checkCoIsUsingActiveSkill()
                         ? coSkillType2
-                        : (getIsAffectedByCo2() ? SkillTypeId.Passive : null),
-                    unitType                : defenderUnit.getUnitType(),
-                    unitHp                  : defenderUnit.getCurrentHp(),
-                    unitWeaponType          : (defenderUnit.getPrimaryWeaponBaseDamage(attackerArmorType) != null)
-                        ? (WeaponTypeId.Primary)
+                        : (getIsAffectedByCo2() ? CoSkills_Constants.SkillTypeId.Passive : null),
+                    unitType       : defenderUnit.getUnitType(),
+                    unitHp         : defenderUnit.getCurrentHp(),
+                    unitWeaponType : (defenderUnit.getPrimaryWeaponBaseDamage(attackerArmorType) != null)
+                        ? (Units_Constants.WeaponTypeId.Primary)
                         : (defenderUnit.getSecondaryWeaponBaseDamage(attackerArmorType) != null
-                            ? WeaponTypeId.Secondary
+                            ? Units_Constants.WeaponTypeId.Secondary
                             : null
                         ),
-                    unitPromotion           : defenderUnit.getCurrentPromotion(),
-                    tileType                : defenderTile.getTileTypeId(),
-                    tileCustomBuildingData  : defenderTile.getCustomBuildingData(),
-                    towersCount             : allCommandTowers.filter(v => v.getPlayerIndex() === defenderPlayerIndex).length,
-                    offenseBonus            : defenderRule.getAttackPowerModifier() + warEventManager.getOpaAttackPowerModifier(defenderUnit, defenderGridIndex),
-                    defenseBonus            : defenderRule.getDefenseModifier() + warEventManager.getOpaDefenseModifier(defenderUnit, defenderGridIndex),
-                    upperLuck               : Math.max(defenderUpperLuck, defenderLowerLuck),
-                    lowerLuck               : Math.min(defenderUpperLuck, defenderLowerLuck),
-                    hasPrimaryAmmo          : !!defenderUnit.getPrimaryWeaponCurrentAmmo(),
-                    coOnboard               : defenderUnit.getIsCoOnboard(),
-                    fund                    : canSeeHiddenInfo2 ? defenderPlayer.getFund() : 0,
-                    citiesCount             : canSeeHiddenInfo2 ? allCities.filter(v => v.getPlayerIndex() === defenderPlayerIndex).length : 0,
+                    unitPromotion          : defenderUnit.getCurrentPromotion(),
+                    tileType               : defenderTile.getTileTypeId(),
+                    tileCustomBuildingData : defenderTile.getCustomBuildingData(),
+                    towersCount            : allCommandTowers.filter(v => v.getPlayerIndex() === defenderPlayerIndex).length,
+                    offenseBonus           : defenderRule.getAttackPowerModifier() + warEventManager.getOpaAttackPowerModifier(defenderUnit, defenderGridIndex),
+                    defenseBonus           : defenderRule.getDefenseModifier() + warEventManager.getOpaDefenseModifier(defenderUnit, defenderGridIndex),
+                    upperLuck              : Math.max(defenderUpperLuck, defenderLowerLuck),
+                    lowerLuck              : Math.min(defenderUpperLuck, defenderLowerLuck),
+                    hasPrimaryAmmo         : !!defenderUnit.getPrimaryWeaponCurrentAmmo(),
+                    coOnboard              : defenderUnit.getIsCoOnboard(),
+                    fund                   : canSeeHiddenInfo2 ? defenderPlayer.getFund() : 0,
+                    citiesCount            : canSeeHiddenInfo2 ? allCities.filter(v => v.getPlayerIndex() === defenderPlayerIndex).length : 0,
                 }),
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedGroupSettingsSwitch(): void {
@@ -227,11 +237,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         if (!settings.isEnabled) {
-            openPanel(getDict().CommonHelpPanel, {
-                getContent : () => getText(TextType.A0021),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0021),
             });
         }
         settings.isEnabled = !settings.isEnabled;
@@ -244,9 +254,10 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        const targetPlayerIndex = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayerIndex();
+        const gridIndex         = war.getCursor()?.getGridIndex();
+        const targetPlayerIndex = gridIndex ? war.getUnitMap().getUnitOnMap(gridIndex)?.getPlayerIndex() : undefined;
         if (targetPlayerIndex != null) {
             const settings          = war.getDamagePreviewSettings();
             const settingsForEnemy  = settings.settings.find(v => v.playerIndex === targetPlayerIndex);
@@ -254,9 +265,9 @@ export class Panel extends UiPanel<OpenData> {
                 settingsForEnemy.isForcedInCoZone = !settingsForEnemy.isForcedInCoZone;
             } else {
                 settings.settings.push({
-                    playerIndex             : targetPlayerIndex,
-                    isForcedInCoZone        : true,
-                    extraCommandTowerCount  : 0,
+                    playerIndex            : targetPlayerIndex,
+                    isForcedInCoZone       : true,
+                    extraCommandTowerCount : 0,
                 });
             }
             this._updateComponentsForDamage();
@@ -270,7 +281,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const targetPlayerIndex = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayerIndex();
+        const gridIndex         = war.getCursor()?.getGridIndex();
+        const targetPlayerIndex = gridIndex ? war.getUnitMap().getUnitOnMap(gridIndex)?.getPlayerIndex() : undefined;
         if (targetPlayerIndex != null) {
             const settingsForEnemy = war.getDamagePreviewSettings().settings.find(v => v.playerIndex === targetPlayerIndex);
             if ((settingsForEnemy) && (settingsForEnemy.extraCommandTowerCount > 0)) {
@@ -288,7 +300,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const targetPlayerIndex = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayerIndex();
+        const gridIndex         = war.getCursor()?.getGridIndex();
+        const targetPlayerIndex = gridIndex ? war.getUnitMap().getUnitOnMap(gridIndex)?.getPlayerIndex() : undefined;
         if (targetPlayerIndex != null) {
             const settings          = war.getDamagePreviewSettings();
             const settingsForEnemy  = settings.settings.find(v => v.playerIndex === targetPlayerIndex);
@@ -296,9 +309,9 @@ export class Panel extends UiPanel<OpenData> {
                 ++settingsForEnemy.extraCommandTowerCount;
             } else {
                 settings.settings.push({
-                    playerIndex             : targetPlayerIndex,
-                    isForcedInCoZone        : false,
-                    extraCommandTowerCount  : 1,
+                    playerIndex            : targetPlayerIndex,
+                    isForcedInCoZone       : false,
+                    extraCommandTowerCount : 1,
                 });
             }
             this._updateComponentsForDamage();
@@ -323,11 +336,20 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const actionPlanner = war.getActionPlanner();
-        const stateId       = actionPlanner.getStateId();
-        const group         = this._group;
+        if (actionPlanner == null) {
+            return;
+        }
 
-        if ((stateId === StateId.ChoosingUnitMovePath)     ||
-            (stateId === StateId.ChoosingUnitAttackTarget)
+        const gridIndex2 = war.getCursor()?.getGridIndex();
+        if (gridIndex2 == null) {
+            return;
+        }
+
+        const stateId   = actionPlanner.getStateId();
+        const group     = this._group;
+
+        if ((stateId === ActionPlanners_Constants.StateId.ChoosingUnitMovePath)     ||
+            (stateId === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget)
         ) {
             const attackerUnit  = actionPlanner.getFocusUnit();
             if (attackerUnit == null) {
@@ -338,7 +360,6 @@ export class Panel extends UiPanel<OpenData> {
             const unitMap       = war.getUnitMap();
             const rawMovePath   = actionPlanner.getMovePath();
             const movePath      = rawMovePath.map(v => v.getGridIndex());
-            const gridIndex2    = war.getCursor().getGridIndex();
             if (!attackerUnit.checkCanAttackTargetAfterMovePath(movePath, gridIndex2)) {
                 group.setIsVisible(false);
             } else {
@@ -351,26 +372,26 @@ export class Panel extends UiPanel<OpenData> {
                 }
 
                 const attackerUnitId    = attackerUnit.getUnitId();
-                const battleInfo        = getEstimatedBattleInfo({
-                    war                         : war,
-                    movePath1                   : movePath,
-                    launchUnitId1               : attackerUnit.getLoaderUnitId() == null ? null : attackerUnitId,
-                    gridIndex2                  : gridIndex2,
-                    observerTeamIndexSet        : war instanceof getSpwWarClass() ? war.getPlayerManager().getTeamIndexSet([attackerUnit.getPlayerIndex()]) : null,
-                    useDamagePreviewSettings    : true,
-                    fuelConsumption             : destinationNode.getTotalMoveCost(),
-                    isAttackUnit                : unitMap.getVisibleUnitOnMap(gridIndex2) != null,
+                const battleInfo        = DamageCalculators_Utils.getEstimatedBattleInfo({
+                    war                      : war,
+                    movePath1                : movePath,
+                    launchUnitId1            : attackerUnit.getLoaderUnitId() == null ? null : attackerUnitId,
+                    gridIndex2               : gridIndex2,
+                    observerTeamIndexSet     : war instanceof SinglePlayerWars_War.War ? war.getPlayerManager().getTeamIndexSet([attackerUnit.getPlayerIndex()]) : null,
+                    useDamagePreviewSettings : true,
+                    fuelConsumption          : destinationNode.getTotalMoveCost(),
+                    isAttackUnit             : unitMap.getVisibleUnitOnMap(gridIndex2) != null,
                 });
                 if (unitOnDestination) {
                     unitMap.setUnitOnMap(unitOnDestination);
                 }
 
                 const target                            = unitMap.getUnitOnMap(gridIndex2) || war.getTileMap().getTile(gridIndex2);
-                const { attackDamage, counterDamage }   = getAttackAndCounterDamage({
-                    battleDamageInfoArray   : battleInfo.damageInfoArray,
-                    attackerUnitId          : attackerUnitId,
-                    targetGridIndex         : gridIndex2,
-                    unitMap                 : unitMap,
+                const { attackDamage, counterDamage }   = DamageCalculators_Utils.getAttackAndCounterDamage({
+                    battleDamageInfoArray : battleInfo.damageInfoArray,
+                    attackerUnitId        : attackerUnitId,
+                    targetGridIndex       : gridIndex2,
+                    unitMap               : unitMap,
                 });
                 group.setIsVisible(true);
                 this._labelAttackValue.setText(`${attackDamage == null ? `---` : attackDamage} / ${target.getCurrentHp()}`);
@@ -384,7 +405,7 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
     private _updateGroupSettingsSwitch(): void {
-        this._groupSettingsSwitch.setIsVisible(!(this.getOpenData()?.war instanceof getRwWarBaseClass()));
+        this._groupSettingsSwitch.setIsVisible(!(this.getOpenData()?.war instanceof ReplayWar_Model_RwWarBase.RwWarBase));
     }
     private _updateGroupSettings(): void {
         const war = this.getOpenData()?.war;
@@ -410,7 +431,8 @@ export class Panel extends UiPanel<OpenData> {
             }
         }
 
-        const targetPlayerIndex = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayerIndex();
+        const gridIndex         = war.getCursor()?.getGridIndex();
+        const targetPlayerIndex = gridIndex ? war.getUnitMap().getUnitOnMap(gridIndex)?.getPlayerIndex() : undefined;
         const settingsForEnemy  = settings.settings.find(v => v.playerIndex === targetPlayerIndex);
         this._imgCoz.setIsVisible(!!settingsForEnemy?.isForcedInCoZone);
         this._labelCommandTower.setText(`+${settingsForEnemy?.extraCommandTowerCount ?? 0}`);
@@ -424,15 +446,20 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const targetPlayer = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayer();
-        this._imgCommandTower.loadSource(getCachedTileObjectImageSource({
-            version     : getSelfSettingsTextureVersion(),
-            themeType   : ThemeTypeId.Normal,
-            skinId      : targetPlayer?.getUnitAndTileSkinId() ?? 0,
-            shapeId     : 0,
-            objectType  : ObjectTypeId.CommandTower,
-            isDark      : false,
-            tickCount   : getTileAnimationTickCount(),
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
+        const targetPlayer = war.getUnitMap().getUnitOnMap(gridIndex)?.getPlayer();
+        this._imgCommandTower.loadSource(Common_Model_CommonModel.getCachedTileObjectImageSource({
+            version    : Users_Model.getSelfSettingsTextureVersion(),
+            themeType  : Tiles_Constants_Common.ThemeTypeId.Normal,
+            skinId     : targetPlayer?.getUnitAndTileSkinId() ?? 0,
+            shapeId    : 0,
+            objectType : Tiles_Constants_Common.ObjectTypeId.CommandTower,
+            isDark     : false,
+            tickCount  : Common_Model_CommonModel.getTileAnimationTickCount(),
         }));
     }
 
@@ -442,15 +469,23 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const container     = war.getView().getFieldContainer();
-        const gridIndex     = war.getCursor().getGridIndex();
-        const stage         = getStage();
+        const container = war.getView()?.getFieldContainer();
+        if (container == null) {
+            return;
+        }
+
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
+        const stage         = Stages_StageManager.getStage();
         const group         = this._group;
         const groupWidth    = group.getUnscaledWidth();
         const groupHeight   = group.getUnscaledHeight();
         const point         = container.getContentsContainerLocalToGlobal({
-            x: (gridIndex.getX() + 0.5) * getGridWidth(),
-            y: (gridIndex.getY()) * getGridHeight(),
+            x : (gridIndex.getX() + 0.5) * getGridWidth(),
+            y : (gridIndex.getY()) * getGridHeight(),
         });
         group.setX(Math.max(0, Math.min(point.x - groupWidth / 2, stage.stageWidth - groupWidth)));
         // 原本设计为预览框永远位于画面内，但有玩家反馈会导致操作阻挡，因此改成可以超出屏幕上沿
@@ -459,8 +494,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelAttackTitle.setText(getText(TextType.B0077));
-        this._labelCounterTitle.setText(getText(TextType.B0078));
+        this._labelAttackTitle.setLangText(Lang_Constants.TextType.B0077);
+        this._labelCounterTitle.setLangText(Lang_Constants.TextType.B0078);
 
         this._layoutAttack.arrangeItems();
         this._layoutCounter.arrangeItems();

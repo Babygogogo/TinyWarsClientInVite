@@ -1,104 +1,100 @@
-import type { MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
-import { CcrRoomCreator } from "../model/CcrRoomCreator.ts";
-import { showLang } from "../../FloatText.ts";
-import { SortType } from "../../gameConfig/GcMap.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
 import {
-    getRawData,
-    getEnabledNormalMapIdSet,
-    getBriefData,
-    checkIsMeetFilter,
-    sortMapArray,
-} from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiMapInfo } from "../../ui/interfaces/IUiMapInfo.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { callLater, Event } from "../../vendor/egret/Egret.ts";
+    CoopCustomRoom_Model_CcrRoomCreator,
+    Egret_Egret,
+    FloatText,
+    GameConfigs_Provider,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    Maps_Constants,
+    NormalMap_Model_NormalMapModel,
+    Numbers_Utils,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Timer_TimerModel,
+    Tween_Executor,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapFilter,
+    type Helpers_PointerInput,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiMapInfo,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Interfaces_IUiZoomableMap,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 const MapsPerPage           = 50;
 let _pageIndex              = 0;
 let _selectedNormalMapId    : number | undefined;
-let _previousFilter         : MapFilter | null = null;
-let _mapSorter              : MapSorter = {
-    sortType    : SortType.MapName,
+let _previousFilter         : AuxiliaryTypes_MapFilter.MapFilter | null = null;
+let _mapSorter              : AuxiliaryTypes_AuxiliaryTypes.MapSorter = {
+    sortType    : Maps_Constants.SortType.MapName,
     isAscending : true,
 };
 
 export interface OpenData {
-    mapFilter               : MapFilter | null;
-    mapSorter               : MapSorter | null;
+    mapFilter               : AuxiliaryTypes_MapFilter.MapFilter | null;
+    mapSorter               : AuxiliaryTypes_AuxiliaryTypes.MapSorter | null;
     usePreviousFilter       : boolean;
     usePreviousPageIndex    : boolean;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupMapView!             : IUiContainer;
-    private readonly _zoomMap!                  : IUiZoomableMap;
-    private readonly _labelLoading!             : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupMapView!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _zoomMap!                  : Ui_Interfaces_IUiZoomableMap.IUiZoomableMap;
+    private readonly _labelLoading!             : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupNavigator!           : IUiLayout;
-    private readonly _layoutNavName!            : IUiLayout;
-    private readonly _labelMultiPlayer!         : IUiLabel;
-    private readonly _labelCreateRoom!          : IUiLabel;
-    private readonly _labelChooseMap!           : IUiLabel;
+    private readonly _groupNavigator!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _layoutNavName!            : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelMultiPlayer!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCreateRoom!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelChooseMap!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnBack!                  : IUiButton;
-    private readonly _btnNextStep!              : IUiButton;
+    private readonly _btnBack!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNextStep!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupTopRightButtons!     : IUiContainer;
-    private readonly _btnSwitch!                : IUiButton;
-    private readonly _btnSearch!                : IUiButton;
-    private readonly _btnSort!                  : IUiButton;
+    private readonly _groupTopRightButtons!     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnSwitch!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSearch!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSort!                  : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupSearch!              : IUiContainer;
-    private readonly _btnPrevPage!              : IUiButton;
-    private readonly _btnNextPage!              : IUiButton;
-    private readonly _layoutPage!               : IUiLayout;
-    private readonly _labelPageTitle!           : IUiLabel;
-    private readonly _labelPage!                : IUiLabel;
+    private readonly _groupSearch!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnPrevPage!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNextPage!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _layoutPage!               : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelPageTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPage!                : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupMapList!             : IUiContainer;
-    private readonly _listMap!                  : IUiScrollList<DataForMapNameRenderer>;
-    private readonly _labelNoMap!               : IUiLabel;
+    private readonly _groupMapList!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listMap!                  : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForMapNameRenderer>;
+    private readonly _labelNoMap!               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _uiMapInfo!                : IUiMapInfo;
-    private _mapFilter                          : MapFilter | null = null;
+    private readonly _uiMapInfo!                : Ui_Interfaces_IUiMapInfo.IUiMapInfo;
+    private _mapFilter                          : AuxiliaryTypes_MapFilter.MapFilter | null = null;
     private _cachedListDataArray                : DataForMapNameRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnSearch,      callback: this._onTouchTapBtnSearch },
-            { ui: this._btnSort,        callback: this._onTouchedBtnSort },
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
-            { ui: this._groupMapView,   callback: this._onTouchedGroupMapView },
-            { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
-            { ui: this._btnPrevPage,    callback: this._onTouchedBtnPrevPage },
-            { ui: this._btnNextPage,    callback: this._onTouchedBtnNextPage },
+            { ui : this._btnSearch,      callback : this._onTouchTapBtnSearch },
+            { ui : this._btnSort,        callback : this._onTouchedBtnSort },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnNextStep,    callback : this._onTouchedBtnNextStep },
+            { ui : this._groupMapView,   callback : this._onTouchedGroupMapView },
+            { ui : this._btnSwitch,      callback : this._onTouchedBtnSwitch },
+            { ui : this._btnPrevPage,    callback : this._onTouchedBtnPrevPage },
+            { ui : this._btnNextPage,    callback : this._onTouchedBtnNextPage },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -114,6 +110,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateOnOpenDataChanged();
     }
     protected override async _onClosed(): Promise<void> {
+        this._zoomMap.clearMap();
         await Promise.all([
             this._uiMapInfo.close(),
             this._listMap.removeAllItems(),
@@ -126,10 +123,10 @@ export class Panel extends UiPanel<OpenData> {
         _selectedNormalMapId = newNormalMapId;
 
         const listMap   = this._listMap;
-        const index     = getExisted(listMap.getRevisedFirstIndex(v => v?.normalMapId === newNormalMapId));
+        const index     = listMap.getRevisedFirstIndex(v => v?.normalMapId === newNormalMapId);
         listMap.setSelectedItemIndex(index);
         if (needScroll) {
-            callLater(() => listMap.scrollToItem(Math.max(0, index - 1)), undefined); // callLater是为了防止sizer延迟导致的scroll失效；index-1是为了让玩家看到上面还有选项
+            Egret_Egret.callLater(() => listMap.scrollToItem(Math.max(0, index - 1)), undefined); // callLater是为了防止sizer延迟导致的scroll失效；index-1是为了让玩家看到上面还有选项
         }
 
         this._showMap(listMap.getFirstSelectedData()?.normalMapId ?? null);
@@ -142,28 +139,28 @@ export class Panel extends UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchTapBtnSearch(): void {
-        openPanel(getDict().CommonMapFilterPanel, {
-            mapFilter           : this._mapFilter,
-            callbackOnConfirm   : mapFilter => {
-                openPanel(getDict().CcrCreateMapListPanel, {
-                    mapFilter               : mapFilter,
-                    mapSorter               : _mapSorter,
-                    usePreviousFilter       : false,
-                    usePreviousPageIndex    : false,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonMapFilterPanel, {
+            mapFilter         : this._mapFilter,
+            callbackOnConfirm : mapFilter => {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrCreateMapListPanel, {
+                    mapFilter            : mapFilter,
+                    mapSorter            : _mapSorter,
+                    usePreviousFilter    : false,
+                    usePreviousPageIndex : false,
                 });
             },
         });
     }
 
     private _onTouchedBtnSort(): void {
-        openPanel(getDict().CommonChooseMapSorterPanel, {
-            currentSorter       : _mapSorter,
-            callbackOnConfirm   : (mapSorter: MapSorter) => {
-                openPanel(getDict().CcrCreateMapListPanel, {
-                    mapFilter               : null,
-                    mapSorter               : mapSorter,
-                    usePreviousFilter       : true,
-                    usePreviousPageIndex    : false
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMapSorterPanel, {
+            currentSorter     : _mapSorter,
+            callbackOnConfirm : (mapSorter: AuxiliaryTypes_AuxiliaryTypes.MapSorter) => {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrCreateMapListPanel, {
+                    mapFilter            : null,
+                    mapSorter            : mapSorter,
+                    usePreviousFilter    : true,
+                    usePreviousPageIndex : false,
                 });
             },
         });
@@ -171,9 +168,9 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        openPanel(getDict().CcrMainMenuPanel, void 0);
-        openPanel(getDict().LobbyTopPanel, void 0);
-        openPanel(getDict().LobbyBottomPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrMainMenuPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyTopPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyBottomPanel, void 0);
     }
 
     private async _onTouchedBtnNextStep(): Promise<void> {
@@ -181,10 +178,10 @@ export class Panel extends UiPanel<OpenData> {
         if (selectedNormalMapId != null) {
             this.closePanel();
 
-            openPanel(getDict().CcrCreateSettingsPanel, {
-                roomCreator : new CcrRoomCreator(
-                    await getLatestGameConfig(),
-                    getExisted(await getRawData(selectedNormalMapId))
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrCreateSettingsPanel, {
+                roomCreator : new CoopCustomRoom_Model_CcrRoomCreator.CcrRoomCreator(
+                    await GameConfigs_Provider.getLatestGameConfig(),
+                    Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(selectedNormalMapId)),
                 ),
             });
         }
@@ -193,34 +190,34 @@ export class Panel extends UiPanel<OpenData> {
     private async _onTouchedGroupMapView(): Promise<void> {
         const normalMapId = this._getSelectedNormalMapId();
         if (normalMapId != null) {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
-            openPanel(getDict().CommonShowMapPanel, {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowMapPanel, {
                 mapInfo : {
-                    gameConfig          : await getLatestGameConfig(),
-                    mapRawData          : getExisted(await getRawData(normalMapId)),
-                    overridingPlayers   : null,
+                    gameConfig        : await GameConfigs_Provider.getLatestGameConfig(),
+                    mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                    overridingPlayers : null,
                 },
             });
         }
     }
 
     private async _onTouchedBtnSwitch(): Promise<void> {
-        showLang(TextType.A0937);
+        FloatText.showLang(Lang_Constants.TextType.A0937);
 
         this.closePanel();
-        openPanel(getDict().McrCreateMapListPanel, {
-            mapFilter               : null,
-            mapSorter               : null,
-            usePreviousFilter       : true,
-            usePreviousPageIndex    : true,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrCreateMapListPanel, {
+            mapFilter            : null,
+            mapSorter            : null,
+            usePreviousFilter    : true,
+            usePreviousPageIndex : true,
         });
     }
 
     private async _onTouchedBtnPrevPage(): Promise<void> {
-        const newPageIndex = getValueInRange({
-            minValue    : 0,
-            maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
-            rawValue    : _pageIndex - 1,
+        const newPageIndex = Numbers_Utils.getValueInRange({
+            minValue : 0,
+            maxValue : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
+            rawValue : _pageIndex - 1,
         });
         if (newPageIndex !== _pageIndex) {
             _pageIndex = newPageIndex;
@@ -228,10 +225,10 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
     private async _onTouchedBtnNextPage(): Promise<void> {
-        const newPageIndex = getValueInRange({
-            minValue    : 0,
-            maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
-            rawValue    : _pageIndex + 1,
+        const newPageIndex = Numbers_Utils.getValueInRange({
+            minValue : 0,
+            maxValue : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
+            rawValue : _pageIndex + 1,
         });
         if (newPageIndex !== _pageIndex) {
             _pageIndex = newPageIndex;
@@ -271,17 +268,17 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelCreateRoom.setText(getText(TextType.B0000));
-        this._labelMultiPlayer.setText(getText(TextType.B0646));
-        this._labelChooseMap.setText(getText(TextType.B0227));
-        this._labelLoading.setText(getText(TextType.A0150));
-        this._labelNoMap.setText(getText(TextType.A0010));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._btnSearch.setText(getText(TextType.B0228));
-        this._btnSort.setText(getText(TextType.B1049));
-        this._btnNextStep.setText(getText(TextType.B1383));
-        this._btnPrevPage.setText(getText(TextType.B1384));
-        this._btnNextPage.setText(getText(TextType.B1385));
+        this._labelCreateRoom.setLangText(Lang_Constants.TextType.B0000);
+        this._labelMultiPlayer.setLangText(Lang_Constants.TextType.B0646);
+        this._labelChooseMap.setLangText(Lang_Constants.TextType.B0227);
+        this._labelLoading.setLangText(Lang_Constants.TextType.A0150);
+        this._labelNoMap.setLangText(Lang_Constants.TextType.A0010);
+        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
+        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
+        this._btnSort.setLangText(Lang_Constants.TextType.B1049);
+        this._btnNextStep.setLangText(Lang_Constants.TextType.B1383);
+        this._btnPrevPage.setLangText(Lang_Constants.TextType.B1384);
+        this._btnNextPage.setLangText(Lang_Constants.TextType.B1385);
         this._updateLabelPageTitle();
 
         this._layoutPage.arrangeItems();
@@ -305,10 +302,10 @@ export class Panel extends UiPanel<OpenData> {
         const mapFilter = this._mapFilter;
         if ((mapFilter == null) || (mapFilter.checkIsEmpty())) {
             label.setTextColor(0xCCCCCC);
-            label.setText(getText(TextType.B1386));
+            label.setLangText(Lang_Constants.TextType.B1386);
         } else {
             label.setTextColor(0xFFFF00);
-            label.setText(`${getText(TextType.B1386)}(${getText(TextType.B1387)})`);
+            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1386)}(${Lang_Utils.getText(Lang_Constants.TextType.B1387)})`);
         }
         this._layoutPage.arrangeItems();
     }
@@ -317,26 +314,26 @@ export class Panel extends UiPanel<OpenData> {
         const mapFilter     = this._mapFilter;
         const dataArray     : DataForMapNameRenderer[] = [];
         const promiseArray  : Promise<void>[] = [];
-        for (const normalMapId of await getEnabledNormalMapIdSet()) {
+        for (const normalMapId of await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()) {
             promiseArray.push((async () => {
-                const mapBriefData = await getBriefData(normalMapId);
+                const mapBriefData = await NormalMap_Model_NormalMapModel.getBriefData(normalMapId);
                 if ((mapBriefData == null)                                                      ||
                     (!mapBriefData.getRuleAvailability()?.getCanCcw())                          ||
-                    (!await checkIsMeetFilter(normalMapId, mapFilter))
+                    (!await NormalMap_Model_NormalMapModel.checkIsMeetFilter(normalMapId, mapFilter))
                 ) {
                     return;
                 }
 
                 dataArray.push({
                     normalMapId,
-                    panel   : this,
+                    panel : this,
                 });
             })());
         }
         await Promise.all(promiseArray);
 
-        this._cachedListDataArray = (await sortMapArray(
-            dataArray.map(v => ({ normalMapId: v.normalMapId, extraData: v })),
+        this._cachedListDataArray = (await NormalMap_Model_NormalMapModel.sortMapArray(
+            dataArray.map(v => ({ normalMapId : v.normalMapId, extraData : v })),
             _mapSorter,
         )).map(v => v.extraData);
     }
@@ -359,19 +356,19 @@ export class Panel extends UiPanel<OpenData> {
             uiMapInfo.setIsVisible(true);
             labelLoading.setIsVisible(true);
 
-            const mapRawData        = getExisted(await getRawData(normalMapId));
-            const gameConfig        = await getLatestGameConfig();
+            const mapRawData        = Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId));
+            const gameConfig        = await GameConfigs_Provider.getLatestGameConfig();
             labelLoading.setIsVisible(false);
             zoomMap.showMapByMapData({
-                mapRawData          : mapRawData,
-                gameConfig          : gameConfig,
-                overridingPlayers   : null,
+                mapRawData        : mapRawData,
+                gameConfig        : gameConfig,
+                overridingPlayers : null,
             });
             uiMapInfo.setOpenData({
                 mapInfo : {
-                    hasFog      : null,
-                    gameConfig  : gameConfig,
-                    mapRawData  : mapRawData,
+                    hasFog     : null,
+                    gameConfig : gameConfig,
+                    mapRawData : mapRawData,
                 },
             });
             await uiMapInfo.applyOpenData();
@@ -379,112 +376,112 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
-            obj         : this._groupMapView,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupMapView,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
-        Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
-        Executor.reset({
-            obj         : this._groupTopRightButtons,
-            beginProps  : { customAlpha: 0, customY: 16 - 40 },
-            endProps    : { customAlpha: 1, customY: 16 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupTopRightButtons,
+            beginProps : { customAlpha : 0, customY : 16 - 40 },
+            endProps   : { customAlpha : 1, customY : 16 },
         });
-        Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
-        Executor.reset({
-            obj         : this._groupSearch,
-            beginProps  : { customAlpha: 0, customY: 30 },
-            endProps    : { customAlpha: 1, customY: 70 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupSearch,
+            beginProps : { customAlpha : 0, customY : 30 },
+            endProps   : { customAlpha : 1, customY : 70 },
         });
-        Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
-        Executor.reset({
-            obj         : this._groupMapList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupMapList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
-        Executor.reset({
-            obj         : this._uiMapInfo,
-            beginProps  : { customAlpha: 0, customX: 40 },
-            endProps    : { customAlpha: 1, customX: 0 },
+        Tween_Executor.Executor.reset({
+            obj        : this._uiMapInfo,
+            beginProps : { customAlpha : 0, customX : 40 },
+            endProps   : { customAlpha : 1, customX : 0 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
-            obj         : this._groupMapView,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupMapView,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
-        Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
-        Executor.reset({
-            obj         : this._groupTopRightButtons,
-            beginProps  : { customAlpha: 1, customY: 16 },
-            endProps    : { customAlpha: 0, customY: 16 - 40 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupTopRightButtons,
+            beginProps : { customAlpha : 1, customY : 16 },
+            endProps   : { customAlpha : 0, customY : 16 - 40 },
         });
-        Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
-        Executor.reset({
-            obj         : this._groupSearch,
-            beginProps  : { customAlpha: 1, customY: 70 },
-            endProps    : { customAlpha: 0, customY: 30 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupSearch,
+            beginProps : { customAlpha : 1, customY : 70 },
+            endProps   : { customAlpha : 0, customY : 30 },
         });
-        Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
-        Executor.reset({
-            obj         : this._groupMapList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupMapList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
-        Executor.reset({
-            obj         : this._uiMapInfo,
-            beginProps  : { customAlpha: 1, customX: 0 },
-            endProps    : { customAlpha: 0, customX: 40 },
+        Tween_Executor.Executor.reset({
+            obj        : this._uiMapInfo,
+            beginProps : { customAlpha : 1, customX : 0 },
+            endProps   : { customAlpha : 0, customX : 40 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 }
 
-interface DataForMapNameRenderer extends UiListItemData {
+interface DataForMapNameRenderer extends Ui_Types_UiListItemData.UiListItemData {
     normalMapId : number;
     panel       : Panel;
 }
-class MapNameRenderer extends UiListItemRenderer<DataForMapNameRenderer> {
-    private readonly _btnHelp!      : IUiButton;
+class MapNameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForMapNameRenderer> {
+    private readonly _btnHelp!      : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupName!        : IUiContainer;
-    private readonly _layoutName!       : IUiLayout;
-    private readonly _labelName!        : IUiLabel;
-    private readonly _labelId!          : IUiLabel;
-    private readonly _labelDesigner!    : IUiLabel;
+    private readonly _groupName!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutName!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelName!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelId!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelDesigner!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnHelp,    callback: this._onTouchedBtnHelp },
-            { ui: this._groupName,  callback: this._onTouchedGroupName },
+            { ui : this._btnHelp,    callback : this._onTouchedBtnHelp },
+            { ui : this._groupName,  callback : this._onTouchedGroupName },
         ]);
     }
 
@@ -496,13 +493,13 @@ class MapNameRenderer extends UiListItemRenderer<DataForMapNameRenderer> {
             return;
         }
 
-        const hasDescription = !!(await getBriefData(normalMapId))?.getHasDescription();
+        const hasDescription = !!(await NormalMap_Model_NormalMapModel.getBriefData(normalMapId))?.getHasDescription();
         if (normalMapId === this.getOpenData()?.normalMapId) {
             this._btnHelp.setIsVisible(hasDescription);
         }
     }
 
-    private async _onTouchedBtnHelp(e: Event): Promise<void> {
+    private async _onTouchedBtnHelp(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): Promise<void> {
         e.stopPropagation();
 
         const openData = this.getOpenData();
@@ -513,14 +510,14 @@ class MapNameRenderer extends UiListItemRenderer<DataForMapNameRenderer> {
         const normalMapId = openData.normalMapId;
         openData.panel.setAndReviseSelectedNormalMapId(normalMapId, false);
 
-        const mapRawData = await getRawData(normalMapId);
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getLanguageText({ textArray: mapRawData?.getMapExtraText()?.getMapDescription() }) ?? UndefinedError,
+        const mapRawData = await NormalMap_Model_NormalMapModel.getRawData(normalMapId);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getLanguageText({ textArray : mapRawData?.getMapExtraText()?.getMapDescription() }) ?? Lang_Constants.UndefinedError,
         });
     }
 
     private _onTouchedGroupName(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const openData = this.getOpenData();
         openData?.panel.setAndReviseSelectedNormalMapId(openData.normalMapId, false);
@@ -536,13 +533,13 @@ class MapNameRenderer extends UiListItemRenderer<DataForMapNameRenderer> {
         this._labelId.setText(`#${normalMapId}`);
         labelName.setText(``);
 
-        const mapBriefData = await getBriefData(normalMapId);
+        const mapBriefData = await NormalMap_Model_NormalMapModel.getBriefData(normalMapId);
         if ((normalMapId !== this.getOpenData()?.normalMapId) || (mapBriefData == null)) {
             return;
         }
 
-        labelName.setText(getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? UndefinedError);
-        this._labelDesigner.setText(mapBriefData.getDesignerName() ?? UndefinedError);
+        labelName.setText(Lang_Utils.getLanguageText({ textArray : mapBriefData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
+        this._labelDesigner.setText(mapBriefData.getDesignerName() ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
 }

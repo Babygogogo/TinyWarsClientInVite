@@ -1,47 +1,49 @@
-import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getTileName } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
-import { Dimension } from "../../stages/Constants.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
+import {
+    ForceSkins_Utils,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    Numbers_Utils,
+    Players_Constants,
+    Stages_Constants,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
+    Tween_Executor,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
-    gameConfig          : GcData;
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
     currentTileType     : number;
     tileTypeArray       : number[];
     callback            : (tileType: number) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!      : IUiImage;
-    private readonly _group!        : IUiContainer;
-    private readonly _labelTitle!   : IUiLabel;
-    private readonly _btnClose!     : IUiButton;
-    private readonly _labelTips!    : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTips!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _listType!     : IUiScrollList<DataForTypeRenderer>;
+    private readonly _listType!     : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForTypeRenderer>;
 
     private _selectedTileType       : number | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -101,8 +103,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0516);
-        this._labelTips.setLangText(TextType.B1249);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0516);
+        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
     }
     private async _updateListType(): Promise<void> {
         const openData = this.getOpenData();
@@ -114,64 +116,75 @@ export class Panel extends UiPanel<OpenData> {
         const dataArray     : DataForTypeRenderer[] = [];
         for (const newTileType of openData.tileTypeArray) {
             dataArray.push({
-                gameConfig  : gameConfig,
-                tileType    : newTileType,
-                panel       : this,
-                callback    : openData.callback,
+                gameConfig : gameConfig,
+                tileType   : newTileType,
+                panel      : this,
+                callback   : openData.callback,
             });
         }
         await this._listType.bindData(dataArray);
 
         const rowCount = Math.ceil(dataArray.length / 4);
-        this._group.setUnscaledManualHeight(getValueInRange({
-            rawValue    : rowCount * 36 + (rowCount - 1) * 10 + 80,
-            minValue    : 200,
-            maxValue    : Dimension.DesignMinHeight,
+        this._group.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
+            rawValue : rowCount * 36 + (rowCount - 1) * 10 + 80,
+            minValue : 200,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight,
         }));
     }
 }
 
-interface DataForTypeRenderer extends UiListItemData {
-    gameConfig  : GcData;
+interface DataForTypeRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
     tileType    : number;
     callback    : (tileType: number) => void;
     panel       : Panel;
 }
-class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
-    private readonly _conTileView!  : IUiContainer;
-    private readonly _imgSelected!  : IUiImage;
+class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTypeRenderer> {
+    private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSelected!  : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _layoutName!   : IUiLayout;
-    private readonly _labelType!    : IUiLabel;
-    private readonly _labelId!      : IUiLabel;
+    private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelType!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _tileView      = new (getUiTileViewClass())();
+    private _tileView               : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.TileAnimationTick,   callback: this._onNotifyTileAnimationTick },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
-
-        const conTileView   = this._conTileView;
-        const tileView      = this._tileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
 
-        const imgSelected = this._imgSelected;
-        imgSelected.setAlpha(0);
-        Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        {
+            const imgSelected = this._imgSelected;
+            imgSelected.setAlpha(0);
+            Tween_Executor.Executor.removeTweens(imgSelected);
+            Tween_Executor.Executor.get(imgSelected, { loop : true })
+                .to({ customAlpha : 0.6 }, 500)
+                .to({ customAlpha : 0 }, 500);
+        }
+
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
     protected override async _onClosed(): Promise<void> {
-        Executor.removeTweens(this._imgSelected);
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
     }
@@ -193,9 +206,6 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
     private _onNotifyLanguageChanged(): void {        // DONE
         this._updateComponentsForLanguage();
     }
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnAnimationTick();
-    }
 
     private _updateComponentsForLanguage(): void {
         this._updateLabelType();
@@ -207,7 +217,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
             return;
         }
 
-        this._labelType.setText(getTileName(openData.tileType, openData.gameConfig) ?? UndefinedError);
+        this._labelType.setText(Lang_Utils.getTileName(openData.tileType, openData.gameConfig) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
     private _updateLabelId(): void {
@@ -222,17 +232,15 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
 
         const tileType      = openData.tileType;
         const gameConfig    = openData.gameConfig;
-        this._tileView.init({
-            tileBaseType            : getExisted(gameConfig.getTileBaseTypeByTileType(tileType)),
-            tileBaseShapeId         : 0,
-            tileDecorationType      : null,
-            tileDecorationShapeId   : null,
-            tileObjectType          : getExisted(gameConfig.getTileObjectTypeByTileType(tileType)),
-            tileObjectShapeId       : 0,
-            skinId                  : getDefaultSkinId(PlayerIndex.Neutral),
-            overridingSkinId        : undefined,
-            gameConfig              : gameConfig,
-        });
+        const tileView      = this._tileView?.getView();
+        tileView?.loadViewData({
+            baseTypeId    : Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType)),
+            baseShapeId   : 0,
+            objectTypeId  : Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType)),
+            objectShapeId : 0,
+            skinId        : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
+        }, true);
+        tileView?.refreshAllViews();
     }
     private _updateImgSelected(): void {
         const openData = this.getOpenData();

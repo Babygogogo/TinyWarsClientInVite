@@ -1,8 +1,12 @@
 
 const fs = require("fs");
+const path = require("path");
 
 function main() {
-    const relativePath      = process.argv[2];
+    const projectPath       = "TinyWarsClientInVite\\";
+    const rawRelativePath   = path.normalize(process.argv[2]);
+    const index             = rawRelativePath.indexOf(projectPath);
+    const relativePath      = index >= 0 ? rawRelativePath.substring(index + projectPath.length) : rawRelativePath;
     const targetPathDict    = new Map([
         ["tw2", `../../../../TinyWars2/TinyWarsClientInVite/${relativePath}`],
     ]);

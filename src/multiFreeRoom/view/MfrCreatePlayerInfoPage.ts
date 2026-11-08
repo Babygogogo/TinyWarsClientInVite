@@ -1,53 +1,54 @@
-import { CoId } from "../../cos/Constants.ts";
-import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getPlayerForceName, getPlayerTeamName, getText } from "../../lang/Utils.ts";
-import type { MfrRoomCreator } from "../model/MfrRoomCreator.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getFinalMfwHumanCoIdSet } from "../../playerRules/Utils.ts";
-import { PlayerIndex, AliveStateId } from "../../players/Constants.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
-import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import { getSelfUserId } from "../../users/Model.ts";
-import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
+import {
+    Players_Constants,
+    Cos_Constants,
+    Notifications_Dispatcher,
+    ForceSkins_Utils,
+    Helpers_ImageSource,
+    GamePanels_Dict,
+    Helpers_Misc,
+    PlayerRules_Utils,
+    GameConfigs_Provider,
+    Lang_Utils,
+    WarRules_Utils_CommonData,
+    Users_Model,
+    Ui_Utils_UiSkinHelpers,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Ui_Types_UiHorizontalAlign,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiOpenableComponent,
+    Ui_Types_UiVerticalAlign,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type MultiFreeRoom_Model_MfrRoomCreator,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export type OpenData = {
-    roomCreator : MfrRoomCreator;
+    roomCreator : MultiFreeRoom_Model_MfrRoomCreator.MfrRoomCreator;
 } | null;
-export class Page extends UiOpenableComponent<OpenData> {
-    private readonly _groupInfo!    : IUiContainer;
-    private readonly _listPlayer!   : IUiScrollList<DataForPlayerRenderer>;
+export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData> {
+    private readonly _groupInfo!    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listPlayer!   : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForPlayerRenderer>;
 
     public constructor() {
         super();
 
-        loadSkinByPath(this, "multiFreeRoom/MfrCreatePlayerInfoPage.exml");
+        Ui_Utils_UiSkinHelpers.loadSkinByPath(this, "multiFreeRoom/MfrCreatePlayerInfoPage.exml");
     }
 
     public updateOnLoadedSkin(): void {
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
 
         this._listPlayer.setItemRendererClass(PlayerRenderer);
@@ -80,9 +81,9 @@ export class Page extends UiOpenableComponent<OpenData> {
         const roomCreator           = openData.roomCreator;
         const initialWarData        = roomCreator.getInitialWarData();
         const playersCountUnneutral = (initialWarData.getPlayerManager()?.getPlayers()?.length ?? 0) - 1;
-        const gameConfig            = await getGameConfig(getExisted(initialWarData.getSettingsForCommon()?.getConfigVersion()));
+        const gameConfig            = await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(initialWarData.getSettingsForCommon()?.getConfigVersion()));
         const dataArray             : DataForPlayerRenderer[] = [];
-        for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
+        for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
             dataArray.push({
                 roomCreator : roomCreator,
                 playerIndex : playerIndex,
@@ -95,40 +96,40 @@ export class Page extends UiOpenableComponent<OpenData> {
     }
 }
 
-interface DataForPlayerRenderer extends UiListItemData {
-    roomCreator  : MfrRoomCreator;
+interface DataForPlayerRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    roomCreator  : MultiFreeRoom_Model_MfrRoomCreator.MfrRoomCreator;
     playerIndex     : number;
-    gameConfig      : GcData;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     page            : Page;
 }
-class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
-    private readonly _groupCo!              : IUiContainer;
-    private readonly _imgSkin!              : IUiImage;
-    private readonly _imgCoInfo!            : IUiImage;
-    private readonly _imgCoHead!            : IUiImage;
-    private readonly _labelCo!              : IUiLabel;
-    private readonly _labelPlayerType!      : IUiLabel;
+class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForPlayerRenderer> {
+    private readonly _groupCo!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSkin!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgCoInfo!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgCoHead!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelCo!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPlayerType!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelPlayerIndex!     : IUiLabel;
-    private readonly _labelTeamIndex!       : IUiLabel;
+    private readonly _labelPlayerIndex!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTeamIndex!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnChangeCo!          : IUiButton;
-    private readonly _btnChangeSkinId!      : IUiButton;
-    private readonly _btnChangeController!  : IUiButton;
+    private readonly _btnChangeCo!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnChangeSkinId!      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnChangeController!  : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupCo,                callback: this._onTouchedGroupCo },
-            { ui: this._btnChangeCo,            callback: this._onTouchedBtnChangeCo },
-            { ui: this._btnChangeSkinId,        callback: this._onTouchedBtnChangeSkinId },
-            { ui: this._btnChangeController,    callback: this._onTouchedBtnChangeController },
+            { ui : this._groupCo,                callback : this._onTouchedGroupCo },
+            { ui : this._btnChangeCo,            callback : this._onTouchedBtnChangeCo },
+            { ui : this._btnChangeSkinId,        callback : this._onTouchedBtnChangeSkinId },
+            { ui : this._btnChangeController,    callback : this._onTouchedBtnChangeController },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.RoomCreator_SelfCoIdChanged,         callback: this._onNotifyMfrCreateSelfCoIdChanged },
-            { type: TypeId.RoomCreator_SelfPlayerIndexChanged,  callback: this._onNotifyMfrCreateSelfPlayerIndexChanged },
-            { type: TypeId.RoomCreator_SelfSkinIdChanged,       callback: this._onNotifyMfrCreateSelfSkinIdChanged },
-            { type: TypeId.MfrCreatePlayerSkinIdChanged,        callback: this._onNotifyMfrCreatePlayerSkinIdChanged },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "RoomCreator_SelfCoIdChanged",         callback : this._onNotifyMfrCreateSelfCoIdChanged },
+            { type : "RoomCreator_SelfPlayerIndexChanged",  callback : this._onNotifyMfrCreateSelfPlayerIndexChanged },
+            { type : "RoomCreator_SelfSkinIdChanged",       callback : this._onNotifyMfrCreateSelfSkinIdChanged },
+            { type : "MfrCreatePlayerSkinIdChanged",        callback : this._onNotifyMfrCreatePlayerSkinIdChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -145,28 +146,28 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const gameConfig        = openData.gameConfig;
         const initialWarData    = roomCreator.getInitialWarData();
         if (playerIndex === roomCreator.getSelfPlayerIndex()) {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-            openPanel(getDict().CommonCoInfoPanel, {
-                gameConfig  : gameConfig,
-                coId        : roomCreator.getSelfCoId(),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoInfoPanel, {
+                gameConfig : gameConfig,
+                coId       : roomCreator.getSelfCoId(),
             });
             return;
         }
 
-        const playerData = initialWarData.getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex() ?? 0) === playerIndex);
+        const playerData = initialWarData.getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex()) === playerIndex);
         if (playerData == null) {
             return;
         }
 
         if ((playerData.getUserId() == null)                                                     ||
-            ((playerData.getAliveState() ?? 0) === AliveStateId.Dead)
+            ((playerData.getAliveState()) === Players_Constants.AliveStateId.Dead)
         ) {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-            openPanel(getDict().CommonCoInfoPanel, {
-                gameConfig  : gameConfig,
-                coId        : playerData.getCoId() ?? 0,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoInfoPanel, {
+                gameConfig : gameConfig,
+                coId       : playerData.getCoId(),
             });
         }
     }
@@ -179,12 +180,12 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const roomCreator   = openData.roomCreator;
         const playerIndex   = openData.playerIndex;
         const players       = roomCreator.getInitialWarData().getPlayerManager()?.getPlayers() ?? [];
-        const playerData    = getExisted(players.find(v => v.getPlayerIndex() === playerIndex));
+        const playerData    = Helpers_Misc.getExisted(players.find(v => v.getPlayerIndex() === playerIndex));
         const oldSkinId     = playerData.getUnitAndTileSkinId();
-        openPanel(getDict().CommonChooseSingleSkinIdPanel, {
-            availableSkinIdArray    : getAllSkinIdArray(false),
-            currentSkinId           : oldSkinId,
-            callback                : newSkinId => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSkinIdPanel, {
+            availableSkinIdArray : ForceSkins_Utils.getAllSkinIdArray(false),
+            currentSkinId        : oldSkinId,
+            callback             : newSkinId => {
                 if (newSkinId === oldSkinId) {
                     return;
                 }
@@ -196,8 +197,8 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
                     roomCreator.setSelfUnitAndTileSkinId(oldSkinId);
                 }
 
-                dispatch(TypeId.MfrCreatePlayerSkinIdChanged);
-            }
+                Notifications_Dispatcher.dispatch("MfrCreatePlayerSkinIdChanged");
+            },
         });
     }
     private _onTouchedBtnChangeController(): void {
@@ -208,8 +209,8 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
 
         const roomCreator   = openData.roomCreator;
         const playerIndex   = openData.playerIndex;
-        const playerData    = getExisted(roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex() ?? 0) === playerIndex));
-        playerData.setUserId((playerData.getUserId() == null) ? getSelfUserId() : null);
+        const playerData    = Helpers_Misc.getExisted(roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex()) === playerIndex));
+        playerData.setUserId((playerData.getUserId() == null) ? Users_Model.getSelfUserId() : null);
         this._updateComponentsForSettings();
     }
     private _onTouchedBtnChangeCo(): void {
@@ -221,20 +222,20 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const roomCreator       = openData.roomCreator;
         const playerIndex       = openData.playerIndex;
         const gameConfig        = openData.gameConfig;
-        const warRuleCommonData = getExisted(roomCreator.getInstanceWarRule().getWarRuleCommonData());
-        const playerData        = getExisted(roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex() ?? 0) === playerIndex));
-        const currentCoId       = playerData.getCoId() ?? 0;
-        openPanel(getDict().CommonChooseSingleCoIdPanel, {
-            gameConfig          : gameConfig,
-            currentCoId         : currentCoId,
-            availableCoIdArray  : [...getFinalMfwHumanCoIdSet({
-                playerRule      : getPlayerRule(warRuleCommonData, playerIndex),
+        const warRuleCommonData = Helpers_Misc.getExisted(roomCreator.getInstanceWarRule().getWarRuleCommonData());
+        const playerData        = Helpers_Misc.getExisted(roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex()) === playerIndex));
+        const currentCoId       = playerData.getCoId();
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
+            gameConfig         : gameConfig,
+            currentCoId        : currentCoId,
+            availableCoIdArray : [...PlayerRules_Utils.getFinalMfwHumanCoIdSet({
+                playerRule      : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
                 gameConfig      : gameConfig,
                 hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
                 includeRandom   : true,
             })],
-            isBan               : false,
-            callbackOnConfirm   : newCoId => {
+            isBan             : false,
+            callbackOnConfirm : newCoId => {
                 if (newCoId !== currentCoId) {
                     playerData.setCoId(newCoId);
                     this._updateComponentsForSettings();
@@ -264,9 +265,9 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnChangeCo.setLangText(TextType.B0230);
-        this._btnChangeSkinId.setLangText(TextType.B0609);
-        this._btnChangeController.setLangText(TextType.B0424);
+        this._btnChangeCo.setLangText(Lang_Constants.TextType.B0230);
+        this._btnChangeSkinId.setLangText(Lang_Constants.TextType.B0609);
+        this._btnChangeController.setLangText(Lang_Constants.TextType.B0424);
     }
 
     private _updateComponentsForSettings(): void {
@@ -276,41 +277,38 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         }
 
         const playerIndex = openData.playerIndex;
-        this._labelPlayerIndex.setText(getPlayerForceName(playerIndex));
+        this._labelPlayerIndex.setText(Lang_Utils.getPlayerForceName(playerIndex));
 
         const roomCreator       = openData.roomCreator;
-        const warRuleCommonData = getExisted(roomCreator.getInstanceWarRule().getWarRuleCommonData());
-        const playerRule        = getPlayerRule(warRuleCommonData, playerIndex);
-        this._labelTeamIndex.setText(getPlayerTeamName(getExisted(playerRule.getTeamIndex())) || UndefinedError);
+        const warRuleCommonData = Helpers_Misc.getExisted(roomCreator.getInstanceWarRule().getWarRuleCommonData());
+        const playerRule        = WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex);
+        this._labelTeamIndex.setText(Lang_Utils.getPlayerTeamName(playerRule.getTeamIndex()) || Lang_Constants.UndefinedError);
 
-        const playerData = roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex() ?? 0) === playerIndex);
+        const playerData = roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex()) === playerIndex);
         if (playerData == null) {
             return;
         }
 
-        const isDead        = (playerData.getAliveState() ?? 0) === AliveStateId.Dead;
+        const isDead        = (playerData.getAliveState()) === Players_Constants.AliveStateId.Dead;
         const isHumanPlayer = (playerData.getUserId() != null) && (!isDead);
         this._btnChangeCo.setIsVisible(!isHumanPlayer);
         this._btnChangeSkinId.setIsVisible(!isHumanPlayer);
         this._btnChangeController.setIsVisible((playerIndex !== roomCreator.getSelfPlayerIndex()) && (!isDead));
 
         const isSelfPlayer = roomCreator.getSelfPlayerIndex() === playerIndex;
-        this._imgSkin.loadSource(getCoHeadFrame(isSelfPlayer
+        this._imgSkin.loadSource(Helpers_ImageSource.getCoHeadFrame(isSelfPlayer
             ? roomCreator.getSelfUnitAndTileSkinId()
-            : (isHumanPlayer ? null : (playerData.getUnitAndTileSkinId() ?? 0))
+            : (isHumanPlayer ? null : (playerData.getUnitAndTileSkinId())),
         ));
-        this._labelPlayerType.setText(isSelfPlayer
-            ? getText(TextType.B0647)
-            : (isHumanPlayer ? getText(TextType.B0648) : getText(TextType.B0607))
-        );
+        this._labelPlayerType.setLangText(isSelfPlayer ? Lang_Constants.TextType.B0647 : isHumanPlayer ? Lang_Constants.TextType.B0648 : Lang_Constants.TextType.B0607);
 
         const gameConfig                = openData.gameConfig;
         const coId                      = isSelfPlayer
             ? roomCreator.getSelfCoId()
-            : (isHumanPlayer ? null : (playerData.getCoId() ?? 0));
+            : (isHumanPlayer ? null : (playerData.getCoId()));
         const coCfg                     = coId == null ? null : gameConfig.getCoBasicCfg(coId);
         this._labelCo.setText(coCfg ? coCfg.getName() : `??`);
-        this._imgCoHead.loadSource(coId == null ? `` : getCoHead(gameConfig, coId) ?? UndefinedError);
-        this._imgCoInfo.setIsVisible((coId !== CoId.Empty) && (!!coCfg));
+        this._imgCoHead.loadSource(coId == null ? `` : Helpers_ImageSource.getCoHead(gameConfig, coId) ?? Lang_Constants.UndefinedError);
+        this._imgCoInfo.setIsVisible((coId !== Cos_Constants.CoId.Empty) && (!!coCfg));
     }
 }

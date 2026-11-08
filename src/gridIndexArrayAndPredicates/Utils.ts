@@ -1,27 +1,27 @@
-import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import { TextType, UndefinedError } from "../lang/Constants.ts";
-import { getFormattedText } from "../lang/Utils.ts";
+import {
+    Lang_Utils,
+    AuxiliaryTypes_GridIndex,
+    Lang_Constants,
+    type AuxiliaryTypes_MapSize,
+} from "../internal.ts";
 import type { GridIndexArrayAndPredicate } from "../proto/schema/CommonProto/Structure/GridIndexArrayAndPredicate.ts";
 
-type GridIndexArrayAndPredicateSchema = GridIndexArrayAndPredicate;
-
-export function getDesc(data: GridIndexArrayAndPredicateSchema, valueName: string): string {
-    return getFormattedText(
-        data.getIsOneOf() ? TextType.F0228 : TextType.F0229,
+export function getDesc(data: GridIndexArrayAndPredicate, valueName: string): string {
+    return Lang_Utils.getFormattedText(
+        data.getIsOneOf() ? Lang_Constants.TextType.F0228 : Lang_Constants.TextType.F0229,
         valueName,
-        data.getGridIndexArray()?.map(v => `(${v.getX()},${v.getY()})`).join(`, `) ?? UndefinedError
+        data.getGridIndexArray()?.map(v => `(${v.getX()},${v.getY()})`).join(`, `),
     );
 }
 
-export function checkIsValid(data: GridIndexArrayAndPredicateSchema, mapSize: MapSize): boolean {
+export function checkIsValid(data: GridIndexArrayAndPredicate, mapSize: AuxiliaryTypes_MapSize.MapSize): boolean {
     const rawArray = data.getGridIndexArray();
     if ((rawArray == null) || (!rawArray.length)) {
         return false;
     }
 
     const gridIdSet = new Set<number>();
-    for (const gridIndex of rawArray.map(v => GridIndex.convertGridIndex(v))) {
+    for (const gridIndex of rawArray.map(v => AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) {
         if ((gridIndex == null) || (!gridIndex.checkIsInsideMap(mapSize))) {
             return false;
         }
@@ -36,7 +36,7 @@ export function checkIsValid(data: GridIndexArrayAndPredicateSchema, mapSize: Ma
     return true;
 }
 
-export function checkIsMeet(data: GridIndexArrayAndPredicateSchema, value: GridIndex): boolean {
+export function checkIsMeet(data: GridIndexArrayAndPredicate, value: AuxiliaryTypes_GridIndex.GridIndex): boolean {
     const gridIndexArray = data.getGridIndexArray();
     return data.getIsOneOf()
         ? !!gridIndexArray?.some(v => value.checkIsEqual2(v))

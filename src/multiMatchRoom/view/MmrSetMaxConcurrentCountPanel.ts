@@ -1,79 +1,80 @@
-import { MultiRankedWar } from "../../gameConfig/GcWar.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { getMaxConcurrentCount } from "../model/MmrModel.ts";
-import { reqMmrSetMaxConcurrentCount } from "../model/MmrProxy.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import {
+    GamePanels_Dict,
+    Helpers_Misc,
+    MultiMatchRoom_Model_MmrModel,
+    Lang_Utils,
+    MultiRankedWars_Constants,
+    GamePanels_Manager,
+    Helpers_PointerInput,
+    MultiMatchRoom_Model_MmrProxy,
+    Lang_Constants,
+    Ui_Components_UiPanel,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnHelp!          : IUiButton;
-    private readonly _btnCancel!        : IUiButton;
-    private readonly _btnConfirm!       : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCancel!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutStd!        : IUiLayout;
-    private readonly _labelStdTitle!    : IUiLabel;
-    private readonly _groupStd!         : IUiContainer;
-    private readonly _imgStdBar!        : IUiImage;
-    private readonly _imgStdPoint!      : IUiImage;
-    private readonly _layoutStdCount!   : IUiLayout;
-    private readonly _labelStdCount!    : IUiLabel;
-    private readonly _labelStdMaxCount! : IUiLabel;
+    private readonly _layoutStd!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelStdTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupStd!         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgStdBar!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgStdPoint!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _layoutStdCount!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelStdCount!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelStdMaxCount! : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutFog!        : IUiLayout;
-    private readonly _labelFogTitle!    : IUiLabel;
-    private readonly _groupFog!         : IUiContainer;
-    private readonly _imgFogBar!        : IUiImage;
-    private readonly _imgFogPoint!      : IUiImage;
-    private readonly _layoutFogCount!   : IUiLayout;
-    private readonly _labelFogCount!    : IUiLabel;
-    private readonly _labelFogMaxCount! : IUiLabel;
+    private readonly _layoutFog!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelFogTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupFog!         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgFogBar!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgFogPoint!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _layoutFogCount!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelFogCount!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelFogMaxCount! : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _selectedCountForStd?       : number;
     private _selectedCountForFog?       : number;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgMmrGetMaxConcurrentCount,    callback: this._onMsgMmrGetMaxConcurrentCount },
-            { type: TypeId.MsgMmrSetMaxConcurrentCount,    callback: this._onMsgMmrSetMaxConcurrentCount },
+            { type : "LanguageChanged",                callback : this._onNotifyLanguageChanged },
+            { type : "MsgMmrGetMaxConcurrentCount",    callback : this._onMsgMmrGetMaxConcurrentCount },
+            { type : "MsgMmrSetMaxConcurrentCount",    callback : this._onMsgMmrSetMaxConcurrentCount },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupStd,       callback: this._onTouchedGroupStd },
-            { ui: this._groupStd,       callback: this._onTouchMoveGroupStd,            eventType: PointerEventType.PressMove },
-            { ui: this._groupStd,       callback: this._onTouchEndGroupStd,             eventType: PointerEventType.ReleaseIn },
-            { ui: this._groupStd,       callback: this._onTouchReleaseOutsideGroupStd,  eventType: PointerEventType.ReleaseOut },
+            { ui : this._groupStd,       callback : this._onTouchedGroupStd },
+            { ui : this._groupStd,       callback : this._onTouchMoveGroupStd,            eventType : Helpers_PointerInput.PointerEventType.PressMove },
+            { ui : this._groupStd,       callback : this._onTouchEndGroupStd,             eventType : Helpers_PointerInput.PointerEventType.ReleaseIn },
+            { ui : this._groupStd,       callback : this._onTouchReleaseOutsideGroupStd,  eventType : Helpers_PointerInput.PointerEventType.ReleaseOut },
 
-            { ui: this._groupFog,       callback: this._onTouchedGroupFog },
-            { ui: this._groupFog,       callback: this._onTouchMoveGroupFog,            eventType: PointerEventType.PressMove },
-            { ui: this._groupFog,       callback: this._onTouchEndGroupFog,             eventType: PointerEventType.ReleaseIn },
-            { ui: this._groupFog,       callback: this._onTouchReleaseOutsideGroupFog,  eventType: PointerEventType.ReleaseOut },
+            { ui : this._groupFog,       callback : this._onTouchedGroupFog },
+            { ui : this._groupFog,       callback : this._onTouchMoveGroupFog,            eventType : Helpers_PointerInput.PointerEventType.PressMove },
+            { ui : this._groupFog,       callback : this._onTouchEndGroupFog,             eventType : Helpers_PointerInput.PointerEventType.ReleaseIn },
+            { ui : this._groupFog,       callback : this._onTouchReleaseOutsideGroupFog,  eventType : Helpers_PointerInput.PointerEventType.ReleaseOut },
 
-            { ui: this._btnCancel,      callback: this.closePanel },
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
+            { ui : this._btnCancel,      callback : this.closePanel },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
-        this._labelStdMaxCount.setText(` / ${MultiRankedWar.MaxConcurrentCount}`);
-        this._labelFogMaxCount.setText(` / ${MultiRankedWar.MaxConcurrentCount}`);
+        this._labelStdMaxCount.setText(` / ${MultiRankedWars_Constants.Common.MaxConcurrentCount}`);
+        this._labelFogMaxCount.setText(` / ${MultiRankedWars_Constants.Common.MaxConcurrentCount}`);
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
@@ -93,28 +94,28 @@ export class Panel extends UiPanel<OpenData> {
         this._loadMaxCountAndUpdateView();
     }
 
-    private _onTouchedGroupStd(e: Event): void {
+    private _onTouchedGroupStd(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupStd;
         const width                 = group.getUnscaledWidth();
-        const data                  = e.data as PointerUnifiedEventData;
+        const data                  = Helpers_Misc.getExisted(e.data);
         const point                 = group.globalToLocal(data.stageX, data.stageY);
-        const countForStd           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWar.MaxConcurrentCount - MultiRankedWar.MinConcurrentCount)) + MultiRankedWar.MinConcurrentCount;
+        const countForStd           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWars_Constants.Common.MaxConcurrentCount - MultiRankedWars_Constants.Common.MinConcurrentCount)) + MultiRankedWars_Constants.Common.MinConcurrentCount;
         this._selectedCountForStd   = countForStd;
         this._updateGroupStd();
 
-        this._selectedCountForFog   = Math.min(this._selectedCountForFog ?? 0, MultiRankedWar.MaxConcurrentCount - countForStd);
+        this._selectedCountForFog   = Math.min(this._selectedCountForFog ?? 0, MultiRankedWars_Constants.Common.MaxConcurrentCount - countForStd);
         this._updateGroupFog();
     }
-    private _onTouchMoveGroupStd(e: Event): void {
+    private _onTouchMoveGroupStd(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupStd;
         const width                 = group.getUnscaledWidth();
-        const data                  = e.data as PointerUnifiedEventData;
+        const data                  = Helpers_Misc.getExisted(e.data);
         const point                 = group.globalToLocal(data.stageX, data.stageY);
-        const countForStd           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWar.MaxConcurrentCount - MultiRankedWar.MinConcurrentCount)) + MultiRankedWar.MinConcurrentCount;
+        const countForStd           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWars_Constants.Common.MaxConcurrentCount - MultiRankedWars_Constants.Common.MinConcurrentCount)) + MultiRankedWars_Constants.Common.MinConcurrentCount;
         this._selectedCountForStd   = countForStd;
         this._updateGroupStd();
 
-        this._selectedCountForFog   = Math.min(this._selectedCountForFog ?? 0, MultiRankedWar.MaxConcurrentCount - countForStd);
+        this._selectedCountForFog   = Math.min(this._selectedCountForFog ?? 0, MultiRankedWars_Constants.Common.MaxConcurrentCount - countForStd);
         this._updateGroupFog();
     }
     private _onTouchEndGroupStd(): void {
@@ -124,28 +125,28 @@ export class Panel extends UiPanel<OpenData> {
         // nothing to do
     }
 
-    private _onTouchedGroupFog(e: Event): void {
+    private _onTouchedGroupFog(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupFog;
         const width                 = group.getUnscaledWidth();
-        const data                  = e.data as PointerUnifiedEventData;
+        const data                  = Helpers_Misc.getExisted(e.data);
         const point                 = group.globalToLocal(data.stageX, data.stageY);
-        const countForFog           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWar.MaxConcurrentCount - MultiRankedWar.MinConcurrentCount)) + MultiRankedWar.MinConcurrentCount;
+        const countForFog           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWars_Constants.Common.MaxConcurrentCount - MultiRankedWars_Constants.Common.MinConcurrentCount)) + MultiRankedWars_Constants.Common.MinConcurrentCount;
         this._selectedCountForFog   = countForFog;
         this._updateGroupFog();
 
-        this._selectedCountForStd   = Math.min(this._selectedCountForStd ?? 0, MultiRankedWar.MaxConcurrentCount - countForFog);
+        this._selectedCountForStd   = Math.min(this._selectedCountForStd ?? 0, MultiRankedWars_Constants.Common.MaxConcurrentCount - countForFog);
         this._updateGroupStd();
     }
-    private _onTouchMoveGroupFog(e: Event): void {
+    private _onTouchMoveGroupFog(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
         const group                 = this._groupFog;
         const width                 = group.getUnscaledWidth();
-        const data                  = e.data as PointerUnifiedEventData;
+        const data                  = Helpers_Misc.getExisted(e.data);
         const point                 = group.globalToLocal(data.stageX, data.stageY);
-        const countForFog           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWar.MaxConcurrentCount - MultiRankedWar.MinConcurrentCount)) + MultiRankedWar.MinConcurrentCount;
+        const countForFog           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWars_Constants.Common.MaxConcurrentCount - MultiRankedWars_Constants.Common.MinConcurrentCount)) + MultiRankedWars_Constants.Common.MinConcurrentCount;
         this._selectedCountForFog   = countForFog;
         this._updateGroupFog();
 
-        this._selectedCountForStd   = Math.min(this._selectedCountForStd ?? 0, MultiRankedWar.MaxConcurrentCount - countForFog);
+        this._selectedCountForStd   = Math.min(this._selectedCountForStd ?? 0, MultiRankedWars_Constants.Common.MaxConcurrentCount - countForFog);
         this._updateGroupStd();
     }
     private _onTouchEndGroupFog(): void {
@@ -156,13 +157,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnConfirm(): void {
-        reqMmrSetMaxConcurrentCount(getExisted(this._selectedCountForStd), getExisted(this._selectedCountForFog));
+        MultiMatchRoom_Model_MmrProxy.reqMmrSetMaxConcurrentCount(Helpers_Misc.getExisted(this._selectedCountForStd), Helpers_Misc.getExisted(this._selectedCountForFog));
 
         this.closePanel();
     }
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0400),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0400),
         });
     }
 
@@ -170,18 +171,18 @@ export class Panel extends UiPanel<OpenData> {
     // Function for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _loadMaxCountAndUpdateView(): void {
-        this._selectedCountForStd = getMaxConcurrentCount(false);
-        this._selectedCountForFog = getMaxConcurrentCount(true);
+        this._selectedCountForStd = MultiMatchRoom_Model_MmrModel.getMaxConcurrentCount(false);
+        this._selectedCountForFog = MultiMatchRoom_Model_MmrModel.getMaxConcurrentCount(true);
         this._updateGroupStd();
         this._updateGroupFog();
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
-        this._labelTitle.setText(getText(TextType.B0413));
-        this._labelStdTitle.setText(getText(TextType.B0548));
-        this._labelFogTitle.setText(getText(TextType.B0549));
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0413);
+        this._labelStdTitle.setLangText(Lang_Constants.TextType.B0548);
+        this._labelFogTitle.setLangText(Lang_Constants.TextType.B0549);
 
         this._layoutStdCount.arrangeItems();
         this._layoutStd.arrangeItems();
@@ -190,16 +191,16 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateGroupStd(): void {
-        const count = getExisted(this._selectedCountForStd);
-        const pos   = this._groupStd.getUnscaledWidth() * (count - MultiRankedWar.MinConcurrentCount) / (MultiRankedWar.MaxConcurrentCount - MultiRankedWar.MinConcurrentCount);
+        const count = Helpers_Misc.getExisted(this._selectedCountForStd);
+        const pos   = this._groupStd.getUnscaledWidth() * (count - MultiRankedWars_Constants.Common.MinConcurrentCount) / (MultiRankedWars_Constants.Common.MaxConcurrentCount - MultiRankedWars_Constants.Common.MinConcurrentCount);
         this._imgStdPoint.setX(pos);
         this._imgStdBar.setUnscaledManualWidth(pos);
         this._labelStdCount.setText(`${count}`);
         this._layoutStdCount.arrangeItems();
     }
     private _updateGroupFog(): void {
-        const count = getExisted(this._selectedCountForFog);
-        const pos   = this._groupFog.getUnscaledWidth() * (count - MultiRankedWar.MinConcurrentCount) / (MultiRankedWar.MaxConcurrentCount - MultiRankedWar.MinConcurrentCount);
+        const count = Helpers_Misc.getExisted(this._selectedCountForFog);
+        const pos   = this._groupFog.getUnscaledWidth() * (count - MultiRankedWars_Constants.Common.MinConcurrentCount) / (MultiRankedWars_Constants.Common.MaxConcurrentCount - MultiRankedWars_Constants.Common.MinConcurrentCount);
         this._imgFogPoint.setX(pos);
         this._imgFogBar.setUnscaledManualWidth(pos);
         this._labelFogCount.setText(`${count}`);

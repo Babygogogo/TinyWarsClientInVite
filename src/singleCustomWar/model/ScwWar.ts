@@ -1,23 +1,24 @@
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    SinglePlayerWars_War,
+    BootTimers_Constants,
+    type GameConfigs_GameConfig,
+} from "../../internal.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForScw as ProtoSchemaCommonProtoWarSettingsSettingsForScw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
-import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
 
-type SettingsForScw     = ProtoSchemaCommonProtoWarSettingsSettingsForScw;
-type GcData             = GameConfigGcData;
-
-export class ScwWar extends SpwWar {
+export class ScwWar extends SinglePlayerWars_War.War {
     private _settingsForScw?    : SettingsForScw;
 
-    public init(data: SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForScw(getExisted(data.getSettingsForScw(), ClientErrorCode.ScwWar_Init_00));
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForScw(Helpers_Misc.getExisted(data.getSettingsForScw(), Utils_ClientErrorCode.ClientErrorCode.ScwWar_Init_00));
         this.getRetractManager().setCanRetract(true);
 
         this._initView();
@@ -25,23 +26,23 @@ export class ScwWar extends SpwWar {
 
     public serialize(): SerialWar {
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
-            settingsForScw              : this._getSettingsForScw().toJson(),
+            settingsForCommon : this.getCommonSettingManager().getSettingsForCommon().toJson(),
+            settingsForScw    : this._getSettingsForScw().toJson(),
 
-            warId                       : this.getWarId(),
-            isEnded                     : this.getIsEnded(),
-            seedRandomInitialState      : null,
-            seedRandomCurrentState      : null,
-            remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
-            drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
-            weatherManager              : this.getWeatherManager().serialize().toJson(),
-            warEventManager             : this.getWarEventManager().serialize().toJson(),
-            playerManager               : this.getPlayerManager().serialize().toJson(),
-            turnManager                 : this.getTurnManager().serialize().toJson(),
-            field                       : this.getField().serialize().toJson(),
-            executedOperationManager    : this.getExecutedOperationManager().serialize().toJson(),
-            warStatisticsManager        : this.getWarStatisticsManager().serialize().toJson(),
-            taskObjectiveManager        : this.getTaskObjectiveManager().serialize().toJson(),
+            warId                    : this.getWarId(),
+            isEnded                  : this.getIsEnded(),
+            seedRandomInitialState   : null,
+            seedRandomCurrentState   : null,
+            remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
+            drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
+            weatherManager           : this.getWeatherManager().serialize().toJson(),
+            warEventManager          : this.getWarEventManager().serialize().toJson(),
+            playerManager            : this.getPlayerManager().serialize().toJson(),
+            turnManager              : this.getTurnManager().serialize().toJson(),
+            field                    : this.getField().serialize().toJson(),
+            executedOperationManager : this.getExecutedOperationManager().serialize().toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serialize().toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serialize().toJson(),
         });
     }
 
@@ -56,7 +57,7 @@ export class ScwWar extends SpwWar {
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getNormalMapId(): number {
-        return getExisted(this._getSettingsForScw().getNormalMapId());
+        return this._getSettingsForScw().getNormalMapId();
     }
 
     public getCanCheat(): boolean {
@@ -67,13 +68,13 @@ export class ScwWar extends SpwWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return [TimerTypeId.NoBoot];
+        return [BootTimers_Constants.TimerTypeId.NoBoot];
     }
 
     private _setSettingsForScw(settings: SettingsForScw): void {
         this._settingsForScw = settings;
     }
     private _getSettingsForScw(): SettingsForScw {
-        return getExisted(this._settingsForScw);
+        return Helpers_Misc.getExisted(this._settingsForScw);
     }
 }

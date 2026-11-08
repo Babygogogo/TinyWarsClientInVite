@@ -1,16 +1,13 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import type {
-    WoSystemVoteForDraw as ProtoSchemaCommonProtoWarOperationWoSystemVoteForDraw,
-} from "../../../proto/schema/CommonProto/WarOperation/WoSystemVoteForDraw.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData } from "./Common.ts";
-
-type WoSystemVoteForDraw    = ProtoSchemaCommonProtoWarOperationWoSystemVoteForDraw;
-type IBwWar                 = BaseWarInterfaceIBwWar;
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    WarOperations_Executors_Utils_Common,
+    type BaseWar_Model_War,
+} from "../../../internal.ts";
+import type { WoSystemVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoSystemVoteForDraw.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoSystemVoteForDraw, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoSystemVoteForDraw, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeSystemVoteForDraw(war, action);
     } else {
@@ -18,41 +15,41 @@ export async function execute(war: IBwWar, action: WoSystemVoteForDraw, isFast: 
     }
 }
 
-function fastExeSystemVoteForDraw(war: IBwWar, action: WoSystemVoteForDraw): void {
+function fastExeSystemVoteForDraw(war: BaseWar_Model_War.War, action: WoSystemVoteForDraw): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_FastExeSystemVoteForDraw_00),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeSystemVoteForDraw_00),
             isFastExecute   : true,
         });
     }
 
     war.getDrawVoteManager().handleVote(
         (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
-        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree())
+        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
     );
 }
 
-async function normalExeSystemVoteForDraw(war: IBwWar, action: WoSystemVoteForDraw): Promise<void> {
+async function normalExeSystemVoteForDraw(war: BaseWar_Model_War.War, action: WoSystemVoteForDraw): Promise<void> {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        const commonExtraData = getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_NormalExeSystemVoteForDraw_00);
-        await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeSystemVoteForDraw_00);
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
         });
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute   : false,
+            isFastExecute : false,
         });
     }
 
     war.getDrawVoteManager().handleVote(
         (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
-        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree())
+        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
     );
 }

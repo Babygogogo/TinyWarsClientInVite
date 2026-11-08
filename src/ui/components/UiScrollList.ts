@@ -1,46 +1,45 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { TaskQueue } from "../../auxiliaryTypes/TaskQueue.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
-import { UiScrollerBase } from "./UiScrollerBase.ts";
-import type { IUiList } from "../interfaces/IUiList.ts";
-import type { IUiListItemRenderer as UiInterfacesIUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
-import type { IUiScrollList } from "../interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../types/UiListItemData.ts";
-import { getUiListClass } from "../utils/UiFactory.ts";
-import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
+import {
+    Helpers_Misc,
+    AuxiliaryTypes_TaskQueue,
+    Ui_Components_UiList,
+    Ui_Components_UiScrollerBase,
+    type Ui_Interfaces_IUiList,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type Egret_Egret,
+} from "../../internal.ts";
 
-type IUiListItemRenderer<T extends UiListItemData> = UiInterfacesIUiListItemRenderer<T>;
+export class UiScrollList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemData>
+    extends     Ui_Components_UiScrollerBase.UiScrollerBase
+    implements  Ui_Interfaces_IUiScrollList.IUiScrollList<DataForRenderer> {
+    private readonly _taskQueue = new AuxiliaryTypes_TaskQueue.TaskQueue();
+    private _viewport?          : Ui_Interfaces_IUiList.IUiList<DataForRenderer>;
 
-export class UiScrollList<DataForRenderer extends UiListItemData>
-    extends     UiScrollerBase
-    implements  IUiScrollList<DataForRenderer>
-{
-    private readonly _taskQueue = new TaskQueue();
-    private _viewport?          : IUiList<DataForRenderer>;
-
-    private _getTaskQueue(): TaskQueue<any> {
+    private _getTaskQueue(): AuxiliaryTypes_TaskQueue.TaskQueue<any> {
         return this._taskQueue;
     }
 
-    public initViewport(viewport: IUiList<DataForRenderer>): void {
+    public initViewport(viewport: Ui_Interfaces_IUiList.IUiList<DataForRenderer>): void {
         if (this._getViewport()) {
-            throw newError(`Viewport initialized.`);
+            throw Helpers_Misc.newError(`Viewport initialized.`);
         }
 
-        if (!(viewport instanceof getUiListClass())) {
-            throw newError(`UiScrollList only supports UiList as viewport, use UiScroller instead.`);
+        if (!(viewport instanceof Ui_Components_UiList.UiList)) {
+            throw Helpers_Misc.newError(`UiScrollList only supports UiList as viewport, use UiScroller instead.`);
         }
         viewport.setUnscaledRequestedSize(this.getUnscaledManualWidth(), this.getUnscaledManualHeight());
 
         this._viewport = viewport;
-        this.addChild(viewport as unknown as DisplayObjectContainer);
+        this.addChild(viewport as unknown as Egret_Egret.DisplayObjectContainer);
     }
-    protected _getViewport(): IUiList<DataForRenderer> | undefined {
+    protected _getViewport(): Ui_Interfaces_IUiList.IUiList<DataForRenderer> | undefined {
         return this._viewport;
     }
 
-    public setItemRendererClass(itemRenderer: new () => IUiListItemRenderer<DataForRenderer>): void {
-        getExisted(this._getViewport()).setItemRendererClass(itemRenderer);
+    public setItemRendererClass(itemRenderer: new () => Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): void {
+        Helpers_Misc.getExisted(this._getViewport()).setItemRendererClass(itemRenderer);
     }
 
     public getMaxSelection(): number | undefined {
@@ -68,7 +67,7 @@ export class UiScrollList<DataForRenderer extends UiListItemData>
         if (keepSelectedIndexes) {
             this.setSelectedItemIndexes(
                 selectedIndexes                             ??
-                (viewport.getRequireSelection() ? [0] : [])
+                (viewport.getRequireSelection() ? [0] : []),
             );
         }
 
@@ -93,7 +92,7 @@ export class UiScrollList<DataForRenderer extends UiListItemData>
         }
     }
 
-    public async removeItem(item: IUiListItemRenderer<DataForRenderer>): Promise<IUiListItemRenderer<DataForRenderer> | undefined> {
+    public async removeItem(item: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined> {
         const index = this.getAllItems()?.indexOf(item);
         if ((index == null) || (index < 0)) {
             return undefined;
@@ -101,10 +100,10 @@ export class UiScrollList<DataForRenderer extends UiListItemData>
             return this.removeItemAt(index);
         }
     }
-    public removeItemAt(index: number): Promise<IUiListItemRenderer<DataForRenderer> | undefined> {
+    public removeItemAt(index: number): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined> {
         return this._getTaskQueue().addTask(() => this._doRemoveItemAt(index));
     }
-    private async _doRemoveItemAt(index: number): Promise<IUiListItemRenderer<DataForRenderer> | undefined> {
+    private async _doRemoveItemAt(index: number): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined> {
         const item = await this._getViewport()?.removeItemAt(index);
         if (item) {
             this._resizeAllComponents();
@@ -112,10 +111,10 @@ export class UiScrollList<DataForRenderer extends UiListItemData>
 
         return item;
     }
-    public removeAllItems(): Promise<IUiListItemRenderer<DataForRenderer>[] | undefined> {
+    public removeAllItems(): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined> {
         return this._getTaskQueue().addTask(() => this._doRemoveAllItems());
     }
-    private async _doRemoveAllItems(): Promise<IUiListItemRenderer<DataForRenderer>[] | undefined> {
+    private async _doRemoveAllItems(): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined> {
         const items = await this._getViewport()?.removeAllItems();
         if (items?.length) {
             this._resizeAllComponents();
@@ -124,24 +123,24 @@ export class UiScrollList<DataForRenderer extends UiListItemData>
         return items;
     }
 
-    public override getAllItems(): IUiListItemRenderer<DataForRenderer>[] | undefined {
+    public override getAllItems(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined {
         return this._getViewport()?.getAllItems();
     }
-    public override getItem(index: number): IUiListItemRenderer<DataForRenderer> | undefined {
+    public override getItem(index: number): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined {
         return this._getViewport()?.getItemAt(index);
     }
 
-    public getPreviousSelectedItems(): IUiListItemRenderer<DataForRenderer>[] | undefined {
+    public getPreviousSelectedItems(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined {
         return this._getViewport()?.getPreviousSelectedItems();
     }
     public getPreviousSelectedItemIndexes(): number[] | undefined {
         return this._getViewport()?.getPreviousSelectedItemIndexes();
     }
 
-    public getSelectedItems(): IUiListItemRenderer<DataForRenderer>[] | undefined {
+    public getSelectedItems(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined {
         return this._getViewport()?.getSelectedItems();
     }
-    public setSelectedItems(newItems: IUiListItemRenderer<DataForRenderer>[] | undefined, needResetItemsSkin = true): void {
+    public setSelectedItems(newItems: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined, needResetItemsSkin = true): void {
         this._getViewport()?.setSelectedItems(newItems, needResetItemsSkin);
     }
 
@@ -155,11 +154,11 @@ export class UiScrollList<DataForRenderer extends UiListItemData>
     public setSelectedItemIndexes(indexes: number[], needResetItemsSkin = true): void {
         this._getViewport()?.setSelectedItemIndexes(indexes, needResetItemsSkin);
     }
-    public setSelectedItemIndex(index: Undefinable<number>, needResetItemsSkin = true): void {
+    public setSelectedItemIndex(index: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>, needResetItemsSkin = true): void {
         this.setSelectedItemIndexes(index == null ? [] : [index], needResetItemsSkin);
     }
 
-    public getFirstSelectedItem(): IUiListItemRenderer<DataForRenderer> | undefined {
+    public getFirstSelectedItem(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined {
         return this._getViewport()?.getFirstSelectedItem();
     }
     public getFirstSelectedItemIndex(): number | undefined {

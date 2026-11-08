@@ -1,11 +1,13 @@
-import type { Base } from "../contexts/Base.ts";
-import { ContextType, ResultType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
-import { Num as ExpressionParsersResultsNum } from "../results/Num.ts";
+import {
+    ExpressionParsers_Nodes_Base,
+    ExpressionParsers_Enums,
+    ExpressionParsers_Results_Num,
+    type ExpressionParsers_Contexts_Base,
+    type ExpressionParsers_Results_Base,
+} from "../../internal.ts";
 
-export class Num extends ExpressionParsersNodesBase {
-    private _number: number;             // The number
+export class Num extends ExpressionParsers_Nodes_Base.Base {
+    private readonly _number: number;             // The number
 
     public constructor(num: number) {
         super();
@@ -13,18 +15,18 @@ export class Num extends ExpressionParsersNodesBase {
         this._number = num;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public override eval(ctx: Base): ExpressionParsersResultsBase {
-        return new ExpressionParsersResultsNum(ctx.getWar(), this._number);
+     
+    public override eval(ctx: ExpressionParsers_Contexts_Base.Base): ExpressionParsers_Results_Base.Base {
+        return new ExpressionParsers_Results_Num.Num(ctx.getWar(), this._number);
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public override getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet }: {
-        contextType             : ContextType;
-        lambdaArgumentInfoDict  : Map<string, ResultType> | null;
-        localVariableDict       : Map<string, ResultType> | null;
+        contextType             : ExpressionParsers_Enums.ContextType;
+        lambdaArgumentInfoDict  : Map<string, ExpressionParsers_Enums.ResultType> | null;
+        localVariableDict       : Map<string, ExpressionParsers_Enums.ResultType> | null;
         customCounterNameSet    : Set<string>;
-    }): ResultType {
-        return ResultType.Number;
+    }): ExpressionParsers_Enums.ResultType {
+        return ExpressionParsers_Enums.ResultType.Number;
     }
 
     public override getTokensCount(): number {

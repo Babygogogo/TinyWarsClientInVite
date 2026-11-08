@@ -1,14 +1,16 @@
-import type { IUiComponent } from "./IUiComponent.ts";
-import type { IUiLayoutBase } from "./IUiLayoutBase.ts";
+import {
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Interfaces_IUiLayoutBase,
+} from "../../internal.ts";
 
-export interface IUiLayout extends IUiLayoutBase {
-    getItemAt(index: number): IUiComponent | undefined;
-    getAllItems(): IUiComponent[];
+export interface IUiLayout extends Ui_Interfaces_IUiLayoutBase.IUiLayoutBase {
+    getItemAt(index: number): Ui_Interfaces_IUiComponent.IUiComponent | undefined;
+    getAllItems(): Ui_Interfaces_IUiComponent.IUiComponent[];
 
-    addItem(item: IUiComponent, needArrange: boolean): IUiComponent;
-    addItemAt(item: IUiComponent, index: number, needArrange: boolean): IUiComponent;
+    addItem(item: Ui_Interfaces_IUiComponent.IUiComponent, needArrange: boolean): Ui_Interfaces_IUiComponent.IUiComponent;
+    addItemAt(item: Ui_Interfaces_IUiComponent.IUiComponent, index: number, needArrange: boolean): Ui_Interfaces_IUiComponent.IUiComponent;
 
-    removeItem(item: IUiComponent, needArrange: boolean): IUiComponent | undefined;
-    removeItemAt(index: number, needArrange: boolean): IUiComponent | undefined;
-    removeAllItems(needArrange: boolean): IUiComponent[];
+    removeItem(item: Ui_Interfaces_IUiComponent.IUiComponent, needArrange: boolean): Ui_Interfaces_IUiComponent.IUiComponent | undefined;
+    removeItemAt(index: number, needArrange: boolean): Ui_Interfaces_IUiComponent.IUiComponent | undefined;
+    removeAllItems(needArrange: boolean): Ui_Interfaces_IUiComponent.IUiComponent[];
 }

@@ -1,50 +1,50 @@
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import type { DataForUnitAction } from "../model/BwTypes.ts";
-import { getUnitClass, getUnitViewClass } from "../../gameHelpers/GhFactory.ts";
-import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import { createLazyFunc } from "../../helpers/Misc.ts";
-import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
-import { UndefinedError, TextType } from "../../lang/Constants.ts";
-import { getUnitActionName, getText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { getStage } from "../../stages/StageManager.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { ActionTypeId } from "../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
-import { createDefault } from "../../units/utils/Serialization.ts";
+import {
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Model_BwTypes,
+    type BaseWar_Model_War,
+    Graphics_Utils,
+    Helpers_Misc,
+    Keyboard_KbTypes,
+    Lang_Constants,
+    Lang_Utils,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Stages_StageManager,
+    Timer_TimerModel,
+    Tween_Executor,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+    Units_Constants,
+    Units_Unit,
+    Units_UnitView,
+    Units_UnitViewPool,
+    Units_Utils_Serialization,
+} from "../../internal.ts";
 
-type IUnit              = UnitsIUnit;
-
-const getGridWidth      = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight     = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
+const getGridWidth      = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight     = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
 export interface OpenData {
-    war         : IBwWar;
-    destination : GridIndex;
-    actionList  : DataForUnitAction[];
+    war         : BaseWar_Model_War.War;
+    destination : AuxiliaryTypes_GridIndex.GridIndex;
+    actionList  : BaseWar_Model_BwTypes.DataForUnitAction[];
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _group!        : IUiContainer;
-    private readonly _listAction!   : IUiScrollList<DataForUnitActionRenderer>;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listAction!   : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForUnitActionRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.ZoomableContentsMoved,      callback: this._onNotifyZoomableContentsMoved },
+            { type : "ZoomableContentsMoved",      callback : this._onNotifyZoomableContentsMoved },
         ]);
         this._setKeyboardListener({
-            callback    : this._onKeyboard,
-            thisObject  : this,
+            callback   : this._onKeyboard,
+            thisObject : this,
         });
         this._listAction.setItemRendererClass(UnitActionRenderer);
     }
@@ -65,7 +65,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updatePosition();
     }
 
-    private _onKeyboard(eventData: EventData): void {
+    private _onKeyboard(eventData: Keyboard_KbTypes.EventData): void {
         if (this._getIsShowingCloseAnimation()) {
             return;
         }
@@ -76,18 +76,18 @@ export class Panel extends UiPanel<OpenData> {
         eventData.isHandled = true;
 
         const newKeys = eventData.newKeys;
-        if ((newKeys.has(KeyCode.K)) || (newKeys.has(KeyCode.Escape))) {
-            this.getOpenData()?.war.getActionPlanner().cancelCurrentState();
+        if ((newKeys.has(Keyboard_KbTypes.KeyCode.K)) || (newKeys.has(Keyboard_KbTypes.KeyCode.Escape))) {
+            this.getOpenData()?.war.getActionPlanner()?.cancelCurrentState();
             return;
         }
 
         const list = this._listAction;
-        if ((newKeys.has(KeyCode.J)) || (newKeys.has(KeyCode.Enter))) {
+        if ((newKeys.has(Keyboard_KbTypes.KeyCode.J)) || (newKeys.has(Keyboard_KbTypes.KeyCode.Enter))) {
             const data = list.getFirstSelectedData();
-            if ((data == null) || (data.war.getActionPlanner().checkIsStateRequesting())) {
-                playShortSfx(ShortSfxCode.ButtonForbidden01);
+            if ((data == null) || (data.war.getActionPlanner()?.checkIsStateRequesting())) {
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             } else {
-                playShortSfx(ShortSfxCode.CursorConfirm01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
                 data.callback();
             }
 
@@ -95,12 +95,12 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         {
-            const offsetIndex   = (newKeys.has(KeyCode.W) ? -1 : 0) + (newKeys.has(KeyCode.S) ? 1 : 0);
+            const offsetIndex   = (newKeys.has(Keyboard_KbTypes.KeyCode.W) ? -1 : 0) + (newKeys.has(Keyboard_KbTypes.KeyCode.S) ? 1 : 0);
             const length        = list.getBoundDataArray()?.length;
             const index         = list.getFirstSelectedItemIndex();
             if ((offsetIndex !== 0) && (length != null) && (index != null) && (length > 0)) {
                 list.setSelectedItemIndex((index + length + offsetIndex) % length);
-                playShortSfx(ShortSfxCode.CursorMove01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorMove01);
                 return;
             }
         }
@@ -123,15 +123,15 @@ export class Panel extends UiPanel<OpenData> {
             if (produceUnitType == null) {
                 dataArray.push({
                     war,
-                    actionType          : data.actionType,
-                    callback            : data.callback,
-                    unit                : data.unitForDrop || data.unitForLaunch,
-                    costForProduceUnit  : data.costForProduceUnit ?? null,
+                    actionType         : data.actionType,
+                    callback           : data.callback,
+                    unit               : data.unitForDrop || data.unitForLaunch,
+                    costForProduceUnit : data.costForProduceUnit ?? null,
                 });
             } else {
-                const unitForProduce = new (getUnitClass())();
-                unitForProduce.init(createDefault({
-                    gridIndex   : { x: 0, y: 0 },
+                const unitForProduce = new Units_Unit.Unit(false);
+                unitForProduce.init(Units_Utils_Serialization.createDefault({
+                    gridIndex   : { x : 0, y : 0 },
                     unitId      : -1,
                     unitTypeId  : produceUnitType,
                     playerIndex : war.getPlayerIndexInTurn(),
@@ -141,10 +141,10 @@ export class Panel extends UiPanel<OpenData> {
 
                 dataArray.push({
                     war,
-                    actionType          : data.actionType,
-                    callback            : data.callback,
-                    unit                : unitForProduce,
-                    costForProduceUnit  : data.costForProduceUnit ?? null,
+                    actionType         : data.actionType,
+                    callback           : data.callback,
+                    unit               : unitForProduce,
+                    costForProduceUnit : data.costForProduceUnit ?? null,
                 });
             }
         }
@@ -161,27 +161,31 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const container = openData.war.getView().getFieldContainer();
+        const container = openData.war.getView()?.getFieldContainer();
+        if (container == null) {
+            return;
+        }
+
         const gridIndex = openData.destination;
-        const stage     = getStage();
+        const stage     = Stages_StageManager.getStage();
         const group     = this._group;
         const point     = container.getContentsContainerLocalToGlobal({
-            x: (gridIndex.getX() + 1) * getGridWidth(),
-            y: (gridIndex.getY() + 1) * getGridHeight(),
+            x : (gridIndex.getX() + 1) * getGridWidth(),
+            y : (gridIndex.getY() + 1) * getGridHeight(),
         });
         group.setX(Math.max(0, Math.min(point.x, stage.stageWidth - 140)));
         group.setY(Math.max(40, Math.min(point.y, stage.stageHeight - group.getScaledHeight())));
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
-            obj         : this._group,
-            beginProps  : { customScaleX: 0, customScaleY: 0 },
-            endProps    : { customScaleX: 1, customScaleY: 1 },
-            tweenTime   : 100,
+        Tween_Executor.Executor.reset({
+            obj        : this._group,
+            beginProps : { customScaleX : 0, customScaleY : 0 },
+            endProps   : { customScaleX : 1, customScaleY : 1 },
+            tweenTime  : 100,
         });
 
-        await wait(100);
+        await Timer_TimerModel.wait(100);
     }
     protected async _showCloseAnimation(): Promise<void> {
         // 为提升操作手感而屏蔽掉
@@ -196,67 +200,61 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForUnitActionRenderer extends UiListItemData {
-    war                 : IBwWar;
-    actionType          : ActionTypeId;
+interface DataForUnitActionRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    war                 : BaseWar_Model_War.War;
+    actionType          : Units_Constants.ActionTypeId;
     callback            : () => void;
-    unit?               : IUnit;
+    unit?               : Units_Unit.Unit;
     costForProduceUnit  : number | null;
     isLastAction?       : boolean;
 }
-class UnitActionRenderer extends UiListItemRenderer<DataForUnitActionRenderer> {
-    private readonly _imgSelected!      : IUiImage;
-    private readonly _labelAction!      : IUiLabel;
-    private readonly _labelCost!        : IUiLabel;
-    private readonly _conUnitView!      : IUiContainer;
+class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUnitActionRenderer> {
+    private readonly _imgSelected!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelAction!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCost!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _conUnitView!      : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _unitView      = new (getUnitViewClass())();
+    private _unitView                   : Units_UnitView.UnitView | undefined;
 
     public updateOnLoadedSkin(): void {
-        this._conUnitView.addUiChild(this._unitView);
-        this._applySettingsForWholeTouch(undefined, false, undefined, ShortSfxCode.None);
+        this._applySettingsForWholeTouch(undefined, false, undefined, Sounds_Constants.ShortSfxCode.None);
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
 
-        const imgSelected = this._imgSelected;
-        imgSelected.setAlpha(0);
-        Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.3 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        {
+            const imgSelected = this._imgSelected;
+            imgSelected.setAlpha(0);
+            Tween_Executor.Executor.removeTweens(imgSelected);
+            Tween_Executor.Executor.get(imgSelected, { loop : true })
+                .to({ customAlpha : 0.3 }, 500)
+                .to({ customAlpha : 0 }, 500);
+        }
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
+        }
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunningView();
-        Executor.removeTweens(this._imgSelected);
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
     }
 
     protected override _doApplyOpenData(): void {
-        const openData = this.getOpenData();
-        if (openData == null) {
-            return;
-        }
-
-        this._labelAction.setText(getUnitActionName(openData.actionType) || UndefinedError);
-
-        const unit      = openData.unit;
-        const unitView  = this._unitView;
-        const labelCost = this._labelCost;
-        if (unit == null) {
-            labelCost.setText("");
-            unitView.setIsVisible(false);
-        } else {
-            if (openData.actionType !== ActionTypeId.ProduceUnit) {
-                labelCost.setText(``);
-            } else {
-                const cost = openData.costForProduceUnit;
-                labelCost.setText(`${getText(TextType.B0079)}: ${cost != null ? cost : UndefinedError}`);
-            }
-            unitView.setIsVisible(true);
-            unitView.init(unit).startRunningView();
-        }
+        this._updateView();
     }
 
     public onItemTapEvent(): void {
@@ -265,11 +263,52 @@ class UnitActionRenderer extends UiListItemRenderer<DataForUnitActionRenderer> {
             return;
         }
 
-        if (openData.war.getActionPlanner().checkIsStateRequesting()) {
-            playShortSfx(ShortSfxCode.ButtonForbidden01);
+        if (openData.war.getActionPlanner()?.checkIsStateRequesting()) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
         } else {
-            playShortSfx(ShortSfxCode.CursorConfirm01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
             openData.callback();
+        }
+    }
+
+    private _updateView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        this._labelAction.setText(Lang_Utils.getUnitActionName(openData.actionType) || Lang_Constants.UndefinedError);
+
+        const unit      = openData.unit;
+        const labelCost = this._labelCost;
+        if (unit == null) {
+            labelCost.setText("");
+        } else {
+            if (openData.actionType !== Units_Constants.ActionTypeId.ProduceUnit) {
+                labelCost.setText(``);
+            } else {
+                const cost = openData.costForProduceUnit;
+                labelCost.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0079)}: ${cost != null ? cost : Lang_Constants.UndefinedError}`);
+            }
+        }
+
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const unit      = openData.unit;
+        const unitView  = this._unitView;
+        if (unit == null) {
+            unitView?.setIsVisible(false);
+        } else {
+            unitView?.setIsVisible(true);
+            unitView?.loadViewDataFromUnit(unit, openData.war, true);
+            unitView?.refreshAllViews();
         }
     }
 }

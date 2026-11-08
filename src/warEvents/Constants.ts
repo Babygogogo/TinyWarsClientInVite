@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-shadow
+ 
 export const enum DescType {
     EventName,
     EventMaxCallCountInPlayerTurn,
@@ -8,7 +8,7 @@ export const enum DescType {
     Action,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum Event {
     MaxNameLength               = 150,
     MaxEventsPerMap             = 100,
@@ -21,7 +21,7 @@ export const enum Event {
     MaxOffset                   = 1000000,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum ConditionNode {
     MaxCountPerMap              = 150,
     MaxCountPerEventRoot        = 5,

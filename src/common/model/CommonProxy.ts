@@ -1,59 +1,54 @@
-import { setMrwRankArray, setCoStatistics } from "./CommonModel.ts";
-import { addListeners, send } from "../../networks/Manager.ts";
-import { MessageCodes } from "../../networks/MessageCodes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCommonGetRankListS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetRankList/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCommonGetServerStatusS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetServerStatus/S.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import {
+    Helpers_Misc,
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Networks_MessageCodes,
+    Common_Model_CommonModel,
+    type Egret_Egret,
+} from "../../internal.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgCommonError,                  callback: _onMsgCommonError, },
-        { msgCode: MessageCodes.MsgCommonGetServerStatus,        callback: _onMsgCommonGetServerStatus, },
-        { msgCode: MessageCodes.MsgCommonGetRankList,            callback: _onMsgCommonGetRankList },
-        { msgCode: MessageCodes.MsgCommonGetCoStatistics,        callback: _onMsgCommonGetCoStatistics },
+    Networks_Manager.addListeners([
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonError,                  callback : _onMsgCommonError },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonGetServerStatus,        callback : _onMsgCommonGetServerStatus },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonGetRankList,            callback : _onMsgCommonGetRankList },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonGetCoStatistics,        callback : _onMsgCommonGetCoStatistics },
     ], null);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function _onMsgCommonError(e: Event): void {
+function _onMsgCommonError(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonError"]>): void {
     // TODO: Handle common error message.
 }
 
 export function reqCommonGetServerStatus(): void {
-    send({ MsgCommonGetServerStatus: { c: {} }, });
+    Networks_Manager.send({ MsgCommonGetServerStatus : { c : {} } });
 }
-function _onMsgCommonGetServerStatus(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCommonGetServerStatusS;
+function _onMsgCommonGetServerStatus(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonGetServerStatus"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgCommonGetServerStatus, data);
+        Notifications_Dispatcher.dispatch("MsgCommonGetServerStatus", { msg: data });
     }
 }
 
 export function reqGetRankList(): void {
-    send({ MsgCommonGetRankList: { c: {} } });
+    Networks_Manager.send({ MsgCommonGetRankList : { c : {} } });
 }
-function _onMsgCommonGetRankList(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCommonGetRankListS;
+function _onMsgCommonGetRankList(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonGetRankList"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        setMrwRankArray(data.getMrwRankDataArray());
-        dispatch(TypeId.MsgCommonGetRankList, data);
+        Common_Model_CommonModel.setMrwRankArray(data.getMrwRankDataArray());
+        Notifications_Dispatcher.dispatch("MsgCommonGetRankList", { msg: data });
     }
 }
 
 export function reqCommonGetCoStatistics(): void {
-    send({ MsgCommonGetCoStatistics: { c: {} } });
+    Networks_Manager.send({ MsgCommonGetCoStatistics : { c : {} } });
 }
-function _onMsgCommonGetCoStatistics(e: Event): void {
-    const data = e.data as S;
+function _onMsgCommonGetCoStatistics(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonGetCoStatistics"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        setCoStatistics(data);
-        dispatch(TypeId.MsgCommonGetCoStatistics, data);
+        Common_Model_CommonModel.setCoStatistics(data);
+        Notifications_Dispatcher.dispatch("MsgCommonGetCoStatistics", { msg: data });
     }
 }

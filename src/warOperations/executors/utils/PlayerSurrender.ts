@@ -1,32 +1,23 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { show } from "../../../FloatText.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
-import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import { AliveStateId } from "../../../players/Constants.ts";
-import type {
-    WoPlayerSurrender as ProtoSchemaCommonProtoWarOperationWoPlayerSurrender,
-} from "../../../proto/schema/CommonProto/WarOperation/WoPlayerSurrender.ts";
-import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
-import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData } from "./Common.ts";
+import {
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWarBase,
+    FloatText,
+    SinglePlayerWars_War,
+    TestWar_Model_TwWar,
+    Players_Constants,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Lang_Utils,
+    WarOperations_Executors_Utils_Common,
+    Lang_Constants,
+    type BaseWar_Model_War,
+} from "../../../internal.ts";
 
-type WoPlayerSurrender  = ProtoSchemaCommonProtoWarOperationWoPlayerSurrender;
-type IBwWar             = BaseWarInterfaceIBwWar;
-
-let _meWarClass     : new () => IMeWar;
-let _mpwWarClass    : new () => IMpwWar;
-let _rwWarBaseClass : new () => IRwWarBase;
-let _spwWarClass    : new () => ISpwWar;
-let _twWarClass     : new () => ITwWar;
+import type { WoPlayerSurrender } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerSurrender.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoPlayerSurrender, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoPlayerSurrender, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExePlayerSurrender(war, action);
     } else {
@@ -34,66 +25,61 @@ export async function execute(war: IBwWar, action: WoPlayerSurrender, isFast: bo
     }
 }
 
-function fastExePlayerSurrender(war: IBwWar, action: WoPlayerSurrender): void {
+function fastExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPlayerSurrender): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_FastExePlayerSurrender_00),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerSurrender_00),
             isFastExecute   : true,
         });
     } else {
-        war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).setAliveState(AliveStateId.Dying);
+        war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).setAliveState(Players_Constants.AliveStateId.Dying);
     }
 }
 
-async function normalExePlayerSurrender(war: IBwWar, action: WoPlayerSurrender): Promise<void> {
+async function normalExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPlayerSurrender): Promise<void> {
     const desc = await getDesc(war, action);
-    (desc) && (show(desc));
+    (desc) && (FloatText.show(desc));
 
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        const commonExtraData = getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_NormalExePlayerSurrender_00);
-        await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerSurrender_00);
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
         });
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute   : false,
+            isFastExecute : false,
         });
 
     } else {
-        war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).setAliveState(AliveStateId.Dying);
+        war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).setAliveState(Players_Constants.AliveStateId.Dying);
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoPlayerSurrender): Promise<string | null> {
-    _meWarClass     ??= getMeWarClass();
-    _mpwWarClass    ??= getMpwWarClass();
-    _rwWarBaseClass ??= getRwWarBaseClass();
-    _spwWarClass    ??= getSpwWarClass();
-    _twWarClass     ??= getTwWarClass();
 
-    if (war instanceof _meWarClass) {
+async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerSurrender): Promise<string | null> {
+
+    if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
-    } else if (war instanceof _mpwWarClass) {
-        return getFormattedText(
-            TextType.F0008,
-            await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname()
+    } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
+        return Lang_Utils.getFormattedText(
+            Lang_Constants.TextType.F0008,
+            await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname(),
         );
-    } else if (war instanceof _rwWarBaseClass) {
-        return `${await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname()} ${getText(TextType.B0055)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof _spwWarClass) {
-        return getFormattedText(
-            TextType.F0008,
-            await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname()
+    } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
+        return `${await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0055)} ${war.getWarOperationDescSuffix()}`;
+    } else if (war instanceof SinglePlayerWars_War.War) {
+        return Lang_Utils.getFormattedText(
+            Lang_Constants.TextType.F0008,
+            await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname(),
         );
-    } else if (war instanceof _twWarClass) {
+    } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {
         return null;

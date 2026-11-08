@@ -1,78 +1,74 @@
-import type { IActionPlanner } from "../actionPlanners/IActionPlanner.ts";
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { IBwCursor as BaseWarInterfaceIBwCursor } from "../baseWar/interface/IBwCursor.ts";
-import type { IBwGridVisualEffect as BaseWarInterfaceIBwGridVisualEffect } from "../baseWar/interface/IBwGridVisualEffect.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { IField } from "./IField.ts";
-import type { IFieldView } from "./IFieldView.ts";
-import type { IFogMap } from "../fogMaps/IFogMap.ts";
-import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
 import {
-    getBwCursorClass,
-    getBwGridVisualEffectClass,
-    getFieldViewClass,
-    getActionPlannerClass,
-    getFogMapClass,
-    getTileMapClass,
-    getUnitMapClass,
-} from "../gameHelpers/GhFactory.ts";
-import { newError } from "../helpers/Misc.ts";
+    ActionPlanners_ActionPlanner,
+    AuxiliaryTypes_MapSize,
+    BaseWar_Model_BwCursor,
+    BaseWar_Model_BwGridVisualEffect,
+    Fields_FieldView,
+    FogMaps_FogMap,
+    Helpers_Misc,
+    Tiles_TileMap,
+    Units_UnitMap,
+    Utils_ClientErrorCode,
+    type ActionPlanners_IActionPlanner,
+    type BaseWar_Interface_IBwCursor,
+    type BaseWar_Interface_IBwGridVisualEffect,
+    type BaseWar_Model_War,
+    type GameConfigs_GameConfig,
+} from "../internal.ts";
+
 import { SerialField } from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
-import type { ITileMap } from "../tiles/ITileMap.ts";
-import type { IUnitMap } from "../units/IUnitMap.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type GcData                 = GameConfigGcData;
-type IBwTileMap             = ITileMap;
-type IBwUnitMap             = IUnitMap;
-type IBwCursor              = BaseWarInterfaceIBwCursor;
-type IBwGridVisualEffect    = BaseWarInterfaceIBwGridVisualEffect;
-type IBwWar                 = BaseWarInterfaceIBwWar;
+export class Field {
+    private readonly _view              : Fields_FieldView.FieldView | undefined;
+    private readonly _cursor            : BaseWar_Model_BwCursor.BwCursor | undefined;
+    private readonly _gridVisualEffect  : BaseWar_Model_BwGridVisualEffect.BwGridVisualEffect | undefined;
+    private readonly _actionPlanner     : ActionPlanners_ActionPlanner.ActionPlanner | undefined;
+    private readonly _tileMap           : Tiles_TileMap.TileMap;
+    private readonly _unitMap           : Units_UnitMap.UnitMap;
+    private readonly _fogMap            = new FogMaps_FogMap.FogMap();
 
-export class Field implements IField {
-    private readonly _cursor            = new (getBwCursorClass())();
-    private readonly _gridVisualEffect  = new (getBwGridVisualEffectClass())();
-    private readonly _view              = new (getFieldViewClass())();
-    private readonly _actionPlanner     = new (getActionPlannerClass())();
-    private readonly _fogMap            = new (getFogMapClass())();
-    private readonly _tileMap           = new (getTileMapClass())();
-    private readonly _unitMap           = new (getUnitMapClass())();
+    public constructor(isNeedView: boolean) {
+        this._tileMap = new Tiles_TileMap.TileMap(isNeedView);
+        this._unitMap = new Units_UnitMap.UnitMap(isNeedView);
+
+        if (isNeedView) {
+            this._view              = new Fields_FieldView.FieldView();
+            this._cursor            = new BaseWar_Model_BwCursor.BwCursor();
+            this._gridVisualEffect  = new BaseWar_Model_BwGridVisualEffect.BwGridVisualEffect();
+            this._actionPlanner     = new ActionPlanners_ActionPlanner.ActionPlanner();
+        }
+    }
 
     public init({ data, gameConfig, playersCountUnneutral }: {
-        data                    : Undefinable<SerialField>;
-        gameConfig              : GcData;
+        data                    : SerialField;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
         playersCountUnneutral   : number;
     }): void {
-        if (data == null) {
-            throw newError(`Empty data.`, ClientErrorCode.BwField_Init_00);
-        }
-
-        const mapSize = MapSize.createWithSerialTileMap(data.getTileMap());
+        const mapSize = AuxiliaryTypes_MapSize.MapSize.createWithSerialTileMap(data.getTileMap());
         if (!mapSize.checkIsValid()) {
-            throw newError(`Invalid mapSize.`, ClientErrorCode.BwField_Init_01);
+            throw Helpers_Misc.newError(`Invalid mapSize.`, Utils_ClientErrorCode.ClientErrorCode.BwField_Init_01);
         }
 
         this.getFogMap().init({
-            data                    : data.getFogMap(),
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral,
+            data                  : data.getFogMap(),
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
 
         const tileMap = this.getTileMap();
         tileMap.init({
-            data                    : data.getTileMap(),
-            gameConfig              : gameConfig,
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral
+            data                  : Helpers_Misc.getExisted(data.getTileMap()),
+            gameConfig            : gameConfig,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
 
         const unitMap = this.getUnitMap();
         unitMap.init({
-            data                    : data.getUnitMap(),
-            gameConfig              : gameConfig,
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral
+            data                  : Helpers_Misc.getExisted(data.getUnitMap()),
+            gameConfig            : gameConfig,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
 
         // const { width, height } = mapSize.getWH();
@@ -86,64 +82,70 @@ export class Field implements IField {
         //     }
         // }
 
-        this.getActionPlanner().init(mapSize);
-        this.getCursor().init(mapSize);
-        this.getGridVisualEffect().init();
-        this.getView().init(this);
+        this.getActionPlanner()?.init(mapSize);
+        this.getCursor()?.init(mapSize);
+        this.getGridVisualEffect()?.init();
+        this.getView()?.init(this);
     }
     public fastInit({ data, gameConfig, playersCountUnneutral }: {
         data                    : SerialField;
-        gameConfig              : GcData;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
         playersCountUnneutral   : number;
     }): void {
-        const mapSize = MapSize.createWithSerialTileMap(data.getTileMap());
+        const mapSize = AuxiliaryTypes_MapSize.MapSize.createWithSerialTileMap(data.getTileMap());
         this.getFogMap().fastInit({
-            data                    : data.getFogMap(),
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral
+            data                  : data.getFogMap(),
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
         this.getTileMap().fastInit({
-            data                    : data.getTileMap(),
-            gameConfig              : gameConfig,
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral,
+            data                  : data.getTileMap(),
+            gameConfig            : gameConfig,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
         this.getUnitMap().fastInit({
-            data                    : data.getUnitMap(),
-            gameConfig              : gameConfig,
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral,
+            data                  : Helpers_Misc.getExisted(data.getUnitMap()),
+            gameConfig            : gameConfig,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
 
-        this.getCursor().fastInit();
-        this.getActionPlanner().fastInit();
-        this.getGridVisualEffect().fastInit();
-        this.getView().fastInit(this);
+        this.getCursor()?.fastInit();
+        this.getActionPlanner()?.fastInit();
+        this.getGridVisualEffect()?.fastInit();
+        this.getView()?.fastInit(this);
     }
 
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this.getTileMap().startRunning(war);
         this.getUnitMap().startRunning(war);
         this.getFogMap().startRunning(war);
-        this.getCursor().startRunning(war);
-        this.getActionPlanner().startRunning(war);
-        this.getGridVisualEffect().startRunning(war);
+        this.getCursor()?.startRunning(war);
+        this.getActionPlanner()?.startRunning(war);
+        this.getGridVisualEffect()?.startRunning(war);
     }
     public startRunningView(): void {
-        this.getView().startRunningView();
+        this.getView()?.startRunning();
         this.getTileMap().startRunningView();
         this.getUnitMap().startRunningView();
-        this.getCursor().startRunningView();
-        this.getActionPlanner().startRunningView();
-        this.getGridVisualEffect().startRunningView();
+        this.getCursor()?.startRunningView();
+        this.getActionPlanner()?.startRunningView();
+        this.getGridVisualEffect()?.startRunningView();
     }
     public stopRunning(): void {
-        this.getView().stopRunningView();
+        this.getView()?.stopRunning();
         this.getTileMap().stopRunning();
         this.getUnitMap().stopRunning();
-        this.getCursor().stopRunning();
-        this.getActionPlanner().stopRunning();
-        this.getGridVisualEffect().stopRunning();
+        this.getCursor()?.stopRunning();
+        this.getActionPlanner()?.stopRunning();
+        this.getGridVisualEffect()?.stopRunning();
+    }
+    public dispose(): void {
+        this.stopRunning();
+
+        this.getTileMap().dispose();
+        this.getUnitMap().dispose();
     }
 
     public serialize(): SerialField {
@@ -171,31 +173,31 @@ export class Field implements IField {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getView(): IFieldView {
+    public getView(): Fields_FieldView.FieldView | undefined {
         return this._view;
     }
 
-    public getCursor(): IBwCursor {
+    public getCursor(): BaseWar_Interface_IBwCursor.IBwCursor | undefined {
         return this._cursor;
     }
 
-    public getGridVisualEffect(): IBwGridVisualEffect {
+    public getGridVisualEffect(): BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect | undefined {
         return this._gridVisualEffect;
     }
 
-    public getActionPlanner(): IActionPlanner {
+    public getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner | undefined {
         return this._actionPlanner;
     }
 
-    public getFogMap(): IFogMap {
+    public getFogMap(): FogMaps_FogMap.FogMap {
         return this._fogMap;
     }
 
-    public getTileMap(): IBwTileMap {
+    public getTileMap(): Tiles_TileMap.TileMap {
         return this._tileMap;
     }
 
-    public getUnitMap(): IBwUnitMap {
+    public getUnitMap(): Units_UnitMap.UnitMap {
         return this._unitMap;
     }
 

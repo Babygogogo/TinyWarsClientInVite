@@ -1,56 +1,58 @@
-import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
-import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+import {
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    Lang_Constants,
+    type ExpressionParsers_Types,
+} from "../../../internal.ts";
 
 export const ExpressionInfoDict: {
-    ConTileFilter           : EpExpressionInfo;
-    ConBuffFilter           : EpExpressionInfo;
-    ActBuffType             : EpExpressionInfo;
-    ActExpiringTurnIndex    : EpExpressionInfo;
-    ActExpiringPlayerIndex  : EpExpressionInfo;
-    ActExtraParams          : EpExpressionInfo;
+    ConTileFilter           : ExpressionParsers_Types.EpExpressionInfo;
+    ConBuffFilter           : ExpressionParsers_Types.EpExpressionInfo;
+    ActBuffType             : ExpressionParsers_Types.EpExpressionInfo;
+    ActExpiringTurnIndex    : ExpressionParsers_Types.EpExpressionInfo;
+    ActExpiringPlayerIndex  : ExpressionParsers_Types.EpExpressionInfo;
+    ActExtraParams          : ExpressionParsers_Types.EpExpressionInfo;
 } = {
-    ConTileFilter: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
-        isRequired      : true,
-        getTitleText    : () => getText(TextType.TileFilter),
-        getHelpText     : () => getText(TextType.A0662),
+    ConTileFilter : {
+        contextType  : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
+        isRequired   : true,
+        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.TileFilter),
+        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0662),
     },
-    ConBuffFilter: {
-        contextType     : ContextType.TileBuff,
-        resultTypes     : [ResultType.Number],
-        isRequired      : true,
-        getTitleText    : () => getText(TextType.B1235),
-        getHelpText     : () => getText(TextType.A0765),
+    ConBuffFilter : {
+        contextType  : ExpressionParsers_Enums.ContextType.TileBuff,
+        resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
+        isRequired   : true,
+        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B1235),
+        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0765),
     },
-    ActBuffType: {
-        contextType     : ContextType.TileBuff,
-        resultTypes     : [ResultType.Number],
-        isRequired      : false,
-        getTitleText    : () => getText(TextType.B0805),
-        getHelpText     : () => getText(TextType.A0766),
+    ActBuffType : {
+        contextType  : ExpressionParsers_Enums.ContextType.TileBuff,
+        resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
+        isRequired   : false,
+        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B0805),
+        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0766),
     },
-    ActExpiringTurnIndex: {
-        contextType     : ContextType.TileBuff,
-        resultTypes     : [ResultType.Number],
-        isRequired      : false,
-        getTitleText    : () => getText(TextType.EndTurnIndex),
-        getHelpText     : () => getText(TextType.A0767),
+    ActExpiringTurnIndex : {
+        contextType  : ExpressionParsers_Enums.ContextType.TileBuff,
+        resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
+        isRequired   : false,
+        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex),
+        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0767),
     },
-    ActExpiringPlayerIndex: {
-        contextType     : ContextType.TileBuff,
-        resultTypes     : [ResultType.Number],
-        isRequired      : false,
-        getTitleText    : () => getText(TextType.EndPlayerIndex),
-        getHelpText     : () => getText(TextType.A0768),
+    ActExpiringPlayerIndex : {
+        contextType  : ExpressionParsers_Enums.ContextType.TileBuff,
+        resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
+        isRequired   : false,
+        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex),
+        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0768),
     },
-    ActExtraParams: {
-        contextType     : ContextType.TileBuff,
-        resultTypes     : [ResultType.NumberArray],
-        isRequired      : false,
-        getTitleText    : () => getText(TextType.B1229),
-        getHelpText     : () => getText(TextType.A0769),
+    ActExtraParams : {
+        contextType  : ExpressionParsers_Enums.ContextType.TileBuff,
+        resultTypes  : [ExpressionParsers_Enums.ResultType.NumberArray],
+        isRequired   : false,
+        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B1229),
+        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0769),
     },
 };

@@ -1,5 +1,7 @@
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+} from "../../../internal.ts";
 import type { SelfUnitCaptureAmount } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCaptureAmount.ts";
 
 export function getTotalOffsetPct({
@@ -12,12 +14,12 @@ export function getTotalOffsetPct({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfUnitCaptureAmount | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): number {
     if (cfg == null) {
         return 0;
@@ -32,13 +34,13 @@ export function getTotalOffsetPct({
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-            coZoneRadius                : coZoneRadius,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+            coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+            coZoneRadius             : coZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))
     ) {
         return 0;
     }
 
-    return cfg.getOffsetPct() ?? 0;
+    return cfg.getOffsetPct();
 }

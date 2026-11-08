@@ -1,67 +1,63 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { checkIsValidForcedFogCode } from "../../../fogMaps/Utils.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { UndefinedError, TextType } from "../../../lang/Constants.ts";
-import { getForceFogCodeName, getFormattedText, getText } from "../../../lang/Utils.ts";
-import type {
-    WeaSetForceFogCodeSimple as ProtoSchemaCommonProtoWarEventWeaSetForceFogCodeSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeSimple.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
+import {
+    FogMaps_Utils,
+    Lang_Utils,
+    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
+} from "../../../internal.ts";
+import type { WeaSetForceFogCodeSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeSimple.ts";
 
-type WeaSetForceFogCodeSimple   = ProtoSchemaCommonProtoWarEventWeaSetForceFogCodeSimple;
-
-export function checkIsValid(action: Undefinable<WeaSetForceFogCodeSimple>): boolean {
+export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetForceFogCodeSimple>): boolean {
     if (action == null) {
         return false;
     }
 
     const forceFogCode = action.getForceFogCode();
     return (forceFogCode != null)
-        && (checkIsValidForcedFogCode(forceFogCode))
+        && (FogMaps_Utils.checkIsValidForcedFogCode(forceFogCode))
         && (action.getTurnsCount() != null);
 }
 
-export function getBriefDesc(data: Undefinable<WeaSetForceFogCodeSimple>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetForceFogCodeSimple>): string | null {
     if (data == null) {
         return null;
     }
 
-    const turnsCount            = getExisted(data.getTurnsCount(), ClientErrorCode.WarEventHelper_GetDescForWeaSetHasFog_00);
-    const textForForceFogCode   = getForceFogCodeName(getExisted(data.getForceFogCode(), ClientErrorCode.WarEventHelper_GetDescForWeaSetHasFog_01)) ?? UndefinedError;
+    const turnsCount            = data.getTurnsCount();
+    const textForForceFogCode   = Lang_Utils.getForceFogCodeName(data.getForceFogCode()) ?? Lang_Constants.UndefinedError;
     return (turnsCount == 0)
-        ? getFormattedText(TextType.F0109, textForForceFogCode)
-        : getFormattedText(TextType.F0108, textForForceFogCode, turnsCount);
+        ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0109, textForForceFogCode)
+        : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0108, textForForceFogCode, turnsCount);
 }
-export function getDetailDesc(data: Undefinable<WeaSetForceFogCodeSimple>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetForceFogCodeSimple>): string | null {
     return getBriefDesc(data);
 }
 
 export function getErrorTip(data: WeaSetForceFogCodeSimple): string | null {
     const forceFogCode = data.getForceFogCode();
-    if ((forceFogCode == null) || (!checkIsValidForcedFogCode(forceFogCode))) {
-        return getText(TextType.A0264);
+    if ((forceFogCode == null) || (!FogMaps_Utils.checkIsValidForcedFogCode(forceFogCode))) {
+        return Lang_Utils.getText(Lang_Constants.TextType.A0264);
     }
 
     if (data.getTurnsCount() == null) {
-        return getText(TextType.A0253);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0253);
     }
 
     return null;
 }
 
-export function applyWithExtraData(action: WeaSetForceFogCodeSimple, war: IBwWar, isFast: boolean): Promise<void> {
+export function applyWithExtraData(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     return apply(action, war, isFast);
 }
-export function applyWithoutExtraData(action: WeaSetForceFogCodeSimple, war: IBwWar, isFast: boolean): Promise<void> {
+export function applyWithoutExtraData(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     return apply(action, war, isFast);
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function apply(action: WeaSetForceFogCodeSimple, war: IBwWar, isFast: boolean): Promise<void> {
+async function apply(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     const fogMap = war.getFogMap();
-    fogMap.setForceFogCode(getExisted(action.getForceFogCode()));
+    fogMap.setForceFogCode(action.getForceFogCode());
 
-    const turnsCount = getExisted(action.getTurnsCount());
+    const turnsCount = action.getTurnsCount();
     if (turnsCount == 0) {
         fogMap.setForceExpirePlayerIndex(null);
         fogMap.setForceExpireTurnIndex(null);

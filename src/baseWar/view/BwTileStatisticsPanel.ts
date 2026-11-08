@@ -1,52 +1,53 @@
-import type { IBwWar } from "../interface/IBwWar.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
-import type { ITile as TilesITile } from "../../tiles/ITile.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
-import { checkAndAddAutoSizerInfo } from "../../ui/utils/UiSizerHelpers.ts";
-import { getAllTilesVisibleToTeams } from "../../visibilities/Utils.ts";
-
-type ITile          = TilesITile;
+import {
+    GameConfigs_GameConfig,
+    Lang_Constants,
+    Players_Constants,
+    TileObjects_Utils,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Utils_UiSizerHelpers,
+    Visibilities_Utils,
+    type BaseWar_Model_War,
+    type Tiles_Tile,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war             : IBwWar;
+    war             : BaseWar_Model_War.War;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnClose!                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupTitle!               : IUiContainer;
-    private readonly _labelTotal!               : IUiLabel;
-    private readonly _labelP0!                  : IUiLabel;
-    private readonly _labelP1!                  : IUiLabel;
-    private readonly _labelP2!                  : IUiLabel;
-    private readonly _labelP3!                  : IUiLabel;
-    private readonly _labelP4!                  : IUiLabel;
-    private readonly _labelP5!                  : IUiLabel;
-    private readonly _labelP6!                  : IUiLabel;
-    private readonly _labelP7!                  : IUiLabel;
-    private readonly _labelP8!                  : IUiLabel;
+    private readonly _groupTitle!               : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTotal!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP0!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP1!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP2!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP3!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP4!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP5!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP6!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP7!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP8!                  : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _listTile!                 : IUiScrollList<DataForTileRenderer>;
+    private readonly _listTile!                 : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForTileRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
+            { ui : this._btnClose,           callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -85,10 +86,10 @@ export class Panel extends UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1296);
-        this._labelTotal.setLangText(TextType.B1295);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1296);
+        this._labelTotal.setLangText(Lang_Constants.TextType.B1295);
 
-        checkAndAddAutoSizerInfo(this._groupTitle, false);
+        Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this._groupTitle, false);
     }
 
     private _updateView(): void {
@@ -118,8 +119,8 @@ export class Panel extends UiPanel<OpenData> {
         const gameConfig            = war.getGcData();
         const playersCountUnneutral = war.getPlayersCountUnneutral();
         const allTiles              = war.getTileMap().getAllTiles();
-        const visibleTileSet        = getAllTilesVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
-        const allTilesForPlayers    : ITile[][] = [];
+        const visibleTileSet        = Visibilities_Utils.getAllTilesVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
+        const allTilesForPlayers    : Tiles_Tile.Tile[][] = [];
         for (let i = 0; i <= playersCountUnneutral; ++i) {
             allTilesForPlayers.push([]);
         }
@@ -139,18 +140,18 @@ export class Panel extends UiPanel<OpenData> {
                 continue;
             }
 
-            const tileObjectCfg = gameConfig.getTileObjectCfg(tileObjectType);
+            const tileObjectCfg = TileObjects_Utils.getTileObjectCfg(tileObjectType);
             if ((tileObjectCfg == null) || (tileObjectCfg.isNeutralOnly)) {
                 continue;
             }
 
             dataArray.push({
-                index                   : index++,
-                gameConfig              : gameConfig,
-                tileObjectType          : tileObjectType,
-                playersCountUnneutral   : playersCountUnneutral,
-                total                   : allTiles.filter(v => v.getTileTypeId() === tileType).length,
-                countArray              : allTilesForPlayers.map(v => v.filter(t => t.getTileTypeId() === tileType).length),
+                index                 : index++,
+                gameConfig            : gameConfig,
+                tileObjectType        : tileObjectType,
+                playersCountUnneutral : playersCountUnneutral,
+                total                 : allTiles.filter(v => v.getTileTypeId() === tileType).length,
+                countArray            : allTilesForPlayers.map(v => v.filter(t => t.getTileTypeId() === tileType).length),
             });
         }
 
@@ -158,50 +159,57 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForTileRenderer extends UiListItemData {
+interface DataForTileRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index                   : number;
-    gameConfig              : GcData;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
     tileObjectType          : number;
     playersCountUnneutral   : number;
     total                   : number;
     countArray              : number[];
 }
-class UnitRenderer extends UiListItemRenderer<DataForTileRenderer> {
-    private readonly _group!            : IUiContainer;
-    private readonly _imgBackground!    : IUiImage;
-    private readonly _conTileView!      : IUiContainer;
+class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTileRenderer> {
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBackground!    : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _conTileView!      : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _groupValue!       : IUiContainer;
-    private readonly _labelTotal!       : IUiLabel;
-    private readonly _labelP0!          : IUiLabel;
-    private readonly _labelP1!          : IUiLabel;
-    private readonly _labelP2!          : IUiLabel;
-    private readonly _labelP3!          : IUiLabel;
-    private readonly _labelP4!          : IUiLabel;
-    private readonly _labelP5!          : IUiLabel;
-    private readonly _labelP6!          : IUiLabel;
-    private readonly _labelP7!          : IUiLabel;
-    private readonly _labelP8!          : IUiLabel;
+    private readonly _groupValue!       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTotal!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP0!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP1!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP2!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP3!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP4!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP5!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP6!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP7!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelP8!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _tileView          = new (getUiTileViewClass())();
+    private _tileView                   : Tiles_TileViewBox.TileViewBox | undefined;
 
-    public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type: TypeId.TileAnimationTick,       callback: this._onNotifyTileAnimationTick },
-        ]);
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        const conTileView   = this._conTileView;
-        const tileView      = this._tileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnAnimationTick();
-    }
-
     protected override _doApplyOpenData(): void {
         this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        await super._onClosed();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,40 +221,40 @@ class UnitRenderer extends UiListItemRenderer<DataForTileRenderer> {
             return;
         }
 
-        const gameConfig = openData.gameConfig;
         this._imgBackground.setIsVisible(openData.index % 2 == 1);
 
         {
-            const tileView = this._tileView;
-            tileView.init({
-                tileBaseType            : null,
-                tileBaseShapeId         : null,
-                tileDecorationType      : null,
-                tileDecorationShapeId   : null,
-                tileObjectType          : openData.tileObjectType,
-                tileObjectShapeId       : 0,
-                skinId                  : PlayerIndex.Neutral,
-                overridingSkinId        : undefined,
-                gameConfig              : gameConfig,
-            });
-            tileView.updateView();
+            const playersCountUnneutral  = openData.playersCountUnneutral;
+            const countArray             = openData.countArray;
+            this._labelTotal.setText(`${openData.total}`);
+            this._labelP0.setText(`${countArray[0]}`);
+            this._labelP1.setText(`${countArray[1]}`);
+            this._labelP2.setText(`${countArray[2]}`);
+            this._labelP3.setText(playersCountUnneutral >= 3 ? `${countArray[3]}` : ``);
+            this._labelP4.setText(playersCountUnneutral >= 4 ? `${countArray[4]}` : ``);
+            this._labelP5.setText(playersCountUnneutral >= 5 ? `${countArray[5]}` : ``);
+            this._labelP6.setText(playersCountUnneutral >= 6 ? `${countArray[6]}` : ``);
+            this._labelP7.setText(playersCountUnneutral >= 7 ? `${countArray[7]}` : ``);
+            this._labelP8.setText(playersCountUnneutral >= 8 ? `${countArray[8]}` : ``);
+
+            Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this._groupValue, false);
         }
 
-        {
-           const playersCountUnneutral  = openData.playersCountUnneutral;
-           const countArray             = openData.countArray;
-           this._labelTotal.setText(`${openData.total}`);
-           this._labelP0.setText(`${countArray[0]}`);
-           this._labelP1.setText(`${countArray[1]}`);
-           this._labelP2.setText(`${countArray[2]}`);
-           this._labelP3.setText(playersCountUnneutral >= 3 ? `${countArray[3]}` : ``);
-           this._labelP4.setText(playersCountUnneutral >= 4 ? `${countArray[4]}` : ``);
-           this._labelP5.setText(playersCountUnneutral >= 5 ? `${countArray[5]}` : ``);
-           this._labelP6.setText(playersCountUnneutral >= 6 ? `${countArray[6]}` : ``);
-           this._labelP7.setText(playersCountUnneutral >= 7 ? `${countArray[7]}` : ``);
-           this._labelP8.setText(playersCountUnneutral >= 8 ? `${countArray[8]}` : ``);
+        this._updateTileView();
+    }
 
-           checkAndAddAutoSizerInfo(this._groupValue, false);
+    private _updateTileView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
         }
+
+        const tileView = this._tileView?.getView();
+        tileView?.loadViewData({
+            objectTypeId  : openData.tileObjectType,
+            objectShapeId : 0,
+            skinId        : Players_Constants.PlayerIndex.Neutral,
+        }, true);
+        tileView?.refreshAllViews();
     }
 }

@@ -1,46 +1,47 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { newError, getExisted } from "../../../helpers/Misc.ts";
-import { AliveStateId } from "../../../players/Constants.ts";
+import {
+    Players_Constants,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    WarOperations_Revisers_Utils_Common,
+    AuxiliaryTypes_GridIndex,
+    Turns_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
+} from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitBeLoaded } from "../../../proto/schema/CommonProto/WarOperation/WoUnitBeLoaded.ts";
-import { PhaseCode } from "../../../turns/Constants.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { getRevisedPath } from "./Common.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
-export function revise(war: IBwWar, rawAction: WoUnitBeLoaded, requesterUserId: Undefinable<number>): WoContainer {
-    if (war.getTurnPhaseCode() !== PhaseCode.Main) {
-        throw newError(`Invalid turnPhaseCode.`, ClientErrorCode.WarOperationReviser_ReviseUnitBeLoaded_00);
+export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitBeLoaded, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+    if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
+        throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitBeLoaded_00);
     }
 
     const playerInTurn = war.getPlayerInTurn();
-    if ((playerInTurn == null) || (playerInTurn.getAliveState() !== AliveStateId.Alive)) {
-        throw newError(`Invalid aliveState.`, ClientErrorCode.WarOperationReviser_ReviseUnitBeLoaded_01);
+    if ((playerInTurn == null) || (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Alive)) {
+        throw Helpers_Misc.newError(`Invalid aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitBeLoaded_01);
     }
 
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = getRevisedPath({ war, rawPath, launchUnitId, requesterUserId });
+    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
+        war, rawPath, launchUnitId, requesterUserId, 
+    });
     const unitMap       = war.getUnitMap();
-    const focusUnit     = getExisted(unitMap.getUnit(revisedPath.nodes[0], launchUnitId), ClientErrorCode.WarOperationReviser_ReviseUnitBeLoaded_02);
-    const rawPathNodes  = rawPath?.getNodes()?.map(v => getExisted(GridIndex.convertGridIndex(v))) ?? [];
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.nodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitBeLoaded_02);
+    const rawPathNodes  = rawPath?.getNodes()?.map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     const destination   = rawPathNodes[rawPathNodes.length - 1];
     const loaderUnit    = unitMap.getUnitOnMap(destination);
     if ((rawPathNodes.length <= 1)              ||
         (!loaderUnit)                           ||
         (!loaderUnit.checkCanLoadUnit(focusUnit))
     ) {
-        throw newError(`Invalid loaderUnit.`, ClientErrorCode.WarOperationReviser_ReviseUnitBeLoaded_03);
+        throw Helpers_Misc.newError(`Invalid loaderUnit.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitBeLoaded_03);
     }
 
     return WoContainer.fromJson({
-        WoUnitBeLoaded: {
-            path            : revisedPath.toProto().toJson(),
-            launchUnitId    : launchUnitId,
+        WoUnitBeLoaded : {
+            path         : revisedPath.toProto().toJson(),
+            launchUnitId : launchUnitId,
         },
     });
 }

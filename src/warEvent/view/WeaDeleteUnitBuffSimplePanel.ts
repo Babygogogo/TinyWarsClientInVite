@@ -1,72 +1,65 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import {
+    Graphics_Constants,
+    Notifications_Dispatcher,
+    WarEvents_Actions_Utils_Common,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    Lang_Constants,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaDeleteUnitBuffSimple } from "../../proto/schema/CommonProto/WarEvent/WeaDeleteUnitBuffSimple.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { getErrorTipForAction, getDetailDescForAction } from "../../warEvents/actions/utils/Common.ts";
-
-type WarEventFullData   = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventAction     = ProtoSchemaCommonProtoWarEventWarEventAction;
-
 
 export interface OpenData {
-    war         : IMeWar;
+    war         : MapEditor_Interface_IMeWar.IMeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                                  : IUiImage;
-    private readonly _group!                                    : IUiContainer;
-    private readonly _labelTitle!                               : IUiLabel;
-    private readonly _btnType!                                  : IUiButton;
-    private readonly _btnClose!                                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnType!                                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupDesc!                                : IUiLayout;
-    private readonly _labelDesc!                                : IUiLabel;
-    private readonly _labelError!                               : IUiLabel;
+    private readonly _groupDesc!                                : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelDesc!                                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelError!                               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConPlayerFilter!                       : IUiButton;
-    private readonly _labelConPlayerFilter!                     : IUiLabel;
+    private readonly _btnConPlayerFilter!                       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConPlayerFilter!                     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConUnitFilter!                         : IUiButton;
-    private readonly _labelConUnitFilter!                       : IUiLabel;
+    private readonly _btnConUnitFilter!                         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConUnitFilter!                       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConTileFilter!                         : IUiButton;
-    private readonly _labelConTileFilter!                       : IUiLabel;
+    private readonly _btnConTileFilter!                         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConTileFilter!                       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConUnitBuffFilter!                     : IUiButton;
-    private readonly _labelConUnitBuffFilter!                   : IUiLabel;
+    private readonly _btnConUnitBuffFilter!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConUnitBuffFilter!                   : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnType,                                callback: this._onTouchedBtnType },
-            { ui: this._btnClose,                               callback: this.closePanel },
+            { ui : this._btnType,                                callback : this._onTouchedBtnType },
+            { ui : this._btnClose,                               callback : this.closePanel },
 
-            { ui: this._btnConPlayerFilter,                     callback: this._onTouchedBtnConPlayerFilter },
-            { ui: this._btnConUnitFilter,                       callback: this._onTouchedBtnConUnitFilter },
-            { ui: this._btnConTileFilter,                       callback: this._onTouchedBtnConTileFilter },
-            { ui: this._btnConUnitBuffFilter,                   callback: this._onTouchedBtnConUnitBuffFilter },
+            { ui : this._btnConPlayerFilter,                     callback : this._onTouchedBtnConPlayerFilter },
+            { ui : this._btnConUnitFilter,                       callback : this._onTouchedBtnConUnitFilter },
+            { ui : this._btnConTileFilter,                       callback : this._onTouchedBtnConTileFilter },
+            { ui : this._btnConUnitBuffFilter,                   callback : this._onTouchedBtnConUnitBuffFilter },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -94,10 +87,10 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeActionTypeListPanel, {
-            war         : openData.war,
-            fullData    : openData.fullData,
-            action      : openData.action,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
+            war      : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
         });
     }
 
@@ -112,13 +105,13 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WePlayerFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            currentFilter           : action.getConPlayerFilter(),
-            callback                : filter => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WePlayerFilterPanel, {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            currentFilter         : action.getConPlayerFilter(),
+            callback              : filter => {
                 action.setConPlayerFilter(filter);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -134,14 +127,14 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeUnitFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConUnitFilter(),
-            callback                : filter => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitFilterPanel, {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConUnitFilter(),
+            callback              : filter => {
                 action.setConUnitFilter(filter);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -157,14 +150,14 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeTileFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConTileFilter(),
-            callback                : filter => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileFilterPanel, {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConTileFilter(),
+            callback              : filter => {
                 action.setConTileFilter(filter);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -175,11 +168,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeUnitBuffFilterPanel, {
-            currentFilter   : action.getConUnitBuffFilter(),
-            callback        : filter => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitBuffFilterPanel, {
+            currentFilter : action.getConUnitBuffFilter(),
+            callback      : filter => {
                 action.setConUnitBuffFilter(filter);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -192,13 +185,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(TextType.B0516);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_Constants.TextType.B0516);
 
-        this._btnConPlayerFilter.setLangText(TextType.PlayerFilter);
-        this._btnConUnitFilter.setLangText(TextType.UnitFilter);
-        this._btnConTileFilter.setLangText(TextType.TileFilter);
-        this._btnConUnitBuffFilter.setLangText(TextType.B1235);
+        this._btnConPlayerFilter.setLangText(Lang_Constants.TextType.PlayerFilter);
+        this._btnConUnitFilter.setLangText(Lang_Constants.TextType.UnitFilter);
+        this._btnConTileFilter.setLangText(Lang_Constants.TextType.TileFilter);
+        this._btnConUnitBuffFilter.setLangText(Lang_Constants.TextType.B1235);
 
         this._updateLabelDescAndLabelError();
 
@@ -216,11 +209,11 @@ export class Panel extends UiPanel<OpenData> {
 
         const action            = openData.action;
         const war               = openData.war;
-        const errorTip          = getErrorTipForAction(openData.fullData, action, war);
+        const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || getText(TextType.B0493));
-        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
-        this._labelDesc.setText(getDetailDescForAction(action, war.getGcData()) || UndefinedError);
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
+        this._labelDesc.setText(WarEvents_Actions_Utils_Common.getDetailDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
@@ -230,7 +223,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelConPlayerFilter.setText(action.getConPlayerFilter() == null ? `` : getText(TextType.B1408));
+        this._labelConPlayerFilter.setText(action.getConPlayerFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
     }
 
     private _updateLabelConUnitFilter(): void {
@@ -239,7 +232,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelConUnitFilter.setText(action.getConUnitFilter() == null ? `` : getText(TextType.B1408));
+        this._labelConUnitFilter.setText(action.getConUnitFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
     }
 
     private _updateLabelConTileFilter(): void {
@@ -248,7 +241,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelConTileFilter.setText(action.getConTileFilter() == null ? `` : getText(TextType.B1408));
+        this._labelConTileFilter.setText(action.getConTileFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
     }
 
     private _updateLabelConUnitBuffFilter(): void {
@@ -257,10 +250,10 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelConUnitBuffFilter.setText(action.getConUnitBuffFilter() == null ? `` : getText(TextType.B1408));
+        this._labelConUnitBuffFilter.setText(action.getConUnitBuffFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
     }
 
-    private _getAction(): Undefinable<WeaDeleteUnitBuffSimple> {
+    private _getAction(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaDeleteUnitBuffSimple> {
         return this.getOpenData()?.action.getWeaDeleteUnitBuffSimple();
     }
 }

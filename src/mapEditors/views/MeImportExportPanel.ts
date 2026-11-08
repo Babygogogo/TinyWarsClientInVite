@@ -1,53 +1,52 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getIsTransparentTouchLayerTouched, setIsTransparentTouchLayerTouched } from "../../common/model/CommonModel.ts";
-import { CoId } from "../../cos/Constants.ts";
-import { showLang, show } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { getMapEditorData } from "../../mapEditor/model/MeModel.ts";
-import { convertAwbwMap } from "../../maps/utils/Common.ts";
-import { getEnabledNormalMapIdSet, getRawData } from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+import {
+    Cos_Constants,
+    Maps_Utils_Common,
+    GamePanels_Dict,
+    NormalMap_Model_NormalMapModel,
+    Helpers_Misc,
+    Common_Model_CommonModel,
+    MapEditor_Model_MeModel,
+    Lang_Utils,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export interface OpenData {
-    war     : IMeWar;
+    war     : MapEditor_Interface_IMeWar.IMeWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                              : IUiImage;
-    private readonly _group!                                : IUiContainer;
-    private readonly _btnClose!                             : IUiButton;
-    private readonly _labelTitle!                           : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnClose!                             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTitle!                           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnImportMapFromPool!                 : IUiButton;
-    private readonly _btnImportMapFromClipboard!            : IUiButton;
-    private readonly _btnImportMapFromClipboardAwbw!        : IUiButton;
-    private readonly _btnImportMapFromMapEditorSlot!        : IUiButton;
-    private readonly _btnExportMapToClipboard!              : IUiButton;
+    private readonly _btnImportMapFromPool!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnImportMapFromClipboard!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnImportMapFromClipboardAwbw!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnImportMapFromMapEditorSlot!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnExportMapToClipboard!              : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                           callback: this.closePanel },
-            { ui: this._btnImportMapFromPool,               callback: this._onTouchedBtnImportMapFromPool },
-            { ui: this._btnImportMapFromClipboard,          callback: this._onTouchedBtnImportFromMapClipboard },
-            { ui: this._btnImportMapFromClipboardAwbw,      callback: this._onTouchedBtnImportFromMapClipboardAwbw },
-            { ui: this._btnImportMapFromMapEditorSlot,      callback: this._onTouchedBtnImportMapFromMapEditorSlot },
-            { ui: this._btnExportMapToClipboard,            callback: this._onTouchedBtnExportMapToClipboard },
+            { ui : this._btnClose,                           callback : this.closePanel },
+            { ui : this._btnImportMapFromPool,               callback : this._onTouchedBtnImportMapFromPool },
+            { ui : this._btnImportMapFromClipboard,          callback : this._onTouchedBtnImportFromMapClipboard },
+            { ui : this._btnImportMapFromClipboardAwbw,      callback : this._onTouchedBtnImportFromMapClipboardAwbw },
+            { ui : this._btnImportMapFromMapEditorSlot,      callback : this._onTouchedBtnImportMapFromMapEditorSlot },
+            { ui : this._btnExportMapToClipboard,            callback : this._onTouchedBtnExportMapToClipboard },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -63,13 +62,13 @@ export class Panel extends UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private async _onTouchedBtnImportMapFromPool(): Promise<void> {
         const war = this.getOpenData()?.war;
-        openPanel(getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : [...await getEnabledNormalMapIdSet()],
-            getTitleText                : () => getText(TextType.B0681),
-            callback                    : async normalMapId => {
-                openPanel(getDict().MeImportContentPanel, {
-                    war             : war,
-                    srcMapRawData   : getExisted(await getRawData(normalMapId)),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
+            availableNormalMapIdArray : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0681),
+            callback                  : async normalMapId => {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeImportContentPanel, {
+                    war           : war,
+                    srcMapRawData : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
                 });
             },
         });
@@ -78,7 +77,7 @@ export class Panel extends UiPanel<OpenData> {
     private async _onTouchedBtnImportFromMapClipboard(): Promise<void> {
         const war = this.getOpenData()?.war;
         if (war == null) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -88,7 +87,7 @@ export class Panel extends UiPanel<OpenData> {
                 window.focus();
                 text = await navigator.clipboard.readText();
             } catch {
-                showLang(TextType.A0275);
+                FloatText.showLang(Lang_Constants.TextType.A0275);
                 return;
             }
 
@@ -96,34 +95,34 @@ export class Panel extends UiPanel<OpenData> {
             try {
                 mapRawData = MapRawData.fromJson(JSON.parse(text));
             } catch {
-                showLang(TextType.A0784);
+                FloatText.showLang(Lang_Constants.TextType.A0784);
                 return;
             }
 
             handleUnsupportedCoId(mapRawData, war.getGcData());
-            openPanel(getDict().MeImportContentPanel, {
-                war             : war,
-                srcMapRawData   : mapRawData,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeImportContentPanel, {
+                war           : war,
+                srcMapRawData : mapRawData,
             });
             this.closePanel();
         };
 
-        if (getIsTransparentTouchLayerTouched()) {
+        if (Common_Model_CommonModel.getIsTransparentTouchLayerTouched()) {
             callback();
         } else {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent          : () => getText(TextType.A0979),
-                getTextForConfirm   : () => getText(TextType.B0026),
-                getTextForCancel    : () => getText(TextType.B0026),
-                showButtonClose     : false,
-                callback            : async () => {
-                    setIsTransparentTouchLayerTouched(true);
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                showButtonClose   : false,
+                callback          : async () => {
+                    Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
-                callbackOnCancel    : async () => {
-                    setIsTransparentTouchLayerTouched(true);
+                callbackOnCancel : async () => {
+                    Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
             });
@@ -132,7 +131,7 @@ export class Panel extends UiPanel<OpenData> {
     private async _onTouchedBtnImportFromMapClipboardAwbw(): Promise<void> {
         const war = this.getOpenData()?.war;
         if (war == null) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -142,47 +141,47 @@ export class Panel extends UiPanel<OpenData> {
                 window.focus();
                 text = await navigator.clipboard.readText();
             } catch {
-                showLang(TextType.A0275);
+                FloatText.showLang(Lang_Constants.TextType.A0275);
                 return;
             }
 
             let mapRawData: MapRawData | undefined;
             try {
-                mapRawData = convertAwbwMap(text, war.getGcData());
+                mapRawData = Maps_Utils_Common.convertAwbwMap(text, war.getGcData());
             } catch {
-                showLang(TextType.A0784);
+                FloatText.showLang(Lang_Constants.TextType.A0784);
                 return;
             }
 
             if (mapRawData == null) {
-                showLang(TextType.A0784);
+                FloatText.showLang(Lang_Constants.TextType.A0784);
                 return;
             }
 
             handleUnsupportedCoId(mapRawData, war.getGcData());
-            openPanel(getDict().MeImportContentPanel, {
-                war             : war,
-                srcMapRawData   : mapRawData,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeImportContentPanel, {
+                war           : war,
+                srcMapRawData : mapRawData,
             });
             this.closePanel();
         };
 
-        if (getIsTransparentTouchLayerTouched()) {
+        if (Common_Model_CommonModel.getIsTransparentTouchLayerTouched()) {
             callback();
         } else {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent          : () => getText(TextType.A0979),
-                getTextForConfirm   : () => getText(TextType.B0026),
-                getTextForCancel    : () => getText(TextType.B0026),
-                showButtonClose     : false,
-                callback            : async () => {
-                    setIsTransparentTouchLayerTouched(true);
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                showButtonClose   : false,
+                callback          : async () => {
+                    Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
-                callbackOnCancel    : async () => {
-                    setIsTransparentTouchLayerTouched(true);
+                callbackOnCancel : async () => {
+                    Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
             });
@@ -190,15 +189,15 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _onTouchedBtnImportMapFromMapEditorSlot(): void {
         const war = this.getOpenData()?.war;
-        openPanel(getDict().CommonChooseSingleMapEditorSlotPanel, {
-            currentSlotIndex        : 0,
-            needConfirmOverwrite    : false,
-            needNonEmptySlot        : true,
-            getHelpText             : null,
-            callback                : async slotIndex => {
-                openPanel(getDict().MeImportContentPanel, {
-                    war             : war,
-                    srcMapRawData   : getExisted((await getMapEditorData(slotIndex))?.mapRawData),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleMapEditorSlotPanel, {
+            currentSlotIndex     : 0,
+            needConfirmOverwrite : false,
+            needNonEmptySlot     : true,
+            getHelpText          : null,
+            callback             : async slotIndex => {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeImportContentPanel, {
+                    war           : war,
+                    srcMapRawData : Helpers_Misc.getExisted((await MapEditor_Model_MeModel.getMapEditorData(slotIndex))?.mapRawData),
                 });
             },
         });
@@ -207,7 +206,7 @@ export class Panel extends UiPanel<OpenData> {
     private async _onTouchedBtnExportMapToClipboard(): Promise<void> {
         const mapData = await this.getOpenData()?.war.serializeForMap();
         if (mapData == null) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -216,29 +215,29 @@ export class Panel extends UiPanel<OpenData> {
                 window.focus();
                 await navigator.clipboard.writeText(JSON.stringify(mapData.toJson()));
             } catch {
-                showLang(TextType.A0275);
+                FloatText.showLang(Lang_Constants.TextType.A0275);
                 return;
             }
 
-            show(getText(TextType.A0235));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0235));
         };
 
-        if (getIsTransparentTouchLayerTouched()) {
+        if (Common_Model_CommonModel.getIsTransparentTouchLayerTouched()) {
             callback();
         } else {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent          : () => getText(TextType.A0979),
-                getTextForConfirm   : () => getText(TextType.B0026),
-                getTextForCancel    : () => getText(TextType.B0026),
-                showButtonClose     : false,
-                callback            : async () => {
-                    setIsTransparentTouchLayerTouched(true);
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                showButtonClose   : false,
+                callback          : async () => {
+                    Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
-                callbackOnCancel    : async () => {
-                    setIsTransparentTouchLayerTouched(true);
+                callbackOnCancel : async () => {
+                    Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
             });
@@ -257,23 +256,23 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1252);
-        this._btnImportMapFromPool.setLangText(TextType.B0681);
-        this._btnImportMapFromClipboard.setLangText(TextType.B0313);
-        this._btnImportMapFromClipboardAwbw.setText(`${getText(TextType.B0313)} (AWBW)`);
-        this._btnImportMapFromMapEditorSlot.setLangText(TextType.B0126);
-        this._btnExportMapToClipboard.setLangText(TextType.B0680);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1252);
+        this._btnImportMapFromPool.setLangText(Lang_Constants.TextType.B0681);
+        this._btnImportMapFromClipboard.setLangText(Lang_Constants.TextType.B0313);
+        this._btnImportMapFromClipboardAwbw.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0313)} (AWBW)`);
+        this._btnImportMapFromMapEditorSlot.setLangText(Lang_Constants.TextType.B0126);
+        this._btnExportMapToClipboard.setLangText(Lang_Constants.TextType.B0680);
     }
 }
 
-function handleUnsupportedCoId(mapRawData: MapRawData, gcData: GcData): void {
+function handleUnsupportedCoId(mapRawData: MapRawData, gcData: GameConfigs_GameConfig.GameConfig): void {
     {
-        for (const data1 of mapRawData.getMapSimpleDialogueArray() ?? []) {
-            for (const data2 of data1.getDataArray() ?? []) {
+        for (const data1 of mapRawData.getMapSimpleDialogueArray()) {
+            for (const data2 of data1.getDataArray()) {
                 const data = data2.getDataForCoDialogue();
                 if (data) {
                     if (checkShouldModifyCoId(data.getCoId(), gcData)) {
-                        data.setCoId(CoId.Empty);
+                        data.setCoId(Cos_Constants.CoId.Empty);
                     }
                 }
             }
@@ -283,19 +282,19 @@ function handleUnsupportedCoId(mapRawData: MapRawData, gcData: GcData): void {
         for (const data1 of mapRawData.getTemplateWarRuleArray()) {
             for (const data2 of data1.getWarRuleCommonData()?.getPlayerRuleList() ?? []) {
                 if (checkShouldModifyCoId(data2.getCcwAiCoId(), gcData)) {
-                    data2.setCcwAiCoId(CoId.Empty);
+                    data2.setCcwAiCoId(Cos_Constants.CoId.Empty);
                 }
                 if (checkShouldModifyCoId(data2.getSrwAiCoId(), gcData)) {
-                    data2.setSrwAiCoId(CoId.Empty);
+                    data2.setSrwAiCoId(Cos_Constants.CoId.Empty);
                 }
                 if (checkShouldModifyCoId(data2.getCampaignAiCoId(), gcData)) {
-                    data2.setCampaignAiCoId(CoId.Empty);
+                    data2.setCampaignAiCoId(Cos_Constants.CoId.Empty);
                 }
                 {
                     const arr       = data2.getCampaignHumanCoIdArray();
                     const newArr    = arr.filter(coId => !checkShouldModifyCoId(coId, gcData));
                     if (newArr.length !== arr.length) {
-                        data2.setCampaignHumanCoIdArray([...newArr, CoId.Empty]);
+                        data2.setCampaignHumanCoIdArray([...newArr, Cos_Constants.CoId.Empty]);
                     }
                 }
             }
@@ -311,6 +310,6 @@ function handleUnsupportedCoId(mapRawData: MapRawData, gcData: GcData): void {
         }
     }
 }
-function checkShouldModifyCoId(coId: Undefinable<number>, gcData: GcData): boolean {
+function checkShouldModifyCoId(coId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>, gcData: GameConfigs_GameConfig.GameConfig): boolean {
     return (coId != null) && (!gcData.checkHasCo(coId));
 }

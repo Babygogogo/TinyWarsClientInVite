@@ -1,53 +1,52 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { newError } from "../../helpers/Misc.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    WarOperations_Revisers_Utils_PlayerDeleteUnit,
+    WarOperations_Revisers_Utils_PlayerEndTurn,
+    WarOperations_Revisers_Utils_PlayerProduceUnit,
+    WarOperations_Revisers_Utils_PlayerSurrender,
+    WarOperations_Revisers_Utils_PlayerUseCoSkill,
+    WarOperations_Revisers_Utils_PlayerVoteForDraw,
+    WarOperations_Revisers_Utils_SystemBeginTurn,
+    WarOperations_Revisers_Utils_SystemCallWarEvent,
+    WarOperations_Revisers_Utils_SystemDestroyPlayerForce,
+    WarOperations_Revisers_Utils_SystemEndTurn,
+    WarOperations_Revisers_Utils_SystemEndWar,
+    WarOperations_Revisers_Utils_SystemHandleBootPlayer,
+    WarOperations_Revisers_Utils_SystemVoteForDraw,
+    WarOperations_Revisers_Utils_UnitAttackTile,
+    WarOperations_Revisers_Utils_UnitAttackUnit,
+    WarOperations_Revisers_Utils_UnitBeLoaded,
+    WarOperations_Revisers_Utils_UnitBoardedByCo,
+    WarOperations_Revisers_Utils_UnitBuildTile,
+    WarOperations_Revisers_Utils_UnitCaptureTile,
+    WarOperations_Revisers_Utils_UnitCrushUnit,
+    WarOperations_Revisers_Utils_UnitDive,
+    WarOperations_Revisers_Utils_UnitDropUnit,
+    WarOperations_Revisers_Utils_UnitJoinUnit,
+    WarOperations_Revisers_Utils_UnitLaunchFlare,
+    WarOperations_Revisers_Utils_UnitLaunchSilo,
+    WarOperations_Revisers_Utils_UnitProduceUnit,
+    WarOperations_Revisers_Utils_UnitRepairUnit,
+    WarOperations_Revisers_Utils_UnitSelfDetonate,
+    WarOperations_Revisers_Utils_UnitSupplyUnit,
+    WarOperations_Revisers_Utils_UnitSurface,
+    WarOperations_Revisers_Utils_UnitUseCoSkill,
+    WarOperations_Revisers_Utils_UnitWait,
+    WarOperations_Revisers_Utils_Unknown,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
+} from "../../internal.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { revise as WarOperationsRevisersUtilsPlayerDeleteUnitRevise } from "./utils/PlayerDeleteUnit.ts";
-import { revise as WarOperationsRevisersUtilsPlayerEndTurnRevise } from "./utils/PlayerEndTurn.ts";
-import { revise as WarOperationsRevisersUtilsPlayerProduceUnitRevise } from "./utils/PlayerProduceUnit.ts";
-import { revise as WarOperationsRevisersUtilsPlayerSurrenderRevise } from "./utils/PlayerSurrender.ts";
-import { revise as WarOperationsRevisersUtilsPlayerUseCoSkillRevise } from "./utils/PlayerUseCoSkill.ts";
-import { revise as WarOperationsRevisersUtilsPlayerVoteForDrawRevise } from "./utils/PlayerVoteForDraw.ts";
-import { revise as WarOperationsRevisersUtilsSystemBeginTurnRevise } from "./utils/SystemBeginTurn.ts";
-import { revise as WarOperationsRevisersUtilsSystemCallWarEventRevise } from "./utils/SystemCallWarEvent.ts";
-import { revise as WarOperationsRevisersUtilsSystemDestroyPlayerForceRevise } from "./utils/SystemDestroyPlayerForce.ts";
-import { revise as WarOperationsRevisersUtilsSystemEndTurnRevise } from "./utils/SystemEndTurn.ts";
-import { revise as WarOperationsRevisersUtilsSystemEndWarRevise } from "./utils/SystemEndWar.ts";
-import { revise as WarOperationsRevisersUtilsSystemHandleBootPlayerRevise } from "./utils/SystemHandleBootPlayer.ts";
-import { revise as WarOperationsRevisersUtilsSystemVoteForDrawRevise } from "./utils/SystemVoteForDraw.ts";
-import { revise as WarOperationsRevisersUtilsUnitAttackTileRevise } from "./utils/UnitAttackTile.ts";
-import { revise as WarOperationsRevisersUtilsUnitAttackUnitRevise } from "./utils/UnitAttackUnit.ts";
-import { revise as WarOperationsRevisersUtilsUnitBeLoadedRevise } from "./utils/UnitBeLoaded.ts";
-import { revise as WarOperationsRevisersUtilsUnitBoardedByCoRevise } from "./utils/UnitBoardedByCo.ts";
-import { revise as WarOperationsRevisersUtilsUnitBuildTileRevise } from "./utils/UnitBuildTile.ts";
-import { revise as WarOperationsRevisersUtilsUnitCaptureTileRevise } from "./utils/UnitCaptureTile.ts";
-import { revise as WarOperationsRevisersUtilsUnitCrushUnitRevise } from "./utils/UnitCrushUnit.ts";
-import { revise as WarOperationsRevisersUtilsUnitDiveRevise } from "./utils/UnitDive.ts";
-import { revise as WarOperationsRevisersUtilsUnitDropUnitRevise } from "./utils/UnitDropUnit.ts";
-import { revise as WarOperationsRevisersUtilsUnitJoinUnitRevise } from "./utils/UnitJoinUnit.ts";
-import { revise as WarOperationsRevisersUtilsUnitLaunchFlareRevise } from "./utils/UnitLaunchFlare.ts";
-import { revise as WarOperationsRevisersUtilsUnitLaunchSiloRevise } from "./utils/UnitLaunchSilo.ts";
-import { revise as WarOperationsRevisersUtilsUnitProduceUnitRevise } from "./utils/UnitProduceUnit.ts";
-import { revise as WarOperationsRevisersUtilsUnitRepairUnitRevise } from "./utils/UnitRepairUnit.ts";
-import { revise as WarOperationsRevisersUtilsUnitSelfDetonateRevise } from "./utils/UnitSelfDetonate.ts";
-import { revise as WarOperationsRevisersUtilsUnitSupplyUnitRevise } from "./utils/UnitSupplyUnit.ts";
-import { revise as WarOperationsRevisersUtilsUnitSurfaceRevise } from "./utils/UnitSurface.ts";
-import { revise as WarOperationsRevisersUtilsUnitUseCoSkillRevise } from "./utils/UnitUseCoSkill.ts";
-import { revise as WarOperationsRevisersUtilsUnitWaitRevise } from "./utils/UnitWait.ts";
-import { revise as WarOperationsRevisersUtilsUnknownRevise } from "./utils/Unknown.ts";
 
-type IBwWar             = BaseWarInterfaceIBwWar;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
-export function revise(war: IBwWar, rawAction: WoContainer, requesterUserId: Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoContainer, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     // if (Object.keys(rawAction).length !== 2) {
     //     throw Helpers.Misc.newError(`Invalid rawAction.keys.`, ClientErrorCode.WarOperationReviser_Revise_00);
     // }
 
     const operationId = rawAction.getOperationId();
     if ((operationId == null) || (operationId !== war.getExecutedOperationManager().getExecutedOperationsCount())) {
-        throw newError(`Invalid actionId: ${operationId}`, ClientErrorCode.WarOperationReviser_Revise_01);
+        throw Helpers_Misc.newError(`Invalid actionId: ${operationId}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_Revise_01);
     }
 
     const action = doRevise(war, rawAction, requesterUserId);
@@ -55,166 +54,166 @@ export function revise(war: IBwWar, rawAction: WoContainer, requesterUserId: Und
     return action;
 }
 
-function doRevise(war: IBwWar, rawAction: WoContainer, requesterUserId: Undefinable<number>): WoContainer {
+function doRevise(war: BaseWar_Model_War.War, rawAction: WoContainer, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     const woPlayerDeleteUnit = rawAction.getWoPlayerDeleteUnit();
     if (woPlayerDeleteUnit) {
-        return WarOperationsRevisersUtilsPlayerDeleteUnitRevise(war, woPlayerDeleteUnit, requesterUserId);
+        return WarOperations_Revisers_Utils_PlayerDeleteUnit.revise(war, woPlayerDeleteUnit, requesterUserId);
     }
 
     const woPlayerEndTurn = rawAction.getWoPlayerEndTurn();
     if (woPlayerEndTurn) {
-        return WarOperationsRevisersUtilsPlayerEndTurnRevise(war, woPlayerEndTurn, requesterUserId);
+        return WarOperations_Revisers_Utils_PlayerEndTurn.revise(war, woPlayerEndTurn, requesterUserId);
     }
 
     const woPlayerProduceUnit = rawAction.getWoPlayerProduceUnit();
     if (woPlayerProduceUnit) {
-        return WarOperationsRevisersUtilsPlayerProduceUnitRevise(war, woPlayerProduceUnit, requesterUserId);
+        return WarOperations_Revisers_Utils_PlayerProduceUnit.revise(war, woPlayerProduceUnit, requesterUserId);
     }
 
     const woPlayerSurrender = rawAction.getWoPlayerSurrender();
     if (woPlayerSurrender) {
-        return WarOperationsRevisersUtilsPlayerSurrenderRevise(war, woPlayerSurrender, requesterUserId);
+        return WarOperations_Revisers_Utils_PlayerSurrender.revise(war, woPlayerSurrender, requesterUserId);
     }
 
     const woPlayerVoteForDraw = rawAction.getWoPlayerVoteForDraw();
     if (woPlayerVoteForDraw) {
-        return WarOperationsRevisersUtilsPlayerVoteForDrawRevise(war, woPlayerVoteForDraw, requesterUserId);
+        return WarOperations_Revisers_Utils_PlayerVoteForDraw.revise(war, woPlayerVoteForDraw, requesterUserId);
     }
 
     const woPlayerUseCoSkill = rawAction.getWoPlayerUseCoSkill();
     if (woPlayerUseCoSkill) {
-        return WarOperationsRevisersUtilsPlayerUseCoSkillRevise(war, woPlayerUseCoSkill, requesterUserId);
+        return WarOperations_Revisers_Utils_PlayerUseCoSkill.revise(war, woPlayerUseCoSkill, requesterUserId);
     }
 
     const woSystemBeginTurn = rawAction.getWoSystemBeginTurn();
     if (woSystemBeginTurn) {
-        return WarOperationsRevisersUtilsSystemBeginTurnRevise(war, woSystemBeginTurn, requesterUserId);
+        return WarOperations_Revisers_Utils_SystemBeginTurn.revise(war, woSystemBeginTurn, requesterUserId);
     }
 
     const woSystemCallWarEvent = rawAction.getWoSystemCallWarEvent();
     if (woSystemCallWarEvent) {
-        return WarOperationsRevisersUtilsSystemCallWarEventRevise(war, woSystemCallWarEvent, requesterUserId);
+        return WarOperations_Revisers_Utils_SystemCallWarEvent.revise(war, woSystemCallWarEvent, requesterUserId);
     }
 
     const woSystemDestroyPlayerForce = rawAction.getWoSystemDestroyPlayerForce();
     if (woSystemDestroyPlayerForce) {
-        return WarOperationsRevisersUtilsSystemDestroyPlayerForceRevise(war, woSystemDestroyPlayerForce, requesterUserId);
+        return WarOperations_Revisers_Utils_SystemDestroyPlayerForce.revise(war, woSystemDestroyPlayerForce, requesterUserId);
     }
 
     const woSystemEndWar = rawAction.getWoSystemEndWar();
     if (woSystemEndWar) {
-        return WarOperationsRevisersUtilsSystemEndWarRevise(war, woSystemEndWar, requesterUserId);
+        return WarOperations_Revisers_Utils_SystemEndWar.revise(war, woSystemEndWar, requesterUserId);
     }
 
     const woSystemEndTurn = rawAction.getWoSystemEndTurn();
     if (woSystemEndTurn) {
-        return WarOperationsRevisersUtilsSystemEndTurnRevise(war, woSystemEndTurn, requesterUserId);
+        return WarOperations_Revisers_Utils_SystemEndTurn.revise(war, woSystemEndTurn, requesterUserId);
     }
 
     const woSystemHandleBootPlayer = rawAction.getWoSystemHandleBootPlayer();
     if (woSystemHandleBootPlayer) {
-        return WarOperationsRevisersUtilsSystemHandleBootPlayerRevise(war, woSystemHandleBootPlayer, requesterUserId);
+        return WarOperations_Revisers_Utils_SystemHandleBootPlayer.revise(war, woSystemHandleBootPlayer, requesterUserId);
     }
 
     const woSystemVoteForDraw = rawAction.getWoSystemVoteForDraw();
     if (woSystemVoteForDraw) {
-        return WarOperationsRevisersUtilsSystemVoteForDrawRevise(war, woSystemVoteForDraw, requesterUserId);
+        return WarOperations_Revisers_Utils_SystemVoteForDraw.revise(war, woSystemVoteForDraw, requesterUserId);
     }
 
     const woUnitAttackTile = rawAction.getWoUnitAttackTile();
     if (woUnitAttackTile) {
-        return WarOperationsRevisersUtilsUnitAttackTileRevise(war, woUnitAttackTile, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitAttackTile.revise(war, woUnitAttackTile, requesterUserId);
     }
 
     const woUnitAttackUnit = rawAction.getWoUnitAttackUnit();
     if (woUnitAttackUnit) {
-        return WarOperationsRevisersUtilsUnitAttackUnitRevise(war, woUnitAttackUnit, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitAttackUnit.revise(war, woUnitAttackUnit, requesterUserId);
     }
 
     const woUnitBeLoaded = rawAction.getWoUnitBeLoaded();
     if (woUnitBeLoaded) {
-        return WarOperationsRevisersUtilsUnitBeLoadedRevise(war, woUnitBeLoaded, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitBeLoaded.revise(war, woUnitBeLoaded, requesterUserId);
     }
 
     const woUnitBuildTile = rawAction.getWoUnitBuildTile();
     if (woUnitBuildTile) {
-        return WarOperationsRevisersUtilsUnitBuildTileRevise(war, woUnitBuildTile, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitBuildTile.revise(war, woUnitBuildTile, requesterUserId);
     }
 
     const woUnitCaptureTile = rawAction.getWoUnitCaptureTile();
     if (woUnitCaptureTile) {
-        return WarOperationsRevisersUtilsUnitCaptureTileRevise(war, woUnitCaptureTile, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitCaptureTile.revise(war, woUnitCaptureTile, requesterUserId);
     }
 
     const woUnitCrushUnit = rawAction.getWoUnitCrushUnit();
     if (woUnitCrushUnit) {
-        return WarOperationsRevisersUtilsUnitCrushUnitRevise(war, woUnitCrushUnit, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitCrushUnit.revise(war, woUnitCrushUnit, requesterUserId);
     }
 
     const woUnitDive = rawAction.getWoUnitDive();
     if (woUnitDive) {
-        return WarOperationsRevisersUtilsUnitDiveRevise(war, woUnitDive, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitDive.revise(war, woUnitDive, requesterUserId);
     }
 
     const woUnitDropUnit = rawAction.getWoUnitDropUnit();
     if (woUnitDropUnit) {
-        return WarOperationsRevisersUtilsUnitDropUnitRevise(war, woUnitDropUnit, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitDropUnit.revise(war, woUnitDropUnit, requesterUserId);
     }
 
     const woUnitJoinUnit = rawAction.getWoUnitJoinUnit();
     if (woUnitJoinUnit) {
-        return WarOperationsRevisersUtilsUnitJoinUnitRevise(war, woUnitJoinUnit, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitJoinUnit.revise(war, woUnitJoinUnit, requesterUserId);
     }
 
     const woUnitLaunchFlare = rawAction.getWoUnitLaunchFlare();
     if (woUnitLaunchFlare) {
-        return WarOperationsRevisersUtilsUnitLaunchFlareRevise(war, woUnitLaunchFlare, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitLaunchFlare.revise(war, woUnitLaunchFlare, requesterUserId);
     }
 
     const woUnitLaunchSilo = rawAction.getWoUnitLaunchSilo();
     if (woUnitLaunchSilo) {
-        return WarOperationsRevisersUtilsUnitLaunchSiloRevise(war, woUnitLaunchSilo, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitLaunchSilo.revise(war, woUnitLaunchSilo, requesterUserId);
     }
 
     const woUnitBoardedByCo = rawAction.getWoUnitBoardedByCo();
     if (woUnitBoardedByCo) {
-        return WarOperationsRevisersUtilsUnitBoardedByCoRevise(war, woUnitBoardedByCo, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitBoardedByCo.revise(war, woUnitBoardedByCo, requesterUserId);
     }
 
     const woUnitProduceUnit = rawAction.getWoUnitProduceUnit();
     if (woUnitProduceUnit) {
-        return WarOperationsRevisersUtilsUnitProduceUnitRevise(war, woUnitProduceUnit, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitProduceUnit.revise(war, woUnitProduceUnit, requesterUserId);
     }
 
     const woUnitRepairUnit = rawAction.getWoUnitRepairUnit();
     if (woUnitRepairUnit) {
-        return WarOperationsRevisersUtilsUnitRepairUnitRevise(war, woUnitRepairUnit, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitRepairUnit.revise(war, woUnitRepairUnit, requesterUserId);
     }
 
     const woUnitSelfDetonate = rawAction.getWoUnitSelfDetonate();
     if (woUnitSelfDetonate) {
-        return WarOperationsRevisersUtilsUnitSelfDetonateRevise(war, woUnitSelfDetonate, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitSelfDetonate.revise(war, woUnitSelfDetonate, requesterUserId);
     }
 
     const woUnitSupplyUnit = rawAction.getWoUnitSupplyUnit();
     if (woUnitSupplyUnit) {
-        return WarOperationsRevisersUtilsUnitSupplyUnitRevise(war, woUnitSupplyUnit, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitSupplyUnit.revise(war, woUnitSupplyUnit, requesterUserId);
     }
 
     const woUnitSurface = rawAction.getWoUnitSurface();
     if (woUnitSurface) {
-        return WarOperationsRevisersUtilsUnitSurfaceRevise(war, woUnitSurface, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitSurface.revise(war, woUnitSurface, requesterUserId);
     }
 
     const woUnitUseCoSkill = rawAction.getWoUnitUseCoSkill();
     if (woUnitUseCoSkill) {
-        return WarOperationsRevisersUtilsUnitUseCoSkillRevise(war, woUnitUseCoSkill, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitUseCoSkill.revise(war, woUnitUseCoSkill, requesterUserId);
     }
 
     const woUnitWait = rawAction.getWoUnitWait();
     if (woUnitWait) {
-        return WarOperationsRevisersUtilsUnitWaitRevise(war, woUnitWait, requesterUserId);
+        return WarOperations_Revisers_Utils_UnitWait.revise(war, woUnitWait, requesterUserId);
     }
 
-    return WarOperationsRevisersUtilsUnknownRevise();
+    return WarOperations_Revisers_Utils_Unknown.revise();
 }

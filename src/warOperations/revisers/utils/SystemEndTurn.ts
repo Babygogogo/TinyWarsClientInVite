@@ -1,30 +1,29 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { newError } from "../../../helpers/Misc.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Turns_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
+} from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemEndTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemEndTurn.ts";
-import { PhaseCode } from "../../../turns/Constants.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-type IBwWar             = BaseWarInterfaceIBwWar;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function revise(war: IBwWar, rawAction: WoSystemEndTurn, requesterUserId: Undefinable<number>): WoContainer {
+ 
+export function revise(war: BaseWar_Model_War.War, rawAction: WoSystemEndTurn, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     if (requesterUserId != null) {
-        throw newError(`Invalid requesterUserId.`, ClientErrorCode.WarOperationReviser_ReviseSystemEndTurn_00);
+        throw Helpers_Misc.newError(`Invalid requesterUserId.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemEndTurn_00);
     }
 
-    if (war.getTurnPhaseCode() !== PhaseCode.Main) {
-        throw newError(`Invalid turnPhaseCode.`, ClientErrorCode.WarOperationReviser_ReviseSystemEndTurn_01);
+    if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
+        throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemEndTurn_01);
     }
 
     if (war.getDrawVoteManager().checkNeedVoteBeforeEndTurn(war.getPlayerIndexInTurn())) {
-        throw newError(`Need vote for draw.`, ClientErrorCode.WarOperationReviser_ReviseSystemEndTurn_02);
+        throw Helpers_Misc.newError(`Need vote for draw.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemEndTurn_02);
     }
 
     return WoContainer.fromJson({
-        WoSystemEndTurn: {
+        WoSystemEndTurn : {
         },
     });
 }

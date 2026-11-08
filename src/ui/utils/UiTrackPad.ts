@@ -1,11 +1,13 @@
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { type ConstrainEase, UiSlidingNumber } from "./UiSlidingNumber.ts";
-import { Point } from "../../vendor/egret/Egret.ts";
+import {
+    Ui_Utils_UiSlidingNumber,
+    Numbers_Utils,
+    Egret_Egret,
+} from "../../internal.ts";
 
 interface TrackPadOptions {
     /** override the easing function when constraining */
-    xEase?: ConstrainEase;
-    yEase?: ConstrainEase;
+    xEase?: Ui_Utils_UiSlidingNumber.ConstrainEase;
+    yEase?: Ui_Utils_UiSlidingNumber.ConstrainEase;
 
     maxSpeed?: number;
     constrain?: boolean;
@@ -15,31 +17,31 @@ interface TrackPadOptions {
 
 /** Easing controller for the {@link ScrollBox}. */
 export class UiTrackPad {
-    private _xAxis              : UiSlidingNumber;
-    private _yAxis              : UiSlidingNumber;
+    private readonly _xAxis              : Ui_Utils_UiSlidingNumber.UiSlidingNumber;
+    private readonly _yAxis              : Ui_Utils_UiSlidingNumber.UiSlidingNumber;
 
     private _isDown             = false;
-    private _globalPosition     = new Point();
+    private _globalPosition     = new Egret_Egret.Point();
     private _dirty              = false;
     private _isEasingDisabled   = false;    // 原名disableEasing
 
     public constructor(options: TrackPadOptions) {
-        this._xAxis = new UiSlidingNumber({
-            ease: options.xEase,
-            maxSpeed: options.maxSpeed,
-            constrain: options.constrain
+        this._xAxis = new Ui_Utils_UiSlidingNumber.UiSlidingNumber({
+            ease      : options.xEase,
+            maxSpeed  : options.maxSpeed,
+            constrain : options.constrain,
         });
 
-        this._yAxis = new UiSlidingNumber({
-            ease: options.yEase,
-            maxSpeed: options.maxSpeed,
-            constrain: options.constrain
+        this._yAxis = new Ui_Utils_UiSlidingNumber.UiSlidingNumber({
+            ease      : options.yEase,
+            maxSpeed  : options.maxSpeed,
+            constrain : options.constrain,
         });
 
         this.setIsEasingDisabled(options.disableEasing ?? false);
     }
 
-    public pointerDown(pos: Point): void {
+    public pointerDown(pos: Egret_Egret.Point): void {
         this._globalPosition = pos;
         this._xAxis.grab(pos.x);
         this._yAxis.grab(pos.y);
@@ -50,7 +52,7 @@ export class UiTrackPad {
         this._isDown = false;
     }
 
-    public pointerMove(pos: Point): void {
+    public pointerMove(pos: Egret_Egret.Point): void {
         this._globalPosition = pos;
     }
 
@@ -84,10 +86,10 @@ export class UiTrackPad {
         this._isEasingDisabled = value;
     }
 
-    public getXAxis(): UiSlidingNumber {
+    public getXAxis(): Ui_Utils_UiSlidingNumber.UiSlidingNumber {
         return this._xAxis;
     }
-    public getYAxis(): UiSlidingNumber {
+    public getYAxis(): Ui_Utils_UiSlidingNumber.UiSlidingNumber {
         return this._yAxis;
     }
 
@@ -99,10 +101,10 @@ export class UiTrackPad {
         if (!needRevise) {
             axis.setPositionAndClearSpeed(x);
         } else {
-            axis.setPositionAndClearSpeed(getValueInRange({
-                minValue    : axis.getMax(),
-                maxValue    : axis.getMin(),
-                rawValue    : x,
+            axis.setPositionAndClearSpeed(Numbers_Utils.getValueInRange({
+                minValue : axis.getMax(),
+                maxValue : axis.getMin(),
+                rawValue : x,
             }));
         }
     }
@@ -115,10 +117,10 @@ export class UiTrackPad {
         if (!needRevise) {
             axis.setPositionAndClearSpeed(y);
         } else {
-            axis.setPositionAndClearSpeed(getValueInRange({
-                minValue    : axis.getMax(),
-                maxValue    : axis.getMin(),
-                rawValue    : y,
+            axis.setPositionAndClearSpeed(Numbers_Utils.getValueInRange({
+                minValue : axis.getMax(),
+                maxValue : axis.getMin(),
+                rawValue : y,
             }));
         }
     }

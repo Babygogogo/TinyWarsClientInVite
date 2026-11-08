@@ -1,73 +1,74 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { showLang, show } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getErrorText } from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { getCriticalErrorCodeForMapRawData } from "../../mapEditor/model/MeHelpers.ts";
-import { getReviewingMapSlotIndex } from "../../mapEditor/model/MeModel.ts";
-import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
-import { getErrorCode } from "../../maps/utils/MapRawData.ts";
-import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
-import { reqMmAddWarEvent, reqMmSubmitMapSimpleDialogue } from "../../normalMap/model/NormalMapProxy.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+import {
+    FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Graphics_Constants,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeHelpers,
+    MapEditor_Model_MeModel,
+    MapEditor_Model_MeProxy,
+    Maps_Utils_MapRawData,
+    NormalMap_Model_NormalMapModel,
+    NormalMap_Model_NormalMapProxy,
+    Ui_Components_UiPanel,
+    Utils_ClientErrorCode,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { WarRuleDialogueInfo } from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/WarRuleDialogueInfo.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 export interface OpenData {
-    war : IMeWar;
+    war : MapEditor_Interface_IMeWar.IMeWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnClose!                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelReviewDescTitle!     : IUiLabel;
-    private readonly _labelReviewDesc!          : IUiLabel;
-    private readonly _groupCommand!             : IUiLayout;
+    private readonly _labelReviewDescTitle!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelReviewDesc!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupCommand!             : Ui_Interfaces_IUiLayout.IUiLayout;
 
-    private readonly _groupSave!                : IUiContainer;
-    private readonly _btnSave!                  : IUiButton;
-    private readonly _btnHelpSave!              : IUiButton;
-    private readonly _btnSaveAndSubmit!         : IUiButton;
-    private readonly _btnHelpSaveAndSubmit!     : IUiButton;
+    private readonly _groupSave!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnSave!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelpSave!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSaveAndSubmit!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelpSaveAndSubmit!     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupEventAndDialogue!    : IUiContainer;
-    private readonly _btnAddWarEvent!           : IUiButton;
-    private readonly _btnSubmitDialogue!        : IUiButton;
+    private readonly _groupEventAndDialogue!    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnAddWarEvent!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSubmitDialogue!        : Ui_Interfaces_IUiButton.IUiButton;
 
     private _mapRawData         : MapRawData | null = null;
-    private _mapErrorCode       = ClientErrorCode.NoError;
+    private _mapErrorCode       : Utils_ClientErrorCode.ClientErrorCode = Utils_ClientErrorCode.ClientErrorCode.NoError;
     private _canSubmitForReview = false;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgMmAddWarEvent,                callback: this._onNotifyMsgMmAddWarEvent },
-            { type: TypeId.MsgMmSubmitMapSimpleDialogue,    callback: this._onNotifyMsgMmSubmitMapSimpleDialogue },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "MsgMmAddWarEvent",                callback : this._onNotifyMsgMmAddWarEvent },
+            { type : "MsgMmSubmitMapSimpleDialogue",    callback : this._onNotifyMsgMmSubmitMapSimpleDialogue },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel, },
-            { ui: this._btnSave,                callback: this._onTouchedBtnSave, },
-            { ui: this._btnHelpSave,            callback: this._onTouchedBtnHelpSave },
-            { ui: this._btnSaveAndSubmit,       callback: this._onTouchedBtnSaveAndSubmit },
-            { ui: this._btnHelpSaveAndSubmit,   callback: this._onTouchedBtnHelpSaveAndSubmit },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnSave,                callback : this._onTouchedBtnSave },
+            { ui : this._btnHelpSave,            callback : this._onTouchedBtnHelpSave },
+            { ui : this._btnSaveAndSubmit,       callback : this._onTouchedBtnSaveAndSubmit },
+            { ui : this._btnHelpSaveAndSubmit,   callback : this._onTouchedBtnHelpSaveAndSubmit },
 
-            { ui: this._btnAddWarEvent,         callback: this._onTouchedBtnAddWarEvent },
-            { ui: this._btnSubmitDialogue,      callback: this._onTouchedBtnSubmitDialogue },
+            { ui : this._btnAddWarEvent,         callback : this._onTouchedBtnAddWarEvent },
+            { ui : this._btnSubmitDialogue,      callback : this._onTouchedBtnSubmitDialogue },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -86,7 +87,7 @@ export class Panel extends UiPanel<OpenData> {
     private async _onTouchedBtnSave(): Promise<void> {
         const mapRawData = this._mapRawData;
         if (mapRawData == null) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -97,42 +98,42 @@ export class Panel extends UiPanel<OpenData> {
 
         const slotIndex                 = war.getMapSlotIndex();
         const srcNormalMapIdForAddEvent = war.getSrcNormalMapIdForAddEvent();
-        const reviewingSlotIndex        = await getReviewingMapSlotIndex();
+        const reviewingSlotIndex        = await MapEditor_Model_MeModel.getReviewingMapSlotIndex();
         if (reviewingSlotIndex === slotIndex) {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getText(TextType.A0245),
-                callback: () => {
-                    reqMeSubmitNormalMap({
-                        slotIndex                   : slotIndex,
-                        mapRawData                  : mapRawData,
-                        needReview                  : false,
-                        srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                        gridMarkData                : war.getGridMarkData(),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0245),
+                callback   : () => {
+                    MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
+                        slotIndex                 : slotIndex,
+                        mapRawData                : mapRawData,
+                        needReview                : false,
+                        srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                        gridMarkData              : war.getGridMarkData(),
                     });
                     this.closePanel();
                 },
             });
         } else {
-            reqMeSubmitNormalMap({
-                slotIndex                   : slotIndex,
-                mapRawData                  : mapRawData,
-                needReview                  : false,
-                srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                gridMarkData                : war.getGridMarkData(),
+            MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
+                slotIndex                 : slotIndex,
+                mapRawData                : mapRawData,
+                needReview                : false,
+                srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                gridMarkData              : war.getGridMarkData(),
             });
             this.closePanel();
         }
     }
 
     private _onTouchedBtnHelpSave(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0420),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0420),
         });
     }
 
     private async _onTouchedBtnAddWarEvent(): Promise<void> {
         if (!this._canSubmitForReview) {
-            show(getText(TextType.A0394));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0394));
             return;
         }
 
@@ -146,28 +147,28 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const oldWarEventFullData       = getExisted(await getRawData(srcNormalMapIdForAddEvent)).getWarEventFullData() ?? new WarEventFullData();
+        const oldWarEventFullData       = Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(srcNormalMapIdForAddEvent)).getWarEventFullData() ?? new WarEventFullData();
         const newWarEventFullData       = war.getWarEventManager().getWarEventFullData() ?? new WarEventFullData();
-        const oldActionIdSet            = new Set(oldWarEventFullData.getActionArray().map(v => getExisted(v.getWeaCommonData()?.getActionId())));
-        const incrementalActionArray    = newWarEventFullData.getActionArray().filter(v => !oldActionIdSet.has(getExisted(v.getWeaCommonData()?.getActionId())));
-        const oldEventIdSet             = new Set(oldWarEventFullData.getEventArray().map(v => getExisted(v.getEventId())));
-        const incrementalEventArray     = newWarEventFullData.getEventArray().filter(v => !oldEventIdSet.has(getExisted(v.getEventId())));
-        const oldNodeIdSet              = new Set(oldWarEventFullData.getConditionNodeArray().map(v => getExisted(v.getNodeId())));
-        const incrementalNodeArray      = newWarEventFullData.getConditionNodeArray().filter(v => !oldNodeIdSet.has(getExisted(v.getNodeId())));
-        const oldConditionIdSet         = new Set(oldWarEventFullData.getConditionArray().map(v => getExisted(v.getWecCommonData()?.getConditionId())));
-        const incrementalConditionArray = newWarEventFullData.getConditionArray().filter(v => !oldConditionIdSet.has(getExisted(v.getWecCommonData()?.getConditionId())));
+        const oldActionIdSet            = new Set(oldWarEventFullData.getActionArray().map(v => Helpers_Misc.getExisted(v.getWeaCommonData()?.getActionId())));
+        const incrementalActionArray    = newWarEventFullData.getActionArray().filter(v => !oldActionIdSet.has(Helpers_Misc.getExisted(v.getWeaCommonData()?.getActionId())));
+        const oldEventIdSet             = new Set(oldWarEventFullData.getEventArray().map(v => v.getEventId()));
+        const incrementalEventArray     = newWarEventFullData.getEventArray().filter(v => !oldEventIdSet.has(v.getEventId()));
+        const oldNodeIdSet              = new Set(oldWarEventFullData.getConditionNodeArray().map(v => v.getNodeId()));
+        const incrementalNodeArray      = newWarEventFullData.getConditionNodeArray().filter(v => !oldNodeIdSet.has(v.getNodeId()));
+        const oldConditionIdSet         = new Set(oldWarEventFullData.getConditionArray().map(v => Helpers_Misc.getExisted(v.getWecCommonData()?.getConditionId())));
+        const incrementalConditionArray = newWarEventFullData.getConditionArray().filter(v => !oldConditionIdSet.has(Helpers_Misc.getExisted(v.getWecCommonData()?.getConditionId())));
         if ((!incrementalActionArray?.length)   &&
             (!incrementalEventArray?.length)    &&
             (!incrementalNodeArray?.length)     &&
             (!incrementalConditionArray?.length)
         ) {
-            show(getText(TextType.A0395));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0395));
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent     : () => getFormattedText(
-                TextType.F0157,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getFormattedText(
+                Lang_Constants.TextType.F0157,
                 incrementalEventArray.length,
                 incrementalEventArray.length ? incrementalEventArray.map(v => `E${v.getEventId()}`).join(`, `) : `----`,
                 incrementalNodeArray.length,
@@ -177,23 +178,23 @@ export class Panel extends UiPanel<OpenData> {
                 incrementalActionArray.length,
                 incrementalActionArray.length ? incrementalActionArray.map(v => `A${v.getWeaCommonData()?.getActionId()}`).join(`, `) : `----`,
             ),
-            callback    : () => {
-                reqMmAddWarEvent(
+            callback : () => {
+                NormalMap_Model_NormalMapProxy.reqMmAddWarEvent(
                     srcNormalMapIdForAddEvent,
                     WarEventFullData.fromJson({
-                        eventArray              : incrementalEventArray.map(v => v.toJson()),
-                        actionArray             : incrementalActionArray.map(v => v.toJson()),
-                        conditionArray          : incrementalConditionArray.map(v => v.toJson()),
-                        conditionNodeArray      : incrementalNodeArray.map(v => v.toJson()),
-                        customCounterNameArray  : [],
-                    })
+                        eventArray             : incrementalEventArray.map(v => v.toJson()),
+                        actionArray            : incrementalActionArray.map(v => v.toJson()),
+                        conditionArray         : incrementalConditionArray.map(v => v.toJson()),
+                        conditionNodeArray     : incrementalNodeArray.map(v => v.toJson()),
+                        customCounterNameArray : [],
+                    }),
                 );
             },
         });
     }
     private _onTouchedBtnSubmitDialogue(): void {
         if (!this._canSubmitForReview) {
-            showLang(TextType.A0394);
+            FloatText.showLang(Lang_Constants.TextType.A0394);
             return;
         }
 
@@ -207,19 +208,19 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getTitle       : () => getText(TextType.B1100),
-            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback    : () => {
-                const mapRawData                = getExisted(this._mapRawData);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1100),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => {
+                const mapRawData                = Helpers_Misc.getExisted(this._mapRawData);
                 const warRuleDialogueInfoArray  : WarRuleDialogueInfo[] = [];
                 for (const warRule of mapRawData.getTemplateWarRuleArray()) {
                     warRuleDialogueInfoArray.push(WarRuleDialogueInfo.fromJson({
-                        templateWarRuleId           : warRule.getRuleId() ?? 0,
-                        mapSimpleDialogueIdArray    : warRule.getMapSimpleDialogueIdArray(),
+                        templateWarRuleId        : warRule.getRuleId(),
+                        mapSimpleDialogueIdArray : warRule.getMapSimpleDialogueIdArray(),
                     }));
                 }
-                reqMmSubmitMapSimpleDialogue(
+                NormalMap_Model_NormalMapProxy.reqMmSubmitMapSimpleDialogue(
                     srcNormalMapIdForAddEvent,
                     mapRawData.getMapSimpleDialogueArray(),
                     warRuleDialogueInfoArray,
@@ -230,7 +231,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private async _onTouchedBtnSaveAndSubmit(): Promise<void> {
         if (!this._canSubmitForReview) {
-            show(getText(TextType.A0316));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0316));
             return;
         }
 
@@ -239,53 +240,53 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
         if (war.getSrcNormalMapIdForAddEvent()) {
-            showLang(TextType.A0434);
+            FloatText.showLang(Lang_Constants.TextType.A0434);
             return;
         }
 
         const mapRawData = this._mapRawData;
         if (mapRawData == null) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const slotIndex                 = war.getMapSlotIndex();
         const srcNormalMapIdForAddEvent = war.getSrcNormalMapIdForAddEvent();
-        const reviewingSlotIndex        = await getReviewingMapSlotIndex();
+        const reviewingSlotIndex        = await MapEditor_Model_MeModel.getReviewingMapSlotIndex();
         if (reviewingSlotIndex === slotIndex) {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getText(TextType.A0245),
-                callback: () => {
-                    reqMeSubmitNormalMap({
-                        slotIndex                   : slotIndex,
-                        mapRawData                  : mapRawData,
-                        needReview                  : true,
-                        srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                        gridMarkData                : war.getGridMarkData(),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0245),
+                callback   : () => {
+                    MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
+                        slotIndex                 : slotIndex,
+                        mapRawData                : mapRawData,
+                        needReview                : true,
+                        srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                        gridMarkData              : war.getGridMarkData(),
                     });
                     this.closePanel();
                 },
             });
         } else {
             if (reviewingSlotIndex == null) {
-                reqMeSubmitNormalMap({
-                    slotIndex                   : slotIndex,
-                    mapRawData                  : mapRawData,
-                    needReview                  : true,
-                    srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                    gridMarkData                : war.getGridMarkData(),
+                MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
+                    slotIndex                 : slotIndex,
+                    mapRawData                : mapRawData,
+                    needReview                : true,
+                    srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                    gridMarkData              : war.getGridMarkData(),
                 });
                 this.closePanel();
             } else {
-                openPanel(getDict().CommonConfirmPanel, {
-                    getContent : () => getText(TextType.A0084),
-                    callback: () => {
-                        reqMeSubmitNormalMap({
-                            slotIndex                   : slotIndex,
-                            mapRawData                  : mapRawData,
-                            needReview                  : true,
-                            srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                            gridMarkData                : war.getGridMarkData(),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0084),
+                    callback   : () => {
+                        MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
+                            slotIndex                 : slotIndex,
+                            mapRawData                : mapRawData,
+                            needReview                : true,
+                            srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                            gridMarkData              : war.getGridMarkData(),
                         });
                         this.closePanel();
                     },
@@ -294,8 +295,8 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
     private _onTouchedBtnHelpSaveAndSubmit(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0285),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0285),
         });
     }
 
@@ -303,18 +304,18 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgMmAddWarEvent(): void {
-        show(getText(TextType.OperationSucceeded));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.OperationSucceeded));
     }
     private _onNotifyMsgMmSubmitMapSimpleDialogue(): void {
-        show(getText(TextType.OperationSucceeded));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.OperationSucceeded));
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSave.setText(getText(TextType.B0844));
-        this._btnAddWarEvent.setText(getText(TextType.B1007));
-        this._btnSubmitDialogue.setText(getText(TextType.B1100));
-        this._btnSaveAndSubmit.setText(getText(TextType.B0921));
-        this._labelTitle.setText(getText(TextType.B0155));
+        this._btnSave.setLangText(Lang_Constants.TextType.B0844);
+        this._btnAddWarEvent.setLangText(Lang_Constants.TextType.B1007);
+        this._btnSubmitDialogue.setLangText(Lang_Constants.TextType.B1100);
+        this._btnSaveAndSubmit.setLangText(Lang_Constants.TextType.B0921);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0155);
     }
 
     private async _initDataAndUpdateGroupCommand(): Promise<void> {
@@ -327,53 +328,55 @@ export class Panel extends UiPanel<OpenData> {
         const srcNormalMapIdForAddEvent = war.getSrcNormalMapIdForAddEvent();
         groupCommand.removeAllItems(false);
         groupCommand.addItem(this._groupSave, false);
-        (srcNormalMapIdForAddEvent != null) && (groupCommand.addItem(this._groupEventAndDialogue, false));
+        if (srcNormalMapIdForAddEvent != null) {
+            groupCommand.addItem(this._groupEventAndDialogue, false);
+        }
         groupCommand.arrangeItems();
 
         const mapRawData            = await war.serializeForMap();
-        const criticalErrorCode     = await getCriticalErrorCodeForMapRawData(mapRawData);
+        const criticalErrorCode     = await MapEditor_Model_MeHelpers.getCriticalErrorCodeForMapRawData(mapRawData);
         const labelReviewDescTitle  = this._labelReviewDescTitle;
         const labelReviewDesc       = this._labelReviewDesc;
         if (criticalErrorCode) {
             this._canSubmitForReview        = false;
             this._mapErrorCode              = criticalErrorCode;
             this._mapRawData                = null;
-            labelReviewDescTitle.setText(getText(TextType.A0433));
-            labelReviewDescTitle.setTextColor(ColorValue.Yellow);
-            labelReviewDesc.setText(getErrorText(criticalErrorCode));
+            labelReviewDescTitle.setLangText(Lang_Constants.TextType.A0433);
+            labelReviewDescTitle.setTextColor(Graphics_Constants.ColorValue.Yellow);
+            labelReviewDesc.setText(Lang_Utils.getErrorText(criticalErrorCode));
             return;
         }
 
-        const errorCode     = await getErrorCode({
-            mapRawData                          : mapRawData,
-            allowRedundantWarEvents             : srcNormalMapIdForAddEvent != null,
-            allowRedundantMapSimpleDialogues    : srcNormalMapIdForAddEvent != null,
+        const errorCode     = await Maps_Utils_MapRawData.getErrorCode({
+            mapRawData                       : mapRawData,
+            allowRedundantWarEvents          : srcNormalMapIdForAddEvent != null,
+            allowRedundantMapSimpleDialogues : srcNormalMapIdForAddEvent != null,
         });
         this._mapErrorCode  = errorCode;
         this._mapRawData    = mapRawData;
         if (mapRawData.getTemplateWarRuleArray().some(v => !checkIsValidAvailability(v.getRuleAvailability()))) {
             this._canSubmitForReview        = false;
-            labelReviewDescTitle.setText(getText(TextType.A0083));
-            labelReviewDescTitle.setTextColor(ColorValue.Yellow);
-            labelReviewDesc.setText(getText(TextType.A0298));
+            labelReviewDescTitle.setLangText(Lang_Constants.TextType.A0083);
+            labelReviewDescTitle.setTextColor(Graphics_Constants.ColorValue.Yellow);
+            labelReviewDesc.setLangText(Lang_Constants.TextType.A0298);
             return;
         }
 
         if (errorCode) {
             this._canSubmitForReview        = false;
-            labelReviewDescTitle.setText(getText(TextType.A0083));
-            labelReviewDescTitle.setTextColor(ColorValue.Yellow);
-            labelReviewDesc.setText(getErrorText(errorCode));
+            labelReviewDescTitle.setLangText(Lang_Constants.TextType.A0083);
+            labelReviewDescTitle.setTextColor(Graphics_Constants.ColorValue.Yellow);
+            labelReviewDesc.setText(Lang_Utils.getErrorText(errorCode));
         } else {
             this._canSubmitForReview        = true;
-            labelReviewDescTitle.setText(getText(TextType.A0786));
-            labelReviewDescTitle.setTextColor(ColorValue.Green);
+            labelReviewDescTitle.setLangText(Lang_Constants.TextType.A0786);
+            labelReviewDescTitle.setTextColor(Graphics_Constants.ColorValue.Green);
             labelReviewDesc.setText(``);
         }
     }
 }
 
-function checkIsValidAvailability(ruleAvailability: Undefinable<RuleAvailability>): boolean {
+function checkIsValidAvailability(ruleAvailability: AuxiliaryTypes_AuxiliaryTypes.Undefinable<RuleAvailability>): boolean {
     if (ruleAvailability == null) {
         return false;
     }

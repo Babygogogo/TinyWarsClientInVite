@@ -1,26 +1,23 @@
-import type { IWar } from "./IWar.ts";
-import { DefaultParams } from "../../bootTimers/Constants.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
-import type {
-    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForAtw as ProtoSchemaCommonProtoWarSettingsSettingsForAtw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
+import {
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    MultiPlayerWar_Model_MpwWar,
+    type GameConfigs_GameConfig,
+    type AutoTourneys_Wars_IWar,
+} from "../../internal.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
 
-type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar;
-type SettingsForAtw     = ProtoSchemaCommonProtoWarSettingsSettingsForAtw;
-type GcData             = GameConfigGcData;
-
-export class War extends MpwWar implements IWar {
+export class War extends MultiPlayerWar_Model_MpwWar.MpwWar implements AutoTourneys_Wars_IWar.IWar {
     private _settingsForAtw?    : SettingsForAtw;
 
-    public init(data: SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForAtw(getExisted(data.getSettingsForAtw()));
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForAtw(Helpers_Misc.getExisted(data.getSettingsForAtw()));
 
         this._initView();
     }
@@ -39,20 +36,20 @@ export class War extends MpwWar implements IWar {
         return false;
     }
     public getNormalMapId(): number {
-        return this.getSettingsForAtw().getNormalMapId() ?? 0;
+        return this.getSettingsForAtw().getNormalMapId();
     }
 
     private _setSettingsForAtw(settings: SettingsForAtw): void {
         this._settingsForAtw = settings;
     }
     public getSettingsForAtw(): SettingsForAtw {
-        return getExisted(this._settingsForAtw);
+        return Helpers_Misc.getExisted(this._settingsForAtw);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getSettingsBootTimerParams(): number[] {
-        return this.getSettingsForAtw().getBootTimerParams() ?? DefaultParams.concat();
+        return this.getSettingsForAtw().getBootTimerParams();
     }
 }

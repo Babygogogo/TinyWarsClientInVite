@@ -1,8 +1,8 @@
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
-import type {
-    SelfTileEnabledForUnitProduction,
-} from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+} from "../../../internal.ts";
+import type { SelfTileEnabledForUnitProduction } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
 
 export function checkIsEffective({
     cfg,
@@ -13,11 +13,11 @@ export function checkIsEffective({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfTileEnabledForUnitProduction | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     tileTypeId                  : number;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): boolean {
     if (cfg == null) {
         return false;
@@ -31,9 +31,9 @@ export function checkIsEffective({
     }
 
     if (!gridIndex.checkIsInsideCoSkillArea({
-        coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-        coZoneRadius                : coZoneRadius,
-        getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+        coZoneRadius             : coZoneRadius,
+        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
     })) {
         return false;
     }

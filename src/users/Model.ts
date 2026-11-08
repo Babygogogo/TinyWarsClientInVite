@@ -1,78 +1,48 @@
-import { Common } from "../autoTourneys/Constants.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, UserOnlineState } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
-import { reqGetAllMessages, reqGetAllReadProgressList } from "../chat/Proxy.ts";
-import { updateOnUnitAndTileTextureVersionChanged } from "../common/model/CommonModel.ts";
-import { showLang } from "../FloatText.ts";
-import { TypeName } from "../gameVersions/Constants.ts";
-import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
-import { TextureVersionId, TextureResolutionId } from "../graphics/Constants.ts";
-import { addElementToListIfNotExists, deleteElementFromList } from "../helpers/Collection.ts";
-import { setDocumentTitle } from "../helpers/Compatibility.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import { TextType } from "../lang/Constants.ts";
-import { addEventListeners, dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import type { S } from "../proto/schema/CommonProto/NetMessage/MsgCampaignGetScore/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignValidateWarS,
-} from "../proto/schema/CommonProto/NetMessage/MsgCampaignValidateWar/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgGmSetUserPrivilegeS,
-} from "../proto/schema/CommonProto/NetMessage/MsgGmSetUserPrivilege/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserGetBriefInfoS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserGetBriefInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineStateS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineState/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfo/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgUserLoginS } from "../proto/schema/CommonProto/NetMessage/MsgUserLogin/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserLoginAsGuestS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserLoginAsGuest/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgUserLogoutS } from "../proto/schema/CommonProto/NetMessage/MsgUserLogout/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserModifyFavoriteReplayIdArrayS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserModifyFavoriteReplayIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserRequestEmailVerificationCodeS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetAvatarIdS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetAvatarId/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetCoBgmSettingsS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetCoBgmSettings/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetDiscordInfoS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetDiscordInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetMapEditorAutoSaveTimeS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetMapRatingS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapRating/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetNicknameS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetNickname/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetRelationS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetSceneBgmSettingsS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetSceneBgmSettings/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetSettingsS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetSettings/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetShowMedalIdArrayS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetShowMedalIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserVerifyEmailS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserVerifyEmail/S.ts";
+import {
+    type Notifications_Mapping,
+    Helpers_Collection,
+    Notifications_Dispatcher,
+    Sounds_Constants,
+    AuxiliaryTypes_CachedDataAccessor,
+    Utils_ClientErrorCode,
+    AutoTourneys_Constants,
+    GameVersions_Utils,
+    Helpers_Misc,
+    Users_Constants,
+    Chat_Proxy,
+    WatchWar_Model_WwProxy,
+    Users_Proxy,
+    Helpers_Compatibility,
+    FloatText,
+    Lang_Constants,
+    Graphics_Constants,
+    GameVersions_Constants,
+    Common_Model_CommonModel,
+    WarTypes_Constants,
+    type Egret_Egret,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
+import type { S as CampaignGetScoreResponse } from "../proto/schema/CommonProto/NetMessage/MsgCampaignGetScore/S.ts";
+import type { S as CampaignValidateWarResponse } from "../proto/schema/CommonProto/NetMessage/MsgCampaignValidateWar/S.ts";
+import type { S as GmSetUserPrivilegeResponse } from "../proto/schema/CommonProto/NetMessage/MsgGmSetUserPrivilege/S.ts";
+import type { S as UserGetBriefInfoResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserGetBriefInfo/S.ts";
+import type { S as UserGetOnlineStateResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineState/S.ts";
+import type { S as UserGetPublicInfoResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfo/S.ts";
+import type { S as UserLoginResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserLogin/S.ts";
+import type { S as UserLoginAsGuestResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserLoginAsGuest/S.ts";
+import type { S as UserModifyFavoriteReplayIdArrayResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserModifyFavoriteReplayIdArray/S.ts";
+import type { S as UserRequestEmailVerificationCodeResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
+import type { S as UserSetAvatarIdResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetAvatarId/S.ts";
+import type { S as UserSetCoBgmSettingsResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetCoBgmSettings/S.ts";
+import type { S as UserSetDiscordInfoResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetDiscordInfo/S.ts";
+import type { S as UserSetMapEditorAutoSaveTimeResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
+import type { S as UserSetMapRatingResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapRating/S.ts";
+import type { S as UserSetNicknameResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetNickname/S.ts";
+import type { S as UserSetRelationResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
+import type { S as UserSetSceneBgmSettingsResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetSceneBgmSettings/S.ts";
+import type { S as UserSetSettingsResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetSettings/S.ts";
+import type { S as UserSetShowMedalIdArrayResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetShowMedalIdArray/S.ts";
+import type { S as UserVerifyEmailResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserVerifyEmail/S.ts";
 import type { UserBriefInfo } from "../proto/schema/CommonProto/User/UserBriefInfo.ts";
 import type { UserComplexInfo } from "../proto/schema/CommonProto/User/UserComplexInfo.ts";
 import type { UserDiscordInfo } from "../proto/schema/CommonProto/User/UserDiscordInfo.ts";
@@ -86,36 +56,27 @@ import type { UserSettings } from "../proto/schema/CommonProto/User/UserSettings
 import { CoBgmSettings } from "../proto/schema/CommonProto/User/UserSettings/CoBgmSettings.ts";
 import { UserCawStatistics } from "../proto/schema/CommonProto/User/UserWarStatistics/UserCawStatistics.ts";
 import type { UserMpwStatistics } from "../proto/schema/CommonProto/User/UserWarStatistics/UserMpwStatistics.ts";
-import { BgmSfxCode } from "../sounds/Constants.ts";
-import { LogoutTypeId } from "./Constants.ts";
-import { reqUserGetPublicInfo, reqUserGetBriefInfo, reqUserGetOnlineState, reqUserSetSettings } from "./Proxy.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import type { Event } from "../vendor/egret/Egret.ts";
-import { WarTypeId } from "../warTypes/Constants.ts";
-import { reqMpwWatchRequestedWarIdArray } from "../watchWar/model/WwProxy.ts";
-
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 let _isLoggedIn                 = false;
 let _selfInfo                   : UserSelfInfo | null = null;
 let _selfAccount                : string;
 let _selfPassword               : string | null = null;
-let _selfGuestUserId            : Undefinable<number>;
-const _userPublicInfoAccessor   = new CachedDataAccessor<number, UserPublicInfo>({
-    reqData                     : (userId: number) => reqUserGetPublicInfo(userId),
+let _selfGuestUserId            : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+const _userPublicInfoAccessor   = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, UserPublicInfo>({
+    reqData : (userId: number) => Users_Proxy.reqUserGetPublicInfo(userId),
 });
-const _userBriefInfoAccessor    = new CachedDataAccessor<number, UserBriefInfo>({
-    reqData                     : (userId: number) => reqUserGetBriefInfo(userId),
+const _userBriefInfoAccessor    = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, UserBriefInfo>({
+    reqData : (userId: number) => Users_Proxy.reqUserGetBriefInfo(userId),
 });
-const _userOnlineStateAccessor  = new CachedDataAccessor<number, UserOnlineState>({
-    reqData         : userId => reqUserGetOnlineState(userId),
-    dataExpireTime  : 5,
+const _userOnlineStateAccessor  = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, AuxiliaryTypes_AuxiliaryTypes.UserOnlineState>({
+    reqData        : userId => Users_Proxy.reqUserGetOnlineState(userId),
+    dataExpireTime : 5,
 });
 
 export function init(): void {
-    addEventListeners([
-        { type: TypeId.NetworkDisconnected,    callback: _onNotifyNetworkDisconnected, },
-        { type: TypeId.MsgUserLogout,          callback: _onNotifyMsgUserLogout, },
+    Notifications_Dispatcher.addEventListeners([
+        { type : "NetworkDisconnected",    callback : _onNotifyNetworkDisconnected },
+        { type : "MsgUserLogout",          callback : _onNotifyMsgUserLogout },
     ], null);
 }
 
@@ -138,11 +99,11 @@ function setSelfInfo(selfInfo: UserSelfInfo | null): void {
 export function getSelfInfo(): UserSelfInfo | null {
     return _selfInfo;
 }
-function getSelfUserComplexInfo(): Undefinable<UserComplexInfo> {
+function getSelfUserComplexInfo(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserComplexInfo> {
     return getSelfInfo()?.getUserComplexInfo();
 }
 
-export function getSelfUserId(): Undefinable<number> {
+export function getSelfUserId(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     return getSelfInfo()?.getUserId();
 }
 
@@ -160,14 +121,14 @@ export function getSelfPassword(): string | null {
     return _selfPassword;
 }
 
-export function getSelfGuestUserId(): Undefinable<number> {
+export function getSelfGuestUserId(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     return _selfGuestUserId;
 }
-function setSelfGuestUserId(guestUserId: Undefinable<number>) {
+function setSelfGuestUserId(guestUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>) {
     _selfGuestUserId = guestUserId;
 }
 
-export function getSelfUserPrivilege(): Undefinable<UserPrivilege> {
+export function getSelfUserPrivilege(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserPrivilege> {
     return getSelfUserComplexInfo()?.getUserPrivilege();
 }
 function setSelfUserPrivilege(userPrivilege: UserPrivilege): void {
@@ -194,14 +155,14 @@ export function getIsSelfCampaignManager(): boolean {
     return !!getSelfUserPrivilege()?.getIsCampaignManager();
 }
 
-export function getSelfNickname(): Undefinable<string> {
+export function getSelfNickname(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<string> {
     return getSelfInfo()?.getNickname();
 }
 function setSelfNickname(nickname: string): void {
     getSelfInfo()?.setNickname(nickname);
 }
 
-export function getSelfAvatarId(): Undefinable<number> {
+export function getSelfAvatarId(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     return getSelfInfo()?.getUserComplexInfo()?.getAvatarId();
 }
 export function setSelfAvatarId(avatarId: number): void {
@@ -212,75 +173,75 @@ export function getSelfShowMedalIdArray(): number[] {
     return getSelfInfo()?.getUserComplexInfo()?.getUserMedalInfo()?.getShowMedalIdArray() ?? [];
 }
 
-export function getSelfMapEditorAutoSaveTime(): Undefinable<number> {
+export function getSelfMapEditorAutoSaveTime(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     return getSelfInfo()?.getUserComplexInfo()?.getMapEditorAutoSaveTime();
 }
-export function setSelfMapEditorAutoSaveTime(time: Undefinable<number>): void {
+export function setSelfMapEditorAutoSaveTime(time: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void {
     getSelfInfo()?.getUserComplexInfo()?.setMapEditorAutoSaveTime(time);
 }
 
-export function getSelfDiscordInfo(): Undefinable<UserDiscordInfo> {
+export function getSelfDiscordInfo(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserDiscordInfo> {
     return getSelfUserComplexInfo()?.getUserDiscordInfo();
 }
-function setSelfDiscordInfo(discordInfo: Undefinable<UserDiscordInfo>): void {
+function setSelfDiscordInfo(discordInfo: AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserDiscordInfo>): void {
     getSelfUserComplexInfo()?.setUserDiscordInfo(discordInfo);
 }
 
 export function checkHasUserPublicInfo(userId: number): boolean {
     return _userPublicInfoAccessor.getHasKey(userId);
 }
-export function getUserPublicInfo(userId: number): Promise<Undefinable<UserPublicInfo>> {
+export function getUserPublicInfo(userId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserPublicInfo>> {
     return _userPublicInfoAccessor.getData(userId);
 }
-function setUserPublicInfo(userId: number, info: Undefinable<UserPublicInfo>): void {
+function setUserPublicInfo(userId: number, info: AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserPublicInfo>): void {
     _userPublicInfoAccessor.setData(userId, info);
 }
 
-export function getUserBriefInfo(userId: number): Promise<Undefinable<UserBriefInfo>> {
+export function getUserBriefInfo(userId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserBriefInfo>> {
     return _userBriefInfoAccessor.getData(userId);
 }
-function setUserBriefInfo(userId: number, info: Undefinable<UserBriefInfo>): void {
+function setUserBriefInfo(userId: number, info: AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserBriefInfo>): void {
     _userBriefInfoAccessor.setData(userId, info);
 }
 
-export function getUserOnlineState(userId: number): Promise<Undefinable<UserOnlineState>> {
+export function getUserOnlineState(userId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.UserOnlineState>> {
     return _userOnlineStateAccessor.getData(userId);
 }
-function setUserOnlineState(userId: number, state: Undefinable<UserOnlineState>): void {
+function setUserOnlineState(userId: number, state: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.UserOnlineState>): void {
     _userOnlineStateAccessor.setData(userId, state);
 }
 
-export async function getUserNickname(userId: number): Promise<Undefinable<string>> {
+export async function getUserNickname(userId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>> {
     return (await getUserPublicInfo(userId))?.getNickname();
 }
-export async function getUserMrwRankScoreInfo(userId: number, warType: WarTypeId, playersCount: number): Promise<Undefinable<UserMrwRankInfo>> {
+export async function getUserMrwRankScoreInfo(userId: number, warType: WarTypes_Constants.WarTypeId, playersCount: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserMrwRankInfo>> {
     return (await getUserPublicInfo(userId))
         ?.getUserMrwRankInfoArray()
         ?.find(v => (v.getWarType() === warType) && (v.getPlayersCountUnneutral() === playersCount));
 }
-export async function getUserMpwStatisticsData(userId: number, warType: WarTypeId, playersCount: number): Promise<Undefinable<UserMpwStatistics>> {
+export async function getUserMpwStatisticsData(userId: number, warType: WarTypes_Constants.WarTypeId, playersCount: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserMpwStatistics>> {
     return (await getUserPublicInfo(userId))
         ?.getUserMpwStatisticsArray()
         ?.find(v => (v.getWarType() === warType) && (v.getPlayersCountUnneutral() === playersCount));
 }
-export function getMapRating(normalMapId: number): Undefinable<number> {
+export function getMapRating(normalMapId: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     return getSelfUserComplexInfo()?.getUserMapRatingArray()?.find(v => v.getNormalMapId() === normalMapId)?.getRating();
 }
 
 export function checkCanRegisterAutoTourney(): boolean {
     return getSelfUserComplexInfo()?.getUserRankInfo()?.getMrwArray()?.find(v =>
-        ((v.getWarType() === WarTypeId.MrwFog) || (v.getWarType() === WarTypeId.MrwStd))  &&
-        (v.getPlayersCountUnneutral() === Common.PlayersCountUnneutral)
+        ((v.getWarType() === WarTypes_Constants.WarTypeId.MrwFog) || (v.getWarType() === WarTypes_Constants.WarTypeId.MrwStd))  &&
+        (v.getPlayersCountUnneutral() === AutoTourneys_Constants.Common.PlayersCountUnneutral),
     )?.getLastWarEndTime() != null;
 }
 
-export function getSelfSettings(): Undefinable<UserSettings> {
+export function getSelfSettings(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserSettings> {
     return getSelfUserComplexInfo()?.getUserSettings();
 }
-export function getSelfSettingsTextureVersion(): TextureVersionId {
-    return getCurrentGameEssentialConfig().textureResolutionTypeId === TextureResolutionId.Trilogy
-        ? TextureVersionId.V1
-        : (getSelfSettings()?.getUnitAndTileTextureVersion() ?? TextureVersionId.V0);
+export function getSelfSettingsTextureVersion(): Graphics_Constants.TextureVersionId {
+    return GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId === Graphics_Constants.TextureResolutionId.Trilogy
+        ? Graphics_Constants.TextureVersionId.V1
+        : (getSelfSettings()?.getUnitAndTileTextureVersion() ?? Graphics_Constants.TextureVersionId.V0);
 }
 export function getSelfSettingsIsSetPathMode(): boolean {
     return getSelfSettings()?.getIsSetPathMode() ?? false;
@@ -304,19 +265,19 @@ export function getSelfSettingsIsReplayResultVisible(): boolean {
     return getSelfSettings()?.getIsReplayResultVisible() ?? true;
 }
 export function getSelfSettingsBgmCodeForLobby(): number {
-    return getSelfSettings()?.getSceneBgmSettings()?.getLobbyBgmCode() ?? BgmSfxCode.Lobby;
+    return getSelfSettings()?.getSceneBgmSettings()?.getLobbyBgmCode() ?? Sounds_Constants.BgmSfxCode.Lobby;
 }
 export function getSelfSettingsBgmCodeForMapEditor(): number {
-    return getSelfSettings()?.getSceneBgmSettings()?.getMapEditorBgmCode() ?? BgmSfxCode.MapEditor;
+    return getSelfSettings()?.getSceneBgmSettings()?.getMapEditorBgmCode() ?? Sounds_Constants.BgmSfxCode.MapEditor;
 }
-export function getSelfSettingsCoBgmCodeArray(coCategoryId: number): Undefinable<number[]> {
+export function getSelfSettingsCoBgmCodeArray(coCategoryId: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]> {
     return getSelfSettings()?.getCoBgmSettings()?.find(v => (v.getCoCategoryId() ?? 0) === coCategoryId)?.getBgmCodeArray();
 }
 export function getSelfSettingsIsScreenVibrationEnabled(): boolean {
     return getSelfSettings()?.getIsScreenVibrationEnabled() ?? true;
 }
 
-export function getSelfSettingsOpacitySettings(): Undefinable<UserOpacitySettings> {
+export function getSelfSettingsOpacitySettings(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserOpacitySettings> {
     return getSelfSettings()?.getOpacitySettings() ?? null;
 }
 export function setSelfSettingsOpacitySettings(opacitySettings: UserOpacitySettings): void {
@@ -326,18 +287,18 @@ export function setSelfSettingsOpacitySettings(opacitySettings: UserOpacitySetti
     }
 
     selfSettings.setOpacitySettings(opacitySettings);
-    dispatch(TypeId.UserSettingsOpacitySettingsChanged);
+    Notifications_Dispatcher.dispatch("UserSettingsOpacitySettingsChanged");
 }
 export function reqTickSelfSettingsUnitOpacity(): void {
     const unitOpacity = getSelfSettingsOpacitySettings()?.getUnitOpacity();
     if ((unitOpacity === 100) || (unitOpacity == null)) {
-        reqUserSetSettings({ opacitySettings: { unitOpacity: 75 }, coBgmSettings: [] });
+        Users_Proxy.reqUserSetSettings({ opacitySettings : { unitOpacity : 75 }, coBgmSettings : [] });
     } else if (unitOpacity === 75) {
-        reqUserSetSettings({ opacitySettings: { unitOpacity: 50 }, coBgmSettings: [] });
+        Users_Proxy.reqUserSetSettings({ opacitySettings : { unitOpacity : 50 }, coBgmSettings : [] });
     } else if (unitOpacity === 50) {
-        reqUserSetSettings({ opacitySettings: { unitOpacity: 0 }, coBgmSettings: [] });
+        Users_Proxy.reqUserSetSettings({ opacitySettings : { unitOpacity : 0 }, coBgmSettings : [] });
     } else {
-        reqUserSetSettings({ opacitySettings: { unitOpacity: 100 }, coBgmSettings: [] });
+        Users_Proxy.reqUserSetSettings({ opacitySettings : { unitOpacity : 100 }, coBgmSettings : [] });
     }
 }
 function mergeSelfSettingsOpacitySettings(newOpacitySettings: UserOpacitySettings): void {
@@ -356,42 +317,42 @@ function mergeSelfSettingsOpacitySettings(newOpacitySettings: UserOpacitySetting
         currentOpacitySettings.setUnitOpacity(newOpacitySettings.getUnitOpacity() ?? currentOpacitySettings.getUnitOpacity());
     }
 
-    dispatch(TypeId.UserSettingsOpacitySettingsChanged);
+    Notifications_Dispatcher.dispatch("UserSettingsOpacitySettingsChanged");
 }
 
-export function getFollowingUserIdArray(): Undefinable<number[]> {
+export function getFollowingUserIdArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]> {
     return getSelfInfo()?.getUserRelationInfo()?.getFollowingUserIdArray();
 }
-export function checkIsFollowingUser(userId: Undefinable<number>): boolean {
+export function checkIsFollowingUser(userId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
     return userId == null
         ? false
         : !!getFollowingUserIdArray()?.includes(userId);
 }
-export function checkIsBlockingUser(userId: Undefinable<number>): boolean {
+export function checkIsBlockingUser(userId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
     return userId == null
         ? false
         : !!getSelfInfo()?.getUserRelationInfo()?.getBlockingUserIdArray()?.includes(userId);
 }
 
-export function getFavoriteReplayIdArray(): Undefinable<number[]> {
+export function getFavoriteReplayIdArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]> {
     return getSelfUserComplexInfo()?.getFavoriteReplayIdArray();
 }
-export function checkIsFavoriteReplayId(replayId: number): Undefinable<boolean> {
+export function checkIsFavoriteReplayId(replayId: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<boolean> {
     return getSelfUserComplexInfo()?.getFavoriteReplayIdArray().includes(replayId);
 }
 
-export function getSelfCawHighScoreInfo(campaignId: number, campaignMapId: number): Undefinable<UserCawStatistics> {
+export function getSelfCawHighScoreInfo(campaignId: number, campaignMapId: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<UserCawStatistics> {
     return getSelfUserComplexInfo()
         ?.getUserWarStatistics()
         ?.getCawArray()
-        ?.find(v => ((v.getCampaignId() ?? 0) == campaignId) && ((v.getCampaignMapId() ?? 0) == campaignMapId));
+        ?.find(v => ((v.getCampaignId()) == campaignId) && ((v.getCampaignMapId()) == campaignMapId));
 }
 function setSelfCawHighScore({ configVersion, campaignId, campaignMapId, campaignMapRevision, highScore }: {
     configVersion       : string;
     campaignId          : number;
     campaignMapId       : number;
     campaignMapRevision : number;
-    highScore           : Undefinable<number>;
+    highScore           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 }): void {
     const userComplexInfo = getSelfUserComplexInfo();
     if (userComplexInfo == null) {
@@ -399,10 +360,10 @@ function setSelfCawHighScore({ configVersion, campaignId, campaignMapId, campaig
     }
 
     const cawArray      = userComplexInfo.createIfNotExistsUserWarStatistics().getCawArray();
-    const existingInfo  = cawArray.find(v => ((v.getCampaignId() ?? 0) == campaignId) && ((v.getCampaignMapId() ?? 0) == campaignMapId));
+    const existingInfo  = cawArray.find(v => ((v.getCampaignId()) == campaignId) && ((v.getCampaignMapId()) == campaignMapId));
     if (existingInfo != null) {
         const existingConfigVersion = existingInfo.getConfigVersion() ?? ``;
-        const existingMapRevision   = existingInfo.getCampaignMapRevision() ?? 0;
+        const existingMapRevision   = existingInfo.getCampaignMapRevision();
         if ((existingConfigVersion == configVersion) && (existingMapRevision == campaignMapRevision)) {
             if ((highScore != null) && (highScore >= (existingInfo.getHighScore() ?? 0))) {
                 existingInfo.setHighScore(highScore);
@@ -425,18 +386,18 @@ function setSelfCawHighScore({ configVersion, campaignId, campaignMapId, campaig
     }
 }
 
-export function updateOnMsgUserLogin(data: ProtoSchemaCommonProtoNetMessageMsgUserLoginS): void {
+export function updateOnMsgUserLogin(data: UserLoginResponse): void {
     setIsLoggedIn(true);
 
     const userSelfInfo = data.getUserSelfInfo();
     (userSelfInfo) && (setSelfInfo(userSelfInfo));
 
     _updateDocumentTitle();
-    reqGetAllMessages();
-    reqGetAllReadProgressList();
-    reqMpwWatchRequestedWarIdArray();
+    Chat_Proxy.reqGetAllMessages();
+    Chat_Proxy.reqGetAllReadProgressList();
+    WatchWar_Model_WwProxy.reqMpwWatchRequestedWarIdArray();
 }
-export function updateOnMsgUserLoginAsGuest(data: ProtoSchemaCommonProtoNetMessageMsgUserLoginAsGuestS): void {
+export function updateOnMsgUserLoginAsGuest(data: UserLoginAsGuestResponse): void {
     setIsLoggedIn(true);
 
     const userSelfInfo = data.getUserSelfInfo();
@@ -446,61 +407,61 @@ export function updateOnMsgUserLoginAsGuest(data: ProtoSchemaCommonProtoNetMessa
     }
 
     _updateDocumentTitle();
-    reqGetAllMessages();
-    reqGetAllReadProgressList();
+    Chat_Proxy.reqGetAllMessages();
+    Chat_Proxy.reqGetAllReadProgressList();
 }
 
-export function updateOnMsgUserGetOnlineState(data: ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineStateS): void {
+export function updateOnMsgUserGetOnlineState(data: UserGetOnlineStateResponse): void {
     setUserOnlineState(
         data.getUserId() ?? 0,
         {
-            isOnline                : !!data.getIsOnline(),
-            lastActivityTimestamp   : data.getLastActivityTime() ?? 0,
-        }
+            isOnline              : !!data.getIsOnline(),
+            lastActivityTimestamp : data.getLastActivityTime() ?? 0,
+        },
     );
 }
-export function updateOnFailedMsgUserGetOnlineState(data: ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineStateS): void {
+export function updateOnFailedMsgUserGetOnlineState(data: UserGetOnlineStateResponse): void {
     const userId = data.getUserId();
     if (userId != null) {
         _userOnlineStateAccessor.updateOnRequestFailed(userId);
     }
 }
 
-export function updateOnMsgUserGetPublicInfo(data: ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoS): void {
+export function updateOnMsgUserGetPublicInfo(data: UserGetPublicInfoResponse): void {
     setUserPublicInfo(data.getUserId() ?? 0, data.getUserPublicInfo());
 }
-export function updateOnFailedMsgUserGetPublicInfo(data: ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoS): void {
+export function updateOnFailedMsgUserGetPublicInfo(data: UserGetPublicInfoResponse): void {
     const userId = data.getUserId();
     if (userId != null) {
         _userPublicInfoAccessor.updateOnRequestFailed(userId);
     }
 }
 
-export function updateOnMsgUserGetBriefInfo(data: ProtoSchemaCommonProtoNetMessageMsgUserGetBriefInfoS): void {
+export function updateOnMsgUserGetBriefInfo(data: UserGetBriefInfoResponse): void {
     setUserBriefInfo(data.getUserId() ?? 0, data.getUserBriefInfo() ?? null);
 }
-export function updateOnFailedMsgUserGetBriefInfo(data: ProtoSchemaCommonProtoNetMessageMsgUserGetBriefInfoS): void {
+export function updateOnFailedMsgUserGetBriefInfo(data: UserGetBriefInfoResponse): void {
     const userId = data.getUserId();
     if (userId != null) {
         _userBriefInfoAccessor.updateOnRequestFailed(userId);
     }
 }
 
-export function updateOnMsgUserSetNickname(data: ProtoSchemaCommonProtoNetMessageMsgUserSetNicknameS): void {
-    setSelfNickname(getExisted(data.getNickname()));
+export function updateOnMsgUserSetNickname(data: UserSetNicknameResponse): void {
+    setSelfNickname(Helpers_Misc.getExisted(data.getNickname()));
 
     _updateDocumentTitle();
 }
-export function updateOnMsgUserSetDiscordInfo(data: ProtoSchemaCommonProtoNetMessageMsgUserSetDiscordInfoS): void {
+export function updateOnMsgUserSetDiscordInfo(data: UserSetDiscordInfoResponse): void {
     setSelfDiscordInfo(data.getDiscordInfo());
 }
-export function updateOnMsgGmSetUserPrivilege(data: ProtoSchemaCommonProtoNetMessageMsgGmSetUserPrivilegeS): void {
+export function updateOnMsgGmSetUserPrivilege(data: GmSetUserPrivilegeResponse): void {
     const userId = data.getUserId() ?? 0;
     if (userId === getSelfUserId()) {
         setSelfUserPrivilege(data.getUserPrivilege() ?? new UserPrivilege());
     }
 }
-export function updateOnMsgUserSetSettings(data: ProtoSchemaCommonProtoNetMessageMsgUserSetSettingsS): void {
+export function updateOnMsgUserSetSettings(data: UserSetSettingsResponse): void {
     const selfSettings  = getSelfSettings();
     const newSettings   = data.getUserSettings();
     if ((selfSettings == null) || (newSettings == null)) {
@@ -532,36 +493,36 @@ export function updateOnMsgUserSetSettings(data: ProtoSchemaCommonProtoNetMessag
     }
 
     if (oldVersion !== getSelfSettingsTextureVersion()) {
-        updateOnUnitAndTileTextureVersionChanged();
-        dispatch(TypeId.UnitAndTileTextureVersionChanged);
+        Common_Model_CommonModel.updateOnUnitAndTileTextureVersionChanged();
+        Notifications_Dispatcher.dispatch("UnitAndTileTextureVersionChanged");
     }
     if (oldIsShowGridBorder !== getSelfSettingsIsShowGridBorder()) {
-        dispatch(TypeId.UserSettingsIsShowGridBorderChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsShowGridBorderChanged");
     }
     if (oldIsAutoScrollMap !== getSelfSettingsIsAutoScrollMap()) {
-        dispatch(TypeId.UserSettingsIsAutoScrollMapChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsAutoScrollMapChanged");
     }
     if (oldIsUnitFlickeringOnFullEnergy !== getSelfSettingsIsUnitFlickeringOnFullEnergy()) {
-        dispatch(TypeId.UserSettingsIsUnitFlickeringOnFullEnergyChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsUnitFlickeringOnFullEnergyChanged");
     }
     if (oldUnitMoveAniSpeedMultiplierPct !== getSelfSettingsUnitMoveAniSpeedMultiplierPct()) {
-        dispatch(TypeId.UserSettingsUnitMoveAniSpeedMultiplierPctChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsUnitMoveAniSpeedMultiplierPctChanged");
     }
     if (oldIsReplayResultVisible !== getSelfSettingsIsReplayResultVisible()) {
-        dispatch(TypeId.UserSettingsIsReplayResultVisibleChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsReplayResultVisibleChanged");
     }
     if (oldIsSetPathMode !== getSelfSettingsIsSetPathMode()) {
-        dispatch(TypeId.UserSettingsIsSetPathModeChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsSetPathModeChanged");
     }
     if (oldCanAcceptNotFollowingMessages !== getSelfSettingsCanAcceptNotFollowingMessages()) {
-        dispatch(TypeId.UserSettingsCanAcceptNotFollowingMessagesChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsCanAcceptNotFollowingMessagesChanged");
     }
     if (oldIsScreenVibrationEnabled !== getSelfSettingsIsScreenVibrationEnabled()) {
-        dispatch(TypeId.UserSettingsIsScreenVibrationEnabledChanged);
+        Notifications_Dispatcher.dispatch("UserSettingsIsScreenVibrationEnabledChanged");
     }
 }
-export function updateOnMsgUserSetMapRating(data: ProtoSchemaCommonProtoNetMessageMsgUserSetMapRatingS): void {
-    const complexInfo   = getExisted(getSelfUserComplexInfo());
+export function updateOnMsgUserSetMapRating(data: UserSetMapRatingResponse): void {
+    const complexInfo   = Helpers_Misc.getExisted(getSelfUserComplexInfo());
     const normalMapId   = data.getNormalMapId();
     const rating        = data.getRating();
     const array         = complexInfo.getUserMapRatingArray();
@@ -575,19 +536,19 @@ export function updateOnMsgUserSetMapRating(data: ProtoSchemaCommonProtoNetMessa
         }));
     }
 }
-export function updateOnMsgUserSetAvatarId(data: ProtoSchemaCommonProtoNetMessageMsgUserSetAvatarIdS): void {
-    setSelfAvatarId(getExisted(data.getAvatarId(), ClientErrorCode.UserModel_UpdateOnMsgUserSetAvatarId_00));
+export function updateOnMsgUserSetAvatarId(data: UserSetAvatarIdResponse): void {
+    setSelfAvatarId(Helpers_Misc.getExisted(data.getAvatarId(), Utils_ClientErrorCode.ClientErrorCode.UserModel_UpdateOnMsgUserSetAvatarId_00));
 }
-export function updateOnMsgUserSetMapEditorAutoSaveTime(data: ProtoSchemaCommonProtoNetMessageMsgUserSetMapEditorAutoSaveTimeS): void {
+export function updateOnMsgUserSetMapEditorAutoSaveTime(data: UserSetMapEditorAutoSaveTimeResponse): void {
     setSelfMapEditorAutoSaveTime(data.getTime());
 }
-export function updateOnMsgUserSetCoBgmSettings(data: ProtoSchemaCommonProtoNetMessageMsgUserSetCoBgmSettingsS): void {
+export function updateOnMsgUserSetCoBgmSettings(data: UserSetCoBgmSettingsResponse): void {
     const selfSettings = getSelfSettings();
     if (selfSettings == null) {
         return;
     }
 
-    const coCategoryId  = getExisted(data.getCoCategoryId());
+    const coCategoryId  = Helpers_Misc.getExisted(data.getCoCategoryId());
     const bgmCodeArray  = data.getBgmCodeArray();
     const coBgmSettings = selfSettings.getCoBgmSettings();
     const index         = coBgmSettings.findIndex(v => v.getCoCategoryId() === coCategoryId);
@@ -600,13 +561,13 @@ export function updateOnMsgUserSetCoBgmSettings(data: ProtoSchemaCommonProtoNetM
     } else {
         if (bgmCodeArray) {
             coBgmSettings.push(CoBgmSettings.fromJson({
-                coCategoryId    : coCategoryId,
-                bgmCodeArray    : bgmCodeArray,
+                coCategoryId : coCategoryId,
+                bgmCodeArray : bgmCodeArray,
             }));
         }
     }
 }
-export function updateOnMsgUserSetSceneBgmSettings(data: ProtoSchemaCommonProtoNetMessageMsgUserSetSceneBgmSettingsS): void {
+export function updateOnMsgUserSetSceneBgmSettings(data: UserSetSceneBgmSettingsResponse): void {
     const selfSettings = getSelfSettings();
     if (selfSettings == null) {
         return;
@@ -627,29 +588,29 @@ export function updateOnMsgUserSetSceneBgmSettings(data: ProtoSchemaCommonProtoN
         }
     }
 }
-export function updateOnMsgUserSetRelation(data: ProtoSchemaCommonProtoNetMessageMsgUserSetRelationS): void {
+export function updateOnMsgUserSetRelation(data: UserSetRelationResponse): void {
     const selfInfo = getSelfInfo();
     if (selfInfo == null) {
         return;
     }
 
-    const userId                = getExisted(data.getTargetUserId());
+    const userId                = Helpers_Misc.getExisted(data.getTargetUserId());
     const relationInfo          = selfInfo.createIfNotExistsUserRelationInfo();
     const followingUserIdArray  = relationInfo.getFollowingUserIdArray();
     if (data.getIsFollowing()) {
-        addElementToListIfNotExists(followingUserIdArray, userId);
+        Helpers_Collection.addElementToListIfNotExists(followingUserIdArray, userId);
     } else {
-        deleteElementFromList(followingUserIdArray, userId);
+        Helpers_Collection.deleteElementFromList(followingUserIdArray, userId);
     }
 
     const blockingUserIdArray = relationInfo.getBlockingUserIdArray();
     if (data.getIsBlocking()) {
-        addElementToListIfNotExists(blockingUserIdArray, userId);
+        Helpers_Collection.addElementToListIfNotExists(blockingUserIdArray, userId);
     } else {
-        deleteElementFromList(blockingUserIdArray, userId);
+        Helpers_Collection.deleteElementFromList(blockingUserIdArray, userId);
     }
 }
-export function updateOnMsgUserSetShowMedalIdArray(data: ProtoSchemaCommonProtoNetMessageMsgUserSetShowMedalIdArrayS): void {
+export function updateOnMsgUserSetShowMedalIdArray(data: UserSetShowMedalIdArrayResponse): void {
     const selfInfo = getSelfInfo();
     if (selfInfo == null) {
         return;
@@ -657,7 +618,7 @@ export function updateOnMsgUserSetShowMedalIdArray(data: ProtoSchemaCommonProtoN
 
     selfInfo.createIfNotExistsUserComplexInfo().createIfNotExistsUserMedalInfo().setShowMedalIdArray(data.getShowMedalIdArray());
 }
-export function updateOnMsgUserModifyFavoriteReplayIdArray(data: ProtoSchemaCommonProtoNetMessageMsgUserModifyFavoriteReplayIdArrayS): void {
+export function updateOnMsgUserModifyFavoriteReplayIdArray(data: UserModifyFavoriteReplayIdArrayResponse): void {
     const info = getSelfUserComplexInfo();
     if (info == null) {
         return;
@@ -672,7 +633,7 @@ export function updateOnMsgUserModifyFavoriteReplayIdArray(data: ProtoSchemaComm
     }
     info.setFavoriteReplayIdArray([...replayIdSet]);
 }
-export function updateOnMsgUserRequestEmailVerificationCode(data: ProtoSchemaCommonProtoNetMessageMsgUserRequestEmailVerificationCodeS): void {
+export function updateOnMsgUserRequestEmailVerificationCode(data: UserRequestEmailVerificationCodeResponse): void {
     const selfInfo = getSelfInfo();
     if (selfInfo) {
         const complexInfo = selfInfo.createIfNotExistsUserComplexInfo();
@@ -680,14 +641,14 @@ export function updateOnMsgUserRequestEmailVerificationCode(data: ProtoSchemaCom
         complexInfo.setEmailVerificationEndTimestamp(data.getEndTimestamp());
     }
 }
-export function updateOnMsgUserVerifyEmail(data: ProtoSchemaCommonProtoNetMessageMsgUserVerifyEmailS): void {
+export function updateOnMsgUserVerifyEmail(data: UserVerifyEmailResponse): void {
     const info = getSelfInfo();
     if (info) {
         info.setEmailAddress(data.getEmailAddress());
     }
 }
 
-export function updateOnMsgCampaignValidateWar(data: ProtoSchemaCommonProtoNetMessageMsgCampaignValidateWarS): void {
+export function updateOnMsgCampaignValidateWar(data: CampaignValidateWarResponse): void {
     setSelfCawHighScore({
         configVersion       : data.getConfigVersion() ?? ``,
         campaignId          : data.getCampaignId() ?? 0,
@@ -696,7 +657,7 @@ export function updateOnMsgCampaignValidateWar(data: ProtoSchemaCommonProtoNetMe
         highScore           : null,
     });
 }
-export function updateOnMsgCampaignGetScore(data:S): void {
+export function updateOnMsgCampaignGetScore(data:CampaignGetScoreResponse): void {
     setSelfCawHighScore({
         configVersion       : data.getConfigVersion() ?? ``,
         campaignId          : data.getCampaignId() ?? 0,
@@ -709,14 +670,14 @@ export function updateOnMsgCampaignGetScore(data:S): void {
 function _onNotifyNetworkDisconnected(): void {
     setIsLoggedIn(false);
 }
-function _onNotifyMsgUserLogout(e: Event): void {
-    const reason = (e.data as ProtoSchemaCommonProtoNetMessageMsgUserLogoutS).getReason();
-    if (reason === LogoutTypeId.SelfRequest) {
-        showLang(TextType.A0005);
-    } else if (reason === LogoutTypeId.LoginCollision) {
-        showLang(TextType.A0006);
-    } else if (reason === LogoutTypeId.NetworkFailure) {
-        showLang(TextType.A0013);
+function _onNotifyMsgUserLogout(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserLogout"]>): void {
+    const reason = ((Helpers_Misc.getExisted(e.data)).msg).getReason();
+    if (reason === Users_Constants.LogoutTypeId.SelfRequest) {
+        FloatText.showLang(Lang_Constants.TextType.A0005);
+    } else if (reason === Users_Constants.LogoutTypeId.LoginCollision) {
+        FloatText.showLang(Lang_Constants.TextType.A0006);
+    } else if (reason === Users_Constants.LogoutTypeId.NetworkFailure) {
+        FloatText.showLang(Lang_Constants.TextType.A0013);
     }
 
     setIsLoggedIn(false);
@@ -725,15 +686,15 @@ function _onNotifyMsgUserLogout(e: Event): void {
 function _updateDocumentTitle(): void {
     const nickname  = getSelfNickname();
     const prefix    = _getDocumentTitlePrefix();
-    setDocumentTitle(nickname == null ? prefix : `${prefix} - ${nickname}`);
+    Helpers_Compatibility.setDocumentTitle(nickname == null ? prefix : `${prefix} - ${nickname}`);
 }
 function _getDocumentTitlePrefix(): string {
     switch (window.GAME_VERSION) {
-        case TypeName.Legacy       : return `TW Classic`;
-        case TypeName.Trilogy      : return `TW Tri.`;
-        case TypeName.Test         : return `TW Exp.`;
-        case TypeName.Dor          : return `TW DoR`;
-        case TypeName.TinyWars2    : return `TW2`;
+        case GameVersions_Constants.TypeName.Legacy       : return `TW Classic`;
+        case GameVersions_Constants.TypeName.Trilogy      : return `TW Tri.`;
+        case GameVersions_Constants.TypeName.Test         : return `TW Exp.`;
+        case GameVersions_Constants.TypeName.Dor          : return `TW DoR`;
+        case GameVersions_Constants.TypeName.TinyWars2    : return `TW2`;
         default                                             : return `TW`;
     }
 }

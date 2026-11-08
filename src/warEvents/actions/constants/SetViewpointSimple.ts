@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-shadow
+ 
 export const enum Common {
     MinInterval     = 100,
     MaxInterval     = 3000,

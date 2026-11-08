@@ -1,133 +1,101 @@
-import { compress } from "../../helpers/Gzip.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { addListeners, send } from "../../networks/Manager.ts";
-import { MessageCodes } from "../../networks/MessageCodes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import type { C } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/C.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSfwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSfw/S.ts";
-import type { C as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSrwC } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/C.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSrwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgSpmDeleteWarSaveSlotS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgSpmDeleteWarSaveSlot/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgSpmGetAllWarSaveSlotTimestampsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetAllWarSaveSlotTimestamps/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgSpmGetRankListS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetRankList/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgSpmGetReplayDataS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetReplayData/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetWarSaveSlotFullData/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetWarSaveSlotFullDataArray/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmSaveScwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveScw/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmSaveSfwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveSfw/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmSaveSrwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveSrw/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgSpmValidateSrwS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgSpmValidateSrw/S.ts";
+import {
+    Helpers_Gzip,
+    Helpers_Misc,
+    Networks_Manager,
+    Networks_MessageCodes,
+    Notifications_Dispatcher,
+    SinglePlayerMode_Model_SpmModel,
+    SinglePlayerWars_War,
+    SingleRankWar_Model_SrwWar,
+    type Egret_Egret,
+} from "../../internal.ts";
+import type { C as SpmCreateScwRequest } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/C.ts";
+import type { C as SpmCreateSrwRequest } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/C.ts";
 import type { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import {
-    updateOnFailedMsgSpmGetAllWarSaveSlotTimestamps,
-    updateOnMsgSpmGetAllWarSaveSlotTimestamps,
-    updateOnMsgSpmGetWarSaveSlotFullDataArray,
-    updateOnFailedMsgSpmGetWarSaveSlotFullData,
-    updateOnMsgSpmGetWarSaveSlotFullData,
-    updateOnMsgSpmCreateScw,
-    updateOnMsgSpmCreateSfw,
-    updateOnMsgSpmCreateSrw,
-    updateOnMsgSpmSaveScw,
-    updateOnMsgSpmSaveSfw,
-    updateOnMsgSpmSaveSrw,
-    updateOnMsgSpmDeleteWarSaveSlot,
-    updateOnMsgSpmGetRankList,
-    updateOnFailedMsgSpmGetReplayData,
-    updateOnMsgSpmGetReplayData,
-} from "./SpmModel.ts";
-import type { ISpwWar } from "../../singlePlayerWar/interface/ISpwWar.ts";
-import type { ISrwWar } from "../../singleRankWar/interface/ISrwWar.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgSpmCreateScw,                     callback: _onMsgSpmCreateScw },
-        { msgCode: MessageCodes.MsgSpmCreateSfw,                     callback: _onMsgSpmCreateSfw },
-        { msgCode: MessageCodes.MsgSpmCreateSrw,                     callback: _onMsgSpmCreateSrw },
-        { msgCode: MessageCodes.MsgSpmGetAllWarSaveSlotTimestamps,   callback: _onMsgSpmGetAllWarSaveSlotTimestamps },
-        { msgCode: MessageCodes.MsgSpmGetWarSaveSlotFullData,        callback: _onMsgSpmGetWarSaveSlotFullData },
-        { msgCode: MessageCodes.MsgSpmGetWarSaveSlotFullDataArray,   callback: _onMsgSpmGetWarSaveSlotFullDataArray },
-        { msgCode: MessageCodes.MsgSpmDeleteWarSaveSlot,             callback: _onMsgSpmDeleteWarSaveSlot },
-        { msgCode: MessageCodes.MsgSpmSaveScw,                       callback: _onMsgSpmSaveScw },
-        { msgCode: MessageCodes.MsgSpmSaveSfw,                       callback: _onMsgSpmSaveSfw },
-        { msgCode: MessageCodes.MsgSpmSaveSrw,                       callback: _onMsgSpmSaveSrw },
-        { msgCode: MessageCodes.MsgSpmGetRankList,                   callback: _onMsgSpmGetRankList },
-        { msgCode: MessageCodes.MsgSpmValidateSrw,                   callback: _onMsgSpmValidateSrw },
-        { msgCode: MessageCodes.MsgSpmGetReplayData,                 callback: _onMsgSpmGetReplayData },
+    Networks_Manager.addListeners([
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmCreateScw,                     callback : _onMsgSpmCreateScw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmCreateSfw,                     callback : _onMsgSpmCreateSfw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmCreateSrw,                     callback : _onMsgSpmCreateSrw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmGetAllWarSaveSlotTimestamps,   callback : _onMsgSpmGetAllWarSaveSlotTimestamps },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmGetWarSaveSlotFullData,        callback : _onMsgSpmGetWarSaveSlotFullData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmGetWarSaveSlotFullDataArray,   callback : _onMsgSpmGetWarSaveSlotFullDataArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmDeleteWarSaveSlot,             callback : _onMsgSpmDeleteWarSaveSlot },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmSaveScw,                       callback : _onMsgSpmSaveScw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmSaveSfw,                       callback : _onMsgSpmSaveSfw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmSaveSrw,                       callback : _onMsgSpmSaveSrw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmGetRankList,                   callback : _onMsgSpmGetRankList },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmValidateSrw,                   callback : _onMsgSpmValidateSrw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmGetReplayData,                 callback : _onMsgSpmGetReplayData },
     ], null);
 }
 
 export function reqSpmGetAllWarSaveSlotTimestamps(): void {
-    send({ MsgSpmGetAllWarSaveSlotTimestamps: { c: {
-    } } });
+    Networks_Manager.send({
+        MsgSpmGetAllWarSaveSlotTimestamps : {
+            c : {
+            },
+        },
+    });
 }
-function _onMsgSpmGetAllWarSaveSlotTimestamps(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmGetAllWarSaveSlotTimestampsS;
+function _onMsgSpmGetAllWarSaveSlotTimestamps(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmGetAllWarSaveSlotTimestamps"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
-        updateOnFailedMsgSpmGetAllWarSaveSlotTimestamps(data);
+        SinglePlayerMode_Model_SpmModel.updateOnFailedMsgSpmGetAllWarSaveSlotTimestamps(data);
     } else {
-        updateOnMsgSpmGetAllWarSaveSlotTimestamps(data);
-        dispatch(TypeId.MsgSpmGetAllWarSaveSlotTimestamps, data);
+        SinglePlayerMode_Model_SpmModel.updateOnMsgSpmGetAllWarSaveSlotTimestamps(data);
+        Notifications_Dispatcher.dispatch("MsgSpmGetAllWarSaveSlotTimestamps", { msg : data });
     }
 }
 
 export function reqSpmGetWarSaveSlotFullDataArray(slotIndexArray: number[]): void {
-    send({ MsgSpmGetWarSaveSlotFullDataArray: { c: {
-        slotIndexArray: slotIndexArray,
-    }, }, });
+    Networks_Manager.send({
+        MsgSpmGetWarSaveSlotFullDataArray : {
+            c : {
+                slotIndexArray : slotIndexArray,
+            },
+        },
+    });
 }
-async function _onMsgSpmGetWarSaveSlotFullDataArray(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataArrayS;
+async function _onMsgSpmGetWarSaveSlotFullDataArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmGetWarSaveSlotFullDataArray"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        await updateOnMsgSpmGetWarSaveSlotFullDataArray(data);
-        dispatch(TypeId.MsgSpmGetWarSaveFullDataArray, data);
+        await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmGetWarSaveSlotFullDataArray(data);
+        Notifications_Dispatcher.dispatch("MsgSpmGetWarSaveFullDataArray", { msg : data });
     }
 }
 
 export function reqSpmGetWarSaveSlotFullData(slotIndex: number): void {
-    send({
-        MsgSpmGetWarSaveSlotFullData: { c: {
-            slotIndex,
-        }, },
+    Networks_Manager.send({
+        MsgSpmGetWarSaveSlotFullData : {
+            c : {
+                slotIndex,
+            },
+        },
     });
 }
-async function _onMsgSpmGetWarSaveSlotFullData(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataS;
+async function _onMsgSpmGetWarSaveSlotFullData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmGetWarSaveSlotFullData"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
-        updateOnFailedMsgSpmGetWarSaveSlotFullData(data);
+        SinglePlayerMode_Model_SpmModel.updateOnFailedMsgSpmGetWarSaveSlotFullData(data);
     } else {
-        await updateOnMsgSpmGetWarSaveSlotFullData(data);
-        dispatch(TypeId.MsgSpmGetWarSaveFullData, data);
+        await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmGetWarSaveSlotFullData(data);
+        Notifications_Dispatcher.dispatch("MsgSpmGetWarSaveFullData", { msg : data });
     }
 }
 
-export function reqSpmCreateScw(param: C): void {
-    send({
-        MsgSpmCreateScw: { c: param.toJson() },
+export function reqSpmCreateScw(param: SpmCreateScwRequest): void {
+    Networks_Manager.send({
+        MsgSpmCreateScw : { c : param.toJson() },
     });
 }
-async function _onMsgSpmCreateScw(e: Event): Promise<void> {
-    const data = e.data as S;
+async function _onMsgSpmCreateScw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmCreateScw"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        await updateOnMsgSpmCreateScw(data);
-        dispatch(TypeId.MsgSpmCreateScw, data);
+        await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmCreateScw(data);
+        Notifications_Dispatcher.dispatch("MsgSpmCreateScw", { msg : data });
     }
 }
 
@@ -136,143 +104,159 @@ export function reqSpmCreateSfw({ slotIndex, slotExtraData, warData }: {
     slotExtraData   : SpmWarSaveSlotExtraData;
     warData         : SerialWar;
 }): void {
-    send({
-        MsgSpmCreateSfw: { c: {
-            slotIndex       : slotIndex,
-            slotExtraData   : slotExtraData.toJson(),
-            warData         : warData.toJson(),
-        }, },
+    Networks_Manager.send({
+        MsgSpmCreateSfw : {
+            c : {
+                slotIndex     : slotIndex,
+                slotExtraData : slotExtraData.toJson(),
+                warData       : warData.toJson(),
+            },
+        },
     });
 }
-async function _onMsgSpmCreateSfw(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSfwS;
+async function _onMsgSpmCreateSfw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmCreateSfw"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        await updateOnMsgSpmCreateSfw(data);
-        dispatch(TypeId.MsgSpmCreateSfw, data);
+        await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmCreateSfw(data);
+        Notifications_Dispatcher.dispatch("MsgSpmCreateSfw", { msg : data });
     }
 }
 
-export function reqSpmCreateSrw(data: ProtoSchemaCommonProtoNetMessageMsgSpmCreateSrwC): void {
-    send({
-        MsgSpmCreateSrw: { c: data.toJson() },
+export function reqSpmCreateSrw(data: SpmCreateSrwRequest): void {
+    Networks_Manager.send({
+        MsgSpmCreateSrw : { c : data.toJson() },
     });
 }
-async function _onMsgSpmCreateSrw(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSrwS;
+async function _onMsgSpmCreateSrw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmCreateSrw"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        await updateOnMsgSpmCreateSrw(data);
-        dispatch(TypeId.MsgSpmCreateSrw, data);
+        await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmCreateSrw(data);
+        Notifications_Dispatcher.dispatch("MsgSpmCreateSrw", { msg : data });
     }
 }
 
-export function reqSpmSaveScw(war: ISpwWar): void {
-    send({
-        MsgSpmSaveScw: { c: {
-            slotIndex           : war.getSaveSlotIndex(),
-            slotExtraData       : war.getSaveSlotExtraData()?.toJson(),
-            compressedWarData   : compress(war.serialize().encode()),
-        }, },
+export function reqSpmSaveScw(war: SinglePlayerWars_War.War): void {
+    Networks_Manager.send({
+        MsgSpmSaveScw : {
+            c : {
+                slotIndex         : war.getSaveSlotIndex(),
+                slotExtraData     : war.getSaveSlotExtraData()?.toJson(),
+                compressedWarData : Helpers_Gzip.compress(war.serialize().encode()),
+            },
+        },
     });
 }
-async function _onMsgSpmSaveScw(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmSaveScwS;
+async function _onMsgSpmSaveScw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmSaveScw"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        await updateOnMsgSpmSaveScw(data);
-        dispatch(TypeId.MsgSpmSaveScw, data);
+        await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmSaveScw(data);
+        Notifications_Dispatcher.dispatch("MsgSpmSaveScw", { msg : data });
     }
 }
 
-export function reqSpmSaveSfw(war: ISpwWar): void {
-    send({
-        MsgSpmSaveSfw: { c: {
-            slotIndex           : war.getSaveSlotIndex(),
-            slotExtraData       : war.getSaveSlotExtraData()?.toJson(),
-            compressedWarData   : compress(war.serialize().encode()),
-        }, },
+export function reqSpmSaveSfw(war: SinglePlayerWars_War.War): void {
+    Networks_Manager.send({
+        MsgSpmSaveSfw : {
+            c : {
+                slotIndex         : war.getSaveSlotIndex(),
+                slotExtraData     : war.getSaveSlotExtraData()?.toJson(),
+                compressedWarData : Helpers_Gzip.compress(war.serialize().encode()),
+            },
+        },
     });
 }
-async function _onMsgSpmSaveSfw(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmSaveSfwS;
+async function _onMsgSpmSaveSfw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmSaveSfw"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        await updateOnMsgSpmSaveSfw(data);
-        dispatch(TypeId.MsgSpmSaveSfw, data);
+        await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmSaveSfw(data);
+        Notifications_Dispatcher.dispatch("MsgSpmSaveSfw", { msg : data });
     }
 }
 
-export function reqSpmSaveSrw(war: ISpwWar): void {
-    send({
-        MsgSpmSaveSrw: { c: {
-            slotIndex           : war.getSaveSlotIndex(),
-            slotExtraData       : war.getSaveSlotExtraData()?.toJson(),
-            compressedWarData   : compress(war.serialize().encode()),
-        }, },
+export function reqSpmSaveSrw(war: SinglePlayerWars_War.War): void {
+    Networks_Manager.send({
+        MsgSpmSaveSrw : {
+            c : {
+                slotIndex         : war.getSaveSlotIndex(),
+                slotExtraData     : war.getSaveSlotExtraData()?.toJson(),
+                compressedWarData : Helpers_Gzip.compress(war.serialize().encode()),
+            },
+        },
     });
 }
-async function _onMsgSpmSaveSrw(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmSaveSrwS;
+async function _onMsgSpmSaveSrw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmSaveSrw"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        await updateOnMsgSpmSaveSrw(data);
-        dispatch(TypeId.MsgSpmSaveSrw, data);
+        await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmSaveSrw(data);
+        Notifications_Dispatcher.dispatch("MsgSpmSaveSrw", { msg : data });
     }
 }
 
 export function reqSpmDeleteWarSaveSlot(slotIndex: number): void {
-    send({
-        MsgSpmDeleteWarSaveSlot: { c: {
-            slotIndex,
-        } },
+    Networks_Manager.send({
+        MsgSpmDeleteWarSaveSlot : {
+            c : {
+                slotIndex,
+            },
+        },
     });
 }
-async function _onMsgSpmDeleteWarSaveSlot(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmDeleteWarSaveSlotS;
+async function _onMsgSpmDeleteWarSaveSlot(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmDeleteWarSaveSlot"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        await updateOnMsgSpmDeleteWarSaveSlot(getExisted(data.getSlotIndex()));
-        dispatch(TypeId.MsgSpmDeleteWarSaveSlot, data);
+        await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmDeleteWarSaveSlot(Helpers_Misc.getExisted(data.getSlotIndex()));
+        Notifications_Dispatcher.dispatch("MsgSpmDeleteWarSaveSlot", { msg : data });
     }
 }
 
 export function reqSpmGetRankList(normalMapId: number): void {
-    send({
-        MsgSpmGetRankList: { c: {
-            normalMapId,
-        } },
+    Networks_Manager.send({
+        MsgSpmGetRankList : {
+            c : {
+                normalMapId,
+            },
+        },
     });
 }
-function _onMsgSpmGetRankList(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmGetRankListS;
+function _onMsgSpmGetRankList(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmGetRankList"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        updateOnMsgSpmGetRankList(data);
-        dispatch(TypeId.MsgSpmGetRankList, data);
+        SinglePlayerMode_Model_SpmModel.updateOnMsgSpmGetRankList(data);
+        Notifications_Dispatcher.dispatch("MsgSpmGetRankList", { msg : data });
     }
 }
 
-export function reqSpmValidateSrw(war: ISrwWar): void {
-    send({
-        MsgSpmValidateSrw: { c: {
-            warData     : war.serializeForValidation().toJson(),
-        } },
+export function reqSpmValidateSrw(war: SingleRankWar_Model_SrwWar.SrwWar): void {
+    Networks_Manager.send({
+        MsgSpmValidateSrw : {
+            c : {
+                warData : war.serializeForValidation().toJson(),
+            },
+        },
     });
 }
-function _onMsgSpmValidateSrw(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmValidateSrwS;
+function _onMsgSpmValidateSrw(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmValidateSrw"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgSpmValidateSrw, data);
+        Notifications_Dispatcher.dispatch("MsgSpmValidateSrw", { msg : data });
     }
 }
 
 export function reqSpmGetReplayData(rankId: number): void {
-    send({
-        MsgSpmGetReplayData: { c: {
-            rankId,
-        } },
+    Networks_Manager.send({
+        MsgSpmGetReplayData : {
+            c : {
+                rankId,
+            },
+        },
     });
 }
-async function _onMsgSpmGetReplayData(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmGetReplayDataS;
+async function _onMsgSpmGetReplayData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgSpmGetReplayData"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
-        updateOnFailedMsgSpmGetReplayData(data);
+        SinglePlayerMode_Model_SpmModel.updateOnFailedMsgSpmGetReplayData(data);
     } else {
-        await updateOnMsgSpmGetReplayData(data);
-        dispatch(TypeId.MsgSpmGetReplayData, data);
+        await SinglePlayerMode_Model_SpmModel.updateOnMsgSpmGetReplayData(data);
+        Notifications_Dispatcher.dispatch("MsgSpmGetReplayData", { msg : data });
     }
 }

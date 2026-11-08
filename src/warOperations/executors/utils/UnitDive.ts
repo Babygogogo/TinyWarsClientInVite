@@ -1,34 +1,25 @@
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
-import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type {
-    WoUnitDive as ProtoSchemaCommonProtoWarOperationWoUnitDive,
-} from "../../../proto/schema/CommonProto/WarOperation/WoUnitDive.ts";
-import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
-import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
-import { ActionStateId } from "../../../units/Constants.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { checkIsUnitOnMapVisibleToTeams } from "../../../visibilities/Utils.ts";
-import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
+import {
+    AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWars_War,
+    TestWar_Model_TwWar,
+    Units_Constants,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    WarOperations_Executors_Utils_Common,
+    type BaseWar_Model_War,
+} from "../../../internal.ts";
 
-type WoUnitDive         = ProtoSchemaCommonProtoWarOperationWoUnitDive;
-type IBwWar             = BaseWarInterfaceIBwWar;
-
-let _meWarClass     : new () => IMeWar;
-let _mpwWarClass    : new () => IMpwWar;
-let _rwWarBaseClass : new () => IRwWarBase;
-let _spwWarClass    : new () => ISpwWar;
-let _twWarClass     : new () => ITwWar;
+import type { WoUnitDive } from "../../../proto/schema/CommonProto/WarOperation/WoUnitDive.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoUnitDive, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoUnitDive, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitDive(war, action);
     } else {
@@ -36,69 +27,73 @@ export async function execute(war: IBwWar, action: WoUnitDive, isFast: boolean):
     }
 }
 
-function fastExeUnitDive(war: IBwWar, action: WoUnitDive): void {
+function fastExeUnitDive(war: BaseWar_Model_War.War, action: WoUnitDive): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war             : war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_FastExeUnitDive_00),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitDive_00),
             isFastExecute   : true,
         });
     } else {
-        const path          = MovePath.create(getExisted(action.getPath()));
+        const path          = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
         const launchUnitId  = action.getLaunchUnitId();
         const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
-        const focusUnit     = getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         const isSuccessful  = !path.isBlocked;
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(ActionStateId.Acted);
-        (isSuccessful) && (focusUnit.setIsDiving(true));
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+        if (isSuccessful) {
+            focusUnit.setIsDiving(true);
+        }
 
-        handlePostOperationPlunder(focusUnit, true);
+        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitDive(war: IBwWar, action: WoUnitDive): Promise<void> {
+async function normalExeUnitDive(war: BaseWar_Model_War.War, action: WoUnitDive): Promise<void> {
     // const desc = await war.getDescForExeUnitDive(action);
     // (desc) && (FloatText.show(desc));
 
     const gridVisualEffect  = war.getGridVisualEffect();
     const actionExtraData   = action.getExtraData();
     if (actionExtraData) {
-        const commonExtraData   = getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_NormalExeUnitDive_00);
+        const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDive_00);
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-        await war.moveExtraUnit({
-            movingUnitAndPath,
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : undefined,
         });
 
         const movingPath    = movingUnitAndPath?.getPath();
         const lastNode      = movingPath ? movingPath[movingPath?.length - 1] : null;
         if ((lastNode?.getIsVisible()) && (!lastNode.getIsBlocked())) {
-            gridVisualEffect.showEffectDive(getExisted(GridIndex.convertGridIndex(lastNode.getGridIndex()), ClientErrorCode.WarOperationExecutor_NormalExeUnitDive_01));
+            gridVisualEffect?.showEffectDive(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDive_01));
         }
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute       : false,
+            isFastExecute : false,
         });
 
     } else {
-        const path          = MovePath.create(getExisted(action.getPath()));
+        const path          = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
         const launchUnitId  = action.getLaunchUnitId();
         const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
-        const focusUnit     = getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         const isSuccessful  = !path.isBlocked;
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(ActionStateId.Acted);
-        (isSuccessful) && (focusUnit.setIsDiving(true));
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+        if (isSuccessful) {
+            focusUnit.setIsDiving(true);
+        }
 
         await focusUnit.moveViewAlongPath({
             pathNodes           : pathNodes,
@@ -109,7 +104,7 @@ async function normalExeUnitDive(war: IBwWar, action: WoUnitDive): Promise<void>
         });
         if (isSuccessful) {
             const endingGridIndex = pathNodes[pathNodes.length - 1];
-            if (checkIsUnitOnMapVisibleToTeams({
+            if (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
                 war                 : war,
                 unitType            : focusUnit.getUnitType(),
                 unitPlayerIndex     : focusUnit.getPlayerIndex(),
@@ -118,33 +113,28 @@ async function normalExeUnitDive(war: IBwWar, action: WoUnitDive): Promise<void>
                 isDiving            : false,
                 isInvisible         : focusUnit.checkIsInvisible(endingGridIndex),
             })) {
-                gridVisualEffect.showEffectDive(endingGridIndex);
+                gridVisualEffect?.showEffectDive(endingGridIndex);
             }
         }
 
-        handlePostOperationPlunder(focusUnit, false);
+        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoUnitDive): Promise<string | null> {
-    _meWarClass     ??= getMeWarClass();
-    _mpwWarClass    ??= getMpwWarClass();
-    _rwWarBaseClass ??= getRwWarBaseClass();
-    _spwWarClass    ??= getSpwWarClass();
-    _twWarClass     ??= getTwWarClass();
+async function getDesc(war: BaseWar_Model_War.War, action: WoUnitDive): Promise<string | null> {
 
-    if (war instanceof _meWarClass) {
+    if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
-    } else if (war instanceof _mpwWarClass) {
+    } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         return null;
-    } else if (war instanceof _rwWarBaseClass) {
-        return `${getText(TextType.B0101)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof _spwWarClass) {
+    } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0101)} ${war.getWarOperationDescSuffix()}`;
+    } else if (war instanceof SinglePlayerWars_War.War) {
         return null;
-    } else if (war instanceof _twWarClass) {
+    } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {
         return null;

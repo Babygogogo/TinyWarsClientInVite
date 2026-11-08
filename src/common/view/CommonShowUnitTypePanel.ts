@@ -1,54 +1,51 @@
-import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
-import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getUnitName } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
-import { Dimension } from "../../stages/Constants.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
-import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
-import { createDefault } from "../../units/utils/Serialization.ts";
-
-type GcData             = GameConfigGcData;
+import {
+    ForceSkins_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Lang_Constants,
+    Lang_Utils,
+    Numbers_Utils,
+    Players_Constants,
+    Stages_Constants,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Units_UnitView,
+    Units_UnitViewPool,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
-    gameConfig              : GcData;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
     currentUnitTypeArray    : number[];
     availableUnitTypeArray  : number[];
     getHelpText?            : (() => string) | null;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnHelp!              : IUiButton;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listUnitType!         : IUiScrollList<DataForUnitTypeRenderer>;
-    private readonly _labelNoData!          : IUiLabel;
+    private readonly _listUnitType!         : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForUnitTypeRenderer>;
+    private readonly _labelNoData!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private readonly _selectedNumberSet     = new Set<number>();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -101,7 +98,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnHelp(): void {
         const getHelpText = this.getOpenData()?.getHelpText;
         if (getHelpText) {
-            openPanel(getDict().CommonHelpPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => getHelpText(),
             });
         }
@@ -112,8 +109,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0525));
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0525);
+        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
     }
 
     private async _resetList(): Promise<void> {
@@ -126,19 +123,19 @@ export class Panel extends UiPanel<OpenData> {
         const dataArray     : DataForUnitTypeRenderer[] = [];
         for (const num of openData.availableUnitTypeArray.concat().sort((v1, v2) => v1 - v2)) {
             dataArray.push({
-                unitType            : num,
-                gameConfig          : gameConfig,
-                panel               : this,
+                unitType   : num,
+                gameConfig : gameConfig,
+                panel      : this,
             });
         }
 
         const dataCount     = dataArray.length;
         const rowsCount     = Math.ceil(dataCount / 4);
         const list          = this._listUnitType;
-        const listHeight    = getValueInRange({
-            rawValue    : rowsCount * 34 + (rowsCount - 1) * 6,
-            minValue    : 120,
-            maxValue    : Dimension.DesignMinHeight - 80,
+        const listHeight    = Numbers_Utils.getValueInRange({
+            rawValue : rowsCount * 34 + (rowsCount - 1) * 6,
+            minValue : 120,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight - 80,
         });
         this._labelNoData.setIsVisible(!dataCount);
         this._group.setUnscaledManualHeight(listHeight + 80);
@@ -147,41 +144,60 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForUnitTypeRenderer extends UiListItemData {
+interface DataForUnitTypeRenderer extends Ui_Types_UiListItemData.UiListItemData {
     unitType    : number;
-    gameConfig  : GcData;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
     panel       : Panel;
 }
-class UnitTypeRenderer extends UiListItemRenderer<DataForUnitTypeRenderer> {
-    private readonly _groupSelect!      : IUiContainer;
-    private readonly _imgSelected!      : IUiImage;
-    private readonly _imgSelected0!     : IUiImage;
+class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUnitTypeRenderer> {
+    private readonly _groupSelect!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSelected!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgSelected0!     : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _conUnitView!      : IUiContainer;
-    private readonly _layoutName!       : IUiLayout;
-    private readonly _labelType!        : IUiLabel;
-    private readonly _labelName!        : IUiLabel;
+    private readonly _conUnitView!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutName!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelType!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelName!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView          = new (getUiUnitViewClass())();
+    private _unitView                   : Units_UnitView.UnitView | undefined;
 
-    public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
-        ]);
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        this._conUnitView.addUiChild(this._unitView);
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
+        }
     }
-
-    private _onNotifyLanguageChanged(): void {        // DONE
-        this._updateComponentsForLanguage();
-    }
-    private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(getUnitAnimationTickCount());
-    }
-
     protected override _doApplyOpenData(): void {
         this._updateComponentsForLanguage();
+
+        this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        await super._onClosed();
+    }
+
+    private _updateView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const isSelected = openData.panel.checkHasSelectedNumber(openData.unitType);
+        this._imgSelected.setIsVisible(isSelected);
+        this._imgSelected0.setIsVisible(isSelected);
 
         this._updateUnitView();
     }
@@ -194,7 +210,7 @@ class UnitTypeRenderer extends UiListItemRenderer<DataForUnitTypeRenderer> {
 
         const unitType = openData.unitType;
         this._labelType.setText(`#${unitType}`);
-        this._labelName.setText(getUnitName(unitType, openData.gameConfig) ?? UndefinedError);
+        this._labelName.setText(Lang_Utils.getUnitName(unitType, openData.gameConfig) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
 
@@ -204,23 +220,13 @@ class UnitTypeRenderer extends UiListItemRenderer<DataForUnitTypeRenderer> {
             return;
         }
 
-        const unitType      = openData.unitType;
-        const playerIndex   = PlayerIndex.First;
-        const isSelected    = openData.panel.checkHasSelectedNumber(unitType);
-        const gameConfig    = openData.gameConfig;
-        this._imgSelected.setIsVisible(isSelected);
-        this._imgSelected0.setIsVisible(isSelected);
-        this._unitView.update(new UiUnitViewData({
-            gameConfig          : gameConfig,
-            skinId              : getDefaultSkinId(playerIndex),
-            overridingSkinId    : undefined,
-            unitData            : createDefault({
-                gridIndex   : { x: 0, y: 0 },
-                playerIndex : playerIndex,
-                unitTypeId  : unitType,
-                unitId      : -1,
-                gcData      : gameConfig,
-            }),
-        }));
+        const playerIndex   = Players_Constants.PlayerIndex.First;
+        const unitView      = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : openData.unitType,
+            playerIndex : playerIndex,
+            skinId      : ForceSkins_Utils.getDefaultSkinId(playerIndex),
+        }, true);
+        unitView?.refreshAllViews();
     }
 }

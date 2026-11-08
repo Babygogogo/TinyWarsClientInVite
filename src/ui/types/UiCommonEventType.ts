@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum UiCommonEventType {
     AddedToParent              = "added",               // egret.Event.ADDED
     AddedToStage               = "addedToStage",        // egret.Event.ADDED_TO_STAGE
@@ -31,3 +31,9 @@ export const enum UiCommonEventType {
 
     SkinLoaded                 = `SkinLoaded`,
 }
+
+export type Mapping = {
+    [T in UiCommonEventType]: T extends UiCommonEventType.ListItemSelectedByTap | UiCommonEventType.ListItemDeselectedByTap
+        ? number
+        : undefined;
+};

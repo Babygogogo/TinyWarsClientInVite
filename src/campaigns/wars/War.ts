@@ -1,27 +1,27 @@
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { IWar } from "./IWar.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
-import { SinglePlayerWar } from "../../gameConfig/GcWar.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Numbers_Utils,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    SinglePlayerWars_Constants,
+    SinglePlayerWars_War,
+    BootTimers_Constants,
+    type GameConfigs_GameConfig,
+} from "../../internal.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForCaw as ProtoSchemaCommonProtoWarSettingsSettingsForCaw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForCaw.ts";
-import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import type { SettingsForCaw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCaw.ts";
 
-type GcData             = GameConfigGcData;
-type SettingsForCaw     = ProtoSchemaCommonProtoWarSettingsSettingsForCaw;
-
-export class War extends SpwWar implements IWar {
+export class War extends SinglePlayerWars_War.War {
     private _settingsForCaw?    : SettingsForCaw;
 
-    public init(data: SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForCaw(getExisted(data.getSettingsForCaw(), ClientErrorCode.CawWar_Init_00));
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForCaw(Helpers_Misc.getExisted(data.getSettingsForCaw(), Utils_ClientErrorCode.ClientErrorCode.CawWar_Init_00));
 
         this._initView();
     }
@@ -29,46 +29,46 @@ export class War extends SpwWar implements IWar {
     public serialize(): SerialWar {
         const randomNumberManager = this.getRandomNumberManager();
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
-            settingsForCaw              : this.getSettingsForCaw().toJson(),
+            settingsForCommon : this.getCommonSettingManager().getSettingsForCommon().toJson(),
+            settingsForCaw    : this.getSettingsForCaw().toJson(),
 
-            warId                       : this.getWarId(),
-            isEnded                     : this.getIsEnded(),
-            seedRandomInitialState      : getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
-            seedRandomCurrentState      : randomNumberManager.getSeedRandomCurrentStateJson(),
-            remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
-            drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
-            weatherManager              : this.getWeatherManager().serialize().toJson(),
-            warEventManager             : this.getWarEventManager().serialize().toJson(),
-            playerManager               : this.getPlayerManager().serialize().toJson(),
-            turnManager                 : this.getTurnManager().serialize().toJson(),
-            field                       : this.getField().serialize().toJson(),
-            executedOperationManager    : this.getExecutedOperationManager().serialize().toJson(),
-            warStatisticsManager        : this.getWarStatisticsManager().serialize().toJson(),
-            taskObjectiveManager        : this.getTaskObjectiveManager().serialize().toJson(),
+            warId                    : this.getWarId(),
+            isEnded                  : this.getIsEnded(),
+            seedRandomInitialState   : Helpers_Misc.getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
+            seedRandomCurrentState   : randomNumberManager.getSeedRandomCurrentStateJson(),
+            remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
+            drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
+            weatherManager           : this.getWeatherManager().serialize().toJson(),
+            warEventManager          : this.getWarEventManager().serialize().toJson(),
+            playerManager            : this.getPlayerManager().serialize().toJson(),
+            turnManager              : this.getTurnManager().serialize().toJson(),
+            field                    : this.getField().serialize().toJson(),
+            executedOperationManager : this.getExecutedOperationManager().serialize().toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serialize().toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serialize().toJson(),
         });
     }
     public serializeForValidation(): SerialWar {
         const settingsForCaw = this.getSettingsForCaw().clone();
         settingsForCaw.setTotalScore(this.calculateTotalScore());
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
-            settingsForCaw              : settingsForCaw.toJson(),
+            settingsForCommon : this.getCommonSettingManager().getSettingsForCommon().toJson(),
+            settingsForCaw    : settingsForCaw.toJson(),
 
-            warId                       : null,
-            isEnded                     : null,
-            seedRandomInitialState      : getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
-            seedRandomCurrentState      : null,
-            remainingVotesForDraw       : null,
-            drawVoteManager             : new SerialDrawVoteManager().toJson(),
-            weatherManager              : null,
-            warEventManager             : null,
-            playerManager               : this.getPlayerManager().serialize().toJson(),
-            turnManager                 : null,
-            field                       : null,
-            executedOperationManager    : this.getExecutedOperationManager().serializeForCawValidation().toJson(),
-            warStatisticsManager        : null,
-            taskObjectiveManager        : null,
+            warId                    : null,
+            isEnded                  : null,
+            seedRandomInitialState   : Helpers_Misc.getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
+            seedRandomCurrentState   : null,
+            remainingVotesForDraw    : null,
+            drawVoteManager          : new SerialDrawVoteManager().toJson(),
+            weatherManager           : null,
+            warEventManager          : null,
+            playerManager            : this.getPlayerManager().serialize().toJson(),
+            turnManager              : null,
+            field                    : null,
+            executedOperationManager : this.getExecutedOperationManager().serializeForCawValidation().toJson(),
+            warStatisticsManager     : null,
+            taskObjectiveManager     : null,
         });
     }
 
@@ -94,25 +94,25 @@ export class War extends SpwWar implements IWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return [TimerTypeId.NoBoot];
+        return [BootTimers_Constants.TimerTypeId.NoBoot];
     }
 
     private _setSettingsForCaw(settings: SettingsForCaw): void {
         this._settingsForCaw = settings;
     }
     public getSettingsForCaw(): SettingsForCaw {
-        return getExisted(this._settingsForCaw);
+        return Helpers_Misc.getExisted(this._settingsForCaw);
     }
 
     public calculateTotalScore(): number {
-        return getValueInRange({
-            minValue    : SinglePlayerWar.PlayerScore.MinScore,
-            maxValue    : SinglePlayerWar.PlayerScore.MaxScore,
-            rawValue    : Math.floor(
-                SinglePlayerWar.PlayerScore.BaseScore
+        return Numbers_Utils.getValueInRange({
+            minValue : SinglePlayerWars_Constants.PlayerScore.MinScore,
+            maxValue : SinglePlayerWars_Constants.PlayerScore.MaxScore,
+            rawValue : Math.floor(
+                SinglePlayerWars_Constants.PlayerScore.BaseScore
                 - (this.getTurnManager().getTurnIndex() - 1) * 1000
                 - this.getExecutedOperationManager().getExecutedOperationsCount()
-                + this.getTaskObjectiveManager().getScore()
+                + this.getTaskObjectiveManager().getScore(),
             ),
         });
     }

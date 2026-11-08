@@ -1,4 +1,6 @@
-import { UiScrollSpring } from "./UiScrollSpring.ts";
+import {
+    Ui_Utils_UiScrollSpring,
+} from "../../internal.ts";
 
 export interface SlidingNumberOptions {
     constrain?: boolean;
@@ -15,12 +17,12 @@ export interface ConstrainEase {
 
 export class UiSlidingNumber {
     private _position       = 0;
-    private _constrain      = true;
+    private readonly _constrain      : boolean = true;
     private _min            = 0; // the window width of the drag
     private _max            = 0; // the window width of the drag
-    private _maxSpeed       = 400;
+    private readonly _maxSpeed       : number = 400;
 
-    private _ease           : ConstrainEase;
+    private readonly _ease           : ConstrainEase;
 
     private _offset         = 0;
     private _prev           = 0;
@@ -35,7 +37,7 @@ export class UiSlidingNumber {
     public constructor(options: SlidingNumberOptions = {}) {
         this._constrain = options.constrain ?? true;
         this._maxSpeed = options.maxSpeed ?? 400;
-        this._ease = options.ease ?? new UiScrollSpring();
+        this._ease = options.ease ?? new Ui_Utils_UiScrollSpring.UiScrollSpring();
     }
 
     public setPositionAndClearSpeed(n: number): void {
@@ -102,8 +104,7 @@ export class UiSlidingNumber {
 
             if (tempPosition > this._min) {
                 this.setPosition(tempPosition - (tempPosition - this._min) / 1.5);
-            }
-            else if (tempPosition < this._max) {
+            } else if (tempPosition < this._max) {
                 this.setPosition(tempPosition + (this._max - tempPosition) / 1.5);
             }
         }

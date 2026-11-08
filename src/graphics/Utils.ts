@@ -1,20 +1,19 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
-import { TextureResolutionId, TextureResolutionConfigs } from "./Constants.ts";
-import type { TextureResolutionConfig as GraphicsTypesTextureResolutionConfig } from "./Types.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import { Capabilities } from "../vendor/egret/Egret.ts";
-
-type TextureResolutionConfig    = GraphicsTypesTextureResolutionConfig;
-type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+import {
+    Egret_Egret,
+    GameVersions_Utils,
+    Helpers_Misc,
+    Graphics_Constants,
+    type Graphics_Types,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
 export function checkIsWebGl(): boolean {
-    return Capabilities.renderMode === "webgl";
+    return Egret_Egret.Capabilities.renderMode === "webgl";
 }
 
-export function getTextureResolutionConfig(typeId: TextureResolutionId): Undefinable<TextureResolutionConfig> {
-    return TextureResolutionConfigs.get(typeId);
+export function getTextureResolutionConfig(typeId: Graphics_Constants.TextureResolutionId): AuxiliaryTypes_AuxiliaryTypes.Undefinable<Graphics_Types.TextureResolutionConfig> {
+    return Graphics_Constants.TextureResolutionConfigs.get(typeId);
 }
-export function getCurrentTextureResolutionConfig(): TextureResolutionConfig {
-    return getExisted(getTextureResolutionConfig(getCurrentGameEssentialConfig().textureResolutionTypeId));
+export function getCurrentTextureResolutionConfig(): Graphics_Types.TextureResolutionConfig {
+    return Helpers_Misc.getExisted(getTextureResolutionConfig(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId));
 }

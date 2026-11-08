@@ -1,84 +1,87 @@
-import type { IBwCursor } from "../interface/IBwCursor.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import type { DataForTileView } from "../model/BwTypes.ts";
-import { getUnitAndTileTexturePrefix } from "../../common/model/CommonModel.ts";
-import { showLang } from "../../FloatText.ts";
-import { getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
-import { getRwWarClass, getRwWarBaseClass, getMpwWarClass, getUnitViewClass, getTileViewClass } from "../../gameHelpers/GhFactory.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getUnitName } from "../../lang/Utils.ts";
-import { getUnitStatistics } from "../../multiPlayerWar/model/MpwModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { ActionStateId } from "../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
-import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
-import { getAllUnitsOnMapVisibleToTeams } from "../../visibilities/Utils.ts";
-
-type IUnit                  = UnitsIUnit;
+import {
+    type BaseWar_Model_War,
+    Common_Model_CommonModel,
+    FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Lang_Constants,
+    Lang_Utils,
+    MultiPlayerWar_Model_MpwModel,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWar,
+    ReplayWar_Model_RwWarBase,
+    Sounds_Constants,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
+    Tiles_TileViewData,
+    Tween_Executor,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+    Units_Constants,
+    type Units_Unit,
+    Units_UnitView,
+    Units_UnitViewPool,
+    Users_Model,
+    Visibilities_Utils,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war                     : IBwWar;
-    callbackForMoveCursor   : (unit: IUnit) => void;
-    callbackForSelectUnit   : (unit: IUnit) => void;
+    war                     : BaseWar_Model_War.War;
+    callbackForMoveCursor   : (unit: Units_Unit.Unit) => void;
+    callbackForSelectUnit   : (unit: Units_Unit.Unit) => void;
 }
 
 let Alpha = 0.8;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnAddAlpha!          : IUiButton;
-    private readonly _btnSubAlpha!          : IUiButton;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnAddAlpha!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSubAlpha!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupPlayer!          : IUiLayout;
-    private readonly _labelPlayerName!      : IUiLabel;
-    private readonly _labelPlayer!          : IUiLabel;
+    private readonly _groupPlayer!          : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelPlayerName!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPlayer!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupCount!           : IUiLayout;
-    private readonly _labelCountName!       : IUiLabel;
-    private readonly _labelCount!           : IUiLabel;
+    private readonly _groupCount!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelCountName!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCount!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupValue!           : IUiLayout;
-    private readonly _labelValueName!       : IUiLabel;
-    private readonly _labelValue!           : IUiLabel;
+    private readonly _groupValue!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelValueName!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelValue!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _listUnit!             : IUiScrollList<DataForUnitRenderer>;
-    private readonly _labelNoUnit!          : IUiLabel;
+    private readonly _listUnit!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForUnitRenderer>;
+    private readonly _labelNoUnit!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupButtons!         : IUiLayout;
-    private readonly _btnNext!              : IUiButton;
-    private readonly _btnPrevious!          : IUiButton;
-    private readonly _btnUnitStatistics!    : IUiButton;
+    private readonly _groupButtons!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnNext!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnPrevious!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnUnitStatistics!    : Ui_Interfaces_IUiButton.IUiButton;
 
     private _playerIndex    : number | null = null;
     private _selectedIndex  = -1;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.ActionPlannerStateChanged, callback: this._onNotifyBwPlannerStateChanged },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "ActionPlannerStateChanged", callback : this._onNotifyBwPlannerStateChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnAddAlpha,        callback: this._onTouchedBtnAddAlpha },
-            { ui: this._btnSubAlpha,        callback: this._onTouchedBtnSubAlpha },
-            { ui: this._btnNext,            callback: this._onTouchedBtnNext },
-            { ui: this._btnPrevious,        callback: this._onTouchedBtnPrevious },
-            { ui: this._btnUnitStatistics,  callback: this._onTouchedBtnUnitStatistics },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnAddAlpha,        callback : this._onTouchedBtnAddAlpha },
+            { ui : this._btnSubAlpha,        callback : this._onTouchedBtnSubAlpha },
+            { ui : this._btnNext,            callback : this._onTouchedBtnNext },
+            { ui : this._btnPrevious,        callback : this._onTouchedBtnPrevious },
+            { ui : this._btnUnitStatistics,  callback : this._onTouchedBtnUnitStatistics },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -105,7 +108,7 @@ export class Panel extends UiPanel<OpenData> {
         await super._onClosed();
     }
 
-    public updateOnSelectedUnit(unit: IUnit): void {
+    public updateOnSelectedUnit(unit: Units_Unit.Unit): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
@@ -170,41 +173,41 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        if (war instanceof getRwWarClass()) {
-            openPanel(getDict().BwUnitStatisticsPanel, {
-                war         : war,
-                infoArray   : war.getWarStatisticsManager().getUnitStatisticsInfoArrayForFullReplay(),
+        if (war instanceof ReplayWar_Model_RwWar.RwWar) {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitStatisticsPanel, {
+                war       : war,
+                infoArray : war.getWarStatisticsManager().getUnitStatisticsInfoArrayForFullReplay(),
             });
             return;
         }
 
         const warId = war.getWarId();
         if (warId != null) {
-            const info = await getUnitStatistics(warId);
+            const info = await MultiPlayerWar_Model_MpwModel.getUnitStatistics(warId);
             if (info == null) {
-                showLang(TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             } else {
-                openPanel(getDict().BwUnitStatisticsPanel, {
-                    war         : war,
-                    infoArray   : info.getInfoArray(),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitStatisticsPanel, {
+                    war       : war,
+                    infoArray : info.getInfoArray(),
                 });
             }
             return;
         }
 
-        showLang(TextType.YouCanNotDoThisRightNow);
+        FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelPlayerName.setLangText(TextType.B0031);
-        this._labelCountName.setLangText(TextType.B0160);
-        this._labelValueName.setLangText(TextType.B0161);
-        this._labelTitle.setLangText(TextType.B0152);
-        this._btnUnitStatistics.setLangText(TextType.B0876);
-        this._labelNoUnit.setLangText(TextType.B1289);
+        this._labelPlayerName.setLangText(Lang_Constants.TextType.B0031);
+        this._labelCountName.setLangText(Lang_Constants.TextType.B0160);
+        this._labelValueName.setLangText(Lang_Constants.TextType.B0161);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0152);
+        this._btnUnitStatistics.setLangText(Lang_Constants.TextType.B0876);
+        this._labelNoUnit.setLangText(Lang_Constants.TextType.B1289);
 
         this._groupPlayer.arrangeItems();
         this._groupCount.arrangeItems();
@@ -218,8 +221,8 @@ export class Panel extends UiPanel<OpenData> {
         group.addItem(this._btnNext, false);
 
         const war = this.getOpenData()?.war;
-        if ((war instanceof getRwWarBaseClass())    ||
-            (war instanceof getMpwWarClass())
+        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase)    ||
+            (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar)
         ) {
             group.addItem(this._btnUnitStatistics, false);
         }
@@ -261,37 +264,24 @@ export class Panel extends UiPanel<OpenData> {
             return [];
         }
 
-        const cursor                = war.getCursor();
-        const unitMap               = war.getUnitMap();
-        const tileMap               = war.getTileMap();
-        const gameConfig            = war.getGcData();
-        const teamIndexes           = war.getPlayerManager().getWatcherTeamIndexesForSelf();
-        const dataList              : DataForUnitRenderer[]= [];
-        const playerIndex           = this._playerIndex;
-        for (const unit of getAllUnitsOnMapVisibleToTeams(war, teamIndexes)) {
+        const unitMap       = war.getUnitMap();
+        const tileMap       = war.getTileMap();
+        const teamIndexes   = war.getPlayerManager().getWatcherTeamIndexesForSelf();
+        const dataList      : DataForUnitRenderer[]= [];
+        const playerIndex   = this._playerIndex;
+        for (const unit of Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, teamIndexes)) {
             if (unit.getPlayerIndex() === playerIndex) {
-                const tile              = tileMap.getTile(unit.getGridIndex());
-                const dataForTileView   : DataForTileView = {
-                    gameConfig          : gameConfig,
-                    hasFog              : tile.getHasFog(),
-                    skinId              : tile.getSkinId(),
-                    overridingSkinId    : getRawOverridingSkinId(war, tile.getPlayerIndex()),
-                    themeType           : tile.getTileThemeType(),
-                    tileData            : tile.serializeForTeamIndexes(teamIndexes),
-                    isFullReplay        : war instanceof getRwWarClass(),
-                };
+                const dataForTileView = Tiles_TileViewData.TileViewData.generateFromTile(tileMap.getTile(unit.getGridIndex()), war, true);
                 dataList.push({
-                    cursor                  : cursor,
-                    unit                    : unit,
-                    dataForTileView         : dataForTileView,
-                    panel                   : this,
+                    unit            : unit,
+                    dataForTileView : dataForTileView,
+                    panel           : this,
                 });
                 for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {
                     dataList.push({
-                        cursor                  : cursor,
-                        unit                    : loadedUnit,
-                        dataForTileView         : dataForTileView,
-                        panel                   : this,
+                        unit            : loadedUnit,
+                        dataForTileView : dataForTileView,
+                        panel           : this,
                     });
                 }
             }
@@ -305,9 +295,9 @@ function sorterForDataForList(a: DataForUnitRenderer, b: DataForUnitRenderer): n
     const unitB     = b.unit;
     const stateA    = unitA.getActionState();
     const stateB    = unitB.getActionState();
-    if ((stateA === ActionStateId.Idle) && (stateB !== ActionStateId.Idle)) {
+    if ((stateA === Units_Constants.ActionStateId.Idle) && (stateB !== Units_Constants.ActionStateId.Idle)) {
         return -1;
-    } else if ((stateA !== ActionStateId.Idle) && (stateB === ActionStateId.Idle)) {
+    } else if ((stateA !== Units_Constants.ActionStateId.Idle) && (stateB === Units_Constants.ActionStateId.Idle)) {
         return 1;
     } else {
         return unitA.getUnitType() - unitB.getUnitType();
@@ -320,69 +310,82 @@ const _IMAGE_SOURCE_AMMO        = `c03_t99_s02_f02`;
 const _IMAGE_SOURCE_MATERIAL    = `c03_t99_s02_f04`;
 const _IMAGE_SOURCE_FLARE       = `c03_t99_s02_f02`;
 
-interface DataForUnitRenderer extends UiListItemData {
-    unit                    : IUnit;
-    dataForTileView         : DataForTileView;
-    cursor                  : IBwCursor;
+interface DataForUnitRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    unit                    : Units_Unit.Unit;
+    dataForTileView         : Tiles_TileViewData.TileViewData;
     panel                   : Panel;
 }
-class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
-    private readonly _group!            : IUiContainer;
-    private readonly _imgSelected!      : IUiImage;
-    private readonly _conUnitView!      : IUiContainer;
-    private readonly _conTileView!      : IUiContainer;
-    private readonly _labelName!        : IUiLabel;
-    private readonly _labelGridIndex!   : IUiLabel;
-    private readonly _labelHp!          : IUiLabel;
-    private readonly _labelFuel!        : IUiLabel;
-    private readonly _labelState!       : IUiLabel;
-    private readonly _imgHp!            : IUiImage;
-    private readonly _imgFuel!          : IUiImage;
-    private readonly _imgState!         : IUiImage;
+class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUnitRenderer> {
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSelected!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _conUnitView!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _conTileView!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelName!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelGridIndex!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHp!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelFuel!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelState!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgHp!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgFuel!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgState!         : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _unitView          = new (getUnitViewClass())();
-    private readonly _tileView          = new (getTileViewClass())();
+    private _unitView                   : Units_UnitView.UnitView | undefined;
+    private _tileView                   : Tiles_TileViewBox.TileViewBox | undefined;
 
     public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type: TypeId.TileAnimationTick,       callback: this._onNotifyTileAnimationTick },
-            { type: TypeId.StateIndicatorTick,      callback: this._onNotifyStateIndicatorTick },
-        ]);
-        this._applySettingsForWholeTouch(undefined, undefined, undefined, ShortSfxCode.None);
+        this._applySettingsForWholeTouch(undefined, undefined, undefined, Sounds_Constants.ShortSfxCode.None);
 
-        this._imgHp.loadSource(getUnitAndTileTexturePrefix(getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_HP);
-        this._imgFuel.loadSource(getUnitAndTileTexturePrefix(getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_FUEL);
-        this._conUnitView.addUiChild(this._unitView);
-
-        const tileView      = this._tileView;
-        const conTileView   = this._conTileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgBuff());
-        conTileView.addUiChild(tileView.getImgObject());
+        this._imgHp.loadSource(Common_Model_CommonModel.getUnitAndTileTexturePrefix(Users_Model.getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_HP);
+        this._imgFuel.loadSource(Common_Model_CommonModel.getUnitAndTileTexturePrefix(Users_Model.getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_FUEL);
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
 
-        const imgSelected = this._imgSelected;
-        imgSelected.setAlpha(0);
-        Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        {
+            const imgSelected = this._imgSelected;
+            imgSelected.setAlpha(0);
+            Tween_Executor.Executor.removeTweens(imgSelected);
+            Tween_Executor.Executor.get(imgSelected, { loop : true })
+                .to({ customAlpha : 0.6 }, 500)
+                .to({ customAlpha : 0 }, 500);
+        }
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
+        }
+
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunningView();
-        Executor.removeTweens(this._imgSelected);
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
+
+        Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
-    }
-
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateTileAnimation();
-    }
-    private _onNotifyStateIndicatorTick(): void {
-        this._tileView.updateImgBuff();
     }
 
     protected override _doApplyOpenData(): void {
@@ -404,30 +407,29 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
         }
 
         const unit = openData.unit;
-        this._unitView.init(unit).startRunningView();
         this._labelHp.setText(`${unit.getCurrentHp()}`);
         this._labelFuel.setText(`${unit.getCurrentFuel()}`);
-        this._labelName.setText(getUnitName(unit.getUnitType(), unit.getGcData()) ?? UndefinedError);
+        this._labelName.setText(Lang_Utils.getUnitName(unit.getUnitType(), unit.getGcData()) ?? Lang_Constants.UndefinedError);
         this._labelGridIndex.setText(`x${unit.getGridX()} y${unit.getGridY()}`);
 
         if (unit.getCurrentBuildMaterial() != null) {
             this._imgState.setIsVisible(true);
-            this._imgState.loadSource(getUnitAndTileTexturePrefix(getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_MATERIAL);
+            this._imgState.loadSource(Common_Model_CommonModel.getUnitAndTileTexturePrefix(Users_Model.getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_MATERIAL);
             this._labelState.setIsVisible(true);
             this._labelState.setText(`${unit.getCurrentBuildMaterial()}`);
         } else if (unit.getCurrentProduceMaterial() != null) {
             this._imgState.setIsVisible(true);
-            this._imgState.loadSource(getUnitAndTileTexturePrefix(getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_MATERIAL);
+            this._imgState.loadSource(Common_Model_CommonModel.getUnitAndTileTexturePrefix(Users_Model.getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_MATERIAL);
             this._labelState.setIsVisible(true);
             this._labelState.setText(`${unit.getCurrentProduceMaterial()}`);
         } else if (unit.getFlareCurrentAmmo() != null) {
             this._imgState.setIsVisible(true);
-            this._imgState.loadSource(getUnitAndTileTexturePrefix(getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_FLARE);
+            this._imgState.loadSource(Common_Model_CommonModel.getUnitAndTileTexturePrefix(Users_Model.getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_FLARE);
             this._labelState.setIsVisible(true);
             this._labelState.setText(`${unit.getFlareCurrentAmmo()}`);
         } else if (unit.getPrimaryWeaponCurrentAmmo() != null) {
             this._imgState.setIsVisible(true);
-            this._imgState.loadSource(getUnitAndTileTexturePrefix(getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_AMMO);
+            this._imgState.loadSource(Common_Model_CommonModel.getUnitAndTileTexturePrefix(Users_Model.getSelfSettingsTextureVersion()) + _IMAGE_SOURCE_AMMO);
             this._labelState.setIsVisible(true);
             this._labelState.setText(`${unit.getPrimaryWeaponCurrentAmmo()}`);
         } else {
@@ -435,8 +437,30 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
             this._labelState.setIsVisible(false);
         }
 
-        const tileView = this._tileView;
-        tileView.setData(openData.dataForTileView);
-        tileView.updateView();
+        this._updateUnitView();
+        this._updateTileView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const unit      = openData.unit;
+        const unitView  = this._unitView;
+        unitView?.loadViewDataFromUnit(unit, unit.getWar(), true);
+        unitView?.refreshAllViews();
+    }
+
+    private _updateTileView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const tileView = this._tileView?.getView();
+        tileView?.loadViewData(openData.dataForTileView, true);
+        tileView?.refreshAllViews();
     }
 }

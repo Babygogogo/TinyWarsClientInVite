@@ -1,21 +1,20 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
-import { doGetNextOperation } from "./Utils.ts";
-import { newError } from "../helpers/Misc.ts";
-import type { WoContainer as ProtoSchemaCommonProtoWarOperationWoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+import {
+    Utils_ClientErrorCode,
+    Bots_Utils,
+    Helpers_Misc,
+    type BaseWar_Model_War,
+} from "../internal.ts";
+import type { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-type WoContainer    = ProtoSchemaCommonProtoWarOperationWoContainer;
-type IBwWar         = BaseWarInterfaceIBwWar;
+const _calculatingWars = new Set<BaseWar_Model_War.War>();
 
-const _calculatingWars = new Set<IBwWar>();
-
-export async function getNextOperation(war: IBwWar): Promise<WoContainer> {
+export async function getNextOperation(war: BaseWar_Model_War.War): Promise<WoContainer> {
     if (_calculatingWars.has(war)) {
-        throw newError(`Calculating.`, ClientErrorCode.SpwRobot_GetNextAction_00);
+        throw Helpers_Misc.newError(`Calculating.`, Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetNextAction_00);
     }
 
     _calculatingWars.add(war);
-    const action = await doGetNextOperation(war);
+    const action = await Bots_Utils.doGetNextOperation(war);
     action.setOperationId(war.getExecutedOperationManager().getExecutedOperationsCount());
     _calculatingWars.delete(war);
 

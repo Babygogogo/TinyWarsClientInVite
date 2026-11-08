@@ -1,113 +1,114 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CoStatisticsFilter } from "../../auxiliaryTypes/CoStatisticsFilter.ts";
-import { getCoStatistics } from "../model/CommonModel.ts";
-import { ModeId } from "../../gameModes/Constants.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getGameModeName, getGameModeHelpText, getTextForYesOrNo } from "../../lang/Utils.ts";
-import { getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { TurnIndex } from "../../turns/Constants.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import {
+    AuxiliaryTypes_CoStatisticsFilter,
+    Common_Model_CommonModel,
+    GamePanels_Dict,
+    Lang_Utils,
+    NormalMap_Model_NormalMapModel,
+    GameModes_Constants,
+    GamePanels_Manager,
+    Lang_Constants,
+    Turns_Constants,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 
 export type OpenData = {
-    filter              : Undefinable<CoStatisticsFilter>;
-    callbackOnConfirm   : (mapFilter: Undefinable<CoStatisticsFilter>) => void;
+    filter              : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_CoStatisticsFilter.CoStatisticsFilter>;
+    callbackOnConfirm   : (mapFilter: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_CoStatisticsFilter.CoStatisticsFilter>) => void;
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                      : IUiImage;
-    private readonly _group!                        : IUiContainer;
-    private readonly _labelTitle!                   : IUiLabel;
-    private readonly _btnHelp!                      : IUiButton;
-    private readonly _btnClose!                     : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnReset!                     : IUiButton;
-    private readonly _btnSearch!                    : IUiButton;
+    private readonly _btnReset!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSearch!                    : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelNormalMapIdTitle!        : IUiLabel;
-    private readonly _labelNormalMapId!             : IUiLabel;
-    private readonly _btnModifyNormalMapId!         : IUiButton;
-    private readonly _btnDeleteNormalMapId!         : IUiButton;
+    private readonly _labelNormalMapIdTitle!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalMapId!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyNormalMapId!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteNormalMapId!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelGameModeTitle!           : IUiLabel;
-    private readonly _labelGameMode!                : IUiLabel;
-    private readonly _btnModifyGameMode!            : IUiButton;
-    private readonly _btnDeleteGameMode!            : IUiButton;
+    private readonly _labelGameModeTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelGameMode!                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyGameMode!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteGameMode!            : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMinTurnIndexTitle!       : IUiLabel;
-    private readonly _labelMinTurnIndex!            : IUiLabel;
-    private readonly _btnModifyMinTurnIndex!        : IUiButton;
-    private readonly _btnDeleteMinTurnIndex!        : IUiButton;
+    private readonly _labelMinTurnIndexTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMinTurnIndex!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMinTurnIndex!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMinTurnIndex!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMaxTurnIndexTitle!       : IUiLabel;
-    private readonly _labelMaxTurnIndex!            : IUiLabel;
-    private readonly _btnModifyMaxTurnIndex!        : IUiButton;
-    private readonly _btnDeleteMaxTurnIndex!        : IUiButton;
+    private readonly _labelMaxTurnIndexTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMaxTurnIndex!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMaxTurnIndex!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMaxTurnIndex!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMinRankScoreTitle!       : IUiLabel;
-    private readonly _labelMinRankScore!            : IUiLabel;
-    private readonly _btnModifyMinRankScore!        : IUiButton;
-    private readonly _btnDeleteMinRankScore!        : IUiButton;
+    private readonly _labelMinRankScoreTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMinRankScore!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMinRankScore!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMinRankScore!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMaxRankScoreTitle!       : IUiLabel;
-    private readonly _labelMaxRankScore!            : IUiLabel;
-    private readonly _btnModifyMaxRankScore!        : IUiButton;
-    private readonly _btnDeleteMaxRankScore!        : IUiButton;
+    private readonly _labelMaxRankScoreTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMaxRankScore!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMaxRankScore!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMaxRankScore!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelHasFogTitle!             : IUiLabel;
-    private readonly _labelHasFog!                  : IUiLabel;
-    private readonly _btnModifyHasFog!              : IUiButton;
-    private readonly _btnDeleteHasFog!              : IUiButton;
+    private readonly _labelHasFogTitle!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHasFog!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyHasFog!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteHasFog!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelIncludeMirrorGameTitle!  : IUiLabel;
-    private readonly _labelIncludeMirrorGame!       : IUiLabel;
-    private readonly _btnModifyIncludeMirrorGame!   : IUiButton;
+    private readonly _labelIncludeMirrorGameTitle!  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelIncludeMirrorGame!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyIncludeMirrorGame!   : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelShowDeprecatedCoTitle!   : IUiLabel;
-    private readonly _labelShowDeprecatedCo!        : IUiLabel;
-    private readonly _btnModifyShowDeprecatedCo!    : IUiButton;
+    private readonly _labelShowDeprecatedCoTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelShowDeprecatedCo!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyShowDeprecatedCo!    : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _filter                                 = new CoStatisticsFilter();
+    private _filter                                 = new AuxiliaryTypes_CoStatisticsFilter.CoStatisticsFilter();
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnHelp,                    callback: this._onTouchedBtnHelp },
-            { ui: this._btnReset,                   callback: this._onTouchedBtnReset },
-            { ui: this._btnSearch,                  callback: this._onTouchedBtnSearch },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnHelp,                    callback : this._onTouchedBtnHelp },
+            { ui : this._btnReset,                   callback : this._onTouchedBtnReset },
+            { ui : this._btnSearch,                  callback : this._onTouchedBtnSearch },
 
-            { ui: this._btnModifyNormalMapId,       callback: this._onTouchedBtnModifyNormalMapId },
-            { ui: this._btnDeleteNormalMapId,       callback: this._onTouchedBtnDeleteNormalMapId },
+            { ui : this._btnModifyNormalMapId,       callback : this._onTouchedBtnModifyNormalMapId },
+            { ui : this._btnDeleteNormalMapId,       callback : this._onTouchedBtnDeleteNormalMapId },
 
-            { ui: this._btnModifyGameMode,          callback: this._onTouchedBtnModifyGameMode },
-            { ui: this._btnDeleteGameMode,          callback: this._onTouchedBtnDeleteGameMode },
+            { ui : this._btnModifyGameMode,          callback : this._onTouchedBtnModifyGameMode },
+            { ui : this._btnDeleteGameMode,          callback : this._onTouchedBtnDeleteGameMode },
 
-            { ui: this._btnModifyMinTurnIndex,      callback: this._onTouchedBtnModifyMinTurnIndex },
-            { ui: this._btnDeleteMinTurnIndex,      callback: this._onTouchedBtnDeleteMinTurnIndex },
+            { ui : this._btnModifyMinTurnIndex,      callback : this._onTouchedBtnModifyMinTurnIndex },
+            { ui : this._btnDeleteMinTurnIndex,      callback : this._onTouchedBtnDeleteMinTurnIndex },
 
-            { ui: this._btnModifyMaxTurnIndex,      callback: this._onTouchedBtnModifyMaxTurnIndex },
-            { ui: this._btnDeleteMaxTurnIndex,      callback: this._onTouchedBtnDeleteMaxTurnIndex },
+            { ui : this._btnModifyMaxTurnIndex,      callback : this._onTouchedBtnModifyMaxTurnIndex },
+            { ui : this._btnDeleteMaxTurnIndex,      callback : this._onTouchedBtnDeleteMaxTurnIndex },
 
-            { ui: this._btnModifyMinRankScore,      callback: this._onTouchedBtnModifyMinRankScore },
-            { ui: this._btnDeleteMinRankScore,      callback: this._onTouchedBtnDeleteMinRankScore },
+            { ui : this._btnModifyMinRankScore,      callback : this._onTouchedBtnModifyMinRankScore },
+            { ui : this._btnDeleteMinRankScore,      callback : this._onTouchedBtnDeleteMinRankScore },
 
-            { ui: this._btnModifyMaxRankScore,      callback: this._onTouchedBtnModifyMaxRankScore },
-            { ui: this._btnDeleteMaxRankScore,      callback: this._onTouchedBtnDeleteMaxRankScore },
+            { ui : this._btnModifyMaxRankScore,      callback : this._onTouchedBtnModifyMaxRankScore },
+            { ui : this._btnDeleteMaxRankScore,      callback : this._onTouchedBtnDeleteMaxRankScore },
 
-            { ui: this._btnModifyHasFog,            callback: this._onTouchedBtnModifyHasFog },
-            { ui: this._btnDeleteHasFog,            callback: this._onTouchedBtnDeleteHasFog },
+            { ui : this._btnModifyHasFog,            callback : this._onTouchedBtnModifyHasFog },
+            { ui : this._btnDeleteHasFog,            callback : this._onTouchedBtnDeleteHasFog },
 
-            { ui: this._btnModifyIncludeMirrorGame, callback: this._onTouchedBtnModifyIncludeMirrorGame },
+            { ui : this._btnModifyIncludeMirrorGame, callback : this._onTouchedBtnModifyIncludeMirrorGame },
 
-            { ui: this._btnModifyShowDeprecatedCo,  callback: this._onTouchedBtnModifyShowDeprecatedCo },
+            { ui : this._btnModifyShowDeprecatedCo,  callback : this._onTouchedBtnModifyShowDeprecatedCo },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -115,19 +116,19 @@ export class Panel extends UiPanel<OpenData> {
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._filter = this.getOpenData()?.filter?.clone() ?? new CoStatisticsFilter();
+        this._filter = this.getOpenData()?.filter?.clone() ?? new AuxiliaryTypes_CoStatisticsFilter.CoStatisticsFilter();
         this._updateComponentsForLanguage();
         this._resetComponentsForFilter();
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0312),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0312),
         });
     }
 
     private _onTouchedBtnReset(): void {
-        this._filter = new CoStatisticsFilter();
+        this._filter = new AuxiliaryTypes_CoStatisticsFilter.CoStatisticsFilter();
         this._resetComponentsForFilter();
     }
 
@@ -139,20 +140,20 @@ export class Panel extends UiPanel<OpenData> {
 
     private async _onTouchedBtnModifyNormalMapId(): Promise<void> {
         const normalMapIdSet = new Set<number>();
-        for (const gameData of (await getCoStatistics())?.getGameDataArray() ?? []) {
+        for (const gameData of (await Common_Model_CommonModel.getCoStatistics())?.getGameDataArray() ?? []) {
             const normalMapId = gameData.getNormalMapId() ?? 0;
             if (normalMapId >= 0) {
                 normalMapIdSet.add(normalMapId);
             }
         }
 
-        openPanel(getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : [...normalMapIdSet],
-            getTitleText                : () => getText(TextType.B0227),
-            callback                    : normalMapId => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
+            availableNormalMapIdArray : [...normalMapIdSet],
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
+            callback                  : normalMapId => {
                 this._filter.normalMapId = normalMapId;
                 this._updateLabelNormalMapId();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteNormalMapId(): void {
@@ -163,25 +164,25 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnModifyGameMode(): void {
         const filter        = this._filter;
         const currentMode   = filter.gameMode;
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            availableNumberArray    : [
-                ModeId.Versus,
-                ModeId.Free,
-                ModeId.UnrankedMatch,
-                ModeId.RankedMatch,
-                ModeId.AutoTourney,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            availableNumberArray : [
+                GameModes_Constants.ModeId.Versus,
+                GameModes_Constants.ModeId.Free,
+                GameModes_Constants.ModeId.UnrankedMatch,
+                GameModes_Constants.ModeId.RankedMatch,
+                GameModes_Constants.ModeId.AutoTourney,
             ],
-            currentNumber           : filter.gameMode,
-            keepOrder               : true,
-            getTitleText            : () => getText(TextType.B0153),
-            getNumberMainText       : mode => getGameModeName(mode) ?? UndefinedError,
-            getNumberHelpText       : mode => getGameModeHelpText(mode) ?? UndefinedError,
-            callbackOnConfirm       : mode => {
+            currentNumber     : filter.gameMode,
+            keepOrder         : true,
+            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B0153),
+            getNumberMainText : mode => Lang_Utils.getGameModeName(mode) ?? Lang_Constants.UndefinedError,
+            getNumberHelpText : mode => Lang_Utils.getGameModeHelpText(mode) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm : mode => {
                 if (currentMode != mode) {
                     filter.gameMode = mode;
                     this._updateLabelGameMode();
                 }
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteGameMode(): void {
@@ -191,15 +192,15 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnModifyMinTurnIndex(): void {
         const filter = this._filter;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0611),
-            minValue        : 6,
-            maxValue        : filter.maxTurnIndex ?? TurnIndex.MaxLimit,
-            currentValue    : filter.minTurnIndex,
-            callback        : minTurnIndex => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0611),
+            minValue     : 6,
+            maxValue     : filter.maxTurnIndex ?? Turns_Constants.TurnIndex.MaxLimit,
+            currentValue : filter.minTurnIndex,
+            callback     : minTurnIndex => {
                 filter.minTurnIndex = minTurnIndex;
                 this._updateLabelMinTurnIndex();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMinTurnIndex(): void {
@@ -209,15 +210,15 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnModifyMaxTurnIndex(): void {
         const filter = this._filter;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0621),
-            minValue        : filter.minTurnIndex ?? 6,
-            maxValue        : TurnIndex.MaxLimit,
-            currentValue    : filter.maxTurnIndex,
-            callback        : maxTurnIndex => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0621),
+            minValue     : filter.minTurnIndex ?? 6,
+            maxValue     : Turns_Constants.TurnIndex.MaxLimit,
+            currentValue : filter.maxTurnIndex,
+            callback     : maxTurnIndex => {
                 filter.maxTurnIndex = maxTurnIndex;
                 this._updateLabelMaxTurnIndex();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMaxTurnIndex(): void {
@@ -227,15 +228,15 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnModifyMinRankScore(): void {
         const filter = this._filter;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0687),
-            minValue        : 0,
-            maxValue        : filter.maxRankScore ?? 9999,
-            currentValue    : filter.minRankScore,
-            callback        : minRankScore => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0687),
+            minValue     : 0,
+            maxValue     : filter.maxRankScore ?? 9999,
+            currentValue : filter.minRankScore,
+            callback     : minRankScore => {
                 filter.minRankScore = minRankScore;
                 this._updateLabelMinRankScore();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMinRankScore(): void {
@@ -245,15 +246,15 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnModifyMaxRankScore(): void {
         const filter = this._filter;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0863),
-            minValue        : filter.minRankScore ?? 0,
-            maxValue        : 9999,
-            currentValue    : filter.maxRankScore,
-            callback        : maxRankScore => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0863),
+            minValue     : filter.minRankScore ?? 0,
+            maxValue     : 9999,
+            currentValue : filter.maxRankScore,
+            callback     : maxRankScore => {
                 filter.maxRankScore = maxRankScore;
                 this._updateLabelMaxRankScore();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMaxRankScore(): void {
@@ -300,19 +301,19 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0132));
-        this._labelNormalMapIdTitle.setText(getText(TextType.B0225));
-        this._labelGameModeTitle.setText(getText(TextType.B0153));
-        this._labelMinTurnIndexTitle.setText(getText(TextType.B0611));
-        this._labelMaxTurnIndexTitle.setText(getText(TextType.B0621));
-        this._labelMinRankScoreTitle.setText(getText(TextType.B0687));
-        this._labelMaxRankScoreTitle.setText(getText(TextType.B0863));
-        this._labelHasFogTitle.setText(getText(TextType.B0438));
-        this._labelIncludeMirrorGameTitle.setText(getText(TextType.B0941));
-        this._labelShowDeprecatedCoTitle.setText(getText(TextType.B0948));
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0132);
+        this._labelNormalMapIdTitle.setLangText(Lang_Constants.TextType.B0225);
+        this._labelGameModeTitle.setLangText(Lang_Constants.TextType.B0153);
+        this._labelMinTurnIndexTitle.setLangText(Lang_Constants.TextType.B0611);
+        this._labelMaxTurnIndexTitle.setLangText(Lang_Constants.TextType.B0621);
+        this._labelMinRankScoreTitle.setLangText(Lang_Constants.TextType.B0687);
+        this._labelMaxRankScoreTitle.setLangText(Lang_Constants.TextType.B0863);
+        this._labelHasFogTitle.setLangText(Lang_Constants.TextType.B0438);
+        this._labelIncludeMirrorGameTitle.setLangText(Lang_Constants.TextType.B0941);
+        this._labelShowDeprecatedCoTitle.setLangText(Lang_Constants.TextType.B0948);
 
-        this._btnReset.setText(getText(TextType.B0391));
-        this._btnSearch.setText(getText(TextType.B0228));
+        this._btnReset.setLangText(Lang_Constants.TextType.B0391);
+        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
         this._updateLabelMaxRankScore();
     }
 
@@ -320,12 +321,12 @@ export class Panel extends UiPanel<OpenData> {
         const normalMapId = this._filter.normalMapId;
         this._labelNormalMapId.setText(normalMapId == null
             ? ``
-            : (await getMapNameInCurrentLanguage(normalMapId) ?? UndefinedError)
+            : (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId) ?? Lang_Constants.UndefinedError),
         );
     }
     private _updateLabelGameMode(): void {
         const gameMode = this._filter.gameMode;
-        this._labelGameMode.setText(gameMode == null ? `` : (getGameModeName(gameMode) ?? UndefinedError));
+        this._labelGameMode.setText(gameMode == null ? `` : (Lang_Utils.getGameModeName(gameMode) ?? Lang_Constants.UndefinedError));
     }
     private _updateLabelMinTurnIndex(): void {
         this._labelMinTurnIndex.setText(`${this._filter.minTurnIndex ?? ``}`);
@@ -341,17 +342,17 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _updateLabelHasFog(): void {
         const hasFog = this._filter.hasFog;
-        this._labelHasFog.setText(hasFog == null ? `` : getTextForYesOrNo(hasFog));
+        this._labelHasFog.setText(hasFog == null ? `` : Lang_Utils.getTextForYesOrNo(hasFog));
     }
     private _updateLabelIncludeMirrorGame(): void {
-        this._labelIncludeMirrorGame.setText(getTextForYesOrNo(this._filter.includeMirrorGame));
+        this._labelIncludeMirrorGame.setLangText(this._filter.includeMirrorGame ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
     }
     private _updateLabelShowDeprecatedCo(): void {
-        this._labelShowDeprecatedCo.setText(getTextForYesOrNo(this._filter.showDeprecatedCo));
+        this._labelShowDeprecatedCo.setLangText(this._filter.showDeprecatedCo ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
     }
 }
 
-function checkIsEmptyCoStatisticsFilter(filter: Undefinable<CoStatisticsFilter>): boolean {
+function checkIsEmptyCoStatisticsFilter(filter: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_CoStatisticsFilter.CoStatisticsFilter>): boolean {
     if (filter == null) {
         return true;
     }

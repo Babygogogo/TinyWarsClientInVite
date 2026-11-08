@@ -1,24 +1,18 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "./AuxiliaryTypes.ts";
-import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
-import type {
-    DataForPlayerInRoom as ProtoSchemaCommonProtoStructureDataForPlayerInRoom,
-} from "../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
+import {
+    WarOperations_Constants,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    Turns_Constants,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
+import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { DataForPlayerInRoom } from "../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
 import type { InstanceWarRule } from "../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import { SettingsForCommon } from "../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
-import { TurnIndex } from "../turns/Constants.ts";
-import { Common } from "../warOperations/Constants.ts";
-
-type DataForPlayerInRoom    = ProtoSchemaCommonProtoStructureDataForPlayerInRoom;
-type GcData                 = GameConfigGcData;
-type MapRawData             = ProtoSchemaCommonProtoMapMapRawData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export class WarCreatorBase {
-    private readonly _gcData            : GcData;
+    private readonly _gcData            : GameConfigs_GameConfig.GameConfig;
     private readonly _settingsForCommon : SettingsForCommon;
 
     private readonly _mapRawData        : MapRawData;
@@ -26,14 +20,14 @@ export class WarCreatorBase {
     private readonly _playerInfoList    : DataForPlayerInRoom[] = [];
 
     private _saveSlotIndex              = 0;
-    private _saveSlotComment            : Undefinable<string>;
+    private _saveSlotComment            : AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
 
-    public constructor(gcData: GcData, mapRawData: MapRawData, saveSlotIndex: number) {
+    public constructor(gcData: GameConfigs_GameConfig.GameConfig, mapRawData: MapRawData, saveSlotIndex: number) {
         this._gcData            = gcData;
         this._settingsForCommon = SettingsForCommon.fromJson({
-            configVersion       : gcData.getVersion(),
-            turnsLimit          : TurnIndex.DefaultLimit,
-            warOperationsLimit  : Common.DefaultLimit,
+            configVersion      : gcData.getVersion(),
+            turnsLimit         : Turns_Constants.TurnIndex.DefaultLimit,
+            warOperationsLimit : WarOperations_Constants.Common.DefaultLimit,
         });
 
         this._mapRawData = mapRawData;
@@ -41,14 +35,14 @@ export class WarCreatorBase {
         this.setSaveSlotIndex(saveSlotIndex);
     }
 
-    public getGcData(): GcData {
+    public getGcData(): GameConfigs_GameConfig.GameConfig {
         return this._gcData;
     }
     public getSettingsForCommon(): SettingsForCommon {
         return this._settingsForCommon;
     }
     public getInstanceWarRule(): InstanceWarRule {
-        return getExisted(this.getSettingsForCommon().getInstanceWarRule());
+        return Helpers_Misc.getExisted(this.getSettingsForCommon().getInstanceWarRule());
     }
 
     public getMapRawData(): MapRawData {
@@ -63,7 +57,7 @@ export class WarCreatorBase {
         selfList.splice(0, selfList.length, ...list);
     }
     public getPlayerInfo(playerIndex: number): DataForPlayerInRoom {
-        return getExisted(this._getPlayerInfoList().find(v => v.getPlayerIndex() === playerIndex));
+        return Helpers_Misc.getExisted(this._getPlayerInfoList().find(v => v.getPlayerIndex() === playerIndex));
     }
 
     public getSaveSlotIndex(): number {
@@ -72,14 +66,14 @@ export class WarCreatorBase {
     public setSaveSlotIndex(slotIndex: number): void {
         if (this.getSaveSlotIndex() !== slotIndex) {
             this._saveSlotIndex = slotIndex;
-            dispatch(TypeId.WarCreator_SaveSlotIndexChanged);
+            Notifications_Dispatcher.dispatch("WarCreator_SaveSlotIndexChanged");
         }
     }
 
-    public getSlotComment(): Undefinable<string> {
+    public getSlotComment(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<string> {
         return this._saveSlotComment;
     }
-    public setSlotComment(comment: Undefinable<string>): void {
+    public setSlotComment(comment: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): void {
         this._saveSlotComment = comment;
     }
 }

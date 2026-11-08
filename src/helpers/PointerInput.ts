@@ -1,12 +1,14 @@
-import type { Point } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getSquaredPointDistance } from "../geometries/Utils.ts";
-import { type WebPlayer, type WebTouchHandler, getWebPlayer, isPc } from "./Compatibility.ts";
-import { getExisted } from "./Misc.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import { getStage } from "../stages/StageManager.ts";
-import { hitTestTarget } from "../ui/utils/UiHelpers.ts";
-import { DisplayObject, Stage, startTick, DisplayObjectContainer } from "../vendor/egret/Egret.ts";
+import {
+    Egret_Egret,
+    Egret_Web,
+    Geometries_Utils,
+    Helpers_Compatibility,
+    Helpers_Misc,
+    Notifications_Dispatcher,
+    Stages_StageManager,
+    Ui_Utils_UiHelpers,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
 /**
  * 已知的egret事件相关信息：
@@ -37,7 +39,7 @@ import { DisplayObject, Stage, startTick, DisplayObjectContainer } from "../vend
  *   - 否则（一个sub都未命中），返回DisplayObject.$hitTest的值
  */
 
-// eslint-disable-next-line no-shadow
+
 export const enum MouseStyleType {
     Auto,
     Default,
@@ -46,7 +48,7 @@ export const enum MouseStyleType {
 }
 
 type MouseExpectedStyle = {
-    displayObject   : WeakRef<DisplayObject>;
+    displayObject   : WeakRef<Egret_Egret.DisplayObject>;
     expectedStyle   : MouseStyleType;
 };
 type PointerPressStatus = {
@@ -59,14 +61,14 @@ const LIMIT_MOVE_EVENT_FREQUENCY    = false;
 
 // const MouseWheelMultiplier      = (egret.Capabilities.os === `Unknown` || navigator?.userAgent?.toLocaleLowerCase()?.includes(`firefox`)) ? 40 : 1;
 const MouseExpectedStyleArray   : MouseExpectedStyle[] = [];
-const PointerHoverObjectDict    = new Map<number, WeakRef<DisplayObject>>();
-const PointerPressObjectDict    = new Map<number, WeakRef<DisplayObject>>();
+const PointerHoverObjectDict    = new Map<number, WeakRef<Egret_Egret.DisplayObject>>();
+const PointerPressObjectDict    = new Map<number, WeakRef<Egret_Egret.DisplayObject>>();
 const PointerPressStatusDict    = new Map<number, PointerPressStatus>();
 const PointerMoveTimeDict       = new Map<number, number>();
 
-let _stage                      : Stage;
-let _webPlayer                  : WebPlayer;
-let _webTouchHandler            : WebTouchHandler;
+let _stage                      : Egret_Egret.Stage;
+let _webPlayer                  : Helpers_Compatibility.WebPlayer;
+let _webTouchHandler            : Egret_Web.WebTouchHandler;
 let _canvas                     : HTMLCanvasElement;
 
 let _isEnabled                  = false;
@@ -81,14 +83,14 @@ export type PointerUnifiedEventData = {
     stageX          : number;
     stageY          : number;
     wheelValue      : number | undefined;
-    lastHover       : DisplayObject | undefined;
-    currentHover    : DisplayObject | undefined;
-    lastPress       : DisplayObject | undefined;
-    currentPress    : DisplayObject | undefined;
+    lastHover       : Egret_Egret.DisplayObject | undefined;
+    currentHover    : Egret_Egret.DisplayObject | undefined;
+    lastPress       : Egret_Egret.DisplayObject | undefined;
+    currentPress    : Egret_Egret.DisplayObject | undefined;
     rawEvent        : PointerEvent | WheelEvent;
-    dispatcher      : DisplayObject | undefined;
+    dispatcher      : Egret_Egret.DisplayObject | undefined;
 };
-// eslint-disable-next-line no-shadow
+
 export const enum PointerEventType {
     Press       = "PointerPress",
     ReleaseIn   = "PointerReleaseIn",
@@ -110,8 +112,8 @@ export function enable(): void {
         _isEnabled = true;
     }
 
-    _stage              = getStage();
-    _webPlayer          = getExisted(getWebPlayer());
+    _stage              = Stages_StageManager.getStage();
+    _webPlayer          = Helpers_Misc.getExisted(Helpers_Compatibility.getWebPlayer());
     _webTouchHandler    = _webPlayer.webTouchHandler;
     _canvas             = _webPlayer.canvas;
     _canvas.addEventListener("wheel", e => {
@@ -122,7 +124,7 @@ export function enable(): void {
         }
 
         const revisedValue = value > 0 ? -100 : 100;
-        dispatch(TypeId.MouseWheel, revisedValue);
+        Notifications_Dispatcher.dispatch("MouseWheel", { num : revisedValue });
 
         const point         = getStagePoint(e);
         const targetObject  = getPointerTargetObject(point);
@@ -131,16 +133,16 @@ export function enable(): void {
                 PointerEventType.Wheel,
                 true,
                 {
-                    pointerId       : -1,
-                    stageX          : point.x,
-                    stageY          : point.y,
-                    wheelValue      : revisedValue,
-                    lastHover       : targetObject,
-                    currentHover    : targetObject,
-                    lastPress       : undefined,
-                    currentPress    : undefined,
-                    rawEvent        : e,
-                    dispatcher      : targetObject,
+                    pointerId    : -1,
+                    stageX       : point.x,
+                    stageY       : point.y,
+                    wheelValue   : revisedValue,
+                    lastHover    : targetObject,
+                    currentHover : targetObject,
+                    lastPress    : undefined,
+                    currentPress : undefined,
+                    rawEvent     : e,
+                    dispatcher   : targetObject,
                 } as PointerUnifiedEventData,
             );
         }
@@ -171,16 +173,16 @@ export function enable(): void {
                 PointerEventType.ReleaseOut,
                 true,
                 {
-                    pointerId       : pointerId,
-                    stageX          : point.x,
-                    stageY          : point.y,
-                    wheelValue      : undefined,
-                    lastHover       : hoverObject,
-                    currentHover    : hoverObject,
-                    lastPress       : lastPressObject,
-                    currentPress    : undefined,
-                    rawEvent        : e,
-                    dispatcher      : lastPressObject,
+                    pointerId    : pointerId,
+                    stageX       : point.x,
+                    stageY       : point.y,
+                    wheelValue   : undefined,
+                    lastHover    : hoverObject,
+                    currentHover : hoverObject,
+                    lastPress    : lastPressObject,
+                    currentPress : undefined,
+                    rawEvent     : e,
+                    dispatcher   : lastPressObject,
                 } as PointerUnifiedEventData,
             );
         }
@@ -189,7 +191,7 @@ export function enable(): void {
     _canvas.addEventListener("pointerdown", e => {
         // console.log("pointerdown", e, e.button, e.buttons);
         if (e.button === 2) {
-            dispatch(TypeId.MouseRightButtonClicked, e);
+            Notifications_Dispatcher.dispatch("MouseRightButtonClicked", e);
             return;
         }
 
@@ -204,9 +206,9 @@ export function enable(): void {
         // console.log(`pointdown ${stageX}, ${stageY}`);
         setPointerPressObject(pointerId, targetObject);
         setPointerPressStatus(pointerId, {
-            originX     : stageX,
-            originY     : stageY,
-            hasMoved    : false,
+            originX  : stageX,
+            originY  : stageY,
+            hasMoved : false,
         });
 
         if ((lastPressObject != null) || (targetObject != null)) {
@@ -215,32 +217,32 @@ export function enable(): void {
                 PointerEventType.ReleaseOut,
                 true,
                 {
-                    pointerId       : pointerId,
-                    stageX          : stageX,
-                    stageY          : stageY,
-                    wheelValue      : undefined,
-                    lastHover       : hoverObject,
-                    currentHover    : hoverObject,
-                    lastPress       : lastPressObject,
-                    currentPress    : targetObject,
-                    rawEvent        : e,
-                    dispatcher      : lastPressObject,
+                    pointerId    : pointerId,
+                    stageX       : stageX,
+                    stageY       : stageY,
+                    wheelValue   : undefined,
+                    lastHover    : hoverObject,
+                    currentHover : hoverObject,
+                    lastPress    : lastPressObject,
+                    currentPress : targetObject,
+                    rawEvent     : e,
+                    dispatcher   : lastPressObject,
                 } as PointerUnifiedEventData,
             );
             targetObject?.dispatchEventWith(
                 PointerEventType.Press,
                 true,
                 {
-                    pointerId       : pointerId,
-                    stageX          : stageX,
-                    stageY          : stageY,
-                    wheelValue      : undefined,
-                    lastHover       : hoverObject,
-                    currentHover    : hoverObject,
-                    lastPress       : lastPressObject,
-                    currentPress    : targetObject,
-                    rawEvent        : e,
-                    dispatcher      : targetObject,
+                    pointerId    : pointerId,
+                    stageX       : stageX,
+                    stageY       : stageY,
+                    wheelValue   : undefined,
+                    lastHover    : hoverObject,
+                    currentHover : hoverObject,
+                    lastPress    : lastPressObject,
+                    currentPress : targetObject,
+                    rawEvent     : e,
+                    dispatcher   : targetObject,
                 } as PointerUnifiedEventData,
             );
         }
@@ -264,16 +266,16 @@ export function enable(): void {
         if (lastPressObject != null) {
             const hoverObject   = getPointerHoverObject(pointerId);
             const unifiedEvent  : PointerUnifiedEventData = {
-                pointerId       : pointerId,
-                stageX          : point.x,
-                stageY          : point.y,
-                wheelValue      : undefined,
-                lastHover       : hoverObject,
-                currentHover    : hoverObject,
-                lastPress       : lastPressObject,
-                currentPress    : undefined,
-                rawEvent        : e,
-                dispatcher      : lastPressObject,
+                pointerId    : pointerId,
+                stageX       : point.x,
+                stageY       : point.y,
+                wheelValue   : undefined,
+                lastHover    : hoverObject,
+                currentHover : hoverObject,
+                lastPress    : lastPressObject,
+                currentPress : undefined,
+                rawEvent     : e,
+                dispatcher   : lastPressObject,
             };
 
             if (!checkIsSameOrAncestor(lastPressObject, getPointerTargetObject(point))) {
@@ -311,7 +313,7 @@ export function enable(): void {
         const stageY        = point.y;
         const pressStatus   = getPointerPressStatus(pointerId);
         if (pressStatus != null) {
-            pressStatus.hasMoved ||= getSquaredPointDistance(pressStatus.originX, pressStatus.originY, stageX, stageY) > 100;
+            pressStatus.hasMoved ||= Geometries_Utils.getSquaredPointDistance(pressStatus.originX, pressStatus.originY, stageX, stageY) > 100;
         }
 
         const lastHoverObject   = getPointerHoverObject(pointerId);
@@ -320,33 +322,33 @@ export function enable(): void {
 
         const lastPressObject       = getPointerPressObject(pointerId);
         _tempPointerMoveEventData   = {
-            pointerId       : pointerId,
-            stageX          : stageX,
-            stageY          : stageY,
-            wheelValue      : undefined,
-            lastHover       : lastHoverObject,
-            currentHover    : targetObject,
-            lastPress       : lastPressObject,
-            currentPress    : lastPressObject,
-            rawEvent        : e,
-            dispatcher      : undefined,
+            pointerId    : pointerId,
+            stageX       : stageX,
+            stageY       : stageY,
+            wheelValue   : undefined,
+            lastHover    : lastHoverObject,
+            currentHover : targetObject,
+            lastPress    : lastPressObject,
+            currentPress : lastPressObject,
+            rawEvent     : e,
+            dispatcher   : undefined,
         };
-        dispatch(TypeId.PointerGlobalMove, _tempPointerMoveEventData);
+        Notifications_Dispatcher.dispatch("PointerGlobalMove", _tempPointerMoveEventData);
 
         lastPressObject?.dispatchEventWith(
             PointerEventType.PressMove,
             true,
             {
-                pointerId       : pointerId,
-                stageX          : stageX,
-                stageY          : stageY,
-                wheelValue      : undefined,
-                lastHover       : lastHoverObject,
-                currentHover    : targetObject,
-                lastPress       : lastPressObject,
-                currentPress    : lastPressObject,
-                rawEvent        : e,
-                dispatcher      : lastPressObject,
+                pointerId    : pointerId,
+                stageX       : stageX,
+                stageY       : stageY,
+                wheelValue   : undefined,
+                lastHover    : lastHoverObject,
+                currentHover : targetObject,
+                lastPress    : lastPressObject,
+                currentPress : lastPressObject,
+                rawEvent     : e,
+                dispatcher   : lastPressObject,
             } as PointerUnifiedEventData,
         );
         if (lastHoverObject !== targetObject) {
@@ -355,32 +357,32 @@ export function enable(): void {
                 PointerEventType.HoverOut,
                 true,
                 {
-                    pointerId       : pointerId,
-                    stageX          : stageX,
-                    stageY          : stageY,
-                    wheelValue      : undefined,
-                    lastHover       : lastHoverObject,
-                    currentHover    : targetObject,
-                    lastPress       : lastPressObject,
-                    currentPress    : lastPressObject,
-                    rawEvent        : e,
-                    dispatcher      : lastHoverObject,
+                    pointerId    : pointerId,
+                    stageX       : stageX,
+                    stageY       : stageY,
+                    wheelValue   : undefined,
+                    lastHover    : lastHoverObject,
+                    currentHover : targetObject,
+                    lastPress    : lastPressObject,
+                    currentPress : lastPressObject,
+                    rawEvent     : e,
+                    dispatcher   : lastHoverObject,
                 } as PointerUnifiedEventData,
             );
             targetObject?.dispatchEventWith(
                 PointerEventType.HoverIn,
                 true,
                 {
-                    pointerId       : pointerId,
-                    stageX          : stageX,
-                    stageY          : stageY,
-                    wheelValue      : undefined,
-                    lastHover       : lastHoverObject,
-                    currentHover    : targetObject,
-                    lastPress       : lastPressObject,
-                    currentPress    : lastPressObject,
-                    rawEvent        : e,
-                    dispatcher      : targetObject,
+                    pointerId    : pointerId,
+                    stageX       : stageX,
+                    stageY       : stageY,
+                    wheelValue   : undefined,
+                    lastHover    : lastHoverObject,
+                    currentHover : targetObject,
+                    lastPress    : lastPressObject,
+                    currentPress : lastPressObject,
+                    rawEvent     : e,
+                    dispatcher   : targetObject,
                 } as PointerUnifiedEventData,
             );
         }
@@ -463,19 +465,19 @@ export function enable(): void {
         //     }
         // }
 
-        {
-            // 不再需要egret自带的点击监听，因此全部屏蔽，egret.web.js第2827行
-            _canvas.removeEventListener("mousedown", _webTouchHandler.onTouchBegin);
-            _canvas.removeEventListener("mousemove", _webTouchHandler.onMouseMove);
-            _canvas.removeEventListener("mouseup", _webTouchHandler.onTouchEnd);
-            _webTouchHandler.onTouchBegin   = () => { /* nothing to do  */ };
-            _webTouchHandler.onMouseMove    = () => { /* nothing to do  */ };
-            _webTouchHandler.onTouchEnd     = () => { /* nothing to do  */ };
-        }
+        // {
+        //     // 不再需要egret自带的点击监听，因此全部屏蔽，egret.web.js第2827行
+        //     _canvas.removeEventListener("mousedown", _webTouchHandler.onTouchBegin);
+        //     _canvas.removeEventListener("mousemove", _webTouchHandler.onMouseMove);
+        //     _canvas.removeEventListener("mouseup", _webTouchHandler.onTouchEnd);
+        //     _webTouchHandler.onTouchBegin   = () => { /* nothing to do  */ };
+        //     _webTouchHandler.onMouseMove    = () => { /* nothing to do  */ };
+        //     _webTouchHandler.onTouchEnd     = () => { /* nothing to do  */ };
+        // }
     }
 
     {
-        startTick(() => {
+        Egret_Egret.startTick(() => {
             ++_frames;
             if (_frames % 2 === 0) {
                 updateMouseStyle();
@@ -485,20 +487,20 @@ export function enable(): void {
     }
 }
 
-function getMouseExpectedStyle(obj: DisplayObject): MouseExpectedStyle | undefined {
+function getMouseExpectedStyle(obj: Egret_Egret.DisplayObject): MouseExpectedStyle | undefined {
     return MouseExpectedStyleArray.find(v => v.displayObject.deref() === obj);
 }
-export function getMouseExpectedStyleType(obj: DisplayObject): MouseStyleType | undefined {
+export function getMouseExpectedStyleType(obj: Egret_Egret.DisplayObject): MouseStyleType | undefined {
     return getMouseExpectedStyle(obj)?.expectedStyle;
 }
-export function setMouseExpectedStyleType(obj: DisplayObject, style: MouseStyleType): void {
+export function setMouseExpectedStyleType(obj: Egret_Egret.DisplayObject, style: MouseStyleType): void {
     const status = getMouseExpectedStyle(obj);
     if (status) {
         status.expectedStyle = style;
     } else {
         MouseExpectedStyleArray.push({
-            displayObject   : new WeakRef(obj),
-            expectedStyle   : style,
+            displayObject : new WeakRef(obj),
+            expectedStyle : style,
         });
     }
 }
@@ -509,27 +511,27 @@ export function getMouseX(): number | undefined {
 export function getMouseY(): number | undefined {
     return _mouseY;
 }
-function checkAndUpdateMousePos(point: Point): void {
-    if (isPc) {
+function checkAndUpdateMousePos(point: AuxiliaryTypes_AuxiliaryTypes.Point): void {
+    if (Helpers_Compatibility.isPc) {
         _mouseX = point.x;
         _mouseY = point.y;
     }
 }
 
-export function getPointerHoverObject(pointerId: number): DisplayObject | undefined {
+export function getPointerHoverObject(pointerId: number): Egret_Egret.DisplayObject | undefined {
     return PointerHoverObjectDict.get(pointerId)?.deref();
 }
-function setPointerHoverObject(pointerId: number, obj: DisplayObject | undefined): void {
+function setPointerHoverObject(pointerId: number, obj: Egret_Egret.DisplayObject | undefined): void {
     if (obj == null) {
         PointerHoverObjectDict.delete(pointerId);
     } else {
         PointerHoverObjectDict.set(pointerId, new WeakRef(obj));
     }
 }
-export function getPointerPressObject(pointerId: number): DisplayObject | undefined {
+export function getPointerPressObject(pointerId: number): Egret_Egret.DisplayObject | undefined {
     return PointerPressObjectDict.get(pointerId)?.deref();
 }
-function setPointerPressObject(pointerId: number, obj: DisplayObject | undefined): void {
+function setPointerPressObject(pointerId: number, obj: Egret_Egret.DisplayObject | undefined): void {
     if (obj == null) {
         PointerPressObjectDict.delete(pointerId);
     } else {
@@ -548,7 +550,7 @@ function setPointerPressStatus(pointerId: number, status: PointerPressStatus | u
 }
 
 function updateMouseStyle(): void {
-    if ((!isPc)    ||
+    if ((!Helpers_Compatibility.isPc)    ||
         (_mouseX == null)               ||
         (_mouseY == null)
     ) {
@@ -557,7 +559,7 @@ function updateMouseStyle(): void {
 
     const aliveStatusArray  = MouseExpectedStyleArray.concat();
     const expectedStyleArray: {
-        obj                 : DisplayObject;
+        obj                 : Egret_Egret.DisplayObject;
         style               : MouseStyleType;
         displayIndexArray   : number[];
     }[] = [];
@@ -575,9 +577,9 @@ function updateMouseStyle(): void {
         }
 
         expectedStyleArray.push({
-            obj                 : obj,
-            style               : status.expectedStyle,
-            displayIndexArray   : displayIndexArray,
+            obj               : obj,
+            style             : status.expectedStyle,
+            displayIndexArray : displayIndexArray,
         });
     }
     if (aliveStatusArray.length !== MouseExpectedStyleArray.length) {
@@ -588,7 +590,7 @@ function updateMouseStyle(): void {
     {
         let isUpdated = false;
         if (expectedStyleArray.length > 0) {
-            const targetObj = getPointerTargetObject({ x: _mouseX, y: _mouseY });
+            const targetObj = getPointerTargetObject({ x : _mouseX, y : _mouseY });
             if (targetObj != null) {
                 for (const item of expectedStyleArray.sort((v1, v2) => v2.displayIndexArray.length - v1.displayIndexArray.length)) {
                     if (checkIsSameOrAncestor(item.obj, targetObj)) {
@@ -606,7 +608,7 @@ function updateMouseStyle(): void {
     }
 }
 
-function getDisplayIndexArray(obj: DisplayObject): number[] {
+function getDisplayIndexArray(obj: Egret_Egret.DisplayObject): number[] {
     const arr: number[] = [];
     while (obj !== _stage) {
         if (!obj.visible) {
@@ -614,7 +616,7 @@ function getDisplayIndexArray(obj: DisplayObject): number[] {
         }
 
         if ((!obj.touchEnabled)                                                         &&
-            (!((obj instanceof DisplayObjectContainer) && (obj.touchChildren)))
+            (!((obj instanceof Egret_Egret.DisplayObjectContainer) && (obj.touchChildren)))
         ) {
             return [];
         }
@@ -630,12 +632,12 @@ function getDisplayIndexArray(obj: DisplayObject): number[] {
 
     return arr.reverse();
 }
-function checkIsSameOrAncestor(container: DisplayObject, obj: DisplayObject | undefined): boolean {
+function checkIsSameOrAncestor(container: Egret_Egret.DisplayObject, obj: Egret_Egret.DisplayObject | undefined): boolean {
     if (container === obj) {
         return true;
     } else {
         return (obj != null)
-            && (container instanceof DisplayObjectContainer)
+            && (container instanceof Egret_Egret.DisplayObjectContainer)
             && (container.contains(obj));
     }
 
@@ -647,13 +649,13 @@ function checkIsSameOrAncestor(container: DisplayObject, obj: DisplayObject | un
     // }
     // return false;
 }
-function getPointerTargetObject(stagePoint: Point): DisplayObject | undefined {
+function getPointerTargetObject(stagePoint: AuxiliaryTypes_AuxiliaryTypes.Point): Egret_Egret.DisplayObject | undefined {
     // return _stage.$hitTest(stagePoint.x, stagePoint.y);
-    return hitTestTarget(_stage, stagePoint.x, stagePoint.y).mostInnerObject;
+    return Ui_Utils_UiHelpers.hitTestTarget(_stage, stagePoint.x, stagePoint.y).mostInnerObject;
 }
-function getStagePoint(e: PointerEvent | WheelEvent): Point {
+function getStagePoint(e: PointerEvent | WheelEvent): AuxiliaryTypes_AuxiliaryTypes.Point {
     const p = _webTouchHandler.getLocation(e);
-    return { x: p.x, y: p.y };
+    return { x : p.x, y : p.y };
 }
 
 function getStyleString(style: MouseStyleType): string {

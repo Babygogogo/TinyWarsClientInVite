@@ -1,18 +1,29 @@
-import type { CustomError } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
-import { BwWar } from "../../baseWar/model/BwWar.ts";
-import { TimerTypeId, DefaultParams } from "../../bootTimers/Constants.ts";
-import { CoId } from "../../cos/Constants.ts";
-import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { ForcedFogCode } from "../../fogMaps/Constants.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
-import { getLatestConfigVersion } from "../../gameConfig/GcModel.ts";
-import { getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { Generator } from "../../helpers/SeedRandom.ts";
-import { getErrorCodeForPlayerRuleList } from "../../playerRules/Utils.ts";
-import { PlayerIndex, AliveStateId } from "../../players/Constants.ts";
+import {
+    BaseWar_Model_War,
+    BaseWar_Model_BwWarEventManager,
+    BootTimers_Constants,
+    Cos_Constants,
+    CoSkills_Constants,
+    FogMaps_Constants,
+    GameConfigs_Provider,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    RandomNumbers_SeedRandom,
+    PlayerRules_Utils,
+    Players_Constants,
+    Timer_TimerModel,
+    Turns_Constants,
+    Utils_ClientErrorCode,
+    WarOperations_Constants,
+    WarRules_Utils_CommonData,
+    WarRules_Utils_Instance,
+    WarTypes_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Interface_IBwWarEventManager,
+    type GameConfigs_GameConfig,
+    type TestWar_Interface_ITwWar,
+} from "../../internal.ts";
+
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialExecutedOperationManager } from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
@@ -23,19 +34,83 @@ import { SerialTurnManager } from "../../proto/schema/CommonProto/WarSerializati
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
 import { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
-import type { ITwWar } from "../interface/ITwWar.ts";
-import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import { TurnIndex, PhaseCode } from "../../turns/Constants.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { Common } from "../../warOperations/Constants.ts";
-import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
-import { create } from "../../warRules/utils/Instance.ts";
-import { WarTypeId } from "../../warTypes/Constants.ts";
 
-type GcData                 = GameConfigGcData;
+export class TwWar extends BaseWar_Model_War.War implements TestWar_Interface_ITwWar.ITwWar {
+    private readonly _warEventManager = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
 
-export class TwWar extends BwWar implements ITwWar {
-    private readonly _warEventManager       = new (getBwWarEventManagerClass())();
+    public static async getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<Utils_ClientErrorCode.ClientErrorCode> {
+        const war       = new TwWar();
+        let errorCode   : Utils_ClientErrorCode.ClientErrorCode = Utils_ClientErrorCode.ClientErrorCode.NoError;
+        try {
+            await war.initByMapRawData(mapRawData, gameConfig);
+        } catch (e) {
+            const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+            errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitByMapRawData_00;
+        } finally {
+            try {
+                war.dispose();
+            } catch (e) {
+                const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+                errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitByMapRawData_01;
+            }
+        }
+
+        return errorCode;
+    }
+    public static getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode {
+        const war       = new TwWar();
+        let errorCode   : Utils_ClientErrorCode.ClientErrorCode = Utils_ClientErrorCode.ClientErrorCode.NoError;
+        try {
+            war.init(
+                data,
+                gameConfig,
+                data.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault()
+                    ? WarTypes_Constants.WarTypeId.SfwFog
+                    : WarTypes_Constants.WarTypeId.SfwStd,
+            );
+        } catch(e) {
+            const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+            errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitForSfw_00;
+        } finally {
+            try {
+                war.dispose();
+            } catch (e) {
+                const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+                errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitForSfw_01;
+            }
+        }
+
+        return errorCode;
+    }
+    public static getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode {
+        const war       = new TwWar();
+        let errorCode   : Utils_ClientErrorCode.ClientErrorCode = Utils_ClientErrorCode.ClientErrorCode.NoError;
+        try {
+            war.init(
+                data,
+                gameConfig,
+                data.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault()
+                    ? WarTypes_Constants.WarTypeId.MfwFog
+                    : WarTypes_Constants.WarTypeId.MfwStd,
+            );
+        } catch(e) {
+            const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+            errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitForMfw_00;
+        } finally {
+            try {
+                war.dispose();
+            } catch (e) {
+                const error = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
+                errorCode   = error?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.TwWar_GetErrorCodeForInitForMfw_01;
+            }
+        }
+
+        return errorCode;
+    }
+
+    private constructor() {
+        super(false);
+    }
 
     public getCanCheat(): boolean {
         return false;
@@ -44,7 +119,7 @@ export class TwWar extends BwWar implements ITwWar {
         return false;
     }
 
-    public getWarEventManager(): IBwWarEventManager {
+    public getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
         return this._warEventManager;
     }
 
@@ -55,46 +130,11 @@ export class TwWar extends BwWar implements ITwWar {
         // nothing to do.
     }
 
-    public init(data: SerialWar, gameConfig: GcData, warTypeId = getWarTypeId(data)): void {
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig, warTypeId = Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data)): void {
         this._baseInit(data, gameConfig, warTypeId);
     }
-    public async initByMapRawData(mapRawData: MapRawData, gameConfig: GcData): Promise<void> {
+    public async initByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<void> {
         this.init(await _createDataForCreateTwWar(mapRawData, gameConfig), gameConfig);
-    }
-
-    public getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GcData): ClientErrorCode {
-        try {
-            this.init(
-                data,
-                gameConfig,
-                data.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypeId.SfwFog : WarTypeId.SfwStd
-            );
-        } catch(e) {
-            const error = e as CustomError;
-            return error?.errorCode ?? ClientErrorCode.TwWar_GetErrorCodeForInitForSfw_00;
-        }
-
-        return ClientErrorCode.NoError;
-    }
-    public getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GcData): ClientErrorCode {
-        try {
-            this.init(
-                data,
-                gameConfig,
-                data.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypeId.MfwFog : WarTypeId.MfwStd
-            );
-        } catch(e) {
-            const error = e as CustomError;
-            return error?.errorCode ?? ClientErrorCode.TwWar_GetErrorCodeForInitForMfw_00;
-        }
-
-        return ClientErrorCode.NoError;
-    }
-    public async getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GcData): Promise<ClientErrorCode> {
-        return await this.initByMapRawData(mapRawData, gameConfig).catch(e => {
-            const error = e as CustomError;
-            return error?.errorCode ?? ClientErrorCode.TwWar_GetErrorCodeForInitByMapRawData_00;
-        }) || ClientErrorCode.NoError;
     }
 
     public getNormalMapId(): number | null {
@@ -112,94 +152,94 @@ export class TwWar extends BwWar implements ITwWar {
         return null;
     }
     public getSettingsBootTimerParams(): number[] {
-        return [TimerTypeId.NoBoot];
+        return [BootTimers_Constants.TimerTypeId.NoBoot];
     }
 }
 
-async function _createDataForCreateTwWar(mapRawData: MapRawData, gameConfig: GcData): Promise<SerialWar> {
+async function _createDataForCreateTwWar(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<SerialWar> {
     const dataForPlayerManager  = await _createInitialPlayerManagerDataForTw(mapRawData, gameConfig);
     const fieldData             = await _createInitialFieldData(mapRawData);
-    const seedRandomState       = new Generator("" + Math.random(), { state: true }).state();
-    const instanceWarRule       = create({
-        templateWarRule             : mapRawData.getTemplateWarRuleArray()[0],
-        warEventFullData            : mapRawData.getWarEventFullData(),
-        allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-        taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+    const seedRandomState       = new RandomNumbers_SeedRandom.Generator("" + Math.random(), { state : true }).state();
+    const instanceWarRule       = WarRules_Utils_Instance.create({
+        templateWarRule           : mapRawData.getTemplateWarRuleArray()[0],
+        warEventFullData          : mapRawData.getWarEventFullData(),
+        allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+        taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
     });
 
     return SerialWar.fromJson({
-        settingsForCommon       : {
-            turnsLimit          : TurnIndex.DefaultLimit,
-            warOperationsLimit  : Common.DefaultLimit,
-            configVersion       : await getLatestConfigVersion(),
-            instanceWarRule     : instanceWarRule.toJson(),
+        settingsForCommon : {
+            turnsLimit         : Turns_Constants.TurnIndex.DefaultLimit,
+            warOperationsLimit : WarOperations_Constants.Common.DefaultLimit,
+            configVersion      : await GameConfigs_Provider.getLatestConfigVersion(),
+            instanceWarRule    : instanceWarRule.toJson(),
         },
-        settingsForMfw          : new SettingsForMfw().toJson(),
+        settingsForMfw : new SettingsForMfw().toJson(),
 
-        warId                   : -1,
-        isEnded                 : false,
-        drawVoteManager         : new SerialDrawVoteManager().toJson(),
-        playerManager           : dataForPlayerManager.toJson(),
-        turnManager             : _createInitialTurnData().toJson(),
-        field                   : fieldData.toJson(),
-        seedRandomInitialState  : seedRandomState,
-        seedRandomCurrentState  : seedRandomState,
-        warEventManager         : new SerialWarEventManager().toJson(),
-        executedOperationManager: new SerialExecutedOperationManager().toJson(),
-        warStatisticsManager    : null,
-        taskObjectiveManager    : null,
+        warId                    : -1,
+        isEnded                  : false,
+        drawVoteManager          : new SerialDrawVoteManager().toJson(),
+        playerManager            : dataForPlayerManager.toJson(),
+        turnManager              : _createInitialTurnData().toJson(),
+        field                    : fieldData.toJson(),
+        seedRandomInitialState   : seedRandomState,
+        seedRandomCurrentState   : seedRandomState,
+        warEventManager          : new SerialWarEventManager().toJson(),
+        executedOperationManager : new SerialExecutedOperationManager().toJson(),
+        warStatisticsManager     : null,
+        taskObjectiveManager     : null,
     });
 }
 
 function _createInitialTurnData(): SerialTurnManager {
     return SerialTurnManager.fromJson({
-        turnIndex       : TurnIndex.FirstIndex,
-        playerIndex     : 0,
-        turnPhaseCode   : PhaseCode.WaitBeginTurn,
-        enterTurnTime   : getServerTimestamp(),
+        turnIndex     : Turns_Constants.TurnIndex.FirstIndex,
+        playerIndex   : 0,
+        turnPhaseCode : Turns_Constants.PhaseCode.WaitBeginTurn,
+        enterTurnTime : Timer_TimerModel.getServerTimestamp(),
     });
 }
 
-async function _createInitialPlayerManagerDataForTw(mapRawData: MapRawData, gameConfig: GcData): Promise<SerialPlayerManager> {
+async function _createInitialPlayerManagerDataForTw(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<SerialPlayerManager> {
     const playersCountUnneutral = mapRawData.getPlayersCountUnneutral();
     if ((playersCountUnneutral == null) || (playersCountUnneutral < 2)) {
-        throw newError(`Invalid playersCountUnneutral: ${playersCountUnneutral}`, ClientErrorCode.TwWar_CreateInitialPlayerManagerDataForTw_00);
+        throw Helpers_Misc.newError(`Invalid playersCountUnneutral: ${playersCountUnneutral}`, Utils_ClientErrorCode.ClientErrorCode.TwWar_CreateInitialPlayerManagerDataForTw_00);
     }
 
-    const bootTimerParams   = DefaultParams.concat();
+    const bootTimerParams   = BootTimers_Constants.DefaultParams.concat();
     const restTimeToBoot    = bootTimerParams[1];
     const players = [_createInitialSinglePlayerData({
-        playerIndex         : 0,
-        teamIndex           : 0,
-        userId              : null,
-        coId                : CoId.Empty,
-        restTimeToBoot      : 0,
-        unitAndTileSkinId   : 0,
+        playerIndex       : 0,
+        teamIndex         : 0,
+        userId            : null,
+        coId              : Cos_Constants.CoId.Empty,
+        restTimeToBoot    : 0,
+        unitAndTileSkinId : 0,
     })];
 
     const templateWarRule   = mapRawData.getTemplateWarRuleArray()[0];
-    const warRuleCommonData = getExisted(templateWarRule.getWarRuleCommonData());
+    const warRuleCommonData = Helpers_Misc.getExisted(templateWarRule.getWarRuleCommonData());
     const playerRuleList    = warRuleCommonData.getPlayerRuleList();
-    if ((getErrorCodeForPlayerRuleList({
-            playerRuleList          : playerRuleList,
-            gameConfig              : gameConfig,
-            playersCountUnneutral   : playersCountUnneutral,
-            ruleAvailability        : templateWarRule.getRuleAvailability() ?? null,
-            isCampaignMap           : mapRawData.getCampaignMapData() != null,
-        }))                                                                     ||
+    if ((PlayerRules_Utils.getErrorCodeForPlayerRuleList({
+        playerRuleList        : playerRuleList,
+        gameConfig            : gameConfig,
+        playersCountUnneutral : playersCountUnneutral,
+        ruleAvailability      : templateWarRule.getRuleAvailability() ?? null,
+        isCampaignMap         : mapRawData.getCampaignMapData() != null,
+    }))                                                                     ||
         (playerRuleList.length !== playersCountUnneutral)
     ) {
-        throw newError(`Invalid ruleForPlayers.`, ClientErrorCode.TwWar_CreateInitialPlayerManagerDataForTw_01);
+        throw Helpers_Misc.newError(`Invalid ruleForPlayers.`, Utils_ClientErrorCode.ClientErrorCode.TwWar_CreateInitialPlayerManagerDataForTw_01);
     }
 
-    for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
+    for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
         players.push(_createInitialSinglePlayerData({
-            playerIndex         : playerIndex,
-            teamIndex           : getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
-            userId              : 1,
-            coId                : CoId.Empty,
-            restTimeToBoot      : restTimeToBoot,
-            unitAndTileSkinId   : playerIndex,
+            playerIndex       : playerIndex,
+            teamIndex         : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
+            userId            : 1,
+            coId              : Cos_Constants.CoId.Empty,
+            restTimeToBoot    : restTimeToBoot,
+            unitAndTileSkinId : playerIndex,
         }));
     }
 
@@ -211,7 +251,7 @@ async function _createInitialPlayerManagerDataForTw(mapRawData: MapRawData, game
 async function _createInitialFieldData(mapRawData: MapRawData): Promise<SerialField> {
     const units = mapRawData.getUnitDataArray();
     return SerialField.fromJson({
-        tileMap     : {
+        tileMap : {
             tiles               : mapRawData.getTileDataArray().map(v => v.toJson()),
             tileCustomNameArray : mapRawData.getTileCustomNameArray().map(v => v.toJson()),
         },
@@ -220,9 +260,9 @@ async function _createInitialFieldData(mapRawData: MapRawData): Promise<SerialFi
             nextUnitId          : units.length,
             unitCustomNameArray : mapRawData.getUnitCustomNameArray().map(v => v.toJson()),
         },
-        fogMap  : {
-            forceFogCode    : ForcedFogCode.None,
-            mapsFromPath    : [],
+        fogMap : {
+            forceFogCode : FogMaps_Constants.ForcedFogCode.None,
+            mapsFromPath : [],
         },
     });
 }
@@ -239,14 +279,14 @@ function _createInitialSinglePlayerData(data: DataForCreateSinglePlayerData): Se
     return SerialPlayer.fromJson({
         fund                        : 0,
         hasVotedForDraw             : false,
-        aliveState                  : AliveStateId.Alive,
+        aliveState                  : Players_Constants.AliveStateId.Alive,
         playerIndex                 : data.playerIndex,
         restTimeToBoot              : data.restTimeToBoot,
         userId                      : data.userId,
         unitAndTileSkinId           : data.unitAndTileSkinId,
         coId                        : data.coId,
         coCurrentEnergy             : null,
-        coUsingSkillType            : SkillTypeId.Passive,
+        coUsingSkillType            : CoSkills_Constants.SkillTypeId.Passive,
         coPowerActivatedCount       : null,
         coIsDestroyedInTurn         : false,
         watchOngoingSrcUserIdArray  : [],

@@ -1,24 +1,24 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { BwWar } from "../baseWar/model/BwWar.ts";
-import { TaskObjective } from "../expressionParsers/contexts/TaskObjective.ts";
-import { Parser } from "../expressionParsers/Parser.ts";
-import { Num } from "../expressionParsers/results/Num.ts";
-import { newError, getExisted } from "../helpers/Misc.ts";
-import { getValueInInt32 } from "../numbers/Utils.ts";
+import {
+    Utils_ClientErrorCode,
+    TaskObjectives_Utils,
+    Helpers_Misc,
+    Numbers_Utils,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Parser,
+    ExpressionParsers_Contexts_TaskObjective,
+    type BaseWar_Model_War,
+    type TaskObjectives_ITaskObjectiveManager,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import { TaskObjectiveState } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 import { SerialTaskObjectiveManager } from "../proto/schema/CommonProto/WarSerialization/SerialTaskObjectiveManager.ts";
-import type { ITaskObjectiveManager } from "./ITaskObjectiveManager.ts";
-import { getErrorCodeForState } from "./Utils.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type IBwWar                         = BwWar;
+export class TaskObjectiveManager implements TaskObjectives_ITaskObjectiveManager.ITaskObjectiveManager {
+    private readonly _stateArray             : TaskObjectiveState[] = [];
+    private _war?                   : BaseWar_Model_War.War;
 
-export class TaskObjectiveManager implements ITaskObjectiveManager {
-    private _stateArray             : TaskObjectiveState[] = [];
-    private _war?                   : IBwWar;
-
-    public init(data: Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: Undefinable<TaskObjectiveFullData>): void {
+    public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TaskObjectiveFullData>): void {
         if (data == null) {
             return;
         }
@@ -26,27 +26,27 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
         const stateArray            = data.getStateArray();
         const taskObjectiveIdSet    = new Set<number>();
         for (const state of stateArray) {
-            const objectiveId = state.getObjectiveId() ?? 0;
+            const objectiveId = state.getObjectiveId();
             if (taskObjectiveIdSet.has(objectiveId)) {
-                throw newError(`Duplicated objectiveId: ${objectiveId}`);
+                throw Helpers_Misc.newError(`Duplicated objectiveId: ${objectiveId}`);
             }
             taskObjectiveIdSet.add(objectiveId);
 
-            const errorCode = getErrorCodeForState(state, taskObjectiveFullData);
+            const errorCode = TaskObjectives_Utils.getErrorCodeForState(state, taskObjectiveFullData);
             if (errorCode) {
-                throw newError(`Invalid state.`, errorCode);
+                throw Helpers_Misc.newError(`Invalid state.`, errorCode);
             }
         }
 
         this._setStateArray(stateArray);
     }
-    public fastInit(data: Undefinable<SerialTaskObjectiveManager>): void {
+    public fastInit(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTaskObjectiveManager>): void {
         this._setStateArray(data?.getStateArray() ?? []);
     }
 
     public serialize(): SerialTaskObjectiveManager {
         return SerialTaskObjectiveManager.fromJson({
-            stateArray  : this.getStateArray().map(v => v.toJson()),
+            stateArray : this.getStateArray().map(v => v.toJson()),
         });
     }
     public serializeForCreateMfr(): SerialTaskObjectiveManager {
@@ -56,15 +56,15 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
         return this.serialize();
     }
 
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
     }
 
-    private _setWar(war: IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    public getWar(): IBwWar {
-        return getExisted(this._war, ClientErrorCode.BwWeatherManager_GetWar_00);
+    public getWar(): BaseWar_Model_War.War {
+        return Helpers_Misc.getExisted(this._war, Utils_ClientErrorCode.ClientErrorCode.BwWeatherManager_GetWar_00);
     }
 
     private _setStateArray(stateArray: TaskObjectiveState[]): void {
@@ -76,9 +76,9 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
         return this._stateArray;
     }
     public updateState(state: TaskObjectiveState): boolean {
-        const objectiveId   = state.getObjectiveId() ?? 0;
+        const objectiveId   = state.getObjectiveId();
         const array         = this.getStateArray();
-        const existingData  = array.find(v => (v.getObjectiveId() ?? 0) === objectiveId);
+        const existingData  = array.find(v => (v.getObjectiveId()) === objectiveId);
         if (existingData == null) {
             array.push(state.clone());
             return true;
@@ -86,21 +86,21 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
             let isUpdated = false;
             {
                 const isHidden = state.getIsHidden();
-                if ((existingData.getIsHidden() ?? false) !== (isHidden ?? false)) {
+                if ((existingData.getIsHidden()) !== (isHidden)) {
                     isUpdated = true;
                     existingData.setIsHidden(isHidden);
                 }
             }
             {
                 const progress = state.getCurrentProgress();
-                if ((existingData.getCurrentProgress() ?? 0) !== (progress ?? 0)) {
+                if ((existingData.getCurrentProgress()) !== (progress)) {
                     isUpdated = true;
                     existingData.setCurrentProgress(progress);
                 }
             }
             {
                 const isDisabled = state.getIsProgressUpdaterDisabled();
-                if ((existingData.getIsProgressUpdaterDisabled() ?? false) !== (isDisabled ?? false)) {
+                if ((existingData.getIsProgressUpdaterDisabled()) !== (isDisabled)) {
                     isUpdated = true;
                     existingData.setIsProgressUpdaterDisabled(isDisabled);
                 }
@@ -125,8 +125,8 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
                 continue;
             }
 
-            const objectiveId   = taskObjective.getObjectiveId() ?? 0;
-            const state         = stateArray.find(v => (v.getObjectiveId() ?? 0) === objectiveId);
+            const objectiveId   = taskObjective.getObjectiveId();
+            const state         = stateArray.find(v => (v.getObjectiveId()) === objectiveId);
             if (state?.getIsProgressUpdaterDisabled()) {
                 continue;
             }
@@ -150,22 +150,22 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
         const taskObjectiveArray    = this.getWar().getCommonSettingManager().getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray();
         let score                   = 0;
         for (const state of this.getStateArray()) {
-            const progress = state.getCurrentProgress() ?? 0;
+            const progress = state.getCurrentProgress();
             if (progress == 0) {
                 continue;
             }
 
-            const objectiveId     = state.getObjectiveId() ?? 0;
-            const taskObjective   = taskObjectiveArray?.find(v => (v.getObjectiveId() ?? 0) === objectiveId);
+            const objectiveId     = state.getObjectiveId();
+            const taskObjective   = taskObjectiveArray?.find(v => (v.getObjectiveId()) === objectiveId);
             if (taskObjective == null) {
                 continue;
             }
 
-            score += progress * (taskObjective.getScoreForProgress() ?? 0);
+            score += progress * (taskObjective.getScoreForProgress());
 
             const maxProgress = taskObjective.getMaxProgress();
             if ((maxProgress != null) && (maxProgress <= progress)) {
-                score += (taskObjective.getScoreForCompletion() ?? 0);
+                score += (taskObjective.getScoreForCompletion());
             }
         }
 
@@ -173,11 +173,11 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
     }
 }
 
-function evalProgress(war: IBwWar, updater: string, objectiveId: number, defaultValue: number): number {
+function evalProgress(war: BaseWar_Model_War.War, updater: string, objectiveId: number, defaultValue: number): number {
     try {
-        const epResult = Parser.getParseResult(updater).eval(new TaskObjective(war, objectiveId), false);
-        if (epResult instanceof Num) {
-            return getValueInInt32(epResult.num);
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(updater).eval(new ExpressionParsers_Contexts_TaskObjective.TaskObjective(war, objectiveId), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
+            return Numbers_Utils.getValueInInt32(epResult.num);
         } else {
             return defaultValue;
         }

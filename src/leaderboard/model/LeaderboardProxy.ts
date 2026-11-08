@@ -1,73 +1,74 @@
 import {
-    updateOnMsgLbSpmOverallGetTopDataArray,
-    updateOnFailedMsgLbSpmOverallGetRankInfo,
-    updateOnMsgLbSpmOverallGetRankInfo,
-    updateOnFailedMsgLbMrwGetRankIndex,
-    updateOnMsgLbMrwGetRankIndex,
-} from "./LeaderboardModel.ts";
-import { addListeners, send } from "../../networks/Manager.ts";
-import { MessageCodes } from "../../networks/MessageCodes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgLbMrwGetRankIndex/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetRankInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetTopDataArray/S.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
-import type { WarTypeId } from "../../warTypes/Constants.ts";
+    Helpers_Misc,
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Networks_MessageCodes,
+    Leaderboard_Model_LeaderboardModel,
+    type Egret_Egret,
+    type WarTypes_Constants,
+} from "../../internal.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgLbSpmOverallGetTopDataArray,  callback: _onMsgLbSpmOverallGetTopDataArray, },
-        { msgCode: MessageCodes.MsgLbSpmOverallGetRankInfo,      callback: _onMsgLbSpmOverallGetRankInfo, },
-        { msgCode: MessageCodes.MsgLbMrwGetRankIndex,            callback: _onMsgLbMrwGetRankIndex },
+    Networks_Manager.addListeners([
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgLbSpmOverallGetTopDataArray,  callback : _onMsgLbSpmOverallGetTopDataArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgLbSpmOverallGetRankInfo,      callback : _onMsgLbSpmOverallGetRankInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgLbMrwGetRankIndex,            callback : _onMsgLbMrwGetRankIndex },
     ]);
 }
 
 export function reqLbSpmOverallGetTopDataArray(configVersion: string): void {
-    send({ MsgLbSpmOverallGetTopDataArray: { c: {
-        configVersion   : configVersion,
-    } } });
+    Networks_Manager.send({
+        MsgLbSpmOverallGetTopDataArray : {
+            c : {
+                configVersion : configVersion,
+            }, 
+        }, 
+    });
 }
-function _onMsgLbSpmOverallGetTopDataArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS;
+function _onMsgLbSpmOverallGetTopDataArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgLbSpmOverallGetTopDataArray"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        updateOnMsgLbSpmOverallGetTopDataArray(data);
-        dispatch(TypeId.MsgLbSpmOverallGetTopDataArray, data);
+        Leaderboard_Model_LeaderboardModel.updateOnMsgLbSpmOverallGetTopDataArray(data);
+        Notifications_Dispatcher.dispatch("MsgLbSpmOverallGetTopDataArray", { msg: data });
     }
 }
 
 export function reqLbSpmOverallGetRankInfo(userId: number): void {
-    send({ MsgLbSpmOverallGetRankInfo: { c: {
-        userId,
-    } } });
+    Networks_Manager.send({
+        MsgLbSpmOverallGetRankInfo : {
+            c : {
+                userId,
+            }, 
+        }, 
+    });
 }
-function _onMsgLbSpmOverallGetRankInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS;
+function _onMsgLbSpmOverallGetRankInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgLbSpmOverallGetRankInfo"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
-        updateOnFailedMsgLbSpmOverallGetRankInfo(data);
+        Leaderboard_Model_LeaderboardModel.updateOnFailedMsgLbSpmOverallGetRankInfo(data);
     } else {
-        updateOnMsgLbSpmOverallGetRankInfo(data);
-        dispatch(TypeId.MsgLbSpmOverallGetRankInfo, data);
+        Leaderboard_Model_LeaderboardModel.updateOnMsgLbSpmOverallGetRankInfo(data);
+        Notifications_Dispatcher.dispatch("MsgLbSpmOverallGetRankInfo", { msg: data });
     }
 }
 
-export function reqLbMrwGetRankIndex(warType: WarTypeId, playersCountUnneutral: number, userId: number): void {
-    send({ MsgLbMrwGetRankIndex: { c: {
-        warType,
-        playersCountUnneutral,
-        userId,
-    } } });
+export function reqLbMrwGetRankIndex(warType: WarTypes_Constants.WarTypeId, playersCountUnneutral: number, userId: number): void {
+    Networks_Manager.send({
+        MsgLbMrwGetRankIndex : {
+            c : {
+                warType,
+                playersCountUnneutral,
+                userId,
+            }, 
+        }, 
+    });
 }
-function _onMsgLbMrwGetRankIndex(e: Event): void {
-    const data = e.data as S;
+function _onMsgLbMrwGetRankIndex(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgLbMrwGetRankIndex"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
-        updateOnFailedMsgLbMrwGetRankIndex(data);
+        Leaderboard_Model_LeaderboardModel.updateOnFailedMsgLbMrwGetRankIndex(data);
     } else {
-        updateOnMsgLbMrwGetRankIndex(data);
-        dispatch(TypeId.MsgLbMrwGetRankIndex, data);
+        Leaderboard_Model_LeaderboardModel.updateOnMsgLbMrwGetRankIndex(data);
+        Notifications_Dispatcher.dispatch("MsgLbMrwGetRankIndex", { msg: data });
     }
 }

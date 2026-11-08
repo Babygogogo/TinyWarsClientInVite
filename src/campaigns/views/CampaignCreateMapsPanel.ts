@@ -1,65 +1,62 @@
-import { getCampaignInfo, getCampaignMapRawData } from "../mains/Provider.ts";
-import { type OpenData as CampaignsViewsCampaignMapInfoPageOpenData, Page } from "./CampaignMapInfoPage.ts";
 import {
-    type OpenData as CampaignsViewsCampaignMapRankPageOpenData,
-    Page as CampaignsViewsCampaignMapRankPage,
-} from "./CampaignMapRankPage.ts";
-import { getLatestConfigVersion } from "../../gameConfig/GcModel.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import { UiTabItemRenderer } from "../../ui/components/UiTabItemRenderer.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfUserId, getSelfCawHighScoreInfo } from "../../users/Model.ts";
+    Campaigns_Views_CampaignMapInfoPage,
+    Campaigns_Views_CampaignMapRankPage,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Interfaces_IUiTab,
+    type Ui_Types_UiListItemData,
+    Tween_Executor,
+    Campaigns_Mains_Provider,
+    GamePanels_Dict,
+    Lang_Utils,
+    GameConfigs_Provider,
+    Users_Model,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Components_UiTabItemRenderer,
+    Timer_TimerModel,
+} from "../../internal.ts";
 
 export interface OpenData {
     campaignId      : number;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupTab!             : IUiContainer;
-    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CampaignsViewsCampaignMapInfoPageOpenData | CampaignsViewsCampaignMapRankPageOpenData>;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupTab!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _tabSettings!          : Ui_Interfaces_IUiTab.IUiTab<DataForTabItemRenderer, Campaigns_Views_CampaignMapInfoPage.OpenData | Campaigns_Views_CampaignMapRankPage.OpenData>;
 
-    private readonly _groupNavigator!       : IUiLayout;
-    private readonly _labelSinglePlayer!    : IUiLabel;
-    private readonly _labelCampaign!        : IUiLabel;
-    private readonly _labelChooseCampaign!  : IUiLabel;
-    private readonly _labelChooseMap!       : IUiLabel;
+    private readonly _groupNavigator!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelSinglePlayer!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCampaign!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelChooseCampaign!  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelChooseMap!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnBack!              : IUiButton;
-    private readonly _btnNextStep!          : IUiButton;
+    private readonly _btnBack!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNextStep!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupCampaignList!    : IUiContainer;
-    private readonly _listCampaign!         : IUiScrollList<DataForCampaignMapRenderer>;
-    private readonly _labelNoCampaign!      : IUiLabel;
+    private readonly _groupCampaignList!    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listCampaign!         : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForCampaignMapRenderer>;
+    private readonly _labelNoCampaign!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _isTabInitialized   = false;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnNextStep,    callback : this._onTouchedBtnNextStep },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgCampaignValidateWar,  callback: this._onNotifyMsgCampaignValidateWar },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgCampaignValidateWar",  callback : this._onNotifyMsgCampaignValidateWar },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -88,7 +85,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedCampaignMapId(newCampaignMapId: number | null): Promise<void> {
         const listCampaign  = this._listCampaign;
-        const newIndex      = getExisted(listCampaign.getRevisedFirstIndex(v => v?.campaignMapId === newCampaignMapId));
+        const newIndex      = listCampaign.getRevisedFirstIndex(v => v?.campaignMapId === newCampaignMapId);
         listCampaign.setSelectedItemIndex(newIndex);
 
         this._updateBtnNextStep();
@@ -103,15 +100,15 @@ export class Panel extends UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        openPanel(getDict().CampaignCreateCampaignsPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CampaignCreateCampaignsPanel, void 0);
     }
 
     private async _onTouchedBtnNextStep(): Promise<void> {
         const campaignMapId = this._listCampaign.getFirstSelectedData()?.campaignMapId;
         if (campaignMapId != null) {
-            openPanel(getDict().CampaignCreateQuickSettingsPanel, {
-                campaignId      : this.getOpenData()?.campaignId,
-                campaignMapId   : campaignMapId,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CampaignCreateQuickSettingsPanel, {
+                campaignId    : this.getOpenData()?.campaignId,
+                campaignMapId : campaignMapId,
             });
         }
     }
@@ -155,13 +152,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSinglePlayer.setText(getText(TextType.B0138));
-        this._labelCampaign.setText(getText(TextType.B1135));
-        this._labelChooseCampaign.setText(getText(TextType.B0085));
-        this._labelChooseMap.setText(getText(TextType.B1082));
-        this._labelNoCampaign.setText(getText(TextType.B0278));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._btnNextStep.setText(getText(TextType.B0566));
+        this._labelSinglePlayer.setLangText(Lang_Constants.TextType.B0138);
+        this._labelCampaign.setLangText(Lang_Constants.TextType.B1135);
+        this._labelChooseCampaign.setLangText(Lang_Constants.TextType.B0085);
+        this._labelChooseMap.setLangText(Lang_Constants.TextType.B1082);
+        this._labelNoCampaign.setLangText(Lang_Constants.TextType.B0278);
+        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
+        this._btnNextStep.setLangText(Lang_Constants.TextType.B0566);
 
         this._groupNavigator.arrangeItems();
     }
@@ -170,13 +167,13 @@ export class Panel extends UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: getText(TextType.B0423) },
-                pageClass   : Page,
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0423) },
+                pageClass   : Campaigns_Views_CampaignMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: getText(TextType.B0436) },
-                pageClass   : CampaignsViewsCampaignMapRankPage,
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0436) },
+                pageClass   : Campaigns_Views_CampaignMapRankPage.Page,
                 pageData    : null,
             },
         ]);
@@ -189,9 +186,9 @@ export class Panel extends UiPanel<OpenData> {
             return [];
         }
 
-        const campaignInfo              = await getCampaignInfo(campaignId);
+        const campaignInfo              = await Campaigns_Mains_Provider.getCampaignInfo(campaignId);
         const enabledCampaignMapIdArray = campaignInfo?.getEnabledCampaignMapIdArray() ?? [];
-        const selfUserId                = getSelfUserId();
+        const selfUserId                = Users_Model.getSelfUserId();
         const isDesigner                = (selfUserId != null) && ((campaignInfo?.getDesignerUserIdArray().indexOf(selfUserId) ?? -1) >= 0);
         const dataArray                 : DataForCampaignMapRenderer[] = [];
         for (const campaignMapId of campaignInfo?.getAllCampaignMapIdArray() ?? []) {
@@ -201,12 +198,12 @@ export class Panel extends UiPanel<OpenData> {
 
             if ((!dataArray.length)                                                                                         ||
                 (isDesigner)                                                                                                ||
-                (getSelfCawHighScoreInfo(campaignId, dataArray[dataArray.length - 1].campaignMapId) != null)
+                (Users_Model.getSelfCawHighScoreInfo(campaignId, dataArray[dataArray.length - 1].campaignMapId) != null)
             ) {
                 dataArray.push({
-                    campaignId      : campaignId,
-                    campaignMapId   : campaignMapId,
-                    panel           : this,
+                    campaignId    : campaignId,
+                    campaignMapId : campaignMapId,
+                    panel         : this,
                 });
             }
         }
@@ -226,100 +223,100 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
 
-    private async _createDataForCampaignMapInfoPage(): Promise<CampaignsViewsCampaignMapInfoPageOpenData> {
+    private async _createDataForCampaignMapInfoPage(): Promise<Campaigns_Views_CampaignMapInfoPage.OpenData> {
         const campaignMapId = this._listCampaign.getFirstSelectedData()?.campaignMapId;
         const campaignId    = this.getOpenData()?.campaignId;
         return ((campaignMapId == null) || (campaignId == null))
             ? null
             : {
-                campaignId      : campaignId,
-                campaignMapId   : campaignMapId,
+                campaignId    : campaignId,
+                campaignMapId : campaignMapId,
             };
     }
 
-    private _createDataForCampaignMapRankPage(): CampaignsViewsCampaignMapRankPageOpenData {
+    private _createDataForCampaignMapRankPage(): Campaigns_Views_CampaignMapRankPage.OpenData {
         const selectedData = this._listCampaign.getFirstSelectedData();
         return selectedData == null
             ? null
             : {
-                campaignId      : selectedData.campaignId,
-                campaignMapId   : selectedData.campaignMapId,
+                campaignId    : selectedData.campaignId,
+                campaignMapId : selectedData.campaignMapId,
             };
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
-        Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
-        Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
-        Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
-        Executor.reset({
-            obj         : this._groupCampaignList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupCampaignList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
-        Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
-        Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
-        Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
-        Executor.reset({
-            obj         : this._groupCampaignList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+        Tween_Executor.Executor.reset({
+            obj        : this._groupCampaignList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 }
 
-interface DataForCampaignMapRenderer extends UiListItemData {
+interface DataForCampaignMapRenderer extends Ui_Types_UiListItemData.UiListItemData {
     campaignId      : number;
     campaignMapId   : number;
     panel           : Panel;
 }
-class CampaignMapRenderer extends UiListItemRenderer<DataForCampaignMapRenderer> {
-    private readonly _layoutName!   : IUiLayout;
-    private readonly _labelName!    : IUiLabel;
-    private readonly _labelId!      : IUiLabel;
+class CampaignMapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForCampaignMapRenderer> {
+    private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -358,16 +355,16 @@ class CampaignMapRenderer extends UiListItemRenderer<DataForCampaignMapRenderer>
         labelName.setText(``);
 
         const [mapRawData, configVersion] = await Promise.all([
-            getCampaignMapRawData(campaignId, campaignMapId),
-            getLatestConfigVersion()
+            Campaigns_Mains_Provider.getCampaignMapRawData(campaignId, campaignMapId),
+            GameConfigs_Provider.getLatestConfigVersion(),
         ]);
         if (openData !== this.getOpenData()) {
             return;
         }
 
-        labelName.setText(getLanguageText({ textArray: mapRawData?.getMapNameArray() }) ?? UndefinedError);
+        labelName.setText(Lang_Utils.getLanguageText({ textArray : mapRawData?.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
 
-        const cawHighScoreInfo = getSelfCawHighScoreInfo(campaignId, campaignMapId);
+        const cawHighScoreInfo = Users_Model.getSelfCawHighScoreInfo(campaignId, campaignMapId);
         if (cawHighScoreInfo == null) {
             labelId.setText(`#${campaignId}-${campaignMapId}`);
         } else {
@@ -376,22 +373,22 @@ class CampaignMapRenderer extends UiListItemRenderer<DataForCampaignMapRenderer>
                 (cawHighScoreInfo.getConfigVersion() !== configVersion)                                         ||
                 (highScore == null)
             ) {
-                labelId.setText(`#${campaignId}-${campaignMapId} ${getText(TextType.B0121)}`);
+                labelId.setText(`#${campaignId}-${campaignMapId} ${Lang_Utils.getText(Lang_Constants.TextType.B0121)}`);
             } else {
-                labelId.setText(`#${campaignId}-${campaignMapId} ${getText(TextType.B0907)}: ${highScore}`);
+                labelId.setText(`#${campaignId}-${campaignMapId} ${Lang_Utils.getText(Lang_Constants.TextType.B0907)}: ${highScore}`);
             }
         }
         this._layoutName.arrangeItems();
     }
 }
 
-interface DataForTabItemRenderer extends UiListItemData {
+interface DataForTabItemRenderer extends Ui_Types_UiListItemData.UiListItemData {
     name: string;
 }
-class TabItemRenderer extends UiTabItemRenderer<DataForTabItemRenderer> {
-    private readonly _labelName!    : IUiLabel;
+class TabItemRenderer extends Ui_Components_UiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer> {
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? Lang_Constants.UndefinedError);
     }
 }

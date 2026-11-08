@@ -1,35 +1,32 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "./IBwWar.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import {
+    type BaseWar_Model_War,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { Info } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/Info.ts";
-import type {
-    SerialWarStatisticsManager as ProtoSchemaCommonProtoWarSerializationSerialWarStatisticsManager,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWarStatisticsManager.ts";
+import type { SerialWarStatisticsManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarStatisticsManager.ts";
 import type { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-
-type SerialWarStatisticsManager = ProtoSchemaCommonProtoWarSerializationSerialWarStatisticsManager;
-type UnitStatistics             = WsUnitStatistics;
 
 export interface IBwWarStatisticsManager {
     init({ data, playersCountUnneutral, currentTurnIndex, gameConfiguration }: {
-        data                    : Undefinable<SerialWarStatisticsManager>;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWarStatisticsManager>;
         playersCountUnneutral   : number;
         currentTurnIndex        : number;
-        gameConfiguration       : GcData;
+        gameConfiguration       : GameConfigs_GameConfig.GameConfig;
     }): void;
-    fastInit(data: Undefinable<SerialWarStatisticsManager>): void;
-    startRunning(war: IBwWar): void;
+    fastInit(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWarStatisticsManager>): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     serialize(): SerialWarStatisticsManager;
     serializeForCreateSfw(): SerialWarStatisticsManager;
     serializeForCreateMfr(): SerialWarStatisticsManager;
 
-    getUnitStatisticsArray(): UnitStatistics[];
+    getUnitStatisticsArray(): WsUnitStatistics[];
     getUnitStatisticsInfoArrayForFullReplay(): Info[];
-    addUnitStatistics(data: UnitStatistics): void;
+    addUnitStatistics(data: WsUnitStatistics): void;
 
     tickPlayerManualActionsCount(turnIndex: number, playerIndex: number): void;
     getManualActionsCount(turnIndex: number, playerIndex: number): number;
     getManualActionsCountForPlayerInTurn(): number;
-    getManualActionsCountForPlayersInRecentTurns(playerIndexSet: Set<number>, recentTurnsCount: Undefinable<number>): number;
+    getManualActionsCountForPlayersInRecentTurns(playerIndexSet: Set<number>, recentTurnsCount: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): number;
 }

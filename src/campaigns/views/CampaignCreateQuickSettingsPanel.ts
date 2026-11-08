@@ -1,66 +1,67 @@
-import { reqCampaignCreateWar } from "../mains/Gateway.ts";
-import { getCampaignMapRawData } from "../mains/Provider.ts";
-import { getLatestConfigVersion, getLatestGameConfig } from "../../gameConfig/GcModel.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
-import { gotoSinglePlayerWar } from "../../helpers/GameFlow.ts";
-import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
+import {
+    type Notifications_Mapping,
+    GamePanels_Manager,
+    Stages_Constants,
+    SinglePlayerMode_Model_SpmModel,
+    Campaigns_Mains_Provider,
+    Helpers_ImageSource,
+    GamePanels_Dict,
+    Helpers_Misc,
+    GameConfigs_Provider,
+    Lang_Utils,
+    WarRules_Utils_CommonData,
+    Users_Model,
+    Numbers_Utils,
+    Helpers_GameFlow,
+    Players_Constants,
+    Sounds_SoundPlayer,
+    Campaigns_Mains_Gateway,
+    Sounds_Constants,
+    Lang_Constants,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { PlayerCoInfo } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/PlayerCoInfo.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/S.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import { getAvailableSlotIndex } from "../../singlePlayerMode/model/SpmModel.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { Dimension } from "../../stages/Constants.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfCawHighScoreInfo } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
-import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
 
 export interface OpenData {
     campaignId      : number;
     campaignMapId   : number;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutHighScore!      : IUiLayout;
-    private readonly _labelHighScoreTitle!  : IUiLabel;
-    private readonly _labelHighScore!       : IUiLabel;
+    private readonly _layoutHighScore!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelHighScoreTitle!  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHighScore!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnStart!             : IUiButton;
+    private readonly _btnStart!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listPlayer!           : IUiScrollList<DataForPlayerRenderer>;
+    private readonly _listPlayer!           : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForPlayerRenderer>;
 
-    private _playerCoDict   = new Map<number, number>();
+    private readonly _playerCoDict   = new Map<number, number>();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgCampaignCreateWar,        callback: this._onNotifyMsgCampaignCreateWar },
-            { type: TypeId.MsgCampaignCreateWarFailed,  callback: this._onNotifyMsgCampaignCreateWarFailed },
+            { type : "LanguageChanged",             callback : this._onNotifyLanguageChanged },
+            { type : "MsgCampaignCreateWar",        callback : this._onNotifyMsgCampaignCreateWar },
+            { type : "MsgCampaignCreateWarFailed",  callback : this._onNotifyMsgCampaignCreateWarFailed },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnStart,           callback: this._onTouchedBtnStart },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnStart,           callback : this._onTouchedBtnStart },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -90,19 +91,19 @@ export class Panel extends UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgCampaignCreateWar(e: Event): void {
+    private _onNotifyMsgCampaignCreateWar(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCampaignCreateWar"]>): void {
         this.closePanel();
-        closePanel(getDict().CommonBlockPanel);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
 
-        const data = e.data as S;
-        gotoSinglePlayerWar({
-            slotIndex       : getExisted(data.getSlotIndex()),
-            slotExtraData   : getExisted(data.getSlotExtraData()),
-            warData         : getExisted(data.getWarData()),
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
+        Helpers_GameFlow.gotoSinglePlayerWar({
+            slotIndex     : Helpers_Misc.getExisted(data.getSlotIndex()),
+            slotExtraData : Helpers_Misc.getExisted(data.getSlotExtraData()),
+            warData       : Helpers_Misc.getExisted(data.getWarData()),
         });
     }
     private _onNotifyMsgCampaignCreateWarFailed(): void {
-        closePanel(getDict().CommonBlockPanel);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
     }
 
     private async _onTouchedBtnStart(): Promise<void> {
@@ -111,21 +112,21 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonChooseSingleSpmSaveSlotPanel, {
-            currentSlotIndex        : await getAvailableSlotIndex(),
-            needComment             : false,
-            needConfirmOverwrite    : true,
-            callback                : slotIndex => {
-                reqCampaignCreateWar({
-                    slotIndex           : slotIndex,
-                    slotExtraData       : new SpmWarSaveSlotExtraData(),
-                    campaignId          : openData.campaignId,
-                    campaignMapId       : openData.campaignMapId,
-                    playerCoInfoArray   : [...this._playerCoDict.entries()].map(v => PlayerCoInfo.fromJson({ playerIndex: v[0], coId: v[1] })),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel, {
+            currentSlotIndex     : await SinglePlayerMode_Model_SpmModel.getAvailableSlotIndex(),
+            needComment          : false,
+            needConfirmOverwrite : true,
+            callback             : slotIndex => {
+                Campaigns_Mains_Gateway.reqCampaignCreateWar({
+                    slotIndex         : slotIndex,
+                    slotExtraData     : new SpmWarSaveSlotExtraData(),
+                    campaignId        : openData.campaignId,
+                    campaignMapId     : openData.campaignMapId,
+                    playerCoInfoArray : [...this._playerCoDict.entries()].map(v => PlayerCoInfo.fromJson({ playerIndex : v[0], coId : v[1] })),
                 });
-                openPanel(getDict().CommonBlockPanel, {
-                    title   : getText(TextType.B0088),
-                    content : getText(TextType.A0040),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
+                    title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
+                    content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
                 });
             },
         });
@@ -142,9 +143,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0560));
-        this._labelHighScoreTitle.setText(getText(TextType.B0907));
-        this._btnStart.setText(getText(TextType.B0026));
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0560);
+        this._labelHighScoreTitle.setLangText(Lang_Constants.TextType.B0907);
+        this._btnStart.setLangText(Lang_Constants.TextType.B0026);
 
         this._layoutHighScore.arrangeItems();
     }
@@ -158,15 +159,15 @@ export class Panel extends UiPanel<OpenData> {
         const campaignId                    = openData.campaignId;
         const campaignMapId                 = openData.campaignMapId;
         const [mapRawData, configVersion]   = await Promise.all([
-            getCampaignMapRawData(campaignId, campaignMapId),
-            getLatestConfigVersion()
+            Campaigns_Mains_Provider.getCampaignMapRawData(campaignId, campaignMapId),
+            GameConfigs_Provider.getLatestConfigVersion(),
         ]);
         if (openData !== this.getOpenData()) {
             return;
         }
 
         const label             = this._labelHighScore;
-        const cawHighScoreInfo  = getSelfCawHighScoreInfo(campaignId, campaignMapId);
+        const cawHighScoreInfo  = Users_Model.getSelfCawHighScoreInfo(campaignId, campaignMapId);
         if (cawHighScoreInfo == null) {
             label.setText(`--`);
         } else {
@@ -175,7 +176,7 @@ export class Panel extends UiPanel<OpenData> {
                 (cawHighScoreInfo.getConfigVersion() !== configVersion)                                         ||
                 (highScore == null)
             ) {
-                label.setText(getText(TextType.B1300));
+                label.setLangText(Lang_Constants.TextType.B1300);
             } else {
                 label.setText(`${highScore}`);
             }
@@ -188,19 +189,19 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const mapRawData    = await getCampaignMapRawData(openData.campaignId, openData.campaignMapId);
+        const mapRawData    = await Campaigns_Mains_Provider.getCampaignMapRawData(openData.campaignId, openData.campaignMapId);
         const listPlayer    = this._listPlayer;
         if (mapRawData) {
-            await listPlayer.bindData(await this._createDataForListPlayer(getExisted(mapRawData.getPlayersCountUnneutral())));
+            await listPlayer.bindData(await this._createDataForListPlayer(mapRawData.getPlayersCountUnneutral()));
         } else {
             await listPlayer.removeAllItems();
         }
 
         const dataCount = listPlayer.getBoundDataArray()?.length ?? 0;
-        this._group.setUnscaledManualWidth(getValueInRange({
-            rawValue    : dataCount * 140 + (dataCount - 1) * 10 + 40,
-            minValue    : 330,
-            maxValue    : Dimension.DesignWidth,
+        this._group.setUnscaledManualWidth(Numbers_Utils.getValueInRange({
+            rawValue : dataCount * 140 + (dataCount - 1) * 10 + 40,
+            minValue : 330,
+            maxValue : Stages_Constants.Dimension.DesignWidth,
         }));
     }
 
@@ -211,23 +212,23 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const { campaignId, campaignMapId } = openData;
-        const mapRawData                    = await getCampaignMapRawData(campaignId, campaignMapId);
+        const mapRawData                    = await Campaigns_Mains_Provider.getCampaignMapRawData(campaignId, campaignMapId);
         if (mapRawData == null) {
             return [];
         }
 
-        const warRuleCommonData = getExisted(mapRawData.getTemplateWarRuleArray()[0].getWarRuleCommonData());
+        const warRuleCommonData = Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray()[0].getWarRuleCommonData());
         const playerCoDict      = this._playerCoDict;
         const dataList          : DataForPlayerRenderer[] = [];
-        for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
-            const playerRule = getPlayerRule(warRuleCommonData, playerIndex);
+        for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
+            const playerRule = WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex);
             dataList.push({
-                campaignId      : campaignId,
-                campaignMapId   : campaignMapId,
-                playerIndex     : playerIndex,
-                mapRawData      : mapRawData,
-                coId            : playerRule.getCampaignAiCoId() ?? getExisted(playerCoDict.get(playerIndex)),
-                panel           : this,
+                campaignId    : campaignId,
+                campaignMapId : campaignMapId,
+                playerIndex   : playerIndex,
+                mapRawData    : mapRawData,
+                coId          : playerRule.getCampaignAiCoId() ?? Helpers_Misc.getExisted(playerCoDict.get(playerIndex)),
+                panel         : this,
             });
         }
 
@@ -243,17 +244,17 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const playerRuleDataArray = ((await getCampaignMapRawData(openData.campaignId, openData.campaignMapId))?.getTemplateWarRuleArray() ?? [])[0].getWarRuleCommonData()?.getPlayerRuleList() ?? [];
+        const playerRuleDataArray = ((await Campaigns_Mains_Provider.getCampaignMapRawData(openData.campaignId, openData.campaignMapId))?.getTemplateWarRuleArray() ?? [])[0].getWarRuleCommonData()?.getPlayerRuleList() ?? [];
         for (const playerRule of playerRuleDataArray) {
             const coIdArray = playerRule.getCampaignHumanCoIdArray();
             if (coIdArray?.length) {
-                dict.set(playerRule.getPlayerIndex() ?? 0, coIdArray[0]);
+                dict.set(playerRule.getPlayerIndex(), coIdArray[0]);
             }
         }
     }
 }
 
-interface DataForPlayerRenderer extends UiListItemData {
+interface DataForPlayerRenderer extends Ui_Types_UiListItemData.UiListItemData {
     campaignId      : number;
     campaignMapId   : number;
     mapRawData      : MapRawData;
@@ -261,20 +262,20 @@ interface DataForPlayerRenderer extends UiListItemData {
     coId            : number;
     panel           : Panel;
 }
-class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
-    private readonly _groupCo!              : IUiContainer;
-    private readonly _imgSkin!              : IUiImage;
-    private readonly _groupChangeCo!        : IUiContainer;
-    private readonly _imgCoHead!            : IUiImage;
-    private readonly _labelCo!              : IUiLabel;
-    private readonly _labelPlayerType!      : IUiLabel;
+class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForPlayerRenderer> {
+    private readonly _groupCo!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSkin!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _groupChangeCo!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgCoHead!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelCo!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPlayerType!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelPlayerIndex!     : IUiLabel;
-    private readonly _labelTeamIndex!       : IUiLabel;
+    private readonly _labelPlayerIndex!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTeamIndex!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupCo,                callback: this._onTouchedGroupCo },
+            { ui : this._groupCo,                callback : this._onTouchedGroupCo },
         ]);
     }
 
@@ -283,7 +284,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
     }
 
     private async _onTouchedGroupCo(): Promise<void> {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const openData = this.getOpenData();
         if (openData == null) {
@@ -291,21 +292,21 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         }
 
         const playerIndex       = openData.playerIndex;
-        const warRuleCommonData = getExisted(openData.mapRawData.getTemplateWarRuleArray()[0].getWarRuleCommonData());
-        const coIdArray         = (getPlayerRule(warRuleCommonData, playerIndex)).getCampaignHumanCoIdArray();
+        const warRuleCommonData = Helpers_Misc.getExisted(openData.mapRawData.getTemplateWarRuleArray()[0].getWarRuleCommonData());
+        const coIdArray         = (WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex)).getCampaignHumanCoIdArray();
         const coId              = openData.coId;
         if (coIdArray.length <= 1) {
-            openPanel(getDict().CommonCoInfoPanel, {
-                gameConfig  : await getLatestGameConfig(),
-                coId        : coId,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoInfoPanel, {
+                gameConfig : await GameConfigs_Provider.getLatestGameConfig(),
+                coId       : coId,
             });
         } else {
-            openPanel(getDict().CommonChooseSingleCoIdPanel, {
-                gameConfig          : await getLatestGameConfig(),
-                currentCoId         : coId,
-                isBan               : false,
-                availableCoIdArray  : coIdArray,
-                callbackOnConfirm   : newCoId => {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
+                gameConfig         : await GameConfigs_Provider.getLatestGameConfig(),
+                currentCoId        : coId,
+                isBan              : false,
+                availableCoIdArray : coIdArray,
+                callbackOnConfirm  : newCoId => {
                     if (newCoId !== coId) {
                         openData.panel.updateOnSelectCo(playerIndex, newCoId);
                     }
@@ -321,7 +322,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         }
 
         const { campaignId, campaignMapId, playerIndex, coId, mapRawData }  = oldOpenData;
-        const gameConfig                                                    = await getLatestGameConfig();
+        const gameConfig                                                    = await GameConfigs_Provider.getLatestGameConfig();
         if (mapRawData == null) {
             return;
         }
@@ -338,20 +339,20 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
             return;
         }
 
-        const playerRule = mapRawData.getTemplateWarRuleArray()[0].getWarRuleCommonData()?.getPlayerRuleList().find(v => (v.getPlayerIndex() ?? 0) === playerIndex);
+        const playerRule = mapRawData.getTemplateWarRuleArray()[0].getWarRuleCommonData()?.getPlayerRuleList().find(v => (v.getPlayerIndex()) === playerIndex);
         if (playerRule == null) {
             return;
         }
 
         const isAi = playerRule.getCampaignAiCoId() != null;
-        this._labelPlayerIndex.setText(getPlayerForceName(playerIndex));
-        this._labelTeamIndex.setText(getPlayerTeamName(playerRule.getTeamIndex() ?? 0) || UndefinedError);
-        this._imgSkin.loadSource(getCoHeadFrame(playerRule.getCampaignSkinId() ?? 0));
-        this._labelPlayerType.setText(getText(isAi ? TextType.B0607 : TextType.B0031));
+        this._labelPlayerIndex.setText(Lang_Utils.getPlayerForceName(playerIndex));
+        this._labelTeamIndex.setText(Lang_Utils.getPlayerTeamName(playerRule.getTeamIndex()) || Lang_Constants.UndefinedError);
+        this._imgSkin.loadSource(Helpers_ImageSource.getCoHeadFrame(playerRule.getCampaignSkinId() ?? 0));
+        this._labelPlayerType.setLangText(isAi ? Lang_Constants.TextType.B0607 : Lang_Constants.TextType.B0031);
 
         const coCfg = gameConfig.getCoBasicCfg(coId);
         this._labelCo.setText(coCfg ? coCfg.getName() : `??`);
-        this._imgCoHead.loadSource(getCoHead(gameConfig, coId) ?? UndefinedError);
+        this._imgCoHead.loadSource(Helpers_ImageSource.getCoHead(gameConfig, coId) ?? Lang_Constants.UndefinedError);
         this._groupChangeCo.setIsVisible(playerRule.getCampaignHumanCoIdArray().length > 1);
     }
 }

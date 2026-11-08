@@ -1,29 +1,25 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getFormattedText, getComparatorName, getText } from "../../../lang/Utils.ts";
-import type {
-    WecOngoingPersistentActionPresence as ProtoSchemaCommonProtoWarEventWecOngoingPersistentActionPresence,
-} from "../../../proto/schema/CommonProto/WarEvent/WecOngoingPersistentActionPresence.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { checkIsValidValueComparatorId, checkIsMeet1 } from "../../../valueAndComparators/Utils.ts";
-import { checkIsValidWarEventActionIdSubset } from "../../actions/utils/Common.ts";
+import {
+    ValueAndComparators_Utils,
+    WarEvents_Actions_Utils_Common,
+    Lang_Utils,
+    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
+} from "../../../internal.ts";
+import type { WecOngoingPersistentActionPresence } from "../../../proto/schema/CommonProto/WarEvent/WecOngoingPersistentActionPresence.ts";
 
-type WecOngoingPersistentActionPresence = ProtoSchemaCommonProtoWarEventWecOngoingPersistentActionPresence;
-
-export function getBriefDesc(data: Undefinable<WecOngoingPersistentActionPresence>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecOngoingPersistentActionPresence>): string | null {
     if (data == null) {
         return null;
     }
 
-    return getFormattedText(
-        TextType.F0135,
-        getComparatorName(getExisted(data.getOngoingActionsCountComparator())),
-        data.getOngoingActionsCount() ?? UndefinedError,
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0135,
+        Lang_Utils.getComparatorName(data.getOngoingActionsCountComparator()),
+        data.getOngoingActionsCount(),
     );
 }
-export function getDetailedDesc(data: Undefinable<WecOngoingPersistentActionPresence>): string | null {
+export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecOngoingPersistentActionPresence>): string | null {
     if (data == null) {
         return null;
     }
@@ -32,56 +28,56 @@ export function getDetailedDesc(data: Undefinable<WecOngoingPersistentActionPres
     {
         const actionIdArray = data.getOngoingActionIdArray();
         if (actionIdArray?.length) {
-            subTextArray.push(`- ${getFormattedText(
-                TextType.F0226,
-                actionIdArray.join(` ${getText(TextType.Or)} `)
+            subTextArray.push(`- ${Lang_Utils.getFormattedText(
+                Lang_Constants.TextType.F0226,
+                actionIdArray.join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `),
             )}`);
         }
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(getText(TextType.A0944));
+        subTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0944));
     }
 
     return [
-        getFormattedText(
-            TextType.F0225,
-            getComparatorName(getExisted(data.getOngoingActionsCountComparator())),
-            data.getOngoingActionsCount() ?? UndefinedError,
+        Lang_Utils.getFormattedText(
+            Lang_Constants.TextType.F0225,
+            Lang_Utils.getComparatorName(data.getOngoingActionsCountComparator()),
+            data.getOngoingActionsCount(),
         ),
-        ...subTextArray
+        ...subTextArray,
     ].join(`\n`);
 }
 export function getErrorTip(data: WecOngoingPersistentActionPresence): string | null {
     if (data.getOngoingActionsCount() == null) {
-        return getFormattedText(TextType.F0091, getText(TextType.B0902));
+        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0902));
     }
 
     {
         const comparator = data.getOngoingActionsCountComparator();
-        if ((comparator == null) || (!checkIsValidValueComparatorId(comparator))) {
-            return getFormattedText(TextType.F0091, getText(TextType.Comparator));
+        if ((comparator == null) || (!ValueAndComparators_Utils.checkIsValidValueComparatorId(comparator))) {
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
         }
     }
 
     {
         const actionIdArray = data.getOngoingActionIdArray();
-        if ((actionIdArray) && (!checkIsValidWarEventActionIdSubset(actionIdArray))) {
-            return getFormattedText(TextType.F0091, getText(TextType.B0889));
+        if ((actionIdArray) && (!WarEvents_Actions_Utils_Common.checkIsValidWarEventActionIdSubset(actionIdArray))) {
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0889));
         }
     }
 
     return null;
 }
 
-export function checkIsValid(condition: Undefinable<WecOngoingPersistentActionPresence>): boolean {
+export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecOngoingPersistentActionPresence>): boolean {
     if (condition == null) {
         return false;
     }
 
     {
         const actionIdArray = condition.getOngoingActionIdArray();
-        if ((actionIdArray) && (!checkIsValidWarEventActionIdSubset(actionIdArray))) {
+        if ((actionIdArray) && (!WarEvents_Actions_Utils_Common.checkIsValidWarEventActionIdSubset(actionIdArray))) {
             return false;
         }
     }
@@ -92,7 +88,7 @@ export function checkIsValid(condition: Undefinable<WecOngoingPersistentActionPr
 
     {
         const comparator = condition.getOngoingActionsCountComparator();
-        if ((comparator == null) || (!checkIsValidValueComparatorId(comparator))) {
+        if ((comparator == null) || (!ValueAndComparators_Utils.checkIsValidValueComparatorId(comparator))) {
             return false;
         }
     }
@@ -100,7 +96,7 @@ export function checkIsValid(condition: Undefinable<WecOngoingPersistentActionPr
     return true;
 }
 
-export function checkIsMeet(condition: WecOngoingPersistentActionPresence, war: IBwWar): boolean {
+export function checkIsMeet(condition: WecOngoingPersistentActionPresence, war: BaseWar_Model_War.War): boolean {
     const conActionIdArray  = condition.getOngoingActionIdArray();
     const opaIdArray        = war.getWarEventManager().getOpaIdArray();
     let counter                 = 0;
@@ -115,9 +111,9 @@ export function checkIsMeet(condition: WecOngoingPersistentActionPresence, war: 
         }
     }
 
-    return checkIsMeet1({
-        comparator  : getExisted(condition.getOngoingActionsCountComparator(), ClientErrorCode.BwWarEventManager_CheckIsMeetConOngoingPersistentActionPresence_00),
-        targetValue : getExisted(condition.getOngoingActionsCount(), ClientErrorCode.BwWarEventManager_CheckIsMeetConOngoingPersistentActionPresence_01),
+    return ValueAndComparators_Utils.checkIsMeet1({
+        comparator  : condition.getOngoingActionsCountComparator(),
+        targetValue : condition.getOngoingActionsCount(),
         actualValue : counter,
     });
 }

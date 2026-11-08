@@ -1,27 +1,22 @@
-import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "./IBwWar.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import {
+    type BaseWar_Model_War,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_MapSize,
+    type WarTypes_Constants,
+} from "../../internal.ts";
 import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
-import type {
-    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
-} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import type { WarRuleCommonData } from "../../proto/schema/CommonProto/WarRule/WarRuleCommonData.ts";
-import type {
-    SettingsForCommon as ProtoSchemaCommonProtoWarSettingsSettingsForCommon,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
-import type { WarTypeId } from "../../warTypes/Constants.ts";
-
-type SettingsForCommon  = ProtoSchemaCommonProtoWarSettingsSettingsForCommon;
-type TemplateWarRule    = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
+import type { SettingsForCommon } from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
 
 export interface IBwCommonSettingManager {
     init({ settings, warType, playersCountUnneutral, gameConfig, mapSize }: {
         settings                : SettingsForCommon;
-        warType                 : WarTypeId;
+        warType                 : WarTypes_Constants.WarTypeId;
         playersCountUnneutral   : number;
-        gameConfig              : GcData;
-        mapSize                 : MapSize;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
+        mapSize                 : AuxiliaryTypes_MapSize.MapSize;
     }): void;
 
     serializeForCreateSfw(): SettingsForCommon;
@@ -29,7 +24,7 @@ export interface IBwCommonSettingManager {
     serializeForCreateSfwWithTemplateWarRule(templateWarRule: TemplateWarRule): SettingsForCommon;
     serializeForCreateMfwWithTemplateWarRule(templateWarRule: TemplateWarRule): SettingsForCommon;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     getSettingsForCommon(): SettingsForCommon;
     getTurnsLimit(): number;

@@ -1,17 +1,16 @@
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { CommonParams } from "../CommonParams.ts";
-import type { ScoreAndAction } from "../Types.ts";
-import { MinValue, MaxValue } from "../../numbers/Constants.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
+import {
+    Timer_TimerModel,
+    Numbers_Utils,
+    Numbers_Constants,
+    type Bots_CommonParams,
+    type Units_Unit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitProduceUnit(commonParams: CommonParams, unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
-    await checkAndCallLater();
+export async function getScoreAndActionUnitProduceUnit(commonParams: Bots_CommonParams.CommonParams, unit: Units_Unit.Unit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     if ((pathNodes.length !== 1) || (unit.getLoaderUnitId() != null)) {
         return null;
@@ -63,15 +62,15 @@ export async function getScoreAndActionUnitProduceUnit(commonParams: CommonParam
         return null;
     }
 
-    const score = getValueInRange({
-        minValue    : MinValue,
-        maxValue    : MaxValue,
-        rawValue    : (
-            ((war.getFogMap().checkHasFogCurrently() ? aiProductionScoreCfg.getBaseFog() : aiProductionScoreCfg.getBaseStd()) ?? 0) +
+    const score = Numbers_Utils.getValueInRange({
+        minValue : Numbers_Constants.MinValue,
+        maxValue : Numbers_Constants.MaxValue,
+        rawValue : (
+            ((war.getFogMap().checkHasFogCurrently() ? aiProductionScoreCfg.getBaseFog() : aiProductionScoreCfg.getBaseStd())) +
             war.getWarEventManager().getOpaAiUnitProductionBonusScore(
                 playerIndexInTurn,
                 produceUnitType,
-                pathNodes[pathNodes.length - 1].getGridIndex()
+                pathNodes[pathNodes.length - 1].getGridIndex(),
             )
         ) || 0,
     });
@@ -80,14 +79,16 @@ export async function getScoreAndActionUnitProduceUnit(commonParams: CommonParam
     }
 
     return {
-        score   : score + 1,
-        action  : WoContainer.fromJson({ WoUnitProduceUnit: {
-            path    : {
-                nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                isBlocked       : false,
-            },
-            launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-        }}),
+        score  : score + 1,
+        action : WoContainer.fromJson({
+            WoUnitProduceUnit : {
+                path : {
+                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                    isBlocked       : false,
+                },
+                launchUnitId : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+            }, 
+        }),
     };
 }

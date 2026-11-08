@@ -1,35 +1,34 @@
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { CommonParams } from "../CommonParams.ts";
-import type { ScoreAndAction } from "../Types.ts";
-import { getUnitTypeSetForCoSkillSetUnitIdle, getCoPowerSkillTargetGridIndexArray } from "../Utils.ts";
-import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
+import {
+    Units_Constants,
+    Timer_TimerModel,
+    Utils_ClientErrorCode,
+    Bots_Utils,
+    Helpers_Misc,
+    CoSkills_Constants,
+    type Bots_CommonParams,
+    type Units_Unit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import { ActionStateId } from "../../units/Constants.ts";
-import type { IUnit } from "../../units/IUnit.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitUseCoSkill(commonParams: CommonParams, unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
-    await checkAndCallLater();
+export async function getScoreAndActionUnitUseCoSkill(commonParams: Bots_CommonParams.CommonParams, unit: Units_Unit.Unit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const war               = commonParams.getWar();
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
-    const unitsInfo         = getExisted(commonParams.getUnitsInfoDict().get(playerIndexInTurn), ClientErrorCode.SpwRobot_GetScoreAndActionUnitUseCoSkill_00);
+    const unitsInfo         = Helpers_Misc.getExisted(commonParams.getUnitsInfoDict().get(playerIndexInTurn), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreAndActionUnitUseCoSkill_00);
     const player            = war.getPlayer(playerIndexInTurn);
     const idleUnitsCount    = unitsInfo.idleCountOnMap;
     const allUnitsCount     = unitsInfo.allCountOnMap;
     const gameConfig        = war.getGcData();
 
-    if (unit.checkCanUseCoSkill(SkillTypeId.SuperPower)) {
-        const unitTypeSetForCoSkillSetUnitIdle = getUnitTypeSetForCoSkillSetUnitIdle(player, SkillTypeId.SuperPower, gameConfig);
+    if (unit.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.SuperPower)) {
+        const unitTypeSetForCoSkillSetUnitIdle = Bots_Utils.getUnitTypeSetForCoSkillSetUnitIdle(player, CoSkills_Constants.SkillTypeId.SuperPower, gameConfig);
         if (unitTypeSetForCoSkillSetUnitIdle.size > 0) {
             const targetUnits = war.getUnitMap().getAllUnitsOnMap(v => (v.getPlayerIndex() === playerIndexInTurn) && (unitTypeSetForCoSkillSetUnitIdle.has(v.getUnitType())));
             if ((!targetUnits.length)                                                                               ||
-                (targetUnits.some(v => (v.getActionState() === ActionStateId.Idle) && (v.checkCanAiDoAction())))
+                (targetUnits.some(v => (v.getActionState() === Units_Constants.ActionStateId.Idle) && (v.checkCanAiDoAction())))
             ) {
                 return null;
             }
@@ -41,30 +40,32 @@ export async function getScoreAndActionUnitUseCoSkill(commonParams: CommonParams
         }
 
         return {
-            score   : await getScoreForActionUnitUseCoSkill(),
-            action  : WoContainer.fromJson({ WoUnitUseCoSkill: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                launchUnitId            : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-                skillType               : SkillTypeId.SuperPower,
-                targetGridIndexArray    : getCoPowerSkillTargetGridIndexArray(commonParams, player, SkillTypeId.SuperPower)?.map(v => v.toProto().toJson()) ?? [],
-            } }),
+            score  : await getScoreForActionUnitUseCoSkill(),
+            action : WoContainer.fromJson({
+                WoUnitUseCoSkill : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    launchUnitId         : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+                    skillType            : CoSkills_Constants.SkillTypeId.SuperPower,
+                    targetGridIndexArray : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.SuperPower)?.map(v => v.toProto().toJson()) ?? [],
+                }, 
+            }),
         };
     }
 
-    if (unit.checkCanUseCoSkill(SkillTypeId.Power)) {
-        if (player.getCoCurrentEnergy() > getExisted(player.getCoPowerEnergy(), ClientErrorCode.SpwRobot_GetScoreAndActionUnitUseCoSkill_01) * 1.1) {
+    if (unit.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.Power)) {
+        if (player.getCoCurrentEnergy() > Helpers_Misc.getExisted(player.getCoPowerEnergy(), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreAndActionUnitUseCoSkill_01) * 1.1) {
             return null;
         }
 
-        const unitTypeSetForCoSkillSetUnitIdle = getUnitTypeSetForCoSkillSetUnitIdle(player, SkillTypeId.Power, gameConfig);
+        const unitTypeSetForCoSkillSetUnitIdle = Bots_Utils.getUnitTypeSetForCoSkillSetUnitIdle(player, CoSkills_Constants.SkillTypeId.Power, gameConfig);
         if (unitTypeSetForCoSkillSetUnitIdle.size > 0) {
             const targetUnits = war.getUnitMap().getAllUnitsOnMap(v => (v.getPlayerIndex() === playerIndexInTurn) && (unitTypeSetForCoSkillSetUnitIdle.has(v.getUnitType())));
             if ((!targetUnits.length)                                                                               ||
-                (targetUnits.some(v => (v.getActionState() === ActionStateId.Idle) && (v.checkCanAiDoAction())))
+                (targetUnits.some(v => (v.getActionState() === Units_Constants.ActionStateId.Idle) && (v.checkCanAiDoAction())))
             ) {
                 return null;
             }
@@ -76,17 +77,19 @@ export async function getScoreAndActionUnitUseCoSkill(commonParams: CommonParams
         }
 
         return {
-            score   : await getScoreForActionUnitUseCoSkill(),
-            action  : WoContainer.fromJson({ WoUnitUseCoSkill: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                launchUnitId            : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-                skillType               : SkillTypeId.Power,
-                targetGridIndexArray    : getCoPowerSkillTargetGridIndexArray(commonParams, player, SkillTypeId.Power)?.map(v => v.toProto().toJson()) ?? [],
-            } }),
+            score  : await getScoreForActionUnitUseCoSkill(),
+            action : WoContainer.fromJson({
+                WoUnitUseCoSkill : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    launchUnitId         : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+                    skillType            : CoSkills_Constants.SkillTypeId.Power,
+                    targetGridIndexArray : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.Power)?.map(v => v.toProto().toJson()) ?? [],
+                }, 
+            }),
         };
     }
 
@@ -94,7 +97,7 @@ export async function getScoreAndActionUnitUseCoSkill(commonParams: CommonParams
 }
 
 async function getScoreForActionUnitUseCoSkill(): Promise<number> {
-    await checkAndCallLater();
+    await Timer_TimerModel.checkAndCallLater();
 
     return 999999999;
 }

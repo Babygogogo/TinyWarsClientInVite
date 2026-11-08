@@ -1,21 +1,20 @@
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { CommonParams } from "../CommonParams.ts";
-import type { ScoreAndAction } from "../Types.ts";
+import {
+    Timer_TimerModel,
+    type Bots_CommonParams,
+    type AuxiliaryTypes_GridIndex,
+    type Units_Unit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
-
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
 
 export async function getScoreAndActionUnitSelfDetonate(
-    commonParams    : CommonParams,
-    focusUnit       : IBwUnit,
-    destination     : GridIndex,
-    pathNodes       : MovePathNode[]
-): Promise<GrScoreAndAction | null> {
-    await checkAndCallLater();
+    commonParams    : Bots_CommonParams.CommonParams,
+    focusUnit       : Units_Unit.Unit,
+    destination     : AuxiliaryTypes_GridIndex.GridIndex,
+    pathNodes       : AuxiliaryTypes_MovePathNode.MovePathNode[],
+): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const selfDetonateCfg = focusUnit.getTemplateCfg().getSelfDetonateCfg();
     if (selfDetonateCfg == null) {
@@ -39,16 +38,16 @@ export async function getScoreAndActionUnitSelfDetonate(
     }
 
     return {
-        score   : totalScore,
-        action  : WoContainer.fromJson({
-            WoUnitSelfDetonate: {
-                path        : {
+        score  : totalScore,
+        action : WoContainer.fromJson({
+            WoUnitSelfDetonate : {
+                path : {
                     nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                     fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
                     isBlocked       : false,
                 },
-                launchUnitId    : focusUnit.getLoaderUnitId() == null ? null : focusUnit.getUnitId(),
-            }
+                launchUnitId : focusUnit.getLoaderUnitId() == null ? null : focusUnit.getUnitId(),
+            },
         }),
     };
 }

@@ -1,100 +1,103 @@
-import { setAllMessageIdArray, updateOnFailedMsgBroadcastGetMessageData, updateOnMsgBroadcastGetMessageData } from "./Provider.ts";
-import { addListeners, send } from "../networks/Manager.ts";
-import { MessageCodes } from "../networks/MessageCodes.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import type { S } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastAddMessage/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastDeleteMessageS,
-} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastDeleteMessage/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastDoBroadcastS,
-} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastDoBroadcast/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetAllMessageIdArrayS,
-} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetAllMessageIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS,
-} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
+import {
+    Helpers_Misc,
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Networks_MessageCodes,
+    Broadcasts_Provider,
+    type Egret_Egret,
+} from "../internal.ts";
 import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type { Event } from "../vendor/egret/Egret.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgBroadcastAddMessage,              callback: _onMsgBroadcastAddMessage },
-        { msgCode: MessageCodes.MsgBroadcastDeleteMessage,           callback: _onMsgBroadcastDeleteMessage, },
-        { msgCode: MessageCodes.MsgBroadcastDoBroadcast,             callback: _onMsgBroadcastDoBroadcast },
-        { msgCode: MessageCodes.MsgBroadcastGetAllMessageIdArray,    callback: _onMsgBroadcastGetAllMessageIdArray, },
-        { msgCode: MessageCodes.MsgBroadcastGetMessageData,          callback: _onMsgBroadcastGetMessageData },
+    Networks_Manager.addListeners([
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgBroadcastAddMessage,              callback : _onMsgBroadcastAddMessage },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgBroadcastDeleteMessage,           callback : _onMsgBroadcastDeleteMessage },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgBroadcastDoBroadcast,             callback : _onMsgBroadcastDoBroadcast },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgBroadcastGetAllMessageIdArray,    callback : _onMsgBroadcastGetAllMessageIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgBroadcastGetMessageData,          callback : _onMsgBroadcastGetMessageData },
     ], null);
 }
 
 export function reqBroadcastAddMessage(textList: LanguageText[], startTime: number, endTime: number): void {
-    send({
-        MsgBroadcastAddMessage: { c: {
-            textList    : textList.map(v => v.toJson()),
-            startTime   : startTime,
-            endTime     : endTime,
-        } },
+    Networks_Manager.send({
+        MsgBroadcastAddMessage : {
+            c : {
+                textList  : textList.map(v => v.toJson()),
+                startTime : startTime,
+                endTime   : endTime,
+            }, 
+        },
     });
 }
-function _onMsgBroadcastAddMessage(e: Event): void {
-    const data = e.data as S;
+function _onMsgBroadcastAddMessage(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgBroadcastAddMessage"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgBroadcastAddMessage, data);
+        Notifications_Dispatcher.dispatch("MsgBroadcastAddMessage", { msg: data });
     }
 }
 
 export function reqBroadcastDeleteMessage(messageId: number): void {
-    send({
-        MsgBroadcastDeleteMessage: { c: {
-            messageId,
-        } },
+    Networks_Manager.send({
+        MsgBroadcastDeleteMessage : {
+            c : {
+                messageId,
+            }, 
+        },
     });
 }
-function _onMsgBroadcastDeleteMessage(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastDeleteMessageS;
+function _onMsgBroadcastDeleteMessage(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgBroadcastDeleteMessage"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgBroadcastDeleteMessage, data);
+        Notifications_Dispatcher.dispatch("MsgBroadcastDeleteMessage", { msg: data });
     }
 }
 
 export function reqBroadcastDoBroadcast(): void {
-    send({
-        MsgBroadcastDoBroadcast: { c: {
-        } },
+    Networks_Manager.send({
+        MsgBroadcastDoBroadcast : {
+            c : {
+            }, 
+        },
     });
 }
-function _onMsgBroadcastDoBroadcast(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastDoBroadcastS;
+function _onMsgBroadcastDoBroadcast(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgBroadcastDoBroadcast"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgBroadcastDoBroadcast, data);
+        Notifications_Dispatcher.dispatch("MsgBroadcastDoBroadcast", { msg: data });
     }
 }
 
 export function reqBroadcastGetAllMessageIdArray(): void {
-    send({ MsgBroadcastGetAllMessageIdArray: { c: {
-    } }, });
+    Networks_Manager.send({
+        MsgBroadcastGetAllMessageIdArray : {
+            c : {
+            }, 
+        }, 
+    });
 }
-function _onMsgBroadcastGetAllMessageIdArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetAllMessageIdArrayS;
+function _onMsgBroadcastGetAllMessageIdArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgBroadcastGetAllMessageIdArray"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        setAllMessageIdArray(data.getMessageIdArray());
-        dispatch(TypeId.MsgBroadcastGetAllMessageIdArray, data);
+        Broadcasts_Provider.setAllMessageIdArray(data.getMessageIdArray());
+        Notifications_Dispatcher.dispatch("MsgBroadcastGetAllMessageIdArray", { msg: data });
     }
 }
 
 export function reqBroadcastGetMessageData(messageId: number): void {
-    send({ MsgBroadcastGetMessageData: { c: {
-        messageId,
-    } } });
+    Networks_Manager.send({
+        MsgBroadcastGetMessageData : {
+            c : {
+                messageId,
+            }, 
+        }, 
+    });
 }
-function _onMsgBroadcastGetMessageData(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS;
+function _onMsgBroadcastGetMessageData(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgBroadcastGetMessageData"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (data.getErrorCode()) {
-        updateOnFailedMsgBroadcastGetMessageData(data);
+        Broadcasts_Provider.updateOnFailedMsgBroadcastGetMessageData(data);
     } else {
-        updateOnMsgBroadcastGetMessageData(data);
-        dispatch(TypeId.MsgBroadcastGetMessageData, data);
+        Broadcasts_Provider.updateOnMsgBroadcastGetMessageData(data);
+        Notifications_Dispatcher.dispatch("MsgBroadcastGetMessageData", { msg: data });
     }
 }

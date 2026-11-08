@@ -1,67 +1,57 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { TimerTypeId, Incremental } from "../../bootTimers/Constants.ts";
-import { show } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { BasicSettingsType, Misc, SinglePlayerWar } from "../../gameConfig/GcWar.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import {
-    getText,
-    getLanguageText,
-    getWeatherFullDesc,
-    getWarBasicSettingsName,
-    getWeatherName,
-    getTileThemeName,
-    getBootTimerTypeName,
-    getTimeDurationText2,
-    getFormattedText,
-} from "../../lang/Utils.ts";
-import { getRawData, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Tiles_Constants_Common,
+    Wars_Constants,
+    Lang_Utils,
+    WarRules_Utils_CommonData,
+    GamePanels_Dict,
+    Helpers_Misc,
+    NormalMap_Model_NormalMapModel,
+    Helpers_Collection,
+    BootTimers_Constants,
+    Ui_Utils_UiSkinHelpers,
+    GamePanels_Manager,
+    FloatText,
+    SinglePlayerWars_Constants,
+    Lang_Constants,
+    Turns_Constants,
+    Ui_Types_UiHorizontalAlign,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiOpenableComponent,
+    Ui_Types_UiVerticalAlign,
+    WarOperations_Constants,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import { AllThemeTypeIdArray } from "../../tiles/constants/Common.ts";
-import { TurnIndex } from "../../turns/Constants.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
-import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import { Common } from "../../warOperations/Constants.ts";
-import { getDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
-
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export type OpenData = {
     dataArrayForListSettings    : DataForSettingsRenderer[];
 } | null;
-export class Page extends UiOpenableComponent<OpenData> {
-    private readonly _listSettings! : IUiScrollList<DataForSettingsRenderer>;
+export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData> {
+    private readonly _listSettings! : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForSettingsRenderer>;
 
     public constructor() {
         super();
 
-        loadSkinByPath(this, "common/CommonWarBasicSettingsPage.exml");
+        Ui_Utils_UiSkinHelpers.loadSkinByPath(this, "common/CommonWarBasicSettingsPage.exml");
     }
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
 
         this._listSettings.setItemRendererClass(SettingsRenderer);
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
     }
     protected override _doApplyOpenData(): void | Promise<void> {
@@ -88,27 +78,27 @@ export class Page extends UiOpenableComponent<OpenData> {
     }
 }
 
-interface DataForSettingsRenderer extends UiListItemData {
-    settingsType        : BasicSettingsType;
+interface DataForSettingsRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    settingsType        : Wars_Constants.BasicSettingsTypeId;
     currentValue        : number | string | null;
     instanceWarRule     : InstanceWarRule;
-    gameConfig          : GcData;
-    warEventFullData    : Undefinable<WarEventFullData>;
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
+    warEventFullData    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventFullData>;
     callbackOnModify    : ((newValue: string | number | null) => void) | null;
 }
-class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
-    private readonly _labelTitle!   : IUiLabel;
-    private readonly _labelValue!   : IUiLabel;
-    private readonly _btnModify!    : IUiButton;
-    private readonly _btnHelp!      : IUiButton;
+class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForSettingsRenderer> {
+    private readonly _labelTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelValue!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModify!    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelp!      : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnModify,  callback: this._onTouchedBtnModify },
-            { ui: this._btnHelp,    callback: this._onTouchedBtnHelp },
+            { ui : this._btnModify,  callback : this._onTouchedBtnModify },
+            { ui : this._btnHelp,    callback : this._onTouchedBtnHelp },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged", callback : this._onNotifyLanguageChanged },
         ]);
     }
     protected override _doApplyOpenData(): void {
@@ -127,38 +117,38 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         }
 
         const settingsType = openData.settingsType;
-        if (settingsType === BasicSettingsType.NormalMapId) {
+        if (settingsType === Wars_Constants.BasicSettingsTypeId.NormalMapId) {
             this._modifyAsNormalMapId();
-        } else if (settingsType === BasicSettingsType.WarName) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarName) {
             this._modifyAsWarName();
-        } else if (settingsType === BasicSettingsType.WarPassword) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarPassword) {
             this._modifyAsWarPassword();
-        } else if (settingsType === BasicSettingsType.WarComment) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarComment) {
             this._modifyAsWarComment();
-        } else if (settingsType === BasicSettingsType.WarRuleTitle) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarRuleTitle) {
             this._modifyAsWarRuleTitle();
-        } else if (settingsType === BasicSettingsType.HasFog) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.HasFog) {
             this._modifyAsHasFog();
-        } else if (settingsType === BasicSettingsType.Weather) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.Weather) {
             this._modifyAsWeather();
-        } else if (settingsType === BasicSettingsType.TileTheme) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TileTheme) {
             this._modifyAsTileTheme();
-        } else if (settingsType === BasicSettingsType.WarEvent) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarEvent) {
             this._modifyAsWarEvent();
-        } else if (settingsType === BasicSettingsType.TurnsAndWarOperationsLimit) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit) {
             this._modifyAsTurnsAndWarOperationsLimit();
-        } else if (settingsType === BasicSettingsType.TimerType) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerType) {
             this._modifyAsTimerType();
-        } else if (settingsType === BasicSettingsType.TimerRegularParam) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerRegularParam) {
             this._modifyAsTimerRegularParam();
-        } else if (settingsType === BasicSettingsType.TimerIncrementalParams) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams) {
             this._modifyAsTimerIncrementalParams();
-        } else if (settingsType === BasicSettingsType.SpmSaveSlotIndex) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.SpmSaveSlotIndex) {
             this._modifyAsSpmSaveSlotIndex();
-        } else if (settingsType === BasicSettingsType.SpmSaveSlotComment) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.SpmSaveSlotComment) {
             this._modifyAsSpmSaveSlotComment();
         } else {
-            throw newError(`CommonWarBasicSettingsPage.SettingsRenderer._onTouchedBtnModify() invalid settingsType: ${settingsType}`);
+            throw Helpers_Misc.newError(`CommonWarBasicSettingsPage.SettingsRenderer._onTouchedBtnModify() invalid settingsType: ${settingsType}`);
         }
     }
     private async _onTouchedBtnHelp(): Promise<void> {
@@ -168,63 +158,63 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         }
 
         const settingsType = openData.settingsType;
-        if (settingsType === BasicSettingsType.NormalMapId) {
+        if (settingsType === Wars_Constants.BasicSettingsTypeId.NormalMapId) {
             const normalMapId     = openData.currentValue;
             const mapDesc   = (typeof normalMapId == "number")
-                ? (await getRawData(normalMapId))?.getMapExtraText()?.getMapDescription()
+                ? (await NormalMap_Model_NormalMapModel.getRawData(normalMapId))?.getMapExtraText()?.getMapDescription()
                 : (null);
             if (mapDesc == null) {
-                show(getText(TextType.B0894));
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0894));
             } else {
-                openPanel(getDict().CommonAlertPanel, {
-                    getTitle   : () => getText(TextType.B0893),
-                    getContent : () => getLanguageText({ textArray: mapDesc }) ?? UndefinedError,
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
+                    getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0893),
+                    getContent : () => Lang_Utils.getLanguageText({ textArray : mapDesc }) ?? Lang_Constants.UndefinedError,
                 });
             }
 
-        } else if (settingsType === BasicSettingsType.HasFog) {
-            openPanel(getDict().CommonHelpPanel, {
-                getTitle  : () => getText(TextType.B0020),
-                getContent: () => getText(TextType.R0002),
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.HasFog) {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0020),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0002),
             });
 
-        } else if (settingsType === BasicSettingsType.Weather) {
-            openPanel(getDict().CommonHelpPanel, {
-                getTitle  : () => getText(TextType.Weather),
-                getContent: () => getWeatherFullDesc(openData.gameConfig),
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.Weather) {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
+                getContent : () => Lang_Utils.getWeatherFullDesc(openData.gameConfig),
             });
 
-        } else if (settingsType === BasicSettingsType.WarEvent) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarEvent) {
             const warEventFullData  = openData.warEventFullData;
-            const warEventIdArray   = openData.instanceWarRule.getWarEventFullData()?.getEventArray().map(v => getExisted(v.getEventId())) ?? [];
+            const warEventIdArray   = openData.instanceWarRule.getWarEventFullData()?.getEventArray().map(v => v.getEventId()) ?? [];
             if ((warEventFullData) && (warEventIdArray?.length)) {
-                openPanel(getDict().CommonWarEventListPanel, {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonWarEventListPanel, {
                     warEventFullData,
                     warEventIdArray,
-                    gameConfig          : openData.gameConfig,
+                    gameConfig : openData.gameConfig,
                 });
             }
 
-        } else if (settingsType === BasicSettingsType.TurnsAndWarOperationsLimit) {
-            openPanel(getDict().CommonHelpPanel, {
-                getTitle  : () => getText(TextType.B0987),
-                getContent: () => getText(TextType.R0012),
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit) {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0987),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0012),
             });
 
-        } else if (settingsType === BasicSettingsType.TimerType) {
-            openPanel(getDict().CommonHelpPanel, {
-                getTitle  : () => getText(TextType.B0574),
-                getContent: () => getText(TextType.R0003),
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerType) {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0574),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0003),
             });
-        } else if (settingsType === BasicSettingsType.TimerRegularParam) {
-            openPanel(getDict().CommonHelpPanel, {
-                getTitle   : () => getText(TextType.B0988),
-                getContent : () => getText(TextType.R0013),
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerRegularParam) {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0988),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0013),
             });
-        } else if (settingsType === BasicSettingsType.TimerIncrementalParams) {
-            openPanel(getDict().CommonHelpPanel, {
-                getTitle   : () => getText(TextType.B0989),
-                getContent : () => getText(TextType.R0014),
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams) {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0989),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0014),
             });
         }
     }
@@ -239,41 +229,41 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         }
 
         const settingsType = openData.settingsType;
-        this._labelTitle.setText(getWarBasicSettingsName(settingsType) || UndefinedError);
+        this._labelTitle.setText(Lang_Utils.getWarBasicSettingsName(settingsType) || Lang_Constants.UndefinedError);
         this._btnModify.setIsVisible(openData.callbackOnModify != null);
 
-        if (settingsType === BasicSettingsType.NormalMapId) {
+        if (settingsType === Wars_Constants.BasicSettingsTypeId.NormalMapId) {
             this._updateViewAsNormalMapId();
-        } else if (settingsType === BasicSettingsType.WarName) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarName) {
             this._updateViewAsWarName();
-        } else if (settingsType === BasicSettingsType.WarPassword) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarPassword) {
             this._updateViewAsWarPassword();
-        } else if (settingsType === BasicSettingsType.WarComment) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarComment) {
             this._updateViewAsWarComment();
-        } else if (settingsType === BasicSettingsType.WarRuleTitle) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarRuleTitle) {
             this._updateViewAsWarRuleTitle();
-        } else if (settingsType === BasicSettingsType.HasFog) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.HasFog) {
             this._updateViewAsHasFog();
-        } else if (settingsType === BasicSettingsType.Weather) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.Weather) {
             this._updateViewAsWeather();
-        } else if (settingsType === BasicSettingsType.TileTheme) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TileTheme) {
             this._updateViewAsTileTheme();
-        } else if (settingsType === BasicSettingsType.WarEvent) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.WarEvent) {
             this._updateViewAsWarEvent();
-        } else if (settingsType === BasicSettingsType.TurnsAndWarOperationsLimit) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit) {
             this._updateViewAsTurnsAndWarOperationsLimit();
-        } else if (settingsType === BasicSettingsType.TimerType) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerType) {
             this._updateViewAsTimerType();
-        } else if (settingsType === BasicSettingsType.TimerRegularParam) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerRegularParam) {
             this._updateViewAsTimerRegularParam();
-        } else if (settingsType === BasicSettingsType.TimerIncrementalParams) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams) {
             this._updateViewAsTimerIncrementalParams();
-        } else if (settingsType === BasicSettingsType.SpmSaveSlotIndex) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.SpmSaveSlotIndex) {
             this._updateViewAsSpmSaveSlotIndex();
-        } else if (settingsType === BasicSettingsType.SpmSaveSlotComment) {
+        } else if (settingsType === Wars_Constants.BasicSettingsTypeId.SpmSaveSlotComment) {
             this._updateViewAsSpmSaveSlotComment();
         } else {
-            throw newError(`CommonWarBasicSettingsPage.SettingsRenderer._updateView() invalid settingsType: ${settingsType}.`);
+            throw Helpers_Misc.newError(`CommonWarBasicSettingsPage.SettingsRenderer._updateView() invalid settingsType: ${settingsType}.`);
         }
     }
     private async _updateViewAsNormalMapId(): Promise<void> {
@@ -284,8 +274,8 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             labelValue.setText(`--`);
             btnHelp.setIsVisible(false);
         } else {
-            labelValue.setText((await getMapNameInCurrentLanguage(normalMapId)) ?? UndefinedError);
-            btnHelp.setIsVisible(!!(await getRawData(normalMapId))?.getMapExtraText()?.getMapDescription().length);
+            labelValue.setText((await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId)) ?? Lang_Constants.UndefinedError);
+            btnHelp.setIsVisible(!!(await NormalMap_Model_NormalMapModel.getRawData(normalMapId))?.getMapExtraText()?.getMapDescription().length);
         }
     }
     private _updateViewAsWarName(): void {
@@ -309,10 +299,10 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         const labelValue        = this._labelValue;
         const templateWarRuleId = instanceWarRule?.getTemplateWarRuleId();
         if (templateWarRuleId == null) {
-            labelValue.setText(getText(TextType.B0321));
+            labelValue.setLangText(Lang_Constants.TextType.B0321);
             labelValue.setTextColor(0xFFFF00);
         } else {
-            labelValue.setText(`(#${templateWarRuleId}) ${getLanguageText({ textArray: instanceWarRule?.getRuleNameArray() }) ?? UndefinedError}`);
+            labelValue.setText(`(#${templateWarRuleId}) ${Lang_Utils.getLanguageText({ textArray : instanceWarRule?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError}`);
             labelValue.setTextColor(0xFFFFFF);
         }
         this._btnHelp.setIsVisible(false);
@@ -321,7 +311,7 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         const openData          = this.getOpenData();
         const hasFog            = openData?.instanceWarRule.getWarRuleCommonData()?.getHasFogByDefault();
         const labelValue        = this._labelValue;
-        labelValue.setText(getText(hasFog ? TextType.Yes : TextType.No));
+        labelValue.setLangText(hasFog ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         labelValue.setTextColor(hasFog ? 0xFFFF00 : 0xFFFFFF);
         this._btnHelp.setIsVisible(true);
     }
@@ -332,15 +322,15 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         }
 
         const gameConfig    = openData.gameConfig;
-        const weatherType   = getDefaultWeatherType(getExisted(openData.instanceWarRule.getWarRuleCommonData()), gameConfig);
+        const weatherType   = WarRules_Utils_CommonData.getDefaultWeatherType(Helpers_Misc.getExisted(openData.instanceWarRule.getWarRuleCommonData()), gameConfig);
         const labelValue    = this._labelValue;
-        labelValue.setText(getWeatherName(weatherType, gameConfig) ?? UndefinedError);
+        labelValue.setText(Lang_Utils.getWeatherName(weatherType, gameConfig) ?? Lang_Constants.UndefinedError);
         labelValue.setTextColor(weatherType === gameConfig.getDefaultWeatherType() ? 0xFFFFFF: 0xFFFF00);
         this._btnHelp.setIsVisible(true);
     }
     private _updateViewAsTileTheme(): void {
         const openData = this.getOpenData();
-        this._labelValue.setText(getTileThemeName(openData?.instanceWarRule.getWarRuleCommonData()?.getFixedTileTheme() ?? null) ?? UndefinedError);
+        this._labelValue.setText(Lang_Utils.getTileThemeName(openData?.instanceWarRule.getWarRuleCommonData()?.getFixedTileTheme() ?? null) ?? Lang_Constants.UndefinedError);
         this._btnHelp.setIsVisible(false);
     }
     private _updateViewAsWarEvent(): void {
@@ -358,17 +348,17 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
     }
     private _updateViewAsTimerType(): void {
         const openData = this.getOpenData();
-        this._labelValue.setText(getBootTimerTypeName(openData?.currentValue as TimerTypeId) || UndefinedError);
+        this._labelValue.setText(Lang_Utils.getBootTimerTypeName(openData?.currentValue as BootTimers_Constants.TimerTypeId) || Lang_Constants.UndefinedError);
         this._btnHelp.setIsVisible(true);
     }
     private _updateViewAsTimerRegularParam(): void {
         const openData = this.getOpenData();
-        this._labelValue.setText(getTimeDurationText2(openData?.currentValue as number));
+        this._labelValue.setText(Lang_Utils.getTimeDurationText2(openData?.currentValue as number));
         this._btnHelp.setIsVisible(true);
     }
     private _updateViewAsTimerIncrementalParams(): void {
         const openData = this.getOpenData();
-        this._labelValue.setText((openData?.currentValue as string).split(`,`).map(v => getTimeDurationText2(parseInt(v))).join(`  `));
+        this._labelValue.setText((openData?.currentValue as string).split(`,`).map(v => Lang_Utils.getTimeDurationText2(parseInt(v))).join(`  `));
         this._btnHelp.setIsVisible(true);
     }
     private _updateViewAsSpmSaveSlotIndex(): void {
@@ -391,15 +381,15 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback      = getExisted(openData.callbackOnModify);
+        const callback      = Helpers_Misc.getExisted(openData.callbackOnModify);
         const currentValue  = openData.currentValue;
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0185),
-            currentValue    : `${currentValue || ``}`,
-            maxChars        : Misc.MaxNameLength,
-            charRestrict    : null,
-            tips            : null,
-            callback        : panel => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0185),
+            currentValue : `${currentValue || ``}`,
+            maxChars     : Wars_Constants.Misc.MaxNameLength,
+            charRestrict : null,
+            tips         : null,
+            callback     : panel => {
                 const newValue = panel.getInputText() || null;
                 if (newValue != currentValue) {
                     callback(newValue);
@@ -413,15 +403,15 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback      = getExisted(openData.callbackOnModify);
+        const callback      = Helpers_Misc.getExisted(openData.callbackOnModify);
         const currentValue  = openData.currentValue;
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0186),
-            currentValue    : `${currentValue || ``}`,
-            maxChars        : Misc.MaxPasswordLength,
-            charRestrict    : `0-9`,
-            tips            : getFormattedText(TextType.F0068, Misc.MaxPasswordLength),
-            callback        : panel => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0186),
+            currentValue : `${currentValue || ``}`,
+            maxChars     : Wars_Constants.Misc.MaxPasswordLength,
+            charRestrict : `0-9`,
+            tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
+            callback     : panel => {
                 const newValue = panel.getInputText() || null;
                 if (newValue != currentValue) {
                     callback(newValue);
@@ -435,15 +425,15 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback      = getExisted(openData.callbackOnModify);
+        const callback      = Helpers_Misc.getExisted(openData.callbackOnModify);
         const currentValue  = openData.currentValue;
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0187),
-            currentValue    : `${currentValue || ``}`,
-            maxChars        : Misc.MaxCommentLength,
-            charRestrict    : null,
-            tips            : null,
-            callback        : panel => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0187),
+            currentValue : `${currentValue || ``}`,
+            maxChars     : Wars_Constants.Misc.MaxCommentLength,
+            charRestrict : null,
+            tips         : null,
+            callback     : panel => {
                 const newValue = panel.getInputText() || null;
                 if (newValue != currentValue) {
                     callback(newValue);
@@ -457,7 +447,7 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback = getExisted(openData.callbackOnModify);
+        const callback = Helpers_Misc.getExisted(openData.callbackOnModify);
         callback(null);
     }
     private _modifyAsHasFog(): void {
@@ -466,13 +456,13 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback = getExisted(openData.callbackOnModify);
+        const callback = Helpers_Misc.getExisted(openData.callbackOnModify);
         if (openData.instanceWarRule.getTemplateWarRuleId() == null) {
             callback(null);
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getText(TextType.A0129),
-                callback: () => callback(null),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
+                callback   : () => callback(null),
             });
         }
     }
@@ -482,13 +472,13 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback = getExisted(openData.callbackOnModify);
+        const callback = Helpers_Misc.getExisted(openData.callbackOnModify);
         if (openData.instanceWarRule.getTemplateWarRuleId() == null) {
             callback(null);
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getText(TextType.A0129),
-                callback: () => callback(null),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
+                callback   : () => callback(null),
             });
         }
     }
@@ -504,12 +494,12 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         }
 
         const callback = () => {
-            openPanel(getDict().CommonChooseSingleNumberPanel, {
-                availableNumberArray    : [-1].concat(getNonNullElements(AllThemeTypeIdArray)),
-                currentNumber           : openData.instanceWarRule.getWarRuleCommonData()?.getFixedTileTheme() ?? -1,
-                getTitleText            : () => getText(TextType.B1113),
-                getNumberMainText           : tileTheme => tileTheme === -1 ? getText(TextType.B0890) : (getTileThemeName(tileTheme) ?? UndefinedError),
-                callbackOnConfirm       : tileTheme => {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+                availableNumberArray : [-1].concat(Helpers_Collection.getNonNullElements(Tiles_Constants_Common.AllThemeTypeIdArray)),
+                currentNumber        : openData.instanceWarRule.getWarRuleCommonData()?.getFixedTileTheme() ?? -1,
+                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1113),
+                getNumberMainText    : tileTheme => tileTheme === -1 ? Lang_Utils.getText(Lang_Constants.TextType.B0890) : (Lang_Utils.getTileThemeName(tileTheme) ?? Lang_Constants.UndefinedError),
+                callbackOnConfirm    : tileTheme => {
                     callbackOnModify(tileTheme === -1 ? null : tileTheme);
                 },
             });
@@ -518,9 +508,9 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         if (openData.instanceWarRule.getTemplateWarRuleId() == null) {
             callback();
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getText(TextType.A0129),
-                callback: callback
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
+                callback   : callback,
             });
         }
     }
@@ -533,25 +523,25 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback                  = getExisted(openData.callbackOnModify);
-        const minValueForTurnsLimit     = TurnIndex.MinLimit;
-        const maxValueForTurnsLimit     = TurnIndex.MaxLimit;
+        const callback                  = Helpers_Misc.getExisted(openData.callbackOnModify);
+        const minValueForTurnsLimit     = Turns_Constants.TurnIndex.MinLimit;
+        const maxValueForTurnsLimit     = Turns_Constants.TurnIndex.MaxLimit;
         const currentValue              = openData.currentValue as string;
         const textArray                 = currentValue.split(`,`);
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle           : () => getText(TextType.B0842),
-            currentValue    : parseInt(textArray[0]),
-            minValue        : minValueForTurnsLimit,
-            maxValue        : maxValueForTurnsLimit,
-            callback        : newTurnsLimit => {
-                const minValueForWarOperationsLimit = Common.MinLimit;
-                const maxValueForWarOperationsLimit = Common.MaxLimit;
-                openPanel(getDict().CommonInputIntegerPanel, {
-                    getTitle           : () => getText(TextType.B0986),
-                    currentValue    : parseInt(textArray[1]),
-                    minValue        : minValueForWarOperationsLimit,
-                    maxValue        : maxValueForWarOperationsLimit,
-                    callback        : newWarOperationsLimit => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0842),
+            currentValue : parseInt(textArray[0]),
+            minValue     : minValueForTurnsLimit,
+            maxValue     : maxValueForTurnsLimit,
+            callback     : newTurnsLimit => {
+                const minValueForWarOperationsLimit = WarOperations_Constants.Common.MinLimit;
+                const maxValueForWarOperationsLimit = WarOperations_Constants.Common.MaxLimit;
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0986),
+                    currentValue : parseInt(textArray[1]),
+                    minValue     : minValueForWarOperationsLimit,
+                    maxValue     : maxValueForWarOperationsLimit,
+                    callback     : newWarOperationsLimit => {
                         const newValue = `${newTurnsLimit}, ${newWarOperationsLimit}`;
                         if (newValue !== currentValue) {
                             callback(newValue);
@@ -567,7 +557,7 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback = getExisted(openData.callbackOnModify);
+        const callback = Helpers_Misc.getExisted(openData.callbackOnModify);
         callback(null);
     }
     private _modifyAsTimerRegularParam(): void {
@@ -576,7 +566,7 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback = getExisted(openData.callbackOnModify);
+        const callback = Helpers_Misc.getExisted(openData.callbackOnModify);
         callback(null);
     }
     private _modifyAsTimerIncrementalParams(): void {
@@ -585,36 +575,36 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback                  = getExisted(openData.callbackOnModify);
+        const callback                  = Helpers_Misc.getExisted(openData.callbackOnModify);
         const minValueForInitialTime    = 10;
-        const maxValueForInitialTime    = Incremental.MaxLimitForInitialTime;
+        const maxValueForInitialTime    = BootTimers_Constants.Incremental.MaxLimitForInitialTime;
         const currentValue              = openData.currentValue as string;
         const timeParamArray            = currentValue.split(`,`).map(v => parseInt(v));
-        openPanel(getDict().CommonInputDurationPanel, {
-            title           : getText(TextType.B0389),
-            currentValue    : timeParamArray[0],
-            minValue        : minValueForInitialTime,
-            maxValue        : maxValueForInitialTime,
-            tips            : `${getText(TextType.B0319)}: [${minValueForInitialTime}, ${maxValueForInitialTime}] (${getText(TextType.B0017)})`,
-            callback        : newInitialTime => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0389),
+            currentValue : timeParamArray[0],
+            minValue     : minValueForInitialTime,
+            maxValue     : maxValueForInitialTime,
+            tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${minValueForInitialTime}, ${maxValueForInitialTime}] (${Lang_Utils.getText(Lang_Constants.TextType.B0017)})`,
+            callback     : newInitialTime => {
                 const minValueForIncrementalTimePerUnit = 0;
-                const maxValueForIncrementalTimePerUnit = Incremental.MaxLimitForIncrementPerUnit;
-                openPanel(getDict().CommonInputDurationPanel, {
-                    title           : getText(TextType.B0390),
-                    currentValue    : timeParamArray[1],
-                    minValue        : minValueForIncrementalTimePerUnit,
-                    maxValue        : maxValueForIncrementalTimePerUnit,
-                    tips            : `${getText(TextType.B0319)}: [${minValueForIncrementalTimePerUnit}, ${maxValueForIncrementalTimePerUnit}] (${getText(TextType.B0017)})`,
-                    callback        : newIncrementalTimePerUnit => {
+                const maxValueForIncrementalTimePerUnit = BootTimers_Constants.Incremental.MaxLimitForIncrementPerUnit;
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
+                    title        : Lang_Utils.getText(Lang_Constants.TextType.B0390),
+                    currentValue : timeParamArray[1],
+                    minValue     : minValueForIncrementalTimePerUnit,
+                    maxValue     : maxValueForIncrementalTimePerUnit,
+                    tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${minValueForIncrementalTimePerUnit}, ${maxValueForIncrementalTimePerUnit}] (${Lang_Utils.getText(Lang_Constants.TextType.B0017)})`,
+                    callback     : newIncrementalTimePerUnit => {
                         const minValueForIncrementalTimePerTurn = 0;
-                        const maxValueForIncrementalTimePerTurn = Incremental.MaxLimitForIncrementPerTurn;
-                        openPanel(getDict().CommonInputDurationPanel, {
-                            title           : getText(TextType.B0991),
-                            currentValue    : timeParamArray[2],
-                            minValue        : minValueForIncrementalTimePerTurn,
-                            maxValue        : maxValueForIncrementalTimePerTurn,
-                            tips            : `${getText(TextType.B0319)}: [${minValueForIncrementalTimePerTurn}, ${maxValueForIncrementalTimePerTurn}] (${getText(TextType.B0017)})`,
-                            callback        : newIncrementalTimePerTurn => {
+                        const maxValueForIncrementalTimePerTurn = BootTimers_Constants.Incremental.MaxLimitForIncrementPerTurn;
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
+                            title        : Lang_Utils.getText(Lang_Constants.TextType.B0991),
+                            currentValue : timeParamArray[2],
+                            minValue     : minValueForIncrementalTimePerTurn,
+                            maxValue     : maxValueForIncrementalTimePerTurn,
+                            tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${minValueForIncrementalTimePerTurn}, ${maxValueForIncrementalTimePerTurn}] (${Lang_Utils.getText(Lang_Constants.TextType.B0017)})`,
+                            callback     : newIncrementalTimePerTurn => {
                                 const newValue = `${newInitialTime}, ${newIncrementalTimePerUnit}, ${newIncrementalTimePerTurn}`;
                                 if (newValue !== currentValue) {
                                     callback(newValue);
@@ -632,7 +622,7 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback = getExisted(openData.callbackOnModify);
+        const callback = Helpers_Misc.getExisted(openData.callbackOnModify);
         callback(null);
     }
     private _modifyAsSpmSaveSlotComment(): void {
@@ -641,15 +631,15 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             return;
         }
 
-        const callback      = getExisted(openData.callbackOnModify);
+        const callback      = Helpers_Misc.getExisted(openData.callbackOnModify);
         const currentValue  = openData.currentValue;
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0605),
-            currentValue    : `${currentValue || ``}`,
-            maxChars        : SinglePlayerWar.MaxSaveSlotCommentLength,
-            charRestrict    : null,
-            tips            : null,
-            callback        : panel => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0605),
+            currentValue : `${currentValue || ``}`,
+            maxChars     : SinglePlayerWars_Constants.Common.MaxSaveSlotCommentLength,
+            charRestrict : null,
+            tips         : null,
+            callback     : panel => {
                 const newValue = panel.getInputText() || null;
                 if (newValue != currentValue) {
                     callback(newValue);

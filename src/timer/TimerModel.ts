@@ -1,15 +1,16 @@
-import { show } from "../FloatText.ts";
-import { Tween } from "../graphics/Constants.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import { TextType } from "../lang/Constants.ts";
-import { getText } from "../lang/Utils.ts";
-import { checkCanAutoReconnect, init as NetworksManagerInit } from "../networks/Manager.ts";
-import { addEventListeners, dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import type { S } from "../proto/schema/CommonProto/NetMessage/MsgCommonHeartbeat/S.ts";
-import * as TimerTimerModel from "./TimerModel.ts";
-import { reqCommonHeartbeat } from "./TimerProxy.ts";
-import { setInterval, callLater, setTimeout, startTick, clearInterval } from "../vendor/egret/Egret.ts";
+import {
+    Notifications_Dispatcher,
+    Egret_Egret,
+    Networks_Manager,
+    Helpers_Misc,
+    Lang_Utils,
+    Timer_TimerProxy,
+    FloatText,
+    Lang_Constants,
+    Timer_TimerModel,
+    Graphics_Constants,
+} from "../internal.ts";
+import type { S as CommonHeartbeatResponse } from "../proto/schema/CommonProto/NetMessage/MsgCommonHeartbeat/S.ts";
 
 const HEARTBEAT_INTERVAL_MS = 10 * 1000;
 
@@ -19,15 +20,15 @@ let _heartbeatIntervalId    : number;
 let _serverTimestamp        = 0;
 
 export function init(): void {
-    addEventListeners([
-        { type: TypeId.NetworkConnected,       callback: _onNotifyNetworkConnected, },
-        { type: TypeId.NetworkDisconnected,    callback: _onNotifyNetworkDisconnected, },
-    ], TimerTimerModel);
+    Notifications_Dispatcher.addEventListeners([
+        { type : "NetworkConnected",       callback : _onNotifyNetworkConnected },
+        { type : "NetworkDisconnected",    callback : _onNotifyNetworkDisconnected },
+    ], Timer_TimerModel);
 
-    setInterval(() => {
+    Egret_Egret.setInterval(() => {
         if (_serverTimestamp) {
             (++_serverTimestamp);
-            dispatch(TypeId.TimeTick);
+            Notifications_Dispatcher.dispatch("TimeTick");
         }
     }, null, 1000);
 }
@@ -45,16 +46,16 @@ let _frameBeginTime = 0;
 export async function checkAndCallLater(maxDuration = 13): Promise<void> {  // DONE
     if (Date.now() - _frameBeginTime > maxDuration) {
         await new Promise<void>((resolve) => {
-            callLater(() => {
+            Egret_Egret.callLater(() => {
                 _frameBeginTime = Date.now();
                 resolve();
             }, null);
         });
     }
 }
-export function wait(timeMs: number = Tween.DefaultDuration): Promise<void> {
+export function wait(timeMs: number = Graphics_Constants.Tween.DefaultDuration): Promise<void> {
     return new Promise<void>(resolve => {
-        setTimeout(resolve, null, timeMs);
+        Egret_Egret.setTimeout(resolve, null, timeMs);
     });
 }
 
@@ -62,7 +63,7 @@ const _tickCallbackArray    : { callback: (timestamp: number) => void; priority:
 let _isMainTickInitialized  = false;
 export function addTickCallback(callback: (timestamp: number) => void, priority = 0): void {
     if (!_isMainTickInitialized) {
-        startTick(mainTick, undefined);
+        Egret_Egret.startTick(mainTick, undefined);
         _isMainTickInitialized = true;
     }
 
@@ -85,8 +86,8 @@ function mainTick(timestamp: number): boolean {
 }
 
 function _onNotifyNetworkConnected(): void {
-    (_heartbeatIntervalId != null) && (clearInterval(_heartbeatIntervalId));
-    _heartbeatIntervalId = setInterval(heartbeat, null, HEARTBEAT_INTERVAL_MS);
+    (_heartbeatIntervalId != null) && (Egret_Egret.clearInterval(_heartbeatIntervalId));
+    _heartbeatIntervalId = Egret_Egret.setInterval(heartbeat, null, HEARTBEAT_INTERVAL_MS);
 
     _isHeartbeatAnswered = true;
     _heartbeatCounter    = 0;
@@ -94,26 +95,26 @@ function _onNotifyNetworkConnected(): void {
 }
 
 function _onNotifyNetworkDisconnected(): void {
-    (_heartbeatIntervalId != null) && (clearInterval(_heartbeatIntervalId));
+    (_heartbeatIntervalId != null) && (Egret_Egret.clearInterval(_heartbeatIntervalId));
 }
 
-export function updateOnMsgCommonHeartbeat(data: S): void {
+export function updateOnMsgCommonHeartbeat(data: CommonHeartbeatResponse): void {
     if (data.getCounter() === _heartbeatCounter) {
         _isHeartbeatAnswered = true;
         ++_heartbeatCounter;
 
-        checkAndUpdateServerTimestamp(getExisted(data.getTimestamp()));
+        checkAndUpdateServerTimestamp(Helpers_Misc.getExisted(data.getTimestamp()));
     }
 }
 
 function heartbeat(): void {
     if (!_isHeartbeatAnswered) {
-        if (!checkCanAutoReconnect()) {
-            show(getText(TextType.A0013));
+        if (!Networks_Manager.checkCanAutoReconnect()) {
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0013));
         } else {
-            show(getText(TextType.A0008));
-            NetworksManagerInit();
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0008));
+            Networks_Manager.init();
         }
     }
-    reqCommonHeartbeat(_heartbeatCounter);
+    Timer_TimerProxy.reqCommonHeartbeat(_heartbeatCounter);
 }

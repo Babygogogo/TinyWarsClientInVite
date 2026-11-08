@@ -1,115 +1,115 @@
-import type { PlayerInfo2 } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
-import { checkHasUnreadMessage } from "../../chat/Model.ts";
-import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { getFinalSkinId } from "../../forceSkins/Utils.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
-import { getCoEyeBackground, getCoEye, getUserOnlineState } from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerTeamName, getTimeDurationText2 } from "../../lang/Utils.ts";
-import type { IMpwWar } from "../interface/IMpwWar.ts";
-import { reqMpwCommonHandleBoot } from "../model/MpwProxy.ts";
-import type { BwPlayerFundChanged } from "../../notifications/DataTypes.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineState/S.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playCoBgmWithWar, playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { UiSkinState } from "../../ui/types/UiSkinState.ts";
-import { loadSkinStateRecursively } from "../../ui/utils/UiSkinHelpers.ts";
-import { getSelfUserId, getUserOnlineState as UsersModelGetUserOnlineState, getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import {
+    type Notifications_Mapping,
+    Players_Constants,
+    AuxiliaryTypes_ChatToTarget,
+    Chat_Model,
+    GamePanels_Manager,
+    Graphics_Constants,
+    Helpers_ImageSource,
+    GamePanels_Dict,
+    Helpers_Misc,
+    ForceSkins_Utils,
+    Users_Model,
+    Lang_Utils,
+    Timer_TimerModel,
+    Ui_Utils_UiSkinHelpers,
+    Sounds_SoundPlayer,
+    MultiPlayerWar_Model_MpwProxy,
+    Sounds_Constants,
+    CoSkills_Constants,
+    Lang_Constants,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Types_UiSkinState,
+    type Egret_Egret,
+    type MultiPlayerWar_Interface_IMpwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 enum PanelSkinState {
     Normal,
     Expanded,
 }
 
 export interface OpenData {
-    war     : IMpwWar;
+    war     : MultiPlayerWar_Interface_IMpwWar.IMpwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _listPlayer!           : IUiScrollList<DataForListPlayer>;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _listPlayer!           : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForListPlayer>;
 
-    private readonly _layoutButton!         : IUiLayout;
-    private readonly _groupVisionTeam!      : IUiLayout;
-    private readonly _labelVisionTeamTitle! : IUiLabel;
-    private readonly _labelVisionTeam!      : IUiLabel;
+    private readonly _layoutButton!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _groupVisionTeam!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelVisionTeamTitle! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelVisionTeam!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupTimer!           : IUiLayout;
-    private readonly _labelTimerTitle!      : IUiLabel;
-    private readonly _labelTimer!           : IUiLabel;
+    private readonly _groupTimer!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTimerTitle!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTimer!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnWeather!           : IUiButton;
-    private readonly _btnChat!              : IUiButton;
+    private readonly _btnWeather!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnChat!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupCo!              : IUiContainer;
-    private readonly _imgSkin!              : IUiImage;
-    private readonly _imgCo!                : IUiImage;
+    private readonly _groupCo!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSkin!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgCo!                : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _groupPlayer!          : IUiLayout;
-    private readonly _labelPlayer!          : IUiLabel;
-    private readonly _labelPlayerState!     : IUiLabel;
-    private readonly _labelTurnIndex!       : IUiLabel;
+    private readonly _groupPlayer!          : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelPlayer!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPlayerState!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTurnIndex!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupInfo!            : IUiContainer;
-    private readonly _layoutEnergy!         : IUiLayout;
-    private readonly _labelCurrEnergy!      : IUiLabel;
-    private readonly _layoutMaxEnergy!      : IUiLayout;
-    private readonly _layoutPowerEnergy!    : IUiLayout;
-    private readonly _labelPowerEnergy1!    : IUiLabel;
-    private readonly _labelPowerEnergy2!    : IUiLabel;
-    private readonly _labelZoneEnergy!      : IUiLabel;
+    private readonly _groupInfo!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutEnergy!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelCurrEnergy!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _layoutMaxEnergy!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _layoutPowerEnergy!    : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelPowerEnergy1!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPowerEnergy2!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelZoneEnergy!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutFund!           : IUiLayout;
-    private readonly _labelFund!            : IUiLabel;
-    private readonly _labelAddFund!         : IUiLabel;
+    private readonly _layoutFund!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelFund!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelAddFund!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnExpand!            : IUiButton;
-    private readonly _btnNarrow!            : IUiButton;
+    private readonly _btnExpand!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNarrow!            : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.TimeTick,                        callback: this._onNotifyTimeTick },
-            { type: TypeId.BwPlayerFundChanged,             callback: this._onNotifyBwPlayerFundChanged },
-            { type: TypeId.BwTurnIndexChanged,              callback: this._onNotifyBwTurnIndexChanged },
-            { type: TypeId.BwPlayerIndexInTurnChanged,      callback: this._onNotifyBwPlayerIndexInTurnChanged },
-            { type: TypeId.BwCoEnergyChanged,               callback: this._onNotifyBwCoEnergyChanged },
-            { type: TypeId.BwCoUsingSkillTypeChanged,       callback: this._onNotifyBwCoUsingSkillChanged },
-            { type: TypeId.WarOperationNormalExecuted,      callback: this._onNotifyWarOperationNormalExecuted },
-            { type: TypeId.BwForceWeatherTypeChanged,       callback: this._onNotifyBwForceWeatherTypeChanged },
-            { type: TypeId.BwOverridingSkinIdChanged,       callback: this._onNotifyBwOverridingSkinIdChanged },
-            { type: TypeId.MsgChatGetAllReadProgressList,   callback: this._onNotifyMsgChatGetAllReadProgressList },
-            { type: TypeId.MsgChatUpdateReadProgress,       callback: this._onNotifyMsgChatUpdateReadProgress },
-            { type: TypeId.MsgChatGetAllMessages,           callback: this._onNotifyMsgChatGetAllMessages },
-            { type: TypeId.MsgChatAddMessage,               callback: this._onNotifyMsgChatAddMessage },
-            { type: TypeId.MsgUserGetOnlineState,           callback: this._onNotifyMsgUserGetOnlineState },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "TimeTick",                        callback : this._onNotifyTimeTick },
+            { type : "BwPlayerFundChanged",             callback : this._onNotifyBwPlayerFundChanged },
+            { type : "BwTurnIndexChanged",              callback : this._onNotifyBwTurnIndexChanged },
+            { type : "BwPlayerIndexInTurnChanged",      callback : this._onNotifyBwPlayerIndexInTurnChanged },
+            { type : "BwCoEnergyChanged",               callback : this._onNotifyBwCoEnergyChanged },
+            { type : "BwCoUsingSkillTypeChanged",       callback : this._onNotifyBwCoUsingSkillChanged },
+            { type : "WarOperationNormalExecuted",      callback : this._onNotifyWarOperationNormalExecuted },
+            { type : "BwForceWeatherTypeChanged",       callback : this._onNotifyBwForceWeatherTypeChanged },
+            { type : "BwOverridingSkinIdChanged",       callback : this._onNotifyBwOverridingSkinIdChanged },
+            { type : "MsgChatGetAllReadProgressList",   callback : this._onNotifyMsgChatGetAllReadProgressList },
+            { type : "MsgChatUpdateReadProgress",       callback : this._onNotifyMsgChatUpdateReadProgress },
+            { type : "MsgChatGetAllMessages",           callback : this._onNotifyMsgChatGetAllMessages },
+            { type : "MsgChatAddMessage",               callback : this._onNotifyMsgChatAddMessage },
+            { type : "MsgUserGetOnlineState",           callback : this._onNotifyMsgUserGetOnlineState },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupTimer,         callback: this._onTouchedGroupTimer },
-            { ui: this._groupVisionTeam,    callback: this._onTouchedGroupVisionTeam },
-            { ui: this._btnWeather,         callback: this._onTouchedBtnWeather },
-            { ui: this._groupPlayer,        callback: this._onTouchedGroupPlayer },
-            { ui: this._groupCo,            callback: this._onTouchedGroupCo },
-            { ui: this._groupInfo,          callback: this._onTouchedGroupInfo },
-            { ui: this._btnChat,            callback: this._onTouchedBtnChat },
-            { ui: this._btnExpand,          callback: this._onTouchedBtnExpand },
-            { ui: this._btnNarrow,          callback: this._onTouchedBtnNarrow },
+            { ui : this._groupTimer,         callback : this._onTouchedGroupTimer },
+            { ui : this._groupVisionTeam,    callback : this._onTouchedGroupVisionTeam },
+            { ui : this._btnWeather,         callback : this._onTouchedBtnWeather },
+            { ui : this._groupPlayer,        callback : this._onTouchedGroupPlayer },
+            { ui : this._groupCo,            callback : this._onTouchedGroupCo },
+            { ui : this._groupInfo,          callback : this._onTouchedGroupInfo },
+            { ui : this._btnChat,            callback : this._onTouchedBtnChat },
+            { ui : this._btnExpand,          callback : this._onTouchedBtnExpand },
+            { ui : this._btnNarrow,          callback : this._onTouchedBtnNarrow },
         ]);
         this._listPlayer.setItemRendererClass(PlayerRenderer);
     }
@@ -139,15 +139,15 @@ export class Panel extends UiPanel<OpenData> {
         this._updateGroupTimer();
 
         if ((!war.getIsExecutingAction()) && (war.checkIsBoot())) {
-            reqMpwCommonHandleBoot(getExisted(war.getWarId()));
+            MultiPlayerWar_Model_MpwProxy.reqMpwCommonHandleBoot(Helpers_Misc.getExisted(war.getWarId()));
         }
 
         const userId = war.getPlayerInTurn().getUserId();
         if ((userId != null)                            &&
-            (userId !== getSelfUserId()) &&
-            (getServerTimestamp() % 10 == 0)
+            (userId !== Users_Model.getSelfUserId()) &&
+            (Timer_TimerModel.getServerTimestamp() % 10 == 0)
         ) {
-            UsersModelGetUserOnlineState(userId);
+            Users_Model.getUserOnlineState(userId);
         }
     }
     private _onNotifyBwPlayerFundChanged(): void {
@@ -163,15 +163,15 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         this._updateView();
-        playCoBgmWithWar({
-            war                             : war,
-            force                           : false,
-            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+        Sounds_SoundPlayer.playCoBgmWithWar({
+            war                            : war,
+            force                          : false,
+            coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
 
         const userId = war.getPlayerInTurn().getUserId();
-        if ((userId != null) && (userId !== getSelfUserId())) {
-            UsersModelGetUserOnlineState(userId);
+        if ((userId != null) && (userId !== Users_Model.getSelfUserId())) {
+            Users_Model.getUserOnlineState(userId);
         }
     }
     private _onNotifyBwCoEnergyChanged(): void {
@@ -184,10 +184,10 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         this._updateLabelEnergy();
-        playCoBgmWithWar({
-            war                             : war,
-            force                           : false,
-            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+        Sounds_SoundPlayer.playCoBgmWithWar({
+            war                            : war,
+            force                          : false,
+            coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     }
     private _onNotifyWarOperationNormalExecuted(): void {
@@ -211,8 +211,8 @@ export class Panel extends UiPanel<OpenData> {
     private _onNotifyMsgChatAddMessage(): void {
         this._updateBtnChat();
     }
-    private _onNotifyMsgUserGetOnlineState(e: Event): void {
-        const data = e.data as S;
+    private _onNotifyMsgUserGetOnlineState(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserGetOnlineState"]>): void {
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getUserId() === this.getOpenData()?.war.getPlayerInTurn().getUserId()) {
             this._updateLabelPlayerState();
         }
@@ -222,10 +222,10 @@ export class Panel extends UiPanel<OpenData> {
     // Callbacks for touch.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedGroupTimer(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0826),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0826),
         });
     }
 
@@ -235,7 +235,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         war.tickVisionTeamIndex();
         war.updateTilesAndUnitsOnVisibilityChanged(false);
@@ -249,8 +249,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.Weather),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
             getContent : () => desc,
         });
     }
@@ -261,9 +261,9 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        const playerInfoArray: PlayerInfo2[] = [];
+        const playerInfoArray: AuxiliaryTypes_AuxiliaryTypes.PlayerInfo2[] = [];
         for (const player of war.getPlayerManager().getAllPlayers(false)) {
             playerInfoArray.push({
                 playerIndex : player.getPlayerIndex(),
@@ -271,19 +271,19 @@ export class Panel extends UiPanel<OpenData> {
                 userId      : player.getUserId(),
                 coId        : player.getCoId(),
                 skinId      : player.getUnitAndTileSkinId(),
-                isAlive     : player.getAliveState() !== AliveStateId.Dead,
+                isAlive     : player.getAliveState() !== Players_Constants.AliveStateId.Dead,
             });
         }
 
-        openPanel(getDict().CommonShowPlayerListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowPlayerListPanel, {
             warId           : war.getWarId(),
             gameConfig      : war.getGcData(),
             playerInfoArray : playerInfoArray,
         });
 
         const userId = war.getPlayerInTurn().getUserId();
-        if ((userId != null) && (userId !== getSelfUserId())) {
-            UsersModelGetUserOnlineState(userId);
+        if ((userId != null) && (userId !== Users_Model.getSelfUserId())) {
+            Users_Model.getUserOnlineState(userId);
         }
     }
 
@@ -293,12 +293,12 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonCoListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoListPanel, {
             war         : war,
             playerIndex : war.getPlayerIndexInTurn(),
         });
-        closePanel(getDict().MpwWarMenuPanel);
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().MpwWarMenuPanel);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedGroupInfo(): void {
@@ -307,17 +307,17 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonCoListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoListPanel, {
             war         : war,
             playerIndex : war.getPlayerIndexInTurn(),
         });
-        closePanel(getDict().MpwWarMenuPanel);
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().MpwWarMenuPanel);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnChat(): void {
-        closePanel(getDict().MpwWarMenuPanel);
-        openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({}) });
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().MpwWarMenuPanel);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({}) });
     }
 
     private _onTouchedBtnExpand(): void {
@@ -347,8 +347,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTimerTitle.setText(getText(TextType.B0188));
-        this._labelVisionTeamTitle.setText(getText(TextType.B0891));
+        this._labelTimerTitle.setLangText(Lang_Constants.TextType.B0188);
+        this._labelVisionTeamTitle.setLangText(Lang_Constants.TextType.B0891);
 
         this._updateGroupVisionTeam();
         this._updateLabelPlayerState();
@@ -362,17 +362,17 @@ export class Panel extends UiPanel<OpenData> {
     private async _updateLabelPlayerState(): Promise<void> {
         const userId    = this.getOpenData()?.war.getPlayerInTurn().getUserId();
         const label     = this._labelPlayerState;
-        if ((userId == null) || (userId === getSelfUserId())) {
-            label.setText(getText(TextType.B0676));
-            label.setTextColor(ColorValue.Green);
+        if ((userId == null) || (userId === Users_Model.getSelfUserId())) {
+            label.setLangText(Lang_Constants.TextType.B0676);
+            label.setTextColor(Graphics_Constants.ColorValue.Green);
         } else {
-            const userOnlineState = await UsersModelGetUserOnlineState(userId);
+            const userOnlineState = await Users_Model.getUserOnlineState(userId);
             if ((userOnlineState == null) || (!userOnlineState.isOnline)) {
-                label.setText(getText(TextType.B0677));
-                label.setTextColor(ColorValue.Red);
+                label.setLangText(Lang_Constants.TextType.B0677);
+                label.setTextColor(Graphics_Constants.ColorValue.Red);
             } else {
-                label.setText(getText(TextType.B0676));
-                label.setTextColor((getServerTimestamp() - getExisted(userOnlineState.lastActivityTimestamp) > 60) ? ColorValue.Yellow : ColorValue.Green);
+                label.setLangText(Lang_Constants.TextType.B0676);
+                label.setTextColor((Timer_TimerModel.getServerTimestamp() - userOnlineState.lastActivityTimestamp > 60) ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
             }
         }
         this._groupPlayer.arrangeItems();
@@ -384,7 +384,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateLabelTurnIndex(): void {
-        this._labelTurnIndex.setText(`${getText(TextType.B0191)} ${this.getOpenData()?.war.getTurnManager().getTurnIndex()}`);
+        this._labelTurnIndex.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0191)} ${this.getOpenData()?.war.getTurnManager().getTurnIndex()}`);
         this._groupPlayer.arrangeItems();
     }
 
@@ -402,8 +402,8 @@ export class Panel extends UiPanel<OpenData> {
 
             const teamIndex = war.getVisionTeamIndex();
             this._labelVisionTeam.setText(teamIndex == null
-                ? getText(TextType.B0890)
-                : (getPlayerTeamName(teamIndex) ?? UndefinedError)
+                ? Lang_Utils.getText(Lang_Constants.TextType.B0890)
+                : (Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError),
             );
 
             group.arrangeItems();
@@ -430,10 +430,10 @@ export class Panel extends UiPanel<OpenData> {
             group.setIsVisible(true);
 
             const label     = this._labelTimer;
-            label.setText(getTimeDurationText2(restTime));
+            label.setText(Lang_Utils.getTimeDurationText2(restTime));
             label.setTextColor(restTime >= 30 * 60
                 ? 0xFFFFFF
-                : (restTime >= 5 * 60 ? 0xFFFF00 : 0xFF4400)
+                : (restTime >= 5 * 60 ? 0xFFFF00 : 0xFF4400),
             );
 
             group.arrangeItems();
@@ -469,8 +469,8 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const player = war.getPlayerInTurn();
-        this._imgSkin.loadSource(getCoEyeBackground(getFinalSkinId(war, player.getPlayerIndex())));
-        this._imgCo.loadSource(getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== AliveStateId.Dead) ?? UndefinedError);
+        this._imgSkin.loadSource(Helpers_ImageSource.getCoEyeBackground(ForceSkins_Utils.getFinalSkinId(war, player.getPlayerIndex())));
+        this._imgCo.loadSource(Helpers_ImageSource.getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== Players_Constants.AliveStateId.Dead) ?? Lang_Constants.UndefinedError);
     }
 
     private _updateLabelEnergy(): void {
@@ -480,9 +480,9 @@ export class Panel extends UiPanel<OpenData> {
             const skillType         = player.getCoUsingSkillType();
             const labelCurrEnergy   = this._labelCurrEnergy;
             const currentEnergy     = player.getCoCurrentEnergy();
-            if (skillType === SkillTypeId.Power) {
+            if (skillType === CoSkills_Constants.SkillTypeId.Power) {
                 labelCurrEnergy.setText(`${currentEnergy}(P)`);
-            } else if (skillType === SkillTypeId.SuperPower) {
+            } else if (skillType === CoSkills_Constants.SkillTypeId.SuperPower) {
                 labelCurrEnergy.setText(`${currentEnergy}(SP)`);
             } else {
                 labelCurrEnergy.setText(`${player.getCoCurrentEnergy()}`);
@@ -507,11 +507,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateBtnChat(): void {
-        this._btnChat.setRedVisible(checkHasUnreadMessage());
+        this._btnChat.setRedVisible(Chat_Model.checkHasUnreadMessage());
     }
 
     private _setPanelSkinState(state: PanelSkinState): void {
-        loadSkinStateRecursively(this, state === PanelSkinState.Normal ? UiSkinState.Normal : UiSkinState.Expanded);
+        Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(this, state === PanelSkinState.Normal ? Ui_Types_UiSkinState.UiSkinState.Normal : Ui_Types_UiSkinState.UiSkinState.Expanded);
 
         this._btnExpand.setIsVisible((state === PanelSkinState.Normal) && ((this.getOpenData()?.war.getPlayersCountUnneutral() ?? 0) > 2));
         this._listPlayer.scrollTop();
@@ -532,7 +532,7 @@ export class Panel extends UiPanel<OpenData> {
                 playerIndex,
             });
         }
-        for (let playerIndex = PlayerIndex.First; playerIndex < playerIndexInTurn; ++playerIndex) {
+        for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex < playerIndexInTurn; ++playerIndex) {
             dataArray.push({
                 war,
                 playerIndex,
@@ -542,32 +542,32 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForListPlayer extends UiListItemData {
-    war         : IMpwWar;
+interface DataForListPlayer extends Ui_Types_UiListItemData.UiListItemData {
+    war         : MultiPlayerWar_Interface_IMpwWar.IMpwWar;
     playerIndex : number;
 }
-class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
-    private readonly _imgSkin!          : IUiImage;
-    private readonly _imgCo!            : IUiImage;
-    private readonly _imgOnlineState!   : IUiImage;
+class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForListPlayer> {
+    private readonly _imgSkin!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgCo!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgOnlineState!   : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _layoutEnergy!     : IUiLayout;
-    private readonly _labelEnergy!      : IUiLabel;
-    private readonly _labelEnergy1!     : IUiLabel;
-    private readonly _labelEnergy2!     : IUiLabel;
+    private readonly _layoutEnergy!     : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelEnergy!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelEnergy1!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelEnergy2!     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelFund!        : IUiLabel;
-    private readonly _labelAddFund!     : IUiLabel;
+    private readonly _labelFund!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelAddFund!     : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.MsgUserGetOnlineState,       callback: this._onNotifyMsgUserGetOnlineState },
-            { type: TypeId.TimeTick,                    callback: this._onNotifyTimeTick },
-            { type: TypeId.BwPlayerFundChanged,         callback: this._onNotifyBwPlayerFundChanged },
-            { type: TypeId.WarOperationNormalExecuted,  callback: this._onNotifyWarOperationNormalExecuted },
-            { type: TypeId.BwCoUsingSkillTypeChanged,   callback: this._onNotifyBwCoUsingSkillChanged },
-            { type: TypeId.BwCoEnergyChanged,           callback: this._onNotifyBwCoEnergyChanged },
-            { type: TypeId.BwOverridingSkinIdChanged,   callback: this._onNotifyBwOverridingSkinIdChanged },
+            { type : "MsgUserGetOnlineState",       callback : this._onNotifyMsgUserGetOnlineState },
+            { type : "TimeTick",                    callback : this._onNotifyTimeTick },
+            { type : "BwPlayerFundChanged",         callback : this._onNotifyBwPlayerFundChanged },
+            { type : "WarOperationNormalExecuted",  callback : this._onNotifyWarOperationNormalExecuted },
+            { type : "BwCoUsingSkillTypeChanged",   callback : this._onNotifyBwCoUsingSkillChanged },
+            { type : "BwCoEnergyChanged",           callback : this._onNotifyBwCoEnergyChanged },
+            { type : "BwOverridingSkinIdChanged",   callback : this._onNotifyBwOverridingSkinIdChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -589,17 +589,17 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
         const war       = openData.war;
         const userId    = war.getPlayer(openData.playerIndex).getUserId();
         if ((userId != null)                        &&
-            (userId !== getSelfUserId())  &&
-            (getServerTimestamp() % 60 == 0)
+            (userId !== Users_Model.getSelfUserId())  &&
+            (Timer_TimerModel.getServerTimestamp() % 60 == 0)
         ) {
-            UsersModelGetUserOnlineState(userId);
+            Users_Model.getUserOnlineState(userId);
         }
     }
 
-    private _onNotifyBwPlayerFundChanged(e: Event): void {
-        const eventData = e.data as BwPlayerFundChanged;
+    private _onNotifyBwPlayerFundChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwPlayerFundChanged"]>): void {
+        const eventData = Helpers_Misc.getExisted(e.data);
         const openData  = this.getOpenData();
-        if (eventData === openData?.war.getPlayer(openData.playerIndex)) {
+        if (eventData.player === openData?.war.getPlayer(openData.playerIndex)) {
             this._updateLabelFundAndAddFund();
         }
     }
@@ -626,7 +626,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
             return;
         }
 
-        openPanel(getDict().CommonCoListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoListPanel, {
             war         : openData.war,
             playerIndex : openData.playerIndex,
         });
@@ -640,7 +640,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
 
         const war       = openData.war;
         const player    = war.getPlayer(openData.playerIndex);
-        this._imgCo.loadSource(getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== AliveStateId.Dead) ?? UndefinedError);
+        this._imgCo.loadSource(Helpers_ImageSource.getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== Players_Constants.AliveStateId.Dead) ?? Lang_Constants.UndefinedError);
         this._updateImgSkin();
         this._updateImgOnlineState();
         this._updateLabelFundAndAddFund();
@@ -653,7 +653,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
             return;
         }
 
-        this._imgSkin.loadSource(getCoEyeBackground(getFinalSkinId(openData.war, openData.playerIndex)));
+        this._imgSkin.loadSource(Helpers_ImageSource.getCoEyeBackground(ForceSkins_Utils.getFinalSkinId(openData.war, openData.playerIndex)));
     }
 
     private async _updateImgOnlineState(): Promise<void> {
@@ -664,10 +664,10 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
 
         const userId    = openData.war.getPlayer(openData.playerIndex).getUserId();
         const img       = this._imgOnlineState;
-        if ((userId == null) || (userId === getSelfUserId())) {
+        if ((userId == null) || (userId === Users_Model.getSelfUserId())) {
             img.loadSource(`uncompressedColorGreen0000`);
         } else {
-            img.loadSource(getUserOnlineState(await UsersModelGetUserOnlineState(userId)));
+            img.loadSource(Helpers_ImageSource.getUserOnlineState(await Users_Model.getUserOnlineState(userId)));
         }
     }
 
@@ -703,9 +703,9 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
         const skillType     = player.getCoUsingSkillType();
         const labelEnergy   = this._labelEnergy;
         const currentEnergy = player.getCoCurrentEnergy();
-        if (skillType === SkillTypeId.Power) {
+        if (skillType === CoSkills_Constants.SkillTypeId.Power) {
             labelEnergy.setText(`${currentEnergy}(P)`);
-        } else if (skillType === SkillTypeId.SuperPower) {
+        } else if (skillType === CoSkills_Constants.SkillTypeId.SuperPower) {
             labelEnergy.setText(`${currentEnergy}(SP)`);
         } else {
             labelEnergy.setText(`${player.getCoCurrentEnergy()}`);

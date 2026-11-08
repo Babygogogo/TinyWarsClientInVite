@@ -1,30 +1,29 @@
-import type { BattleInfo } from "../auxiliaryTypes/BattleInfo.ts";
-import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
-import { EnergyTypeId } from "../cos/Constants.ts";
-import { SkillTypeId } from "../coSkills/Constants.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import { encodeTeamIndex } from "../helpers/Team.ts";
-import { PlayerIndex, AliveStateId } from "../players/Constants.ts";
+import {
+    Cos_Constants,
+    CoSkills_Constants,
+    Helpers_Misc,
+    Helpers_Team,
+    Players_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    type AuxiliaryTypes_BattleInfo,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Model_War,
+    type Units_Unit,
+} from "../internal.ts";
 import { WsUnitStatistics } from "../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import { ShortSfxCode } from "../sounds/Constants.ts";
-import { playShortSfx } from "../sounds/SoundPlayer.ts";
-import type { IUnit } from "../units/IUnit.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import { getObserverTeamIndexListForUnitOnMap } from "../visibilities/Utils.ts";
 
-type IBwWar             = BaseWarInterfaceIBwWar;
-type IBwUnit            = IUnit;
-
-export function destroyUnitOnMap(war: IBwWar, gridIndex: GridIndex, showExplosionEffect: boolean): IBwUnit[] {
+export function destroyUnitOnMap(war: BaseWar_Model_War.War, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, showExplosionEffect: boolean): Units_Unit.Unit[] {
     const unitMap               = war.getUnitMap();
-    const unit                  = getExisted(unitMap.getUnitOnMap(gridIndex), ClientErrorCode.DestructionHelpers_DestroyUnitOnMap_00);
+    const unit                  = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex), Utils_ClientErrorCode.ClientErrorCode.DestructionHelpers_DestroyUnitOnMap_00);
     const destroyedUnits        = [unit];
-    const observerTeamIndexes   = getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
-    unitMap.removeUnitOnMap(gridIndex, true)?.stopRunning();
+    const observerTeamIndexes   = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+    unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
     war.getTileMap().getTile(gridIndex).updateOnUnitLeave();
     for (const u of unitMap.getUnitsLoadedByLoader(unit, true)) {
-        unitMap.removeUnitLoaded(u.getUnitId()).stopRunning();
+        unitMap.removeUnitLoaded(u.getUnitId()).dispose();
         destroyedUnits.push(u);
     }
 
@@ -32,16 +31,16 @@ export function destroyUnitOnMap(war: IBwWar, gridIndex: GridIndex, showExplosio
         if (observerTeamIndexes != null) {
             const warStatisticsManager          = war.getWarStatisticsManager();
             const playerIndex                   = unit.getPlayerIndex();
-            const groupedObserverTeamIndexes    = encodeTeamIndex(observerTeamIndexes);
+            const groupedObserverTeamIndexes    = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
             for (const u of destroyedUnits) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : u.getUnitType(),
-                    normalizedHpGain            : 0,
-                    normalizedHpLoss            : u.getNormalizedCurrentHp(),
-                    unitGain                    : 0,
-                    unitLoss                    : 1,
-                    dstPlayerIndex              : playerIndex,
-                    groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+                    unitType                   : u.getUnitType(),
+                    normalizedHpGain           : 0,
+                    normalizedHpLoss           : u.getNormalizedCurrentHp(),
+                    unitGain                   : 0,
+                    unitLoss                   : 1,
+                    dstPlayerIndex             : playerIndex,
+                    groupedObserverTeamIndexes : groupedObserverTeamIndexes,
                 }));
             }
         }
@@ -50,26 +49,23 @@ export function destroyUnitOnMap(war: IBwWar, gridIndex: GridIndex, showExplosio
     updatePlayersOnUnitDestroyed(destroyedUnits);
 
     if (showExplosionEffect) {
-        const gridVisionEffect = war.getGridVisualEffect();
-        (gridVisionEffect) && (gridVisionEffect.showEffectExplosion(gridIndex));
-
-        const warView = war.getView();
-        (warView) && (warView.showVibration());
-        playShortSfx(ShortSfxCode.Explode);
+        war.getGridVisualEffect()?.showEffectExplosion(gridIndex);
+        war.getView()?.showVibration();
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
     }
 
     return destroyedUnits;
 }
 export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIndex, isEstimated }: {
-    battleInfo          : BattleInfo;
-    war                 : IBwWar;
-    gridIndex           : GridIndex;
+    battleInfo          : AuxiliaryTypes_BattleInfo.BattleInfo;
+    war                 : BaseWar_Model_War.War;
+    gridIndex           : AuxiliaryTypes_GridIndex.GridIndex;
     isEstimated         : boolean;
 }): void {
     const unitMap             = war.getUnitMap();
-    const unit                = getExisted(unitMap.getUnitOnMap(gridIndex));
+    const unit                = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex));
     const tile                = war.getTileMap().getTile(gridIndex);
-    const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
     const destroyedUnits      = [unit];
     const unitId              = unit.getUnitId();
     if (!isEstimated) {
@@ -110,13 +106,13 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
         const playerIndex             = unit.getPlayerIndex();
         for (const u of destroyedUnits) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                unitType                    : u.getUnitType(),
-                normalizedHpGain            : 0,
-                normalizedHpLoss            : u.getNormalizedCurrentHp(),
-                unitGain                    : 0,
-                unitLoss                    : 1,
-                dstPlayerIndex              : playerIndex,
-                groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
+                unitType                   : u.getUnitType(),
+                normalizedHpGain           : 0,
+                normalizedHpLoss           : u.getNormalizedCurrentHp(),
+                unitGain                   : 0,
+                unitLoss                   : 1,
+                dstPlayerIndex             : playerIndex,
+                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
             }));
         }
     }
@@ -126,31 +122,31 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
         battleInfo.destroyedUnits.set(u.getUnitId(), u);
     }
 }
-export function destroyUnitLoaded(war: IBwWar, unitId: number): IBwUnit[] {
+export function destroyUnitLoaded(war: BaseWar_Model_War.War, unitId: number): Units_Unit.Unit[] {
     const unitMap           = war.getUnitMap();
-    const targetUnit        = getExisted(unitMap.getUnitLoadedById(unitId));
+    const targetUnit        = Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId));
     const destroyedUnits    = [targetUnit];
-    unitMap.removeUnitLoaded(unitId).stopRunning();
+    unitMap.removeUnitLoaded(unitId).dispose();
     for (const u of unitMap.getUnitsLoadedByLoader(targetUnit, true)) {
-        unitMap.removeUnitLoaded(u.getUnitId()).stopRunning();
+        unitMap.removeUnitLoaded(u.getUnitId()).dispose();
         destroyedUnits.push(u);
     }
 
     {
-        const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: targetUnit.getGridIndex() });
+        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : targetUnit.getGridIndex() });
         if (observerTeamIndexes != null) {
             const warStatisticsManager          = war.getWarStatisticsManager();
             const playerIndex                   = targetUnit.getPlayerIndex();
-            const groupedObserverTeamIndexes    = encodeTeamIndex(observerTeamIndexes);
+            const groupedObserverTeamIndexes    = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
             for (const u of destroyedUnits) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : u.getUnitType(),
-                    normalizedHpGain            : 0,
-                    normalizedHpLoss            : u.getNormalizedCurrentHp(),
-                    unitGain                    : 0,
-                    unitLoss                    : 1,
-                    dstPlayerIndex              : playerIndex,
-                    groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+                    unitType                   : u.getUnitType(),
+                    normalizedHpGain           : 0,
+                    normalizedHpLoss           : u.getNormalizedCurrentHp(),
+                    unitGain                   : 0,
+                    unitLoss                   : 1,
+                    dstPlayerIndex             : playerIndex,
+                    groupedObserverTeamIndexes : groupedObserverTeamIndexes,
                 }));
             }
         }
@@ -161,7 +157,7 @@ export function destroyUnitLoaded(war: IBwWar, unitId: number): IBwUnit[] {
     return destroyedUnits;
 }
 /** @param destroyedUnits 必须属于同一个玩家 */
-function updatePlayersOnUnitDestroyed(destroyedUnits: IBwUnit[]): void {
+function updatePlayersOnUnitDestroyed(destroyedUnits: Units_Unit.Unit[]): void {
     const destroyedCoUnitsCount = destroyedUnits.filter(u => u.getIsCoOnboard()).length;
     if (destroyedCoUnitsCount > 0) {
         const player            = destroyedUnits[0].getPlayer();
@@ -174,15 +170,15 @@ function updatePlayersOnUnitDestroyed(destroyedUnits: IBwUnit[]): void {
             * destroyedCoUnitsCount
             / (restCoUnitsCount + destroyedCoUnitsCount)
             * destroyedUnits[0].getWar().getCommonSettingManager().getPlayerRule(playerIndex).getEnergyLossPctOnCoDie()
-            / 100
+            / 100,
         );
-        if ((restCoUnitsCount <= 0) && (player.getCoEnergyType() === EnergyTypeId.Dor)) {
-            player.setCoUsingSkillType(SkillTypeId.Passive);
+        if ((restCoUnitsCount <= 0) && (player.getCoEnergyType() === Cos_Constants.EnergyTypeId.Dor)) {
+            player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
         }
     }
 }
 /** @param destroyedUnits 必须属于同一个玩家 */
-function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: BattleInfo, isEstimated: boolean, destroyedUnits: IBwUnit[], war: IBwWar): void {
+function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: AuxiliaryTypes_BattleInfo.BattleInfo, isEstimated: boolean, destroyedUnits: Units_Unit.Unit[], war: BaseWar_Model_War.War): void {
     const destroyedCoUnitsCount = destroyedUnits.filter(u => u.getIsCoOnboard()).length;
     if (destroyedCoUnitsCount > 0) {
         const player      = destroyedUnits[0].getPlayer();
@@ -203,15 +199,15 @@ function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: BattleIn
             * destroyedCoUnitsCount
             / (restCoUnitsCount + destroyedCoUnitsCount)
             * war.getCommonSettingManager().getPlayerRule(playerIndex).getEnergyLossPctOnCoDie()
-            / 100
+            / 100,
         );
-        if ((restCoUnitsCount <= 0) && (player.getCoEnergyType() === EnergyTypeId.Dor)) {
-            player.setCoUsingSkillType(SkillTypeId.Passive);
+        if ((restCoUnitsCount <= 0) && (player.getCoEnergyType() === Cos_Constants.EnergyTypeId.Dor)) {
+            player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
         }
     }
 }
 
-export function destroyPlayerForce(war: IBwWar, playerIndex: number, showExplosionEffect: boolean): void {
+export function destroyPlayerForce(war: BaseWar_Model_War.War, playerIndex: number, showExplosionEffect: boolean): void {
     const unitMap               = war.getUnitMap();
     const tileMap               = war.getTileMap();
     const warStatisticsManager  = war.getWarStatisticsManager();
@@ -225,44 +221,43 @@ export function destroyPlayerForce(war: IBwWar, playerIndex: number, showExplosi
         hasRemovedUnit = true;
 
         const gridIndex                     = unit.getGridIndex();
-        const observerTeamIndexes           = getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
-        const groupedObserverTeamIndexes    = observerTeamIndexes != null ? encodeTeamIndex(observerTeamIndexes) : null;
-        unitMap.removeUnitOnMap(gridIndex, true)?.stopRunning();
+        const observerTeamIndexes           = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+        const groupedObserverTeamIndexes    = observerTeamIndexes != null ? Helpers_Team.encodeTeamIndex(observerTeamIndexes) : null;
+        unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
         tileMap.getTile(gridIndex).updateOnUnitLeave();
-        (gridVisionEffect) && (gridVisionEffect.showEffectExplosion(gridIndex));
+        gridVisionEffect?.showEffectExplosion(gridIndex);
 
         if (groupedObserverTeamIndexes != null) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                unitType                    : unit.getUnitType(),
-                normalizedHpGain            : 0,
-                normalizedHpLoss            : unit.getNormalizedCurrentHp(),
-                unitGain                    : 0,
-                unitLoss                    : 1,
-                dstPlayerIndex              : playerIndex,
-                groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+                unitType                   : unit.getUnitType(),
+                normalizedHpGain           : 0,
+                normalizedHpLoss           : unit.getNormalizedCurrentHp(),
+                unitGain                   : 0,
+                unitLoss                   : 1,
+                dstPlayerIndex             : playerIndex,
+                groupedObserverTeamIndexes : groupedObserverTeamIndexes,
             }));
         }
 
         for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {
-            unitMap.removeUnitLoaded(loadedUnit.getUnitId()).stopRunning();
+            unitMap.removeUnitLoaded(loadedUnit.getUnitId()).dispose();
 
             if (groupedObserverTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : loadedUnit.getUnitType(),
-                    normalizedHpGain            : 0,
-                    normalizedHpLoss            : loadedUnit.getNormalizedCurrentHp(),
-                    unitGain                    : 0,
-                    unitLoss                    : 1,
-                    dstPlayerIndex              : playerIndex,
-                    groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+                    unitType                   : loadedUnit.getUnitType(),
+                    normalizedHpGain           : 0,
+                    normalizedHpLoss           : loadedUnit.getNormalizedCurrentHp(),
+                    unitGain                   : 0,
+                    unitLoss                   : 1,
+                    dstPlayerIndex             : playerIndex,
+                    groupedObserverTeamIndexes : groupedObserverTeamIndexes,
                 }));
             }
         }
     }
     if ((showExplosionEffect) && (hasRemovedUnit)) {
-        const warView = war.getView();
-        (warView) && (warView.showVibration());
-        playShortSfx(ShortSfxCode.Explode);
+        war.getView()?.showVibration();
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
     }
 
     for (const tile of tileMap.getAllTiles()) {
@@ -271,9 +266,9 @@ export function destroyPlayerForce(war: IBwWar, playerIndex: number, showExplosi
             const buildPoint        = tile.getCurrentBuildPoint();
             const capturePoint      = tile.getCurrentCapturePoint();
             tile.resetByTypeAndPlayerIndex({
-                baseType    : tile.getBaseType(),
-                objectType  : tile.getTemplateCfg().getTileObjectTypeIdAfterOwnerChanged() ?? tile.getObjectType(),
-                playerIndex : PlayerIndex.Neutral,
+                baseType    : tile.getBaseTypeId(),
+                objectType  : tile.getTemplateCfg().getTileObjectTypeIdAfterOwnerChanged() ?? tile.getObjectTypeId(),
+                playerIndex : Players_Constants.PlayerIndex.Neutral,
             });
             tile.setCurrentHp(hp);
             tile.setCurrentBuildPoint(buildPoint);
@@ -284,22 +279,22 @@ export function destroyPlayerForce(war: IBwWar, playerIndex: number, showExplosi
     war.getFogMap().resetAllMapsForPlayer(playerIndex);
 
     const player = war.getPlayer(playerIndex);
-    player.setAliveState(AliveStateId.Dead);
+    player.setAliveState(Players_Constants.AliveStateId.Dead);
     player.setCoIsDestroyedInTurn(true);
     player.setAndValidateCoCurrentEnergy(0);
-    player.setCoUsingSkillType(SkillTypeId.Passive);
+    player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
 
     war.getDrawVoteManager().handlePlayerForceDestruction();
 }
 
-export function removeUnitOnMap(war: IBwWar, gridIndex: GridIndex): void {
+export function removeUnitOnMap(war: BaseWar_Model_War.War, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
     war.getTileMap().getTile(gridIndex).updateOnUnitLeave();
 
     const unitMap   = war.getUnitMap();
-    const unit      = getExisted(unitMap.getUnitOnMap(gridIndex));
+    const unit      = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex));
+    unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
 
-    unitMap.removeUnitOnMap(gridIndex, true)?.stopRunning();
     for (const u of unitMap.getUnitsLoadedByLoader(unit, true)) {
-        unitMap.removeUnitLoaded(u.getUnitId()).stopRunning();
+        unitMap.removeUnitLoaded(u.getUnitId()).dispose();
     }
 }

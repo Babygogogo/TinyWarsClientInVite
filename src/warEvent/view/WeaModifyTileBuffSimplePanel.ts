@@ -1,101 +1,95 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getComparatorName, getTileBuffName, getTileBuffDesc, getBuffEndTimeModificationModeName } from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+import {
+    WarEvents_Actions_Constants_Common,
+    TileBuffs_Constants,
+    ValueAndComparators_Constants,
+    Graphics_Constants,
+    Notifications_Dispatcher,
+    ValueAndComparators_Utils,
+    Lang_Utils,
+    WarEvents_Actions_Utils_Common,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Lang_Constants,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaModifyTileBuffSimple } from "../../proto/schema/CommonProto/WarEvent/WeaModifyTileBuffSimple.ts";
-import { AllBuffTypeIdArray, EndTimeModification } from "../../tileBuffs/Constants.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { ComparatorId, AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
-import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
-import { BuffEndTimeModificationMode, AllBuffEndTimeModificationModeArray } from "../../warEvents/actions/constants/Common.ts";
-import { getErrorTipForAction, getDetailDescForAction } from "../../warEvents/actions/utils/Common.ts";
-
-type WarEventFullData               = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventAction                 = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
-    war         : IMeWar;
+    war         : MapEditor_Interface_IMeWar.IMeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                                  : IUiImage;
-    private readonly _group!                                    : IUiContainer;
-    private readonly _labelTitle!                               : IUiLabel;
-    private readonly _btnType!                                  : IUiButton;
-    private readonly _btnClose!                                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnType!                                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupDesc!                                : IUiLayout;
-    private readonly _labelDesc!                                : IUiLabel;
-    private readonly _labelError!                               : IUiLabel;
+    private readonly _groupDesc!                                : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelDesc!                                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelError!                               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConPlayerFilter!                       : IUiButton;
-    private readonly _labelConPlayerFilter!                     : IUiLabel;
+    private readonly _btnConPlayerFilter!                       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConPlayerFilter!                     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConUnitFilter!                         : IUiButton;
-    private readonly _labelConUnitFilter!                       : IUiLabel;
+    private readonly _btnConUnitFilter!                         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConUnitFilter!                       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConUnitComparator!                     : IUiButton;
-    private readonly _labelConUnitComparator!                   : IUiLabel;
+    private readonly _btnConUnitComparator!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConUnitComparator!                   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConTileFilter!                         : IUiButton;
-    private readonly _labelConTileFilter!                       : IUiLabel;
+    private readonly _btnConTileFilter!                         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConTileFilter!                       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConTileBuffFilter!                     : IUiButton;
-    private readonly _labelConTileBuffFilter!                   : IUiLabel;
+    private readonly _btnConTileBuffFilter!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConTileBuffFilter!                   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnActBuffType!                           : IUiButton;
-    private readonly _labelActBuffType!                         : IUiLabel;
+    private readonly _btnActBuffType!                           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActBuffType!                         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnActEndTurnIndex!                       : IUiButton;
-    private readonly _labelActEndTurnIndex!                     : IUiLabel;
+    private readonly _btnActEndTurnIndex!                       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActEndTurnIndex!                     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnActEndPlayerIndex!                     : IUiButton;
-    private readonly _labelActEndPlayerIndex!                   : IUiLabel;
+    private readonly _btnActEndPlayerIndex!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActEndPlayerIndex!                   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnActEndTurnIndexMode!                   : IUiButton;
-    private readonly _labelActEndTurnIndexMode!                 : IUiLabel;
+    private readonly _btnActEndTurnIndexMode!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActEndTurnIndexMode!                 : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnActEndPlayerIndexMode!                 : IUiButton;
-    private readonly _labelActEndPlayerIndexMode!               : IUiLabel;
+    private readonly _btnActEndPlayerIndexMode!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActEndPlayerIndexMode!               : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnType,                                callback: this._onTouchedBtnType },
-            { ui: this._btnClose,                               callback: this.closePanel },
+            { ui : this._btnType,                                callback : this._onTouchedBtnType },
+            { ui : this._btnClose,                               callback : this.closePanel },
 
-            { ui: this._btnConPlayerFilter,                     callback: this._onTouchedBtnConPlayerFilter },
-            { ui: this._btnConUnitFilter,                       callback: this._onTouchedBtnConUnitFilter },
-            { ui: this._btnConUnitComparator,                   callback: this._onTouchedBtnConUnitComparator },
-            { ui: this._btnConTileFilter,                       callback: this._onTouchedBtnConTileFilter },
-            { ui: this._btnConTileBuffFilter,                   callback: this._onTouchedBtnConTileBuffFilter },
+            { ui : this._btnConPlayerFilter,                     callback : this._onTouchedBtnConPlayerFilter },
+            { ui : this._btnConUnitFilter,                       callback : this._onTouchedBtnConUnitFilter },
+            { ui : this._btnConUnitComparator,                   callback : this._onTouchedBtnConUnitComparator },
+            { ui : this._btnConTileFilter,                       callback : this._onTouchedBtnConTileFilter },
+            { ui : this._btnConTileBuffFilter,                   callback : this._onTouchedBtnConTileBuffFilter },
 
-            { ui: this._btnActBuffType,                         callback: this._onTouchedBtnActBuffType },
-            { ui: this._btnActEndTurnIndex,                     callback: this._onTouchedBtnActEndTurnIndex },
-            { ui: this._btnActEndPlayerIndex,                   callback: this._onTouchedBtnActEndPlayerIndex },
-            { ui: this._btnActEndTurnIndexMode,                 callback: this._onTouchedBtnActEndTurnIndexMode },
-            { ui: this._btnActEndPlayerIndexMode,               callback: this._onTouchedBtnActEndPlayerIndexMode },
+            { ui : this._btnActBuffType,                         callback : this._onTouchedBtnActBuffType },
+            { ui : this._btnActEndTurnIndex,                     callback : this._onTouchedBtnActEndTurnIndex },
+            { ui : this._btnActEndPlayerIndex,                   callback : this._onTouchedBtnActEndPlayerIndex },
+            { ui : this._btnActEndTurnIndexMode,                 callback : this._onTouchedBtnActEndTurnIndexMode },
+            { ui : this._btnActEndPlayerIndexMode,               callback : this._onTouchedBtnActEndPlayerIndexMode },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : "LanguageChanged",                 callback : this._onNotifyLanguageChanged },
+            { type : "WarEventFullDataChanged",         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -123,10 +117,10 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeActionTypeListPanel, {
-            war         : openData.war,
-            fullData    : openData.fullData,
-            action      : openData.action,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
+            war      : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
         });
     }
 
@@ -141,13 +135,13 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WePlayerFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            currentFilter           : action.getConPlayerFilter(),
-            callback                : filter => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WePlayerFilterPanel, {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            currentFilter         : action.getConPlayerFilter(),
+            callback              : filter => {
                 action.setConPlayerFilter(filter);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -163,24 +157,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeUnitFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConUnitFilter(),
-            callback                : filter => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitFilterPanel, {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConUnitFilter(),
+            callback              : filter => {
                 action.setConUnitFilter(filter);
 
                 if (filter != null) {
                     if (action.getConUnitComparator() == null) {
                         action.setConUnitComparator(ValueAndComparator.fromJson({
-                            comparator  : ComparatorId.EqualTo,
-                            value       : 0,
+                            comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                            value      : 0,
                         }));
                     }
                 }
 
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -197,38 +191,38 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const oldCon = action.getConUnitComparator();
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.Comparator),
-            availableNumberArray    : AllComparatorIdArray,
-            currentNumber           : oldCon?.getComparator(),
-            getNumberMainText       : num => getComparatorName(num) ?? UndefinedError,
-            callbackOnConfirm       : sign => {
-                openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle        : () => getText(TextType.B0160),
-                    currentValue    : oldCon?.getValue() ?? 0,
-                    minValue        : 0,
-                    maxValue        : 10,
-                    callback        : unitsCount => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            currentNumber        : oldCon?.getComparator(),
+            getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : sign => {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
+                    currentValue : oldCon?.getValue() ?? 0,
+                    minValue     : 0,
+                    maxValue     : 10,
+                    callback     : unitsCount => {
                         if (unitsCount == null) {
                             action.setConUnitComparator(null);
                             action.setConUnitFilter(null);
-                            dispatch(TypeId.WarEventFullDataChanged);
+                            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                         } else {
                             if (oldCon != null) {
                                 oldCon.setValue(unitsCount);
                                 oldCon.setComparator(sign);
                             } else {
                                 action.setConUnitComparator(ValueAndComparator.fromJson({
-                                    value       : unitsCount,
-                                    comparator  : sign,
+                                    value      : unitsCount,
+                                    comparator : sign,
                                 }));
                             }
 
-                            dispatch(TypeId.WarEventFullDataChanged);
+                            Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                         }
                     },
                 });
-            }
+            },
         });
     }
 
@@ -243,14 +237,14 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeTileFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConTileFilter(),
-            callback                : filter => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileFilterPanel, {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConTileFilter(),
+            callback              : filter => {
                 action.setConTileFilter(filter);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -261,11 +255,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeTileBuffFilterPanel, {
-            currentFilter   : action.getConTileBuffFilter(),
-            callback        : filter => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileBuffFilterPanel, {
+            currentFilter : action.getConTileBuffFilter(),
+            callback      : filter => {
                 action.setConTileBuffFilter(filter);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -277,15 +271,15 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const act = action.getActBuffType();
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.AbnormalStateTypeId),
-            availableNumberArray    : [-1, ...AllBuffTypeIdArray],
-            currentNumber           : act,
-            getNumberMainText       : typeId => typeId == -1 ? getText(TextType.None) : (getTileBuffName(typeId) || UndefinedError),
-            getNumberHelpText       : typeId => typeId == -1 ? getText(TextType.None) : getTileBuffDesc(typeId) || UndefinedError,
-            callbackOnConfirm       : newValue => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+            availableNumberArray : [-1, ...TileBuffs_Constants.AllBuffTypeIdArray],
+            currentNumber        : act,
+            getNumberMainText    : typeId => typeId == -1 ? Lang_Utils.getText(Lang_Constants.TextType.None) : (Lang_Utils.getTileBuffName(typeId) || Lang_Constants.UndefinedError),
+            getNumberHelpText    : typeId => typeId == -1 ? Lang_Utils.getText(Lang_Constants.TextType.None) : Lang_Utils.getTileBuffDesc(typeId) || Lang_Constants.UndefinedError,
+            callbackOnConfirm    : newValue => {
                 action.setActBuffType(newValue == -1 ? null : newValue);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -296,30 +290,30 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => getText(TextType.EndTurnIndex),
-            minValue        : EndTimeModification.MinEndTurnIndex,
-            maxValue        : EndTimeModification.MaxEndTurnIndex,
-            currentValue    : action.getActEndTurnIndex(),
-            callback        : newValue => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex),
+            minValue     : TileBuffs_Constants.EndTimeModification.MinEndTurnIndex,
+            maxValue     : TileBuffs_Constants.EndTimeModification.MaxEndTurnIndex,
+            currentValue : action.getActEndTurnIndex(),
+            callback     : newValue => {
                 action.setActEndTurnIndex(newValue);
 
                 const mode = action.getActEndTurnIndexMode();
                 if (newValue == null) {
-                    if ((mode !== BuffEndTimeModificationMode.DoNotChange) && (mode !== BuffEndTimeModificationMode.Delete)) {
+                    if ((mode !== WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) && (mode !== WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)) {
                         action.setActEndPlayerIndex(null);
-                        action.setActEndTurnIndexMode(BuffEndTimeModificationMode.DoNotChange);
-                        action.setActEndPlayerIndexMode(BuffEndTimeModificationMode.DoNotChange);
+                        action.setActEndTurnIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange);
+                        action.setActEndPlayerIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange);
                     }
                 } else {
-                    if ((mode === BuffEndTimeModificationMode.DoNotChange) || (mode === BuffEndTimeModificationMode.Delete)) {
+                    if ((mode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) || (mode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)) {
                         action.setActEndPlayerIndex(0);
-                        action.setActEndTurnIndexMode(BuffEndTimeModificationMode.SetAbsoluteValue);
-                        action.setActEndPlayerIndexMode(BuffEndTimeModificationMode.SetAbsoluteValue);
+                        action.setActEndTurnIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetAbsoluteValue);
+                        action.setActEndPlayerIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetAbsoluteValue);
                     }
                 }
 
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -330,30 +324,30 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => getText(TextType.EndPlayerIndex),
-            minValue        : EndTimeModification.MinEndPlayerIndex,
-            maxValue        : EndTimeModification.MaxEndPlayerIndex,
-            currentValue    : action.getActEndPlayerIndex(),
-            callback        : newValue => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex),
+            minValue     : TileBuffs_Constants.EndTimeModification.MinEndPlayerIndex,
+            maxValue     : TileBuffs_Constants.EndTimeModification.MaxEndPlayerIndex,
+            currentValue : action.getActEndPlayerIndex(),
+            callback     : newValue => {
                 action.setActEndPlayerIndex(newValue);
 
                 const mode = action.getActEndPlayerIndexMode();
                 if (newValue == null) {
-                    if ((mode !== BuffEndTimeModificationMode.DoNotChange) && (mode !== BuffEndTimeModificationMode.Delete)) {
+                    if ((mode !== WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) && (mode !== WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)) {
                         action.setActEndTurnIndex(null);
-                        action.setActEndTurnIndexMode(BuffEndTimeModificationMode.DoNotChange);
-                        action.setActEndPlayerIndexMode(BuffEndTimeModificationMode.DoNotChange);
+                        action.setActEndTurnIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange);
+                        action.setActEndPlayerIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange);
                     }
                 } else {
-                    if ((mode === BuffEndTimeModificationMode.DoNotChange) || (mode === BuffEndTimeModificationMode.Delete)) {
+                    if ((mode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) || (mode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)) {
                         action.setActEndTurnIndex(0);
-                        action.setActEndTurnIndexMode(BuffEndTimeModificationMode.SetAbsoluteValue);
-                        action.setActEndPlayerIndexMode(BuffEndTimeModificationMode.SetAbsoluteValue);
+                        action.setActEndTurnIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetAbsoluteValue);
+                        action.setActEndPlayerIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetAbsoluteValue);
                     }
                 }
 
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -364,37 +358,37 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.B0280),
-            availableNumberArray    : AllBuffEndTimeModificationModeArray,
-            getNumberMainText       : mode => getBuffEndTimeModificationModeName(mode) || UndefinedError,
-            currentNumber           : action.getActEndTurnIndexMode(),
-            callbackOnConfirm       : newMode => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0280),
+            availableNumberArray : WarEvents_Actions_Constants_Common.AllBuffEndTimeModificationModeArray,
+            getNumberMainText    : mode => Lang_Utils.getBuffEndTimeModificationModeName(mode) || Lang_Constants.UndefinedError,
+            currentNumber        : action.getActEndTurnIndexMode(),
+            callbackOnConfirm    : newMode => {
                 action.setActEndTurnIndexMode(newMode);
 
-                if ((newMode === BuffEndTimeModificationMode.DoNotChange) || (newMode === BuffEndTimeModificationMode.Delete)) {
+                if ((newMode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) || (newMode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)) {
                     action.setActEndTurnIndex(null);
 
-                    if (newMode === BuffEndTimeModificationMode.Delete) {
+                    if (newMode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete) {
                         action.setActEndPlayerIndex(null);
-                        action.setActEndPlayerIndexMode(BuffEndTimeModificationMode.Delete);
+                        action.setActEndPlayerIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete);
                     } else {
-                        if (action.getActEndPlayerIndexMode() === BuffEndTimeModificationMode.Delete) {
+                        if (action.getActEndPlayerIndexMode() === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete) {
                             action.setActEndPlayerIndex(null);
-                            action.setActEndPlayerIndexMode(BuffEndTimeModificationMode.DoNotChange);
+                            action.setActEndPlayerIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange);
                         }
                     }
 
                 } else {
                     action.setActEndTurnIndex(action.getActEndTurnIndex() ?? 0);
 
-                    if (action.getActEndPlayerIndexMode() === BuffEndTimeModificationMode.Delete) {
+                    if (action.getActEndPlayerIndexMode() === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete) {
                         action.setActEndPlayerIndex(null);
-                        action.setActEndPlayerIndexMode(BuffEndTimeModificationMode.DoNotChange);
+                        action.setActEndPlayerIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange);
                     }
                 }
 
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -405,37 +399,37 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.B0280),
-            availableNumberArray    : AllBuffEndTimeModificationModeArray,
-            getNumberMainText       : mode => getBuffEndTimeModificationModeName(mode) || UndefinedError,
-            currentNumber           : action.getActEndPlayerIndexMode(),
-            callbackOnConfirm       : newMode => {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0280),
+            availableNumberArray : WarEvents_Actions_Constants_Common.AllBuffEndTimeModificationModeArray,
+            getNumberMainText    : mode => Lang_Utils.getBuffEndTimeModificationModeName(mode) || Lang_Constants.UndefinedError,
+            currentNumber        : action.getActEndPlayerIndexMode(),
+            callbackOnConfirm    : newMode => {
                 action.setActEndPlayerIndexMode(newMode);
 
-                if ((newMode === BuffEndTimeModificationMode.DoNotChange) || (newMode === BuffEndTimeModificationMode.Delete)) {
+                if ((newMode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) || (newMode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)) {
                     action.setActEndPlayerIndex(null);
 
-                    if (newMode === BuffEndTimeModificationMode.Delete) {
+                    if (newMode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete) {
                         action.setActEndTurnIndex(null);
-                        action.setActEndTurnIndexMode(BuffEndTimeModificationMode.Delete);
+                        action.setActEndTurnIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete);
                     } else {
-                        if (action.getActEndTurnIndexMode() === BuffEndTimeModificationMode.Delete) {
+                        if (action.getActEndTurnIndexMode() === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete) {
                             action.setActEndTurnIndex(null);
-                            action.setActEndTurnIndexMode(BuffEndTimeModificationMode.DoNotChange);
+                            action.setActEndTurnIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange);
                         }
                     }
 
                 } else {
                     action.setActEndPlayerIndex(action.getActEndPlayerIndex() ?? 0);
 
-                    if (action.getActEndTurnIndexMode() === BuffEndTimeModificationMode.Delete) {
+                    if (action.getActEndTurnIndexMode() === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete) {
                         action.setActEndTurnIndex(null);
-                        action.setActEndTurnIndexMode(BuffEndTimeModificationMode.DoNotChange);
+                        action.setActEndTurnIndexMode(WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange);
                     }
                 }
 
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
     }
@@ -448,20 +442,20 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(TextType.B0516);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_Constants.TextType.B0516);
 
-        this._btnConPlayerFilter.setLangText(TextType.PlayerFilter);
-        this._btnConUnitFilter.setLangText(TextType.UnitFilter);
-        this._btnConUnitComparator.setLangText(TextType.Comparator);
-        this._btnConTileFilter.setLangText(TextType.TileFilter);
-        this._btnConTileBuffFilter.setLangText(TextType.B1235);
+        this._btnConPlayerFilter.setLangText(Lang_Constants.TextType.PlayerFilter);
+        this._btnConUnitFilter.setLangText(Lang_Constants.TextType.UnitFilter);
+        this._btnConUnitComparator.setLangText(Lang_Constants.TextType.Comparator);
+        this._btnConTileFilter.setLangText(Lang_Constants.TextType.TileFilter);
+        this._btnConTileBuffFilter.setLangText(Lang_Constants.TextType.B1235);
 
-        this._btnActBuffType.setLangText(TextType.AbnormalStateTypeId);
-        this._btnActEndTurnIndex.setLangText(TextType.EndTurnIndex);
-        this._btnActEndPlayerIndex.setLangText(TextType.EndPlayerIndex);
-        this._btnActEndTurnIndexMode.setLangText(TextType.B0280);
-        this._btnActEndPlayerIndexMode.setLangText(TextType.B0280);
+        this._btnActBuffType.setLangText(Lang_Constants.TextType.AbnormalStateTypeId);
+        this._btnActEndTurnIndex.setLangText(Lang_Constants.TextType.EndTurnIndex);
+        this._btnActEndPlayerIndex.setLangText(Lang_Constants.TextType.EndPlayerIndex);
+        this._btnActEndTurnIndexMode.setLangText(Lang_Constants.TextType.B0280);
+        this._btnActEndPlayerIndexMode.setLangText(Lang_Constants.TextType.B0280);
 
         this._updateLabelDescAndLabelError();
 
@@ -486,11 +480,11 @@ export class Panel extends UiPanel<OpenData> {
 
         const action            = openData.action;
         const war               = openData.war;
-        const errorTip          = getErrorTipForAction(openData.fullData, action, war);
+        const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || getText(TextType.B0493));
-        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
-        this._labelDesc.setText(getDetailDescForAction(action, war.getGcData()) || UndefinedError);
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
+        this._labelDesc.setText(WarEvents_Actions_Utils_Common.getDetailDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
@@ -500,7 +494,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelConPlayerFilter.setText(action.getConPlayerFilter() == null ? `` : getText(TextType.B1408));
+        this._labelConPlayerFilter.setText(action.getConPlayerFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
     }
 
     private _updateLabelConUnitFilter(): void {
@@ -509,7 +503,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelConUnitFilter.setText(action.getConUnitFilter() == null ? `` : getText(TextType.B1408));
+        this._labelConUnitFilter.setText(action.getConUnitFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
     }
 
     private _updateLabelConUnitComparator(): void {
@@ -519,7 +513,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const comparator = action.getConUnitComparator();
-        this._labelConUnitComparator.setText(comparator == null ? `` : getBriefDesc(comparator));
+        this._labelConUnitComparator.setText(comparator == null ? `` : ValueAndComparators_Utils.getBriefDesc(comparator));
     }
 
     private _updateLabelConTileFilter(): void {
@@ -528,17 +522,17 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelConTileFilter.setText(action.getConTileFilter() == null ? `` : getText(TextType.B1408));
+        this._labelConTileFilter.setText(action.getConTileFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
     }
 
     private _updateLabelConTileBuffFilter(): void {
         const action = this._getAction();
-        this._labelConTileBuffFilter.setText(action == null || action.getConTileBuffFilter() == null ? `` : getText(TextType.B1408));
+        this._labelConTileBuffFilter.setText(action == null || action.getConTileBuffFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
     }
 
     private _updateLabelActBuffType(): void {
         const buffTypeId = this._getAction()?.getActBuffType();
-        this._labelActBuffType.setText(buffTypeId == null ? `` : (getTileBuffName(buffTypeId) ?? UndefinedError));
+        this._labelActBuffType.setText(buffTypeId == null ? `` : (Lang_Utils.getTileBuffName(buffTypeId) ?? Lang_Constants.UndefinedError));
     }
 
     private _updateLabelActEndTurnIndex(): void {
@@ -553,7 +547,7 @@ export class Panel extends UiPanel<OpenData> {
             label.setText(``);
         } else {
             const mode      = action.getActEndTurnIndexMode();
-            const prefix    = ((mode === BuffEndTimeModificationMode.AddOffset) || (mode === BuffEndTimeModificationMode.SetValueRelativeToCurrentTime)) && (value >= 0)
+            const prefix    = ((mode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.AddOffset) || (mode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetValueRelativeToCurrentTime)) && (value >= 0)
                 ? `+`
                 : ``;
             label.setText(`${prefix}${value}`);
@@ -572,7 +566,7 @@ export class Panel extends UiPanel<OpenData> {
             label.setText(``);
         } else {
             const mode      = action.getActEndPlayerIndexMode();
-            const prefix    = ((mode === BuffEndTimeModificationMode.AddOffset) || (mode === BuffEndTimeModificationMode.SetValueRelativeToCurrentTime)) && (value >= 0)
+            const prefix    = ((mode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.AddOffset) || (mode === WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetValueRelativeToCurrentTime)) && (value >= 0)
                 ? `+`
                 : ``;
             label.setText(`${prefix}${value}`);
@@ -585,8 +579,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const mode = action.getActEndTurnIndexMode() ?? 0;
-        this._labelActEndTurnIndexMode.setText(getBuffEndTimeModificationModeName(mode) || UndefinedError);
+        const mode = action.getActEndTurnIndexMode();
+        this._labelActEndTurnIndexMode.setText(Lang_Utils.getBuffEndTimeModificationModeName(mode) || Lang_Constants.UndefinedError);
     }
 
     private _updateLabelActEndPlayerIndexMode(): void {
@@ -595,11 +589,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const mode = action.getActEndPlayerIndexMode() ?? 0;
-        this._labelActEndPlayerIndexMode.setText(getBuffEndTimeModificationModeName(mode) || UndefinedError);
+        const mode = action.getActEndPlayerIndexMode();
+        this._labelActEndPlayerIndexMode.setText(Lang_Utils.getBuffEndTimeModificationModeName(mode) || Lang_Constants.UndefinedError);
     }
 
-    private _getAction(): Undefinable<WeaModifyTileBuffSimple> {
+    private _getAction(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaModifyTileBuffSimple> {
         return this.getOpenData()?.action.getWeaModifyTileBuffSimple();
     }
 }

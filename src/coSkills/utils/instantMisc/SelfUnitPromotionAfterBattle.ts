@@ -1,8 +1,8 @@
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
-import type {
-    SelfUnitPromotionAfterBattle,
-} from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitPromotionAfterBattle.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+} from "../../../internal.ts";
+import type { SelfUnitPromotionAfterBattle } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitPromotionAfterBattle.ts";
 
 export function getTotalOffset({
     cfg,
@@ -16,12 +16,12 @@ export function getTotalOffset({
     isTargetKilled,
 }: {
     cfg                         : SelfUnitPromotionAfterBattle | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
     targetLostNormalizedHp      : number;
     isTargetKilled              : boolean;
 }): number {
@@ -38,15 +38,15 @@ export function getTotalOffset({
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-            coZoneRadius                : coZoneRadius,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+            coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+            coZoneRadius             : coZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))
     ) {
         return 0;
     }
 
-    const arr = cfg.getOffsetFromDamageDealt() ?? [];
+    const arr = cfg.getOffsetFromDamageDealt();
     return (arr.length ? arr[Math.min(targetLostNormalizedHp, arr.length - 1)] : 0)
-        + (isTargetKilled ? cfg.getOffsetFromKill() ?? 0 : 0);
+        + (isTargetKilled ? cfg.getOffsetFromKill() : 0);
 }

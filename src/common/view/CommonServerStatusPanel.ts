@@ -1,39 +1,41 @@
-import { reqCommonGetServerStatus } from "../model/CommonProxy.ts";
-import { UndefinedError, TextType } from "../../lang/Constants.ts";
-import { getTimeDurationText, getText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetServerStatus/S.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import {
+    Helpers_Misc,
+    type Notifications_Mapping,
+    Lang_Utils,
+    Common_Model_CommonProxy,
+    Lang_Constants,
+    Ui_Components_UiPanel,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnClose!                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelAccountsTitle!       : IUiLabel;
-    private readonly _labelAccounts!            : IUiLabel;
-    private readonly _labelOnlineTimeTitle!     : IUiLabel;
-    private readonly _labelOnlineTime!          : IUiLabel;
-    private readonly _labelNewAccountsTitle!    : IUiLabel;
-    private readonly _labelNewAccounts!         : IUiLabel;
-    private readonly _labelActiveAccountsTitle! : IUiLabel;
-    private readonly _labelActiveAccounts!      : IUiLabel;
-    private readonly _labelOngoingMpwInfoTitle! : IUiLabel;
-    private readonly _labelOngoingMpwInfo!      : IUiLabel;
+    private readonly _labelAccountsTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelAccounts!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOnlineTimeTitle!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOnlineTime!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNewAccountsTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNewAccounts!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelActiveAccountsTitle! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelActiveAccounts!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOngoingMpwInfoTitle! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOngoingMpwInfo!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.MsgCommonGetServerStatus, callback: this._onMsgCommonGetServerStatus },
+            { type : "MsgCommonGetServerStatus", callback : this._onMsgCommonGetServerStatus },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,   callback: this.closePanel },
+            { ui : this._btnClose,   callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -43,36 +45,36 @@ export class Panel extends UiPanel<OpenData> {
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
 
-        reqCommonGetServerStatus();
+        Common_Model_CommonProxy.reqCommonGetServerStatus();
     }
 
-    private _onMsgCommonGetServerStatus(e: Event): void {
-        const data = e.data as S;
+    private _onMsgCommonGetServerStatus(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCommonGetServerStatus"]>): void {
+        const data = (Helpers_Misc.getExisted(e.data)).msg;
 
         this._labelAccounts.setText("" + data.getTotalAccounts());
 
         const totalOnlineTime           = data.getTotalOnlineTime();
-        this._labelOnlineTime.setText(totalOnlineTime == null ? UndefinedError : getTimeDurationText(totalOnlineTime, ` `));
+        this._labelOnlineTime.setText(totalOnlineTime == null ? Lang_Constants.UndefinedError : Lang_Utils.getTimeDurationText(totalOnlineTime, ` `));
 
         const activeAccounts            = data.getActiveAccounts();
-        this._labelActiveAccounts.setText(activeAccounts == null ? UndefinedError : activeAccounts.join(" / "));
+        this._labelActiveAccounts.setText(activeAccounts == null ? Lang_Constants.UndefinedError : activeAccounts.join(" / "));
 
         const newAccounts               = data.getNewAccounts();
-        this._labelNewAccounts.setText(newAccounts == null ? UndefinedError : newAccounts.join(" / "));
+        this._labelNewAccounts.setText(newAccounts == null ? Lang_Constants.UndefinedError : newAccounts.join(" / "));
 
         const ongoingMpwInfo            = data.getOngoingMpwInfo();
         this._labelOngoingMpwInfo.setText(ongoingMpwInfo == null
-            ? UndefinedError
-            : `${ongoingMpwInfo[0]} (${getText(TextType.Players)}: ${ongoingMpwInfo[1]})`
+            ? Lang_Constants.UndefinedError
+            : `${ongoingMpwInfo[0]} (${Lang_Utils.getText(Lang_Constants.TextType.Players)}: ${ongoingMpwInfo[1]})`,
         );
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0327);
-        this._labelAccountsTitle.setLangText(TextType.B0328);
-        this._labelOnlineTimeTitle.setLangText(TextType.B0329);
-        this._labelNewAccountsTitle.setLangText(TextType.B0330);
-        this._labelActiveAccountsTitle.setLangText(TextType.B0331);
-        this._labelOngoingMpwInfoTitle.setLangText(TextType.B1101);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0327);
+        this._labelAccountsTitle.setLangText(Lang_Constants.TextType.B0328);
+        this._labelOnlineTimeTitle.setLangText(Lang_Constants.TextType.B0329);
+        this._labelNewAccountsTitle.setLangText(Lang_Constants.TextType.B0330);
+        this._labelActiveAccountsTitle.setLangText(Lang_Constants.TextType.B0331);
+        this._labelOngoingMpwInfoTitle.setLangText(Lang_Constants.TextType.B1101);
     }
 }

@@ -1,29 +1,30 @@
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { checkIsRedForGameSettings } from "../model/LobbyModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import {
+    Lobby_Model_LobbyModel,
+    Tween_Executor,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Ui_Components_UiPanel,
+    Timer_TimerModel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _group!            : IUiContainer;
-    private readonly _btnSettings!      : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnSettings!      : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserLogout,           callback: this._onMsgUserLogout },
-            { type: TypeId.MsgMailGetAllMailArray,  callback: this._onNotifyMsgMailGetAllMailArray },
-            { type: TypeId.MsgMailGetMail,          callback: this._onNotifyMsgMailGetMail },
-            { type: TypeId.MsgMailDeleteMail,       callback: this._onNotifyMsgMailDeleteMail },
-            { type: TypeId.MsgMailSetIsNew,         callback: this._onNotifyMsgMailSetIsNew },
+            { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
+            { type : "MsgUserLogout",           callback : this._onMsgUserLogout },
+            { type : "MsgMailGetAllMailArray",  callback : this._onNotifyMsgMailGetAllMailArray },
+            { type : "MsgMailGetMail",          callback : this._onNotifyMsgMailGetMail },
+            { type : "MsgMailDeleteMail",       callback : this._onNotifyMsgMailDeleteMail },
+            { type : "MsgMailSetIsNew",         callback : this._onNotifyMsgMailSetIsNew },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnSettings,    callback: this._onTouchedBtnSettings },
+            { ui : this._btnSettings,    callback : this._onTouchedBtnSettings },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -51,29 +52,29 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSettings(): void {
-        openPanel(getDict().UserSettingsPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSettingsPanel, void 0);
     }
 
     private async _updateRedForBtnSettings(): Promise<void> {
-        this._btnSettings.setRedVisible(await checkIsRedForGameSettings());
+        this._btnSettings.setRedVisible(await Lobby_Model_LobbyModel.checkIsRedForGameSettings());
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 0, customY: -40 },
-            endProps    : { customAlpha: 1, customY: 0 },
+        Tween_Executor.Executor.reset({
+            obj        : this._group,
+            beginProps : { customAlpha : 0, customY : -40 },
+            endProps   : { customAlpha : 1, customY : 0 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: -40 },
+        Tween_Executor.Executor.reset({
+            obj        : this._group,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : -40 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 }

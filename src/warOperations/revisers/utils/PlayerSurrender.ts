@@ -1,27 +1,26 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getExisted, newError } from "../../../helpers/Misc.ts";
-import { AliveStateId } from "../../../players/Constants.ts";
+import {
+    Players_Constants,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
+} from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerSurrender } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerSurrender.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
-export function revise(war: IBwWar, rawAction: WoPlayerSurrender, requesterUserId: Undefinable<number>): WoContainer {
-    const playerIndex   = getExisted(rawAction.getPlayerIndex(), ClientErrorCode.WarOperationReviser_RevisePlayerSurrender_00);
+export function revise(war: BaseWar_Model_War.War, rawAction: WoPlayerSurrender, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+    const playerIndex   = Helpers_Misc.getExisted(rawAction.getPlayerIndex(), Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerSurrender_00);
     const player        = war.getPlayer(playerIndex);
     if ((player.getUserId() == null)                            ||
         (player.checkIsNeutral())                               ||
-        (player.getAliveState() !== AliveStateId.Alive)   ||
+        (player.getAliveState() !== Players_Constants.AliveStateId.Alive)   ||
         (player.getUserId() != requesterUserId)
     ) {
-        throw newError(`Invalid playerIndex or aliveState.`, ClientErrorCode.WarOperationReviser_RevisePlayerSurrender_01);
+        throw Helpers_Misc.newError(`Invalid playerIndex or aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerSurrender_01);
     }
 
     return WoContainer.fromJson({
-        WoPlayerSurrender: {
+        WoPlayerSurrender : {
             playerIndex : playerIndex,
         },
     });

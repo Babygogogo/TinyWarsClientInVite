@@ -1,8 +1,8 @@
-import { TextType } from "../lang/Constants.ts";
-import { getText, getFormattedText } from "../lang/Utils.ts";
-import type { ArrayModifier as ProtoSchemaCommonProtoStructureArrayModifier } from "../proto/schema/CommonProto/Structure/ArrayModifier.ts";
-
-type ArrayModifier  = ProtoSchemaCommonProtoStructureArrayModifier;
+import {
+    Lang_Utils,
+    Lang_Constants,
+} from "../internal.ts";
+import type { ArrayModifier } from "../proto/schema/CommonProto/Structure/ArrayModifier.ts";
 
 export function checkIsValid(data: ArrayModifier, allowedValueSet: Set<number>): boolean {
     return getErrorTip(data, allowedValueSet) == null;
@@ -29,21 +29,21 @@ export function getDesc(data: ArrayModifier, name: string): string {
     {
         const addIntArray = data.getAddIntArray();
         if (addIntArray?.length) {
-            textArray.push(`- ${getText(TextType.B1425)}: ${addIntArray.join(`, `)}`);
+            textArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.B1425)}: ${addIntArray.join(`, `)}`);
         }
     }
     {
         const deleteIntArray = data.getDeleteIntArray();
         if (deleteIntArray?.length) {
-            textArray.push(`- ${getText(TextType.B1426)}: ${deleteIntArray.join(`, `)}`);
+            textArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.B1426)}: ${deleteIntArray.join(`, `)}`);
         }
     }
 
     if (!textArray.length) {
-        textArray.push(`- ${getText(TextType.A0957)}`);
+        textArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0957)}`);
     }
 
-    return getFormattedText(TextType.F0256, name, textArray.join(`\n`));
+    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0256, name, textArray.join(`\n`));
 }
 
 export function getErrorTip(data: ArrayModifier, allowedValueSet: Set<number>): string | null {
@@ -51,11 +51,11 @@ export function getErrorTip(data: ArrayModifier, allowedValueSet: Set<number>): 
     const addIntSet     = new Set(addIntArray);
     {
         if (addIntSet.size !== addIntArray.length) {
-            return getFormattedText(TextType.F0091, getText(TextType.B1425));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1425));
         }
         for (const num of addIntSet) {
             if (!allowedValueSet.has(num)) {
-                return getFormattedText(TextType.F0091, getText(TextType.B1425));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1425));
             }
         }
     }
@@ -64,22 +64,22 @@ export function getErrorTip(data: ArrayModifier, allowedValueSet: Set<number>): 
     const deleteIntSet      = new Set(deleteIntArray);
     {
         if (deleteIntSet.size !== deleteIntArray.length) {
-            return getFormattedText(TextType.F0091, getText(TextType.B1426));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1426));
         }
         for (const num of deleteIntSet) {
             if (!allowedValueSet.has(num)) {
-                return getFormattedText(TextType.F0091, getText(TextType.B1426));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1426));
             }
         }
     }
 
     {
         if ((!addIntArray.length) && (!deleteIntArray.length)) {
-            return getText(TextType.A0957);
+            return Lang_Utils.getText(Lang_Constants.TextType.A0957);
         }
         for (const num of addIntSet) {
             if (deleteIntSet.has(num)) {
-                return getFormattedText(TextType.F0091, getText(TextType.B0560));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0560));
             }
         }
     }

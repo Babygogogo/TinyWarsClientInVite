@@ -1,31 +1,26 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "./IBwWar.ts";
-import type {
-    SerialDrawVoteManager as ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
-import type {
-    SerialPlayerManager as ProtoSchemaCommonProtoWarSerializationSerialPlayerManager,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
-
-type SerialPlayerManager    = ProtoSchemaCommonProtoWarSerializationSerialPlayerManager;
-type SerialDrawVoteManager  = ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager;
+import {
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
+} from "../../internal.ts";
+import type { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
+import type { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
 
 export interface IBwDrawVoteManager {
     init(
-        playerManagerData   : Undefinable<SerialPlayerManager>,
-        remainingVotes      : Undefinable<number>,
-        drawVoteManagerData : Undefinable<SerialDrawVoteManager>,
+        playerManagerData   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayerManager>,
+        remainingVotes      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>,
+        drawVoteManagerData : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager>,
     ): void;
     fastInit(
-        remainingVotes      : Undefinable<number>,
-        drawVoteManagerData : Undefinable<SerialDrawVoteManager>,
+        remainingVotes      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>,
+        drawVoteManagerData : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager>,
     ): void;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
-    getRemainingVotes(): Undefinable<number>;
+    getRemainingVotes(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
-    getDrawVoteData(): Undefinable<SerialDrawVoteManager>;
+    getDrawVoteData(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager>;
 
     checkIsDraw(): boolean;
     checkHasOngoingVote(): boolean;

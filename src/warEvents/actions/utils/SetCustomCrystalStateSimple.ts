@@ -1,46 +1,31 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../../lang/Utils.ts";
-import { checkIsValid as MultiplierAndOffsetsUtilsCheckIsValid, getResultValue } from "../../../multiplierAndOffsets/Utils.ts";
-import { getValueInRange } from "../../../numbers/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
-import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type {
-    WeaSetCustomCrystalStateSimple as ProtoSchemaCommonProtoWarEventWeaSetCustomCrystalStateSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCrystalStateSimple.ts";
+import {
+    Players_Utils_Filter,
+    Tiles_Utils_Filter,
+    Units_Utils_Filter,
+    ValueAndComparators_Utils,
+    MultiplierAndOffsets_Utils,
+    Tiles_Utils_Serialization,
+    Tiles_Constants_CustomLimits,
+    Lang_Utils,
+    Numbers_Utils,
+    Lang_Constants,
+    Tiles_Constants_MapWeapon,
+    type BaseWar_Model_War,
+    type GameConfigs_GameConfig,
+    type Players_IPlayer,
+    type Tiles_Tile,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { WeaSetCustomCrystalStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCrystalStateSimple.ts";
 import { TileCustomCrystalData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
-import { Crystal } from "../../../tiles/constants/CustomLimits.ts";
-import { TypeId } from "../../../tiles/constants/MapWeapon.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
-import {
-    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
-    checkIsValid as TilesUtilsFilterCheckIsValid,
-    checkIsMeet as TilesUtilsFilterCheckIsMeet,
-} from "../../../tiles/utils/Filter.ts";
-import { create } from "../../../tiles/utils/Serialization.ts";
-import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
-import {
-    getDesc,
-    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
-    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
-} from "../../../valueAndComparators/Utils.ts";
 
-type PlayerFilter                       = ProtoSchemaCommonProtoStructurePlayerFilter;
-type WeaSetCustomCrystalStateSimple     = ProtoSchemaCommonProtoWarEventWeaSetCustomCrystalStateSimple;
-type IPlayer                            = PlayersIPlayer;
-type ITile                              = TilesITile;
-
-export function checkIsValid(data: Undefinable<WeaSetCustomCrystalStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomCrystalStateSimple>, gameConfig: GameConfigs_GameConfig.GameConfig, mapSize: AuxiliaryTypes_MapSize.MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: Undefinable<WeaSetCustomCrystalStateSimple>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomCrystalStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -49,81 +34,81 @@ export function getBriefDesc(data: Undefinable<WeaSetCustomCrystalStateSimple>):
     {
         const act = data.getActRadius();
         if (act != null) {
-            actTextArray.push(getText(TextType.EffectiveRadius));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.EffectiveRadius));
         }
     }
     {
         const act = data.getActPriority();
         if (act != null) {
-            actTextArray.push(getText(TextType.Priority));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.Priority));
         }
     }
     {
         const act = data.getActCanAffectSelf();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectOwner));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectOwner));
         }
     }
     {
         const act = data.getActCanAffectAlly();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectAlly));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectAlly));
         }
     }
     {
         const act = data.getActCanAffectEnemy();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectEnemy));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectEnemy));
         }
     }
     {
         const act = data.getActOffsetFund();
         if (act != null) {
-            actTextArray.push(getText(TextType.FundOffset));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.FundOffset));
         }
     }
     {
         const act = data.getActOffsetEnergyPercentage();
         if (act != null) {
-            actTextArray.push(getText(TextType.CoEnergyOffset$));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CoEnergyOffset$));
         }
     }
     {
         const act = data.getActOffsetHp();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsHpOffset));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset));
         }
     }
     {
         const act = data.getActOffsetFuelPercentage();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsFuelOffset$));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$));
         }
     }
     {
         const act = data.getActOffsetPrimaryAmmoPercentage();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsPriAmmoOffset$));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$));
         }
     }
     {
         const act = data.getActCanBeFatal();
         if (act != null) {
-            actTextArray.push(getText(TextType.CanBeFatal));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CanBeFatal));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(getText(TextType.A0957));
+        actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
     }
 
-    return getFormattedText(
-        TextType.F0254,
-        getText(TextType.MystCrystal),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0254,
+        Lang_Utils.getText(Lang_Constants.TextType.MystCrystal),
         actTextArray.join(`, `),
     );
 }
-export function getDetailDesc(data: Undefinable<WeaSetCustomCrystalStateSimple>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomCrystalStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -132,161 +117,161 @@ export function getDetailDesc(data: Undefinable<WeaSetCustomCrystalStateSimple>)
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            conTextArray.push(`- ${TilesUtilsFilterGetDescForEmbed(filter)}`);
+            conTextArray.push(`- ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${getText(TextType.B1421)}) ${getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if (comparator != null) {
-            conTextArray.push(`- ${getDesc(
+            conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                getText(data.getConUnitFilter() == null ? TextType.B1418 : TextType.B1419)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
             )}`);
         }
     }
 
     if (!conTextArray.length) {
-        conTextArray.push(`- ${getText(TextType.A0944)}`);
+        conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
     }
 
     const actTextArray: string[] = [];
     {
         const act = data.getActRadius();
         if (act != null) {
-            actTextArray.push(getText(TextType.EffectiveRadius));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.EffectiveRadius));
         }
     }
     {
         const act = data.getActPriority();
         if (act != null) {
-            actTextArray.push(getText(TextType.Priority));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.Priority));
         }
     }
     {
         const act = data.getActCanAffectSelf();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectOwner));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectOwner));
         }
     }
     {
         const act = data.getActCanAffectAlly();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectAlly));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectAlly));
         }
     }
     {
         const act = data.getActCanAffectEnemy();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectEnemy));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectEnemy));
         }
     }
     {
         const act = data.getActOffsetFund();
         if (act != null) {
-            actTextArray.push(getText(TextType.FundOffset));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.FundOffset));
         }
     }
     {
         const act = data.getActOffsetEnergyPercentage();
         if (act != null) {
-            actTextArray.push(getText(TextType.CoEnergyOffset$));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CoEnergyOffset$));
         }
     }
     {
         const act = data.getActOffsetHp();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsHpOffset));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset));
         }
     }
     {
         const act = data.getActOffsetFuelPercentage();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsFuelOffset$));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$));
         }
     }
     {
         const act = data.getActOffsetPrimaryAmmoPercentage();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsPriAmmoOffset$));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$));
         }
     }
     {
         const act = data.getActCanBeFatal();
         if (act != null) {
-            actTextArray.push(getText(TextType.CanBeFatal));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CanBeFatal));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(getText(TextType.A0957));
+        actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
     }
 
-    return getFormattedText(
-        TextType.F0255,
-        getText(TextType.MystCrystal),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0255,
+        Lang_Utils.getText(Lang_Constants.TextType.MystCrystal),
         conTextArray.join(`\n`),
-        getText(TextType.MystCrystal),
+        Lang_Utils.getText(Lang_Constants.TextType.MystCrystal),
         actTextArray.join(`, `),
     );
 }
 
-export function getErrorTip(data: WeaSetCustomCrystalStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaSetCustomCrystalStateSimple, mapSize: AuxiliaryTypes_MapSize.MapSize, playersCountUnneutral: number, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            if (!UnitsUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
+            if (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
-                return getFormattedText(TextType.F0091, getText(TextType.Comparator));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
             }
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!PlayersUtilsFilterCheckIsValid(filter, playersCountUnneutral, gameConfig))
+            (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
         }
     }
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
-            (!TilesUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if ((comparator != null)                            &&
-            (!ValueAndComparatorsUtilsCheckIsValid(comparator))
+            (!ValueAndComparators_Utils.checkIsValid(comparator))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
         }
     }
 
     {
         const act = data.getActRadius();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.EffectiveRadius));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EffectiveRadius));
         }
     }
     {
         const act = data.getActPriority();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.Priority));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Priority));
         }
     }
     {
@@ -304,41 +289,41 @@ export function getErrorTip(data: WeaSetCustomCrystalStateSimple, mapSize: MapSi
     {
         const act = data.getActOffsetFund();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.FundOffset));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.FundOffset));
         }
     }
     {
         const act = data.getActOffsetEnergyPercentage();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.CoEnergyOffset$));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.CoEnergyOffset$));
         }
     }
     {
         const act = data.getActOffsetHp();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.UnitsHpOffset));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset));
         }
     }
     {
         const act = data.getActOffsetFuelPercentage();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.UnitsFuelOffset$));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$));
         }
     }
     {
         const act = data.getActOffsetPrimaryAmmoPercentage();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.UnitsPriAmmoOffset$));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$));
         }
     }
     {
@@ -359,7 +344,7 @@ export function getErrorTip(data: WeaSetCustomCrystalStateSimple, mapSize: MapSi
         (data.getActOffsetPrimaryAmmoPercentage() == null)   &&
         (data.getActCanBeFatal() == null)
     ) {
-        return getText(TextType.A0957);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0957);
     }
 
     return null;
@@ -369,21 +354,21 @@ export function getErrorTip(data: WeaSetCustomCrystalStateSimple, mapSize: MapSi
 export async function applyWithExtraData(_action: WeaSetCustomCrystalStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
-    const targetTileArray: ITile[] = [];
+export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+    const targetTileArray: Tiles_Tile.Tile[] = [];
     {
         const unitMap           = war.getUnitMap();
         const conTileFilter     = action.getConTileFilter();
         const conPlayerFilter   = action.getConPlayerFilter();
         const conUnitFilter     = action.getConUnitFilter();
         const conUnitComparator = action.getConUnitComparator();
-        const playerFilterDict  = new Map<IPlayer, boolean>();
+        const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
         for (const tile of war.getTileMap().getAllTiles()) {
-            if (tile.getMapWeaponType() !== TypeId.CustomCrystal) {
+            if (tile.getMapWeaponType() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal) {
                 continue;
             }
 
-            if ((conTileFilter != null) && (!TilesUtilsFilterCheckIsMeet(conTileFilter, tile))) {
+            if ((conTileFilter != null) && (!Tiles_Utils_Filter.checkIsMeet(conTileFilter, tile))) {
                 continue;
             }
 
@@ -394,11 +379,11 @@ export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimp
             if (conUnitComparator != null) {
                 let count = 0;
                 for (const unit of unitMap.getAllUnitsOnGrid(tile.getGridIndex())) {
-                    if ((conUnitFilter == null) || (UnitsUtilsFilterCheckIsMeet(conUnitFilter, unit))) {
+                    if ((conUnitFilter == null) || (Units_Utils_Filter.checkIsMeet(conUnitFilter, unit))) {
                         ++count;
                     }
                 }
-                if (!ValueAndComparatorsUtilsCheckIsMeet(conUnitComparator, count)) {
+                if (!ValueAndComparators_Utils.checkIsMeet(conUnitComparator, count)) {
                     continue;
                 }
             }
@@ -411,21 +396,21 @@ export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimp
         }
     }
 
-    const dataDict = new Map<ITile, TileCustomCrystalData>();
+    const dataDict = new Map<Tiles_Tile.Tile, TileCustomCrystalData>();
     {
         for (const tile of targetTileArray) {
             dataDict.set(tile, TileCustomCrystalData.fromJson({
-                radius                          : evalActRadius(action, tile),
-                priority                        : evalActPriority(action, tile),
-                canAffectSelf                   : evalActCanAffectSelf(action, tile),
-                canAffectAlly                   : evalActCanAffectAlly(action, tile),
-                canAffectEnemy                  : evalActCanAffectEnemy(action, tile),
-                offsetFund                      : evalActOffsetFund(action, tile),
-                offsetEnergyPercentage          : evalActOffsetEnergyPercentage(action, tile),
-                offsetHp                        : evalActOffsetHp(action, tile),
-                offsetFuelPercentage            : evalActOffsetFuelPercentage(action, tile),
-                offsetPrimaryAmmoPercentage     : evalActOffsetPrimaryAmmoPercentage(action, tile),
-                canBeFatal                      : evalActCanBeFatal(action, tile),
+                radius                      : evalActRadius(action, tile),
+                priority                    : evalActPriority(action, tile),
+                canAffectSelf               : evalActCanAffectSelf(action, tile),
+                canAffectAlly               : evalActCanAffectAlly(action, tile),
+                canAffectEnemy              : evalActCanAffectEnemy(action, tile),
+                offsetFund                  : evalActOffsetFund(action, tile),
+                offsetEnergyPercentage      : evalActOffsetEnergyPercentage(action, tile),
+                offsetHp                    : evalActOffsetHp(action, tile),
+                offsetFuelPercentage        : evalActOffsetFuelPercentage(action, tile),
+                offsetPrimaryAmmoPercentage : evalActOffsetPrimaryAmmoPercentage(action, tile),
+                canBeFatal                  : evalActCanBeFatal(action, tile),
             }));
         }
     }
@@ -433,29 +418,29 @@ export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimp
     {
         for (const [tile, tileCustomCrystalData] of dataDict) {
             const cfg       = tile.getTemplateCfg();
-            const newData   = create({
-                gridIndex               : tile.getGridIndex().toProto().toJson(),
-                playerIndex             : tile.getPlayerIndex(),
-                baseType                : tile.getBaseType(),
-                baseShapeId             : tile.getBaseShapeId(),
-                decorationType          : tile.getDecorationType(),
-                decorationShapeId       : tile.getDecorationShapeId(),
-                objectType              : tile.getObjectType(),
-                objectShapeId           : tile.getObjectShapeId(),
+            const newData   = Tiles_Utils_Serialization.create({
+                gridIndex         : tile.getGridIndex().toProto().toJson(),
+                playerIndex       : tile.getPlayerIndex(),
+                baseType          : tile.getBaseTypeId(),
+                baseShapeId       : tile.getBaseShapeId(),
+                decorationType    : tile.getDecorationTypeId(),
+                decorationShapeId : tile.getDecorationShapeId(),
+                objectType        : tile.getObjectTypeId(),
+                objectShapeId     : tile.getObjectShapeId(),
 
-                customNameId            : tile.getCustomNameId() ?? null,
-                unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-                isHighlighted           : tile.getIsHighlighted(),
+                customNameId           : tile.getCustomNameId() ?? null,
+                unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+                isHighlighted          : tile.getIsHighlighted(),
 
-                currentBuildPoint       : Math.min(tile.getCurrentBuildPoint(),     cfg.getMaxBuildPoint() ?? 0),
-                currentCapturePoint     : Math.min(tile.getCurrentCapturePoint(),   cfg.getMaxCapturePoint() ?? 0),
-                currentHp               : Math.min(tile.getCurrentHp(),             cfg.getMaxHp() ?? 0),
+                currentBuildPoint   : Math.min(tile.getCurrentBuildPoint(),     cfg.getMaxBuildPoint() ?? 0),
+                currentCapturePoint : Math.min(tile.getCurrentCapturePoint(),   cfg.getMaxCapturePoint() ?? 0),
+                currentHp           : Math.min(tile.getCurrentHp(),             cfg.getMaxHp() ?? 0),
 
-                customBuildingData      : null,
-                customCrystalData       : tileCustomCrystalData.toJson(),
-                customCannonData        : null,
-                customLaserTurretData   : null,
+                customBuildingData    : null,
+                customCrystalData     : tileCustomCrystalData.toJson(),
+                customCannonData      : null,
+                customLaserTurretData : null,
             });
 
             tile.init(newData, tile.getGameConfig());
@@ -468,39 +453,39 @@ export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimp
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, checkIsMeet(filter, player));
+        resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }
     return !!resultDict.get(player);
 }
-function evalActRadius(action: WeaSetCustomCrystalStateSimple, tile: ITile): number {
+function evalActRadius(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getRadius() ?? 0;
     const act           = action.getActRadius();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : Crystal.Radius.MinValue,
-        maxValue    : Crystal.Radius.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue : Tiles_Constants_CustomLimits.Crystal.Radius.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.Radius.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActPriority(action: WeaSetCustomCrystalStateSimple, tile: ITile): number {
+function evalActPriority(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getPriority() ?? 0;
     const act           = action.getActPriority();
     if (act == null) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : Crystal.Priority.MinValue,
-        maxValue    : Crystal.Priority.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue : Tiles_Constants_CustomLimits.Crystal.Priority.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.Priority.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActCanAffectSelf(action: WeaSetCustomCrystalStateSimple, tile: ITile): boolean {
+function evalActCanAffectSelf(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCrystalData()?.getCanAffectSelf();
     const act           = action.getActCanAffectSelf();
     if (act == null) {
@@ -509,7 +494,7 @@ function evalActCanAffectSelf(action: WeaSetCustomCrystalStateSimple, tile: ITil
 
     return act;
 }
-function evalActCanAffectAlly(action: WeaSetCustomCrystalStateSimple, tile: ITile): boolean {
+function evalActCanAffectAlly(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCrystalData()?.getCanAffectAlly();
     const act           = action.getActCanAffectAlly();
     if (act == null) {
@@ -518,7 +503,7 @@ function evalActCanAffectAlly(action: WeaSetCustomCrystalStateSimple, tile: ITil
 
     return act;
 }
-function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateSimple, tile: ITile): boolean {
+function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCrystalData()?.getCanAffectEnemy();
     const act           = action.getActCanAffectEnemy();
     if (act == null) {
@@ -527,72 +512,72 @@ function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateSimple, tile: ITi
 
     return act;
 }
-function evalActOffsetFund(action: WeaSetCustomCrystalStateSimple, tile: ITile): number {
+function evalActOffsetFund(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getOffsetFund() ?? 0;
     const act           = action.getActOffsetFund();
     if (act == null) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : Crystal.OffsetFund.MinValue,
-        maxValue    : Crystal.OffsetFund.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateSimple, tile: ITile): number {
+function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getOffsetEnergyPercentage() ?? 0;
     const act           = action.getActOffsetEnergyPercentage();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : Crystal.OffsetEnergyPercentage.MinValue,
-        maxValue    : Crystal.OffsetEnergyPercentage.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetHp(action: WeaSetCustomCrystalStateSimple, tile: ITile): number {
+function evalActOffsetHp(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getOffsetHp() ?? 0;
     const act           = action.getActOffsetHp();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : Crystal.OffsetHp.MinValue,
-        maxValue    : Crystal.OffsetHp.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateSimple, tile: ITile): number {
+function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getOffsetFuelPercentage() ?? 0;
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : Crystal.OffsetFuelPercentage.MinValue,
-        maxValue    : Crystal.OffsetFuelPercentage.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateSimple, tile: ITile): number {
+function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): number {
     const defaultValue  = tile.getFinalCrystalData()?.getOffsetPrimaryAmmoPercentage() ?? 0;
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : Crystal.OffsetPrimaryAmmoPercentage.MinValue,
-        maxValue    : Crystal.OffsetPrimaryAmmoPercentage.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActCanBeFatal(action: WeaSetCustomCrystalStateSimple, tile: ITile): boolean {
+function evalActCanBeFatal(action: WeaSetCustomCrystalStateSimple, tile: Tiles_Tile.Tile): boolean {
     const defaultValue  = !!tile.getFinalCrystalData()?.getCanBeFatal();
     const act           = action.getActCanBeFatal();
     if (act == null) {

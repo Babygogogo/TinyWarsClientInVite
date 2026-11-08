@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-shadow
+ 
 export const enum Common {
     FirstId         = 0,
 
@@ -7,7 +7,7 @@ export const enum Common {
     MinLimit        = 1000,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum OperationTypeId {
     SystemBeginTurn             = 1,
     SystemCallWarEvent          = 2,

@@ -1,48 +1,50 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getUnitViewClass, getUnitClass } from "../../gameHelpers/GhFactory.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { getWar } from "../../mapEditor/model/MeModel.ts";
-import type { DataForDrawUnit } from "../../mapEditor/model/MeTypes.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ObjectTypeId } from "../../tiles/constants/Common.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
-import { createDefault } from "../../units/utils/Serialization.ts";
+import {
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_Misc,
+    Lang_Constants,
+    MapEditor_Model_MeModel,
+    Tiles_Constants_Common,
+    Tiles_TileViewBox,
+    Tiles_TileViewBoxPool,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Units_UnitView,
+    Units_UnitViewPool,
+    type GameConfigs_GameConfig,
+    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeTypes,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScroller,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war     : IMeWar;
+    war     : MapEditor_Interface_IMeWar.IMeWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _scrData!              : IUiScroller<IUiLayout>;
-    private readonly _groupData!            : IUiLayout;
-    private readonly _listTile!             : IUiScrollList<DataForTileRenderer>;
-    private readonly _listUnit!             : IUiScrollList<DataForUnitRenderer>;
+    private readonly _scrData!              : Ui_Interfaces_IUiScroller.IUiScroller<Ui_Interfaces_IUiLayout.IUiLayout>;
+    private readonly _groupData!            : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _listTile!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForTileRenderer>;
+    private readonly _listUnit!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForUnitRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.UnitAndTileTextureVersionChanged,    callback: this._onNotifyUnitAndTileTextureVersionChanged },
+            { type : "LanguageChanged",                     callback : this._onNotifyLanguageChanged },
+            { type : "UnitAndTileTextureVersionChanged",    callback : this._onNotifyUnitAndTileTextureVersionChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -88,7 +90,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1244);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1244);
     }
 
     private async _updateListTile(): Promise<void> {
@@ -101,19 +103,19 @@ export class Panel extends UiPanel<OpenData> {
         const dictForTileObjects    = new Map<number, DataForTileRenderer>();
         const gameConfig            = war.getGcData();
         for (const tile of war.getTileMap().getAllTiles()) {
-            const tileObjectType    = tile.getObjectType();
-            const tileBaseType      = tile.getBaseType();
+            const tileObjectType    = tile.getObjectTypeId();
+            const tileBaseType      = tile.getBaseTypeId();
             const tileType          = tile.getTileTypeId();
             const playerIndex       = tile.getPlayerIndex();
 
-            if (tileObjectType == ObjectTypeId.Empty) {
+            if (tileObjectType == Tiles_Constants_Common.ObjectTypeId.Empty) {
                 if (dictForTileBases.has(tileBaseType)) {
-                    ++getExisted(dictForTileBases.get(tileBaseType)).count;
+                    ++Helpers_Misc.getExisted(dictForTileBases.get(tileBaseType)).count;
                 } else {
                     dictForTileBases.set(tileBaseType, {
-                        baseType    : tileBaseType,
-                        objectType  : null,
-                        count       : 1,
+                        baseType   : tileBaseType,
+                        objectType : null,
+                        count      : 1,
                         tileType,
                         playerIndex,
                         gameConfig,
@@ -121,12 +123,12 @@ export class Panel extends UiPanel<OpenData> {
                 }
             } else {
                 if (dictForTileObjects.has(tileObjectType)) {
-                    ++getExisted(dictForTileObjects.get(tileObjectType)).count;
+                    ++Helpers_Misc.getExisted(dictForTileObjects.get(tileObjectType)).count;
                 } else {
                     dictForTileObjects.set(tileObjectType, {
-                        baseType    : null,
-                        objectType  : tileObjectType,
-                        count       : 1,
+                        baseType   : null,
+                        objectType : tileObjectType,
+                        count      : 1,
                         tileType,
                         playerIndex,
                         gameConfig,
@@ -159,10 +161,10 @@ export class Panel extends UiPanel<OpenData> {
                 dict.set(unitType, new Map());
             }
 
-            const subDict       = getExisted(dict.get(unitType));
+            const subDict       = Helpers_Misc.getExisted(dict.get(unitType));
             const playerIndex   = unit.getPlayerIndex();
             if (subDict.has(playerIndex)) {
-                ++getExisted(subDict.get(playerIndex)).count;
+                ++Helpers_Misc.getExisted(subDict.get(playerIndex)).count;
             } else {
                 subDict.set(playerIndex, {
                     count           : 1,
@@ -194,104 +196,114 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForTileRenderer extends UiListItemData {
+interface DataForTileRenderer extends Ui_Types_UiListItemData.UiListItemData {
     baseType    : number | null;
     objectType  : number | null;
     count       : number;
     tileType    : number;
     playerIndex : number;
-    gameConfig  : GcData;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
 }
-class TileRenderer extends UiListItemRenderer<DataForTileRenderer> {
-    private readonly _group!        : IUiContainer;
-    private readonly _labelNum!     : IUiLabel;
-    private readonly _conTileView!  : IUiContainer;
+class TileRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTileRenderer> {
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelNum!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private _tileView   = new (getUiTileViewClass())();
+    private _tileView               : Tiles_TileViewBox.TileViewBox | undefined;
 
-    public updateOnLoadedSkin(): void {
-        this._setNotifyListenerArray([
-            { type: TypeId.TileAnimationTick,  callback: this._onNotifyTileAnimationTick },
-        ]);
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
 
-        const tileView      = this._tileView;
-        const conTileView   = this._conTileView;
-        conTileView.addUiChild(tileView.getImgBase());
-        conTileView.addUiChild(tileView.getImgDecoration());
-        conTileView.addUiChild(tileView.getImgObject());
-        tileView.startRunningView();
+        if (this._tileView == null) {
+            const view      = Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().acquire();
+            this._tileView  = view;
+            this._conTileView.addUiChild(view);
+
+            this._updateTileView();
+        }
     }
-
-    private _onNotifyTileAnimationTick(): void {
-        this._tileView.updateOnAnimationTick();
-    }
-
     protected override _doApplyOpenData(): void {
+        this._updateView();
+    }
+    protected override async _onClosed(): Promise<void> {
+        if (this._tileView) {
+            const view = this._tileView;
+            this._conTileView.removeUiChild(view);
+
+            Tiles_TileViewBoxPool.TileViewBoxPool.getInstance().release(view);
+            delete this._tileView;
+        }
+
+        await super._onClosed();
+    }
+
+    private _updateView(): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
         }
         this._labelNum.setText(`${openData.count}`);
-        this._tileView.init({
-            tileBaseType            : openData.baseType,
-            tileBaseShapeId         : 0,
-            tileDecorationType      : null,
-            tileDecorationShapeId   : null,
-            tileObjectType          : openData.objectType,
-            tileObjectShapeId       : 0,
-            skinId                  : openData.playerIndex,
-            overridingSkinId        : undefined,
-            gameConfig              : openData.gameConfig,
-        });
-        this._tileView.updateView();
+
+        this._updateTileView();
+    }
+
+    private _updateTileView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const tileView = this._tileView?.getView();
+        tileView?.loadViewData({
+            baseTypeId    : openData.baseType ?? -1,
+            baseShapeId   : 0,
+            objectTypeId  : openData.objectType ?? -1,
+            objectShapeId : 0,
+            skinId        : openData.playerIndex,
+        }, true);
+        tileView?.refreshAllViews();
     }
 }
 
-interface DataForUnitRenderer extends UiListItemData {
+interface DataForUnitRenderer extends Ui_Types_UiListItemData.UiListItemData {
     count           : number;
-    dataForDrawUnit : DataForDrawUnit;
+    dataForDrawUnit : MapEditor_Model_MeTypes.DataForDrawUnit;
 }
-class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
-    private readonly _group!        : IUiContainer;
-    private readonly _labelNum!     : IUiLabel;
-    private readonly _conUnitView!  : IUiContainer;
+class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUnitRenderer> {
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelNum!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _conUnitView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private _unitView   = new (getUnitViewClass())();
+    private _unitView               : Units_UnitView.UnitView | undefined;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
-        this._conUnitView.addUiChild(this._unitView);
+    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        if (this._unitView == null) {
+            const view      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
+            this._unitView  = view;
+            this._conUnitView.addUiChild(view);
+
+            this._updateUnitView();
+        }
     }
     protected override async _onClosed(): Promise<void> {
-        this._unitView.stopRunningView();
+        if (this._unitView) {
+            const view = this._unitView;
+            this._conUnitView.removeUiChild(view);
+
+            Units_UnitViewPool.UnitViewPool.getInstance().release(view);
+            delete this._unitView;
+        }
 
         await super._onClosed();
     }
 
     protected override _doApplyOpenData(): void {
-        const openData = this.getOpenData();
-        if (openData == null) {
-            return;
-        }
-
-        const dataForDrawUnit = openData.dataForDrawUnit;
-        this._labelNum.setText(`${openData.count}`);
-
-        const war       = getExisted(getWar());
-        const gcData    = war.getGcData();
-        const unit      = new (getUnitClass())();
-        unit.init(createDefault({
-            gridIndex   : { x: 0, y: 0 },
-            unitId      : 0,
-            unitTypeId  : dataForDrawUnit.unitType,
-            playerIndex : dataForDrawUnit.playerIndex,
-            gcData      : gcData,
-        }), gcData);
-        unit.startRunning(war);
-
-        const unitView = this._unitView;
-        unitView.init(unit);
-        unitView.startRunningView();
+        this._updateView();
     }
 
     public onItemTapEvent(): void {
@@ -300,7 +312,34 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
             return;
         }
 
-        closePanel(getDict().MeChooseUnitPanel);
-        getExisted(getWar()).getDrawer().setModeDrawUnit(openData.dataForDrawUnit);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().MeChooseUnitPanel);
+        Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar()).getDrawer().setModeDrawUnit(openData.dataForDrawUnit);
+    }
+
+    private _updateView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        this._labelNum.setText(`${openData.count}`);
+
+        this._updateUnitView();
+    }
+
+    private _updateUnitView(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const dataForDrawUnit   = openData.dataForDrawUnit;
+        const unitView          = this._unitView;
+        unitView?.loadViewData({
+            unitTypeId  : dataForDrawUnit.unitType,
+            playerIndex : dataForDrawUnit.playerIndex,
+            skinId      : dataForDrawUnit.playerIndex,
+        }, true);
+        unitView?.refreshAllViews();
     }
 }

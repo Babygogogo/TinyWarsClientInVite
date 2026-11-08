@@ -1,9 +1,11 @@
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { SkillTypeId } from "../coSkills/Constants.ts";
-import { generate } from "../coSkills/utils/DataGeneratorForUseCoSkill.ts";
-import { executeInstantSkill } from "../coSkills/utils/Executor.ts";
-import { getSpwWarClass } from "../gameHelpers/GhFactory.ts";
-import { getAllUnitsOnMapVisibleToTeams } from "../visibilities/Utils.ts";
+import {
+    CoSkills_Constants,
+    CoSkills_Utils_DataGeneratorForUseCoSkill,
+    CoSkills_Utils_Executor,
+    SinglePlayerWars_War,
+    Visibilities_Utils,
+    type BaseWar_Model_War,
+} from "../internal.ts";
 
 export class PlayerDataForWeaSetPlayerState {
     private readonly _playerIndex           : number;
@@ -35,7 +37,7 @@ export class PlayerDataForWeaSetPlayerState {
         this._activateCoSkillType   = activateCoSkillType;
     }
 
-    public async apply(war: IBwWar, isFastExecute: boolean): Promise<void> {
+    public async apply(war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<void> {
         const player = war.getPlayer(this._playerIndex);
         {
             if (this._fund != null) {
@@ -72,46 +74,46 @@ export class PlayerDataForWeaSetPlayerState {
             if (skillType != null) {
                 const skillIdArray = player.getCoSkills(skillType);
                 for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                    executeInstantSkill({
-                        player              : player,
-                        skillId             : skillIdArray[skillIndex],
-                        skillData           : generate({
-                            war         : war,
-                            player      : player,
-                            skillType   : skillType,
-                            skillIndex  : skillIndex,
+                    CoSkills_Utils_Executor.executeInstantSkill({
+                        player    : player,
+                        skillId   : skillIdArray[skillIndex],
+                        skillData : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
+                            war        : war,
+                            player     : player,
+                            skillType  : skillType,
+                            skillIndex : skillIndex,
                         }),
-                        targetGridIndexes   : null,
-                        hasExtraData        : false,
-                        isFastExecute       : isFastExecute,
+                        targetGridIndexes : null,
+                        hasExtraData      : false,
+                        isFastExecute     : isFastExecute,
                     });
                 }
 
                 if (!isFastExecute) {
                     const playerIndex       = player.getPlayerIndex();
                     const gridVisualEffect  = war.getGridVisualEffect();
-                    if (war instanceof getSpwWarClass()) {
+                    if (war instanceof SinglePlayerWars_War.War) {
                         const teamIndexes = new Set(war.getHumanPlayers().map(v => v.getTeamIndex()));
-                        for (const unit of getAllUnitsOnMapVisibleToTeams(war, teamIndexes)) {
+                        for (const unit of Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, teamIndexes)) {
                             if (unit.getPlayerIndex() === playerIndex) {
-                                unit.updateView();
+                                unit.flushDataToView();
 
-                                if (skillType === SkillTypeId.Power) {
-                                    gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
+                                if (skillType === CoSkills_Constants.SkillTypeId.Power) {
+                                    gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
                                 } else {
-                                    gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                                    gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
                                 }
                             }
                         }
                     } else {
                         for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
                             if (unit.getPlayerIndex() === playerIndex) {
-                                unit.updateView();
+                                unit.flushDataToView();
 
-                                if (skillType === SkillTypeId.Power) {
-                                    gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
+                                if (skillType === CoSkills_Constants.SkillTypeId.Power) {
+                                    gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
                                 } else {
-                                    gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                                    gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
                                 }
                             }
                         }

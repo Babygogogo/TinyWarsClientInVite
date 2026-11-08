@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-shadow
+ 
 export const enum TypeId {
     Crystal             = 1,
     CustomCrystal       = 2,

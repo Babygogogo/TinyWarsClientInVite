@@ -1,14 +1,16 @@
-import type { IUiComponent } from "./IUiComponent.ts";
-import type { IUiContainerBase } from "./IUiContainerBase.ts";
+import {
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Interfaces_IUiContainerBase,
+} from "../../internal.ts";
 
-export interface IUiContainer extends IUiContainerBase {
-    getUiChildAt(index: number): IUiComponent | undefined;
-    getUiChildren(): IUiComponent[];
-    addUiChild(child: IUiComponent): IUiComponent;
-    addUiChildAt(child: IUiComponent, index: number): IUiComponent;
-    removeUiChild(child: IUiComponent): IUiComponent | undefined;
-    removeUiChildAt(index: number): IUiComponent | undefined;
-    removeUiChildren(): IUiComponent[];
+export interface IUiContainer extends Ui_Interfaces_IUiContainerBase.IUiContainerBase {
+    getUiChildAt(index: number): Ui_Interfaces_IUiComponent.IUiComponent | undefined;
+    getUiChildren(): Ui_Interfaces_IUiComponent.IUiComponent[];
+    addUiChild(child: Ui_Interfaces_IUiComponent.IUiComponent): Ui_Interfaces_IUiComponent.IUiComponent;
+    addUiChildAt(child: Ui_Interfaces_IUiComponent.IUiComponent, index: number): Ui_Interfaces_IUiComponent.IUiComponent;
+    removeUiChild(child: Ui_Interfaces_IUiComponent.IUiComponent): Ui_Interfaces_IUiComponent.IUiComponent | undefined;
+    removeUiChildAt(index: number): Ui_Interfaces_IUiComponent.IUiComponent | undefined;
+    removeUiChildren(): Ui_Interfaces_IUiComponent.IUiComponent[];
 
-    setUiChildIndex(child: IUiComponent, index: number): void;
+    setUiChildIndex(child: Ui_Interfaces_IUiComponent.IUiComponent, index: number): void;
 }

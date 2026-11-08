@@ -2,7 +2,7 @@
 
 export const MaxCountPerMap = 200;
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum ConditionTypeId {
     WecTurnAndPlayer,
 

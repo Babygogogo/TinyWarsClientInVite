@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-shadow
+ 
 export const enum Common {
     AdminUserId             = 1000001,
 
@@ -11,7 +11,7 @@ export const enum Common {
     DummyUsersCount         = 100,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum LogoutTypeId {
     SelfRequest,
     LoginCollision,

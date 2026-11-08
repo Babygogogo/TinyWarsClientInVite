@@ -1,25 +1,23 @@
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
-import type {
-    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForCcw as ProtoSchemaCommonProtoWarSettingsSettingsForCcw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    MultiPlayerWar_Model_MpwWar,
+    type GameConfigs_GameConfig,
+} from "../../internal.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SettingsForCcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
 
-type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar;
-type SettingsForCcw     = ProtoSchemaCommonProtoWarSettingsSettingsForCcw;
-type GcData             = GameConfigGcData;
-
-export class CcwWar extends MpwWar {
+export class CcwWar extends MultiPlayerWar_Model_MpwWar.MpwWar {
     private _settingsForCcw?: SettingsForCcw;
 
-    public init(data: SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForCcw(getExisted(data.getSettingsForCcw(), ClientErrorCode.CcwWar_Init_00));
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForCcw(Helpers_Misc.getExisted(data.getSettingsForCcw(), Utils_ClientErrorCode.ClientErrorCode.CcwWar_Init_00));
 
         this._initView();
     }
@@ -38,14 +36,14 @@ export class CcwWar extends MpwWar {
         return false;
     }
     public getNormalMapId(): number {
-        return this.getSettingsForCcw().getNormalMapId() ?? 0;
+        return this.getSettingsForCcw().getNormalMapId();
     }
 
     private _setSettingsForCcw(settings: SettingsForCcw): void {
         this._settingsForCcw = settings;
     }
     public getSettingsForCcw(): SettingsForCcw {
-        return getExisted(this._settingsForCcw);
+        return Helpers_Misc.getExisted(this._settingsForCcw);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +60,6 @@ export class CcwWar extends MpwWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return getExisted(this.getSettingsForCcw().getBootTimerParams());
+        return this.getSettingsForCcw().getBootTimerParams();
     }
 }

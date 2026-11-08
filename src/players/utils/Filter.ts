@@ -1,61 +1,53 @@
-import { checkIsValidSkillTypeIdSubset } from "../../coSkills/utils/Common.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText, getPlayerTeamName, getPlayerAliveStateName, getCoSkillTypeName, getFormattedText } from "../../lang/Utils.ts";
-import type { IPlayer } from "../IPlayer.ts";
-import { checkIsValidPlayerIndexSubset, checkIsValidAliveStateIdSubset } from "./Common.ts";
+import {
+    ValueAndComparators_Utils,
+    ValueArrayAndPredicates_Utils,
+    Players_Utils_Common,
+    CoSkills_Utils_Common,
+    Teams_Utils,
+    Lang_Utils,
+    Helpers_Collection,
+    Lang_Constants,
+    type GameConfigs_GameConfig,
+    type Players_IPlayer,
+} from "../../internal.ts";
 import type { PlayerFilter } from "../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import { checkIsValidTeamIndexSubset } from "../../teams/Utils.ts";
-import {
-    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
-    getDesc as ValueAndComparatorsUtilsGetDesc,
-    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
-} from "../../valueAndComparators/Utils.ts";
-import {
-    checkIsMeet as ValueArrayAndPredicatesUtilsCheckIsMeet,
-    getDesc as ValueArrayAndPredicatesUtilsGetDesc,
-    checkIsValid as ValueArrayAndPredicatesUtilsCheckIsValid,
-} from "../../valueArrayAndPredicates/Utils.ts";
 
-type PlayerFilterSchema                 = PlayerFilter;
-
-export function checkIsValid(data: PlayerFilterSchema, playersCountUnneutral: number, gameConfig: GcData): boolean {
+export function checkIsValid(data: PlayerFilter, playersCountUnneutral: number, gameConfig: GameConfigs_GameConfig.GameConfig): boolean {
     return getErrorTip(data, playersCountUnneutral, gameConfig) == null;
 }
 
-export function checkIsMeet(data: PlayerFilterSchema, player: IPlayer): boolean {
+export function checkIsMeet(data: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
     {
         const con = data.getConPlayerIndex();
-        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, player.getPlayerIndex()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getPlayerIndex()))) {
             return false;
         }
     }
 
     {
         const con = data.getConTeamIndex();
-        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, player.getTeamIndex()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getTeamIndex()))) {
             return false;
         }
     }
 
     {
         const con = data.getConAliveState();
-        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, player.getAliveState()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getAliveState()))) {
             return false;
         }
     }
 
     {
         const con = data.getConCoUsingSkillType();
-        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, player.getCoUsingSkillType()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getCoUsingSkillType()))) {
             return false;
         }
     }
 
     {
         const con = data.getConCoCategoryId();
-        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, player.getCoCategoryId()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getCoCategoryId()))) {
             return false;
         }
     }
@@ -76,14 +68,14 @@ export function checkIsMeet(data: PlayerFilterSchema, player: IPlayer): boolean 
 
     {
         const con = data.getConFund();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsMeet(con, player.getFund()))) {
+        if ((con != null) && (!ValueAndComparators_Utils.checkIsMeet(con, player.getFund()))) {
             return false;
         }
     }
 
     {
         const con = data.getConCoEnergy();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsMeet(con, player.getCoCurrentEnergy()))) {
+        if ((con != null) && (!ValueAndComparators_Utils.checkIsMeet(con, player.getCoCurrentEnergy()))) {
             return false;
         }
     }
@@ -91,7 +83,7 @@ export function checkIsMeet(data: PlayerFilterSchema, player: IPlayer): boolean 
     return true;
 }
 
-export function checkIsEmpty(data: PlayerFilterSchema): boolean {
+export function checkIsEmpty(data: PlayerFilter): boolean {
     return (data.getConPlayerIndex() == null)
         && (data.getConTeamIndex() == null)
         && (data.getConAliveState() == null)
@@ -103,53 +95,53 @@ export function checkIsEmpty(data: PlayerFilterSchema): boolean {
         && (data.getConCoEnergy() == null);
 }
 
-export function getDesc(data: PlayerFilterSchema, gameConfig: GcData): string {
+export function getDesc(data: PlayerFilter, gameConfig: GameConfigs_GameConfig.GameConfig): string {
     const conPlayerIndex        = data.getConPlayerIndex();
     const textForConPlayerIndex = conPlayerIndex == null
         ? null
-        : ValueArrayAndPredicatesUtilsGetDesc(conPlayerIndex, getText(TextType.PlayerIndex), v => `P${v}`);
+        : ValueArrayAndPredicates_Utils.getDesc(conPlayerIndex, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex), v => `P${v}`);
 
     const conTeamIndex          = data.getConTeamIndex();
     const textForConTeamIndex   = conTeamIndex == null
         ? null
-        : ValueArrayAndPredicatesUtilsGetDesc(conTeamIndex, getText(TextType.B0019), v => getPlayerTeamName(v));
+        : ValueArrayAndPredicates_Utils.getDesc(conTeamIndex, Lang_Utils.getText(Lang_Constants.TextType.B0019), v => Lang_Utils.getPlayerTeamName(v));
 
     const conAliveState         = data.getConAliveState();
     const textForConAliveState  = conAliveState == null
         ? null
-        : ValueArrayAndPredicatesUtilsGetDesc(conAliveState, getText(TextType.PlayerAliveState), v => getPlayerAliveStateName(v));
+        : ValueArrayAndPredicates_Utils.getDesc(conAliveState, Lang_Utils.getText(Lang_Constants.TextType.PlayerAliveState), v => Lang_Utils.getPlayerAliveStateName(v));
 
     const conCoUsingSkillType           = data.getConCoUsingSkillType();
     const textForConCoUsingSkillType    = conCoUsingSkillType == null
         ? null
-        : ValueArrayAndPredicatesUtilsGetDesc(conCoUsingSkillType, getText(TextType.ActivatingCoSkillType), v => getCoSkillTypeName(v));
+        : ValueArrayAndPredicates_Utils.getDesc(conCoUsingSkillType, Lang_Utils.getText(Lang_Constants.TextType.ActivatingCoSkillType), v => Lang_Utils.getCoSkillTypeName(v));
 
     const conCoCategoryId           = data.getConCoCategoryId();
     const textForConCoCategoryId    = conCoCategoryId == null
         ? null
-        : ValueArrayAndPredicatesUtilsGetDesc(conCoCategoryId, getText(TextType.B0394), v => gameConfig.getCoCategoryCfg(v)?.getName());
+        : ValueArrayAndPredicates_Utils.getDesc(conCoCategoryId, Lang_Utils.getText(Lang_Constants.TextType.B0394), v => gameConfig.getCoCategoryCfg(v)?.getName());
 
     const isInTurn          = data.getConIsInTurn();
     const textForIsInTurn   = isInTurn == null
         ? null
-        : getText(isInTurn ? TextType.A0831 : TextType.A0832);
+        : Lang_Utils.getText(isInTurn ? Lang_Constants.TextType.A0831 : Lang_Constants.TextType.A0832);
 
     const isSkipTurn        = data.getConIsSkipTurn();
     const textForIsSkipTurn = isSkipTurn == null
         ? null
-        : getText(isSkipTurn ? TextType.A0945 : TextType.A0946);
+        : Lang_Utils.getText(isSkipTurn ? Lang_Constants.TextType.A0945 : Lang_Constants.TextType.A0946);
 
     const fund          = data.getConFund();
     const textForFund   = fund == null
         ? null
-        : ValueAndComparatorsUtilsGetDesc(fund, getText(TextType.Fund));
+        : ValueAndComparators_Utils.getDesc(fund, Lang_Utils.getText(Lang_Constants.TextType.Fund));
 
     const coEnergy           = data.getConCoEnergy();
     const textForCoEnergy    = coEnergy == null
         ? null
-        : ValueAndComparatorsUtilsGetDesc(coEnergy, getText(TextType.CoEnergy));
+        : ValueAndComparators_Utils.getDesc(coEnergy, Lang_Utils.getText(Lang_Constants.TextType.CoEnergy));
 
-    const textArrayForSubConditions = getNonNullElements([
+    const textArrayForSubConditions = Helpers_Collection.getNonNullElements([
         textForConPlayerIndex,
         textForConTeamIndex,
         textForConAliveState,
@@ -160,43 +152,43 @@ export function getDesc(data: PlayerFilterSchema, gameConfig: GcData): string {
         textForFund,
         textForCoEnergy,
     ]);
-    return getFormattedText(
-        TextType.F0230,
-        getText(TextType.B0031),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0230,
+        Lang_Utils.getText(Lang_Constants.TextType.B0031),
         textArrayForSubConditions.length
             ? textArrayForSubConditions.map(v => `- ${v}`).join(`\n`)
-            : getText(TextType.A0944)
+            : Lang_Utils.getText(Lang_Constants.TextType.A0944),
     );
 }
-export function getDescForEmbed(data: PlayerFilterSchema): string | null {
-    const textArrayForSubConditions = getNonNullElements([
-        data.getConPlayerIndex() == null         ? null : getText(TextType.PlayerIndex),
-        data.getConTeamIndex() == null           ? null : getText(TextType.B0019),
-        data.getConAliveState() == null          ? null : getText(TextType.PlayerAliveState),
-        data.getConCoUsingSkillType() == null    ? null : getText(TextType.ActivatingCoSkillType),
-        data.getConCoCategoryId() == null        ? null : getText(TextType.B0394),
-        data.getConIsInTurn() == null            ? null : getText(TextType.B1401),
-        data.getConIsSkipTurn() == null          ? null : getText(TextType.B1402),
-        data.getConFund() == null                ? null : getText(TextType.Fund),
-        data.getConCoEnergy() == null            ? null : getText(TextType.CoEnergy),
+export function getDescForEmbed(data: PlayerFilter): string | null {
+    const textArrayForSubConditions = Helpers_Collection.getNonNullElements([
+        data.getConPlayerIndex() == null         ? null : Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex),
+        data.getConTeamIndex() == null           ? null : Lang_Utils.getText(Lang_Constants.TextType.B0019),
+        data.getConAliveState() == null          ? null : Lang_Utils.getText(Lang_Constants.TextType.PlayerAliveState),
+        data.getConCoUsingSkillType() == null    ? null : Lang_Utils.getText(Lang_Constants.TextType.ActivatingCoSkillType),
+        data.getConCoCategoryId() == null        ? null : Lang_Utils.getText(Lang_Constants.TextType.B0394),
+        data.getConIsInTurn() == null            ? null : Lang_Utils.getText(Lang_Constants.TextType.B1401),
+        data.getConIsSkipTurn() == null          ? null : Lang_Utils.getText(Lang_Constants.TextType.B1402),
+        data.getConFund() == null                ? null : Lang_Utils.getText(Lang_Constants.TextType.Fund),
+        data.getConCoEnergy() == null            ? null : Lang_Utils.getText(Lang_Constants.TextType.CoEnergy),
     ]);
     return !textArrayForSubConditions.length
         ? null
-        : getFormattedText(
-            TextType.F0231,
-            getText(TextType.B0031),
-            textArrayForSubConditions.join(`, `)
+        : Lang_Utils.getFormattedText(
+            Lang_Constants.TextType.F0231,
+            Lang_Utils.getText(Lang_Constants.TextType.B0031),
+            textArrayForSubConditions.join(`, `),
         );
 }
 
-export function getErrorTip(data: PlayerFilterSchema, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: PlayerFilter, playersCountUnneutral: number, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     {
         const con = data.getConPlayerIndex();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                                               ||
-                (!checkIsValidPlayerIndexSubset(con.getValueArray(), playersCountUnneutral))
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                                               ||
+                (!Players_Utils_Common.checkIsValidPlayerIndexSubset(con.getValueArray(), playersCountUnneutral))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.PlayerIndex));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex));
             }
         }
     }
@@ -204,10 +196,10 @@ export function getErrorTip(data: PlayerFilterSchema, playersCountUnneutral: num
     {
         const con = data.getConTeamIndex();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                                                   ||
-                (!checkIsValidTeamIndexSubset(con.getValueArray(), playersCountUnneutral))
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                                                   ||
+                (!Teams_Utils.checkIsValidTeamIndexSubset(con.getValueArray(), playersCountUnneutral))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.B0019));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0019));
             }
         }
     }
@@ -215,10 +207,10 @@ export function getErrorTip(data: PlayerFilterSchema, playersCountUnneutral: num
     {
         const con = data.getConAliveState();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                               ||
-                (!checkIsValidAliveStateIdSubset(con.getValueArray()))
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                               ||
+                (!Players_Utils_Common.checkIsValidAliveStateIdSubset(con.getValueArray()))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.PlayerAliveState));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerAliveState));
             }
         }
     }
@@ -226,10 +218,10 @@ export function getErrorTip(data: PlayerFilterSchema, playersCountUnneutral: num
     {
         const con = data.getConCoUsingSkillType();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                               ||
-                (!checkIsValidSkillTypeIdSubset(con.getValueArray()))
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                               ||
+                (!CoSkills_Utils_Common.checkIsValidSkillTypeIdSubset(con.getValueArray()))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.ActivatingCoSkillType));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.ActivatingCoSkillType));
             }
         }
     }
@@ -237,10 +229,10 @@ export function getErrorTip(data: PlayerFilterSchema, playersCountUnneutral: num
     {
         const con = data.getConCoCategoryId();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                       ||
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                       ||
                 (!gameConfig.checkIsValidCoCategoryIdSubset(con.getValueArray()))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.B0394));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0394));
             }
         }
     }
@@ -258,8 +250,8 @@ export function getErrorTip(data: PlayerFilterSchema, playersCountUnneutral: num
     {
         const con = data.getConFund();
         if (con != null) {
-            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
-                return getFormattedText(TextType.F0091, getText(TextType.Fund));
+            if (!ValueAndComparators_Utils.checkIsValid(con)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Fund));
             }
         }
     }
@@ -267,8 +259,8 @@ export function getErrorTip(data: PlayerFilterSchema, playersCountUnneutral: num
     {
         const con = data.getConCoEnergy();
         if (con != null) {
-            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
-                return getFormattedText(TextType.F0091, getText(TextType.CoEnergy));
+            if (!ValueAndComparators_Utils.checkIsValid(con)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.CoEnergy));
             }
         }
     }

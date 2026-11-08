@@ -1,9 +1,11 @@
-import type { IBwCursor } from "./IBwCursor.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import {
+    type BaseWar_Interface_IBwCursor,
+    type Ui_Interfaces_IUiContainer,
+} from "../../internal.ts";
 
-export interface IBwCursorView extends IUiContainer {
-    init(cursor: IBwCursor): void;
-    fastInit(cursor: IBwCursor): void;
+export interface IBwCursorView extends Ui_Interfaces_IUiContainer.IUiContainer {
+    init(cursor: BaseWar_Interface_IBwCursor.IBwCursor): void;
+    fastInit(cursor: BaseWar_Interface_IBwCursor.IBwCursor): void;
 
     startRunningView(): void;
     stopRunningView(): void;

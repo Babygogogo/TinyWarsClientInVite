@@ -1,10 +1,7 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import type { ActionTypeId } from "../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
-
-type IUnit              = UnitsIUnit;
+import {
+    type Units_Constants,
+    type Units_Unit,
+} from "../../internal.ts";
 
 export interface DamagePreviewSettings {
     isEnabled   : boolean;
@@ -16,20 +13,10 @@ export interface DamagePreviewSettings {
 }
 
 export interface DataForUnitAction {
-    actionType          : ActionTypeId;
+    actionType          : Units_Constants.ActionTypeId;
     callback            : () => void;
-    unitForLaunch?      : IUnit;
-    unitForDrop?        : IUnit;
+    unitForLaunch?      : Units_Unit.Unit;
+    unitForDrop?        : Units_Unit.Unit;
     produceUnitType?    : number;
     costForProduceUnit? : number;
-}
-
-export interface DataForTileView {
-    gameConfig          : GcData;
-    tileData            : SerialTile;
-    themeType           : number;
-    hasFog              : boolean;
-    isFullReplay        : boolean;
-    skinId              : number;
-    overridingSkinId    : Undefinable<number>;
 }

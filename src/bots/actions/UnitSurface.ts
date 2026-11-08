@@ -1,14 +1,13 @@
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { ScoreAndAction } from "../Types.ts";
+import {
+    Timer_TimerModel,
+    type Units_Unit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitSurface(unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
-    await checkAndCallLater();
+export async function getScoreAndActionUnitSurface(unit: Units_Unit.Unit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     if (!unit.checkCanSurface()) {
         return null;
@@ -16,20 +15,22 @@ export async function getScoreAndActionUnitSurface(unit: IBwUnit, pathNodes: Mov
         const score = await getScoreForActionUnitSurface(unit);
         return {
             score,
-            action  : WoContainer.fromJson({ WoUnitSurface: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-            } }),
+            action : WoContainer.fromJson({
+                WoUnitSurface : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    launchUnitId : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+                }, 
+            }),
         };
     }
 }
 
-async function getScoreForActionUnitSurface(unit: IBwUnit): Promise<number> {
-    await checkAndCallLater();
+async function getScoreForActionUnitSurface(unit: Units_Unit.Unit): Promise<number> {
+    await Timer_TimerModel.checkAndCallLater();
 
     return unit.checkIsFuelInShort() ? 10 : -10;
 }

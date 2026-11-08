@@ -1,28 +1,31 @@
-import { addListeners, send } from "../networks/Manager.ts";
-import { MessageCodes } from "../networks/MessageCodes.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import type { S } from "../proto/schema/CommonProto/NetMessage/MsgCommonHeartbeat/S.ts";
-import { updateOnMsgCommonHeartbeat } from "./TimerModel.ts";
-import type { Event } from "../vendor/egret/Egret.ts";
+import {
+    Helpers_Misc,
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Networks_MessageCodes,
+    Timer_TimerModel,
+    type Egret_Egret,
+} from "../internal.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgCommonHeartbeat,              callback: _onMsgCommonHeartbeat },
+    Networks_Manager.addListeners([
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonHeartbeat,              callback : _onMsgCommonHeartbeat },
     ], null);
 }
 
 export function reqCommonHeartbeat(counter: number): void {
-    send({
-        MsgCommonHeartbeat: { c: {
-            counter,
-        } },
+    Networks_Manager.send({
+        MsgCommonHeartbeat : {
+            c : {
+                counter,
+            }, 
+        },
     });
 }
-function _onMsgCommonHeartbeat(e: Event): void {
-    const data = e.data as S;
+function _onMsgCommonHeartbeat(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgCommonHeartbeat"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        updateOnMsgCommonHeartbeat(data);
-        dispatch(TypeId.MsgCommonHeartbeat, data);
+        Timer_TimerModel.updateOnMsgCommonHeartbeat(data);
+        Notifications_Dispatcher.dispatch("MsgCommonHeartbeat", { msg: data });
     }
 }

@@ -1,98 +1,100 @@
-import { Base } from "./Base.ts";
-import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
-import { FunctionInfo } from "../FunctionInfo.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
-import { Num } from "../results/Num.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict, getErrorTextForParameterCount, getErrorTextForParameterType } from "../Utils.ts";
-import type { IFogMap as FogMapsIFogMap } from "../../fogMaps/IFogMap.ts";
-import { newError } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getValueInInt32 } from "../../numbers/Utils.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import {
+    ExpressionParsers_Contexts_Base,
+    ExpressionParsers_Contexts_War,
+    ExpressionParsers_Enums,
+    ExpressionParsers_FunctionInfo,
+    type ExpressionParsers_Results_Base,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Results_War,
+    type ExpressionParsers_Types,
+    ExpressionParsers_Utils,
+    FogMaps_FogMap,
+    Helpers_Misc,
+    Lang_Constants,
+    Numbers_Utils,
+    Utils_ClientErrorCode,
+} from "../../internal.ts";
 
-type IFogMap        = FogMapsIFogMap;
-
-export class Fog extends Base {
+export class Fog extends ExpressionParsers_Contexts_Base.Base {
     private static readonly VnWar           = "war";
 
     private static readonly FnEnabled       = "enabled";
 
     public static readonly Functions    = Fog.generateFunctions();
     public static readonly Variables    = Fog.generateVariables();
-    private static generateVariables(): EpVariableInfoDict {
-        const variables = extendVariableInfoDict(War.Variables);
-        variables.set(Fog.VnWar,         { desc: TextType.A0384, resultType: ResultType.War, isExtension: false });
+    private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
+        const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
+        variables.set(Fog.VnWar,         { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War, isExtension : false });
 
         return variables;
     }
-    private static generateFunctions(): EpFunctionInfoDict {
-        const functions = extendFunctionInfoDict(War.Functions);
+    private static generateFunctions(): ExpressionParsers_Types.EpFunctionInfoDict {
+        const functions = ExpressionParsers_Utils.extendFunctionInfoDict(ExpressionParsers_Contexts_War.War.Functions);
         functions.set(
             Fog.FnEnabled,
-            new FunctionInfo(
-                TextType.A0457,
+            new ExpressionParsers_FunctionInfo.FunctionInfo(
+                Lang_Constants.TextType.A0457,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
-                        throw newError(
-                            getErrorTextForParameterCount(Fog.FnEnabled, `1`, argArray.length),
-                            ClientErrorCode.EpContextFog_GenerateFunctions_00
+                        throw Helpers_Misc.newError(
+                            ExpressionParsers_Utils.getErrorTextForParameterCount(Fog.FnEnabled, `1`, argArray.length),
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextFog_GenerateFunctions_00,
                         );
                     }
 
-                    const argResultType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
-                    if (argResultType !== ResultType.Number) {
-                        throw newError(
-                            getErrorTextForParameterType(Fog.FnEnabled, 1, ResultType.Number, argResultType),
-                            ClientErrorCode.EpContextFog_GenerateFunctions_01
+                    const argResultType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
+                    });
+                    if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
+                        throw Helpers_Misc.newError(
+                            ExpressionParsers_Utils.getErrorTextForParameterType(Fog.FnEnabled, 1, ExpressionParsers_Enums.ResultType.Number, argResultType),
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextFog_GenerateFunctions_01,
                         );
                     }
 
-                    return ResultType.Number;
+                    return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
 
         return functions;
     }
 
-    private _fogMap     : IFogMap;
-    private _contextWar : War | null = null;
+    private readonly _fogMap    : FogMaps_FogMap.FogMap;
+    private _contextWar         : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(fogMap: IFogMap) {
+    public constructor(fogMap: FogMaps_FogMap.FogMap) {
         super(fogMap.getWar());
 
         this._fogMap = fogMap;
     }
 
-    public getContextType(): ContextType {
-        return ContextType.Fog;
+    public getContextType(): ExpressionParsers_Enums.ContextType {
+        return ExpressionParsers_Enums.ContextType.Fog;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ExpressionParsers_Results_Base.Base {
         switch (identifierName) {
-            case Fog.VnWar     : return new ExpressionParsersResultsWar(this._fogMap.getWar());
-            default                     : return (this._contextWar ??= new War(this._fogMap.getWar())).resolveVariable(identifierName);
+            case Fog.VnWar     : return new ExpressionParsers_Results_War.War(this._fogMap.getWar());
+            default                     : return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(this._fogMap.getWar())).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ExpressionParsers_Results_Base.Base[], rootCtx: ExpressionParsers_Contexts_Base.Base, localVariableDict: Map<string, ExpressionParsers_Results_Base.Base> | null, isRestricted: boolean): ExpressionParsers_Results_Base.Base {
         switch (identifierName) {
             case Fog.FnEnabled : return this.callEnabled(argumentArray[0]);
-            default                     : return (this._contextWar ??= new War(this._fogMap.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
+            default                     : return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(this._fogMap.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }
     }
-    private callEnabled(arg: ExpressionParsersResultsBase): Num {
-        if (!(arg instanceof Num)) {
-            throw newError(`Unexpected arg.`);
+    private callEnabled(arg: ExpressionParsers_Results_Base.Base): ExpressionParsers_Results_Num.Num {
+        if (!(arg instanceof ExpressionParsers_Results_Num.Num)) {
+            throw Helpers_Misc.newError(`Unexpected arg.`);
         }
 
         const war = this.getWar();
-        switch (getValueInInt32(arg.num)) {
-            case 1  : return new Num(war, this._fogMap.checkHasFogByDefault() ? 1 : 0);
-            default : return new Num(war, this._fogMap.checkHasFogCurrently() ? 1 : 0);
+        switch (Numbers_Utils.getValueInInt32(arg.num)) {
+            case 1  : return new ExpressionParsers_Results_Num.Num(war, this._fogMap.checkHasFogByDefault() ? 1 : 0);
+            default : return new ExpressionParsers_Results_Num.Num(war, this._fogMap.checkHasFogCurrently() ? 1 : 0);
         }
     }
 }

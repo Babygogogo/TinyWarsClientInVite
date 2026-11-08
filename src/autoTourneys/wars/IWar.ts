@@ -1,7 +1,9 @@
-import type { IMpwWar } from "../../multiPlayerWar/interface/IMpwWar.ts";
+import {
+    type MultiPlayerWar_Interface_IMpwWar,
+} from "../../internal.ts";
 import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
 
-export interface IWar extends IMpwWar {
+export interface IWar extends MultiPlayerWar_Interface_IMpwWar.IMpwWar {
     getCanCheat(): boolean;
     getShouldSerializeFullInfoForFreeModeGames(): boolean;
 

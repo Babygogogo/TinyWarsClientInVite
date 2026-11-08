@@ -1,22 +1,22 @@
-import type { Point as AuxiliaryTypesAuxiliaryTypesPoint, TouchPoints } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { MouseStyleType } from "../../helpers/PointerInput.ts";
-import type { IUiComponent } from "./IUiComponent.ts";
-import type { IUiContainerBase } from "./IUiContainerBase.ts";
-import type { Point as VendorEgretEgretPoint } from "../../vendor/egret/Egret.ts";
+import {
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Interfaces_IUiContainerBase,
+    type Helpers_PointerInput,
+} from "../../internal.ts";
 
-type Point = AuxiliaryTypesAuxiliaryTypesPoint;
-
-export interface IUiZoomableComponent extends IUiContainerBase {
+export interface IUiZoomableComponent extends Ui_Interfaces_IUiContainerBase.IUiContainerBase {
     setMouseWheelListenerEnabled(enabled: boolean): void;
 
     getTouchListenerEnabled(): boolean;
-    setTouchListenerEnabled(enabled: boolean, mouseStyle?: MouseStyleType): void;
+    setTouchListenerEnabled(enabled: boolean, mouseStyle?: Helpers_PointerInput.MouseStyleType): void;
 
-    addContent(content: IUiComponent): void;
-    removeContent<T extends IUiComponent>(content: T): T | undefined;
-    removeAllContents(): IUiComponent[];
-    getContentsContainerLocalToGlobal(point: Point): VendorEgretEgretPoint;
-    getContentsContainerGlobalToLocal(point: Point): VendorEgretEgretPoint;
+    addContent(content: Ui_Interfaces_IUiComponent.IUiComponent): void;
+    removeContent<T extends Ui_Interfaces_IUiComponent.IUiComponent>(content: T): T | undefined;
+    removeAllContents(): Ui_Interfaces_IUiComponent.IUiComponent[];
+    getContentsContainerLocalToGlobal(point: AuxiliaryTypes_AuxiliaryTypes.Point): Egret_Egret.Point;
+    getContentsContainerGlobalToLocal(point: AuxiliaryTypes_AuxiliaryTypes.Point): Egret_Egret.Point;
 
     getContentWidth(): number;
     getContentHeight(): number;
@@ -39,9 +39,9 @@ export interface IUiZoomableComponent extends IUiContainerBase {
 
     setZoomByScroll(stageX: number, stageY: number, scrollValue: number): void;
 
-    setZoomByTouches(currGlobalPoints: TouchPoints, prevGlobalPoints: TouchPoints): void;
+    setZoomByTouches(currGlobalPoints: AuxiliaryTypes_AuxiliaryTypes.TouchPoints, prevGlobalPoints: AuxiliaryTypes_AuxiliaryTypes.TouchPoints): void;
 
-    setDragByTouches(currGlobalPoint: Point, prevGlobalPoint: Point): void;
+    setDragByTouches(currGlobalPoint: AuxiliaryTypes_AuxiliaryTypes.Point, prevGlobalPoint: AuxiliaryTypes_AuxiliaryTypes.Point): void;
 
     getRevisedContentX(contentX: number): number;
     getRevisedContentY(contentY: number): number;

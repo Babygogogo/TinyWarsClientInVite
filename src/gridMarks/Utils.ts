@@ -1,4 +1,6 @@
-import { deleteElementFromList2 } from "../helpers/Collection.ts";
+import {
+    Helpers_Collection,
+} from "../internal.ts";
 import { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
 
 export function addGridMark(list: GridIdAndMarkTypeId[], gridId: number, markTypeId: number): boolean {
@@ -12,14 +14,14 @@ export function addGridMark(list: GridIdAndMarkTypeId[], gridId: number, markTyp
         }
     } else {
         list.push(GridIdAndMarkTypeId.fromJson({
-            gridId      : gridId,
-            markTypeId  : markTypeId,
+            gridId     : gridId,
+            markTypeId : markTypeId,
         }));
         return true;
     }
 }
 export function deleteGridMark(list: GridIdAndMarkTypeId[], gridId: number): boolean {
-    return deleteElementFromList2(list, v => v.getGridId() === gridId) > 0;
+    return Helpers_Collection.deleteElementFromList2(list, v => v.getGridId() === gridId) > 0;
 }
 export function updateGridMarkList(list: GridIdAndMarkTypeId[], gridIdArrayForAddMark: number[], gridIdArrayForDeleteMark: number[], markTypeId: number): void {
     for (const gridId of gridIdArrayForAddMark) {
@@ -28,10 +30,10 @@ export function updateGridMarkList(list: GridIdAndMarkTypeId[], gridIdArrayForAd
             data.setMarkTypeId(markTypeId);
         } else {
             list.push(GridIdAndMarkTypeId.fromJson({
-                gridId      : gridId,
-                markTypeId  : markTypeId,
+                gridId     : gridId,
+                markTypeId : markTypeId,
             }));
         }
     }
-    deleteElementFromList2(list, v => gridIdArrayForDeleteMark.includes(v.getGridId()));
+    Helpers_Collection.deleteElementFromList2(list, v => gridIdArrayForDeleteMark.includes(v.getGridId()));
 }

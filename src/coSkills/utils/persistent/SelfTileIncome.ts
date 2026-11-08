@@ -1,5 +1,7 @@
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+} from "../../../internal.ts";
 import type { SelfTileIncome } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileIncome.ts";
 
 export function getTotalMultiplier({
@@ -11,11 +13,11 @@ export function getTotalMultiplier({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfTileIncome | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     tileTypeId                  : number;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): number {
     if (cfg == null) {
         return 1;
@@ -29,12 +31,12 @@ export function getTotalMultiplier({
     }
 
     if (!gridIndex.checkIsInsideCoSkillArea({
-        coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-        coZoneRadius                : coZoneRadius,
-        getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+        coZoneRadius             : coZoneRadius,
+        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
     })) {
         return 1;
     }
 
-    return (cfg.getMultiplierPct() ?? 0) / 100;
+    return (cfg.getMultiplierPct()) / 100;
 }

@@ -1,6 +1,4 @@
 
-
-// eslint-disable-next-line no-shadow
 export enum MessageCodes {
     MsgCommonHeartbeat = 1,
     MsgCommonError = 2,

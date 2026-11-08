@@ -1,6 +1,8 @@
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
-import type { SelfUnitMoveRange } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitMoveRange.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+} from "../../../internal.ts";
+import type { SelfUnitCommonAttributes } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes";
 
 export function getTotalOffset({
     cfg,
@@ -13,50 +15,49 @@ export function getTotalOffset({
     coZoneRadius,
     getCoGridIndexArrayOnMap,
 }: {
-    cfg                         : SelfUnitMoveRange | null | undefined;
-    gameConfig                  : GcData;
+    cfg                         : SelfUnitCommonAttributes | null | undefined;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
     tileTypeId                  : number;
     weatherTypeId               : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): number {
     if (cfg == null) {
         return 0;
     }
 
-    {
-        const unitCategoryId = cfg.getUnitCategoryId();
-        if ((unitCategoryId != null) && (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, unitCategoryId))) {
-            return 0;
-        }
-    }
-
-    {
-        const tileCategoryId = cfg.getTileCategoryId();
-        if ((tileCategoryId != null) && (!gameConfig.checkIsTileTypeInCategory(tileTypeId, tileCategoryId))) {
-            return 0;
-        }
-    }
-
-    {
-        const weatherCategoryId = cfg.getWeatherCategoryId();
-        if ((weatherCategoryId != null) && (!gameConfig.checkIsWeatherTypeInCategory(weatherTypeId, weatherCategoryId))) {
-            return 0;
-        }
-    }
-
-    if ((!isCoOnboard)                                                  &&
-        (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-            coZoneRadius                : coZoneRadius,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
-        }))
-    ) {
+    const conditions        = cfg.getConditions();
+    const moveRangeOffsets  = cfg.getMoveRangeOffsets();
+    if ((conditions == null) || (moveRangeOffsets == null)) {
         return 0;
     }
 
-    return cfg.getOffset() ?? 0;
+    {
+        if (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, conditions.getUnitCategoryId())) {
+            return 0;
+        }
+
+        if (!gameConfig.checkIsTileTypeInCategory(tileTypeId, conditions.getTileCategoryId())) {
+            return 0;
+        }
+
+        if (!gameConfig.checkIsWeatherTypeInCategory(weatherTypeId, conditions.getWeatherCategoryId())) {
+            return 0;
+        }
+
+        if ((!isCoOnboard)                                                  &&
+            (!gridIndex.checkIsInsideCoSkillArea({
+                coSkillAreaType          : conditions.getCoSkillAreaTypeId(),
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+            }))
+        ) {
+            return 0;
+        }
+    }
+
+    return moveRangeOffsets.getOffset();
 }

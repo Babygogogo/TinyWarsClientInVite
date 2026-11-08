@@ -1,20 +1,88 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import type { IBwWarEventManager } from "../interface/IBwWarEventManager.ts";
-import { Constants } from "../../customCounters/Constants.ts";
-import { checkIsValidCustomCounterArray, checkIsValidId, checkIsValidValue } from "../../customCounters/Utils.ts";
-import { deleteElementFromList } from "../../helpers/Collection.ts";
-import { newError, getExisted, getDefined } from "../../helpers/Misc.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex, AliveStateId } from "../../players/Constants.ts";
-import type {
-    ConditionIdAndFlags as ProtoSchemaCommonProtoWarEventConditionIdAndFlags,
-} from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
-import type {
-    NodeIdAndFlags as ProtoSchemaCommonProtoWarEventNodeIdAndFlags,
-} from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
+import {
+    Players_Constants,
+    WarEvents_Actions_Utils_AddTileBuffExpr,
+    WarEvents_Actions_Utils_AddTileBuffSimple,
+    WarEvents_Actions_Utils_AddUnitBuffSimple,
+    WarEvents_Actions_Utils_AddUnitOnMapSimple,
+    WarEvents_Actions_Utils_BigDialogueSimple,
+    WarEvents_Actions_Utils_DeleteTileBuffExpr,
+    WarEvents_Actions_Utils_DeleteTileBuffSimple,
+    WarEvents_Actions_Utils_DeleteUnitBuffSimple,
+    WarEvents_Actions_Utils_DestroyUnitExpr,
+    WarEvents_Actions_Utils_DestroyUnitSimple,
+    WarEvents_Actions_Utils_FillUnitLoadedExpr,
+    WarEvents_Actions_Utils_FillUnitLoadedSimple,
+    WarEvents_Actions_Utils_FillUnitOnMapExpr,
+    WarEvents_Actions_Utils_FillUnitOnMapSimple,
+    WarEvents_Actions_Utils_ModifyTileBuffExpr,
+    WarEvents_Actions_Utils_ModifyTileBuffSimple,
+    WarEvents_Actions_Utils_ModifyUnitBuffSimple,
+    WarEvents_Actions_Utils_PersistentModifyPlayerAttribute,
+    WarEvents_Actions_Utils_PersistentModifyUnitAttribute,
+    WarEvents_Actions_Utils_PersistentPlayBgm,
+    WarEvents_Actions_Utils_PersistentShowText,
+    WarEvents_Actions_Utils_PlayBgm,
+    WarEvents_Actions_Utils_PlaySfx,
+    WarEvents_Actions_Utils_SetCustomBuildingStateExpr,
+    WarEvents_Actions_Utils_SetCustomBuildingStateSimple,
+    WarEvents_Actions_Utils_SetCustomCannonStateExpr,
+    WarEvents_Actions_Utils_SetCustomCannonStateSimple,
+    WarEvents_Actions_Utils_SetCustomCounters,
+    WarEvents_Actions_Utils_SetCustomCrystalStateExpr,
+    WarEvents_Actions_Utils_SetCustomCrystalStateSimple,
+    WarEvents_Actions_Utils_SetCustomLaserTurretStateExpr,
+    WarEvents_Actions_Utils_SetCustomLaserTurretStateSimple,
+    WarEvents_Actions_Utils_SetForceFogCodeExpr,
+    WarEvents_Actions_Utils_SetForceFogCodeSimple,
+    WarEvents_Actions_Utils_SetPlayerStateExpr,
+    WarEvents_Actions_Utils_SetPlayerStateSimple,
+    WarEvents_Actions_Utils_SetTaskObjectiveState,
+    WarEvents_Actions_Utils_SetTileStateExpr,
+    WarEvents_Actions_Utils_SetTileStateSimple,
+    WarEvents_Actions_Utils_SetTileTypeExpr,
+    WarEvents_Actions_Utils_SetTileTypeSimple,
+    WarEvents_Actions_Utils_SetUnitMovePathVisibility,
+    WarEvents_Actions_Utils_SetUnitOwnershipExpr,
+    WarEvents_Actions_Utils_SetUnitOwnershipSimple,
+    WarEvents_Actions_Utils_SetUnitPositionExpr,
+    WarEvents_Actions_Utils_SetUnitPositionSimple,
+    WarEvents_Actions_Utils_SetUnitStateExpr,
+    WarEvents_Actions_Utils_SetUnitStateSimple,
+    WarEvents_Actions_Utils_SetUnitTypeExpr,
+    WarEvents_Actions_Utils_SetUnitTypeSimple,
+    WarEvents_Actions_Utils_SetViewpointExpr,
+    WarEvents_Actions_Utils_SetViewpointSimple,
+    WarEvents_Actions_Utils_SetWeatherExpr,
+    WarEvents_Actions_Utils_SetWeatherSimple,
+    WarEvents_Actions_Utils_SmallDialogueSimple,
+    WarEvents_Actions_Utils_StopPersistentAction,
+    WarEvents_Conditions_Utils_CustomCounter,
+    WarEvents_Conditions_Utils_EventCalledCount,
+    WarEvents_Conditions_Utils_Expression,
+    WarEvents_Actions_Utils_Common,
+    CustomCounters_Utils,
+    WarEvents_Conditions_Utils_ManualActionStatistics,
+    WarEvents_Conditions_Utils_OngoingPersistentActionPresence,
+    WarEvents_Conditions_Utils_PlayerPresence,
+    WarEvents_Conditions_Utils_TilePresence,
+    WarEvents_Conditions_Utils_TurnAndPlayer,
+    WarEvents_Conditions_Utils_UnitPresence,
+    WarEvents_Conditions_Utils_WeatherAndFog,
+    Utils_ClientErrorCode,
+    CustomCounters_Constants,
+    Helpers_Collection,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    WarOperations_Executors_Utils_Common,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwWarEventManager,
+    type BaseWar_Model_War,
+    type Units_Unit,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type WarEvents_Types,
+} from "../../internal.ts";
+import type { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
+import type { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
 import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
@@ -24,275 +92,14 @@ import type { WoSystemCallWarEvent } from "../../proto/schema/CommonProto/WarOpe
 import { CustomCounter } from "../../proto/schema/CommonProto/WarSerialization/CustomCounter.ts";
 import { DataForWarEventCalledCount } from "../../proto/schema/CommonProto/WarSerialization/DataForWarEventCalledCount.ts";
 import { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { applyWithExtraData, applyWithoutExtraData } from "../../warEvents/actions/utils/AddTileBuffExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsAddTileBuffSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsAddTileBuffSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/AddTileBuffSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsAddUnitBuffSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsAddUnitBuffSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/AddUnitBuffSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsAddUnitOnMapSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsAddUnitOnMapSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/AddUnitOnMapSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsBigDialogueSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsBigDialogueSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/BigDialogueSimple.ts";
-import { checkIsPersistentAction } from "../../warEvents/actions/utils/Common.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsDeleteTileBuffExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsDeleteTileBuffExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/DeleteTileBuffExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsDeleteTileBuffSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsDeleteTileBuffSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/DeleteTileBuffSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsDeleteUnitBuffSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsDeleteUnitBuffSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/DeleteUnitBuffSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsDestroyUnitExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsDestroyUnitExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/DestroyUnitExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsDestroyUnitSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsDestroyUnitSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/DestroyUnitSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsFillUnitLoadedExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsFillUnitLoadedExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/FillUnitLoadedExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsFillUnitLoadedSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsFillUnitLoadedSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/FillUnitLoadedSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsFillUnitOnMapExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsFillUnitOnMapExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/FillUnitOnMapExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsFillUnitOnMapSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsFillUnitOnMapSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/FillUnitOnMapSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsModifyTileBuffExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsModifyTileBuffExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/ModifyTileBuffExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsModifyTileBuffSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsModifyTileBuffSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/ModifyTileBuffSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsModifyUnitBuffSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsModifyUnitBuffSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/ModifyUnitBuffSimple.ts";
-import {
-    checkCanActivateCoSkillForPlayer,
-    checkCanProduceUnitForPlayer,
-    getActEnergyGrowthMultiplierModifierForPlayer,
-    getActAiUnitProductionBonusScore,
-    getActCoZoneRadiusModifierForPlayer,
-    applyWithExtraData as WarEventsActionsUtilsPersistentModifyPlayerAttributeApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsPersistentModifyPlayerAttributeApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/PersistentModifyPlayerAttribute.ts";
-import {
-    getAttackPowerModifierForUnit,
-    getDefenseModifierForUnit,
-    getMoveRangeModifierForUnit,
-    getMaxAttackRangeModifierForUnit,
-    getCanAttackAfterMovingForUnit,
-    getVisionRangeModifierForUnit,
-    getIsPenetratingVisionForUnit,
-    getLuckLowerLimitModifierForUnit,
-    getLuckUpperLimitModifierForUnit,
-    getFlareRadiusModifierForUnit,
-    getFlareRangeModifierForUnit,
-    applyWithExtraData as WarEventsActionsUtilsPersistentModifyUnitAttributeApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsPersistentModifyUnitAttributeApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/PersistentModifyUnitAttribute.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsPersistentPlayBgmApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsPersistentPlayBgmApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/PersistentPlayBgm.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsPersistentShowTextApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsPersistentShowTextApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/PersistentShowText.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsPlayBgmApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsPlayBgmApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/PlayBgm.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsPlaySfxApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsPlaySfxApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/PlaySfx.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetCustomBuildingStateExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetCustomBuildingStateExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetCustomBuildingStateExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetCustomBuildingStateSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetCustomBuildingStateSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetCustomBuildingStateSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetCustomCannonStateExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetCustomCannonStateExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetCustomCannonStateExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetCustomCannonStateSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetCustomCannonStateSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetCustomCannonStateSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetCustomCountersApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetCustomCountersApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetCustomCounters.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetCustomCrystalStateExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetCustomCrystalStateExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetCustomCrystalStateExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetCustomCrystalStateSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetCustomCrystalStateSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetCustomCrystalStateSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetCustomLaserTurretStateExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetCustomLaserTurretStateExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetCustomLaserTurretStateExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetCustomLaserTurretStateSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetCustomLaserTurretStateSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetCustomLaserTurretStateSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetForceFogCodeExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetForceFogCodeExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetForceFogCodeExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetForceFogCodeSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetForceFogCodeSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetForceFogCodeSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetPlayerStateExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetPlayerStateExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetPlayerStateExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetPlayerStateSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetPlayerStateSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetPlayerStateSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetTaskObjectiveStateApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetTaskObjectiveStateApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetTaskObjectiveState.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetTileStateExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetTileStateExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetTileStateExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetTileStateSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetTileStateSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetTileStateSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetTileTypeExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetTileTypeExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetTileTypeExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetTileTypeSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetTileTypeSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetTileTypeSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetUnitMovePathVisibilityApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetUnitMovePathVisibilityApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetUnitMovePathVisibility.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetUnitOwnershipExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetUnitOwnershipExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetUnitOwnershipExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetUnitOwnershipSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetUnitOwnershipSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetUnitOwnershipSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetUnitPositionExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetUnitPositionExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetUnitPositionExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetUnitPositionSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetUnitPositionSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetUnitPositionSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetUnitStateExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetUnitStateExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetUnitStateExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetUnitStateSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetUnitStateSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetUnitStateSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetUnitTypeExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetUnitTypeExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetUnitTypeExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetUnitTypeSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetUnitTypeSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetUnitTypeSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetViewpointExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetViewpointExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetViewpointExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetViewpointSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetViewpointSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetViewpointSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetWeatherExprApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetWeatherExprApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetWeatherExpr.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSetWeatherSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSetWeatherSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SetWeatherSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsSmallDialogueSimpleApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsSmallDialogueSimpleApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/SmallDialogueSimple.ts";
-import {
-    applyWithExtraData as WarEventsActionsUtilsStopPersistentActionApplyWithExtraData,
-    applyWithoutExtraData as WarEventsActionsUtilsStopPersistentActionApplyWithoutExtraData,
-} from "../../warEvents/actions/utils/StopPersistentAction.ts";
-import { checkIsMeet } from "../../warEvents/conditions/utils/CustomCounter.ts";
-import { checkIsMeet as WarEventsConditionsUtilsEventCalledCountCheckIsMeet } from "../../warEvents/conditions/utils/EventCalledCount.ts";
-import { checkIsMeet as WarEventsConditionsUtilsExpressionCheckIsMeet } from "../../warEvents/conditions/utils/Expression.ts";
-import {
-    checkIsMeet as WarEventsConditionsUtilsManualActionStatisticsCheckIsMeet,
-} from "../../warEvents/conditions/utils/ManualActionStatistics.ts";
-import {
-    checkIsMeet as WarEventsConditionsUtilsOngoingPersistentActionPresenceCheckIsMeet,
-} from "../../warEvents/conditions/utils/OngoingPersistentActionPresence.ts";
-import { checkIsMeet as WarEventsConditionsUtilsPlayerPresenceCheckIsMeet } from "../../warEvents/conditions/utils/PlayerPresence.ts";
-import { checkIsMeet as WarEventsConditionsUtilsTilePresenceCheckIsMeet } from "../../warEvents/conditions/utils/TilePresence.ts";
-import { checkIsMeet as WarEventsConditionsUtilsTurnAndPlayerCheckIsMeet } from "../../warEvents/conditions/utils/TurnAndPlayer.ts";
-import { checkIsMeet as WarEventsConditionsUtilsUnitPresenceCheckIsMeet } from "../../warEvents/conditions/utils/UnitPresence.ts";
-import { checkIsMeet as WarEventsConditionsUtilsWeatherAndFogCheckIsMeet } from "../../warEvents/conditions/utils/WeatherAndFog.ts";
-import type { WarEventIdAndDataIndex as WarEventsTypesWarEventIdAndDataIndex } from "../../warEvents/Types.ts";
-import { handleCommonExtraData } from "../../warOperations/executors/utils/Common.ts";
 
-type IUnit                                  = UnitsIUnit;
-type NodeIdAndFlags                         = ProtoSchemaCommonProtoWarEventNodeIdAndFlags;
-type ConditionIdAndFlags                    = ProtoSchemaCommonProtoWarEventConditionIdAndFlags;
-type WarEventIdAndDataIndex                 = WarEventsTypesWarEventIdAndDataIndex;
-
-export class BwWarEventManager implements IBwWarEventManager {
-    private _war?                           : IBwWar;
+export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
+    private _war?                           : BaseWar_Model_War.War;
     private _calledCountList?               : DataForWarEventCalledCount[] | null;
     private _customCounterArray?            : CustomCounter[] | null;
     private _opaIdArray?                    : number[];
 
-    public init(data: Undefinable<SerialWarEventManager>, warEventFullData: Undefinable<WarEventFullData>): void {
+    public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWarEventManager>, warEventFullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventFullData>): void {
         if (!data) {
             this._setCalledCountList(null);
             this._setCustomCounterArray(null);
@@ -300,18 +107,18 @@ export class BwWarEventManager implements IBwWarEventManager {
         } else {
             // TODO: validate the data.
             const customCounterArray = data.getCustomCounterArray();
-            if ((customCounterArray) && (!checkIsValidCustomCounterArray(customCounterArray))) {
-                throw newError(`BwWarEventManager.init() invalid customCounterArray.`, ClientErrorCode.BwWarEventManager_Init_00);
+            if ((customCounterArray) && (!CustomCounters_Utils.checkIsValidCustomCounterArray(customCounterArray))) {
+                throw Helpers_Misc.newError(`BwWarEventManager.init() invalid customCounterArray.`, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_Init_00);
             }
 
             const opaIdArray = data.getOngoingPersistentActionIdArray();
             if (opaIdArray.length !== new Set(opaIdArray).size) {
-                throw newError(`BwWarEventManager.init() invalid ongoingPersistentActionIdArray.`, ClientErrorCode.BwWarEventManager_Init_01);
+                throw Helpers_Misc.newError(`BwWarEventManager.init() invalid ongoingPersistentActionIdArray.`, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_Init_01);
             }
             for (const actionId of opaIdArray) {
                 const action = warEventFullData?.getActionArray()?.find(v => v.getWeaCommonData()?.getActionId() === actionId);
-                if ((action == null) || (!checkIsPersistentAction(action))) {
-                    throw newError(`BwWarEventManager.init() invalid ongoingPersistentActionIdArray.`, ClientErrorCode.BwWarEventManager_Init_02);
+                if ((action == null) || (!WarEvents_Actions_Utils_Common.checkIsPersistentAction(action))) {
+                    throw Helpers_Misc.newError(`BwWarEventManager.init() invalid ongoingPersistentActionIdArray.`, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_Init_02);
                 }
             }
 
@@ -328,31 +135,31 @@ export class BwWarEventManager implements IBwWarEventManager {
 
     public serialize(): SerialWarEventManager {
         return SerialWarEventManager.fromJson({
-            calledCountList                 : this._getCalledCountList()?.map(v => v.toJson()) ?? [],
-            customCounterArray              : this._getCustomCounterArray()?.map(v => v.toJson()) ?? [],
-            ongoingPersistentActionIdArray  : [...this.getOpaIdArray()],
+            calledCountList                : this._getCalledCountList()?.map(v => v.toJson()) ?? [],
+            customCounterArray             : this._getCustomCounterArray()?.map(v => v.toJson()) ?? [],
+            ongoingPersistentActionIdArray : [...this.getOpaIdArray()],
         });
     }
     public serializeForCreateSfw(): SerialWarEventManager {
         return SerialWarEventManager.fromJson({
-            calledCountList                 : this._getCalledCountList()?.map(v => v.clone().toJson()) ?? [],
-            customCounterArray              : this._getCustomCounterArray()?.map(v => v.clone().toJson()) ?? [],
-            ongoingPersistentActionIdArray  : [...this.getOpaIdArray()],
+            calledCountList                : this._getCalledCountList()?.map(v => v.clone().toJson()) ?? [],
+            customCounterArray             : this._getCustomCounterArray()?.map(v => v.clone().toJson()) ?? [],
+            ongoingPersistentActionIdArray : [...this.getOpaIdArray()],
         });
     }
     public serializeForCreateMfr(): SerialWarEventManager {
         return this.serializeForCreateSfw();
     }
 
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
     }
 
-    private _setWar(war: IBwWar): void {
+    private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
     }
-    private _getWar(): IBwWar {
-        return getExisted(this._war);
+    private _getWar(): BaseWar_Model_War.War {
+        return Helpers_Misc.getExisted(this._war);
     }
 
     public getWarEventFullData(): WarEventFullData | null {
@@ -369,7 +176,7 @@ export class BwWarEventManager implements IBwWarEventManager {
         this._calledCountList = list;
     }
     private _getCalledCountList(): DataForWarEventCalledCount[] | null {
-        return getDefined(this._calledCountList, ClientErrorCode.BwWarEventManager_GetCalledCountList_00);
+        return Helpers_Misc.getDefined(this._calledCountList, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_GetCalledCountList_00);
     }
 
     public updateWarEventCalledCountOnCall(eventId: number): void {                     // DONE
@@ -383,8 +190,8 @@ export class BwWarEventManager implements IBwWarEventManager {
         } else {
             const data = calledCountList.find(v => v.getEventId() === eventId);
             if (data) {
-                data.setCalledCountInPlayerTurn((data.getCalledCountInPlayerTurn() ?? 0) + 1);
-                data.setCalledCountTotal((data.getCalledCountTotal() ?? 0) + 1);
+                data.setCalledCountInPlayerTurn((data.getCalledCountInPlayerTurn()) + 1);
+                data.setCalledCountTotal((data.getCalledCountTotal()) + 1);
             } else {
                 calledCountList.push(DataForWarEventCalledCount.fromJson({
                     eventId                 : eventId,
@@ -414,19 +221,19 @@ export class BwWarEventManager implements IBwWarEventManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     protected _setCustomCounterArray(counterArray: CustomCounter[] | null): void {
         this._customCounterArray = counterArray;
-        dispatch(TypeId.BwCustomCountersChanged);
+        Notifications_Dispatcher.dispatch("BwCustomCountersChanged");
     }
     private _getCustomCounterArray(): CustomCounter[] | null {
-        return getDefined(this._customCounterArray, ClientErrorCode.BwWarEventManager_GetCustomCounterArray_00);
+        return Helpers_Misc.getDefined(this._customCounterArray, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_GetCustomCounterArray_00);
     }
 
     public setCustomCounter(counterId: number, counterValue: number): void {
-        if (!checkIsValidId(counterId)) {
-            throw newError(`BwWarEventManager._setCustomCounter() invalid counterId: ${counterId}`, ClientErrorCode.BwWarEventManager_SetCustomCounter_00);
+        if (!CustomCounters_Utils.checkIsValidId(counterId)) {
+            throw Helpers_Misc.newError(`BwWarEventManager._setCustomCounter() invalid counterId: ${counterId}`, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_SetCustomCounter_00);
         }
 
-        if (!checkIsValidValue(counterValue)) {
-            throw newError(`BwWarEventManager._setCustomCounter() invalid counterValue: ${counterValue}`, ClientErrorCode.BwWarEventManager_SetCustomCounter_01);
+        if (!CustomCounters_Utils.checkIsValidValue(counterValue)) {
+            throw Helpers_Misc.newError(`BwWarEventManager._setCustomCounter() invalid counterValue: ${counterValue}`, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_SetCustomCounter_01);
         }
 
         const array = this._getCustomCounterArray();
@@ -445,7 +252,7 @@ export class BwWarEventManager implements IBwWarEventManager {
                     value           : counterValue,
                 }));
             }
-            dispatch(TypeId.BwCustomCountersChanged);
+            Notifications_Dispatcher.dispatch("BwCustomCountersChanged");
         }
     }
     public getCustomCounter(counterId: number): number {
@@ -466,7 +273,7 @@ export class BwWarEventManager implements IBwWarEventManager {
     public handleEscapeText(rawText: string): string {
         for (;;) {
             let tempText = rawText;
-            for (let counterId = Constants.MinId; counterId <= Constants.MaxId; ++counterId) {
+            for (let counterId = CustomCounters_Constants.Constants.MinId; counterId <= CustomCounters_Constants.Constants.MaxId; ++counterId) {
                 tempText = tempText.replace(new RegExp(`{CC${counterId}}`, "g"), `${this.getCustomCounter(counterId)}`);
             }
             if (tempText === rawText) {
@@ -483,12 +290,12 @@ export class BwWarEventManager implements IBwWarEventManager {
         this._opaIdArray = opaIdArray;
     }
     public getOpaIdArray(): number[] {
-        return getExisted(this._opaIdArray, ClientErrorCode.BwWarEventManager_GetOngoingPersistentActionIdSet_00);
+        return Helpers_Misc.getExisted(this._opaIdArray, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_GetOngoingPersistentActionIdSet_00);
     }
     public getAllPersistentActionIdArray(): number[] {
         const idArray: number[] = [];
         for (const action of this.getWarEventFullData()?.getActionArray() ?? []) {
-            if (checkIsPersistentAction(action)) {
+            if (WarEvents_Actions_Utils_Common.checkIsPersistentAction(action)) {
                 idArray.push(action.getWeaCommonData()?.getActionId() ?? 0);
             }
         }
@@ -498,13 +305,13 @@ export class BwWarEventManager implements IBwWarEventManager {
     }
     public updateOpaIdArrayOnExecuteAction(actionId: number): void {
         const opaIdArray = this.getOpaIdArray();
-        deleteElementFromList(opaIdArray, actionId);
+        Helpers_Collection.deleteElementFromList(opaIdArray, actionId);
         opaIdArray.push(actionId);
     }
     public updateOpaIdArrayOnDeleteAction(actionIdArray: number[]): void {
         const opaIdArray = this.getOpaIdArray();
         for (const actionId of actionIdArray) {
-            deleteElementFromList(opaIdArray, actionId);
+            Helpers_Collection.deleteElementFromList(opaIdArray, actionId);
         }
     }
 
@@ -516,7 +323,7 @@ export class BwWarEventManager implements IBwWarEventManager {
             {
                 const actionData = action.getWeaPersistentModifyPlayerAttribute();
                 if (actionData) {
-                    const canActivate = checkCanActivateCoSkillForPlayer(actionData, playerIndex, war);
+                    const canActivate = WarEvents_Actions_Utils_PersistentModifyPlayerAttribute.checkCanActivateCoSkillForPlayer(actionData, playerIndex, war);
                     if (canActivate != null) {
                         return canActivate;
                     }
@@ -534,7 +341,7 @@ export class BwWarEventManager implements IBwWarEventManager {
             {
                 const actionData = action.getWeaPersistentModifyPlayerAttribute();
                 if (actionData) {
-                    const canProduceUnit = checkCanProduceUnitForPlayer(actionData, playerIndex, unitType, war);
+                    const canProduceUnit = WarEvents_Actions_Utils_PersistentModifyPlayerAttribute.checkCanProduceUnitForPlayer(actionData, playerIndex, unitType, war);
                     if (canProduceUnit != null) {
                         return canProduceUnit;
                     }
@@ -553,14 +360,14 @@ export class BwWarEventManager implements IBwWarEventManager {
             {
                 const actionData = action.getWeaPersistentModifyPlayerAttribute();
                 if (actionData) {
-                    modifier += getActEnergyGrowthMultiplierModifierForPlayer(actionData, playerIndex, war);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyPlayerAttribute.getActEnergyGrowthMultiplierModifierForPlayer(actionData, playerIndex, war);
                 }
             }
         }
 
         return modifier;
     }
-    public getOpaAiUnitProductionBonusScore(playerIndex: number, unitTypeId: number, gridIndex: GridIndex): number {
+    public getOpaAiUnitProductionBonusScore(playerIndex: number, unitTypeId: number, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         const war       = this._getWar();
         let bonusScore  = 0;
         for (const actionId of this.getOpaIdArray()) {
@@ -568,7 +375,7 @@ export class BwWarEventManager implements IBwWarEventManager {
             {
                 const actionData = action.getWeaPersistentModifyPlayerAttribute();
                 if (actionData) {
-                    bonusScore += getActAiUnitProductionBonusScore({
+                    bonusScore += WarEvents_Actions_Utils_PersistentModifyPlayerAttribute.getActAiUnitProductionBonusScore({
                         action      : actionData,
                         playerIndex : playerIndex,
                         war         : war,
@@ -589,76 +396,76 @@ export class BwWarEventManager implements IBwWarEventManager {
             {
                 const actionData = action.getWeaPersistentModifyPlayerAttribute();
                 if (actionData) {
-                    modifier += getActCoZoneRadiusModifierForPlayer(actionData, playerIndex, war);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyPlayerAttribute.getActCoZoneRadiusModifierForPlayer(actionData, playerIndex, war);
                 }
             }
         }
 
         return modifier;
     }
-    public getOpaAttackPowerModifier(unit: IUnit, gridIndex: GridIndex): number {
+    public getOpaAttackPowerModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    modifier += getAttackPowerModifierForUnit(actionData, unit);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getAttackPowerModifierForUnit(actionData, unit);
                 }
             }
         }
 
         return modifier;
     }
-    public getOpaDefenseModifier(unit: IUnit, gridIndex: GridIndex): number {
+    public getOpaDefenseModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    modifier += getDefenseModifierForUnit(actionData, unit);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getDefenseModifierForUnit(actionData, unit);
                 }
             }
         }
 
         return modifier;
     }
-    public getOpaMoveRangeModifier(unit: IUnit): number {
+    public getOpaMoveRangeModifier(unit: Units_Unit.Unit): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    modifier += getMoveRangeModifierForUnit(actionData, unit);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getMoveRangeModifierForUnit(actionData, unit);
                 }
             }
         }
 
         return modifier;
     }
-    public getOpaMaxAttackRangeModifier(unit: IUnit): number {
+    public getOpaMaxAttackRangeModifier(unit: Units_Unit.Unit): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    modifier += getMaxAttackRangeModifierForUnit(actionData, unit);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getMaxAttackRangeModifierForUnit(actionData, unit);
                 }
             }
         }
 
         return modifier;
     }
-    public getOpaCanAttackAfterMoving(unit: IUnit): boolean | null {
+    public getOpaCanAttackAfterMoving(unit: Units_Unit.Unit): boolean | null {
         for (const opaId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(opaId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    const canAttack = getCanAttackAfterMovingForUnit(actionData, unit);
+                    const canAttack = WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getCanAttackAfterMovingForUnit(actionData, unit);
                     if (canAttack != null) {
                         return canAttack;
                     }
@@ -668,27 +475,27 @@ export class BwWarEventManager implements IBwWarEventManager {
 
         return null;
     }
-    public getOpaUnitVisionRangeModifier(unit: IUnit, gridIndex: GridIndex): number {
+    public getOpaUnitVisionRangeModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    modifier += getVisionRangeModifierForUnit(actionData, unit);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getVisionRangeModifierForUnit(actionData, unit);
                 }
             }
         }
 
         return modifier;
     }
-    public getOpaIsPenetratingVision(unit: IUnit): boolean | null {
+    public getOpaIsPenetratingVision(unit: Units_Unit.Unit): boolean | null {
         for (const opaId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(opaId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    const isPenetrating = getIsPenetratingVisionForUnit(actionData, unit);
+                    const isPenetrating = WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getIsPenetratingVisionForUnit(actionData, unit);
                     if (isPenetrating != null) {
                         return isPenetrating;
                     }
@@ -698,56 +505,56 @@ export class BwWarEventManager implements IBwWarEventManager {
 
         return null;
     }
-    public getOpaLuckLowerLimitModifier(unit: IUnit, gridIndex: GridIndex): number {
+    public getOpaLuckLowerLimitModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    modifier += getLuckLowerLimitModifierForUnit(actionData, unit);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getLuckLowerLimitModifierForUnit(actionData, unit);
                 }
             }
         }
 
         return modifier;
     }
-    public getOpaLuckUpperLimitModifier(unit: IUnit, gridIndex: GridIndex): number {
+    public getOpaLuckUpperLimitModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    modifier += getLuckUpperLimitModifierForUnit(actionData, unit);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getLuckUpperLimitModifierForUnit(actionData, unit);
                 }
             }
         }
 
         return modifier;
     }
-    public getOpaFlareRadiusModifier(unit: IUnit, gridIndex: GridIndex): number {
+    public getOpaFlareRadiusModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    modifier += getFlareRadiusModifierForUnit(actionData, unit);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getFlareRadiusModifierForUnit(actionData, unit);
                 }
             }
         }
 
         return modifier;
     }
-    public getOpaFlareRangeModifier(unit: IUnit, gridIndex: GridIndex): number {
+    public getOpaFlareRangeModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
             const action = this.getWarEventAction(actionId);
             {
                 const actionData = action.getWeaPersistentModifyUnitAttribute();
                 if (actionData) {
-                    modifier += getFlareRangeModifierForUnit(actionData, unit);
+                    modifier += WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getFlareRangeModifierForUnit(actionData, unit);
                 }
             }
         }
@@ -760,7 +567,7 @@ export class BwWarEventManager implements IBwWarEventManager {
         for (let i = opaIdArray.length - 1; i >= 0; --i) {
             const action = this.getWarEventAction(opaIdArray[i]).getWeaPersistentPlayBgm();
             if (action != null) {
-                return getExisted(action.getBgmCode());
+                return Helpers_Misc.getExisted(action.getBgmCode());
             }
         }
 
@@ -774,20 +581,20 @@ export class BwWarEventManager implements IBwWarEventManager {
         this._getWar().getIsExecuteActionsWithExtraData()
             ? await this._callWarEventWithExtraData(action, isFastExecute)
             : await this._callWarEventWithoutExtraData(
-                getExisted(action.getWarEventId(), ClientErrorCode.BwWarEventManager_CallWarEvent_00),
-                getExisted(action.getNodeAndActionsIndex(), ClientErrorCode.BwWarEventManager_CallWarEvent_01),
-                isFastExecute
+                action.getWarEventId(),
+                action.getNodeAndActionsIndex(),
+                isFastExecute,
             );
     }
     private async _callWarEventWithExtraData(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void> {
-        for (const actionId of this.getWarEvent(getExisted(action.getWarEventId())).getRootNodeAndActionsArray()[getExisted(action.getNodeAndActionsIndex())].getActionIdArray()) {
+        for (const actionId of this.getWarEvent(action.getWarEventId()).getRootNodeAndActionsArray()[action.getNodeAndActionsIndex()].getActionIdArray()) {
             await this._callActionWithExtraData(actionId, isFastExecute);
         }
 
-        const extraData = getExisted(action.getExtraData(), ClientErrorCode.BwWarEventManager_CallWarEventWithExtraData_01);
-        handleCommonExtraData({
+        const extraData = Helpers_Misc.getExisted(action.getExtraData(), Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_CallWarEventWithExtraData_01);
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war             : this._getWar(),
-            commonExtraData : getExisted(extraData.getCommonExtraData(), ClientErrorCode.BwWarEventManager_CallWarEventWithExtraData_02),
+            commonExtraData : Helpers_Misc.getExisted(extraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_CallWarEventWithExtraData_02),
             isFastExecute   : isFastExecute,
         });
     }
@@ -795,8 +602,8 @@ export class BwWarEventManager implements IBwWarEventManager {
         const war           = this._getWar();
         const unitMap       = war.getUnitMap();
         const playerManager = war.getPlayerManager();
-        const playerIndexes = playerManager.getPlayerIndexArray(PlayerIndex.First, false)
-            .filter(v => (playerManager.getPlayer(v).getAliveState() === AliveStateId.Alive) && (unitMap.checkHasUnitForPlayer(v)));
+        const playerIndexes = playerManager.getPlayerIndexArray(Players_Constants.PlayerIndex.First, false)
+            .filter(v => (playerManager.getPlayer(v).getAliveState() === Players_Constants.AliveStateId.Alive) && (unitMap.checkHasUnitForPlayer(v)));
 
         for (const actionId of this.getWarEvent(warEventId).getRootNodeAndActionsArray()[dataIndex].getActionIdArray()) {
             await this._callActionWithoutExtraData(actionId, isFastExecute);
@@ -804,10 +611,10 @@ export class BwWarEventManager implements IBwWarEventManager {
 
         for (const playerIndex of playerIndexes) {
             const player = playerManager.getPlayer(playerIndex);
-            if ((player.getAliveState() === AliveStateId.Alive)   &&
+            if ((player.getAliveState() === Players_Constants.AliveStateId.Alive)   &&
                 (!unitMap.checkHasUnitForPlayer(playerIndex))
             ) {
-                player.setAliveState(AliveStateId.Dying);
+                player.setAliveState(Players_Constants.AliveStateId.Dying);
             }
         }
     }
@@ -818,342 +625,342 @@ export class BwWarEventManager implements IBwWarEventManager {
         {
             const act = action.getWeaAddUnitOnMapSimple();
             if (act) {
-                return WarEventsActionsUtilsAddUnitOnMapSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_AddUnitOnMapSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaFillUnitOnMapExpr();
             if (act) {
-                return WarEventsActionsUtilsFillUnitOnMapExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_FillUnitOnMapExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaFillUnitOnMapSimple();
             if (act) {
-                return WarEventsActionsUtilsFillUnitOnMapSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_FillUnitOnMapSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaFillUnitLoadedSimple();
             if (act) {
-                return WarEventsActionsUtilsFillUnitLoadedSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_FillUnitLoadedSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaFillUnitLoadedExpr();
             if (act) {
-                return WarEventsActionsUtilsFillUnitLoadedExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_FillUnitLoadedExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaDestroyUnitSimple();
             if (act) {
-                return WarEventsActionsUtilsDestroyUnitSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_DestroyUnitSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaDestroyUnitExpr();
             if (act) {
-                return WarEventsActionsUtilsDestroyUnitExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_DestroyUnitExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetUnitTypeSimple();
             if (act) {
-                return WarEventsActionsUtilsSetUnitTypeSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetUnitTypeSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetUnitTypeExpr();
             if (act) {
-                return WarEventsActionsUtilsSetUnitTypeExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetUnitTypeExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetUnitOwnershipSimple();
             if (act) {
-                return WarEventsActionsUtilsSetUnitOwnershipSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetUnitOwnershipSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetUnitOwnershipExpr();
             if (act) {
-                return WarEventsActionsUtilsSetUnitOwnershipExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetUnitOwnershipExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetUnitPositionSimple();
             if (act) {
-                return WarEventsActionsUtilsSetUnitPositionSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetUnitPositionSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetUnitPositionExpr();
             if (act) {
-                return WarEventsActionsUtilsSetUnitPositionExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetUnitPositionExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetUnitStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetUnitStateSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetUnitStateSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetUnitStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetUnitStateExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetUnitStateExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaAddUnitBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsAddUnitBuffSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_AddUnitBuffSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaModifyUnitBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsModifyUnitBuffSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_ModifyUnitBuffSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaDeleteUnitBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsDeleteUnitBuffSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_DeleteUnitBuffSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaBigDialogueSimple();
             if (act) {
-                return WarEventsActionsUtilsBigDialogueSimpleApplyWithExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_BigDialogueSimple.applyWithExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetViewpointExpr();
             if (act) {
-                return WarEventsActionsUtilsSetViewpointExprApplyWithExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetViewpointExpr.applyWithExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetViewpointSimple();
             if (act) {
-                return WarEventsActionsUtilsSetViewpointSimpleApplyWithExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetViewpointSimple.applyWithExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetWeatherExpr();
             if (act) {
-                return WarEventsActionsUtilsSetWeatherExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetWeatherExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetWeatherSimple();
             if (act) {
-                return WarEventsActionsUtilsSetWeatherSimpleApplyWithExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetWeatherSimple.applyWithExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSmallDialogueSimple();
             if (act) {
-                return WarEventsActionsUtilsSmallDialogueSimpleApplyWithExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SmallDialogueSimple.applyWithExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaPlayBgm();
             if (act) {
-                return WarEventsActionsUtilsPlayBgmApplyWithExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_PlayBgm.applyWithExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaPlaySfx();
             if (act) {
-                return WarEventsActionsUtilsPlaySfxApplyWithExtraData(act, isFastExecute);
+                return WarEvents_Actions_Utils_PlaySfx.applyWithExtraData(act, isFastExecute);
             }
         }
         {
             const act = action.getWeaSetForceFogCodeExpr();
             if (act) {
-                return WarEventsActionsUtilsSetForceFogCodeExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetForceFogCodeExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetForceFogCodeSimple();
             if (act) {
-                return WarEventsActionsUtilsSetForceFogCodeSimpleApplyWithExtraData(act, war, isFastExecute);
+                return WarEvents_Actions_Utils_SetForceFogCodeSimple.applyWithExtraData(act, war, isFastExecute);
             }
         }
         {
             const act = action.getWeaSetCustomCounters();
             if (act) {
-                return WarEventsActionsUtilsSetCustomCountersApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetCustomCounters.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaStopPersistentAction();
             if (act) {
-                return WarEventsActionsUtilsStopPersistentActionApplyWithExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_StopPersistentAction.applyWithExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetPlayerStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetPlayerStateExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetPlayerStateExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetPlayerStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetPlayerStateSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetPlayerStateSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetTaskObjectiveState();
             if (act) {
-                return WarEventsActionsUtilsSetTaskObjectiveStateApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetTaskObjectiveState.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetUnitMovePathVisibility();
             if (act) {
-                return WarEventsActionsUtilsSetUnitMovePathVisibilityApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetUnitMovePathVisibility.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetTileTypeExpr();
             if (act) {
-                return WarEventsActionsUtilsSetTileTypeExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetTileTypeExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetTileTypeSimple();
             if (act) {
-                return WarEventsActionsUtilsSetTileTypeSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetTileTypeSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetTileStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetTileStateExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetTileStateExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetTileStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetTileStateSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetTileStateSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetCustomBuildingStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetCustomBuildingStateExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetCustomBuildingStateExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetCustomBuildingStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetCustomBuildingStateSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetCustomBuildingStateSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetCustomCannonStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetCustomCannonStateExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetCustomCannonStateExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetCustomCannonStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetCustomCannonStateSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetCustomCannonStateSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetCustomCrystalStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetCustomCrystalStateExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetCustomCrystalStateExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetCustomCrystalStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetCustomCrystalStateSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetCustomCrystalStateSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetCustomLaserTurretStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetCustomLaserTurretStateExprApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetCustomLaserTurretStateExpr.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaSetCustomLaserTurretStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetCustomLaserTurretStateSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_SetCustomLaserTurretStateSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaDeleteTileBuffExpr();
             if (act) {
-                return WarEventsActionsUtilsDeleteTileBuffExprApplyWithExtraData(act, war, isFastExecute);
+                return WarEvents_Actions_Utils_DeleteTileBuffExpr.applyWithExtraData(act, war, isFastExecute);
             }
         }
         {
             const act = action.getWeaDeleteTileBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsDeleteTileBuffSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_DeleteTileBuffSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaAddTileBuffExpr();
             if (act) {
-                return applyWithExtraData(act, war, isFastExecute);
+                return WarEvents_Actions_Utils_AddTileBuffExpr.applyWithExtraData(act, war, isFastExecute);
             }
         }
         {
             const act = action.getWeaAddTileBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsAddTileBuffSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_AddTileBuffSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaModifyTileBuffExpr();
             if (act) {
-                return WarEventsActionsUtilsModifyTileBuffExprApplyWithExtraData(act, war, isFastExecute);
+                return WarEvents_Actions_Utils_ModifyTileBuffExpr.applyWithExtraData(act, war, isFastExecute);
             }
         }
         {
             const act = action.getWeaModifyTileBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsModifyTileBuffSimpleApplyWithExtraData(act);
+                return WarEvents_Actions_Utils_ModifyTileBuffSimple.applyWithExtraData(act);
             }
         }
         {
             const act = action.getWeaPersistentShowText();
             if (act) {
-                return WarEventsActionsUtilsPersistentShowTextApplyWithExtraData(act, warEventActionId, war);
+                return WarEvents_Actions_Utils_PersistentShowText.applyWithExtraData(act, warEventActionId, war);
             }
         }
         {
             const act = action.getWeaPersistentPlayBgm();
             if (act) {
-                return WarEventsActionsUtilsPersistentPlayBgmApplyWithExtraData(act, isFastExecute, warEventActionId, war);
+                return WarEvents_Actions_Utils_PersistentPlayBgm.applyWithExtraData(act, isFastExecute, warEventActionId, war);
             }
         }
         {
             const act = action.getWeaPersistentModifyPlayerAttribute();
             if (act) {
-                return WarEventsActionsUtilsPersistentModifyPlayerAttributeApplyWithExtraData(act, war, warEventActionId);
+                return WarEvents_Actions_Utils_PersistentModifyPlayerAttribute.applyWithExtraData(act, war, warEventActionId);
             }
         }
         {
             const act = action.getWeaPersistentModifyUnitAttribute();
             if (act) {
-                return WarEventsActionsUtilsPersistentModifyUnitAttributeApplyWithExtraData(act, war, warEventActionId);
+                return WarEvents_Actions_Utils_PersistentModifyUnitAttribute.applyWithExtraData(act, war, warEventActionId);
             }
         }
 
         // todo: add more actions.
-        throw newError(`Invalid action.`);
+        throw Helpers_Misc.newError(`Invalid action.`);
     }
     private async _callActionWithoutExtraData(warEventActionId: number, isFastExecute: boolean): Promise<void> {
         const action    = this.getWarEventAction(warEventActionId);
@@ -1161,345 +968,345 @@ export class BwWarEventManager implements IBwWarEventManager {
         {
             const act = action.getWeaAddUnitOnMapSimple();
             if (act) {
-                return WarEventsActionsUtilsAddUnitOnMapSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_AddUnitOnMapSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaFillUnitOnMapExpr();
             if (act) {
-                return WarEventsActionsUtilsFillUnitOnMapExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_FillUnitOnMapExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaFillUnitOnMapSimple();
             if (act) {
-                return WarEventsActionsUtilsFillUnitOnMapSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_FillUnitOnMapSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaFillUnitLoadedSimple();
             if (act) {
-                return WarEventsActionsUtilsFillUnitLoadedSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_FillUnitLoadedSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaFillUnitLoadedExpr();
             if (act) {
-                return WarEventsActionsUtilsFillUnitLoadedExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_FillUnitLoadedExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaDestroyUnitSimple();
             if (act) {
-                return WarEventsActionsUtilsDestroyUnitSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_DestroyUnitSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaDestroyUnitExpr();
             if (act) {
-                return WarEventsActionsUtilsDestroyUnitExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_DestroyUnitExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetUnitTypeSimple();
             if (act) {
-                return WarEventsActionsUtilsSetUnitTypeSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetUnitTypeSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetUnitTypeExpr();
             if (act) {
-                return WarEventsActionsUtilsSetUnitTypeExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetUnitTypeExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetUnitOwnershipSimple();
             if (act) {
-                return WarEventsActionsUtilsSetUnitOwnershipSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetUnitOwnershipSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetUnitOwnershipExpr();
             if (act) {
-                return WarEventsActionsUtilsSetUnitOwnershipExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetUnitOwnershipExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetUnitPositionSimple();
             if (act) {
-                return WarEventsActionsUtilsSetUnitPositionSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetUnitPositionSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetUnitPositionExpr();
             if (act) {
-                return WarEventsActionsUtilsSetUnitPositionExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetUnitPositionExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetUnitStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetUnitStateSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetUnitStateSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetUnitStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetUnitStateExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetUnitStateExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaAddUnitBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsAddUnitBuffSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_AddUnitBuffSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaModifyUnitBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsModifyUnitBuffSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_ModifyUnitBuffSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaDeleteUnitBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsDeleteUnitBuffSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_DeleteUnitBuffSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaBigDialogueSimple();
             if (act) {
-                return WarEventsActionsUtilsBigDialogueSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_BigDialogueSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetViewpointExpr();
             if (act) {
-                return WarEventsActionsUtilsSetViewpointExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetViewpointExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetViewpointSimple();
             if (act) {
-                return WarEventsActionsUtilsSetViewpointSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetViewpointSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetWeatherExpr();
             if (act) {
-                return WarEventsActionsUtilsSetWeatherExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetWeatherExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetWeatherSimple();
             if (act) {
-                return WarEventsActionsUtilsSetWeatherSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetWeatherSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSmallDialogueSimple();
             if (act) {
-                return WarEventsActionsUtilsSmallDialogueSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SmallDialogueSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaPlayBgm();
             if (act) {
-                return WarEventsActionsUtilsPlayBgmApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_PlayBgm.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaPlaySfx();
             if (act) {
-                return WarEventsActionsUtilsPlaySfxApplyWithoutExtraData(act, isFastExecute);
+                return WarEvents_Actions_Utils_PlaySfx.applyWithoutExtraData(act, isFastExecute);
             }
         }
         {
             const act = action.getWeaSetForceFogCodeExpr();
             if (act) {
-                return WarEventsActionsUtilsSetForceFogCodeExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetForceFogCodeExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetForceFogCodeSimple();
             if (act) {
-                return WarEventsActionsUtilsSetForceFogCodeSimpleApplyWithoutExtraData(act, war, isFastExecute);
+                return WarEvents_Actions_Utils_SetForceFogCodeSimple.applyWithoutExtraData(act, war, isFastExecute);
             }
         }
         {
             const act = action.getWeaSetCustomCounters();
             if (act) {
-                return WarEventsActionsUtilsSetCustomCountersApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetCustomCounters.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaStopPersistentAction();
             if (act) {
-                return WarEventsActionsUtilsStopPersistentActionApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_StopPersistentAction.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetPlayerStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetPlayerStateExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetPlayerStateExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetPlayerStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetPlayerStateSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetPlayerStateSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetTaskObjectiveState();
             if (act) {
-                return WarEventsActionsUtilsSetTaskObjectiveStateApplyWithoutExtraData(act, war);
+                return WarEvents_Actions_Utils_SetTaskObjectiveState.applyWithoutExtraData(act, war);
             }
         }
         {
             const act = action.getWeaSetUnitMovePathVisibility();
             if (act) {
-                return WarEventsActionsUtilsSetUnitMovePathVisibilityApplyWithoutExtraData(act, war);
+                return WarEvents_Actions_Utils_SetUnitMovePathVisibility.applyWithoutExtraData(act, war);
             }
         }
         {
             const act = action.getWeaSetTileTypeExpr();
             if (act) {
-                return WarEventsActionsUtilsSetTileTypeExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetTileTypeExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetTileTypeSimple();
             if (act) {
-                return WarEventsActionsUtilsSetTileTypeSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetTileTypeSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetTileStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetTileStateExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetTileStateExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetTileStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetTileStateSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetTileStateSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetCustomBuildingStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetCustomBuildingStateExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetCustomBuildingStateExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetCustomBuildingStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetCustomBuildingStateSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetCustomBuildingStateSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetCustomCannonStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetCustomCannonStateExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetCustomCannonStateExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetCustomCannonStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetCustomCannonStateSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetCustomCannonStateSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetCustomCrystalStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetCustomCrystalStateExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetCustomCrystalStateExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetCustomCrystalStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetCustomCrystalStateSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetCustomCrystalStateSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetCustomLaserTurretStateExpr();
             if (act) {
-                return WarEventsActionsUtilsSetCustomLaserTurretStateExprApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetCustomLaserTurretStateExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaSetCustomLaserTurretStateSimple();
             if (act) {
-                return WarEventsActionsUtilsSetCustomLaserTurretStateSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_SetCustomLaserTurretStateSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaDeleteTileBuffExpr();
             if (act) {
-                return WarEventsActionsUtilsDeleteTileBuffExprApplyWithoutExtraData(act, war, isFastExecute);
+                return WarEvents_Actions_Utils_DeleteTileBuffExpr.applyWithoutExtraData(act, war, isFastExecute);
             }
         }
         {
             const act = action.getWeaDeleteTileBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsDeleteTileBuffSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_DeleteTileBuffSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaAddTileBuffExpr();
             if (act) {
-                return applyWithoutExtraData(act, war, isFastExecute);
+                return WarEvents_Actions_Utils_AddTileBuffExpr.applyWithoutExtraData(act, war, isFastExecute);
             }
         }
         {
             const act = action.getWeaAddTileBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsAddTileBuffSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_AddTileBuffSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaModifyTileBuffExpr();
             if (act) {
-                return WarEventsActionsUtilsModifyTileBuffExprApplyWithoutExtraData(act, war, isFastExecute);
+                return WarEvents_Actions_Utils_ModifyTileBuffExpr.applyWithoutExtraData(act, war, isFastExecute);
             }
         }
         {
             const act = action.getWeaModifyTileBuffSimple();
             if (act) {
-                return WarEventsActionsUtilsModifyTileBuffSimpleApplyWithoutExtraData(act, isFastExecute, war);
+                return WarEvents_Actions_Utils_ModifyTileBuffSimple.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {
             const act = action.getWeaPersistentShowText();
             if (act) {
-                return WarEventsActionsUtilsPersistentShowTextApplyWithoutExtraData(act, warEventActionId, war);
+                return WarEvents_Actions_Utils_PersistentShowText.applyWithoutExtraData(act, warEventActionId, war);
             }
         }
         {
             const act = action.getWeaPersistentPlayBgm();
             if (act) {
-                return WarEventsActionsUtilsPersistentPlayBgmApplyWithoutExtraData(act, isFastExecute, warEventActionId, war);
+                return WarEvents_Actions_Utils_PersistentPlayBgm.applyWithoutExtraData(act, isFastExecute, warEventActionId, war);
             }
         }
         {
             const act = action.getWeaPersistentModifyPlayerAttribute();
             if (act) {
-                return WarEventsActionsUtilsPersistentModifyPlayerAttributeApplyWithoutExtraData(act, war, warEventActionId);
+                return WarEvents_Actions_Utils_PersistentModifyPlayerAttribute.applyWithoutExtraData(act, war, warEventActionId);
             }
         }
         {
             const act = action.getWeaPersistentModifyUnitAttribute();
             if (act) {
-                return WarEventsActionsUtilsPersistentModifyUnitAttributeApplyWithoutExtraData(act, war, warEventActionId);
+                return WarEvents_Actions_Utils_PersistentModifyUnitAttribute.applyWithoutExtraData(act, war, warEventActionId);
             }
         }
 
         // todo: add more actions.
-        throw newError(`Invalid action.`);
+        throw Helpers_Misc.newError(`Invalid action.`);
     }
 
-    public getCallableWarEventIdAndDataIndex(): WarEventIdAndDataIndex | null {                                // DONE
+    public getCallableWarEventIdAndDataIndex(): WarEvents_Types.WarEventIdAndDataIndex | null {                                // DONE
         const war = this._getWar();
         if (war.checkIsExceedTurnsOrWarOperationsLimit()) {
             return null;
@@ -1514,13 +1321,13 @@ export class BwWarEventManager implements IBwWarEventManager {
         const randomState           = randomNumberManager.getIsNeedSeedRandom() ? randomNumberManager.getSeedRandomCurrentStateJson() : null;
         const nodeResultDict        = new Map<number, boolean>();
         const conditionResultDict   = new Map<number, boolean>();
-        let result                  : WarEventIdAndDataIndex | null = null;
+        let result                  : WarEvents_Types.WarEventIdAndDataIndex | null = null;
 
         for (const warEvent of warEventArray) {
             const warEventId    = warEvent.getEventId();
             const dataIndex     = this._getCallableNodeAndActionsIndex(warEventId, nodeResultDict, conditionResultDict);
             if (dataIndex != null) {
-                result = { warEventId: warEventId, dataIndex: dataIndex };
+                result = { warEventId : warEventId, dataIndex : dataIndex };
                 break;
             }
         }
@@ -1547,9 +1354,9 @@ export class BwWarEventManager implements IBwWarEventManager {
         const rootNodeAndActionsArray = warEvent.getRootNodeAndActionsArray();
         for (let index = 0; index < rootNodeAndActionsArray.length; index++) {
             if (this._checkIsMeetConditionNode(
-                getExisted(rootNodeAndActionsArray[index].getNodeIdAndFlags()),
+                Helpers_Misc.getExisted(rootNodeAndActionsArray[index].getNodeIdAndFlags()),
                 nodeResultDict,
-                conditionResultDict
+                conditionResultDict,
             )) {
                 return index;
             }
@@ -1572,7 +1379,7 @@ export class BwWarEventManager implements IBwWarEventManager {
         const conditionIdAndFlagsArray  = node.getConditionIdAndFlagsArray();
         const subNodeIdAndFlagsArray    = node.getSubNodeIdAndFlagsArray();
         if ((!conditionIdAndFlagsArray?.length) && (!subNodeIdAndFlagsArray?.length)) {
-            throw newError(`Empty conditionIdArray and subNodeIdArray.`);
+            throw Helpers_Misc.newError(`Empty conditionIdArray and subNodeIdArray.`);
         }
 
         let isAnySubConTrue     = false;
@@ -1647,65 +1454,65 @@ export class BwWarEventManager implements IBwWarEventManager {
             {
                 const con = condition.getWecEventCalledCount();
                 if (con) {
-                    return WarEventsConditionsUtilsEventCalledCountCheckIsMeet(con, war);
+                    return WarEvents_Conditions_Utils_EventCalledCount.checkIsMeet(con, war);
                 }
             }
             {
                 const con = condition.getWecPlayerPresence();
                 if (con) {
-                    return WarEventsConditionsUtilsPlayerPresenceCheckIsMeet(con, war);
+                    return WarEvents_Conditions_Utils_PlayerPresence.checkIsMeet(con, war);
                 }
             }
             {
                 const con = condition.getWecTurnAndPlayer();
                 if (con) {
-                    return WarEventsConditionsUtilsTurnAndPlayerCheckIsMeet(con, war);
+                    return WarEvents_Conditions_Utils_TurnAndPlayer.checkIsMeet(con, war);
                 }
             }
             {
                 const con = condition.getWecWeatherAndFog();
                 if (con) {
-                    return WarEventsConditionsUtilsWeatherAndFogCheckIsMeet(con, war);
+                    return WarEvents_Conditions_Utils_WeatherAndFog.checkIsMeet(con, war);
                 }
             }
             {
                 const con = condition.getWecTilePresence();
                 if (con) {
-                    return WarEventsConditionsUtilsTilePresenceCheckIsMeet(con, war);
+                    return WarEvents_Conditions_Utils_TilePresence.checkIsMeet(con, war);
                 }
             }
             {
                 const con = condition.getWecUnitPresence();
                 if (con) {
-                    return WarEventsConditionsUtilsUnitPresenceCheckIsMeet(con, war);
+                    return WarEvents_Conditions_Utils_UnitPresence.checkIsMeet(con, war);
                 }
             }
             {
                 const con = condition.getWecExpression();
                 if (con) {
-                    return WarEventsConditionsUtilsExpressionCheckIsMeet(con, war);
+                    return WarEvents_Conditions_Utils_Expression.checkIsMeet(con, war);
                 }
             }
             {
                 const con = condition.getWecCustomCounter();
                 if (con) {
-                    return checkIsMeet(con, war);
+                    return WarEvents_Conditions_Utils_CustomCounter.checkIsMeet(con, war);
                 }
             }
             {
                 const con = condition.getWecOngoingPersistentActionPresence();
                 if (con) {
-                    return WarEventsConditionsUtilsOngoingPersistentActionPresenceCheckIsMeet(con, war);
+                    return WarEvents_Conditions_Utils_OngoingPersistentActionPresence.checkIsMeet(con, war);
                 }
             }
             {
                 const con = condition.getWecManualActionStatistics();
                 if (con) {
-                    return WarEventsConditionsUtilsManualActionStatisticsCheckIsMeet(con, war);
+                    return WarEvents_Conditions_Utils_ManualActionStatistics.checkIsMeet(con, war);
                 }
             }
 
-            throw newError(`Invalid condition!`);
+            throw Helpers_Misc.newError(`Invalid condition!`);
         })();
 
         conditionResultDict.set(conditionId, result);
@@ -1713,16 +1520,16 @@ export class BwWarEventManager implements IBwWarEventManager {
     }
 
     public getWarEvent(warEventId: number): WarEvent {                    // DONE
-        return getExisted(this.getWarEventFullData()?.getEventArray()?.find(v => v.getEventId() === warEventId));
+        return Helpers_Misc.getExisted(this.getWarEventFullData()?.getEventArray()?.find(v => v.getEventId() === warEventId));
     }
     private _getConditionNode(nodeId: number): WarEventConditionNode {    // DONE
-        return getExisted(this.getWarEventFullData()?.getConditionNodeArray()?.find(v => v.getNodeId() === nodeId));
+        return Helpers_Misc.getExisted(this.getWarEventFullData()?.getConditionNodeArray()?.find(v => v.getNodeId() === nodeId));
     }
     private _getCondition(conditionId: number): WarEventCondition {       // DONE
-        return getExisted(this.getWarEventFullData()?.getConditionArray()?.find(v => v.getWecCommonData()?.getConditionId() === conditionId));
+        return Helpers_Misc.getExisted(this.getWarEventFullData()?.getConditionArray()?.find(v => v.getWecCommonData()?.getConditionId() === conditionId));
     }
     public getWarEventAction(actionId: number): WarEventAction {          // DONE
-        return getExisted(this.getWarEventFullData()?.getActionArray()?.find(v => v.getWeaCommonData()?.getActionId() === actionId));
+        return Helpers_Misc.getExisted(this.getWarEventFullData()?.getActionArray()?.find(v => v.getWeaCommonData()?.getActionId() === actionId));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1732,11 +1539,11 @@ export class BwWarEventManager implements IBwWarEventManager {
         // TODO: 此函数返回结果包含了所有已触发过的事件里的不同条件分支的所有对话，但是一个事件被触发过不代表所有条件分支都被触发过，因此如果某个事件的不同条件分支里包含不同对话，结果会出错
         const actionIdArray: number[] = [];
         for (const calledCountInfo of this._getCalledCountList() ?? []) {
-            if ((calledCountInfo.getCalledCountTotal() ?? 0) <= 0) {
+            if ((calledCountInfo.getCalledCountTotal()) <= 0) {
                 continue;
             }
 
-            for (const rootNodeAndActions of this.getWarEvent(calledCountInfo.getEventId() ?? 0).getRootNodeAndActionsArray()) {
+            for (const rootNodeAndActions of this.getWarEvent(calledCountInfo.getEventId()).getRootNodeAndActionsArray()) {
                 for (const actionId of rootNodeAndActions.getActionIdArray()) {
                     const action = this.getWarEventAction(actionId);
                     if ((action.getWeaBigDialogueSimple()) || (action.getWeaSmallDialogueSimple())) {

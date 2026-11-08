@@ -1,7 +1,9 @@
-import { newError } from "../../../helpers/Misc.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+} from "../../../internal.ts";
 import type { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
 export function revise(): WoContainer {
-    throw newError(`Invalid action.`, ClientErrorCode.WarOperationReviser_ReviseUnknownAction_00);
+    throw Helpers_Misc.newError(`Invalid action.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnknownAction_00);
 }

@@ -1,350 +1,338 @@
 import {
-    updateOnMsgAtGetGlobalSettings,
-    updateOnMsgAtSetName,
-    updateOnMsgAtSetBootTimer,
-    updateOnMsgAtGetPhaseInfo,
-    updateOnMsgAtGetRegistrationInfo,
-    setAtTourneyInfo,
-    setAtFullMapInfo,
-    setAtFullBracketInfo,
-    setAtUserArray,
-} from "./Provider.ts";
-import { addListeners, send } from "../../networks/Manager.ts";
-import { MessageCodes } from "../../networks/MessageCodes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgAtCreateTourney/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtDeleteLastTourneyS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtDeleteLastTourney/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgAtDeleteUserS } from "../../proto/schema/CommonProto/NetMessage/MsgAtDeleteUser/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetFullBracketInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetFullBracketInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetFullMapInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetFullMapInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetGlobalSettingsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetGlobalSettings/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetPhaseInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetPhaseInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetRegistrationInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetTourneyInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetTourneyInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetUserArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetUserArray/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgAtRegisterS } from "../../proto/schema/CommonProto/NetMessage/MsgAtRegister/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetAdjustmentDurationS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetAdjustmentDuration/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetBootTimerS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetBootTimer/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetGlobalSettingsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetGlobalSettings/S.ts";
+    Helpers_Misc,
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Networks_MessageCodes,
+    AutoTourneys_Mains_Provider,
+    type Egret_Egret,
+} from "../../internal.ts";
 import type { InitialBracket } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/InitialBracket.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetInitialBracketsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgAtSetMapPoolS } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetMapPool/S.ts";
 import type { SimpleMapInfo } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetMapPool/SimpleMapInfo.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgAtSetNameS } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetName/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetRegistrationDurationS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetRegistrationDuration/S.ts";
 import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgAtGetGlobalSettings,          callback: _onMsgAtGetGlobalSettings },
-        { msgCode: MessageCodes.MsgAtSetGlobalSettings,          callback: _onMsgAtSetGlobalSettings },
-        { msgCode: MessageCodes.MsgAtCreateTourney,              callback: _onMsgAtCreateTourney },
-        { msgCode: MessageCodes.MsgAtDeleteLastTourney,          callback: _onMsgAtDeleteLastTourney },
-        { msgCode: MessageCodes.MsgAtSetRegistrationDuration,    callback: _onMsgAtSetRegistrationDuration },
-        { msgCode: MessageCodes.MsgAtSetAdjustmentDuration,      callback: _onMsgAtSetAdjustmentDuration },
-        { msgCode: MessageCodes.MsgAtSetInitialBrackets,         callback: _onMsgAtSetInitialBrackets },
-        { msgCode: MessageCodes.MsgAtDeleteUser,                 callback: _onMsgAtDeleteUser },
-        { msgCode: MessageCodes.MsgAtSetMapPool,                 callback: _onMsgAtSetMapPool },
-        { msgCode: MessageCodes.MsgAtSetName,                    callback: _onMsgAtSetName },
-        { msgCode: MessageCodes.MsgAtSetBootTimer,               callback: _onMsgAtSetBootTimer },
-        { msgCode: MessageCodes.MsgAtGetPhaseInfo,               callback: _onMsgAtGetPhaseInfo, },
-        { msgCode: MessageCodes.MsgAtGetRegistrationInfo,        callback: _onMsgAtGetRegistrationInfo, },
-        { msgCode: MessageCodes.MsgAtGetTourneyInfo,             callback: _onMsgAtGetTourneyInfo, },
-        { msgCode: MessageCodes.MsgAtGetFullMapInfo,             callback: _onMsgAtGetFullMapInfo, },
-        { msgCode: MessageCodes.MsgAtGetFullBracketInfo,         callback: _onMsgAtGetFullBracketInfo, },
-        { msgCode: MessageCodes.MsgAtGetUserArray,               callback: _onMsgAtGetUserArray },
-        { msgCode: MessageCodes.MsgAtRegister,                   callback: _onMsgAtRegister, },
+    Networks_Manager.addListeners([
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetGlobalSettings,          callback : _onMsgAtGetGlobalSettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetGlobalSettings,          callback : _onMsgAtSetGlobalSettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtCreateTourney,              callback : _onMsgAtCreateTourney },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtDeleteLastTourney,          callback : _onMsgAtDeleteLastTourney },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetRegistrationDuration,    callback : _onMsgAtSetRegistrationDuration },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetAdjustmentDuration,      callback : _onMsgAtSetAdjustmentDuration },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetInitialBrackets,         callback : _onMsgAtSetInitialBrackets },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtDeleteUser,                 callback : _onMsgAtDeleteUser },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetMapPool,                 callback : _onMsgAtSetMapPool },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetName,                    callback : _onMsgAtSetName },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetBootTimer,               callback : _onMsgAtSetBootTimer },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetPhaseInfo,               callback : _onMsgAtGetPhaseInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetRegistrationInfo,        callback : _onMsgAtGetRegistrationInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetTourneyInfo,             callback : _onMsgAtGetTourneyInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetFullMapInfo,             callback : _onMsgAtGetFullMapInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetFullBracketInfo,         callback : _onMsgAtGetFullBracketInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetUserArray,               callback : _onMsgAtGetUserArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtRegister,                   callback : _onMsgAtRegister },
     ]);
 }
 
 export function reqAtGetGlobalSettings(): void {
-    send({
-        MsgAtGetGlobalSettings: { c: {
-        } },
+    Networks_Manager.send({
+        MsgAtGetGlobalSettings : {
+            c : {
+            }, 
+        },
     });
 }
-function _onMsgAtGetGlobalSettings(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetGlobalSettingsS;
+function _onMsgAtGetGlobalSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetGlobalSettings"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        updateOnMsgAtGetGlobalSettings(data);
-        dispatch(TypeId.MsgAtGetGlobalSettings, data);
+        AutoTourneys_Mains_Provider.updateOnMsgAtGetGlobalSettings(data);
+        Notifications_Dispatcher.dispatch("MsgAtGetGlobalSettings", { msg: data });
     }
 }
 
 export function reqAtSetGlobalSettings(isEnabled: boolean, interval: number): void {
-    send({
-        MsgAtSetGlobalSettings: { c: {
-            globalSettings  : {
-                isEnabled   : isEnabled,
-                interval    : interval,
-            },
-        } },
+    Networks_Manager.send({
+        MsgAtSetGlobalSettings : {
+            c : {
+                globalSettings : {
+                    isEnabled : isEnabled,
+                    interval  : interval,
+                },
+            }, 
+        },
     });
 }
-function _onMsgAtSetGlobalSettings(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetGlobalSettingsS;
+function _onMsgAtSetGlobalSettings(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetGlobalSettings"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgAtSetGlobalSettings, data);
+        Notifications_Dispatcher.dispatch("MsgAtSetGlobalSettings", { msg: data });
     }
 }
 
 export function reqAtCreateTourney(): void {
-    send({
-        MsgAtCreateTourney: { c: {
-        } },
+    Networks_Manager.send({
+        MsgAtCreateTourney : {
+            c : {
+            }, 
+        },
     });
 }
-function _onMsgAtCreateTourney(e: Event): void {
-    const data = e.data as S;
+function _onMsgAtCreateTourney(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtCreateTourney"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgAtCreateTourney, data);
+        Notifications_Dispatcher.dispatch("MsgAtCreateTourney", { msg: data });
     }
 }
 
 export function reqAtDeleteLastTourney(): void {
-    send({
-        MsgAtDeleteLastTourney: { c: {
-        } },
+    Networks_Manager.send({
+        MsgAtDeleteLastTourney : {
+            c : {
+            }, 
+        },
     });
 }
-function _onMsgAtDeleteLastTourney(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtDeleteLastTourneyS;
+function _onMsgAtDeleteLastTourney(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtDeleteLastTourney"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgAtDeleteLastTourney, data);
+        Notifications_Dispatcher.dispatch("MsgAtDeleteLastTourney", { msg: data });
     }
 }
 
 export function reqAtSetRegistrationDuration(tourneyId: number, duration: number): void {
-    send({
-        MsgAtSetRegistrationDuration: { c: {
-            tourneyId   : tourneyId,
-            duration    : duration,
-        } },
+    Networks_Manager.send({
+        MsgAtSetRegistrationDuration : {
+            c : {
+                tourneyId : tourneyId,
+                duration  : duration,
+            }, 
+        },
     });
 }
-function _onMsgAtSetRegistrationDuration(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetRegistrationDurationS;
+function _onMsgAtSetRegistrationDuration(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetRegistrationDuration"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgAtSetRegistrationDuration, data);
+        Notifications_Dispatcher.dispatch("MsgAtSetRegistrationDuration", { msg: data });
     }
 }
 
 export function reqAtSetAdjustmentDuration(tourneyId: number, duration: number): void {
-    send({
-        MsgAtSetAdjustmentDuration: { c: {
-            tourneyId   : tourneyId,
-            duration    : duration,
-        } },
+    Networks_Manager.send({
+        MsgAtSetAdjustmentDuration : {
+            c : {
+                tourneyId : tourneyId,
+                duration  : duration,
+            }, 
+        },
     });
 }
-function _onMsgAtSetAdjustmentDuration(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetAdjustmentDurationS;
+function _onMsgAtSetAdjustmentDuration(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetAdjustmentDuration"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgAtSetAdjustmentDuration, data);
+        Notifications_Dispatcher.dispatch("MsgAtSetAdjustmentDuration", { msg: data });
     }
 }
 
 export function reqAtSetInitialBrackets(tourneyId: number, bracketArray: InitialBracket[]): void {
-    send({
-        MsgAtSetInitialBrackets: { c: {
-            tourneyId           : tourneyId,
-            initialBracketArray : bracketArray.map(v => v.toJson()),
-        } },
+    Networks_Manager.send({
+        MsgAtSetInitialBrackets : {
+            c : {
+                tourneyId           : tourneyId,
+                initialBracketArray : bracketArray.map(v => v.toJson()),
+            }, 
+        },
     });
 }
-function _onMsgAtSetInitialBrackets(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetInitialBracketsS;
+function _onMsgAtSetInitialBrackets(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetInitialBrackets"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgAtSetInitialBrackets, data);
+        Notifications_Dispatcher.dispatch("MsgAtSetInitialBrackets", { msg: data });
     }
 }
 
 export function reqAtDeleteUser(tourneyId: number, userIdArray: number[]): void {
-    send({
-        MsgAtDeleteUser: { c: {
-            tourneyId   : tourneyId,
-            userIdArray : userIdArray,
-        } },
+    Networks_Manager.send({
+        MsgAtDeleteUser : {
+            c : {
+                tourneyId   : tourneyId,
+                userIdArray : userIdArray,
+            }, 
+        },
     });
 }
-function _onMsgAtDeleteUser(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtDeleteUserS;
+function _onMsgAtDeleteUser(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtDeleteUser"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgAtDeleteUser, data);
+        Notifications_Dispatcher.dispatch("MsgAtDeleteUser", { msg: data });
     }
 }
 
 export function reqAtSetMapPool(tourneyId: number, mapInfoArray: SimpleMapInfo[]): void {
-    send({
-        MsgAtSetMapPool: { c: {
-            tourneyId           : tourneyId,
-            simpleMapInfoArray  : mapInfoArray.map(v => v.toJson()),
-        } },
+    Networks_Manager.send({
+        MsgAtSetMapPool : {
+            c : {
+                tourneyId          : tourneyId,
+                simpleMapInfoArray : mapInfoArray.map(v => v.toJson()),
+            }, 
+        },
     });
 }
-function _onMsgAtSetMapPool(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetMapPoolS;
+function _onMsgAtSetMapPool(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetMapPool"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgAtSetMapPool, data);
+        Notifications_Dispatcher.dispatch("MsgAtSetMapPool", { msg: data });
     }
 }
 
 export function reqAtSetName(tourneyId: number, nameArray: LanguageText[]): void {
-    send({ MsgAtSetName: { c: {
-        tourneyId   : tourneyId,
-        nameArray   : nameArray.map(v => v.toJson()),
-    } } });
+    Networks_Manager.send({
+        MsgAtSetName : {
+            c : {
+                tourneyId : tourneyId,
+                nameArray : nameArray.map(v => v.toJson()),
+            }, 
+        }, 
+    });
 }
-async function _onMsgAtSetName(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetNameS;
+async function _onMsgAtSetName(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetName"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        await updateOnMsgAtSetName(data);
-        dispatch(TypeId.MsgAtSetName, data);
+        await AutoTourneys_Mains_Provider.updateOnMsgAtSetName(data);
+        Notifications_Dispatcher.dispatch("MsgAtSetName", { msg: data });
     }
 }
 
 export function reqAtSetBootTimer(tourneyId: number, bootTimerParams: number[]): void {
-    send({ MsgAtSetBootTimer: { c: {
-        tourneyId       : tourneyId,
-        bootTimerParams : bootTimerParams,
-    } } });
+    Networks_Manager.send({
+        MsgAtSetBootTimer : {
+            c : {
+                tourneyId       : tourneyId,
+                bootTimerParams : bootTimerParams,
+            }, 
+        }, 
+    });
 }
-async function _onMsgAtSetBootTimer(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetBootTimerS;
+async function _onMsgAtSetBootTimer(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtSetBootTimer"]>): Promise<void> {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        await updateOnMsgAtSetBootTimer(data);
-        dispatch(TypeId.MsgAtSetBootTimer, data);
+        await AutoTourneys_Mains_Provider.updateOnMsgAtSetBootTimer(data);
+        Notifications_Dispatcher.dispatch("MsgAtSetBootTimer", { msg: data });
     }
 }
 
 export function reqAtGetPhaseInfo(): void {
-    send({
-        MsgAtGetPhaseInfo: { c: {
-        } },
+    Networks_Manager.send({
+        MsgAtGetPhaseInfo : {
+            c : {
+            }, 
+        },
     });
 }
-function _onMsgAtGetPhaseInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetPhaseInfoS;
+function _onMsgAtGetPhaseInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetPhaseInfo"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        updateOnMsgAtGetPhaseInfo(data);
-        dispatch(TypeId.MsgAtGetPhaseInfo, data);
+        AutoTourneys_Mains_Provider.updateOnMsgAtGetPhaseInfo(data);
+        Notifications_Dispatcher.dispatch("MsgAtGetPhaseInfo", { msg: data });
     }
 }
 
 export function reqAtGetRegistrationInfo(tourneyId: number): void {
-    send({
-        MsgAtGetRegistrationInfo: { c: {
-            tourneyId   : tourneyId,
-        } },
+    Networks_Manager.send({
+        MsgAtGetRegistrationInfo : {
+            c : {
+                tourneyId : tourneyId,
+            }, 
+        },
     });
 }
-function _onMsgAtGetRegistrationInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetRegistrationInfoS;
+function _onMsgAtGetRegistrationInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetRegistrationInfo"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        updateOnMsgAtGetRegistrationInfo(data);
-        dispatch(TypeId.MsgAtGetRegistrationInfo, data);
+        AutoTourneys_Mains_Provider.updateOnMsgAtGetRegistrationInfo(data);
+        Notifications_Dispatcher.dispatch("MsgAtGetRegistrationInfo", { msg: data });
     }
 }
 
 export function reqAtGetTourneyInfo(tourneyId: number): void {
-    send({
-        MsgAtGetTourneyInfo: { c: {
-            tourneyId   : tourneyId,
-        } },
+    Networks_Manager.send({
+        MsgAtGetTourneyInfo : {
+            c : {
+                tourneyId : tourneyId,
+            }, 
+        },
     });
 }
-function _onMsgAtGetTourneyInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetTourneyInfoS;
+function _onMsgAtGetTourneyInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetTourneyInfo"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        setAtTourneyInfo(data.getTourneyId() ?? 0, data.getTourneyInfo() ?? null);
-        dispatch(TypeId.MsgAtGetTourneyInfo, data);
+        AutoTourneys_Mains_Provider.setAtTourneyInfo(data.getTourneyId() ?? 0, data.getTourneyInfo() ?? null);
+        Notifications_Dispatcher.dispatch("MsgAtGetTourneyInfo", { msg: data });
     }
 }
 
 export function reqAtGetFullMapInfo(tourneyId: number): void {
-    send({
-        MsgAtGetFullMapInfo: { c: {
-            tourneyId   : tourneyId,
-        } },
+    Networks_Manager.send({
+        MsgAtGetFullMapInfo : {
+            c : {
+                tourneyId : tourneyId,
+            }, 
+        },
     });
 }
-function _onMsgAtGetFullMapInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetFullMapInfoS;
+function _onMsgAtGetFullMapInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetFullMapInfo"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        setAtFullMapInfo(data.getTourneyId() ?? 0, data.getFullMapInfo() ?? null);
-        dispatch(TypeId.MsgAtGetFullMapInfo, data);
+        AutoTourneys_Mains_Provider.setAtFullMapInfo(data.getTourneyId() ?? 0, data.getFullMapInfo() ?? null);
+        Notifications_Dispatcher.dispatch("MsgAtGetFullMapInfo", { msg: data });
     }
 }
 
 export function reqAtGetFullBracketInfo(tourneyId: number): void {
-    send({
-        MsgAtGetFullBracketInfo: { c: {
-            tourneyId   : tourneyId,
-        } },
+    Networks_Manager.send({
+        MsgAtGetFullBracketInfo : {
+            c : {
+                tourneyId : tourneyId,
+            }, 
+        },
     });
 }
-function _onMsgAtGetFullBracketInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetFullBracketInfoS;
+function _onMsgAtGetFullBracketInfo(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetFullBracketInfo"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        setAtFullBracketInfo(data.getTourneyId() ?? 0, data.getFullBracketInfo() ?? null);
-        dispatch(TypeId.MsgAtGetFullBracketInfo, data);
+        AutoTourneys_Mains_Provider.setAtFullBracketInfo(data.getTourneyId() ?? 0, data.getFullBracketInfo() ?? null);
+        Notifications_Dispatcher.dispatch("MsgAtGetFullBracketInfo", { msg: data });
     }
 }
 
 export function reqAtGetUserArray(tourneyId: number): void {
-    send({
-        MsgAtGetUserArray: { c: {
-            tourneyId   : tourneyId,
-        } },
+    Networks_Manager.send({
+        MsgAtGetUserArray : {
+            c : {
+                tourneyId : tourneyId,
+            }, 
+        },
     });
 }
-function _onMsgAtGetUserArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetUserArrayS;
+function _onMsgAtGetUserArray(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtGetUserArray"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        setAtUserArray(data.getTourneyId() ?? 0, data.getUserIdArray() ?? null);
-        dispatch(TypeId.MsgAtGetUserArray, data);
+        AutoTourneys_Mains_Provider.setAtUserArray(data.getTourneyId() ?? 0, data.getUserIdArray());
+        Notifications_Dispatcher.dispatch("MsgAtGetUserArray", { msg: data });
     }
 }
 
 export function reqAtRegister(tourneyId: number, isRegister: boolean): void {
-    send({
-        MsgAtRegister: { c: {
-            tourneyId   : tourneyId,
-            isRegister  : isRegister,
-        } },
+    Networks_Manager.send({
+        MsgAtRegister : {
+            c : {
+                tourneyId  : tourneyId,
+                isRegister : isRegister,
+            }, 
+        },
     });
 }
-function _onMsgAtRegister(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtRegisterS;
+function _onMsgAtRegister(e: Egret_Egret.Event<Networks_Manager.ResponseMapping["MsgAtRegister"]>): void {
+    const data = Helpers_Misc.getExisted(e.data);
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgAtRegister, data);
+        Notifications_Dispatcher.dispatch("MsgAtRegister", { msg: data });
     }
 }

@@ -1,39 +1,27 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { EnergyTypeId } from "../cos/Constants.ts";
-import type { SkillTypeId } from "../coSkills/Constants.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
-import type { AliveStateId } from "./Constants.ts";
+import {
+    type BaseWar_Model_War,
+    type Players_Constants,
+    type Cos_Constants,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+    type CoSkills_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
-import type {
-    GridIdAndMarkTypeId as ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId,
-} from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
-import type {
-    SerialPlayer as ProtoSchemaCommonProtoWarSerializationSerialPlayer,
-} from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
-
-type GridIndex              = AuxiliaryTypesGridIndex;
-type PlayerAliveState       = AliveStateId;
-type CoSkillType            = SkillTypeId;
-type CoEnergyType           = EnergyTypeId;
-type GameConfiguration      = GcData;
-type SerialPlayer           = ProtoSchemaCommonProtoWarSerializationSerialPlayer;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type GridIdAndMarkTypeId    = ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId;
+import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
+import type { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 
 export interface IPlayer {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    init(data: SerialPlayer, gameConfig: GameConfiguration): void;
+     
+    init(data: SerialPlayer, gameConfig: GameConfigs_GameConfig.GameConfig): void;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
 
     serialize(): SerialPlayer;
     serializeForCreateSfw(): SerialPlayer;
     serializeForCreateMfr(): SerialPlayer;
 
-    getWar(): IBwWar;
+    getWar(): BaseWar_Model_War.War;
 
     setFund(fund: number): void;
     getFund(): number;
@@ -41,8 +29,8 @@ export interface IPlayer {
     setHasVotedForDraw(voted: boolean): void;
     getHasVotedForDraw(): boolean;
 
-    setAliveState(alive: PlayerAliveState): void;
-    getAliveState(): PlayerAliveState;
+    setAliveState(alive: Players_Constants.AliveStateId): void;
+    getAliveState(): Players_Constants.AliveStateId;
 
     getPlayerIndex(): number;
     checkIsNeutral(): boolean;
@@ -67,7 +55,7 @@ export interface IPlayer {
     ////////////////////////////////////////////////////////////////////////////////
     setGridMarkList(newMarkedGridList: GridIdAndMarkTypeId[]): void;
     getGridMarkList(): GridIdAndMarkTypeId[];
-    getMarkTypeId(gridId: number): Undefinable<number>;
+    getMarkTypeId(gridId: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     addGridMark(gridId: number, markTypeId: number): boolean;
     deleteGridMark(gridId: number): boolean;
     updateGridMarkList(gridIdArrayForAddMark: number[], gridIdArrayForDeleteMark: number[], markTypeId: number): void;
@@ -82,8 +70,8 @@ export interface IPlayer {
     setIsSkipTurn(isSkipTurn: boolean): void;
     getIsSkipTurn(): boolean;
 
-    setUserId(id: Undefinable<number>): void;
-    getUserId(): Undefinable<number>;
+    setUserId(id: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void;
+    getUserId(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     getUnitAndTileSkinId(): number;
 
@@ -101,25 +89,25 @@ export interface IPlayer {
     getCoPowerEnergy(): number | null;
     getCoSuperPowerEnergy(): number | null;
 
-    getCoEnergyType(): CoEnergyType;
+    getCoEnergyType(): Cos_Constants.EnergyTypeId;
     getCoPowerActivatedCount(): number;
 
     getCoZoneRadius(): number;
-    getCoGridIndexListOnMap(): GridIndex[];
-    getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet: Set<number>): GridIndex[];
+    getCoGridIndexListOnMap(): AuxiliaryTypes_GridIndex.GridIndex[];
+    getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet: Set<number>): AuxiliaryTypes_GridIndex.GridIndex[];
 
-    checkIsInCoZone(targetGridIndex: GridIndex, coGridIndexOnMap: GridIndex[]): boolean;
+    checkIsInCoZone(targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex, coGridIndexOnMap: AuxiliaryTypes_GridIndex.GridIndex[]): boolean;
 
-    getCoUsingSkillType(): CoSkillType;
-    setCoUsingSkillType(skillType: CoSkillType): void;
+    getCoUsingSkillType(): CoSkills_Constants.SkillTypeId;
+    setCoUsingSkillType(skillType: CoSkills_Constants.SkillTypeId): void;
     getCoCurrentSkills(): number[];
-    getCoSkills(skillType: CoSkillType): number[];
+    getCoSkills(skillType: CoSkills_Constants.SkillTypeId): number[];
     checkCoIsUsingActiveSkill(): boolean;
     checkHasZoneSkillForCurrentSkills(): boolean;
-    checkCanUseCoSkill(skillType: CoSkillType): boolean;
+    checkCanUseCoSkill(skillType: CoSkills_Constants.SkillTypeId): boolean;
     checkCanGetEnergyWithBattle(): boolean;
 
-    updateOnUseCoSkill(skillType: CoSkillType): void;
+    updateOnUseCoSkill(skillType: CoSkills_Constants.SkillTypeId): void;
 
     getCoIsDestroyedInTurn(): boolean;
     setCoIsDestroyedInTurn(isDestroyed: boolean): void;

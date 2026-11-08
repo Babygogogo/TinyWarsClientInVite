@@ -1,32 +1,23 @@
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { destroyUnitOnMap } from "../../../destructions/Utils.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
-import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type {
-    WoPlayerDeleteUnit as ProtoSchemaCommonProtoWarOperationWoPlayerDeleteUnit,
-} from "../../../proto/schema/CommonProto/WarOperation/WoPlayerDeleteUnit.ts";
-import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
-import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData } from "./Common.ts";
+import {
+    Destructions_Utils,
+    AuxiliaryTypes_GridIndex,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWars_War,
+    TestWar_Model_TwWar,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Lang_Utils,
+    WarOperations_Executors_Utils_Common,
+    Lang_Constants,
+    type BaseWar_Model_War,
+} from "../../../internal.ts";
 
-type IBwWar             = BaseWarInterfaceIBwWar;
-type WoPlayerDeleteUnit = ProtoSchemaCommonProtoWarOperationWoPlayerDeleteUnit;
-
-let _meWarClass     : new () => IMeWar;
-let _mpwWarClass    : new () => IMpwWar;
-let _rwWarBaseClass : new () => IRwWarBase;
-let _spwWarClass    : new () => ISpwWar;
-let _twWarClass     : new () => ITwWar;
+import type { WoPlayerDeleteUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerDeleteUnit.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoPlayerDeleteUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExePlayerDeleteUnit(war, action);
     } else {
@@ -34,65 +25,65 @@ export async function execute(war: IBwWar, action: WoPlayerDeleteUnit, isFast: b
     }
 }
 
-function fastExePlayerDeleteUnit(war: IBwWar, action: WoPlayerDeleteUnit): void {
+function fastExePlayerDeleteUnit(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_FastExePlayerDeleteUnit_00),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerDeleteUnit_00),
             isFastExecute   : true,
         });
     } else {
-        const gridIndex = getExisted(GridIndex.convertGridIndex(action.getGridIndex()));
+        const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getGridIndex()));
         const focusUnit = war.getUnitMap().getUnitOnMap(gridIndex);
         if (focusUnit) {
             if (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
                 war.getFogMap().updateMapFromPathsByUnitAndPath({
-                    unit            : focusUnit,
-                    unitVisionInfo  : focusUnit.getVisionInfo(),
-                    path            : [gridIndex],
+                    unit           : focusUnit,
+                    unitVisionInfo : focusUnit.getVisionInfo(),
+                    path           : [gridIndex],
                 });
             }
 
-            destroyUnitOnMap(war, gridIndex, false);
+            Destructions_Utils.destroyUnitOnMap(war, gridIndex, false);
         }
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExePlayerDeleteUnit(war: IBwWar, action: WoPlayerDeleteUnit): Promise<void> {
+async function normalExePlayerDeleteUnit(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): Promise<void> {
     // const desc = await war.getDescForExePlayerDeleteUnit(action);
     // (desc) && (FloatText.show(desc));
 
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        const commonExtraData = getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_NormalExePlayerDeleteUnit_00);
-        await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerDeleteUnit_00);
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
         });
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute   : false,
+            isFastExecute : false,
         });
 
     } else {
-        const gridIndex = getExisted(GridIndex.convertGridIndex(action.getGridIndex()));
+        const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getGridIndex()));
         const focusUnit = war.getUnitMap().getUnitOnMap(gridIndex);
         if (focusUnit) {
             if (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
                 war.getFogMap().updateMapFromPathsByUnitAndPath({
-                    unit            : focusUnit,
-                    unitVisionInfo  : focusUnit.getVisionInfo(),
-                    path            : [gridIndex],
+                    unit           : focusUnit,
+                    unitVisionInfo : focusUnit.getVisionInfo(),
+                    path           : [gridIndex],
                 });
             }
 
-            destroyUnitOnMap(war, gridIndex, true);
+            Destructions_Utils.destroyUnitOnMap(war, gridIndex, true);
         }
     }
 
@@ -100,22 +91,17 @@ async function normalExePlayerDeleteUnit(war: IBwWar, action: WoPlayerDeleteUnit
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoPlayerDeleteUnit): Promise<string | null> {
-    _meWarClass     ??= getMeWarClass();
-    _mpwWarClass    ??= getMpwWarClass();
-    _rwWarBaseClass ??= getRwWarBaseClass();
-    _spwWarClass    ??= getSpwWarClass();
-    _twWarClass     ??= getTwWarClass();
+async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): Promise<string | null> {
 
-    if (war instanceof _meWarClass) {
+    if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
-    } else if (war instanceof _mpwWarClass) {
+    } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         return null;
-    } else if (war instanceof _rwWarBaseClass) {
-        return `${getText(TextType.B0081)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof _spwWarClass) {
+    } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0081)} ${war.getWarOperationDescSuffix()}`;
+    } else if (war instanceof SinglePlayerWars_War.War) {
         return null;
-    } else if (war instanceof _twWarClass) {
+    } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {
         return null;

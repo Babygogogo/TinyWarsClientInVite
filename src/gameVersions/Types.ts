@@ -1,7 +1,9 @@
-import type { TextureResolutionId } from "../graphics/Constants.ts";
+import {
+    type Graphics_Constants,
+} from "../internal.ts";
 
 export interface GameVersionConfig {
     clientUrl               : string;
     serverUrl               : string;
-    textureResolutionTypeId : TextureResolutionId;
+    textureResolutionTypeId : Graphics_Constants.TextureResolutionId;
 }

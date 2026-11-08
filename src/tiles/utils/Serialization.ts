@@ -1,15 +1,14 @@
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
-import { getExisted } from "../../helpers/Misc.ts";
+import {
+    type GameConfigs_GameConfig,
+    Helpers_Misc,
+} from "../../internal.ts";
 import type { GridIndexJson } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import {
-    type SerialTileJson as ProtoSchemaCommonProtoWarSerializationSerialTileSerialTileJson,
+    type SerialTileJson as ProtoSerialTileJson,
     SerialTile,
 } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 
-type SerialTileJson     = ProtoSchemaCommonProtoWarSerializationSerialTileSerialTileJson;
-type GcData             = GameConfigGcData;
-
-export function fillNonTrivialDefaultValues(tileData: SerialTile, gcData: GcData): void {
+export function fillNonTrivialDefaultValues(tileData: SerialTile, gcData: GameConfigs_GameConfig.GameConfig): void {
     const cfg = gcData.getTileTemplateCfgByBaseTypeAndObjectType(tileData.getBaseType(), tileData.getObjectType());
     if (!cfg) {
         return;
@@ -18,7 +17,7 @@ export function fillNonTrivialDefaultValues(tileData: SerialTile, gcData: GcData
     tileData.setCurrentHp(cfg.getMaxHp());
 }
 
-export function create(json: Required<SerialTileJson>): SerialTile {
+export function create(json: Required<ProtoSerialTileJson>): SerialTile {
     return SerialTile.fromJson(json);
 }
 
@@ -26,31 +25,31 @@ export function createDefault({ tileBaseTypeId, tileObjectTypeId, gridIndex, gcD
     tileBaseTypeId      : number;
     tileObjectTypeId    : number;
     gridIndex           : Required<GridIndexJson>;
-    gcData              : GcData;
+    gcData              : GameConfigs_GameConfig.GameConfig;
 }): SerialTile {
-    const cfg = getExisted(gcData.getTileTemplateCfgByBaseTypeAndObjectType(tileBaseTypeId, tileObjectTypeId));
+    const cfg = Helpers_Misc.getExisted(gcData.getTileTemplateCfgByBaseTypeAndObjectType(tileBaseTypeId, tileObjectTypeId));
     return create({
-        baseType                : tileBaseTypeId,
-        objectType              : tileObjectTypeId,
-        decorationType          : null,
-        baseShapeId             : null,
-        decorationShapeId       : null,
-        objectShapeId           : null,
-        gridIndex               : gridIndex,
-        playerIndex             : null,
+        baseType          : tileBaseTypeId,
+        objectType        : tileObjectTypeId,
+        decorationType    : null,
+        baseShapeId       : null,
+        decorationShapeId : null,
+        objectShapeId     : null,
+        gridIndex         : gridIndex,
+        playerIndex       : null,
 
-        isHighlighted           : null,
-        customNameId            : null,
-        unfixedBuffArray        : [],
-        groupedLocationIdArray  : [],
+        isHighlighted          : null,
+        customNameId           : null,
+        unfixedBuffArray       : [],
+        groupedLocationIdArray : [],
 
-        currentBuildPoint       : null,
-        currentCapturePoint     : null,
-        currentHp               : cfg.getMaxHp() ?? null,
+        currentBuildPoint   : null,
+        currentCapturePoint : null,
+        currentHp           : cfg.getMaxHp() ?? null,
 
-        customBuildingData      : null,
-        customCannonData        : null,
-        customCrystalData       : null,
-        customLaserTurretData   : null,
+        customBuildingData    : null,
+        customCannonData      : null,
+        customCrystalData     : null,
+        customLaserTurretData : null,
     });
 }

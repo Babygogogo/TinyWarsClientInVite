@@ -1,10 +1,12 @@
-import type { IUiComponent } from "./IUiComponent.ts";
+import {
+    type Ui_Interfaces_IUiComponent,
+} from "../../internal.ts";
 
-export interface IUiContainerBase extends IUiComponent {
+export interface IUiContainerBase extends Ui_Interfaces_IUiComponent.IUiComponent {
     getIsTouchChildrenEnabled(): boolean;
     setIsTouchChildrenEnabled(enabled: boolean): void;
 
-    checkIsSameOrAncestor(target: IUiComponent): boolean;
+    checkIsSameOrAncestor(target: Ui_Interfaces_IUiComponent.IUiComponent): boolean;
 
     /** 仅用于配合tween */
     get customX(): number;

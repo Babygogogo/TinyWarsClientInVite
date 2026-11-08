@@ -1,59 +1,53 @@
-import type { DataForTileView as BaseWarModelBwTypesDataForTileView } from "../baseWar/model/BwTypes.ts";
 import {
-    getCachedTileBuffImageSource,
-    getTileAnimationTickCount,
-    getCachedTileObjectImageSource,
-    getCachedTileBaseImageSource,
-    getCachedTileDecorationImageSource,
-    getStateIndicatorTickCount,
-} from "../common/model/CommonModel.ts";
-import { SkinId } from "../forceSkins/Constants.ts";
-import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
-import { createLazyFunc } from "../helpers/Misc.ts";
-import { PlayerIndex } from "../players/Constants.ts";
-import type { ITileView } from "./ITileView.ts";
-import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
-import { getUiImageClass } from "../ui/utils/UiFactory.ts";
-import { getSelfSettingsTextureVersion } from "../users/Model.ts";
+    BaseWar_Model_War,
+    Common_Model_CommonModel,
+    ForceSkins_Constants,
+    Graphics_Utils,
+    Helpers_Misc,
+    Tiles_Tile,
+    Tiles_TileViewData,
+    Ui_Components_UiImage,
+    Users_Model,
+    type Ui_Interfaces_IUiImage,
+} from "../internal.ts";
 
-type DataForTileView = BaseWarModelBwTypesDataForTileView;
+const getGridWidth  = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
-const getGridWidth  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
+export class TileView {
+    private readonly _imgBase       = new Ui_Components_UiImage.UiImage();
+    private readonly _imgDecoration = new Ui_Components_UiImage.UiImage();
+    private readonly _imgObject     = new Ui_Components_UiImage.UiImage();
+    private readonly _imgBuff       = new Ui_Components_UiImage.UiImage();
+    private readonly _imgHighlight  = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorWhite0000` });
 
-export class TileView implements ITileView {
-    private readonly _imgBase       = new (getUiImageClass())();
-    private readonly _imgDecoration = new (getUiImageClass())();
-    private readonly _imgObject     = new (getUiImageClass())();
-    private readonly _imgBuff       = new (getUiImageClass())();
-    private readonly _imgHighlight  = new (getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000` });
-
-    private _data           : DataForTileView | null = null;
-    private _framesForBuff  : string[] | null = null;
+    private readonly _viewData          = new Tiles_TileViewData.TileViewData();
+    private readonly _buffIconSources   = new Array<string>();
 
     public constructor() {
         {
             const imgBase = this.getImgBase();
             imgBase.setIsSmoothing(false);
-            imgBase.setAnchorOffsetY(getGridHeight());
+            // imgBase.setAnchorOffsetY(getGridHeight());
         }
 
         {
             const imgDecoration = this.getImgDecoration();
             imgDecoration.setIsSmoothing(false);
-            imgDecoration.setAnchorOffsetY(getGridHeight());
+            // imgDecoration.setAnchorOffsetY(getGridHeight());
         }
 
         {
             const imgObject = this.getImgObject();
             imgObject.setIsSmoothing(false);
-            imgObject.setAnchorOffsetY(getGridHeight() * 2);
+            // imgObject.setAnchorOffsetY(getGridHeight() * 2);
+            imgObject.setAnchorOffsetY(getGridHeight());
         }
 
         {
             const imgBuff = this.getImgBuff();
             imgBuff.setIsSmoothing(false);
-            imgBuff.setAnchorOffsetY(getGridHeight());
+            // imgBuff.setAnchorOffsetY(getGridHeight());
         }
 
         {
@@ -62,151 +56,202 @@ export class TileView implements ITileView {
             imgHighlight.setUnscaledManualWidth(getGridWidth());
             imgHighlight.setUnscaledManualHeight(getGridHeight());
             imgHighlight.setAlpha(0.6);
-            imgHighlight.setAnchorOffsetY(getGridHeight());
+            // imgHighlight.setAnchorOffsetY(getGridHeight());
         }
     }
 
-    public setData(data: DataForTileView): void {
-        this._data = data;
+    public dispose(): void {
+        // nothing to do
+    }
 
-        this._resetFramesForBuff();
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public updateOnNotifyTileAnimationTick(): void {
+        this._refreshAnimation();
     }
-    public getData(): DataForTileView | null {
-        return this._data;
+    public updateOnNotifyStateIndicatorTick(): void {
+        this._refreshImgBuff();
     }
-    private _resetFramesForBuff(): void {
-        const data = this.getData();
-        if (data == null) {
-            this._framesForBuff = null;
-            return;
+    public updateOnNotifyBwOverridingSkinIdChanged(war: BaseWar_Model_War.War): void {
+        const viewData = this.getViewData();
+        if (this.loadViewData({
+            skinId : Tiles_TileViewData.TileViewData.getNewSkinId({
+                war          : war,
+                playerIndex  : viewData.playerIndex,
+                baseTypeId   : viewData.baseTypeId,
+                objectTypeId : viewData.objectTypeId,
+                hasFog       : viewData.hasFog,
+                skinId       : viewData.skinId,
+            }),
+        })) {
+            this._refreshAnimation();
         }
+    }
 
-        const buffTypeArray = [...new Set(data.tileData.getUnfixedBuffArray().map(v => v.getBuffTypeId()))];
-        if (!buffTypeArray.length) {
-            this._framesForBuff = null;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public getViewData(): Tiles_TileViewData.TileViewData {
+        return this._viewData;
+    }
+    public loadViewData(viewData: Partial<Tiles_TileViewData.ITileViewData>, useDefaultValues = false): boolean {
+        if (useDefaultValues) {
+            const defaultData = new Tiles_TileViewData.TileViewData();
+            defaultData.mergeFrom(viewData);
+            return this.getViewData().mergeFrom(defaultData);
         } else {
-            const version       = getSelfSettingsTextureVersion();
-            const hasFog        = data.hasFog;
-            this._framesForBuff = buffTypeArray.map(v => getCachedTileBuffImageSource({
-                version     : version,
-                buffType    : v,
-                isDark      : hasFog,
-            }));
+            return this.getViewData().mergeFrom(viewData);
         }
     }
-
-    public updateView(): void {
-        this.updateTileAnimation();
-        this.updateImgBuff();
+    public loadViewDataFromTile(tile: Tiles_Tile.Tile, war: BaseWar_Model_War.War, ignorePosition = false): boolean {
+        return this.loadViewData(Tiles_TileViewData.TileViewData.generateFromTile(tile, war, ignorePosition));
     }
-    public updateTileAnimation(): void {
-        const data = this.getData();
-        if (data == null) {
-            return;
-        }
 
-        const skinId        = data.skinId;
-        const hasFog        = data.hasFog;
-        const tileData      = data.tileData;
-        const themeType     = data.themeType;
-        const gameConfig    = data.gameConfig;
-        const version       = getSelfSettingsTextureVersion();
-        const tickCount     = getTileAnimationTickCount();
-        const tileBaseType  = tileData.getBaseType();
+    private _getBuffIconSources(): string[] {
+        return this._buffIconSources;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public refreshAllViews(): void {
+        this._refreshBuffIconSources();
+        this._refreshPosition();
+        this._refreshAnimation();
+        this._refreshImgBuff();
+        this._refreshImgHighlight();
+    }
+
+    private _refreshAnimation(): void {
+        const viewData      = this.getViewData();
+        const hasFog        = viewData.hasFog;
+        const themeTypeId   = viewData.themeTypeId;
+        const version       = Users_Model.getSelfSettingsTextureVersion();
+        const tickCount     = Common_Model_CommonModel.getTileAnimationTickCount();
 
         {
-            const objectType    = tileData.getObjectType();
+            const objectTypeId  = viewData.objectTypeId;
+            const objectShapeId = viewData.objectShapeId;
             const imgObject     = this.getImgObject();
-            const shapeId       = tileData.getObjectShapeId();
-            if ((objectType == 0) && (shapeId == 0)) {
+            if ((objectTypeId < 0)                          ||
+                (objectShapeId < 0)                         ||
+                ((objectTypeId == 0) && (objectShapeId == 0))
+            ) {
                 imgObject.setIsVisible(false);
             } else {
                 imgObject.setIsVisible(true);
-
-                const overridingSkinId = data.overridingSkinId ?? -1;
-                imgObject.loadSource(getCachedTileObjectImageSource({
-                    version     : version,
-                    themeType   : themeType,
-                    skinId      : ((hasFog) && (!data.isFullReplay) && (!gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(tileBaseType, objectType)?.getIsAlwaysShowOwner()))
-                        ? SkinId.Neutral
-                        : (overridingSkinId >= PlayerIndex.First ? overridingSkinId : skinId),
-                    shapeId     : shapeId,
-                    objectType  : objectType,
-                    isDark      : hasFog,
-                    tickCount   : tickCount,
+                imgObject.loadSource(Common_Model_CommonModel.getCachedTileObjectImageSource({
+                    version    : version,
+                    themeType  : themeTypeId,
+                    skinId     : viewData.skinId,
+                    shapeId    : objectShapeId,
+                    objectType : objectTypeId,
+                    isDark     : hasFog,
+                    tickCount  : tickCount,
                 }));
             }
         }
 
         {
-            const imgBase   = this.getImgBase();
-            if (tileBaseType == 0) {
+            const baseTypeId    = viewData.baseTypeId;
+            const baseShapeId   = viewData.baseShapeId;
+            const imgBase       = this.getImgBase();
+            if ((baseTypeId <= 0) || (baseShapeId < 0)) {
                 imgBase.setIsVisible(false);
             } else {
                 imgBase.setIsVisible(true);
-                imgBase.loadSource(getCachedTileBaseImageSource({
-                    version,
-                    themeType,
-                    skinId      : SkinId.Neutral,
-                    shapeId     : tileData.getBaseShapeId(),
-                    baseType    : tileBaseType,
-                    isDark      : hasFog,
-                    tickCount,
+                imgBase.loadSource(Common_Model_CommonModel.getCachedTileBaseImageSource({
+                    version   : version,
+                    themeType : themeTypeId,
+                    skinId    : ForceSkins_Constants.SkinId.Neutral,
+                    shapeId   : baseShapeId,
+                    baseType  : baseTypeId,
+                    isDark    : hasFog,
+                    tickCount : tickCount,
                 }));
             }
         }
 
         {
-            const decorationType    = tileData.getDecorationType();
+            const decorationTypeId  = viewData.decorationTypeId;
+            const decorationShapeId = viewData.decorationShapeId;
             const imgDecoration     = this.getImgDecoration();
-            if (decorationType == 0) {
+            if ((decorationTypeId <= 0) || (decorationShapeId < 0)) {
                 imgDecoration.setIsVisible(false);
             } else {
                 imgDecoration.setIsVisible(true);
-                imgDecoration.loadSource(getCachedTileDecorationImageSource({
-                    version,
-                    themeType,
-                    skinId              : SkinId.Neutral,
-                    tileDecorationType  : decorationType,
-                    shapeId             : tileData.getDecorationShapeId(),
-                    isDark              : hasFog,
-                    tickCount,
+                imgDecoration.loadSource(Common_Model_CommonModel.getCachedTileDecorationImageSource({
+                    version            : version,
+                    themeType          : themeTypeId,
+                    skinId             : ForceSkins_Constants.SkinId.Neutral,
+                    tileDecorationType : decorationTypeId,
+                    shapeId            : decorationShapeId,
+                    isDark             : hasFog,
+                    tickCount          : tickCount,
                 }));
             }
         }
 
-        this.getImgHighlight().setIsVisible(tileData.getIsHighlighted());
     }
-    public updateImgBuff(): void {
-        const img           = this.getImgBuff();
-        const framesForBuff = this._framesForBuff;
-        if (framesForBuff == null) {
-            img.setIsVisible(false);
-            return;
-        }
 
-        const length = framesForBuff.length;
+    private _refreshImgBuff(): void {
+        const img               = this.getImgBuff();
+        const buffIconSources   = this._getBuffIconSources();
+        const length            = buffIconSources.length;
         if (!length) {
             img.setIsVisible(false);
         } else {
             img.setIsVisible(true);
-            img.loadSource(framesForBuff[getStateIndicatorTickCount() % length]);
+            img.loadSource(buffIconSources[Common_Model_CommonModel.getStateIndicatorTickCount() % length]);
         }
     }
 
-    public getImgHighlight(): IUiImage {
+    private _refreshImgHighlight(): void {
+        this.getImgHighlight().setIsVisible(this.getViewData().isHighlighted);
+    }
+
+    private _refreshBuffIconSources(): void {
+        const buffIconSources   = this._getBuffIconSources();
+        buffIconSources.length  = 0;
+
+        const viewData          = this.getViewData();
+        const buffTypeIdList    = viewData.buffTypeIdList;
+        if (buffTypeIdList.length) {
+            const version   = Users_Model.getSelfSettingsTextureVersion();
+            const hasFog    = viewData.hasFog;
+            buffIconSources.push(...buffTypeIdList.map(v => Common_Model_CommonModel.getCachedTileBuffImageSource({
+                version  : version,
+                buffType : v,
+                isDark   : hasFog,
+            })));
+        }
+    }
+
+    private _refreshPosition(): void {
+        const viewData  = this.getViewData();
+        const x         = getGridWidth() * viewData.gridX;
+        const y         = getGridHeight() * viewData.gridY;
+        setXy(this.getImgBase(), x, y);
+        setXy(this.getImgObject(), x, y);
+        setXy(this.getImgDecoration(), x, y);
+        setXy(this.getImgBuff(), x, y);
+        setXy(this.getImgHighlight(), x, y);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public getImgHighlight(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgHighlight;
     }
-    public getImgObject(): IUiImage {
+    public getImgObject(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgObject;
     }
-    public getImgBuff(): IUiImage {
+    public getImgBuff(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgBuff;
     }
-    public getImgDecoration(): IUiImage {
+    public getImgDecoration(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgDecoration;
     }
-    public getImgBase(): IUiImage {
+    public getImgBase(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgBase;
     }
+}
+
+function setXy(img: Ui_Interfaces_IUiImage.IUiImage, x: number, y: number): void {
+    img.setX(x);
+    img.setY(y);
 }

@@ -1,19 +1,23 @@
-import type { ReplayCheckpointData } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
-import { deleteElementFromList } from "../../helpers/Collection.ts";
-import { getExisted } from "../../helpers/Misc.ts";
+import {
+    Helpers_Collection,
+    Visibilities_Utils,
+    Helpers_Misc,
+    ReplayWar_Model_RwWarBase,
+    Teams_Constants,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import { RwWarBase } from "./RwWarBase.ts";
-import { TeamIndex } from "../../teams/Constants.ts";
-import { getAllUnitsOnMapVisibleToTeams, getAllTilesVisibleToTeam } from "../../visibilities/Utils.ts";
 
-type GcData             = GameConfigGcData;
-
-export class RwWar extends RwWarBase {
+export class RwWar extends ReplayWar_Model_RwWarBase.RwWarBase {
     private _replayId?              : number;
     private _isShowAllUnits         = true;
 
-    public init(warData: SerialWar, gameConfig: GcData): void {
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
+    public init(warData: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         super.init(warData, gameConfig);
 
         this._initView();
@@ -35,7 +39,7 @@ export class RwWar extends RwWarBase {
             // 处理发动技能的co挂掉后，剩余部队的技能角标不消失的问题
             const allUnitsOnMap = this.getUnitMap().getAllUnitsOnMap();
             for (const unit of allUnitsOnMap) {
-                unit.updateView();
+                unit.flushDataToView();
             }
 
             if (this.getIsShowAllUnits()) {
@@ -43,7 +47,7 @@ export class RwWar extends RwWarBase {
                     unit.setViewVisible(true);
                 }
             } else {
-                const visibleUnitsOnMap = getAllUnitsOnMapVisibleToTeams(this, new Set([visionTeamIndex]));
+                const visibleUnitsOnMap = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(this, new Set([visionTeamIndex]));
                 for (const unit of allUnitsOnMap) {
                     unit.setViewVisible(visibleUnitsOnMap.has(unit));
                 }
@@ -52,7 +56,7 @@ export class RwWar extends RwWarBase {
 
         const tileMap = this.getTileMap();
         if (!this.getIsBatchExecuteAction()) {
-            const visibleTiles = getAllTilesVisibleToTeam(this, visionTeamIndex);
+            const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeam(this, visionTeamIndex);
             for (const tile of tileMap.getAllTiles()) {
                 tile.setHasFog(!visibleTiles.has(tile));
 
@@ -63,43 +67,42 @@ export class RwWar extends RwWarBase {
         }
 
         if (!isFastExecute) {
-            tileMap.getView().updateCoZone();
+            tileMap.getView()?.updateCoZone();
         }
     }
 
-    public serializeForCheckpoint(): ReplayCheckpointData {
+    public serializeForCheckpoint(): AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData {
         const randomNumberManager = this.getRandomNumberManager();
         return {
-            nextOperationId    : this.getNextOperationId(),
+            nextOperationId : this.getNextOperationId(),
             warData         : SerialWar.fromJson({
-                settingsForCommon           : null,
-                settingsForMcw              : null,
-                settingsForScw              : null,
+                settingsForCommon : null,
+                settingsForMcw    : null,
+                settingsForScw    : null,
 
-                warId                       : null,
-                isEnded                     : this.getIsEnded(),
-                seedRandomInitialState      : getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
-                seedRandomCurrentState      : randomNumberManager.getSeedRandomCurrentStateJson(),
-                remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
-                drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
-                weatherManager              : this.getWeatherManager().serialize().toJson(),
-                warEventManager             : this.getWarEventManager().serialize().toJson(),
-                playerManager               : this.getPlayerManager().serialize().toJson(),
-                turnManager                 : this.getTurnManager().serialize().toJson(),
-                field                       : this.getField().serialize().toJson(),
-                executedOperationManager    : this.getExecutedOperationManager().serializeForReplayCheckpoint().toJson(),
-                warStatisticsManager        : this.getWarStatisticsManager().serialize().toJson(),
-                taskObjectiveManager        : this.getTaskObjectiveManager().serialize().toJson(),
+                warId                    : null,
+                isEnded                  : this.getIsEnded(),
+                seedRandomInitialState   : Helpers_Misc.getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
+                seedRandomCurrentState   : randomNumberManager.getSeedRandomCurrentStateJson(),
+                remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
+                drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
+                weatherManager           : this.getWeatherManager().serialize().toJson(),
+                warEventManager          : this.getWarEventManager().serialize().toJson(),
+                playerManager            : this.getPlayerManager().serialize().toJson(),
+                turnManager              : this.getTurnManager().serialize().toJson(),
+                field                    : this.getField().serialize().toJson(),
+                executedOperationManager : this.getExecutedOperationManager().serializeForReplayCheckpoint().toJson(),
+                warStatisticsManager     : this.getWarStatisticsManager().serialize().toJson(),
+                taskObjectiveManager     : this.getTaskObjectiveManager().serialize().toJson(),
             }).encode(),
         };
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getReplayId(): number {
-        return getExisted(this._replayId);
+        return Helpers_Misc.getExisted(this._replayId);
     }
     public setReplayId(replayId: number): void {
         this._replayId = replayId;
@@ -107,7 +110,7 @@ export class RwWar extends RwWarBase {
 
     public tickVisionTeamIndex(): number | null {
         const teamIndexArray = [...new Set(this.getPlayerManager().getAllPlayers().map(v => v.getTeamIndex()))].sort((v1, v2) => v1 - v2);
-        deleteElementFromList(teamIndexArray, TeamIndex.Neutral);
+        Helpers_Collection.deleteElementFromList(teamIndexArray, Teams_Constants.TeamIndex.Neutral);
 
         const currentVisionTeamIndex    = this.getVisionTeamIndex();
         const newVisionTeamIndex        = currentVisionTeamIndex == null

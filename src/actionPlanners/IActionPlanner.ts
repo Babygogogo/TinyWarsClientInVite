@@ -1,38 +1,30 @@
-import type { StateId } from "./Constants.ts";
-import type { IActionPlannerView } from "./IActionPlannerView.ts";
-import type { ChosenUnitForDrop } from "./Types.ts";
-import type { AttackableArea as AuxiliaryTypesAttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { MovableArea as AuxiliaryTypesMovableArea } from "../auxiliaryTypes/MovableArea.ts";
-import type { MovePathNode as AuxiliaryTypesMovePathNode } from "../auxiliaryTypes/MovePathNode.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import {
+    type AuxiliaryTypes_AttackableArea,
+    type ActionPlanners_Types,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlannerView,
+    type BaseWar_Model_War,
+    type Tiles_Tile,
+    type Units_Unit,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_MovableArea,
+    type AuxiliaryTypes_MovePathNode,
+    type ActionPlanners_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { MovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
-import type { ITile } from "../tiles/ITile.ts";
-import type { IUnit } from "../units/IUnit.ts";
-import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
-
-type GridIndex          = AuxiliaryTypesGridIndex;
-type MovableArea        = AuxiliaryTypesMovableArea;
-type MovePathNode       = AuxiliaryTypesMovePathNode;
-type AttackableArea     = AuxiliaryTypesAttackableArea;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IBwTile            = ITile;
-type IBwUnit            = IUnit;
-type IBwWar             = BaseWarInterfaceIBwWar;
-type ApStateId          = StateId;
 
 export interface IActionPlanner {
-    init(mapSize: MapSize): void;
+    init(mapSize: AuxiliaryTypes_MapSize.MapSize): void;
     fastInit(): void;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Model_War.War): void;
     startRunningView(): void;
     stopRunning(): void;
 
-    getWar(): IBwWar;
+    getWar(): BaseWar_Model_War.War;
 
-    getPlayerIndexLoggedIn(): Undefinable<number>;
+    getPlayerIndexLoggedIn(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     getSelfPlayerIndexSet(): Set<number>;
 
     clearAllDataForStates(): void;
@@ -40,58 +32,58 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for setting common state.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getStateId(): ApStateId;
-    getPreviousStateId(): ApStateId;
-    setStateId(state: ApStateId): void;
+    getStateId(): ActionPlanners_Constants.StateId;
+    getPreviousStateId(): ActionPlanners_Constants.StateId;
+    setStateId(state: ActionPlanners_Constants.StateId): void;
 
     cancelCurrentState(): void;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getView(): IActionPlannerView;
+    getView(): ActionPlanners_IActionPlannerView.IActionPlannerView;
     updateView(): void;
 
-    checkCanControlUnit(unit: IBwUnit): boolean;
+    checkCanControlUnit(unit: Units_Unit.Unit): boolean;
 
-    getMapSize(): MapSize;
+    getMapSize(): AuxiliaryTypes_MapSize.MapSize;
 
     checkIsStateRequesting(): boolean;
 
-    getFocusUnit(): IBwUnit | null;
-    getFocusUnitOnMap(): IBwUnit | null;
-    setFocusUnitOnMap(unit: IBwUnit): void;
+    getFocusUnit(): Units_Unit.Unit | null;
+    getFocusUnitOnMap(): Units_Unit.Unit | null;
+    setFocusUnitOnMap(unit: Units_Unit.Unit): void;
     clearFocusUnitOnMap(): void;
 
-    getFocusUnitLoaded(): IBwUnit | null;
-    setFocusUnitLoaded(unit: IBwUnit): void;
+    getFocusUnitLoaded(): Units_Unit.Unit | null;
+    setFocusUnitLoaded(unit: Units_Unit.Unit): void;
     clearFocusUnitLoaded(): void;
     getUnitIdForFocusUnitLoaded(): number | null;
 
-    getAvailableDropDestinations(): GridIndex[] | null;
-    setAvailableDropDestinations(destinations: GridIndex[]): void;
+    getAvailableDropDestinations(): AuxiliaryTypes_GridIndex.GridIndex[] | null;
+    setAvailableDropDestinations(destinations: AuxiliaryTypes_GridIndex.GridIndex[]): void;
     clearAvailableDropDestinations(): void;
 
-    getChoosingUnitForDrop(): IBwUnit | null;
-    setChoosingUnitForDrop(unit: IBwUnit): void;
+    getChoosingUnitForDrop(): Units_Unit.Unit | null;
+    setChoosingUnitForDrop(unit: Units_Unit.Unit): void;
     clearChoosingUnitForDrop(): void;
 
-    getChosenUnitsForDrop(): ChosenUnitForDrop[];
-    pushBackChosenUnitForDrop(data: ChosenUnitForDrop): void;
-    popBackChosenUnitForDrop(): ChosenUnitForDrop;
+    getChosenUnitsForDrop(): ActionPlanners_Types.ChosenUnitForDrop[];
+    pushBackChosenUnitForDrop(data: ActionPlanners_Types.ChosenUnitForDrop): void;
+    popBackChosenUnitForDrop(): ActionPlanners_Types.ChosenUnitForDrop;
     clearChosenUnitsForDrop(): void;
-    getChosenDropDestinations(): GridIndex[];
+    getChosenDropDestinations(): AuxiliaryTypes_GridIndex.GridIndex[];
 
-    getMovableArea(): MovableArea | null;
+    getMovableArea(): AuxiliaryTypes_MovableArea.MovableArea | null;
     resetMovableArea(): void;
 
-    getAttackableArea(): AttackableArea | null;
+    getAttackableArea(): AuxiliaryTypes_AttackableArea.AttackableArea | null;
     resetAttackableArea(): void;
 
-    getAttackableGridsForUnitWeapon(): GridIndex[] | null;
-    setAttackableGridsForUnitWeapon(grids: GridIndex[]): void;
-    checkHasAttackableGridForUnitWeapon(gridIndex: GridIndex): boolean;
-    createAttackableGridsForUnitWeapon(): GridIndex[];
+    getAttackableGridsForUnitWeapon(): AuxiliaryTypes_GridIndex.GridIndex[] | null;
+    setAttackableGridsForUnitWeapon(grids: AuxiliaryTypes_GridIndex.GridIndex[]): void;
+    checkHasAttackableGridForUnitWeapon(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean;
+    createAttackableGridsForUnitWeapon(): AuxiliaryTypes_GridIndex.GridIndex[];
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for co power targets.
@@ -102,53 +94,53 @@ export interface IActionPlanner {
 
     getMaxCoActiveSkillTargetsCount(): number | null;
 
-    getCoActiveSkillTargetGridIndexArray(): GridIndex[] | null;
-    checkHasCoActiveSkillTargetGridIndex(gridIndex: GridIndex): boolean;
-    addCoActiveSkillTargetGridIndex(gridIndex: GridIndex): void;
-    deleteCoActiveSkillTargetGridIndex(gridIndex: GridIndex): void;
+    getCoActiveSkillTargetGridIndexArray(): AuxiliaryTypes_GridIndex.GridIndex[] | null;
+    checkHasCoActiveSkillTargetGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean;
+    addCoActiveSkillTargetGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
+    deleteCoActiveSkillTargetGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
     clearCoActiveSkillTargetGridIndexArray(): void;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for crush.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitCrushTargetGridIndex(): GridIndex | null;
-    setUnitCrushTargetGridIndex(gridIndex: GridIndex): void;
+    getUnitCrushTargetGridIndex(): AuxiliaryTypes_GridIndex.GridIndex | null;
+    setUnitCrushTargetGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
     clearUnitCrushTargetGridIndex(): void;
-    getUnitCrushCandidateGridIndexArray(): GridIndex[];
+    getUnitCrushCandidateGridIndexArray(): AuxiliaryTypes_GridIndex.GridIndex[];
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for repair.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitRepairTargetGridIndex(): GridIndex | null;
-    setUnitRepairTargetGridIndex(gridIndex: GridIndex): void;
+    getUnitRepairTargetGridIndex(): AuxiliaryTypes_GridIndex.GridIndex | null;
+    setUnitRepairTargetGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
     clearUnitRepairTargetGridIndex(): void;
-    getUnitRepairCandidateGridIndexArray(): GridIndex[];
+    getUnitRepairCandidateGridIndexArray(): AuxiliaryTypes_GridIndex.GridIndex[];
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for move path.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getMovePath(): MovePathNode[];
-    resetMovePathAsShortest(destination: GridIndex): void;
-    setMovePath(movePath: MovePathNode[]): void;
+    getMovePath(): AuxiliaryTypes_MovePathNode.MovePathNode[];
+    resetMovePathAsShortest(destination: AuxiliaryTypes_GridIndex.GridIndex): void;
+    setMovePath(movePath: AuxiliaryTypes_MovePathNode.MovePathNode[]): void;
 
-    getMovePathDestination(): MovePathNode;
-    getFocusUnitDestination(): GridIndex;
-    updateMovePathByDestination(destination: GridIndex): void;
+    getMovePathDestination(): AuxiliaryTypes_MovePathNode.MovePathNode;
+    getFocusUnitDestination(): AuxiliaryTypes_GridIndex.GridIndex;
+    updateMovePathByDestination(destination: AuxiliaryTypes_GridIndex.GridIndex): void;
 
     generateProtoMovePath(): MovePath;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing attackable area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitsForPreviewingAttackableArea(): Map<number, IBwUnit>;
-    getTilesForPreviewingAttackableArea(): Set<IBwTile>;
+    getUnitsForPreviewingAttackableArea(): Map<number, Units_Unit.Unit>;
+    getTilesForPreviewingAttackableArea(): Set<Tiles_Tile.Tile>;
 
-    getAreaForPreviewingAttackableArea(): AttackableArea;
+    getAreaForPreviewingAttackableArea(): AuxiliaryTypes_AttackableArea.AttackableArea;
     clearDataForPreviewingAttackableArea(): void;
-    addUnitForPreviewAttackableArea(unit: IBwUnit): void;
-    addTileForPreviewAttackableArea(tile: IBwTile): void;
+    addUnitForPreviewAttackableArea(unit: Units_Unit.Unit): void;
+    addTileForPreviewAttackableArea(tile: Tiles_Tile.Tile): void;
 
-    updateAreaForPreviewingAttackableArea(unit: IBwUnit): void;
+    updateAreaForPreviewingAttackableArea(unit: Units_Unit.Unit): void;
 
     getIsIgnoreAllyForPreviewingAttackableArea(): boolean;
     setIsIgnoreAllyForPreviewingAttackableArea(isIgnore: boolean): void;
@@ -159,9 +151,9 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing movable area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitForPreviewingMovableArea(): IBwUnit | null;
-    getAreaForPreviewingMovableArea(): MovableArea | null;
-    setUnitForPreviewingMovableArea(unit: IBwUnit): void;
+    getUnitForPreviewingMovableArea(): Units_Unit.Unit | null;
+    getAreaForPreviewingMovableArea(): AuxiliaryTypes_MovableArea.MovableArea | null;
+    setUnitForPreviewingMovableArea(unit: Units_Unit.Unit): void;
     clearDataForPreviewingMovableArea(): void;
     resetAreaForPreviewingMovableArea(): void;
 
@@ -171,15 +163,15 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing visible area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitForPreviewingVisibleArea(): IBwUnit | null;
-    getAreaForPreviewingVisible(): GridIndex[] | null;
+    getUnitForPreviewingVisibleArea(): Units_Unit.Unit | null;
+    getAreaForPreviewingVisible(): AuxiliaryTypes_GridIndex.GridIndex[] | null;
     clearDataForPreviewingVisibleArea(): void;
-    setUnitForPreviewingVisibleArea(unit: IBwUnit): void;
+    setUnitForPreviewingVisibleArea(unit: Units_Unit.Unit): void;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    checkCanFocusUnitOnMapAttackTarget(gridIndex: GridIndex): boolean;
+    checkCanFocusUnitOnMapAttackTarget(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean;
 
-    calculateAvailableDropDestination(unitForDrop: IBwUnit, chosenDropDestinations: GridIndex[]): GridIndex[];
+    calculateAvailableDropDestination(unitForDrop: Units_Unit.Unit, chosenDropDestinations: AuxiliaryTypes_GridIndex.GridIndex[]): AuxiliaryTypes_GridIndex.GridIndex[];
 }

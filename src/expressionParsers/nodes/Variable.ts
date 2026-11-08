@@ -1,16 +1,18 @@
-import type { Base } from "../contexts/Base.ts";
-import { ContextType, ResultType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
-import { Num } from "../results/Num.ts";
-import { getVariableInfoDict } from "../Utils.ts";
-import { newError } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getFormattedText } from "../../lang/Utils.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import {
+    ExpressionParsers_Nodes_Base,
+    Utils_ClientErrorCode,
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    ExpressionParsers_Utils,
+    Helpers_Misc,
+    ExpressionParsers_Results_Num,
+    Lang_Constants,
+    type ExpressionParsers_Contexts_Base,
+    type ExpressionParsers_Results_Base,
+} from "../../internal.ts";
 
-export class Variable extends ExpressionParsersNodesBase {
-    private _identifierName: string;
+export class Variable extends ExpressionParsers_Nodes_Base.Base {
+    private readonly _identifierName: string;
 
     public constructor(identifierName: string) {
         super();
@@ -18,7 +20,7 @@ export class Variable extends ExpressionParsersNodesBase {
         this._identifierName = identifierName;
     }
 
-    public override eval(ctx: Base, rootCtx: Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override eval(ctx: ExpressionParsers_Contexts_Base.Base, rootCtx: ExpressionParsers_Contexts_Base.Base, lambdaArgumentDict: Map<string, ExpressionParsers_Results_Base.Base> | null, localVariableDict: Map<string, ExpressionParsers_Results_Base.Base> | null, isRestricted: boolean): ExpressionParsers_Results_Base.Base {
         const name              = this._identifierName;
         const lambdaArgument    = lambdaArgumentDict?.get(name);
         if (lambdaArgument != null) {
@@ -34,17 +36,17 @@ export class Variable extends ExpressionParsersNodesBase {
             const war               = ctx.getWar();
             const customCounterName = name.substring(3);
             const customCounterId   = war.getCommonSettingManager().getInstanceWarRule().getWarEventFullData()?.getCustomCounterNameArray()?.find(v => (v.getName() ?? ``) === customCounterName)?.getId() ?? 0;
-            return new Num(war, war.getWarEventManager().getCustomCounter(customCounterId));
+            return new ExpressionParsers_Results_Num.Num(war, war.getWarEventManager().getCustomCounter(customCounterId));
         }
 
         return ctx.resolveVariable(name, isRestricted);
     }
     public override getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet }: {
-        contextType             : ContextType;
-        lambdaArgumentInfoDict  : Map<string, ResultType> | null;
-        localVariableDict       : Map<string, ResultType> | null;
+        contextType             : ExpressionParsers_Enums.ContextType;
+        lambdaArgumentInfoDict  : Map<string, ExpressionParsers_Enums.ResultType> | null;
+        localVariableDict       : Map<string, ExpressionParsers_Enums.ResultType> | null;
         customCounterNameSet    : Set<string>;
-    }): ResultType {
+    }): ExpressionParsers_Enums.ResultType {
         const name              = this._identifierName;
         const lambdaArgument    = lambdaArgumentInfoDict?.get(name);
         if (lambdaArgument != null) {
@@ -57,15 +59,15 @@ export class Variable extends ExpressionParsersNodesBase {
         }
 
         if (name.startsWith("cc_")) {
-            return customCounterNameSet.has(name.substring(3)) ? ResultType.Number : ResultType.Unknown;
+            return customCounterNameSet.has(name.substring(3)) ? ExpressionParsers_Enums.ResultType.Number : ExpressionParsers_Enums.ResultType.Unknown;
         }
 
-        const contextVariable = getVariableInfoDict(contextType).get(name)?.resultType;
+        const contextVariable = ExpressionParsers_Utils.getVariableInfoDict(contextType).get(name)?.resultType;
         if (contextVariable != null) {
             return contextVariable;
         }
 
-        throw newError(getFormattedText(TextType.F0021, name), ClientErrorCode.EpNodeVariable_GetResultType_00);
+        throw Helpers_Misc.newError(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0021, name), Utils_ClientErrorCode.ClientErrorCode.EpNodeVariable_GetResultType_00);
     }
 
     public override getTokensCount(): number {

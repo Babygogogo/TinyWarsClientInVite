@@ -1,17 +1,19 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
-import type { SelfUnitOffense } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitOffense.ts";
-import { getNormalizedHp } from "../../../units/utils/Common.ts";
+import {
+    Units_Utils_Common,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
+import type { SelfUnitCommonAttributes } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes";
 
-function getTotalPctFromOwnTiles(cfg: Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
+function getTotalPctFromOwnTiles(cfg: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
     if (!cfg?.length) {
         return 0;
     } else {
         return getOwnTilesCount(cfg[0]) * cfg[1];
     }
 }
-function getTotalPctFromTileDefense(cfg: Undefinable<number[]>, tileDefenseAmount: number, canTileDefendUnit: boolean): number {
+function getTotalPctFromTileDefense(cfg: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, tileDefenseAmount: number, canTileDefendUnit: boolean): number {
     if (!cfg?.length) {
         return 0;
     } else {
@@ -38,16 +40,16 @@ export function getTotalOffsetPct({
     canTileDefendUnit,
     getOwnTilesCount,
 }: {
-    cfg                         : SelfUnitOffense | null | undefined;
-    gameConfig                  : GcData;
+    cfg                         : SelfUnitCommonAttributes | null | undefined;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
     tileTypeId                  : number;
     weatherTypeId               : number;
     isCoOnboard                 : boolean;
     isInCozByPreviewSettings    : boolean;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
     fund                        : number;
     promotion                   : number;
     hp                          : number;
@@ -60,46 +62,45 @@ export function getTotalOffsetPct({
         return 0;
     }
 
-    {
-        const unitCategoryId = cfg.getUnitCategoryId();
-        if ((unitCategoryId != null) && (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, unitCategoryId))) {
-            return 0;
-        }
-    }
-
-    {
-        const tileCategoryId = cfg.getTileCategoryId();
-        if ((tileCategoryId != null) && (!gameConfig.checkIsTileTypeInCategory(tileTypeId, tileCategoryId))) {
-            return 0;
-        }
-    }
-
-    {
-        const weatherCategoryId = cfg.getWeatherCategoryId();
-        if ((weatherCategoryId != null) && (!gameConfig.checkIsWeatherTypeInCategory(weatherTypeId, weatherCategoryId))) {
-            return 0;
-        }
-    }
-
-    if ((!isCoOnboard)                                                  &&
-        (!isInCozByPreviewSettings)                                     &&
-        (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-            coZoneRadius                : coZoneRadius,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
-        }))
-    ) {
+    const conditions            = cfg.getConditions();
+    const offensePercentOffsets = cfg.getOffensePercentOffsets();
+    if ((conditions == null) || (offensePercentOffsets == null)) {
         return 0;
     }
 
-    return (cfg.getOffsetPct() ?? 0)
-        + (cfg.getFundConversion() ?? 0) * fund / 10000
-        + (isCoOnboard ? cfg.getOffsetPctFromCoUnit() ?? 0 : 0)
-        + ((cfg.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
-        + (isCounter ? cfg.getOffsetPctOnCounter() ?? 0 : 0)
-        + getTotalPctFromOwnTiles(cfg.getOffsetPctFromOwnTile(), getOwnTilesCount)
-        + getTotalPctFromTileDefense(cfg.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (cfg.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0);
+    {
+        if (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, conditions.getUnitCategoryId())) {
+            return 0;
+        }
+
+        if (!gameConfig.checkIsTileTypeInCategory(tileTypeId, conditions.getTileCategoryId())) {
+            return 0;
+        }
+
+        if (!gameConfig.checkIsWeatherTypeInCategory(weatherTypeId, conditions.getWeatherCategoryId())) {
+            return 0;
+        }
+
+        if ((!isCoOnboard)                                                  &&
+            (!isInCozByPreviewSettings)                                     &&
+            (!gridIndex.checkIsInsideCoSkillArea({
+                coSkillAreaType          : conditions.getCoSkillAreaTypeId(),
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+            }))
+        ) {
+            return 0;
+        }
+    }
+
+    return (offensePercentOffsets.getOffsetPct())
+        + (offensePercentOffsets.getFundConversion()) * fund / 10000
+        + (isCoOnboard ? offensePercentOffsets.getOffsetPctFromCoUnit() : 0)
+        + ((offensePercentOffsets.getOffsetPctFromPromotion())[promotion] ?? 0)
+        + (isCounter ? offensePercentOffsets.getOffsetPctOnCounter() : 0)
+        + getTotalPctFromOwnTiles(offensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
+        + getTotalPctFromTileDefense(offensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
+        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp())[Units_Utils_Common.getNormalizedHp(hp) - 1] ?? 0 : 0);
 }
 
 export function getTotalOffsetPctForDamageCalculatorPanel({
@@ -117,8 +118,8 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
     canTileDefendUnit,
     getOwnTilesCount,
 }: {
-    cfg                 : SelfUnitOffense | null | undefined;
-    gameConfig          : GcData;
+    cfg                 : SelfUnitCommonAttributes | null | undefined;
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
     unitTypeId          : number;
     tileTypeId          : number;
     weatherTypeId       : number;
@@ -135,33 +136,32 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
         return 0;
     }
 
+    const conditions            = cfg.getConditions();
+    const offensePercentOffsets = cfg.getOffensePercentOffsets();
+    if ((conditions == null) || (offensePercentOffsets == null)) {
+        return 0;
+    }
+
     {
-        const unitCategoryId = cfg.getUnitCategoryId();
-        if ((unitCategoryId != null) && (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, unitCategoryId))) {
+        if (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, conditions.getUnitCategoryId())) {
+            return 0;
+        }
+
+        if (!gameConfig.checkIsTileTypeInCategory(tileTypeId, conditions.getTileCategoryId())) {
+            return 0;
+        }
+
+        if (!gameConfig.checkIsWeatherTypeInCategory(weatherTypeId, conditions.getWeatherCategoryId())) {
             return 0;
         }
     }
 
-    {
-        const tileCategoryId = cfg.getTileCategoryId();
-        if ((tileCategoryId != null) && (!gameConfig.checkIsTileTypeInCategory(tileTypeId, tileCategoryId))) {
-            return 0;
-        }
-    }
-
-    {
-        const weatherCategoryId = cfg.getWeatherCategoryId();
-        if ((weatherCategoryId != null) && (!gameConfig.checkIsWeatherTypeInCategory(weatherTypeId, weatherCategoryId))) {
-            return 0;
-        }
-    }
-
-    return (cfg.getOffsetPct() ?? 0)
-        + (cfg.getFundConversion() ?? 0) * fund / 10000
-        + (isCoOnboard ? cfg.getOffsetPctFromCoUnit() ?? 0 : 0)
-        + ((cfg.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
-        + (isCounter ? cfg.getOffsetPctOnCounter() ?? 0 : 0)
-        + getTotalPctFromOwnTiles(cfg.getOffsetPctFromOwnTile(), getOwnTilesCount)
-        + getTotalPctFromTileDefense(cfg.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (cfg.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0);
+    return (offensePercentOffsets.getOffsetPct())
+        + (offensePercentOffsets.getFundConversion()) * fund / 10000
+        + (isCoOnboard ? offensePercentOffsets.getOffsetPctFromCoUnit() : 0)
+        + ((offensePercentOffsets.getOffsetPctFromPromotion())[promotion] ?? 0)
+        + (isCounter ? offensePercentOffsets.getOffsetPctOnCounter() : 0)
+        + getTotalPctFromOwnTiles(offensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
+        + getTotalPctFromTileDefense(offensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
+        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp())[Units_Utils_Common.getNormalizedHp(hp) - 1] ?? 0 : 0);
 }

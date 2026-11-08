@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum SetRelationId {
     EqualTo         = 1,
     NotEqualTo,
@@ -9,7 +9,7 @@ export const enum SetRelationId {
     SubsetOf,
     NotSubsetOf,
     Intersection,
-    NoIntersection
+    NoIntersection,
 }
 export const AllSetRelationIdArray = [
     SetRelationId.EqualTo,

@@ -1,36 +1,30 @@
-import type { Undefinable } from "./AuxiliaryTypes.ts";
-import { GridIndex } from "./GridIndex.ts";
-import { Constants } from "../gameConfig/GcMap.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
-import type { GridIndex as ProtoSchemaCommonProtoStructureGridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import type {
-    SerialTileMap as ProtoSchemaCommonProtoWarSerializationSerialTileMap,
-} from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
-
-type  SerialTile        = ProtoSchemaCommonProtoWarSerializationSerialTile;
-type  SerialTileMap     = ProtoSchemaCommonProtoWarSerializationSerialTileMap;
-type  MapRawData        = ProtoSchemaCommonProtoMapMapRawData;
+import {
+    Maps_Constants,
+    Helpers_Misc,
+    AuxiliaryTypes_GridIndex,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
+import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { GridIndex as ProtoGridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
+import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
 
 export class MapSize {
-    private _width  : number;
-    private _height : number;
+    private readonly _width  : number;
+    private readonly _height : number;
 
     public static createWithTileArray(tileDataArray: SerialTile[]): MapSize {
         let width   = 0;
         let height  = 0;
         for (const tile of tileDataArray) {
-            const gridIndex = getExisted(GridIndex.convertGridIndex(tile.getGridIndex()));
+            const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(tile.getGridIndex()));
             width           = Math.max(gridIndex.getX() + 1, width);
             height          = Math.max(gridIndex.getY() + 1, height);
         }
 
         return new MapSize(width, height);
     }
-    public static createWithSerialTileMap(serialTileMap: Undefinable<SerialTileMap>): MapSize {
+    public static createWithSerialTileMap(serialTileMap: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTileMap>): MapSize {
         return this.createWithTileArray(serialTileMap?.getTiles() ?? []);
     }
     public static createWithMapRawData(mapRawData: MapRawData): MapSize | null {
@@ -51,7 +45,7 @@ export class MapSize {
     }
 
     public getWH(): { width: number, height: number } {
-        return { width: this.getWidth(), height: this.getHeight() };
+        return { width : this.getWidth(), height : this.getHeight() };
     }
 
     public getWidth(): number {
@@ -91,13 +85,13 @@ export class MapSize {
         const { width, height } = this.getWH();
         return (width > 0)
             && (height > 0)
-            && (width * height <= Constants.MaxGridsCount);
+            && (width * height <= Maps_Constants.Common.MaxGridsCount);
     }
 
-    public checkIsValidGridIndexSubset(gridIndexArray: ProtoSchemaCommonProtoStructureGridIndex[]): boolean {
+    public checkIsValidGridIndexSubset(gridIndexArray: ProtoGridIndex[]): boolean {
         const gridIdSet = new Set<number>();
         for (const g of gridIndexArray) {
-            const gridIndex = GridIndex.convertGridIndex(g);
+            const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(g);
             if ((gridIndex == null) || (!gridIndex.checkIsInsideMap(this))) {
                 return false;
             }

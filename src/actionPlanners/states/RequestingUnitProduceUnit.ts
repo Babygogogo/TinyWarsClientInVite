@@ -1,33 +1,37 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
-import { getMpwWarClass, getSpwWarClass } from "../../gameHelpers/GhFactory.ts";
-import { newError } from "../../helpers/Misc.ts";
-import { reqMpwExecuteWarOperation } from "../../multiPlayerWar/model/MpwProxy.ts";
-import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { reqUnitProduceUnit } from "../../singlePlayerWar/model/SpwLocalProxy.ts";
+import {
+    MultiPlayerWar_Model_MpwWar,
+    SinglePlayerWars_War,
+    ActionPlanners_Constants,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    Helpers_Misc,
+    MultiPlayerWar_Model_MpwProxy,
+    SinglePlayerWars_LocalGateway,
+} from "../../internal.ts";
 
-export class RequestingUnitProduceUnit implements IState {
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+
+export class RequestingUnitProduceUnit implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new RequestingUnitProduceUnit();
 
     public static getInstance(): RequestingUnitProduceUnit {
         return RequestingUnitProduceUnit._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.RequestingUnitProduceUnit;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.RequestingUnitProduceUnit;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(): StateId {
+    public getNextStateIdOnTap(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
@@ -38,38 +42,38 @@ export class RequestingUnitProduceUnit implements IState {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public doApplyOnTap(): void {
-        throw newError(`Not expected to apply on tap!`);
+        throw Helpers_Misc.newError(`Not expected to apply on tap!`);
     }
 
     public doApplyOnDrag(): void {
-        throw newError(`Not expected to apply on drag!`);
+        throw Helpers_Misc.newError(`Not expected to apply on drag!`);
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`RequestingUnitProduceUnitState: Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`RequestingUnitProduceUnitState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: IActionPlanner): void {
+    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const war = actionPlanner.getWar();
-        if (war instanceof getMpwWarClass()) {
-            reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoUnitProduceUnit   : {
-                    path            : {
-                        nodes       : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
+        if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
+            MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
+                operationId       : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoUnitProduceUnit : {
+                    path : {
+                        nodes : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
-                    launchUnitId    : actionPlanner.getUnitIdForFocusUnitLoaded(),
+                    launchUnitId : actionPlanner.getUnitIdForFocusUnitLoaded(),
                 },
             }));
 
-            actionPlanner.setStateId(StateId.RequestingUnitProduceUnit);
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitProduceUnit);
             actionPlanner.updateView();
 
-        } else if (war instanceof getSpwWarClass()) {
-            actionPlanner.setStateId(StateId.RequestingUnitProduceUnit);
+        } else if (war instanceof SinglePlayerWars_War.War) {
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitProduceUnit);
             actionPlanner.updateView();
 
-            reqUnitProduceUnit(
+            SinglePlayerWars_LocalGateway.reqUnitProduceUnit(
                 war,
                 actionPlanner.generateProtoMovePath(),
                 actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,

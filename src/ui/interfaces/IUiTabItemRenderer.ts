@@ -1,4 +1,6 @@
-import type { IUiListItemRenderer } from "./IUiListItemRenderer.ts";
-import type { UiListItemData } from "../types/UiListItemData.ts";
+import {
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
-export type IUiTabItemRenderer<DataForRenderer extends UiListItemData> = IUiListItemRenderer<DataForRenderer>;
+export type IUiTabItemRenderer<DataForRenderer extends Ui_Types_UiListItemData.UiListItemData> = Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>;

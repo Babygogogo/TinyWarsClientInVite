@@ -1,43 +1,42 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { newError } from "../../../helpers/Misc.ts";
-import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
+import {
+    Players_Constants,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
+} from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
-export function revise(war: IBwWar, rawAction: WoPlayerVoteForDraw, requesterUserId: Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoPlayerVoteForDraw, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     const playerIndex = rawAction.getPlayerIndex();
     if (playerIndex == null) {
-        throw newError(`Empty playerIndex.`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_00);
+        throw Helpers_Misc.newError(`Empty playerIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_00);
     }
     if (!war.getPlayerManager().checkHasPlayer(playerIndex)) {
-        throw newError(`Invalid playerIndex.`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_01);
+        throw Helpers_Misc.newError(`Invalid playerIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_01);
     }
-    if (playerIndex === PlayerIndex.Neutral) {
-        throw newError(`Invalid neutral playerIndex.`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_02);
+    if (playerIndex === Players_Constants.PlayerIndex.Neutral) {
+        throw Helpers_Misc.newError(`Invalid neutral playerIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_02);
     }
 
     const player = war.getPlayer(playerIndex);
-    if ((player.getAliveState() !== AliveStateId.Alive)   ||
+    if ((player.getAliveState() !== Players_Constants.AliveStateId.Alive)   ||
         (player.getUserId() != requesterUserId)
     ) {
-        throw newError(`Invalid aliveState.`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_03);
+        throw Helpers_Misc.newError(`Invalid aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_03);
     }
 
     const isAgree = rawAction.getIsAgree();
     if (isAgree == null) {
-        throw newError(`Invalid isAgree: ${isAgree}`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_04);
+        throw Helpers_Misc.newError(`Invalid isAgree: ${isAgree}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_04);
     }
     if (!war.getDrawVoteManager().checkCanVote(playerIndex, isAgree)) {
-        throw newError(`Cannot vote currently: ${isAgree}`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_05);
+        throw Helpers_Misc.newError(`Cannot vote currently: ${isAgree}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_05);
     }
 
     return WoContainer.fromJson({
-        WoPlayerVoteForDraw: {
+        WoPlayerVoteForDraw : {
             playerIndex : playerIndex,
             isAgree     : isAgree,
         },

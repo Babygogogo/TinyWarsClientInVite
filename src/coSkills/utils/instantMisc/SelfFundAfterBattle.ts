@@ -1,5 +1,7 @@
-import { AreaTypeId } from "../../Constants.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import {
+    CoSkills_Constants,
+    type GameConfigs_GameConfig,
+} from "../../../internal.ts";
 import type { SelfFundAfterBattle } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfFundAfterBattle.ts";
 
 export function getTotalOffset({
@@ -13,7 +15,7 @@ export function getTotalOffset({
     enemyFinalProductionCost,
 }: {
     cfg                         : SelfFundAfterBattle | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     selfUnitTypeId              : number;
     isSelfInCoZone              : boolean;
     enemyUnitTypeId             : number;
@@ -24,7 +26,7 @@ export function getTotalOffset({
     if ((cfg == null) || (enemyNormalizedLostHp === 0) || (enemyFinalProductionCost === 0)) {
         return 0;
     }
-    if ((!isSelfInCoZone) && ((cfg.getCoSkillAreaTypeId() ?? 0) !== AreaTypeId.Halo)) {
+    if ((!isSelfInCoZone) && ((cfg.getCoSkillAreaTypeId()) !== CoSkills_Constants.AreaTypeId.Halo)) {
         return 0;
     }
 
@@ -42,5 +44,5 @@ export function getTotalOffset({
         }
     }
 
-    return enemyFinalProductionCost / enemyNormalizedMaxHp * enemyNormalizedLostHp * (cfg.getConversionPctFromDamageDealt() ?? 0) / 100;
+    return enemyFinalProductionCost / enemyNormalizedMaxHp * enemyNormalizedLostHp * (cfg.getConversionPctFromDamageDealt()) / 100;
 }

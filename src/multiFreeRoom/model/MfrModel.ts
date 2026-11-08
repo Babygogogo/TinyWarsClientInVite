@@ -1,92 +1,81 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import type { RoomFilter } from "../../auxiliaryTypes/RoomFilter.ts";
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import type { OpenData as CommonViewCommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
-import type { OpenData as CommonViewCommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
-import { CoId } from "../../cos/Constants.ts";
-import { SkinId } from "../../forceSkins/Constants.ts";
-import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { BasicSettingsType } from "../../gameConfig/GcWar.ts";
-import { ModeId } from "../../gameModes/Constants.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { StoreMfrRoomStaticInfo } from "../../localData/Storage.ts";
 import {
-    reqMfrGetRoomStaticInfo,
-    reqMfrGetRoomPlayerInfo,
-    reqMfrGetJoinableRoomIdArray,
-    reqMfrGetJoinedRoomIdArray,
-    reqMfrExitRoom,
-    reqMfrDeletePlayer,
-    reqMfrAddDummy,
-    reqMfrSetDummySettings,
-} from "./MfrProxy.ts";
-import { getFinalMfwHumanCoIdSet } from "../../playerRules/Utils.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
+    Wars_Constants,
+    AuxiliaryTypes_CachedDataAccessor,
+    Users_Utils,
+    Cos_Constants,
+    ForceSkins_Utils,
+    GamePanels_Dict,
+    Helpers_Misc,
+    PlayerRules_Utils,
+    GameConfigs_Provider,
+    Helpers_Collection,
+    WarRules_Utils_CommonData,
+    Users_Model,
+    GameModes_Constants,
+    GamePanels_Manager,
+    Players_Constants,
+    MultiFreeRoom_Model_MfrProxy,
+    ForceSkins_Constants,
+    LocalData_Storage,
+    BootTimers_Constants,
+    type Common_View_CommonWarAdvancedSettingsPage,
+    type Common_View_CommonWarBasicSettingsPage,
+    type Common_View_CommonWarPlayerInfoPage,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_RoomFilter,
+} from "../../internal.ts";
 import type { MfrRoomPlayerInfo } from "../../proto/schema/CommonProto/MultiFreeRoom/MfrRoomPlayerInfo.ts";
 import type { MfrRoomStaticInfo } from "../../proto/schema/CommonProto/MultiFreeRoom/MfrRoomStaticInfo.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomPlayerInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomStaticInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomStaticInfo/S.ts";
-import { getSelfUserId } from "../../users/Model.ts";
-import { checkIsDummy } from "../../users/Utils.ts";
-import { getPlayersCountUnneutral, getPlayerRule } from "../../warRules/utils/CommonData.ts";
+import type { S as MfrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomPlayerInfo/S.ts";
+import type { S as MfrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomStaticInfo/S.ts";
 
-type Undefinable<T>                             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
-const _roomStaticInfoAccessor = new CachedDataAccessor<number, MfrRoomStaticInfo>({
-    reqData : (roomId: number) => reqMfrGetRoomStaticInfo(roomId),
+const _roomStaticInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, MfrRoomStaticInfo>({
+    reqData : (roomId: number) => MultiFreeRoom_Model_MfrProxy.reqMfrGetRoomStaticInfo(roomId),
 });
-const _roomPlayerInfoAccessor = new CachedDataAccessor<number, MfrRoomPlayerInfo>({
-    reqData : (roomId: number) => reqMfrGetRoomPlayerInfo(roomId),
+const _roomPlayerInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, MfrRoomPlayerInfo>({
+    reqData : (roomId: number) => MultiFreeRoom_Model_MfrProxy.reqMfrGetRoomPlayerInfo(roomId),
 });
-const _joinableRoomIdArrayAccessor = new CachedDataAccessor<null, number[]>({
-    reqData : () => reqMfrGetJoinableRoomIdArray(),
+const _joinableRoomIdArrayAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, number[]>({
+    reqData : () => MultiFreeRoom_Model_MfrProxy.reqMfrGetJoinableRoomIdArray(),
 });
-const _joinedRoomIdArrayAccessor = new CachedDataAccessor<null, number[]>({
-    reqData : () => reqMfrGetJoinedRoomIdArray(),
+const _joinedRoomIdArrayAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, number[]>({
+    reqData : () => MultiFreeRoom_Model_MfrProxy.reqMfrGetJoinedRoomIdArray(),
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for rooms.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function getRoomStaticInfo(roomId: number): Promise<Undefinable<MfrRoomStaticInfo>> {
-    return (await StoreMfrRoomStaticInfo.getData(roomId)) ?? _roomStaticInfoAccessor.getData(roomId);
+export async function getRoomStaticInfo(roomId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<MfrRoomStaticInfo>> {
+    return (await LocalData_Storage.StoreMfrRoomStaticInfo.getData(roomId)) ?? _roomStaticInfoAccessor.getData(roomId);
 }
-function setRoomStaticInfo(roomId: number, info: Undefinable<MfrRoomStaticInfo>): Promise<void> {
+function setRoomStaticInfo(roomId: number, info: AuxiliaryTypes_AuxiliaryTypes.Undefinable<MfrRoomStaticInfo>): Promise<void> {
     _roomStaticInfoAccessor.setData(roomId, info);
-    return StoreMfrRoomStaticInfo.setData(roomId, info);
+    return LocalData_Storage.StoreMfrRoomStaticInfo.setData(roomId, info);
 }
 
-export function getRoomPlayerInfo(roomId: number): Promise<Undefinable<MfrRoomPlayerInfo>> {
+export function getRoomPlayerInfo(roomId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<MfrRoomPlayerInfo>> {
     return _roomPlayerInfoAccessor.getData(roomId);
 }
-function setRoomPlayerInfo(roomId: number, info: Undefinable<MfrRoomPlayerInfo>): void {
+function setRoomPlayerInfo(roomId: number, info: AuxiliaryTypes_AuxiliaryTypes.Undefinable<MfrRoomPlayerInfo>): void {
     _roomPlayerInfoAccessor.setData(roomId, info);
 }
 
-export function getJoinableRoomIdArray(forceNew: boolean): Promise<Undefinable<number[]>> {
+export function getJoinableRoomIdArray(forceNew: boolean): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>> {
     return _joinableRoomIdArrayAccessor.getData(null, forceNew);
 }
-export function setJoinableRoomIdArray(roomIdArray: Undefinable<number[]>): void {
+export function setJoinableRoomIdArray(roomIdArray: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>): void {
     _joinableRoomIdArrayAccessor.setData(null, roomIdArray);
 }
 
-export function getJoinedRoomIdArray(forceNew: boolean): Promise<Undefinable<number[]>> {
+export function getJoinedRoomIdArray(forceNew: boolean): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>> {
     return _joinedRoomIdArrayAccessor.getData(null, forceNew);
 }
-export function setJoinedRoomIdArray(roomIdArray: Undefinable<number[]>): void {
+export function setJoinedRoomIdArray(roomIdArray: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>): void {
     _joinedRoomIdArrayAccessor.setData(null, roomIdArray);
 }
 
-export async function getJoinableRoomIdSetWithFilter(filter: AuxiliaryTypesAuxiliaryTypesUndefinable<RoomFilter>): Promise<Set<number>> {
-    const selfUserId = getSelfUserId();
+export async function getJoinableRoomIdSetWithFilter(filter: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_RoomFilter.RoomFilter>): Promise<Set<number>> {
+    const selfUserId = Users_Model.getSelfUserId();
     if (selfUserId == null) {
         return new Set();
     }
@@ -96,8 +85,8 @@ export async function getJoinableRoomIdSetWithFilter(filter: AuxiliaryTypesAuxil
         ? new Set(unjoinedRoomIdArray)
         : getFilteredRoomIdSet(unjoinedRoomIdArray, filter);
 }
-export async function getJoinedRoomIdSetWithFilter(filter: AuxiliaryTypesAuxiliaryTypesUndefinable<RoomFilter>): Promise<Set<number>> {
-    const selfUserId = getSelfUserId();
+export async function getJoinedRoomIdSetWithFilter(filter: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_RoomFilter.RoomFilter>): Promise<Set<number>> {
+    const selfUserId = Users_Model.getSelfUserId();
     if (selfUserId == null) {
         return new Set();
     }
@@ -107,7 +96,7 @@ export async function getJoinedRoomIdSetWithFilter(filter: AuxiliaryTypesAuxilia
         ? new Set(joinedRoomIdArray)
         : getFilteredRoomIdSet(joinedRoomIdArray, filter);
 }
-async function getFilteredRoomIdSet(roomIdArray: number[], filter: RoomFilter): Promise<Set<number>> {
+async function getFilteredRoomIdSet(roomIdArray: number[], filter: AuxiliaryTypes_RoomFilter.RoomFilter): Promise<Set<number>> {
     if (filter.mapName) {
         return new Set();
     }
@@ -121,8 +110,8 @@ async function getFilteredRoomIdSet(roomIdArray: number[], filter: RoomFilter): 
         const roomId = roomIdArray[i];
         if (await checkIsMeetFilter({
             roomId,
-            roomStaticInfo  : roomStaticInfoArray[i],
-            roomPlayerInfo  : roomPlayerInfoArray[i],
+            roomStaticInfo : roomStaticInfoArray[i],
+            roomPlayerInfo : roomPlayerInfoArray[i],
             filter,
         })) {
             filteredRoomIdSet.add(roomId);
@@ -146,15 +135,15 @@ export async function checkIsRedForRoom(roomId: number): Promise<boolean> {
         getRoomPlayerInfo(roomId),
     ]);
     if ((roomPlayerInfo) && (roomStaticInfo)) {
-        const selfUserId        = getSelfUserId();
+        const selfUserId        = Users_Model.getSelfUserId();
         const playerDataList    = roomPlayerInfo.getPlayerDataList();
         const selfPlayerData    = playerDataList.find(v => v.getUserId() === selfUserId);
         if ((selfPlayerData) && (!selfPlayerData.getIsReady())) {
             return true;
         }
 
-        const warRuleCommonData = getExisted(roomStaticInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData());
-        if ((playerDataList.length === getPlayersCountUnneutral(warRuleCommonData))  &&
+        const warRuleCommonData = Helpers_Misc.getExisted(roomStaticInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData());
+        if ((playerDataList.length === WarRules_Utils_CommonData.getPlayersCountUnneutral(warRuleCommonData))  &&
             (playerDataList.every(v => v.getIsReady()))                                                                            &&
             (selfPlayerData)                                                                                                       &&
             (roomPlayerInfo.getOwnerPlayerIndex() === selfPlayerData.getPlayerIndex())
@@ -173,30 +162,30 @@ export async function checkCanStartGame(roomId: number): Promise<boolean> {
         return false;
     }
 
-    const selfUserId        = getSelfUserId();
+    const selfUserId        = Users_Model.getSelfUserId();
     const playerDataList    = roomPlayerInfo.getPlayerDataList();
     const selfPlayerData    = playerDataList.find(v => v.getUserId() === selfUserId);
-    const warRuleCommonData = getExisted(roomStaticInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData());
+    const warRuleCommonData = Helpers_Misc.getExisted(roomStaticInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData());
     return (selfPlayerData != null)
         && (selfPlayerData.getPlayerIndex() === roomPlayerInfo.getOwnerPlayerIndex())
-        && (playerDataList.length === getPlayersCountUnneutral(warRuleCommonData))
+        && (playerDataList.length === WarRules_Utils_CommonData.getPlayersCountUnneutral(warRuleCommonData))
         && (playerDataList.every(v => v.getIsReady()));
 }
 
-export function updateOnMsgMfrGetRoomStaticInfo(data: ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomStaticInfoS): Promise<void> {
+export function updateOnMsgMfrGetRoomStaticInfo(data: MfrGetRoomStaticInfoResponse): Promise<void> {
     return setRoomStaticInfo(data.getRoomId() ?? 0, data.getRoomStaticInfo() ?? null);
 }
-export function updateOnFailedMsgMfrGetRoomStaticInfo(data: ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomStaticInfoS): void {
+export function updateOnFailedMsgMfrGetRoomStaticInfo(data: MfrGetRoomStaticInfoResponse): void {
     const roomId = data.getRoomId();
     if (roomId != null) {
         _roomStaticInfoAccessor.updateOnRequestFailed(roomId);
     }
 }
 
-export function updateOnMsgMfrGetRoomPlayerInfo(data: S): void {
+export function updateOnMsgMfrGetRoomPlayerInfo(data: MfrGetRoomPlayerInfoResponse): void {
     setRoomPlayerInfo(data.getRoomId() ?? 0, data.getRoomPlayerInfo() ?? null);
 }
-export function updateOnFailedMsgMfrGetRoomPlayerInfo(data: S): void {
+export function updateOnFailedMsgMfrGetRoomPlayerInfo(data: MfrGetRoomPlayerInfoResponse): void {
     const roomId = data.getRoomId();
     if (roomId != null) {
         _roomPlayerInfoAccessor.updateOnRequestFailed(roomId);
@@ -204,7 +193,7 @@ export function updateOnFailedMsgMfrGetRoomPlayerInfo(data: S): void {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function createDataForCommonWarPlayerInfoPage(roomId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
+export async function createDataForCommonWarPlayerInfoPage(roomId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Promise<Common_View_CommonWarPlayerInfoPage.OpenData> {
     if (roomId == null) {
         return null;
     }
@@ -217,219 +206,219 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: AuxiliaryType
         return null;
     }
 
-    const settingsForCommon     = getExisted(roomStaticInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon());
-    const warRuleCommonData     = getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
-    const playersCountUnneutral = getPlayersCountUnneutral(warRuleCommonData);
+    const settingsForCommon     = Helpers_Misc.getExisted(roomStaticInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon());
+    const warRuleCommonData     = Helpers_Misc.getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
+    const playersCountUnneutral = WarRules_Utils_CommonData.getPlayersCountUnneutral(warRuleCommonData);
     const playerDataList        = roomPlayerInfo.getPlayerDataList();
-    const playerInfoArray       : PlayerInfo[] = [];
-    for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
+    const playerInfoArray       : AuxiliaryTypes_AuxiliaryTypes.PlayerInfo[] = [];
+    for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
         const playerData    = playerDataList.find(v => v.getPlayerIndex() === playerIndex);
         const userId        = playerData?.getUserId() ?? null;
         const isReady       = playerData?.getIsReady() ?? null;
         playerInfoArray.push({
             playerIndex,
-            teamIndex           : getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
-            isAi                : (userId == null) && (!!isReady),
-            userId              : userId,
-            coId                : playerData ? playerData.getCoId() ?? 0 : null,
-            unitAndTileSkinId   : playerData?.getUnitAndTileSkinId() ?? null,
-            isReady             : isReady,
-            isInTurn            : null,
-            isDefeat            : null,
-            restTimeToBoot      : null,
+            teamIndex         : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
+            isAi              : (userId == null) && (!!isReady),
+            userId            : userId,
+            coId              : playerData ? playerData.getCoId() : null,
+            unitAndTileSkinId : playerData?.getUnitAndTileSkinId() ?? null,
+            isReady           : isReady,
+            isInTurn          : null,
+            isDefeat          : null,
+            restTimeToBoot    : null,
         });
     }
 
-    const gcData = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));
+    const gcData = await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion()));
     return {
-        gameConfig              : gcData,
-        playersCountUnneutral   : playersCountUnneutral,
-        roomOwnerPlayerIndex    : roomPlayerInfo.getOwnerPlayerIndex() ?? null,
-        callbackOnExitRoom      : () => reqMfrExitRoom(roomId),
-        callbackOnDeletePlayer  : (playerIndex, forbidReentrance) => reqMfrDeletePlayer(roomId, playerIndex, forbidReentrance),
-        callbackOnAddDummy      : (playerDataList.filter(v => (v.getUserId() == null) || (checkIsDummy(v.getUserId()))).length >= playersCountUnneutral - 2)
+        gameConfig             : gcData,
+        playersCountUnneutral  : playersCountUnneutral,
+        roomOwnerPlayerIndex   : roomPlayerInfo.getOwnerPlayerIndex() ?? null,
+        callbackOnExitRoom     : () => MultiFreeRoom_Model_MfrProxy.reqMfrExitRoom(roomId),
+        callbackOnDeletePlayer : (playerIndex, forbidReentrance) => MultiFreeRoom_Model_MfrProxy.reqMfrDeletePlayer(roomId, playerIndex, forbidReentrance),
+        callbackOnAddDummy     : (playerDataList.filter(v => (v.getUserId() == null) || (Users_Utils.checkIsDummy(v.getUserId()))).length >= playersCountUnneutral - 2)
             ? null
             : playerIndex => {
-                const availableCoIdArray = [...getFinalMfwHumanCoIdSet({
-                    playerRule          : getPlayerRule(warRuleCommonData, playerIndex),
-                    gameConfig          : gcData,
-                    hasFogByDefault     : warRuleCommonData.getHasFogByDefault(),
-                    includeRandom       : true,
+                const availableCoIdArray = [...PlayerRules_Utils.getFinalMfwHumanCoIdSet({
+                    playerRule      : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
+                    gameConfig      : gcData,
+                    hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
+                    includeRandom   : true,
                 })];
-                const usedSkinIdArray       = getNonNullElements(playerInfoArray.map(v => v.unitAndTileSkinId));
-                const availableSkinIdArray  = getAllSkinIdArray(false).filter(v => !usedSkinIdArray.includes(v));
+                const usedSkinIdArray       = Helpers_Collection.getNonNullElements(playerInfoArray.map(v => v.unitAndTileSkinId));
+                const availableSkinIdArray  = ForceSkins_Utils.getAllSkinIdArray(false).filter(v => !usedSkinIdArray.includes(v));
 
-                openPanel(getDict().CommonChooseCoAndColorPanel, {
-                    gcData                  : gcData,
-                    availableCoIdArray      : availableCoIdArray,
-                    availableSkinIdArray    : availableSkinIdArray,
-                    currentCoId             : availableCoIdArray[0],
-                    currentSkinId           : availableSkinIdArray[0],
-                    callback                : (coId, skinId) => reqMfrAddDummy(roomId, playerIndex, coId, skinId),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseCoAndColorPanel, {
+                    gcData               : gcData,
+                    availableCoIdArray   : availableCoIdArray,
+                    availableSkinIdArray : availableSkinIdArray,
+                    currentCoId          : availableCoIdArray[0],
+                    currentSkinId        : availableSkinIdArray[0],
+                    callback             : (coId, skinId) => MultiFreeRoom_Model_MfrProxy.reqMfrAddDummy(roomId, playerIndex, coId, skinId),
                 });
             },
-        callbackOnChangeDummy   : playerIndex => {
+        callbackOnChangeDummy : playerIndex => {
             const playerInfo        = playerInfoArray.find(v => v.playerIndex === playerIndex);
-            const currentCoId       = playerInfo?.coId ?? CoId.Empty;
-            const currentSkinId     = playerInfo?.unitAndTileSkinId ?? SkinId.First;
-            const usedSkinIdArray   = getNonNullElements(playerInfoArray.filter(v => v.playerIndex !== playerIndex).map(v => v.unitAndTileSkinId));
+            const currentCoId       = playerInfo?.coId ?? Cos_Constants.CoId.Empty;
+            const currentSkinId     = playerInfo?.unitAndTileSkinId ?? ForceSkins_Constants.SkinId.First;
+            const usedSkinIdArray   = Helpers_Collection.getNonNullElements(playerInfoArray.filter(v => v.playerIndex !== playerIndex).map(v => v.unitAndTileSkinId));
 
-            openPanel(getDict().CommonChooseCoAndColorPanel, {
-                gcData                  : gcData,
-                availableCoIdArray      : [...getFinalMfwHumanCoIdSet({
-                    playerRule          : getPlayerRule(warRuleCommonData, playerIndex),
-                    gameConfig          : gcData,
-                    hasFogByDefault     : warRuleCommonData.getHasFogByDefault(),
-                    includeRandom       : true,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseCoAndColorPanel, {
+                gcData             : gcData,
+                availableCoIdArray : [...PlayerRules_Utils.getFinalMfwHumanCoIdSet({
+                    playerRule      : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
+                    gameConfig      : gcData,
+                    hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
+                    includeRandom   : true,
                 })],
-                availableSkinIdArray    : getAllSkinIdArray(false).filter(v => !usedSkinIdArray.includes(v)),
-                currentCoId             : currentCoId,
-                currentSkinId           : currentSkinId,
-                callback                : (coId, skinId) => {
+                availableSkinIdArray : ForceSkins_Utils.getAllSkinIdArray(false).filter(v => !usedSkinIdArray.includes(v)),
+                currentCoId          : currentCoId,
+                currentSkinId        : currentSkinId,
+                callback             : (coId, skinId) => {
                     if ((coId !== currentCoId)  ||
                         (skinId !== currentSkinId)
                     ) {
-                        reqMfrSetDummySettings(roomId, playerIndex, coId, skinId);
+                        MultiFreeRoom_Model_MfrProxy.reqMfrSetDummySettings(roomId, playerIndex, coId, skinId);
                     }
-                }
+                },
             });
         },
-        playerInfoArray         : playerInfoArray,
-        enterTurnTime           : null,
-        isReplay                : false,
+        playerInfoArray : playerInfoArray,
+        enterTurnTime   : null,
+        isReplay        : false,
     };
 }
 
-export async function createDataForCommonWarBasicSettingsPage(roomId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>, showPassword: boolean): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
+export async function createDataForCommonWarBasicSettingsPage(roomId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>, showPassword: boolean): Promise<Common_View_CommonWarBasicSettingsPage.OpenData> {
     if (roomId == null) {
         return null;
     }
 
     const roomInfo = await getRoomStaticInfo(roomId);
     if (roomInfo == null) {
-        return { dataArrayForListSettings: [] };
+        return { dataArrayForListSettings : [] };
     }
 
-    const settingsForMfw    = getExisted(roomInfo.getSettingsForMfw());
-    const settingsForCommon = getExisted(settingsForMfw.getInitialWarData()?.getSettingsForCommon());
-    const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule());
-    const bootTimerParams   = getExisted(settingsForMfw.getBootTimerParams());
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const settingsForMfw    = Helpers_Misc.getExisted(roomInfo.getSettingsForMfw());
+    const settingsForCommon = Helpers_Misc.getExisted(settingsForMfw.getInitialWarData()?.getSettingsForCommon());
+    const instanceWarRule   = Helpers_Misc.getExisted(settingsForCommon.getInstanceWarRule());
+    const bootTimerParams   = settingsForMfw.getBootTimerParams();
+    const gameConfig        = (await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion())));
     const warPassword       = settingsForMfw.getWarPassword();
-    const timerType         = bootTimerParams[0] as TimerTypeId;
+    const timerType         = bootTimerParams[0] as BootTimers_Constants.TimerTypeId;
     const warEventFullData  = instanceWarRule.getWarEventFullData() ?? null;
-    const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
-        dataArrayForListSettings    : [
+    const openData          : Common_View_CommonWarBasicSettingsPage.OpenData = {
+        dataArrayForListSettings : [
             {
-                settingsType    : BasicSettingsType.WarName,
-                currentValue    : settingsForMfw.getWarName() ?? null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.WarName,
+                currentValue     : settingsForMfw.getWarName() ?? null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.WarPassword,
-                currentValue    : warPassword == null ? null : (showPassword ? warPassword : `****`),
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.WarPassword,
+                currentValue     : warPassword == null ? null : (showPassword ? warPassword : `****`),
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.WarComment,
-                currentValue    : settingsForMfw.getWarComment() ?? null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.WarComment,
+                currentValue     : settingsForMfw.getWarComment() ?? null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.WarRuleTitle,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.WarRuleTitle,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.HasFog,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.HasFog,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.Weather,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.Weather,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType        : BasicSettingsType.TileTheme,
-                currentValue        : null,
-                instanceWarRule     : instanceWarRule,
-                gameConfig          : gameConfig,
-                warEventFullData    : warEventFullData,
-                callbackOnModify    : null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.TileTheme,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.WarEvent,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.WarEvent,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.TurnsAndWarOperationsLimit,
-                currentValue    : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit,
+                currentValue     : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.TimerType,
-                currentValue    : timerType,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.TimerType,
+                currentValue     : timerType,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
         ],
     };
-    if (timerType === TimerTypeId.Regular) {
+    if (timerType === BootTimers_Constants.TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType    : BasicSettingsType.TimerRegularParam,
-            currentValue    : bootTimerParams[1],
-            instanceWarRule : instanceWarRule,
-            gameConfig      : gameConfig,
-            warEventFullData: warEventFullData,
-            callbackOnModify: null,
+            settingsType     : Wars_Constants.BasicSettingsTypeId.TimerRegularParam,
+            currentValue     : bootTimerParams[1],
+            instanceWarRule  : instanceWarRule,
+            gameConfig       : gameConfig,
+            warEventFullData : warEventFullData,
+            callbackOnModify : null,
         });
-    } else if (timerType === TimerTypeId.Incremental) {
+    } else if (timerType === BootTimers_Constants.TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push(
             {
-                settingsType    : BasicSettingsType.TimerIncrementalParams,
-                currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams,
+                currentValue     : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
         );
     } else {
-        throw newError(`MfrModel.createDataForCommonWarBasicSettingsPage() invalid timerType: ${timerType}.`);
+        throw Helpers_Misc.newError(`MfrModel.createDataForCommonWarBasicSettingsPage() invalid timerType: ${timerType}.`);
     }
 
     return openData;
 }
 
-export async function createDataForCommonWarAdvancedSettingsPage(roomId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): Promise<OpenData> {
+export async function createDataForCommonWarAdvancedSettingsPage(roomId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Promise<Common_View_CommonWarAdvancedSettingsPage.OpenData> {
     if (roomId == null) {
         return null;
     }
@@ -439,21 +428,21 @@ export async function createDataForCommonWarAdvancedSettingsPage(roomId: Auxilia
         return null;
     }
 
-    const settingsForCommon = getExisted(roomInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon());
-    const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule());
+    const settingsForCommon = Helpers_Misc.getExisted(roomInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon());
+    const instanceWarRule   = Helpers_Misc.getExisted(settingsForCommon.getInstanceWarRule());
     return {
         canModify       : false,
-        gcData          : await getGameConfig(getExisted(settingsForCommon.getConfigVersion())),
+        gcData          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion())),
         instanceWarRule : instanceWarRule,
-        gameModeId      : ModeId.Free,
+        gameModeId      : GameModes_Constants.ModeId.Free,
     };
 }
 
 async function checkIsMeetFilter({ roomId, roomPlayerInfo, roomStaticInfo, filter }: {
     roomId          : number;
-    roomPlayerInfo  : Undefinable<MfrRoomPlayerInfo>;
-    roomStaticInfo  : Undefinable<MfrRoomStaticInfo>;
-    filter          : RoomFilter | null;
+    roomPlayerInfo  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MfrRoomPlayerInfo>;
+    roomStaticInfo  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MfrRoomStaticInfo>;
+    filter          : AuxiliaryTypes_RoomFilter.RoomFilter | null;
 }): Promise<boolean> {
     if (roomPlayerInfo == null) {
         return false;
@@ -501,12 +490,12 @@ async function checkIsMeetFilter({ roomId, roomPlayerInfo, roomStaticInfo, filte
                 return false;
             }
 
-            const gameConfig = await getGameConfig(configVersion);
+            const gameConfig = await GameConfigs_Provider.getGameConfig(configVersion);
             if (gameConfig == null) {
                 return false;
             }
 
-            if (!playerDataList.some(v => gameConfig.getCoBasicCfg(v.getCoId() ?? 0)?.getCoCategoryId() === filterCoCategoryId)) {
+            if (!playerDataList.some(v => gameConfig.getCoBasicCfg(v.getCoId())?.getCoCategoryId() === filterCoCategoryId)) {
                 return false;
             }
         }

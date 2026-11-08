@@ -1,8 +1,10 @@
-import type { ModeId } from "../gameModes/Constants.ts";
+import {
+    type GameModes_Constants,
+} from "../internal.ts";
 
 export class CoStatisticsFilter {
     normalMapId?        : number | null;
-    gameMode?           : ModeId | null;
+    gameMode?           : GameModes_Constants.ModeId | null;
     minTurnIndex?       : number | null;
     maxTurnIndex?       : number | null;
     minRankScore?       : number | null;

@@ -1,15 +1,17 @@
-import type { UiComponentType } from "./UiComponentType.ts";
-import type { UiSkinAttrs } from "./UiSkinAttrs.ts";
+import {
+    type Ui_Types_UiComponentType,
+    type Ui_Types_UiSkinAttrs,
+} from "../../internal.ts";
 
 export interface UiSkin {
     id?             : string;
-    uiType?         : UiComponentType;
+    uiType?         : Ui_Types_UiComponentType.UiComponentType;
     selfSkinName?   : string;
     currentState?   : string;
     nestedSkin?     : UiSkin;
     nestedSkinName? : string;
     itemSkin?       : UiSkin;
     itemSkinName?   : string;
-    $?              : Record<string, UiSkinAttrs>;
+    $?              : Record<string, Ui_Types_UiSkinAttrs.UiSkinAttrs>;
     $$?             : UiSkin[];
 }

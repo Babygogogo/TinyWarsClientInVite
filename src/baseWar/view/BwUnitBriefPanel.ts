@@ -1,64 +1,67 @@
-import { StateId } from "../../actionPlanners/Constants.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import { getMpwWarClass, getSpwWarClass, getMeWarClass, getUnitViewClass } from "../../gameHelpers/GhFactory.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCurrentGameEssentialConfig } from "../../gameVersions/Utils.ts";
-import { TextureResolutionId } from "../../graphics/Constants.ts";
-import { type PointerUnifiedEventData, PointerEventType, MouseStyleType } from "../../helpers/PointerInput.ts";
-import { getNumText, getSignedNumText } from "../../helpers/Text.ts";
-import { UndefinedError } from "../../lang/Constants.ts";
-import { getUnitName } from "../../lang/Utils.ts";
-import type { BwUnitChanged } from "../../notifications/DataTypes.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiContainer } from "../../ui/components/UiContainer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
-import { checkIsUnitOnMapVisibleToTeams } from "../../visibilities/Utils.ts";
-
-type IUnit                  = UnitsIUnit;
+import {
+    ActionPlanners_Constants,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    GameVersions_Utils,
+    Graphics_Constants,
+    Helpers_Misc,
+    Helpers_PointerInput,
+    Helpers_Text,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    SinglePlayerWars_War,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Timer_TimerModel,
+    Tween_Executor,
+    Ui_Components_UiContainer,
+    Ui_Components_UiPanel,
+    Ui_Utils_UiSkinHelpers,
+    Units_UnitViewPool,
+    Visibilities_Utils,
+    type BaseWar_Model_War,
+    type Egret_Egret,
+    type Notifications_Mapping,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Units_Unit,
+} from "../../internal.ts";
 
 const _CELL_WIDTH   = 70;
 
 export interface OpenData {
-    war : IBwWar;
+    war : BaseWar_Model_War.War;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _group!        : IUiContainer;
-    private readonly _btnExpand!    : IUiButton;
-    private readonly _btnNarrow!    : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnExpand!    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNarrow!    : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _cellList           : BwUnitBriefCell[] = [];
+    private readonly _cellList           : BwUnitBriefCell[] = [];
 
-    private _unitList   : IUnit[] = [];
+    private readonly _unitList   : Units_Unit.Unit[] = [];
     private _isExpanded = true;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             // { type: NotifyType.GlobalTouchBegin,                callback: this._onNotifyGlobalTouchBegin },
             // { type: NotifyType.GlobalTouchMove,                 callback: this._onNotifyGlobalTouchMove },
-            { type: TypeId.BwCursorGridIndexChanged,        callback: this._onNotifyBwCursorGridIndexChanged },
-            { type: TypeId.ActionPlannerStateSet,           callback: this._onNotifyActionPlannerStateSet },
-            { type: TypeId.BwProduceUnitPanelOpened,        callback: this._onNotifyBwProduceUnitPanelOpened },
-            { type: TypeId.BwProduceUnitPanelClosed,        callback: this._onNotifyBwProduceUnitPanelClosed },
-            { type: TypeId.BwUnitChanged,                   callback: this._onNotifyBwUnitChanged },
-            { type: TypeId.BwUnitCustomNameArrayChanged,    callback: this._onNotifyBwUnitCustomNameArrayChanged },
-            { type: TypeId.BwUnitCustomNameIdChanged,       callback: this._onNotifyBwUnitCustomNameIdChanged },
+            { type : "BwCursorGridIndexChanged",        callback : this._onNotifyBwCursorGridIndexChanged },
+            { type : "ActionPlannerStateSet",           callback : this._onNotifyActionPlannerStateSet },
+            { type : "BwProduceUnitPanelOpened",        callback : this._onNotifyBwProduceUnitPanelOpened },
+            { type : "BwProduceUnitPanelClosed",        callback : this._onNotifyBwProduceUnitPanelClosed },
+            { type : "BwUnitChanged",                   callback : this._onNotifyBwUnitChanged },
+            { type : "BwUnitCustomNameArrayChanged",    callback : this._onNotifyBwUnitCustomNameArrayChanged },
+            { type : "BwUnitCustomNameIdChanged",       callback : this._onNotifyBwUnitCustomNameIdChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnExpand,  callback: this._onTouchedBtnExpand },
-            { ui: this._btnNarrow,  callback: this._onTouchedBtnNarrow },
+            { ui : this._btnExpand,  callback : this._onTouchedBtnExpand },
+            { ui : this._btnNarrow,  callback : this._onTouchedBtnNarrow },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -92,8 +95,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        if ((planner.getPreviousStateId() === StateId.ExecutingAction) &&
-            (planner.getStateId() !== StateId.ExecutingAction)
+        if ((planner.getPreviousStateId() === ActionPlanners_Constants.StateId.ExecutingAction) &&
+            (planner.getStateId() !== ActionPlanners_Constants.StateId.ExecutingAction)
         ) {
             this._updateView();
         }
@@ -104,13 +107,13 @@ export class Panel extends UiPanel<OpenData> {
     private _onNotifyBwProduceUnitPanelClosed(): void {
         this._updateView();
     }
-    private _onNotifyBwUnitChanged(e: Event): void {
-        const gridIndex = this.getOpenData()?.war.getCursor().getGridIndex();
+    private _onNotifyBwUnitChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwUnitChanged"]>): void {
+        const gridIndex = this.getOpenData()?.war.getCursor()?.getGridIndex();
         if (gridIndex == null) {
             return;
         }
 
-        const data = e.data as BwUnitChanged;
+        const data = Helpers_Misc.getExisted(e.data);
         if (data.gridIndex.checkIsEqual(gridIndex)) {
             this._updateView();
         }
@@ -135,23 +138,23 @@ export class Panel extends UiPanel<OpenData> {
         this._updateView();
     }
 
-    private _onCellTouchTap(e: Event): void {
-        const dispatcher = (e.data as PointerUnifiedEventData).dispatcher;
+    private _onCellTouchTap(e: Egret_Egret.Event<Helpers_PointerInput.PointerUnifiedEventData>): void {
+        const dispatcher = (Helpers_Misc.getExisted(e.data)).dispatcher;
         if (dispatcher == null) {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const war       = this.getOpenData()?.war;
-        const canDelete = (war instanceof getMpwWarClass())
-            || (war instanceof getSpwWarClass())
-            || (war instanceof getMeWarClass());
+        const canDelete = (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar)
+            || (war instanceof SinglePlayerWars_War.War)
+            || (war instanceof MapEditor_Model_MeWar.MeWar);
         for (let i = 0; i < this._cellList.length; ++i) {
             if (this._cellList[i] === dispatcher) {
-                openPanel(getDict().BwUnitDetailPanel, {
-                    unit        : this._unitList[i],
-                    canDelete   : canDelete,
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitDetailPanel, {
+                    unit      : this._unitList[i],
+                    canDelete : canDelete,
                 });
                 return;
             }
@@ -172,6 +175,12 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            this.setIsVisible(false);
+            return;
+        }
+
         this.setIsVisible(true);
 
         const isExpanded = this._isExpanded;
@@ -183,19 +192,18 @@ export class Panel extends UiPanel<OpenData> {
         unitList.length = 0;
 
         const unitMap       = war.getUnitMap();
-        const gridIndex     = war.getCursor().getGridIndex();
         const unitOnMap     = unitMap.getUnitOnMap(gridIndex);
         const teamIndexes   = war.getPlayerManager().getWatcherTeamIndexesForSelf();
 
         if ((unitOnMap)                                         &&
-            (checkIsUnitOnMapVisibleToTeams({
+            (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
                 war                 : war,
                 gridIndex           : gridIndex,
                 unitType            : unitOnMap.getUnitType(),
                 isDiving            : unitOnMap.getIsDiving(),
                 isInvisible         : unitOnMap.checkIsInvisible(gridIndex),
                 unitPlayerIndex     : unitOnMap.getPlayerIndex(),
-                observerTeamIndexes : teamIndexes
+                observerTeamIndexes : teamIndexes,
             }))
         ) {
             unitList.push(unitOnMap);
@@ -255,34 +263,34 @@ export class Panel extends UiPanel<OpenData> {
     private _createCell(): BwUnitBriefCell {
         const cell = new BwUnitBriefCell();
         cell.setIsTouchEnabled(true);
-        cell.getEventAgent().addPointerEventListener(PointerEventType.Tap, this._onCellTouchTap, this);
+        cell.getEventAgent().addPointerEventListener(Helpers_PointerInput.PointerEventType.Tap, this._onCellTouchTap, this);
         return cell;
     }
     private _destroyCell(cell: BwUnitBriefCell) {
         cell.setIsTouchEnabled(false);
-        cell.getEventAgent().removePointerEventListener(PointerEventType.Tap, this._onCellTouchTap, this);
+        cell.getEventAgent().removePointerEventListener(Helpers_PointerInput.PointerEventType.Tap, this._onCellTouchTap, this);
         cell.dispose();
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
-            tweenTime   : 50,
+        Tween_Executor.Executor.reset({
+            obj        : this._group,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
+            tweenTime  : 50,
         });
 
-        await wait(50);
+        await Timer_TimerModel.wait(50);
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: 40 },
-            tweenTime   : 50,
+        Tween_Executor.Executor.reset({
+            obj        : this._group,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : 40 },
+            tweenTime  : 50,
         });
 
-        await wait(50);
+        await Timer_TimerModel.wait(50);
     }
 }
 
@@ -292,39 +300,39 @@ const _IMAGE_SOURCE_AMMO        = `c04_t10_s02_f00`;
 const _IMAGE_SOURCE_MATERIAL    = `c04_t10_s05_f00`;
 const _IMAGE_SOURCE_FLARE       = `c04_t10_s02_f00`;
 
-class BwUnitBriefCell extends UiContainer {
-    private readonly _group!        : IUiContainer;
-    private readonly _conUnitView!  : IUiContainer;
-    private readonly _labelName!    : IUiLabel;
-    private readonly _labelBonus!   : IUiLabel;
+class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _conUnitView!  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelBonus!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupAttr!    : IUiLayout;
+    private readonly _groupAttr!    : Ui_Interfaces_IUiLayout.IUiLayout;
 
-    private readonly _imgHp!        : IUiImage;
-    private readonly _labelHp!      : IUiLabel;
+    private readonly _imgHp!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelHp!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _imgFuel!      : IUiImage;
-    private readonly _labelFuel!    : IUiLabel;
+    private readonly _imgFuel!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelFuel!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _imgState!     : IUiImage;
-    private readonly _labelState!   : IUiLabel;
+    private readonly _imgState!     : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelState!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView      = new (getUnitViewClass())();
+    private readonly _unitView      = Units_UnitViewPool.UnitViewPool.getInstance().acquire();
 
-    private _unit               : IUnit | null = null;
+    private _unit               : Units_Unit.Unit | null = null;
 
     public constructor() {
         super();
 
         this.setIsTouchChildrenEnabled(false);
-        this.setMouseStyle(MouseStyleType.Pointer);
+        this.setMouseStyle(Helpers_PointerInput.MouseStyleType.Pointer);
 
-        const resTypeId = getCurrentGameEssentialConfig().textureResolutionTypeId;
-        loadSkinByPath(
+        const resTypeId = GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId;
+        Ui_Utils_UiSkinHelpers.loadSkinByPath(
             this,
-            resTypeId === TextureResolutionId.Dor
+            resTypeId === Graphics_Constants.TextureResolutionId.Dor
                 ? `baseWar/BwUnitBriefCell.exml`
-                : `baseWar/BwUnitBriefCell_res${getNumText(resTypeId)}.exml`
+                : `baseWar/BwUnitBriefCell_res${Helpers_Text.getNumText(resTypeId)}.exml`,
         );
     }
 
@@ -335,7 +343,7 @@ class BwUnitBriefCell extends UiContainer {
         this._updateView();
     }
 
-    public setUnit(unit: IUnit): void {
+    public setUnit(unit: Units_Unit.Unit): void {
         this._unit = unit;
         this._updateView();
     }
@@ -348,13 +356,15 @@ class BwUnitBriefCell extends UiContainer {
 
         this._labelName.setText(
             unit.getCustomName()                                        ??
-            getUnitName(unit.getUnitType(), unit.getGcData())  ??
-            UndefinedError
+            Lang_Utils.getUnitName(unit.getUnitType(), unit.getGcData())  ??
+            Lang_Constants.UndefinedError,
         );
     }
 
     public dispose(): void {
-        this._unitView.stopRunningView();
+        const view = this._unitView;
+        this._conUnitView.removeUiChild(view);
+        Units_UnitViewPool.UnitViewPool.getInstance().release(view);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -366,7 +376,12 @@ class BwUnitBriefCell extends UiContainer {
             return;
         }
 
-        this._unitView.init(unit).startRunningView();
+        {
+            const unitView = this._unitView;
+            unitView.loadViewDataFromUnit(unit, unit.getWar(), true);
+            unitView.refreshAllViews();
+        }
+
         this._labelHp.setText(`${unit.getCurrentHp()}`);
         this._labelFuel.setText(`${unit.getCurrentFuel()}`);
         this.updateLabelName();
@@ -420,10 +435,10 @@ class BwUnitBriefCell extends UiContainer {
         const attackBonusFromOpa            = war.getWarEventManager().getOpaAttackPowerModifier(unit, gridIndex);
         const attackBonusFromWeather        = unit.getAttackModifierByWeather(gridIndex, observerTeamIndexSet, false);
         const attackBonusFromCo             = unit.getAttackModifierByCo({
-            selfGridIndex               : gridIndex,
-            isCounter                   : false,
-            observerTeamIndexSet        : observerTeamIndexSet,
-            useDamagePreviewSettings    : false,
+            selfGridIndex            : gridIndex,
+            isCounter                : false,
+            observerTeamIndexSet     : observerTeamIndexSet,
+            useDamagePreviewSettings : false,
         });
         const totalAttackBonus              = Math.floor(attackBonusFromCommonSettings + attackBonusFromGlobalTiles + attackBonusFromPromotion + attackBonusFromOpa + attackBonusFromWeather + attackBonusFromCo);
 
@@ -433,19 +448,19 @@ class BwUnitBriefCell extends UiContainer {
         const defenseBonusFromOpa           = war.getWarEventManager().getOpaDefenseModifier(unit, gridIndex);
         const defenseBonusFromGlobalTiles   = tileMap.getTotalGlobalDefenseBonus(unitPlayerIndex, observerTeamIndexSet, false);
         const defenseBonusFromCo            = unit.getDefenseModifierByCo({
-            selfGridIndex               : gridIndex,
-            attackerUnitTypeId          : null,
-            observerTeamIndexSet        : observerTeamIndexSet,
-            useDamagePreviewSettings    : false,
+            selfGridIndex            : gridIndex,
+            attackerUnitTypeId       : null,
+            observerTeamIndexSet     : observerTeamIndexSet,
+            useDamagePreviewSettings : false,
         });
         const totalDefenseBonus             = Math.floor(defenseBonusFromTile + defenseBonusFromPromotion + defenseBonusFromRule + defenseBonusFromOpa + defenseBonusFromGlobalTiles + defenseBonusFromCo);
 
-        label.setText(`A ${getSignedNumText(totalAttackBonus)}%\nD ${getSignedNumText(totalDefenseBonus)}%`);
+        label.setText(`A ${Helpers_Text.getSignedNumText(totalAttackBonus)}%\nD ${Helpers_Text.getSignedNumText(totalDefenseBonus)}%`);
     }
 }
 
-function getObserverTeamIndexSet(war: IBwWar): Set<number> | null {
-    if (war instanceof getSpwWarClass()) {
+function getObserverTeamIndexSet(war: BaseWar_Model_War.War): Set<number> | null {
+    if (war instanceof SinglePlayerWars_War.War) {
         const set           = new Set<number>();
         const playerInTurn  = war.getPlayerInTurn();
         if (playerInTurn.getUserId() != null) {

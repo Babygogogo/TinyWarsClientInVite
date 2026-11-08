@@ -1,77 +1,63 @@
-import type {
-    DecodedMapEditorData as AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData,
-    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { ReviewStatus } from "../../gameConfig/GcMap.ts";
-import { SlotConstants } from "../../gameConfig/GcMapEditor.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
-import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getCurrentLanguageType, getSecondaryLanguageType, getText } from "../../lang/Utils.ts";
-import { StoreMeFullData } from "../../localData/Storage.ts";
-import { warn } from "../../Logger.ts";
-import type { IMeWar } from "../interface/IMeWar.ts";
-import { createDefaultMapRawData, createDefaultTileDataArray } from "./MeHelpers.ts";
-import { reqMeGetAllMapDataTimestamps, reqMeGetMapData, reqMeGetMapDataArray } from "./MeProxy.ts";
-import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    AuxiliaryTypes_CachedDataAccessor,
+    GameConfigs_Provider,
+    MapEditor_Model_MeWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    MapEditor_Model_MeHelpers,
+    Helpers_Misc,
+    Users_Model,
+    NormalMap_Model_NormalMapModel,
+    MapEditor_Model_MeProxy,
+    Maps_Constants,
+    MapEditors_Constants,
+    LocalData_Storage,
+    Logger,
+    type MapEditor_Interface_IMeWar,
+} from "../../internal.ts";
+
 import type { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeDeleteSlot/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetAllMapDataTimestamps/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapData/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
-import type { GridMarkData as ProtoSchemaCommonProtoStructureGridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
+import type { S as MeDeleteSlotResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeDeleteSlot/S.ts";
+import type { S as MeGetAllMapDataTimestampsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetAllMapDataTimestamps/S.ts";
+import type { S as MeGetMapDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapData/S.ts";
+import type { S as MeGetMapDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataArray/S.ts";
+import type { S as MeGetMapDataTimestampResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
+import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import { getSelfUserId, getIsSelfMapCommittee, getSelfNickname } from "../../users/Model.ts";
 
-type DecodedMapEditorData   = AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type GridMarkData           = ProtoSchemaCommonProtoStructureGridMarkData;
-
-const _allDataTimestampsAccessor    = new CachedDataAccessor<null, Map<number, number | null>>({
-    reqData : () => reqMeGetAllMapDataTimestamps(),
+const _allDataTimestampsAccessor    = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, Map<number, number | null>>({
+    reqData : () => MapEditor_Model_MeProxy.reqMeGetAllMapDataTimestamps(),
 });
 /** 只用于保证收到过消息 */
-const _dataArrayAccessor            = new CachedDataAccessor<null, boolean>({
+const _dataArrayAccessor            = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, boolean>({
     reqData : () => { /** nothing to do */},
 });
-const _mapEditorDataAccessor        = new CachedDataAccessor<number, DecodedMapEditorData | null>({
-    reqData : slotIndex => reqMeGetMapData(slotIndex),
+const _mapEditorDataAccessor        = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, AuxiliaryTypes_AuxiliaryTypes.DecodedMapEditorData | null>({
+    reqData : slotIndex => MapEditor_Model_MeProxy.reqMeGetMapData(slotIndex),
 });
-let _war                        : IMeWar | null = null;
+let _war                        : MapEditor_Interface_IMeWar.IMeWar | null = null;
 
 export function init(): void {
     // nothing to do.
 }
 
-export function getAllDataTimestamps(): Promise<Undefinable<Map<number, Undefinable<number>>>> {
+export function getAllDataTimestamps(): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<Map<number, AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>>>> {
     return _allDataTimestampsAccessor.getData(null);
 }
 function setAllDataTimestamps(dict: Map<number, number>): void {
     _allDataTimestampsAccessor.setData(null, dict);
 }
 
-export async function getMapEditorData(slotIndex: number): Promise<Undefinable<DecodedMapEditorData>> {
+export async function getMapEditorData(slotIndex: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.DecodedMapEditorData>> {
     const timestamp = (await getAllDataTimestamps())?.get(slotIndex);
     if (timestamp == null) {
         return null;
     }
 
     const accessor  = _mapEditorDataAccessor;
-    const userId    = getSelfUserId();
+    const userId    = Users_Model.getSelfUserId();
     if (userId != null) {
-        const cachedData = await StoreMeFullData.getData(userId, slotIndex);
+        const cachedData = await LocalData_Storage.StoreMeFullData.getData(userId, slotIndex);
         if (cachedData != null) {
             if ((cachedData.dataTimestamp ?? 0) === timestamp) {
                 return cachedData;
@@ -83,18 +69,18 @@ export async function getMapEditorData(slotIndex: number): Promise<Undefinable<D
     // 取巧处理地图删除后重新创建的情况下，地图仍然显示为no data的问题
     return (await accessor.getData(slotIndex)) ?? (await accessor.getData(slotIndex, true));
 }
-async function setMapEditorData(slotIndex: number, data: DecodedMapEditorData | null): Promise<void> {
+async function setMapEditorData(slotIndex: number, data: AuxiliaryTypes_AuxiliaryTypes.DecodedMapEditorData | null): Promise<void> {
     _mapEditorDataAccessor.setData(slotIndex, data);
 
-    const userId = getSelfUserId();
+    const userId = Users_Model.getSelfUserId();
     if (userId != null) {
-        await StoreMeFullData.setData(userId, slotIndex, data);
+        await LocalData_Storage.StoreMeFullData.setData(userId, slotIndex, data);
     }
 }
 
-export async function updateOnMsgMeGetAllMapDataTimestamps(data: ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS): Promise<void> {
-    const selfUserId            = getSelfUserId();
-    const existingDataDict      = selfUserId == null ? null : await StoreMeFullData.getAllDataDictForKey1(selfUserId);
+export async function updateOnMsgMeGetAllMapDataTimestamps(data: MeGetAllMapDataTimestampsResponse): Promise<void> {
+    const selfUserId            = Users_Model.getSelfUserId();
+    const existingDataDict      = selfUserId == null ? null : await LocalData_Storage.StoreMeFullData.getAllDataDictForKey1(selfUserId);
     const infoArray             = data.getInfoArray();
     const neededSlotIndexSet    = new Set<number>();
     const resultDict            = new Map<number, number>();
@@ -112,41 +98,41 @@ export async function updateOnMsgMeGetAllMapDataTimestamps(data: ProtoSchemaComm
         }
     }
 
-    reqMeGetMapDataArray([...neededSlotIndexSet]);
+    MapEditor_Model_MeProxy.reqMeGetMapDataArray([...neededSlotIndexSet]);
     await _dataArrayAccessor.getData(null);
 
     setAllDataTimestamps(resultDict);
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function updateOnFailedMsgMeGetAllMapDataTimestamps(data: ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS): void {
+export function updateOnFailedMsgMeGetAllMapDataTimestamps(data: MeGetAllMapDataTimestampsResponse): void {
     _allDataTimestampsAccessor.updateOnRequestFailed(null);
 }
 
-export async function updateOnMsgMeGetMapDataArray(data: ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS): Promise<void> {
+export async function updateOnMsgMeGetMapDataArray(data: MeGetMapDataArrayResponse): Promise<void> {
     const promiseArray: Promise<void>[] = [];
     for (const d of data.getDataArray()) {
-        promiseArray.push(setMapEditorData(d.getSlotIndex() ?? 0, await convertMapEditorData(d)));
+        promiseArray.push(setMapEditorData(d.getSlotIndex(), await convertMapEditorData(d)));
     }
     await Promise.all(promiseArray);
 
     _dataArrayAccessor.setData(null, true);
 }
 
-export async function updateOnMsgMeGetMapDataTimestamp(data: ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS): Promise<void> {
+export async function updateOnMsgMeGetMapDataTimestamp(data: MeGetMapDataTimestampResponse): Promise<void> {
     (await getAllDataTimestamps())?.set(data.getSlotIndex() ?? 0, data.getDataTimestamp() ?? null);
 }
 
-export async function updateOnMsgMeGetMapData(msg: ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS): Promise<void> {
+export async function updateOnMsgMeGetMapData(msg: MeGetMapDataResponse): Promise<void> {
     await setMapEditorData(msg.getSlotIndex() ?? 0, await convertMapEditorData(msg.getData() ?? null));
 }
-export function updateOnFailedMsgMeGetMapData(data: ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS): void {
+export function updateOnFailedMsgMeGetMapData(data: MeGetMapDataResponse): void {
     const slotIndex = data.getSlotIndex();
     if (slotIndex != null) {
         _mapEditorDataAccessor.updateOnRequestFailed(slotIndex);
     }
 }
 
-export async function updateOnMsgMeDeleteSlot(data: S): Promise<void> {
+export async function updateOnMsgMeDeleteSlot(data: MeDeleteSlotResponse): Promise<void> {
     const slotIndex = data.getSlotIndex() ?? 0;
     (await getAllDataTimestamps())?.delete(slotIndex);
     return setMapEditorData(slotIndex, null);   // 会导致地图删除再创建时，仍会错误显示no data；正确做法是直接删掉缓存的key，但是担心引起各种异步问题，所以暂时不搞
@@ -156,7 +142,7 @@ export async function updateOnMsgMeDeleteSlot(data: S): Promise<void> {
 export async function getReviewingMapSlotIndex(): Promise<number | null> {
     const maxSlotsCount = getMaxSlotsCount();
     for (let slotIndex = 0; slotIndex < maxSlotsCount; ++slotIndex) {
-        if ((await getMapEditorData(slotIndex))?.reviewStatus === ReviewStatus.Reviewing) {
+        if ((await getMapEditorData(slotIndex))?.reviewStatus === Maps_Constants.ReviewStatus.Reviewing) {
             return slotIndex;
         }
     }
@@ -165,32 +151,32 @@ export async function getReviewingMapSlotIndex(): Promise<number | null> {
 }
 
 export function getMaxSlotsCount(): number {
-    return getIsSelfMapCommittee() ? SlotConstants.MaxSlotCountForCommittee : SlotConstants.MaxSlotCountForNormal;
+    return Users_Model.getIsSelfMapCommittee() ? MapEditors_Constants.SlotConstants.MaxSlotCountForCommittee : MapEditors_Constants.SlotConstants.MaxSlotCountForNormal;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for managing war.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function loadWar({ mapRawData, slotIndex, isReview, srcNormalMapIdForAddEvent, gridMarkData }: {
-    mapRawData                  : Undefinable<MapRawData>;
+    mapRawData                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapRawData>;
     slotIndex                   : number;
     isReview                    : boolean;
     srcNormalMapIdForAddEvent   : number | null;
-    gridMarkData                : Undefinable<GridMarkData>;
-}): Promise<IMeWar> {
+    gridMarkData                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<GridMarkData>;
+}): Promise<MapEditor_Interface_IMeWar.IMeWar> {
     if (_war) {
-        warn(`MeManager.loadWar() another war has been loaded already!`);
+        Logger.warn(`MeManager.loadWar() another war has been loaded already!`);
         unloadWar();
     }
 
-    const gameConfig    = await getLatestGameConfig();
-    _war                = new (getMeWarClass())();
+    const gameConfig    = await GameConfigs_Provider.getLatestGameConfig();
+    _war                = new MapEditor_Model_MeWar.MeWar(true);
     await _war.initWithMapRawData({
-        mapRawData                  : mapRawData ?? await createDefaultMapRawData(slotIndex, gameConfig),
-        slotIndex                   : slotIndex,
-        gameConfig                  : gameConfig,
-        srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-        gridMarkData                : gridMarkData,
+        mapRawData                : mapRawData ?? await MapEditor_Model_MeHelpers.createDefaultMapRawData(slotIndex, gameConfig),
+        slotIndex                 : slotIndex,
+        gameConfig                : gameConfig,
+        srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+        gridMarkData              : gridMarkData,
     });
     _war.setIsMapModified(false);
     _war.setIsReviewingMap(isReview);
@@ -202,40 +188,40 @@ export async function loadWar({ mapRawData, slotIndex, isReview, srcNormalMapIdF
 
 export function unloadWar(): void {
     if (_war) {
-        _war.stopRunning();
+        _war.dispose();
         _war = null;
     }
 }
 
-export function getWar(): IMeWar | null {
+export function getWar(): MapEditor_Interface_IMeWar.IMeWar | null {
     return _war;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Helpers.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-async function convertMapEditorData(data: MapEditorData | null): Promise<DecodedMapEditorData | null> {
+async function convertMapEditorData(data: MapEditorData | null): Promise<AuxiliaryTypes_AuxiliaryTypes.DecodedMapEditorData | null> {
     if (data == null) {
         return null;
     }
 
     const encodedMapRawData         = data.getEncodedMapRawData();
-    const reviewStatus              = data.getReviewStatus() ?? ReviewStatus.None;
+    const reviewStatus              = data.getReviewStatus();
     const srcNormalMapIdForAddEvent = data.getSrcNormalMapIdForAddEvent() ?? null;
-    const slotIndex                 = data.getSlotIndex() ?? 0;
+    const slotIndex                 = data.getSlotIndex();
     if (srcNormalMapIdForAddEvent == null) {
         return {
-            slotIndex                   : slotIndex,
-            reviewStatus                : reviewStatus,
-            reviewComment               : data.getReviewComment() ?? null,
-            mapRawData                  : await handleDeprecatedData(encodedMapRawData),
-            srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-            dataTimestamp               : data.getDataTimestamp() ?? 0,
-            gridMarkData                : data.getGridMarkData(),
+            slotIndex                 : slotIndex,
+            reviewStatus              : reviewStatus,
+            reviewComment             : data.getReviewComment() ?? null,
+            mapRawData                : await handleDeprecatedData(encodedMapRawData),
+            srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+            dataTimestamp             : data.getDataTimestamp(),
+            gridMarkData              : data.getGridMarkData(),
         };
     } else {
-        const srcMapRawData = getExisted(await getRawData(srcNormalMapIdForAddEvent)).clone();
-        const mapRawData    = MapRawData.decode(getExisted(encodedMapRawData));
+        const srcMapRawData = Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(srcNormalMapIdForAddEvent)).clone();
+        const mapRawData    = MapRawData.decode(Helpers_Misc.getExisted(encodedMapRawData));
         mapRawData.setDesignerName(srcMapRawData.getDesignerName());
         mapRawData.setDesignerUserId(srcMapRawData.getDesignerUserId());
         mapRawData.setMapExtraText(srcMapRawData.getMapExtraText());
@@ -252,12 +238,12 @@ async function convertMapEditorData(data: MapEditorData | null): Promise<Decoded
         mapRawData.setUnitCustomNameArray(srcMapRawData.getUnitCustomNameArray());
 
         {
-            const newRuleArray = srcMapRawData.getTemplateWarRuleArray() ?? [];
+            const newRuleArray = srcMapRawData.getTemplateWarRuleArray();
             for (const newRule of newRuleArray) {
                 newRule.createIfNotExistsRuleAvailability().setCanMcw(true);
 
-                const ruleId        = newRule.getRuleId() ?? 0;
-                const existingRule  = mapRawData.getTemplateWarRuleArray().find(v => (v.getRuleId() ?? 0) === ruleId);
+                const ruleId        = newRule.getRuleId();
+                const existingRule  = mapRawData.getTemplateWarRuleArray().find(v => (v.getRuleId()) === ruleId);
                 if (existingRule) {
                     newRule.setMapSimpleDialogueIdArray(existingRule.getMapSimpleDialogueIdArray());
                 }
@@ -304,49 +290,34 @@ async function convertMapEditorData(data: MapEditorData | null): Promise<Decoded
         mapRawData.setWarEventFullData(srcWarEventFullData);
 
         return {
-            slotIndex                   : slotIndex,
-            reviewStatus                : reviewStatus,
-            reviewComment               : data.getReviewComment() ?? null,
-            mapRawData                  : mapRawData,
-            srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-            dataTimestamp               : data.getDataTimestamp() ?? 0,
-            gridMarkData                : data.getGridMarkData(),
+            slotIndex                 : slotIndex,
+            reviewStatus              : reviewStatus,
+            reviewComment             : data.getReviewComment() ?? null,
+            mapRawData                : mapRawData,
+            srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+            dataTimestamp             : data.getDataTimestamp(),
+            gridMarkData              : data.getGridMarkData(),
         };
     }
 }
-async function handleDeprecatedData(encodedMapRawData: Undefinable<Uint8Array>): Promise<MapRawData | null> {
+async function handleDeprecatedData(encodedMapRawData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Uint8Array>): Promise<MapRawData | null> {
     const mapRawData = encodedMapRawData ? MapRawData.decode(encodedMapRawData) : null;
     if (mapRawData == null) {
         return null;
     }
 
     if ((!mapRawData.getMapWidth()) && (mapRawData.getCampaignMapData())) {
-        const mapWidth          = 20;
-        const mapHeight         = 15;
-        const campaignMapData   = mapRawData.getCampaignMapData();
-        const languageType1     = getCurrentLanguageType();
-        const languageType2     = getSecondaryLanguageType();
-        const gameConfig        = await getLatestGameConfig();
+        await GameConfigs_Provider.getLatestGameConfig();
 
-        mapRawData.setDesignerName(mapRawData.getDesignerName() ?? getSelfNickname());
-        mapRawData.setDesignerUserId(mapRawData.getDesignerUserId() ?? getSelfUserId());
-        mapRawData.setMapWidth(mapRawData.getMapWidth() ?? mapWidth);
-        mapRawData.setMapHeight(mapRawData.getMapHeight() ?? mapHeight);
-        mapRawData.setPlayersCountUnneutral(mapRawData.getPlayersCountUnneutral() ?? 2);
-        mapRawData.setModifiedTime(mapRawData.getModifiedTime() ?? getServerTimestamp());
-        mapRawData.setMapNameArray(mapRawData.getMapNameArray() ?? [
-            LanguageText.fromJson({
-                languageType: languageType1,
-                text        : `${getText(TextType.B1135, languageType1)} ${campaignMapData?.getCampaignId() ?? 0}-${campaignMapData?.getCampaignMapId() ?? 0}`,
-            }),
-            LanguageText.fromJson({
-                languageType: languageType2,
-                text        : `${getText(TextType.B1135, languageType2)} ${campaignMapData?.getCampaignId() ?? 0}-${campaignMapData?.getCampaignMapId() ?? 0}`,
-            }),
-        ]);
+        mapRawData.setDesignerName(mapRawData.getDesignerName() ?? Users_Model.getSelfNickname());
+        mapRawData.setDesignerUserId(mapRawData.getDesignerUserId() ?? Users_Model.getSelfUserId());
+        mapRawData.setMapWidth(mapRawData.getMapWidth());
+        mapRawData.setMapHeight(mapRawData.getMapHeight());
+        mapRawData.setPlayersCountUnneutral(mapRawData.getPlayersCountUnneutral());
+        mapRawData.setModifiedTime(mapRawData.getModifiedTime());
+        mapRawData.setMapNameArray(mapRawData.getMapNameArray());
         mapRawData.setTileDataArray(
-            mapRawData.getTileDataArray() ??
-            createDefaultTileDataArray(mapWidth, mapHeight, gameConfig.getDefaultTileBaseType(), gameConfig)
+            mapRawData.getTileDataArray(),
         );
         mapRawData.setWarEventFullData(mapRawData.getWarEventFullData() ?? new WarEventFullData());
     }

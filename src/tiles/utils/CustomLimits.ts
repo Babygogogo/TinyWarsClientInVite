@@ -1,251 +1,235 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
-    Building as TilesConstantsCustomLimitsBuilding,
-    Crystal as TilesConstantsCustomLimitsCrystal,
-    Cannon as TilesConstantsCustomLimitsCannon,
-    LaserTurret as TilesConstantsCustomLimitsLaserTurret,
-} from "../constants/CustomLimits.ts";
-
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+    Tiles_Constants_CustomLimits,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 
 export namespace Building {
-    
 
     export namespace DefenseAmount {
-        
 
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsBuilding.DefenseAmount.MinValue) && (value <= TilesConstantsCustomLimitsBuilding.DefenseAmount.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Building.DefenseAmount.MinValue) && (value <= Tiles_Constants_CustomLimits.Building.DefenseAmount.MaxValue);
         }
     }
 
     export namespace MaxCapturePoint {
-        
 
-        export function checkIsValid(value: Undefinable<number>): boolean {
+        export function checkIsValid(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
             return (value == null)
-                || ((value >= TilesConstantsCustomLimitsBuilding.MaxCapturePoint.MinValue) && (value <= TilesConstantsCustomLimitsBuilding.MaxCapturePoint.MaxValue));
+                || ((value >= Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MinValue) && (value <= Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MaxValue));
         }
     }
 
     export namespace RepairNormalizedHp {
-        
 
-        export function checkIsValid(value: Undefinable<number>): boolean {
+        export function checkIsValid(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
             return (value == null)
-                || ((value >= TilesConstantsCustomLimitsBuilding.RepairNormalizedHp.MinValue) && (value <= TilesConstantsCustomLimitsBuilding.RepairNormalizedHp.MaxValue));
+                || ((value >= Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MinValue) && (value <= Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MaxValue));
         }
     }
 
     export namespace IncomePerTurn {
-        
 
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsBuilding.IncomePerTurn.MinValue) && (value <= TilesConstantsCustomLimitsBuilding.IncomePerTurn.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Building.IncomePerTurn.MinValue) && (value <= Tiles_Constants_CustomLimits.Building.IncomePerTurn.MaxValue);
         }
     }
 
     export namespace VisionRange {
-        
 
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsBuilding.VisionRange.MinValue) && (value <= TilesConstantsCustomLimitsBuilding.VisionRange.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Building.VisionRange.MinValue) && (value <= Tiles_Constants_CustomLimits.Building.VisionRange.MaxValue);
         }
     }
 
     export namespace GlobalAttackBonus {
-        
 
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsBuilding.GlobalAttackBonus.MinValue) && (value <= TilesConstantsCustomLimitsBuilding.GlobalAttackBonus.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MinValue) && (value <= Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MaxValue);
         }
     }
 
     export namespace GlobalDefenseBonus {
-        
 
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsBuilding.GlobalDefenseBonus.MinValue) && (value <= TilesConstantsCustomLimitsBuilding.GlobalDefenseBonus.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Building.GlobalDefenseBonus.MinValue) && (value <= Tiles_Constants_CustomLimits.Building.GlobalDefenseBonus.MaxValue);
         }
     }
 }
 
 export namespace Crystal {
-    
 
     export namespace Radius {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCrystal.Radius.MinValue)
-                && (value <= TilesConstantsCustomLimitsCrystal.Radius.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Crystal.Radius.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Crystal.Radius.MaxValue);
         }
     }
 
     export namespace Priority {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCrystal.Priority.MinValue)
-                && (value <= TilesConstantsCustomLimitsCrystal.Priority.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Crystal.Priority.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Crystal.Priority.MaxValue);
         }
     }
 
     export namespace OffsetFund {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCrystal.OffsetFund.MinValue)
-                && (value <= TilesConstantsCustomLimitsCrystal.OffsetFund.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Crystal.OffsetFund.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Crystal.OffsetFund.MaxValue);
         }
     }
 
     export namespace OffsetEnergyPercentage {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCrystal.OffsetEnergyPercentage.MinValue)
-                && (value <= TilesConstantsCustomLimitsCrystal.OffsetEnergyPercentage.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MaxValue);
         }
     }
 
     export namespace OffsetHp {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCrystal.OffsetHp.MinValue)
-                && (value <= TilesConstantsCustomLimitsCrystal.OffsetHp.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Crystal.OffsetHp.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Crystal.OffsetHp.MaxValue);
         }
     }
 
     export namespace OffsetFuelPercentage {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCrystal.OffsetFuelPercentage.MinValue)
-                && (value <= TilesConstantsCustomLimitsCrystal.OffsetFuelPercentage.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MaxValue);
         }
     }
 
     export namespace OffsetPrimaryAmmoPercentage {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCrystal.OffsetPrimaryAmmoPercentage.MinValue)
-                && (value <= TilesConstantsCustomLimitsCrystal.OffsetPrimaryAmmoPercentage.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MaxValue);
         }
     }
 }
 
 export namespace Cannon {
-    
 
     export namespace RangeForUp {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCannon.RangeForUp.MinValue)
-                && (value <= TilesConstantsCustomLimitsCannon.RangeForUp.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Cannon.RangeForUp.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Cannon.RangeForUp.MaxValue);
         }
     }
 
     export namespace RangeForDown {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCannon.RangeForDown.MinValue)
-                && (value <= TilesConstantsCustomLimitsCannon.RangeForDown.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Cannon.RangeForDown.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Cannon.RangeForDown.MaxValue);
         }
     }
 
     export namespace RangeForLeft {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCannon.RangeForLeft.MinValue)
-                && (value <= TilesConstantsCustomLimitsCannon.RangeForLeft.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Cannon.RangeForLeft.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Cannon.RangeForLeft.MaxValue);
         }
     }
 
     export namespace RangeForRight {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCannon.RangeForRight.MinValue)
-                && (value <= TilesConstantsCustomLimitsCannon.RangeForRight.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Cannon.RangeForRight.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Cannon.RangeForRight.MaxValue);
         }
     }
 
     export namespace Priority {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCannon.Priority.MinValue)
-                && (value <= TilesConstantsCustomLimitsCannon.Priority.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Cannon.Priority.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Cannon.Priority.MaxValue);
         }
     }
 
     export namespace MaxTargetCount {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCannon.MaxTargetCount.MinValue)
-                && (value <= TilesConstantsCustomLimitsCannon.MaxTargetCount.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Cannon.MaxTargetCount.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Cannon.MaxTargetCount.MaxValue);
         }
     }
 
     export namespace OffsetHp {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCannon.OffsetHp.MinValue)
-                && (value <= TilesConstantsCustomLimitsCannon.OffsetHp.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Cannon.OffsetHp.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Cannon.OffsetHp.MaxValue);
         }
     }
 
     export namespace OffsetFuelPercentage {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCannon.OffsetFuelPercentage.MinValue)
-                && (value <= TilesConstantsCustomLimitsCannon.OffsetFuelPercentage.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Cannon.OffsetFuelPercentage.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Cannon.OffsetFuelPercentage.MaxValue);
         }
     }
 
     export namespace OffsetPrimaryAmmoPercentage {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsCannon.OffsetPrimaryAmmoPercentage.MinValue)
-                && (value <= TilesConstantsCustomLimitsCannon.OffsetPrimaryAmmoPercentage.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.Cannon.OffsetPrimaryAmmoPercentage.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.Cannon.OffsetPrimaryAmmoPercentage.MaxValue);
         }
     }
 }
 
 export namespace LaserTurret {
-    
 
     export namespace RangeForUp {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsLaserTurret.RangeForUp.MinValue)
-                && (value <= TilesConstantsCustomLimitsLaserTurret.RangeForUp.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.LaserTurret.RangeForUp.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.LaserTurret.RangeForUp.MaxValue);
         }
     }
 
     export namespace RangeForDown {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsLaserTurret.RangeForDown.MinValue)
-                && (value <= TilesConstantsCustomLimitsLaserTurret.RangeForDown.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.LaserTurret.RangeForDown.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.LaserTurret.RangeForDown.MaxValue);
         }
     }
 
     export namespace RangeForLeft {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsLaserTurret.RangeForLeft.MinValue)
-                && (value <= TilesConstantsCustomLimitsLaserTurret.RangeForLeft.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.LaserTurret.RangeForLeft.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.LaserTurret.RangeForLeft.MaxValue);
         }
     }
 
     export namespace RangeForRight {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsLaserTurret.RangeForRight.MinValue)
-                && (value <= TilesConstantsCustomLimitsLaserTurret.RangeForRight.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.LaserTurret.RangeForRight.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.LaserTurret.RangeForRight.MaxValue);
         }
     }
 
     export namespace Priority {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsLaserTurret.Priority.MinValue)
-                && (value <= TilesConstantsCustomLimitsLaserTurret.Priority.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.LaserTurret.Priority.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.LaserTurret.Priority.MaxValue);
         }
     }
 
     export namespace OffsetHp {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsLaserTurret.OffsetHp.MinValue)
-                && (value <= TilesConstantsCustomLimitsLaserTurret.OffsetHp.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.LaserTurret.OffsetHp.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.LaserTurret.OffsetHp.MaxValue);
         }
     }
 
     export namespace OffsetFuelPercentage {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsLaserTurret.OffsetFuelPercentage.MinValue)
-                && (value <= TilesConstantsCustomLimitsLaserTurret.OffsetFuelPercentage.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.LaserTurret.OffsetFuelPercentage.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.LaserTurret.OffsetFuelPercentage.MaxValue);
         }
     }
 
     export namespace OffsetPrimaryAmmoPercentage {
         export function checkIsValid(value: number): boolean {
-            return (value >= TilesConstantsCustomLimitsLaserTurret.OffsetPrimaryAmmoPercentage.MinValue)
-                && (value <= TilesConstantsCustomLimitsLaserTurret.OffsetPrimaryAmmoPercentage.MaxValue);
+            return (value >= Tiles_Constants_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MinValue)
+                && (value <= Tiles_Constants_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MaxValue);
         }
     }
 }

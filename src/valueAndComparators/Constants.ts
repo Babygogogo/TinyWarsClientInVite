@@ -1,6 +1,6 @@
 import { ValueAndComparator } from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum ComparatorId {
     EqualTo           = 1,
     NotEqualTo,
@@ -19,6 +19,6 @@ export const AllComparatorIdArray = [
 ];
 
 export const Equal0 = ValueAndComparator.fromJson({
-    value       : 0,
-    comparator  : ComparatorId.EqualTo,
+    value      : 0,
+    comparator : ComparatorId.EqualTo,
 });

@@ -1,54 +1,48 @@
-import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getWarEventActionCategoryName, getWarEventActionTypeName } from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { ActionTypeId, CategoryId, TypeDict } from "../../warEvents/actions/constants/Common.ts";
-import { getActionTypeId, resetAction, openActionModifyPanel } from "../../warEvents/actions/utils/Common.ts";
-
-type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventAction             = ProtoSchemaCommonProtoWarEventWarEventAction;
+import {
+    WarEvents_Actions_Constants_Common,
+    Graphics_Constants,
+    Notifications_Dispatcher,
+    Tween_Executor,
+    WarEvents_Actions_Utils_Common,
+    Lang_Utils,
+    Lang_Constants,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 
 export interface OpenData {
-    war         : IMeWar;
+    war         : MapEditor_Interface_IMeWar.IMeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!      : IUiImage;
-    private readonly _group!        : IUiContainer;
-    private readonly _labelTitle!   : IUiLabel;
-    private readonly _btnClose!     : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listCategory! : IUiScrollList<DataForCategoryRenderer>;
-    private readonly _listType!     : IUiScrollList<DataForTypeRenderer>;
-    private readonly _labelTips!    : IUiLabel;
+    private readonly _listCategory! : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForCategoryRenderer>;
+    private readonly _listType!     : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForTypeRenderer>;
+    private readonly _labelTips!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private _selectedType           : ActionTypeId | null = null;
+    private _selectedType           : WarEvents_Actions_Constants_Common.ActionTypeId | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -66,7 +60,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const actionType        = getActionTypeId(action);
+        const actionType        = WarEvents_Actions_Utils_Common.getActionTypeId(action);
         this._selectedType      = null;
         await this._initListCategory();
         await this.setAndReviseSelectedCategory(actionType == null ? null : getActionCategory(actionType), true);
@@ -80,7 +74,7 @@ export class Panel extends UiPanel<OpenData> {
         await super._onClosed();
     }
 
-    public checkHasSelectedCategory(category: CategoryId): boolean {
+    public checkHasSelectedCategory(category: WarEvents_Actions_Constants_Common.CategoryId): boolean {
         return this._listCategory.getFirstSelectedData()?.category === category;
     }
     public async setAndReviseSelectedCategory(newCategory: number | null, needScroll: boolean): Promise<void> {
@@ -95,10 +89,10 @@ export class Panel extends UiPanel<OpenData> {
         this._selectedType = null;
         await this._updateListType();
     }
-    public checkHasSelectedType(actionType: ActionTypeId): boolean {
+    public checkHasSelectedType(actionType: WarEvents_Actions_Constants_Common.ActionTypeId): boolean {
         return this._selectedType === actionType;
     }
-    public updateOnSelectActionType(actionType: ActionTypeId): void {
+    public updateOnSelectActionType(actionType: WarEvents_Actions_Constants_Common.ActionTypeId): void {
         const oldSelectedActionType = this._selectedType;
         if (oldSelectedActionType === actionType) {
             const openData = this.getOpenData();
@@ -108,11 +102,11 @@ export class Panel extends UiPanel<OpenData> {
 
             const action    = openData.action;
             const war       = openData.war;
-            if (actionType !== getActionTypeId(action)) {
-                resetAction(action, actionType, war.getGcData());
-                openActionModifyPanel(war, openData.fullData, action);
+            if (actionType !== WarEvents_Actions_Utils_Common.getActionTypeId(action)) {
+                WarEvents_Actions_Utils_Common.resetAction(action, actionType, war.getGcData());
+                WarEvents_Actions_Utils_Common.openActionModifyPanel(war, openData.fullData, action);
 
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             }
             this.closePanel();
 
@@ -136,19 +130,19 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0516));
-        this._labelTips.setText(getText(TextType.B1249));
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0516);
+        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
     }
     private async _initListCategory(): Promise<void> {
         const action        = this.getOpenData()?.action;
-        const actionType    = action == null ? null : getActionTypeId(action);
+        const actionType    = action == null ? null : WarEvents_Actions_Utils_Common.getActionTypeId(action);
         const categoryInUse = actionType == null ? null : getActionCategory(actionType);
         const dataArray     : DataForCategoryRenderer[] = [];
-        for (const [category] of TypeDict) {
+        for (const [category] of WarEvents_Actions_Constants_Common.TypeDict) {
             dataArray.push({
-                category    : category,
-                isInUse     : category === categoryInUse,
-                panel       : this,
+                category : category,
+                isInUse  : category === categoryInUse,
+                panel    : this,
             });
         }
 
@@ -168,11 +162,11 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const dataArray: DataForTypeRenderer[] = [];
-        for (const newActionType of TypeDict.get(category) ?? []) {
+        for (const newActionType of WarEvents_Actions_Constants_Common.TypeDict.get(category) ?? []) {
             dataArray.push({
-                newActionType   : newActionType,
-                action          : action,
-                panel           : this,
+                newActionType : newActionType,
+                action        : action,
+                panel         : this,
             });
         }
 
@@ -180,16 +174,15 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForCategoryRenderer extends UiListItemData {
-    category    : CategoryId;
+interface DataForCategoryRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    category    : WarEvents_Actions_Constants_Common.CategoryId;
     isInUse     : boolean;
     panel       : Panel;
 }
 class CategoryRenderer
-    extends     UiListItemRenderer<DataForCategoryRenderer>
-    implements  IUiListItemRenderer<DataForCategoryRenderer>
-{
-    private readonly _labelCategory!    : IUiLabel;
+    extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForCategoryRenderer>
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForCategoryRenderer> {
+    private readonly _labelCategory!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -202,8 +195,8 @@ class CategoryRenderer
         }
 
         const label = this._labelCategory;
-        label.setText(getWarEventActionCategoryName(data.category) ?? UndefinedError);
-        label.setTextColor(data.isInUse ? ColorValue.Green : ColorValue.White);
+        label.setText(Lang_Utils.getWarEventActionCategoryName(data.category) ?? Lang_Constants.UndefinedError);
+        label.setTextColor(data.isInUse ? Graphics_Constants.ColorValue.Green : Graphics_Constants.ColorValue.White);
     }
 
     public onItemTapEvent(): void {
@@ -212,20 +205,20 @@ class CategoryRenderer
     }
 }
 
-interface DataForTypeRenderer extends UiListItemData {
-    newActionType   : ActionTypeId;
+interface DataForTypeRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    newActionType   : WarEvents_Actions_Constants_Common.ActionTypeId;
     action          : WarEventAction;
     panel           : Panel;
 }
-class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
-    private readonly _groupSelect!  : IUiContainer;
-    private readonly _labelType!    : IUiLabel;
-    private readonly _labelUsing!   : IUiLabel;
-    private readonly _imgSelected!  : IUiImage;
+class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTypeRenderer> {
+    private readonly _groupSelect!  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelType!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUsing!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgSelected!  : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",    callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -234,13 +227,13 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.removeTweens(imgSelected);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        Executor.removeTweens(this._imgSelected);
+        Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
     }
@@ -261,7 +254,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelUsing.setText(getText(TextType.B0503));
+        this._labelUsing.setLangText(Lang_Constants.TextType.B0503);
 
         this._updateLabelType();
     }
@@ -276,7 +269,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
         if (openData == null) {
             label.setText(``);
         } else {
-            label.setText(getWarEventActionTypeName(openData.newActionType) || UndefinedError);
+            label.setText(Lang_Utils.getWarEventActionTypeName(openData.newActionType) || Lang_Constants.UndefinedError);
         }
     }
     private _updateImgSelected(): void {
@@ -293,12 +286,12 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
             return;
         }
 
-        this._labelUsing.setIsVisible(getActionTypeId(openData.action) === openData.newActionType);
+        this._labelUsing.setIsVisible(WarEvents_Actions_Utils_Common.getActionTypeId(openData.action) === openData.newActionType);
     }
 }
 
-function getActionCategory(actionType: ActionTypeId): CategoryId | null {
-    for (const [category, arr] of TypeDict) {
+function getActionCategory(actionType: WarEvents_Actions_Constants_Common.ActionTypeId): WarEvents_Actions_Constants_Common.CategoryId | null {
+    for (const [category, arr] of WarEvents_Actions_Constants_Common.TypeDict) {
         if (arr.indexOf(actionType) >= 0) {
             return category;
         }

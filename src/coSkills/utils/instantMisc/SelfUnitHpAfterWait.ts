@@ -1,7 +1,9 @@
-import type { GcData } from "../../../gameConfig/GcData.ts";
-import { getValueInRange } from "../../../numbers/Utils.ts";
+import {
+    Numbers_Utils,
+    Units_Constants,
+    type GameConfigs_GameConfig,
+} from "../../../internal.ts";
 import type { SelfUnitHpAfterWait } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitHpAfterWait.ts";
-import { Hp } from "../../../units/Constants.ts";
 
 export function getTotalOffset({
     cfg,
@@ -10,20 +12,20 @@ export function getTotalOffset({
     currentHp,
 }: {
     cfg         : SelfUnitHpAfterWait;
-    gameConfig  : GcData;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
     maxHp       : number;
     currentHp   : number;
 }): number {
-    const realHpOffset  = cfg.getRealHpOffset() ?? 0;
-    let newHp           = getValueInRange({
-        maxValue    : maxHp,
-        minValue    : 1,
-        rawValue    : currentHp + realHpOffset,
+    const realHpOffset  = cfg.getRealHpOffset();
+    let newHp           = Numbers_Utils.getValueInRange({
+        maxValue : maxHp,
+        minValue : 1,
+        rawValue : currentHp + realHpOffset,
     });
     if (realHpOffset > 0) {
-        const remainder = newHp % Hp.Normalizer;
+        const remainder = newHp % Units_Constants.Hp.Normalizer;
         if (remainder != 0) {
-            newHp += Hp.Normalizer - remainder;
+            newHp += Units_Constants.Hp.Normalizer - remainder;
         }
     }
     return newHp - currentHp;

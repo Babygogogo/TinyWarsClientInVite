@@ -1,11 +1,15 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { getHrwWarClass } from "../../gameHelpers/GhFactory.ts";
-import type { IHrwWar } from "../interface/IHrwWar.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { warn } from "../../Logger.ts";
+import {
+    GameConfigs_Provider,
+    AuxiliaryTypes_GridIndex,
+    HalfwayReplayWar_Model_HrwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Helpers_Collection,
+    Logger,
+    type HalfwayReplayWar_Interface_IHrwWar,
+} from "../../internal.ts";
+
 import { CommonExtraDataForWarOperation } from "../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
 import type { GridIndexAndPathInfo } from "../../proto/schema/CommonProto/Structure/GridIndexAndPathInfo.ts";
 import { MovingUnitAndPath } from "../../proto/schema/CommonProto/Structure/MovingUnitAndPath.ts";
@@ -48,11 +52,8 @@ import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SerialWeatherManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type Undefinable<T>                     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
-let _war    : Undefinable<IHrwWar>;
+let _war    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<HalfwayReplayWar_Interface_IHrwWar.IHrwWar>;
 
 export function init(): void {
     // nothing to do
@@ -61,14 +62,14 @@ export function init(): void {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for managing war.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function loadWar(warData: SerialWar): Promise<IHrwWar> {
+export async function loadWar(warData: SerialWar): Promise<HalfwayReplayWar_Interface_IHrwWar.IHrwWar> {
     if (_war) {
-        warn(`HrwModel.loadWar() another war has been loaded already!`);
+        Logger.warn(`HrwModel.loadWar() another war has been loaded already!`);
         unloadWar();
     }
 
-    const war = new (getHrwWarClass())();
-    war.init(warData, await getGameConfig(getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
+    const war = new HalfwayReplayWar_Model_HrwWar.HrwWar(true);
+    war.init(warData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
     war.startRunning().startRunningView();
     _war = war;
     return _war;
@@ -76,12 +77,12 @@ export async function loadWar(warData: SerialWar): Promise<IHrwWar> {
 
 export function unloadWar(): void {
     if (_war) {
-        _war.stopRunning();
+        _war.dispose();
         _war = null;
     }
 }
 
-export function getWar(): Undefinable<IHrwWar> {
+export function getWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<HalfwayReplayWar_Interface_IHrwWar.IHrwWar> {
     return _war;
 }
 
@@ -93,7 +94,7 @@ export function generateExecutedActions(warData: SerialWar): WoContainer[] {
     for (let i = 0; i < actionsCount; ++i) {
         const actionArrayForTeams: WoContainer[] = new Array(teamsCount);
         for (let j = 0; j < teamsCount; ++j) {
-            actionArrayForTeams[j] = getExisted(halfwayReplayActionArray[j].getOperationArray(), ClientErrorCode.HrwModel_GenerateExecutedActions_00)[i];
+            actionArrayForTeams[j] = halfwayReplayActionArray[j].getOperationArray()[i];
         }
         rearrangedHalfwayActionArray[i] = actionArrayForTeams;
     }
@@ -102,39 +103,39 @@ export function generateExecutedActions(warData: SerialWar): WoContainer[] {
     for (let i = 0; i < actionsCount; ++i) {
         const actionForTeams = rearrangedHalfwayActionArray[i];
         executedActionArray.push(WoContainer.fromJson({
-            operationId                 : actionForTeams[0]?.getOperationId(),
-            WoPlayerDeleteUnit          : mergePlayerDeleteUnit(getNonNullElements(actionForTeams.map(v => v.getWoPlayerDeleteUnit())))?.toJson(),
-            WoPlayerEndTurn             : mergePlayerEndTurn(getNonNullElements(actionForTeams.map(v => v.getWoPlayerEndTurn())))?.toJson(),
-            WoPlayerProduceUnit         : mergePlayerProduceUnit(getNonNullElements(actionForTeams.map(v => v.getWoPlayerProduceUnit())))?.toJson(),
-            WoPlayerSurrender           : mergePlayerSurrender(getNonNullElements(actionForTeams.map(v => v.getWoPlayerSurrender())))?.toJson(),
-            WoPlayerUseCoSkill          : mergePlayerUseCoSkill(getNonNullElements(actionForTeams.map(v => v.getWoPlayerUseCoSkill())))?.toJson(),
-            WoPlayerVoteForDraw         : mergePlayerVoteForDraw(getNonNullElements(actionForTeams.map(v => v.getWoPlayerVoteForDraw())))?.toJson(),
-            WoSystemBeginTurn           : mergeSystemBeginTurn(getNonNullElements(actionForTeams.map(v => v.getWoSystemBeginTurn())))?.toJson(),
-            WoSystemCallWarEvent        : mergeSystemCallWarEvent(getNonNullElements(actionForTeams.map(v => v.getWoSystemCallWarEvent())))?.toJson(),
-            WoSystemDestroyPlayerForce  : mergeSystemDestroyPlayerForce(getNonNullElements(actionForTeams.map(v => v.getWoSystemDestroyPlayerForce())))?.toJson(),
-            WoSystemEndTurn             : mergeSystemEndTurn(getNonNullElements(actionForTeams.map(v => v.getWoSystemEndTurn())))?.toJson(),
-            WoSystemEndWar              : mergeSystemEndWar(getNonNullElements(actionForTeams.map(v => v.getWoSystemEndWar())))?.toJson(),
-            WoSystemHandleBootPlayer    : mergeSystemHandleBootPlayer(getNonNullElements(actionForTeams.map(v => v.getWoSystemHandleBootPlayer())))?.toJson(),
-            WoSystemVoteForDraw         : mergeSystemVoteForDraw(getNonNullElements(actionForTeams.map(v => v.getWoSystemVoteForDraw())))?.toJson(),
-            WoUnitAttackTile            : mergeUnitAttackTile(getNonNullElements(actionForTeams.map(v => v.getWoUnitAttackTile())))?.toJson(),
-            WoUnitAttackUnit            : mergeUnitAttackUnit(getNonNullElements(actionForTeams.map(v => v.getWoUnitAttackUnit())))?.toJson(),
-            WoUnitBeLoaded              : mergeUnitBeLoaded(getNonNullElements(actionForTeams.map(v => v.getWoUnitBeLoaded())))?.toJson(),
-            WoUnitBuildTile             : mergeUnitBuildTile(getNonNullElements(actionForTeams.map(v => v.getWoUnitBuildTile())))?.toJson(),
-            WoUnitCaptureTile           : mergeUnitCaptureTile(getNonNullElements(actionForTeams.map(v => v.getWoUnitCaptureTile())))?.toJson(),
-            WoUnitCrushUnit             : mergeUnitCrushUnit(getNonNullElements(actionForTeams.map(v => v.getWoUnitCrushUnit())))?.toJson(),
-            WoUnitDive                  : mergeUnitDive(getNonNullElements(actionForTeams.map(v => v.getWoUnitDive())))?.toJson(),
-            WoUnitDropUnit              : mergeUnitDropUnit(getNonNullElements(actionForTeams.map(v => v.getWoUnitDropUnit())))?.toJson(),
-            WoUnitJoinUnit              : mergeUnitJoinUnit(getNonNullElements(actionForTeams.map(v => v.getWoUnitJoinUnit())))?.toJson(),
-            WoUnitLaunchFlare           : mergeUnitLaunchFlare(getNonNullElements(actionForTeams.map(v => v.getWoUnitLaunchFlare())))?.toJson(),
-            WoUnitLaunchSilo            : mergeUnitLaunchSilo(getNonNullElements(actionForTeams.map(v => v.getWoUnitLaunchSilo())))?.toJson(),
-            WoUnitBoardedByCo           : mergeUnitBoardedByCo(getNonNullElements(actionForTeams.map(v => v.getWoUnitBoardedByCo())))?.toJson(),
-            WoUnitProduceUnit           : mergeUnitProduceUnit(getNonNullElements(actionForTeams.map(v => v.getWoUnitProduceUnit())))?.toJson(),
-            WoUnitRepairUnit            : mergeUnitRepairUnit(getNonNullElements(actionForTeams.map(v => v.getWoUnitRepairUnit())))?.toJson(),
-            WoUnitSelfDetonate          : mergeUnitSelfDetonate(getNonNullElements(actionForTeams.map(v => v.getWoUnitSelfDetonate())))?.toJson(),
-            WoUnitSupplyUnit            : mergeUnitSupplyUnit(getNonNullElements(actionForTeams.map(v => v.getWoUnitSupplyUnit())))?.toJson(),
-            WoUnitSurface               : mergeUnitSurface(getNonNullElements(actionForTeams.map(v => v.getWoUnitSurface())))?.toJson(),
-            WoUnitUseCoSkill            : mergeUnitUseCoSkill(getNonNullElements(actionForTeams.map(v => v.getWoUnitUseCoSkill())))?.toJson(),
-            WoUnitWait                  : mergeUnitWait(getNonNullElements(actionForTeams.map(v => v.getWoUnitWait())))?.toJson(),
+            operationId                : actionForTeams[0]?.getOperationId(),
+            WoPlayerDeleteUnit         : mergePlayerDeleteUnit(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoPlayerDeleteUnit())))?.toJson(),
+            WoPlayerEndTurn            : mergePlayerEndTurn(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoPlayerEndTurn())))?.toJson(),
+            WoPlayerProduceUnit        : mergePlayerProduceUnit(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoPlayerProduceUnit())))?.toJson(),
+            WoPlayerSurrender          : mergePlayerSurrender(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoPlayerSurrender())))?.toJson(),
+            WoPlayerUseCoSkill         : mergePlayerUseCoSkill(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoPlayerUseCoSkill())))?.toJson(),
+            WoPlayerVoteForDraw        : mergePlayerVoteForDraw(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoPlayerVoteForDraw())))?.toJson(),
+            WoSystemBeginTurn          : mergeSystemBeginTurn(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoSystemBeginTurn())))?.toJson(),
+            WoSystemCallWarEvent       : mergeSystemCallWarEvent(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoSystemCallWarEvent())))?.toJson(),
+            WoSystemDestroyPlayerForce : mergeSystemDestroyPlayerForce(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoSystemDestroyPlayerForce())))?.toJson(),
+            WoSystemEndTurn            : mergeSystemEndTurn(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoSystemEndTurn())))?.toJson(),
+            WoSystemEndWar             : mergeSystemEndWar(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoSystemEndWar())))?.toJson(),
+            WoSystemHandleBootPlayer   : mergeSystemHandleBootPlayer(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoSystemHandleBootPlayer())))?.toJson(),
+            WoSystemVoteForDraw        : mergeSystemVoteForDraw(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoSystemVoteForDraw())))?.toJson(),
+            WoUnitAttackTile           : mergeUnitAttackTile(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitAttackTile())))?.toJson(),
+            WoUnitAttackUnit           : mergeUnitAttackUnit(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitAttackUnit())))?.toJson(),
+            WoUnitBeLoaded             : mergeUnitBeLoaded(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitBeLoaded())))?.toJson(),
+            WoUnitBuildTile            : mergeUnitBuildTile(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitBuildTile())))?.toJson(),
+            WoUnitCaptureTile          : mergeUnitCaptureTile(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitCaptureTile())))?.toJson(),
+            WoUnitCrushUnit            : mergeUnitCrushUnit(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitCrushUnit())))?.toJson(),
+            WoUnitDive                 : mergeUnitDive(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitDive())))?.toJson(),
+            WoUnitDropUnit             : mergeUnitDropUnit(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitDropUnit())))?.toJson(),
+            WoUnitJoinUnit             : mergeUnitJoinUnit(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitJoinUnit())))?.toJson(),
+            WoUnitLaunchFlare          : mergeUnitLaunchFlare(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitLaunchFlare())))?.toJson(),
+            WoUnitLaunchSilo           : mergeUnitLaunchSilo(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitLaunchSilo())))?.toJson(),
+            WoUnitBoardedByCo          : mergeUnitBoardedByCo(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitBoardedByCo())))?.toJson(),
+            WoUnitProduceUnit          : mergeUnitProduceUnit(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitProduceUnit())))?.toJson(),
+            WoUnitRepairUnit           : mergeUnitRepairUnit(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitRepairUnit())))?.toJson(),
+            WoUnitSelfDetonate         : mergeUnitSelfDetonate(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitSelfDetonate())))?.toJson(),
+            WoUnitSupplyUnit           : mergeUnitSupplyUnit(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitSupplyUnit())))?.toJson(),
+            WoUnitSurface              : mergeUnitSurface(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitSurface())))?.toJson(),
+            WoUnitUseCoSkill           : mergeUnitUseCoSkill(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitUseCoSkill())))?.toJson(),
+            WoUnitWait                 : mergeUnitWait(Helpers_Collection.getNonNullElements(actionForTeams.map(v => v.getWoUnitWait())))?.toJson(),
         }));
     }
 
@@ -144,8 +145,8 @@ export function generateExecutedActions(warData: SerialWar): WoContainer[] {
 function mergePlayerDeleteUnit(actionArray: WoPlayerDeleteUnit[]): WoPlayerDeleteUnit | null {
     return actionArray.length
         ? WoPlayerDeleteUnit.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -153,8 +154,8 @@ function mergePlayerDeleteUnit(actionArray: WoPlayerDeleteUnit[]): WoPlayerDelet
 function mergePlayerEndTurn(actionArray: WoPlayerEndTurn[]): WoPlayerEndTurn | null {
     return actionArray.length
         ? WoPlayerEndTurn.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -162,8 +163,8 @@ function mergePlayerEndTurn(actionArray: WoPlayerEndTurn[]): WoPlayerEndTurn | n
 function mergePlayerProduceUnit(actionArray: WoPlayerProduceUnit[]): WoPlayerProduceUnit | null {
     return actionArray.length
         ? WoPlayerProduceUnit.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -171,8 +172,8 @@ function mergePlayerProduceUnit(actionArray: WoPlayerProduceUnit[]): WoPlayerPro
 function mergePlayerSurrender(actionArray: WoPlayerSurrender[]): WoPlayerSurrender | null {
     return actionArray.length
         ? WoPlayerSurrender.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -180,12 +181,12 @@ function mergePlayerSurrender(actionArray: WoPlayerSurrender[]): WoPlayerSurrend
 function mergePlayerUseCoSkill(actionArray: WoPlayerUseCoSkill[]): WoPlayerUseCoSkill | null {
     return actionArray.length
         ? WoPlayerUseCoSkill.fromJson({
-            targetGridIndexArray    : actionArray[0].getTargetGridIndexArray().map(v => v.toJson()),
-            extraData               : {
-                commonExtraData         : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
-                skillDataArray          : actionArray[0].getExtraData()?.getSkillDataArray().map(v => v.toJson()) ?? [],
-                skillType               : actionArray[0].getExtraData()?.getSkillType(),
-                targetGridIndexArray    : [],
+            targetGridIndexArray : actionArray[0].getTargetGridIndexArray().map(v => v.toJson()),
+            extraData            : {
+                commonExtraData      : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+                skillDataArray       : actionArray[0].getExtraData()?.getSkillDataArray().map(v => v.toJson()) ?? [],
+                skillType            : actionArray[0].getExtraData()?.getSkillType(),
+                targetGridIndexArray : [],
             },
         })
         : null;
@@ -193,8 +194,8 @@ function mergePlayerUseCoSkill(actionArray: WoPlayerUseCoSkill[]): WoPlayerUseCo
 function mergePlayerVoteForDraw(actionArray: WoPlayerVoteForDraw[]): WoPlayerVoteForDraw | null {
     return actionArray.length
         ? WoPlayerVoteForDraw.fromJson({
-            extraData: {
-                commonExtraData : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
                 isAgree         : actionArray[0].getExtraData()?.getIsAgree(),
             },
         })
@@ -203,8 +204,8 @@ function mergePlayerVoteForDraw(actionArray: WoPlayerVoteForDraw[]): WoPlayerVot
 function mergeSystemBeginTurn(actionArray: WoSystemBeginTurn[]): WoSystemBeginTurn | null {
     return actionArray.length
         ? WoSystemBeginTurn.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -219,7 +220,7 @@ function mergeSystemCallWarEvent(actionArray: WoSystemCallWarEvent[]): WoSystemC
         warEventId          : action.getWarEventId(),
         nodeAndActionsIndex : action.getNodeAndActionsIndex(),
         extraData           : {
-            commonExtraData         : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             // deprecatedWarEventId    : action.getExtraData()?.getDeprecatedWarEventId(),
         },
     });
@@ -227,9 +228,9 @@ function mergeSystemCallWarEvent(actionArray: WoSystemCallWarEvent[]): WoSystemC
 function mergeSystemDestroyPlayerForce(actionArray: WoSystemDestroyPlayerForce[]): WoSystemDestroyPlayerForce | null {
     return actionArray.length
         ? WoSystemDestroyPlayerForce.fromJson({
-            extraData: {
-                commonExtraData     : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
-                targetPlayerIndex   : actionArray[0].getExtraData()?.getTargetPlayerIndex(),
+            extraData : {
+                commonExtraData   : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+                targetPlayerIndex : actionArray[0].getExtraData()?.getTargetPlayerIndex(),
             },
         })
         : null;
@@ -237,8 +238,8 @@ function mergeSystemDestroyPlayerForce(actionArray: WoSystemDestroyPlayerForce[]
 function mergeSystemEndTurn(actionArray: WoSystemEndTurn[]): WoSystemEndTurn | null {
     return actionArray.length
         ? WoSystemEndTurn.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -246,8 +247,8 @@ function mergeSystemEndTurn(actionArray: WoSystemEndTurn[]): WoSystemEndTurn | n
 function mergeSystemEndWar(actionArray: WoSystemEndWar[]): WoSystemEndWar | null {
     return actionArray.length
         ? WoSystemEndWar.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -255,8 +256,8 @@ function mergeSystemEndWar(actionArray: WoSystemEndWar[]): WoSystemEndWar | null
 function mergeSystemHandleBootPlayer(actionArray: WoSystemHandleBootPlayer[]): WoSystemHandleBootPlayer | null {
     return actionArray.length
         ? WoSystemHandleBootPlayer.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -264,8 +265,8 @@ function mergeSystemHandleBootPlayer(actionArray: WoSystemHandleBootPlayer[]): W
 function mergeSystemVoteForDraw(actionArray: WoSystemVoteForDraw[]): WoSystemVoteForDraw | null {
     return actionArray.length
         ? WoSystemVoteForDraw.fromJson({
-            extraData: {
-                commonExtraData : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
                 isAgree         : actionArray[0].getExtraData()?.getIsAgree(),
             },
         })
@@ -274,8 +275,8 @@ function mergeSystemVoteForDraw(actionArray: WoSystemVoteForDraw[]): WoSystemVot
 function mergeUnitAttackTile(actionArray: WoUnitAttackTile[]): WoUnitAttackTile | null {
     return actionArray.length
         ? WoUnitAttackTile.fromJson({
-            extraData: {
-                commonExtraData : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
                 targetGridIndex : actionArray[0].getExtraData()?.getTargetGridIndex()?.toJson(),
             },
         })
@@ -284,8 +285,8 @@ function mergeUnitAttackTile(actionArray: WoUnitAttackTile[]): WoUnitAttackTile 
 function mergeUnitAttackUnit(actionArray: WoUnitAttackUnit[]): WoUnitAttackUnit | null {
     return actionArray.length
         ? WoUnitAttackUnit.fromJson({
-            extraData: {
-                commonExtraData : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
                 targetGridIndex : actionArray[0].getExtraData()?.getTargetGridIndex()?.toJson(),
             },
         })
@@ -294,8 +295,8 @@ function mergeUnitAttackUnit(actionArray: WoUnitAttackUnit[]): WoUnitAttackUnit 
 function mergeUnitBeLoaded(actionArray: WoUnitBeLoaded[]): WoUnitBeLoaded | null {
     return actionArray.length
         ? WoUnitBeLoaded.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -303,8 +304,8 @@ function mergeUnitBeLoaded(actionArray: WoUnitBeLoaded[]): WoUnitBeLoaded | null
 function mergeUnitBuildTile(actionArray: WoUnitBuildTile[]): WoUnitBuildTile | null {
     return actionArray.length
         ? WoUnitBuildTile.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -312,8 +313,8 @@ function mergeUnitBuildTile(actionArray: WoUnitBuildTile[]): WoUnitBuildTile | n
 function mergeUnitCaptureTile(actionArray: WoUnitCaptureTile[]): WoUnitCaptureTile | null {
     return actionArray.length
         ? WoUnitCaptureTile.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -321,8 +322,8 @@ function mergeUnitCaptureTile(actionArray: WoUnitCaptureTile[]): WoUnitCaptureTi
 function mergeUnitCrushUnit(actionArray: WoUnitCrushUnit[]): WoUnitCrushUnit | null {
     return actionArray.length
         ? WoUnitCrushUnit.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -330,8 +331,8 @@ function mergeUnitCrushUnit(actionArray: WoUnitCrushUnit[]): WoUnitCrushUnit | n
 function mergeUnitDive(actionArray: WoUnitDive[]): WoUnitDive | null {
     return actionArray.length
         ? WoUnitDive.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -359,19 +360,19 @@ function mergeUnitDropUnit(actionArray: WoUnitDropUnit[]): WoUnitDropUnit | null
     }
 
     return WoUnitDropUnit.fromJson({
-        dropDestinations    : [],
-        extraData           : {
-            commonExtraData             : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
-            isDropBlocked               : actionArray[0].getExtraData()?.getIsDropBlocked(),
-            droppingUnitAndPathArray    : getNonNullElements(droppingUnitAndPathArrays.map(v => mergeMovingUnitAndPathArray(v))).map(v => v.toJson()),
+        dropDestinations : [],
+        extraData        : {
+            commonExtraData          : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            isDropBlocked            : actionArray[0].getExtraData()?.getIsDropBlocked(),
+            droppingUnitAndPathArray : Helpers_Collection.getNonNullElements(droppingUnitAndPathArrays.map(v => mergeMovingUnitAndPathArray(v))).map(v => v.toJson()),
         },
     });
 }
 function mergeUnitJoinUnit(actionArray: WoUnitJoinUnit[]): WoUnitJoinUnit | null {
     return actionArray.length
         ? WoUnitJoinUnit.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -379,10 +380,10 @@ function mergeUnitJoinUnit(actionArray: WoUnitJoinUnit[]): WoUnitJoinUnit | null
 function mergeUnitLaunchFlare(actionArray: WoUnitLaunchFlare[]): WoUnitLaunchFlare | null {
     return actionArray.length
         ? WoUnitLaunchFlare.fromJson({
-            extraData: {
-                commonExtraData     : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
-                targetGridIndex     : actionArray[0].getExtraData()?.getTargetGridIndex()?.toJson(),
-                flareRadius         : actionArray[0].getExtraData()?.getFlareRadius(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+                targetGridIndex : actionArray[0].getExtraData()?.getTargetGridIndex()?.toJson(),
+                flareRadius     : actionArray[0].getExtraData()?.getFlareRadius(),
             },
         })
         : null;
@@ -390,9 +391,9 @@ function mergeUnitLaunchFlare(actionArray: WoUnitLaunchFlare[]): WoUnitLaunchFla
 function mergeUnitLaunchSilo(actionArray: WoUnitLaunchSilo[]): WoUnitLaunchSilo | null {
     return actionArray.length
         ? WoUnitLaunchSilo.fromJson({
-            extraData: {
-                commonExtraData     : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
-                targetGridIndex     : actionArray[0].getExtraData()?.getTargetGridIndex()?.toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+                targetGridIndex : actionArray[0].getExtraData()?.getTargetGridIndex()?.toJson(),
             },
         })
         : null;
@@ -400,8 +401,8 @@ function mergeUnitLaunchSilo(actionArray: WoUnitLaunchSilo[]): WoUnitLaunchSilo 
 function mergeUnitBoardedByCo(actionArray: WoUnitBoardedByCo[]): WoUnitBoardedByCo | null {
     return actionArray.length
         ? WoUnitBoardedByCo.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -409,8 +410,8 @@ function mergeUnitBoardedByCo(actionArray: WoUnitBoardedByCo[]): WoUnitBoardedBy
 function mergeUnitProduceUnit(actionArray: WoUnitProduceUnit[]): WoUnitProduceUnit | null {
     return actionArray.length
         ? WoUnitProduceUnit.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -418,8 +419,8 @@ function mergeUnitProduceUnit(actionArray: WoUnitProduceUnit[]): WoUnitProduceUn
 function mergeUnitRepairUnit(actionArray: WoUnitRepairUnit[]): WoUnitRepairUnit | null {
     return actionArray.length
         ? WoUnitRepairUnit.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -427,8 +428,8 @@ function mergeUnitRepairUnit(actionArray: WoUnitRepairUnit[]): WoUnitRepairUnit 
 function mergeUnitSelfDetonate(actionArray: WoUnitSelfDetonate[]): WoUnitSelfDetonate | null {
     return actionArray.length
         ? WoUnitSelfDetonate.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -436,8 +437,8 @@ function mergeUnitSelfDetonate(actionArray: WoUnitSelfDetonate[]): WoUnitSelfDet
 function mergeUnitSupplyUnit(actionArray: WoUnitSupplyUnit[]): WoUnitSupplyUnit | null {
     return actionArray.length
         ? WoUnitSupplyUnit.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -445,8 +446,8 @@ function mergeUnitSupplyUnit(actionArray: WoUnitSupplyUnit[]): WoUnitSupplyUnit 
 function mergeUnitSurface(actionArray: WoUnitSurface[]): WoUnitSurface | null {
     return actionArray.length
         ? WoUnitSurface.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
@@ -454,12 +455,12 @@ function mergeUnitSurface(actionArray: WoUnitSurface[]): WoUnitSurface | null {
 function mergeUnitUseCoSkill(actionArray: WoUnitUseCoSkill[]): WoUnitUseCoSkill | null {
     return actionArray.length
         ? WoUnitUseCoSkill.fromJson({
-            targetGridIndexArray    : actionArray[0].getTargetGridIndexArray().map(v => v.toJson()),
-            extraData               : {
-                commonExtraData         : mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
-                skillDataArray          : actionArray[0].getExtraData()?.getSkillDataArray().map(v => v.toJson()) ?? [],
-                skillType               : actionArray[0].getExtraData()?.getSkillType(),
-                targetGridIndexArray    : [],
+            targetGridIndexArray : actionArray[0].getTargetGridIndexArray().map(v => v.toJson()),
+            extraData            : {
+                commonExtraData      : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+                skillDataArray       : actionArray[0].getExtraData()?.getSkillDataArray().map(v => v.toJson()) ?? [],
+                skillType            : actionArray[0].getExtraData()?.getSkillType(),
+                targetGridIndexArray : [],
             },
         })
         : null;
@@ -467,16 +468,16 @@ function mergeUnitUseCoSkill(actionArray: WoUnitUseCoSkill[]): WoUnitUseCoSkill 
 function mergeUnitWait(actionArray: WoUnitWait[]): WoUnitWait | null {
     return actionArray.length
         ? WoUnitWait.fromJson({
-            extraData: {
-                commonExtraData: mergeCommonExtraData(actionArray.map(v => getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
+            extraData : {
+                commonExtraData : mergeCommonExtraData(actionArray.map(v => Helpers_Misc.getExisted(v.getExtraData()?.getCommonExtraData()))).toJson(),
             },
         })
         : null;
 }
 
 function mergeCommonExtraData(dataArray: CommonExtraDataForWarOperation[]): CommonExtraDataForWarOperation {
-    let nextUnitId                                  : AuxiliaryTypesAuxiliaryTypesUndefinable<number>;
-    let weatherManager                              : AuxiliaryTypesAuxiliaryTypesUndefinable<SerialWeatherManager>;
+    let nextUnitId                                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    let weatherManager                              : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWeatherManager>;
     const destroyedUnitIdArray                      : number[] = [];
     const customCounterArray                        : CustomCounter[] = [];
     const hiddenUnitIdArray                         : number[] = [];
@@ -506,31 +507,31 @@ function mergeCommonExtraData(dataArray: CommonExtraDataForWarOperation[]): Comm
     }
 
     return CommonExtraDataForWarOperation.fromJson({
-        nextUnitId                              : nextUnitId,
-        weatherManager                          : weatherManager?.toJson(),
-        destroyedUnitIdArray                    : destroyedUnitIdArray,
-        customCounterArray                      : customCounterArray.map(v => v.toJson()),
-        hiddenUnitIdArray                       : hiddenUnitIdArray,
-        tileArrayAfterAction                    : tileArrayAfterAction.map(v => v.toJson()),
-        unitArrayAfterAction                    : unitArrayAfterAction.map(v => v.toJson()),
-        playerArrayAfterAction                  : playerArrayAfterAction.map(v => v.toJson()),
-        visibilityArrayFromPathsAfterAction     : visibilityArrayFromPathsAfterAction,
-        visibilityArrayFromPathsAfterWarEvent   : [...unitMovePathVisibilitySetAfterWarEvent],
-        movingUnitAndPath                       : mergeMovingUnitAndPathArray(movingUnitAndPathArray)?.toJson(),
-        taskObjectiveStateArray                 : [],
+        nextUnitId                            : nextUnitId,
+        weatherManager                        : weatherManager?.toJson(),
+        destroyedUnitIdArray                  : destroyedUnitIdArray,
+        customCounterArray                    : customCounterArray.map(v => v.toJson()),
+        hiddenUnitIdArray                     : hiddenUnitIdArray,
+        tileArrayAfterAction                  : tileArrayAfterAction.map(v => v.toJson()),
+        unitArrayAfterAction                  : unitArrayAfterAction.map(v => v.toJson()),
+        playerArrayAfterAction                : playerArrayAfterAction.map(v => v.toJson()),
+        visibilityArrayFromPathsAfterAction   : visibilityArrayFromPathsAfterAction,
+        visibilityArrayFromPathsAfterWarEvent : [...unitMovePathVisibilitySetAfterWarEvent],
+        movingUnitAndPath                     : mergeMovingUnitAndPathArray(movingUnitAndPathArray)?.toJson(),
+        taskObjectiveStateArray               : [],
     });
 }
-function mergeDestroyedUnitIdArray(src: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>, dst: number[]): void {
+function mergeDestroyedUnitIdArray(src: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, dst: number[]): void {
     for (const id of src ?? []) {
         if (dst.indexOf(id) < 0) {
             dst.push(id);
         }
     }
 }
-function mergeCustomCounterArray(src: AuxiliaryTypesAuxiliaryTypesUndefinable<CustomCounter[]>, dst: CustomCounter[]): void {
+function mergeCustomCounterArray(src: AuxiliaryTypes_AuxiliaryTypes.Undefinable<CustomCounter[]>, dst: CustomCounter[]): void {
     for (const srcData of src ?? []) {
-        const id            = srcData.getCustomCounterId() ?? 0;
-        const existingData  = dst.find(v => (v.getCustomCounterId() ?? 0) === id);
+        const id            = srcData.getCustomCounterId();
+        const existingData  = dst.find(v => (v.getCustomCounterId()) === id);
         if (existingData) {
             existingData.setValue(srcData.getValue());
         } else {
@@ -538,29 +539,29 @@ function mergeCustomCounterArray(src: AuxiliaryTypesAuxiliaryTypesUndefinable<Cu
         }
     }
 }
-function mergeHiddenUnitIdArray(src: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>, dst: number[]): void {
+function mergeHiddenUnitIdArray(src: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, dst: number[]): void {
     for (const id of src ?? []) {
         if (dst.indexOf(id) < 0) {
             dst.push(id);
         }
     }
 }
-function mergeTileArrayAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinable<SerialTile[]>, dst: SerialTile[]): void {
+function mergeTileArrayAfterAction(src: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTile[]>, dst: SerialTile[]): void {
     for (const tileData of src ?? []) {
-        const gridIndex = getExisted(GridIndex.convertGridIndex(tileData.getGridIndex()), ClientErrorCode.HrwModel_MergeTileArrayAfterAction_00);
-        if (!dst.find(v => GridIndex.convertGridIndex(v.getGridIndex())?.checkIsEqual(gridIndex))) {
+        const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(tileData.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.HrwModel_MergeTileArrayAfterAction_00);
+        if (!dst.find(v => AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex())?.checkIsEqual(gridIndex))) {
             dst.push(tileData);
         }
     }
 }
-function mergeUnitArrayAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinable<SerialUnit[]>, dst: SerialUnit[]): void {
+function mergeUnitArrayAfterAction(src: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialUnit[]>, dst: SerialUnit[]): void {
     for (const unitData of src ?? []) {
         if (!dst.find(v => v.getUnitId() === unitData.getUnitId())) {
             dst.push(unitData);
         }
     }
 }
-function mergePlayerArrayAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinable<SerialPlayer[]>, dst: SerialPlayer[]): void {
+function mergePlayerArrayAfterAction(src: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayer[]>, dst: SerialPlayer[]): void {
     for (const playerData of src ?? []) {
         const existingPlayerData = dst.find(v => v.getPlayerIndex() == playerData.getPlayerIndex());
         if (!existingPlayerData) {
@@ -572,14 +573,14 @@ function mergePlayerArrayAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinabl
         }
     }
 }
-function mergeVisibilityArrayFromPathsAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>, dst: number[]): void {
+function mergeVisibilityArrayFromPathsAfterAction(src: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, dst: number[]): void {
     for (const id of src ?? []) {
         if (dst.indexOf(id) < 0) {
             dst.push(id);
         }
     }
 }
-function mergeUnitMovePathVisibilityAfterWarEvent(src: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>, dst: Set<number>): void {
+function mergeUnitMovePathVisibilityAfterWarEvent(src: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, dst: Set<number>): void {
     for (const id of src ?? []) {
         dst.add(id);
     }
@@ -607,8 +608,8 @@ function mergeMovingUnitAndPathArray(array: MovingUnitAndPath[]): MovingUnitAndP
         return array[0] ?? null;
     } else {
         array.sort((v1, v2) => {
-            const path1     = getExisted(v1.getPath(), ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_00);
-            const path2     = getExisted(v2.getPath(), ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_01);
+            const path1     = v1.getPath();
+            const path2     = v2.getPath();
             const lastNode1 = path1[path1.length - 1];
             const lastNode2 = path2[path2.length - 1];
             if (lastNode1.getIsVisible()) {
@@ -617,10 +618,10 @@ function mergeMovingUnitAndPathArray(array: MovingUnitAndPath[]): MovingUnitAndP
                 return -1;
             }
 
-            const firstGridIndex1   = getExisted(GridIndex.convertGridIndex(path1[0].getGridIndex()), ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_02);
-            const firstGridIndex2   = getExisted(GridIndex.convertGridIndex(path2[0].getGridIndex()), ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_03);
-            const lastGridIndex1    = getExisted(GridIndex.convertGridIndex(lastNode1.getGridIndex()), ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_04);
-            const lastGridIndex2    = getExisted(GridIndex.convertGridIndex(lastNode2.getGridIndex()), ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_05);
+            const firstGridIndex1   = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(path1[0].getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_02);
+            const firstGridIndex2   = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(path2[0].getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_03);
+            const lastGridIndex1    = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode1.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_04);
+            const lastGridIndex2    = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode2.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_05);
             if (firstGridIndex1.checkIsAdjacent(lastGridIndex2)) {
                 return 1;
             } else if (firstGridIndex2.checkIsAdjacent(lastGridIndex1)) {
@@ -637,8 +638,8 @@ function mergeMovingUnitAndPathArray(array: MovingUnitAndPath[]): MovingUnitAndP
             }
         }
         return MovingUnitAndPath.fromJson({
-            unit    : array[0].getUnit()?.toJson(),
-            path    : mergedPath.map(v => v.toJson()),
+            unit : array[0].getUnit()?.toJson(),
+            path : mergedPath.map(v => v.toJson()),
         });
     }
 }
@@ -659,10 +660,10 @@ function mergeMovingUnitAndPath(data1: MovingUnitAndPath, data2: MovingUnitAndPa
     const length2 = path2.length;
     for (let index1 = 0; index1 < length1; ++index1) {
         const node1         = path1[index1];
-        const gridIndex1    = getExisted(GridIndex.convertGridIndex(node1.getGridIndex()), ClientErrorCode.HrwModel_MergeMovingUnitAndPath_00);
+        const gridIndex1    = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(node1.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.HrwModel_MergeMovingUnitAndPath_00);
         for (let index2 = 0; index2 < length2; ++index2) {
             const node2         = path2[index2];
-            const gridIndex2    = getExisted(GridIndex.convertGridIndex(node2.getGridIndex()), ClientErrorCode.HrwModel_MergeMovingUnitAndPath_01);
+            const gridIndex2    = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(node2.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.HrwModel_MergeMovingUnitAndPath_01);
 
             if (gridIndex1.checkIsEqual(gridIndex2)) {
                 const dstPath = path1.map(v => v.clone());
@@ -684,8 +685,8 @@ function mergeMovingUnitAndPath(data1: MovingUnitAndPath, data2: MovingUnitAndPa
                 }
 
                 return MovingUnitAndPath.fromJson({
-                    unit    : unit1.clone().toJson(),
-                    path    : dstPath.map(v => v.toJson()),
+                    unit : unit1.clone().toJson(),
+                    path : dstPath.map(v => v.toJson()),
                 });
             }
         }

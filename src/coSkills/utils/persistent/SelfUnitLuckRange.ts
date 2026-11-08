@@ -1,5 +1,7 @@
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+} from "../../../internal.ts";
 import type { SelfUnitLuckRange } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitLuckRange.ts";
 
 export function getTotalOffset({
@@ -12,35 +14,35 @@ export function getTotalOffset({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfUnitLuckRange | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): { lower: number; upper: number } {
     if (cfg == null) {
-        return { lower: 0, upper: 0 };
+        return { lower : 0, upper : 0 };
     }
 
     {
         const unitCategoryId = cfg.getUnitCategoryId();
         if ((unitCategoryId != null) && (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, unitCategoryId))) {
-            return { lower: 0, upper: 0 };
+            return { lower : 0, upper : 0 };
         }
     }
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-            coZoneRadius                : coZoneRadius,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+            coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+            coZoneRadius             : coZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))
     ) {
-        return { lower: 0, upper: 0 };
+        return { lower : 0, upper : 0 };
     }
 
-    return { lower: cfg.getLowerOffset() ?? 0, upper: cfg.getUpperOffset() ?? 0 };
+    return { lower : cfg.getLowerOffset(), upper : cfg.getUpperOffset() };
 }
 export function getTotalOffsetForDamageCalculatorPanel({
     cfg,
@@ -48,19 +50,19 @@ export function getTotalOffsetForDamageCalculatorPanel({
     unitTypeId,
 }: {
     cfg                         : SelfUnitLuckRange | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
 }): { lower: number; upper: number } {
     if (cfg == null) {
-        return { lower: 0, upper: 0 };
+        return { lower : 0, upper : 0 };
     }
 
     {
         const unitCategoryId = cfg.getUnitCategoryId();
         if ((unitCategoryId != null) && (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, unitCategoryId))) {
-            return { lower: 0, upper: 0 };
+            return { lower : 0, upper : 0 };
         }
     }
 
-    return { lower: cfg.getLowerOffset() ?? 0, upper: cfg.getUpperOffset() ?? 0 };
+    return { lower : cfg.getLowerOffset(), upper : cfg.getUpperOffset() };
 }

@@ -1,14 +1,13 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { TypeName, ConfigDict } from "./Constants.ts";
-import type { GameVersionConfig as GameVersionsTypesGameVersionConfig } from "./Types.ts";
-import { getExisted } from "../helpers/Misc.ts";
+import {
+    GameVersions_Constants,
+    Helpers_Misc,
+    type GameVersions_Types,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
-type GameVersionConfig  = GameVersionsTypesGameVersionConfig;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
-export function getGameEssentialConfig(version: TypeName): Undefinable<GameVersionConfig> {
-    return ConfigDict.get(version);
+export function getGameEssentialConfig(version: GameVersions_Constants.TypeName): AuxiliaryTypes_AuxiliaryTypes.Undefinable<GameVersions_Types.GameVersionConfig> {
+    return GameVersions_Constants.ConfigDict.get(version);
 }
-export function getCurrentGameEssentialConfig(): GameVersionConfig {
-    return getExisted(getGameEssentialConfig(window.GAME_VERSION));
+export function getCurrentGameEssentialConfig(): GameVersions_Types.GameVersionConfig {
+    return Helpers_Misc.getExisted(getGameEssentialConfig(window.GAME_VERSION));
 }

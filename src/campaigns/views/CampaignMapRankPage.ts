@@ -1,43 +1,44 @@
-import { getCampaignMapLeaderboard } from "../mains/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getSuffixForRankIndex } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
-import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import { getSelfCawHighScoreInfo, getUserPublicInfo } from "../../users/Model.ts";
+import {
+    Campaigns_Mains_Provider,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Users_Model,
+    Helpers_Text,
+    Lang_Utils,
+    Ui_Utils_UiSkinHelpers,
+    GamePanels_Manager,
+    Lang_Constants,
+    Ui_Types_UiHorizontalAlign,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiOpenableComponent,
+    Ui_Types_UiVerticalAlign,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export type OpenData = {
     campaignId      : number;
     campaignMapId   : number;
 } | null;
-export class Page extends UiOpenableComponent<OpenData> {
-    private readonly _listRule! : IUiScrollList<DataForRuleRenderer>;
+export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData> {
+    private readonly _listRule! : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForRuleRenderer>;
 
     public constructor() {
         super();
 
-        loadSkinByPath(this, "campaigns/views/CampaignMapRankPage.exml");
+        Ui_Utils_UiSkinHelpers.loadSkinByPath(this, "campaigns/views/CampaignMapRankPage.exml");
     }
 
     public updateOnLoadedSkin(): void {
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
 
         this._listRule.setItemRendererClass(RuleRenderer);
@@ -70,30 +71,30 @@ export class Page extends UiOpenableComponent<OpenData> {
         const campaignMapId = openData.campaignMapId;
         const dataArray: DataForRuleRenderer[] = [];
         dataArray.push({
-            campaignId      : campaignId,
-            campaignMapId   : campaignMapId,
+            campaignId    : campaignId,
+            campaignMapId : campaignMapId,
         });
         await listRule.bindData(dataArray);
     }
 }
 
-interface DataForRuleRenderer extends UiListItemData {
+interface DataForRuleRenderer extends Ui_Types_UiListItemData.UiListItemData {
     campaignId      : number;
     campaignMapId   : number;
 }
-class RuleRenderer extends UiListItemRenderer<DataForRuleRenderer> {
-    private readonly _layoutMyScore!        : IUiLayout;
-    private readonly _labelMyScoreTitle!    : IUiLabel;
-    private readonly _labelMyScore!         : IUiLabel;
+class RuleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForRuleRenderer> {
+    private readonly _layoutMyScore!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelMyScoreTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMyScore!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelStdNoData!       : IUiLabel;
-    private readonly _labelStdNickname!     : IUiLabel;
-    private readonly _labelStdScore!        : IUiLabel;
-    private readonly _listStd!              : IUiScrollList<DataForUserRenderer>;
+    private readonly _labelStdNoData!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelStdNickname!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelStdScore!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _listStd!              : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForUserRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type : "LanguageChanged",        callback : this._onNotifyLanguageChanged },
         ]);
 
         this._listStd.setItemRendererClass(UserRenderer);
@@ -123,10 +124,10 @@ class RuleRenderer extends UiListItemRenderer<DataForRuleRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelMyScoreTitle.setText(`${getText(TextType.B0822)}:`);
-        this._labelStdNoData.setLangText(TextType.B0278);
-        this._labelStdNickname.setLangText(TextType.B0175);
-        this._labelStdScore.setLangText(TextType.B0579);
+        this._labelMyScoreTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0822)}:`);
+        this._labelStdNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelStdNickname.setLangText(Lang_Constants.TextType.B0175);
+        this._labelStdScore.setLangText(Lang_Constants.TextType.B0579);
 
         this._layoutMyScore.arrangeItems();
     }
@@ -140,15 +141,15 @@ class RuleRenderer extends UiListItemRenderer<DataForRuleRenderer> {
         const campaignId    = openData.campaignId;
         const campaignMapId = openData.campaignMapId;
         const dataArray     : DataForUserRenderer[] = [];
-        for (const rankData of await getCampaignMapLeaderboard(campaignId, campaignMapId) ?? []) {
+        for (const rankData of await Campaigns_Mains_Provider.getCampaignMapLeaderboard(campaignId, campaignMapId) ?? []) {
             const score = rankData.getScore() ?? 0;
-            for (const userId of rankData.getUserIdArray() ?? []) {
+            for (const userId of rankData.getUserIdArray()) {
                 dataArray.push({
-                    index       : 0,
-                    rank        : 0,
-                    userId      : userId,
-                    score       : score,
-                    isLast      : false,
+                    index  : 0,
+                    rank   : 0,
+                    userId : userId,
+                    score  : score,
+                    isLast : false,
                 });
             }
         }
@@ -172,32 +173,32 @@ class RuleRenderer extends UiListItemRenderer<DataForRuleRenderer> {
         this._labelStdNoData.setIsVisible(!length);
         await this._listStd.bindData(dataArray);
 
-        const myScore       = getSelfCawHighScoreInfo(campaignId, campaignMapId)?.getHighScore();
+        const myScore       = Users_Model.getSelfCawHighScoreInfo(campaignId, campaignMapId)?.getHighScore();
         const labelMyScore  = this._labelMyScore;
         if (myScore == null) {
             labelMyScore.setText(`--`);
         } else {
             const rank          = dataArray.find(v => v.score === myScore)?.rank;
-            labelMyScore.setText(rank == null ? `${myScore} (--)` : `${myScore} (${rank}${getSuffixForRankIndex(rank)})`);
+            labelMyScore.setText(rank == null ? `${myScore} (--)` : `${myScore} (${rank}${Helpers_Text.getSuffixForRankIndex(rank)})`);
         }
         this._layoutMyScore.arrangeItems();
     }
 }
 
-interface DataForUserRenderer extends UiListItemData {
+interface DataForUserRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index       : number;
     rank        : number;
     userId      : number;
     score       : number;
     isLast      : boolean;
 }
-class UserRenderer extends UiListItemRenderer<DataForUserRenderer> {
-    private readonly _group!            : IUiContainer;
-    private readonly _imgBg!            : IUiImage;
-    private readonly _imgBottomLine!    : IUiImage;
-    private readonly _labelIndex!       : IUiLabel;
-    private readonly _labelNickname!    : IUiLabel;
-    private readonly _labelScore!       : IUiLabel;
+class UserRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUserRenderer> {
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBg!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgBottomLine!    : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelIndex!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNickname!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelScore!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -208,7 +209,7 @@ class UserRenderer extends UiListItemRenderer<DataForUserRenderer> {
     }
 
     public override onItemTapEvent(): void {
-        openPanel(getDict().UserPanel, { userId: this.getOpenData()?.userId });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : this.getOpenData()?.userId });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -222,13 +223,13 @@ class UserRenderer extends UiListItemRenderer<DataForUserRenderer> {
 
         const rank          = openData.rank;
         const labelNickname = this._labelNickname;
-        labelNickname.setLangText(TextType.B0029);
-        this._labelIndex.setText(`${rank}${getSuffixForRankIndex(rank)}`);
+        labelNickname.setLangText(Lang_Constants.TextType.B0029);
+        this._labelIndex.setText(`${rank}${Helpers_Text.getSuffixForRankIndex(rank)}`);
         this._labelScore.setText(`${openData.score}`);
         this._imgBg.setAlpha(openData.index % 2 == 1 ? 0.2 : 0.5);
         this._imgBottomLine.setIsVisible(openData.isLast);
 
-        const userInfo = getExisted(await getUserPublicInfo(openData.userId));
-        labelNickname.setText(userInfo.getNickname() || UndefinedError);
+        const userInfo = Helpers_Misc.getExisted(await Users_Model.getUserPublicInfo(openData.userId));
+        labelNickname.setText(userInfo.getNickname() || Lang_Constants.UndefinedError);
     }
 }

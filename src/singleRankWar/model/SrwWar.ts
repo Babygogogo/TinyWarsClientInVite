@@ -1,24 +1,25 @@
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    SinglePlayerWars_War,
+    BootTimers_Constants,
+    type GameConfigs_GameConfig,
+} from "../../internal.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForSrw as ProtoSchemaCommonProtoWarSettingsSettingsForSrw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
-import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
-import type { ISrwWar } from "../interface/ISrwWar.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
 
-type SettingsForSrw     = ProtoSchemaCommonProtoWarSettingsSettingsForSrw;
-
-export class SrwWar extends SpwWar implements ISrwWar {
+export class SrwWar extends SinglePlayerWars_War.War {
     private _settingsForSrw?    : SettingsForSrw;
 
-    public init(data: SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForSrw(getExisted(data.getSettingsForSrw(), ClientErrorCode.SrwWar_Init_00));
+    public constructor(isNeedView: boolean) {
+        super(isNeedView);
+    }
+
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForSrw(Helpers_Misc.getExisted(data.getSettingsForSrw(), Utils_ClientErrorCode.ClientErrorCode.SrwWar_Init_00));
 
         this._initView();
     }
@@ -26,23 +27,23 @@ export class SrwWar extends SpwWar implements ISrwWar {
     public serialize(): SerialWar {
         const randomNumberManager = this.getRandomNumberManager();
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
-            settingsForSrw              : this._getSettingsForSrw().toJson(),
+            settingsForCommon : this.getCommonSettingManager().getSettingsForCommon().toJson(),
+            settingsForSrw    : this._getSettingsForSrw().toJson(),
 
-            warId                       : this.getWarId(),
-            isEnded                     : this.getIsEnded(),
-            seedRandomInitialState      : getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
-            seedRandomCurrentState      : randomNumberManager.getSeedRandomCurrentStateJson(),
-            remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
-            drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
-            weatherManager              : this.getWeatherManager().serialize().toJson(),
-            warEventManager             : this.getWarEventManager().serialize().toJson(),
-            playerManager               : this.getPlayerManager().serialize().toJson(),
-            turnManager                 : this.getTurnManager().serialize().toJson(),
-            field                       : this.getField().serialize().toJson(),
-            executedOperationManager    : this.getExecutedOperationManager().serialize().toJson(),
-            warStatisticsManager        : this.getWarStatisticsManager().serialize().toJson(),
-            taskObjectiveManager        : this.getTaskObjectiveManager().serialize().toJson(),
+            warId                    : this.getWarId(),
+            isEnded                  : this.getIsEnded(),
+            seedRandomInitialState   : Helpers_Misc.getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
+            seedRandomCurrentState   : randomNumberManager.getSeedRandomCurrentStateJson(),
+            remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
+            drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
+            weatherManager           : this.getWeatherManager().serialize().toJson(),
+            warEventManager          : this.getWarEventManager().serialize().toJson(),
+            playerManager            : this.getPlayerManager().serialize().toJson(),
+            turnManager              : this.getTurnManager().serialize().toJson(),
+            field                    : this.getField().serialize().toJson(),
+            executedOperationManager : this.getExecutedOperationManager().serialize().toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serialize().toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serialize().toJson(),
         });
     }
     public serializeForValidation(): SerialWar {
@@ -50,23 +51,23 @@ export class SrwWar extends SpwWar implements ISrwWar {
         settingsForSrw.setTotalScore(this.calculateTotalScore());
 
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
-            settingsForSrw              : settingsForSrw.toJson(),
+            settingsForCommon : this.getCommonSettingManager().getSettingsForCommon().toJson(),
+            settingsForSrw    : settingsForSrw.toJson(),
 
-            warId                       : null,
-            isEnded                     : null,
-            seedRandomInitialState      : getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
-            seedRandomCurrentState      : null,
-            remainingVotesForDraw       : null,
-            drawVoteManager             : new SerialDrawVoteManager().toJson(),
-            weatherManager              : null,
-            warEventManager             : null,
-            playerManager               : this.getPlayerManager().serialize().toJson(),
-            turnManager                 : null,
-            field                       : null,
-            executedOperationManager    : this.getExecutedOperationManager().serializeForSrwValidation().toJson(),
-            warStatisticsManager        : null,
-            taskObjectiveManager        : null,
+            warId                    : null,
+            isEnded                  : null,
+            seedRandomInitialState   : Helpers_Misc.getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
+            seedRandomCurrentState   : null,
+            remainingVotesForDraw    : null,
+            drawVoteManager          : new SerialDrawVoteManager().toJson(),
+            weatherManager           : null,
+            warEventManager          : null,
+            playerManager            : this.getPlayerManager().serialize().toJson(),
+            turnManager              : null,
+            field                    : null,
+            executedOperationManager : this.getExecutedOperationManager().serializeForSrwValidation().toJson(),
+            warStatisticsManager     : null,
+            taskObjectiveManager     : null,
         });
     }
 
@@ -81,7 +82,7 @@ export class SrwWar extends SpwWar implements ISrwWar {
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getNormalMapId(): number {
-        return getExisted(this._getSettingsForSrw().getNormalMapId());
+        return this._getSettingsForSrw().getNormalMapId();
     }
 
     public getCanCheat(): boolean {
@@ -92,13 +93,13 @@ export class SrwWar extends SpwWar implements ISrwWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return [TimerTypeId.NoBoot];
+        return [BootTimers_Constants.TimerTypeId.NoBoot];
     }
 
     private _setSettingsForSrw(settings: SettingsForSrw): void {
         this._settingsForSrw = settings;
     }
     private _getSettingsForSrw(): SettingsForSrw {
-        return getExisted(this._settingsForSrw);
+        return Helpers_Misc.getExisted(this._settingsForSrw);
     }
 }

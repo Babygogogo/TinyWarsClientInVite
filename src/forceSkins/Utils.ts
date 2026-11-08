@@ -1,69 +1,74 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { AllSkinIdArrayIncludeNeutral, AllSkinIdArrayExcludeNeutral, SkinId } from "./Constants.ts";
-import { getMpwWarClass, getHrwWarClass, getRwWarClass, getSpwWarClass } from "../gameHelpers/GhFactory.ts";
-import { getMpwOverridingSkinIdArray, getRwOverridingSkinIdArray } from "../localData/Storage.ts";
-import { PlayerIndex } from "../players/Constants.ts";
+import {
+    ForceSkins_Constants,
+    HalfwayReplayWar_Model_HrwWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWar,
+    SinglePlayerWars_War,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
+    LocalData_Storage,
+    Players_Constants,
+} from "../internal.ts";
 
 export function getAllSkinIdArray(includeNeutral: boolean): number[] {
-    return includeNeutral ? AllSkinIdArrayIncludeNeutral : AllSkinIdArrayExcludeNeutral;
+    return includeNeutral ? ForceSkins_Constants.AllSkinIdArrayIncludeNeutral : ForceSkins_Constants.AllSkinIdArrayExcludeNeutral;
 }
 
 export function getDefaultSkinId(playerIndex: number): number {
     return playerIndex;
 }
 
-export function getOriginSkinIdArray(war: IBwWar, includeNeutral: boolean): number[] {
+export function getOriginSkinIdArray(war: BaseWar_Model_War.War, includeNeutral: boolean): number[] {
     return war.getPlayerManager().getAllPlayers(includeNeutral).map(v => v.getUnitAndTileSkinId());
 }
-export function getRawOverridingSkinIdArray(war: IBwWar): Undefinable<Undefinable<number>[]> {
-    if (war instanceof getMpwWarClass()) {
+export function getRawOverridingSkinIdArray(war: BaseWar_Model_War.War): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>[]> {
+    if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         const warId = war.getWarId();
-        return warId == null ? undefined : getMpwOverridingSkinIdArray(warId);
+        return warId == null ? undefined : LocalData_Storage.getMpwOverridingSkinIdArray(warId);
     }
 
-    if (war instanceof getHrwWarClass()) {
+    if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
         const warId = war.getWarId();
-        return warId == null ? undefined : getMpwOverridingSkinIdArray(warId);
+        return warId == null ? undefined : LocalData_Storage.getMpwOverridingSkinIdArray(warId);
     }
 
-    if (war instanceof getRwWarClass()) {
+    if (war instanceof ReplayWar_Model_RwWar.RwWar) {
         const replayId = war.getReplayId();
-        return getRwOverridingSkinIdArray(replayId);
+        return LocalData_Storage.getRwOverridingSkinIdArray(replayId);
     }
 
-    if (war instanceof getSpwWarClass()) {
+    if (war instanceof SinglePlayerWars_War.War) {
         return war.getSaveSlotExtraData()?.getOverridingSkinIdArray();
     }
 
     return undefined;
 }
-export function getRevisedOverridingSkinIdArray(war: IBwWar): number[] {
+export function getRevisedOverridingSkinIdArray(war: BaseWar_Model_War.War): number[] {
     return reviseOverridingSkinIdArray(getOriginSkinIdArray(war, false), getRawOverridingSkinIdArray(war));
 }
-export function getRawOverridingSkinId(war: IBwWar, playerIndex: number): number | undefined {
-    if (playerIndex < PlayerIndex.First) {
+export function getRawOverridingSkinId(war: BaseWar_Model_War.War, playerIndex: number): number | undefined {
+    if (playerIndex < Players_Constants.PlayerIndex.First) {
         return undefined;
     }
 
     const arr = getRawOverridingSkinIdArray(war);
     return arr ? (arr[playerIndex - 1] ?? undefined) : undefined;
 }
-export function getFinalSkinIdArray(war: IBwWar, includeNeutral: boolean): number[] {
+export function getFinalSkinIdArray(war: BaseWar_Model_War.War, includeNeutral: boolean): number[] {
     const skinIdArray           = getOriginSkinIdArray(war, includeNeutral);
     const overridingSkinIdArray = getRawOverridingSkinIdArray(war);
     if (overridingSkinIdArray != null) {
         if (includeNeutral) {
             for (let i = 1; i < skinIdArray.length; ++i) {
                 const skinId = overridingSkinIdArray[i - 1];
-                if ((skinId != null) && (skinId >= PlayerIndex.First)) {
+                if ((skinId != null) && (skinId >= Players_Constants.PlayerIndex.First)) {
                     skinIdArray[i] = skinId;
                 }
             }
         } else {
             for (let i = 0; i < skinIdArray.length; ++i) {
                 const skinId = overridingSkinIdArray[i];
-                if ((skinId != null) && (skinId >= PlayerIndex.First)) {
+                if ((skinId != null) && (skinId >= Players_Constants.PlayerIndex.First)) {
                     skinIdArray[i] = skinId;
                 }
             }
@@ -72,29 +77,29 @@ export function getFinalSkinIdArray(war: IBwWar, includeNeutral: boolean): numbe
 
     return skinIdArray;
 }
-export function getFinalSkinId(war: IBwWar, playerIndex: number): number {
+export function getFinalSkinId(war: BaseWar_Model_War.War, playerIndex: number): number {
     const originSkinId = war.getPlayer(playerIndex).getUnitAndTileSkinId();
-    if (playerIndex < PlayerIndex.First) {
+    if (playerIndex < Players_Constants.PlayerIndex.First) {
         return originSkinId;
     } else {
         return getFinalSkinId2(originSkinId, getRawOverridingSkinId(war, playerIndex));
     }
 }
-export function getFinalSkinId2(originSkinId: number, overridingSkinId: Undefinable<number>): number {
-    return ((overridingSkinId != null) && (overridingSkinId >= PlayerIndex.First))
+export function getFinalSkinId2(originSkinId: number, overridingSkinId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): number {
+    return ((overridingSkinId != null) && (overridingSkinId >= Players_Constants.PlayerIndex.First))
         ? overridingSkinId
         : originSkinId;
 }
 
 export function checkIsValidSkinId(skinId: number, allowNeutral: boolean): boolean {
     if (allowNeutral) {
-        return (skinId >= SkinId.Neutral) && (skinId <= SkinId.Last);
+        return (skinId >= ForceSkins_Constants.SkinId.Neutral) && (skinId <= ForceSkins_Constants.SkinId.Last);
     } else {
-        return (skinId >= SkinId.First) && (skinId <= SkinId.Last);
+        return (skinId >= ForceSkins_Constants.SkinId.First) && (skinId <= ForceSkins_Constants.SkinId.Last);
     }
 }
 
-function reviseOverridingSkinIdArray(originSkinIdArray: number[], targetSkinIdArray: Undefinable<Undefinable<number>[]>): number[] {
+function reviseOverridingSkinIdArray(originSkinIdArray: number[], targetSkinIdArray: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>[]>): number[] {
     if (targetSkinIdArray == null) {
         return originSkinIdArray.concat();
     }
@@ -102,7 +107,7 @@ function reviseOverridingSkinIdArray(originSkinIdArray: number[], targetSkinIdAr
     const result: number[] = [];
     for (let i = 0; i < originSkinIdArray.length; ++i) {
         const skinId = targetSkinIdArray[i];
-        if ((skinId == null) || (skinId < PlayerIndex.First)) {
+        if ((skinId == null) || (skinId < Players_Constants.PlayerIndex.First)) {
             result[i] = originSkinIdArray[i];
         } else {
             result[i] = skinId;
