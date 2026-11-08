@@ -20,7 +20,7 @@ import {
     SingleFreeWar_Model_SfwWar,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
-    SinglePlayerWars_Provider,
+    SinglePlayerWars_AutoWarOpManager,
     SinglePlayerWars_War,
     SingleRankWar_Model_SrwWar,
     Sounds_Constants,
@@ -434,7 +434,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateGroupPauseAi();
 
         if (!isPaused) {
-            SinglePlayerWars_Provider.checkAndHandleAutoActionsAndRobotRecursively(war);
+            SinglePlayerWars_AutoWarOpManager.generateAndRunAutoOps(war);
         }
     }
 

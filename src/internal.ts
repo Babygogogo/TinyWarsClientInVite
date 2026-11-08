@@ -657,6 +657,7 @@ export * as SinglePlayerMode_View_SpmRankPage from "./singlePlayerMode/view/SpmR
 export * as SinglePlayerMode_View_SpmWarListPanel from "./singlePlayerMode/view/SpmWarListPanel.ts";
 export * as SinglePlayerWars_LocalGateway from "./singlePlayerWars/LocalGateway.ts";
 export * as SinglePlayerWars_Provider from "./singlePlayerWars/Provider.ts";
+export * as SinglePlayerWars_AutoWarOpManager from "./singlePlayerWars/AutoWarOpManager.ts";
 export * as Retracts_RetractManager from "./retracts/RetractManager.ts";
 export * as SinglePlayerWar_View_SpwSidePanel from "./singlePlayerWar/view/SpwSidePanel.ts";
 export * as SinglePlayerWar_View_SpwTopPanel from "./singlePlayerWar/view/SpwTopPanel.ts";

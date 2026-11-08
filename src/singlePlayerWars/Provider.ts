@@ -1,32 +1,16 @@
 import {
-    Campaigns_Mains_Gateway,
     Campaigns_Wars_War,
-    FloatText,
     GameConfigs_Provider,
-    GamePanels_Dict,
-    GamePanels_Manager,
-    Helpers_GameFlow,
     Helpers_Misc,
-    Lang_Constants,
-    Lang_Utils,
     Logger,
-    MultiPlayerWar_Model_MpwModel,
-    Players_Constants,
     SingleCustomWar_Model_ScwWar,
     SingleFreeWar_Model_SfwWar,
-    SinglePlayerMode_Model_SpmProxy,
     SinglePlayerWars_War,
-    SinglePlayerWars_Constants,
     SingleRankWar_Model_SrwWar,
-    Users_Model,
     Utils_ClientErrorCode,
-    WarOperations_Executors_Executor,
-    WarOperations_Revisers_Reviser,
-    WarOperations_Utils,
 } from "../internal.ts";
 
 import type { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import type { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
 let _war: SinglePlayerWars_War.War | null = null;
@@ -77,205 +61,6 @@ function setWar(war: SinglePlayerWars_War.War | null): void {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Util functions.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-const _warsWithRobotRunning = new Set<SinglePlayerWars_War.War>();
-
-export async function handlePlayerActionAndAutoActions(war: SinglePlayerWars_War.War, action: WoContainer): Promise<void> {
-    if (war.getIsEnded()) {
-        throw Helpers_Misc.newError(`war.getIsEnded() is true.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_00);
-    }
-    if (war.getIsExecutingAction()) {
-        throw Helpers_Misc.newError(`war.getIsExecutingAction() is true.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_01);
-    }
-    if (!war.getIsRunning()) {
-        throw Helpers_Misc.newError(`war.getIsRunning() is false.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_02);
-    }
-
-    await WarOperations_Executors_Executor.checkAndExecute(
-        war,
-        WarOperations_Revisers_Reviser.revise(war, action, Users_Model.getSelfUserId()),
-        false,
-    );
-
-    await checkAndHandleAutoActionsAndRobotRecursively(war);
-}
-
-export async function checkAndHandleAutoActionsAndRobotRecursively(war: SinglePlayerWars_War.War): Promise<void> {
-    if (_warsWithRobotRunning.has(war)) {
-        return;
-    }
-    _warsWithRobotRunning.add(war);
-
-    while (true) {
-        if ((checkAndEndWar(war))       ||
-            (!war.getIsRunning())       ||
-            (war.getIsAiPaused())       ||
-            (war.getIsViewingWarInfo())
-        ) {
-            _warsWithRobotRunning.delete(war);
-            return;
-        }
-
-        const data = await WarOperations_Utils.getNextSystemOrBotOperation(war);
-        if ((checkAndEndWar(war))       ||
-            (!war.getIsRunning())       ||
-            (war.getIsAiPaused())       ||
-            (war.getIsViewingWarInfo())
-        ) {
-            _warsWithRobotRunning.delete(war);
-            return;
-        }
-        if (!data) {
-            break;
-        }
-
-        await WarOperations_Executors_Executor.checkAndExecute(
-            war,
-            WarOperations_Revisers_Reviser.revise(war, data.warOperation, data.userId),
-            false,
-        );
-    }
-
-    if (war.checkIsHumanInTurn()) {
-        const retractManager = war.getRetractManager();
-        if (retractManager.getCanRetract()) {
-            retractManager.addRetractState(war.serialize().encode());
-        }
-    }
-
-    _warsWithRobotRunning.delete(war);
-}
-
-function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
-    if (!war.getIsEnded()) {
-        return false;
-    }
-
-    const mpwWarId = war instanceof SingleFreeWar_Model_SfwWar.SfwWar
-        ? war.getSaveSlotExtraData()?.getMpwWarId()
-        : null;
-    if (mpwWarId != null) {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle          : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0964),
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0711),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B1446),
-            callback          : async () => {
-                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                    title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                    content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
-                });
-
-                const warData = await MultiPlayerWar_Model_MpwModel.getOngoingWarData(mpwWarId);
-                if (warData) {
-                    Helpers_GameFlow.gotoMultiPlayerWar(warData);
-                } else {
-                    FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
-                }
-
-                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
-            },
-            callbackOnCancel : () => {
-                war.setIsEnded(false);
-                war.getDrawVoteManager().clearAllVotes();
-                for (const [, player] of war.getPlayerManager().getAllPlayersDict()) {
-                    player.setHasVotedForDraw(false);
-                    player.setAliveState(Players_Constants.AliveStateId.Alive);
-                }
-            },
-        });
-    } else {
-        if (war.getDrawVoteManager().checkIsDraw()) {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0030),
-                callback   : () => Helpers_GameFlow.gotoLobby(),
-            });
-        } else {
-            const humanPlayerArray = war.getPlayerManager().getHumanPlayers();
-            if (humanPlayerArray.length <= 0) {
-                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                    getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0035),
-                    callback   : () => Helpers_GameFlow.gotoLobby(),
-                });
-            } else {
-                if (humanPlayerArray.every(v => v.getAliveState() === Players_Constants.AliveStateId.Dead)) {
-                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                        getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0023),
-                        callback   : () => Helpers_GameFlow.gotoLobby(),
-                    });
-                } else {
-                    if (war instanceof SingleRankWar_Model_SrwWar.SrwWar) {
-                        const turnIndex     = war.getTurnManager().getTurnIndex();
-                        const actionsCount  = war.getExecutedOperationManager().getExecutedOperationsCount();
-                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                            getContent : () => Lang_Utils.getFormattedText(
-                                Lang_Constants.TextType.F0127,
-                                SinglePlayerWars_Constants.PlayerScore.BaseScore,
-                                `${(turnIndex - 1) * -1000} (${turnIndex})`,
-                                `${-actionsCount} (${actionsCount})`,
-                                war.getTaskObjectiveManager().getScore(),
-                                war.calculateTotalScore(),
-                            ),
-                            callback : () => {
-                                Helpers_GameFlow.gotoLobby();
-
-                                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0277),
-                                    callback   : () => {
-                                        SinglePlayerMode_Model_SpmProxy.reqSpmValidateSrw(war);
-                                    },
-                                });
-                            },
-                        });
-
-                    } else if (war instanceof Campaigns_Wars_War.War) {
-                        const turnIndex     = war.getTurnManager().getTurnIndex();
-                        const actionsCount  = war.getExecutedOperationManager().getExecutedOperationsCount();
-                        const newScore      = war.calculateTotalScore();
-                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                            getContent : () => Lang_Utils.getFormattedText(
-                                Lang_Constants.TextType.F0127,
-                                SinglePlayerWars_Constants.PlayerScore.BaseScore,
-                                `${(turnIndex - 1) * -1000} (${turnIndex})`,
-                                `${-actionsCount} (${actionsCount})`,
-                                war.getTaskObjectiveManager().getScore(),
-                                newScore,
-                            ),
-                            callback : () => {
-                                const settingsForCaw    = war.getSettingsForCaw();
-                                const campaignId        = settingsForCaw.getCampaignId();
-                                const existingInfo      = Users_Model.getSelfCawHighScoreInfo(campaignId, settingsForCaw.getCampaignMapId());
-                                if ((existingInfo == null)                                                                          ||
-                                    ((settingsForCaw.getCampaignMapRevision()) > (existingInfo.getCampaignMapRevision())) ||
-                                    (newScore > (existingInfo.getHighScore() ?? 0))                                                 ||
-                                    (war.getGcData().getVersion() !== existingInfo.getConfigVersion())
-                                ) {
-                                    Campaigns_Mains_Gateway.reqCampaignValidateWar(war);
-                                }
-
-                                Helpers_GameFlow.gotoCampaignCreateMapsPanel(campaignId);
-                            },
-                        });
-
-                    } else {
-                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0022),
-                            callback   : () => Helpers_GameFlow.gotoLobby(),
-                        });
-                    }
-                }
-            }
-        }
-    }
-
-    return true;
-}
-
 function createWarByWarData(warData: SerialWar): SinglePlayerWars_War.War {
     if (warData.getSettingsForScw()) {
         return new SingleCustomWar_Model_ScwWar.ScwWar(true);

@@ -2,6 +2,7 @@ import {
     AutoTourneys_Mains_Gateway,
     AutoTourneys_Rooms_Gateway,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
     Broadcasts_Gateway,
     Campaigns_Mains_Gateway,
     Campaigns_Managements_Gateway,
@@ -11,7 +12,6 @@ import {
     Common_Model_CommonModel,
     Common_Model_CommonProxy,
     CoopCustomRoom_Model_CcrProxy,
-    type BaseWar_Model_War,
     type Egret_Egret,
     FloatText,
     GameConfigs_Gateway,
@@ -56,6 +56,7 @@ import {
     ResManager,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
+    SinglePlayerWars_AutoWarOpManager,
     SinglePlayerWars_Provider,
     Sounds_SoundPlayer,
     Stages_StageManager,
@@ -367,7 +368,7 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
         coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 
-    await SinglePlayerWars_Provider.checkAndHandleAutoActionsAndRobotRecursively(war);
+    await SinglePlayerWars_AutoWarOpManager.generateAndRunAutoOps(war);
 }
 export async function gotoMapEditorWar({ mapRawData, slotIndex, isReview, srcNormalMapIdForAddEvent, gridMarkData }: {
     mapRawData                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapRawData>;

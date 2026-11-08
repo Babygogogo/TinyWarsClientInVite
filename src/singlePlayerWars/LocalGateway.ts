@@ -1,5 +1,5 @@
 import {
-    SinglePlayerWars_Provider,
+    SinglePlayerWars_AutoWarOpManager,
     SinglePlayerWars_War,
     type AuxiliaryTypes_DropDestination,
     type AuxiliaryTypes_GridIndex,
@@ -9,7 +9,7 @@ import type { MovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts
 import { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 export function reqPlayerDeleteUnit(war: SinglePlayerWars_War.War, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId        : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerDeleteUnit : {
             gridIndex : gridIndex.toProto().toJson(),
@@ -18,7 +18,7 @@ export function reqPlayerDeleteUnit(war: SinglePlayerWars_War.War, gridIndex: Au
 }
 
 export function reqPlayerEndTurn(war: SinglePlayerWars_War.War): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId     : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerEndTurn : {},
     }));
@@ -30,7 +30,7 @@ export function reqPlayerProduceUnit({ war, gridIndex, unitType, unitHp }: {
     unitType    : number;
     unitHp      : number;
 }): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerProduceUnit : {
             gridIndex : gridIndex.toProto().toJson(),
@@ -45,7 +45,7 @@ export function reqPlayerUseCoActiveSkill({ war, skillType, targetGridIndexArray
     skillType               : CoSkills_Constants.SkillTypeId;
     targetGridIndexArray    : AuxiliaryTypes_GridIndex.GridIndex[] | null;
 }): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId        : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerUseCoSkill : {
             skillType            : skillType,
@@ -55,7 +55,7 @@ export function reqPlayerUseCoActiveSkill({ war, skillType, targetGridIndexArray
 }
 
 export function reqPlayerVoteForDraw(war: SinglePlayerWars_War.War, playerIndex: number, isAgree: boolean): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerVoteForDraw : {
             playerIndex : playerIndex,
@@ -65,7 +65,7 @@ export function reqPlayerVoteForDraw(war: SinglePlayerWars_War.War, playerIndex:
 }
 
 export function reqPlayerSurrender(war: SinglePlayerWars_War.War, playerIndex: number): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId       : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerSurrender : {
             playerIndex : playerIndex,
@@ -79,7 +79,7 @@ export function reqUnitAttackUnit({ war, path, launchUnitId, targetGridIndex }: 
     launchUnitId    : number | null;
     targetGridIndex : AuxiliaryTypes_GridIndex.GridIndex;
 }): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId      : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitAttackUnit : {
             path            : path.toJson(),
@@ -95,7 +95,7 @@ export function reqUnitAttackTile({ war, path, launchUnitId, targetGridIndex }: 
     launchUnitId    : number | null;
     targetGridIndex : AuxiliaryTypes_GridIndex.GridIndex;
 }): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId      : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitAttackTile : {
             path            : path.toJson(),
@@ -106,7 +106,7 @@ export function reqUnitAttackTile({ war, path, launchUnitId, targetGridIndex }: 
 }
 
 export function reqUnitBeLoaded(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId    : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitBeLoaded : {
             path         : path.toJson(),
@@ -116,7 +116,7 @@ export function reqUnitBeLoaded(war: SinglePlayerWars_War.War, path: MovePath, l
 }
 
 export function reqUnitBuildTile(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId     : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitBuildTile : {
             path         : path.toJson(),
@@ -126,7 +126,7 @@ export function reqUnitBuildTile(war: SinglePlayerWars_War.War, path: MovePath, 
 }
 
 export function reqUnitCaptureTile(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId       : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitCaptureTile : {
             path         : path.toJson(),
@@ -136,7 +136,7 @@ export function reqUnitCaptureTile(war: SinglePlayerWars_War.War, path: MovePath
 }
 
 export function reqUnitCrushUnit(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId     : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitCrushUnit : {
             path            : path.toJson(),
@@ -147,7 +147,7 @@ export function reqUnitCrushUnit(war: SinglePlayerWars_War.War, path: MovePath, 
 }
 
 export function reqUnitDive(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitDive  : {
             path         : path.toJson(),
@@ -162,7 +162,7 @@ export function reqUnitDrop({ war, path, launchUnitId, dropDestinations }: {
     launchUnitId    : number | null;
     dropDestinations: AuxiliaryTypes_DropDestination.DropDestination[];
 }): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId    : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitDropUnit : {
             path             : path.toJson(),
@@ -173,7 +173,7 @@ export function reqUnitDrop({ war, path, launchUnitId, dropDestinations }: {
 }
 
 export function reqUnitJoin(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId    : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitJoinUnit : {
             path         : path.toJson(),
@@ -188,7 +188,7 @@ export function reqUnitLaunchFlare({ war, path, launchUnitId, targetGridIndex }:
     launchUnitId    : number | null;
     targetGridIndex : AuxiliaryTypes_GridIndex.GridIndex;
 }): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId       : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitLaunchFlare : {
             path            : path.toJson(),
@@ -204,7 +204,7 @@ export function reqUnitLaunchSilo({ war, path, launchUnitId, targetGridIndex }: 
     launchUnitId    : number | null;
     targetGridIndex : AuxiliaryTypes_GridIndex.GridIndex;
 }): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId      : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitLaunchSilo : {
             path            : path.toJson(),
@@ -215,7 +215,7 @@ export function reqUnitLaunchSilo({ war, path, launchUnitId, targetGridIndex }: 
 }
 
 export function reqUnitBoardedByCo(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId       : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitBoardedByCo : {
             path         : path.toJson(),
@@ -225,7 +225,7 @@ export function reqUnitBoardedByCo(war: SinglePlayerWars_War.War, path: MovePath
 }
 
 export function reqUnitProduceUnit(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId       : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitProduceUnit : {
             path         : path.toJson(),
@@ -235,7 +235,7 @@ export function reqUnitProduceUnit(war: SinglePlayerWars_War.War, path: MovePath
 }
 
 export function reqUnitRepairUnit(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId      : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitRepairUnit : {
             path            : path.toJson(),
@@ -246,7 +246,7 @@ export function reqUnitRepairUnit(war: SinglePlayerWars_War.War, path: MovePath,
 }
 
 export function reqUnitSelfDetonate(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId        : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitSelfDetonate : {
             path         : path.toJson(),
@@ -256,7 +256,7 @@ export function reqUnitSelfDetonate(war: SinglePlayerWars_War.War, path: MovePat
 }
 
 export function reqUnitSupply(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId      : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitSupplyUnit : {
             path         : path.toJson(),
@@ -266,7 +266,7 @@ export function reqUnitSupply(war: SinglePlayerWars_War.War, path: MovePath, lau
 }
 
 export function reqUnitSurface(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId   : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitSurface : {
             path         : path.toJson(),
@@ -282,7 +282,7 @@ export function reqUnitUseCoActiveSkill({ war, skillType, path, launchUnitId, ta
     launchUnitId            : number | null;
     targetGridIndexArray    : AuxiliaryTypes_GridIndex.GridIndex[] | null;
 }): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId      : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitUseCoSkill : {
             skillType            : skillType,
@@ -294,7 +294,7 @@ export function reqUnitUseCoActiveSkill({ war, skillType, path, launchUnitId, ta
 }
 
 export function reqUnitWait(war: SinglePlayerWars_War.War, path: MovePath, launchUnitId: number | null): void {
-    SinglePlayerWars_Provider.handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
+    SinglePlayerWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, WoContainer.fromJson({
         operationId : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitWait  : {
             path         : path.toJson(),
