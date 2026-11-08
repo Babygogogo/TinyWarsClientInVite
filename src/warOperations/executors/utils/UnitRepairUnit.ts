@@ -1,11 +1,11 @@
 import {
-    Units_Constants,
-    Helpers_Team,
-    Helpers_Misc,
-    Visibilities_Utils,
     AuxiliaryTypes_GridIndex,
-    WarOperations_Executors_Utils_Common,
     AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Helpers_Team,
+    Units_Constants,
+    Visibilities_Utils,
+    WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WoUnitRepairUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitRepairUnit.ts";
@@ -144,7 +144,7 @@ async function normalExeUnitRepairUnit(war: BaseWar_Model_War.War, action: WoUni
             }
 
             targetUnit.flushDataToView();
-            war.getGridVisualEffect().showEffectRepair(targetGridIndex);
+            war.getGridVisualEffect()?.showEffectRepair(targetGridIndex);
         }
 
         WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);

@@ -1,22 +1,22 @@
 import {
     AuxiliaryTypes_GridIndex,
-    MapEditor_Model_MeWar,
     AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Helpers_Team,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
+    Players_Constants,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     TestWar_Model_TwWar,
     Units_Constants,
     Utils_ClientErrorCode,
-    Helpers_Team,
-    Helpers_Misc,
     Visibilities_Utils,
-    Lang_Utils,
     WarOperations_Executors_Utils_Common,
-    Players_Constants,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    Lang_Constants,
     type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
@@ -121,7 +121,7 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUni
         const targetGridIndex   = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(actionExtraData.getTargetGridIndex());
         if (targetGridIndex) {
             for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize })) {
-                gridVisualEffect.showEffectSiloExplosion(grid);
+                gridVisualEffect?.showEffectSiloExplosion(grid);
             }
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
         }
@@ -198,7 +198,7 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUni
                 updateViewAfterMove : true,
             });
             for (const grid of targetGrids) {
-                gridVisualEffect.showEffectSiloExplosion(grid);
+                gridVisualEffect?.showEffectSiloExplosion(grid);
             }
             for (const unit of targetUnits) {
                 unit.flushDataToView();

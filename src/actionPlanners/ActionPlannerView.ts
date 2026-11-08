@@ -852,8 +852,10 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
                 this._addTempUnitView(data.unit, data.destination);
             }
 
-            const cursorGridIndex = actionPlanner.getWar().getCursor().getGridIndex();
-            if (actionPlanner.getAvailableDropDestinations()?.some(grid => grid.checkIsEqual(cursorGridIndex))) {
+            const cursorGridIndex = actionPlanner.getWar().getCursor()?.getGridIndex();
+            if ((cursorGridIndex)                                                                               &&
+                (actionPlanner.getAvailableDropDestinations()?.some(grid => grid.checkIsEqual(cursorGridIndex)))
+            ) {
                 this._addTempUnitView(Helpers_Misc.getExisted(actionPlanner.getChoosingUnitForDrop()), cursorGridIndex);
             }
 

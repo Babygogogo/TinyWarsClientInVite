@@ -1,12 +1,12 @@
 import {
+    CoSkills_Constants,
+    CoSkills_Utils_DataGeneratorForUseCoSkill,
+    CoSkills_Utils_Executor,
+    Helpers_Collection,
+    Helpers_Misc,
     Players_Constants,
     Utils_ClientErrorCode,
-    Helpers_Collection,
-    CoSkills_Utils_Executor,
-    CoSkills_Utils_DataGeneratorForUseCoSkill,
-    Helpers_Misc,
     WarOperations_Executors_Utils_Common,
-    CoSkills_Constants,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WoPlayerUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerUseCoSkill.ts";
@@ -124,9 +124,9 @@ function normalExePlayerUseCoSkill(war: BaseWar_Model_War.War, action: WoPlayerU
                 unit.flushDataToView();
 
                 if (skillType === CoSkills_Constants.SkillTypeId.Power) {
-                    gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
+                    gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
                 } else {
-                    gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                    gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
                 }
             }
         }
@@ -179,9 +179,9 @@ function normalExePlayerUseCoSkill(war: BaseWar_Model_War.War, action: WoPlayerU
                 unit.flushDataToView();
 
                 if (skillType === CoSkills_Constants.SkillTypeId.Power) {
-                    gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
+                    gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
                 } else {
-                    gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                    gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
                 }
             }
         }

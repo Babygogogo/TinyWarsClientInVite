@@ -1,17 +1,17 @@
 import {
+    ActionPlanners_Constants,
     HalfwayReplayWar_Model_HrwWar,
+    Helpers_Misc,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
-    ActionPlanners_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     TestWar_Model_TwWar,
-    type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
-    Helpers_Misc,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
+    type AuxiliaryTypes_GridIndex,
 } from "../../internal.ts";
 
 export class ChoosingUnitFlareDestination implements ActionPlanners_States_IState.IState {
@@ -44,7 +44,7 @@ export class ChoosingUnitFlareDestination implements ActionPlanners_States_IStat
             if (destination.getDistance(gridIndex) > Helpers_Misc.getExisted(actionPlanner.getFocusUnit()?.getFlareMaxRange(destination))) {
                 return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
-                const previousGridIndex = actionPlanner.getWar().getCursor().getPreviousGridIndex();
+                const previousGridIndex = actionPlanner.getWar().getCursor()?.getPreviousGridIndex();
                 if ((previousGridIndex) && (gridIndex.checkIsEqual(previousGridIndex))) {
                     return ActionPlanners_Constants.StateId.RequestingUnitLaunchFlare;
                 } else {
@@ -65,7 +65,7 @@ export class ChoosingUnitFlareDestination implements ActionPlanners_States_IStat
             if (destination.getDistance(gridIndex) > Helpers_Misc.getExisted(Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).getFlareMaxRange(destination))) {
                 return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
-                const previousGridIndex = actionPlanner.getWar().getCursor().getPreviousGridIndex();
+                const previousGridIndex = actionPlanner.getWar().getCursor()?.getPreviousGridIndex();
                 if ((previousGridIndex != null) && (gridIndex.checkIsEqual(previousGridIndex))) {
                     return ActionPlanners_Constants.StateId.RequestingUnitLaunchFlare;
                 } else {
@@ -91,7 +91,7 @@ export class ChoosingUnitFlareDestination implements ActionPlanners_States_IStat
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
-        actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
+        actionPlanner.getWar().getCursor()?.setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
 
         actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
         actionPlanner.updateView();
@@ -137,7 +137,7 @@ export class ChoosingUnitFlareDestination implements ActionPlanners_States_IStat
             // Nothing to do.
         }
 
-        actionPlanner.getWar().getCursor().getView().setTargetAreaRadius(flareRadius);
+        actionPlanner.getWar().getCursor()?.getView().setTargetAreaRadius(flareRadius);
         actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitFlareDestination);
         actionPlanner.updateView();
     }

@@ -1,38 +1,38 @@
 import {
-    AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwCursor,
-    type BaseWar_Interface_IBwCursorView,
+    ActionPlanners_Constants,
     ActionPlanners_States_Idle,
+    ActionPlanners_States_RequestingPlayerEndTurn,
+    AuxiliaryTypes_GridIndex,
+    FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Geometries_Utils,
+    Graphics_Utils,
+    Helpers_ImageSource,
+    Helpers_Misc,
+    Helpers_PointerInput,
+    Keyboard_KbManager,
+    Keyboard_KbTypes,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeHelpers,
+    MapEditor_Model_MeModel,
+    MapEditor_Model_MeProxy,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    ActionPlanners_States_RequestingPlayerEndTurn,
-    FloatText,
-    SinglePlayerWar_Model_SpwWar,
-    ActionPlanners_Constants,
-    Ui_Components_UiImage,
     Notifications_Dispatcher,
-    Keyboard_KbManager,
-    Helpers_Misc,
-    Keyboard_KbTypes,
-    Tween_Executor,
-    Helpers_ImageSource,
-    MapEditor_Model_MeHelpers,
-    Graphics_Utils,
-    GamePanels_Dict,
-    MapEditor_Model_MeModel,
-    Geometries_Utils,
-    Lang_Utils,
     Numbers_Utils,
-    type Ui_Interfaces_IUiImage,
-    GamePanels_Manager,
-    Sounds_SoundPlayer,
-    Helpers_PointerInput,
-    MapEditor_Model_MeProxy,
+    SinglePlayerWar_Model_SpwWar,
     Sounds_Constants,
-    Lang_Constants,
+    Sounds_SoundPlayer,
+    Tween_Executor,
     Ui_Components_UiContainer,
+    Ui_Components_UiImage,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Interface_IBwCursor,
+    type BaseWar_Interface_IBwCursorView,
     type Egret_Egret,
+    type Ui_Interfaces_IUiImage,
 } from "../../internal.ts";
 
 const _PULSE_IN_DURATION                    = 150;
@@ -303,6 +303,10 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
         const cursor        = this._getCursor();
         const war           = cursor.getWar();
         const actionPlanner = war.getActionPlanner();
+        if (actionPlanner == null) {
+            return;
+        }
+
         if ((actionPlanner.checkIsStateRequesting())    ||
             (war.getIsExecutingAction())                ||
             (war.getIsEnded())                          ||
@@ -398,7 +402,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                     cursor.setGridIndex(gridIndex);
                     cursor.updateView();
                     war.getView()?.tweenGridToCentralArea(gridIndex);
-                    war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
+                    war.getGridVisualEffect()?.showEffectAiming(gridIndex, 800);
                     Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
                 }
             } else {
@@ -420,7 +424,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                     cursor.setGridIndex(gridIndex);
                     cursor.updateView();
                     war.getView()?.tweenGridToCentralArea(gridIndex);
-                    war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
+                    war.getGridVisualEffect()?.showEffectAiming(gridIndex, 800);
                     Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
                 }
             } else {
@@ -440,7 +444,7 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                         getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0036),
                         getContent : () => war.getHintForEndTurn(),
-                        callback   : () => ActionPlanners_States_RequestingPlayerEndTurn.RequestingPlayerEndTurn.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
+                        callback   : () => ActionPlanners_States_RequestingPlayerEndTurn.RequestingPlayerEndTurn.getInstance().doApplyOnChooseAction(actionPlanner),
                     });
                     Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
                 }
@@ -510,6 +514,10 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
     private _updateConForNormal(): void {
         const cursor        = this._getCursor();
         const actionPlanner = cursor.getWar().getActionPlanner();
+        if (actionPlanner == null) {
+            return;
+        }
+
         const gridIndex     = cursor.getGridIndex();
         const state         = actionPlanner.getStateId();
         const con           = this._conForNormal;
@@ -569,9 +577,13 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
     private _updateConForTarget(): void {
         const cursor        = this._getCursor();
         const actionPlanner = cursor.getWar().getActionPlanner();
-        const con           = this._conForTarget;
-        const gridIndex     = cursor.getGridIndex();
-        const state         = actionPlanner.getStateId();
+        if (actionPlanner == null) {
+            return;
+        }
+
+        const con       = this._conForTarget;
+        const gridIndex = cursor.getGridIndex();
+        const state     = actionPlanner.getStateId();
 
         if (state === ActionPlanners_Constants.StateId.Idle) {
             con.setIsVisible(false);
@@ -627,8 +639,12 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
     }
     private _updateConForTargetArea(): void {
         const actionPlanner = this._getCursor().getWar().getActionPlanner();
-        const con           = this._conForTargetArea;
-        const state         = actionPlanner.getStateId();
+        if (actionPlanner == null) {
+            return;
+        }
+
+        const con   = this._conForTargetArea;
+        const state = actionPlanner.getStateId();
 
         if (state === ActionPlanners_Constants.StateId.Idle) {
             con.setIsVisible(false);

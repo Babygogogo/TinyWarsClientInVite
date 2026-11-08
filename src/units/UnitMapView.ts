@@ -106,8 +106,11 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer {
         }
 
         const actionPlanner = war.getActionPlanner();
-        const state         = actionPlanner.getStateId();
+        if (actionPlanner == null) {
+            return;
+        }
 
+        const state = actionPlanner.getStateId();
         if (state === ActionPlanners_Constants.StateId.Idle) {
             this._resetVisibleForAllUnitsOnMap();
 

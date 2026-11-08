@@ -1,26 +1,30 @@
 import {
-    Helpers_Misc,
-    MultiPlayerWar_Model_MpwModel,
+    ActionPlanners_Constants,
     ActionPlanners_States_ChoosingCoActiveSkillTarget,
-    Cos_Constants,
-    GamePanels_Dict,
-    Lang_Utils,
-    CoSkills_Utils_Common,
-    Timer_TimerModel,
     ActionPlanners_States_Idle,
-    GamePanels_Manager,
-    Turns_Constants,
-    Sounds_SoundPlayer,
     ActionPlanners_States_RequestingPlayerEndTurn,
     ActionPlanners_States_RequestingPlayerUseCoActiveSkill,
-    Sounds_Constants,
-    FloatText,
+    Cos_Constants,
     CoSkills_Constants,
-    ActionPlanners_Constants,
+    CoSkills_Utils_Common,
+    FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_Misc,
     Lang_Constants,
+    Lang_Utils,
+    MultiPlayerWar_Model_MpwModel,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Timer_TimerModel,
+    Turns_Constants,
     Ui_Components_UiContainer,
     Ui_Components_UiLabel,
     Ui_Components_UiPanel,
+    Ui_Utils_UiSkinHelpers,
+    Units_Constants,
+    Users_Model,
+    WatchWar_Model_WwModel,
     type BaseWar_Model_War,
     type MultiPlayerWar_Interface_IMpwWar,
     type Ui_Interfaces_IUiButton,
@@ -29,11 +33,8 @@ import {
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScroller,
-    Units_Constants,
-    Users_Model,
-    WatchWar_Model_WwModel,
-    Ui_Utils_UiSkinHelpers,
 } from "../../internal.ts";
+
 import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 
@@ -114,6 +115,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const planner = war.getActionPlanner();
+        if (planner == null) {
+            return;
+        }
+
         if ((!war.getIsExecutingAction()) && (!planner.checkIsStateRequesting())) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(planner);
         }
@@ -175,8 +180,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-            const targetsCount  = CoSkills_Utils_Common.getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
             const actionPlanner = war.getActionPlanner();
+            if (actionPlanner == null) {
+                return;
+            }
+
+            const targetsCount  = CoSkills_Utils_Common.getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
             if (targetsCount <= 0) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                     getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0142),
@@ -204,8 +213,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-            const targetsCount  = CoSkills_Utils_Common.getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
             const actionPlanner = war.getActionPlanner();
+            if (actionPlanner == null) {
+                return;
+            }
+
+            const targetsCount  = CoSkills_Utils_Common.getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
             if (targetsCount <= 0) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                     getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0144),
@@ -228,6 +241,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const field         = war.getField();
         const actionPlanner = field.getActionPlanner();
+        if (actionPlanner == null) {
+            return;
+        }
+
         if ((!actionPlanner.checkIsStateRequesting()) && (actionPlanner.getStateId() !== ActionPlanners_Constants.StateId.ExecutingAction)) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
 
@@ -236,10 +253,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             } else {
                 const cursor = field.getCursor();
-                cursor.setGridIndex(gridIndex);
-                cursor.updateView();
+                cursor?.setGridIndex(gridIndex);
+                cursor?.updateView();
                 war.getView()?.tweenGridToCentralArea(gridIndex);
-                war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
+                war.getGridVisualEffect()?.showEffectAiming(gridIndex, 800);
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             }
         }
@@ -252,6 +269,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const field         = war.getField();
         const actionPlanner = field.getActionPlanner();
+        if (actionPlanner == null) {
+            return;
+        }
+
         if ((!actionPlanner.checkIsStateRequesting()) && (actionPlanner.getStateId() !== ActionPlanners_Constants.StateId.ExecutingAction)) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
 
@@ -260,10 +281,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             } else {
                 const cursor = field.getCursor();
-                cursor.setGridIndex(gridIndex);
-                cursor.updateView();
+                cursor?.setGridIndex(gridIndex);
+                cursor?.updateView();
                 war.getView()?.tweenGridToCentralArea(gridIndex);
-                war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
+                war.getGridVisualEffect()?.showEffectAiming(gridIndex, 800);
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             }
         }
@@ -277,10 +298,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (war.getDrawVoteManager().checkNeedVoteBeforeEndTurn(war.getPlayerIndexInTurn())) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0034));
         } else {
+            const planner = war.getActionPlanner();
+            if (planner == null) {
+                return;
+            }
+
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0036),
                 getContent : () => war.getHintForEndTurn(),
-                callback   : () => ActionPlanners_States_RequestingPlayerEndTurn.RequestingPlayerEndTurn.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
+                callback   : () => ActionPlanners_States_RequestingPlayerEndTurn.RequestingPlayerEndTurn.getInstance().doApplyOnChooseAction(planner),
             });
         }
     }
@@ -291,6 +317,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const planner = war.getActionPlanner();
+        if (planner == null) {
+            return;
+        }
+
         if ((!war.getIsExecutingAction()) && (!planner.checkIsStateRequesting())) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(planner);
         }
@@ -302,6 +332,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const actionPlanner = war.getActionPlanner();
+        if (actionPlanner == null) {
+            return;
+        }
+
         if (!actionPlanner.checkIsStateRequesting()) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
         }
@@ -314,6 +348,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const actionPlanner = war.getActionPlanner();
+        if (actionPlanner == null) {
+            return;
+        }
+
         if (!actionPlanner.checkIsStateRequesting()) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
         }
@@ -417,10 +455,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const player    = war.getPlayerInTurn();
         const btn       = this._btnCop;
-        if ((war.getActionPlanner().getStateId() !== ActionPlanners_Constants.StateId.Idle)     ||
-            (war.getTurnManager().getPhaseCode() !== Turns_Constants.PhaseCode.Main)        ||
-            (player.getPlayerIndex() !== war.getPlayerIndexLoggedIn())          ||
-            (player.getCoEnergyType() !== Cos_Constants.EnergyTypeId.Trilogy)                 ||
+        if ((war.getActionPlanner()?.getStateId() !== ActionPlanners_Constants.StateId.Idle)    ||
+            (war.getTurnManager().getPhaseCode() !== Turns_Constants.PhaseCode.Main)            ||
+            (player.getPlayerIndex() !== war.getPlayerIndexLoggedIn())                          ||
+            (player.getCoEnergyType() !== Cos_Constants.EnergyTypeId.Trilogy)                   ||
             (player.getCoPowerEnergy() == null)
         ) {
             btn.setIsVisible(false);
@@ -438,10 +476,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const player    = war.getPlayerInTurn();
         const btn       = this._btnScop;
-        if ((war.getActionPlanner().getStateId() !== ActionPlanners_Constants.StateId.Idle)     ||
-            (war.getTurnManager().getPhaseCode() !== Turns_Constants.PhaseCode.Main)        ||
-            (player.getPlayerIndex() !== war.getPlayerIndexLoggedIn())          ||
-            (player.getCoEnergyType() !== Cos_Constants.EnergyTypeId.Trilogy)                            ||
+        if ((war.getActionPlanner()?.getStateId() !== ActionPlanners_Constants.StateId.Idle)    ||
+            (war.getTurnManager().getPhaseCode() !== Turns_Constants.PhaseCode.Main)            ||
+            (player.getPlayerIndex() !== war.getPlayerIndexLoggedIn())                          ||
+            (player.getCoEnergyType() !== Cos_Constants.EnergyTypeId.Trilogy)                   ||
             (player.getCoSuperPowerEnergy() == null)
         ) {
             btn.setIsVisible(false);
@@ -458,7 +496,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const turnManager = war.getTurnManager();
-        this._btnEndTurn.setIsVisible((war.getActionPlanner().getStateId() === ActionPlanners_Constants.StateId.Idle)
+        this._btnEndTurn.setIsVisible((war.getActionPlanner()?.getStateId() === ActionPlanners_Constants.StateId.Idle)
             && (turnManager.getPlayerIndexInTurn() === war.getPlayerIndexLoggedIn())
             && (turnManager.getPhaseCode() === Turns_Constants.PhaseCode.Main),
         );
@@ -472,8 +510,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const turnManager   = war.getTurnManager();
         const btn           = this._btnNextUnit;
-        if ((war.getActionPlanner().getStateId() !== ActionPlanners_Constants.StateId.Idle)         ||
-            (turnManager.getPlayerIndexInTurn() !== war.getPlayerIndexLoggedIn())   ||
+        if ((war.getActionPlanner()?.getStateId() !== ActionPlanners_Constants.StateId.Idle)    ||
+            (turnManager.getPlayerIndexInTurn() !== war.getPlayerIndexLoggedIn())               ||
             (turnManager.getPhaseCode() !== Turns_Constants.PhaseCode.Main)
         ) {
             btn.setIsVisible(false);
@@ -511,11 +549,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const actionPlanner = war.getActionPlanner();
         const turnManager   = war.getTurnManager();
         const btn           = this._btnNextTile;
-        if ((actionPlanner.getStateId() !== ActionPlanners_Constants.StateId.Idle)            ||
-            (turnManager.getPlayerIndexInTurn() !== war.getPlayerIndexLoggedIn())   ||
+        if ((war.getActionPlanner()?.getStateId() !== ActionPlanners_Constants.StateId.Idle)    ||
+            (turnManager.getPlayerIndexInTurn() !== war.getPlayerIndexLoggedIn())               ||
             (turnManager.getPhaseCode() !== Turns_Constants.PhaseCode.Main)
         ) {
             btn.setIsVisible(false);
@@ -531,12 +568,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const turnManager       = war.getTurnManager();
-        const actionPlanner     = war.getActionPlanner();
-        const state             = actionPlanner.getStateId();
+        const actionPlanner = war.getActionPlanner();
+        if (actionPlanner == null) {
+            return;
+        }
+
+        const turnManager   = war.getTurnManager();
+        const state         = actionPlanner.getStateId();
         this._btnCancel.setIsVisible(
-            (state !== ActionPlanners_Constants.StateId.Idle)                                     &&
-            (state !== ActionPlanners_Constants.StateId.ExecutingAction)                          &&
+            (state !== ActionPlanners_Constants.StateId.Idle)                       &&
+            (state !== ActionPlanners_Constants.StateId.ExecutingAction)            &&
             (!actionPlanner.checkIsStateRequesting())                               &&
             (turnManager.getPlayerIndexInTurn() === war.getPlayerIndexLoggedIn())   &&
             (turnManager.getPhaseCode() === Turns_Constants.PhaseCode.Main),

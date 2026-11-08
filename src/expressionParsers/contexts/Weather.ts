@@ -1,17 +1,17 @@
 import {
     ExpressionParsers_Contexts_Base,
-    Utils_ClientErrorCode,
+    ExpressionParsers_Contexts_War,
     ExpressionParsers_Enums,
-    ExpressionParsers_Utils,
     ExpressionParsers_FunctionInfo,
-    Helpers_Misc,
+    type ExpressionParsers_Results_Base,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_War,
-    Lang_Constants,
-    ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
-    type Weathers_IManager,
-    type ExpressionParsers_Results_Base,
+    ExpressionParsers_Utils,
+    Helpers_Misc,
+    Lang_Constants,
+    Utils_ClientErrorCode,
+    type Weathers_Manager,
 } from "../../internal.ts";
 
 export class Weather extends ExpressionParsers_Contexts_Base.Base {
@@ -46,7 +46,7 @@ export class Weather extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -63,10 +63,10 @@ export class Weather extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private readonly _weatherManager : Weathers_IManager.IManager;
+    private readonly _weatherManager : Weathers_Manager.Manager;
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(weatherManager: Weathers_IManager.IManager) {
+    public constructor(weatherManager: Weathers_Manager.Manager) {
         super(weatherManager.getWar());
 
         this._weatherManager = weatherManager;

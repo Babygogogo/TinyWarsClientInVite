@@ -1,17 +1,17 @@
 import {
-    MultiPlayerWar_Model_MpwModel,
-    GamePanels_Manager,
-    GamePanels_Dict,
-    Lang_Utils,
-    WatchWar_Model_WwModel,
-    Helpers_GameFlow,
-    Turns_Constants,
-    MultiPlayerWar_Model_MpwProxy,
-    FloatText,
     ActionPlanners_Constants,
-    Wars_Constants,
+    FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_GameFlow,
     Lang_Constants,
+    Lang_Utils,
+    MultiPlayerWar_Model_MpwModel,
+    MultiPlayerWar_Model_MpwProxy,
+    Turns_Constants,
     Ui_Components_UiPanel,
+    Wars_Constants,
+    WatchWar_Model_WwModel,
     type MultiPlayerWar_Interface_IMpwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -149,7 +149,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         MultiPlayerWar_Model_MpwProxy.reqMpwCommonSyncWar(
             war,
-            war.getActionPlanner().checkIsStateRequesting()
+            war.getActionPlanner()?.checkIsStateRequesting()
                 ? Wars_Constants.SyncRequestTypeId.PlayerForce
                 : Wars_Constants.SyncRequestTypeId.PlayerRequest,
         );
@@ -334,6 +334,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return (war != null)
             && (war.checkIsHumanInTurn())
             && (war.getTurnManager().getPhaseCode() === Turns_Constants.PhaseCode.Main)
-            && (war.getActionPlanner().getStateId() === ActionPlanners_Constants.StateId.Idle);
+            && ((war.getActionPlanner()?.getStateId() ?? ActionPlanners_Constants.StateId.Idle) === ActionPlanners_Constants.StateId.Idle);
     }
 }

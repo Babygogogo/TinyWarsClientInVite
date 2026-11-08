@@ -4,10 +4,10 @@ import {
     ActionPlanners_States_RequestingPlayerDeleteUnit,
     type AuxiliaryTypes_AuxiliaryTypes,
     AuxiliaryTypes_DamageCalculatorPlayerData,
+    type BaseWar_Model_War,
     Common_Model_CommonModel,
     Common_View_CommonDamageCalculatorPanel,
     CoSkills_Constants,
-    type BaseWar_Model_War,
     type Egret_Egret,
     FloatText,
     ForceSkins_Constants,
@@ -323,8 +323,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const unitMap   = war.getUnitMap();
-        const gridIndex = unit.getGridIndex();
+        const unitMap       = war.getUnitMap();
+        const gridIndex     = unit.getGridIndex();
+        const actionPlanner = war.getActionPlanner();
         if (war.getCanCheat()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0029),
@@ -344,11 +345,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     }
 
                     if (unit.getIsCoOnboard()) {
-                        war.getTileMap().getView().updateCoZone();
+                        war.getTileMap().getView()?.updateCoZone();
                     }
 
                     unit.getLoaderUnit()?.flushDataToView();
-                    ActionPlanners_States_Idle.Idle.getInstance().apply(war.getActionPlanner());
+                    if (actionPlanner) {
+                        ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
+                    }
                     Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex });
 
                     this.closePanel();
@@ -383,11 +386,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 return;
             }
 
-            const actionPlanner = war.getActionPlanner();
             if ((unitMap.getUnitOnMap(gridIndex) !== unit)                                      ||
-                (war.getTurnManager().getPhaseCode() !== Turns_Constants.PhaseCode.Main)      ||
-                (actionPlanner.checkIsStateRequesting())                                        ||
-                (actionPlanner.getStateId() === ActionPlanners_Constants.StateId.ExecutingAction)
+                (war.getTurnManager().getPhaseCode() !== Turns_Constants.PhaseCode.Main)        ||
+                (actionPlanner?.checkIsStateRequesting())                                       ||
+                (actionPlanner?.getStateId() === ActionPlanners_Constants.StateId.ExecutingAction)
             ) {
                 FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
                 return;
@@ -396,14 +398,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             if ((war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) ||
                 (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar)
             ) {
-                actionPlanner.cancelCurrentState();
-                war.getCursor().setGridIndex(gridIndex);
+                actionPlanner?.cancelCurrentState();
+                war.getCursor()?.setGridIndex(gridIndex);
 
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                     getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0081),
                     getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0029),
                     callback   : () => {
-                        ActionPlanners_States_RequestingPlayerDeleteUnit.RequestingPlayerDeleteUnit.getInstance().doApplyOnChooseAction(actionPlanner);
+                        if (actionPlanner) {
+                            ActionPlanners_States_RequestingPlayerDeleteUnit.RequestingPlayerDeleteUnit.getInstance().doApplyOnChooseAction(actionPlanner);
+                        }
+
                         this.closePanel();
                     },
                 });
@@ -1487,7 +1492,12 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             callback   : () => {
                 unit.setActionState(state === Units_Constants.ActionStateId.Acted ? Units_Constants.ActionStateId.Idle : Units_Constants.ActionStateId.Acted);
                 unit.flushDataToView();
-                ActionPlanners_States_Idle.Idle.getInstance().apply(war.getActionPlanner());
+
+                const planner = war.getActionPlanner();
+                if (planner) {
+                    ActionPlanners_States_Idle.Idle.getInstance().apply(planner);
+                }
+
                 this._updateView();
                 openData.panel.updateUnitView();
             },
@@ -1600,7 +1610,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 this._updateView();
                 openData.panel.updateUnitView();
 
-                war.getTileMap().getView().updateCoZone();
+                war.getTileMap().getView()?.updateCoZone();
             },
         });
     }
@@ -1816,7 +1826,11 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 loaderUnit.flushDataToView();
                 this._updateView();
                 openData.panel.updateUnitView();
-                ActionPlanners_States_Idle.Idle.getInstance().apply(war.getActionPlanner());
+
+                const planner = war.getActionPlanner();
+                if (planner) {
+                    ActionPlanners_States_Idle.Idle.getInstance().apply(planner);
+                }
 
                 Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex : loaderUnit.getGridIndex() });
             },

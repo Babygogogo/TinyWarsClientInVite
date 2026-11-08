@@ -1,14 +1,14 @@
 import {
+    ExpressionParsers_Contexts_Weather,
+    ExpressionParsers_Parser,
+    ExpressionParsers_Results_Num,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    Numbers_Constants,
+    Numbers_Utils,
     Utils_ClientErrorCode,
     WarEvents_Actions_Constants_SetWeatherExpr,
-    Lang_Utils,
-    Numbers_Utils,
-    Numbers_Constants,
-    Helpers_Misc,
-    ExpressionParsers_Results_Num,
-    ExpressionParsers_Parser,
-    Lang_Constants,
-    ExpressionParsers_Contexts_Weather,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -128,7 +128,7 @@ export async function applyWithoutExtraData(action: WeaSetWeatherExpr, isFast: b
         }
 
         if (!isFast) {
-            weatherManager.getView().resetView(false);
+            weatherManager.getView()?.resetView(false);
         }
 
     } catch {

@@ -1,15 +1,15 @@
 import {
-    Units_Constants,
-    GamePanels_Manager,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Users_Model,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
     ActionPlanners_Constants,
-    type AuxiliaryTypes_GridIndex,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_Misc,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Units_Constants,
+    Users_Model,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
+    type AuxiliaryTypes_GridIndex,
 } from "../../internal.ts";
 
 export class ChoosingUnitAction implements ActionPlanners_States_IState.IState {
@@ -37,7 +37,7 @@ export class ChoosingUnitAction implements ActionPlanners_States_IState.IState {
                     if (!Users_Model.getSelfSettingsIsSetPathMode()) {
                         return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                     } else {
-                        const previousGridIndex = war.getCursor().getPreviousGridIndex();
+                        const previousGridIndex = war.getCursor()?.getPreviousGridIndex();
                         if ((previousGridIndex) && (gridIndex.checkIsEqual(previousGridIndex))) {
                             return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                         } else {
@@ -74,7 +74,7 @@ export class ChoosingUnitAction implements ActionPlanners_States_IState.IState {
                 }
             } else {
                 if (actionPlanner.checkCanFocusUnitOnMapAttackTarget(gridIndex)) {
-                    const previousGridIndex = war.getCursor().getPreviousGridIndex();
+                    const previousGridIndex = war.getCursor()?.getPreviousGridIndex();
                     if ((previousGridIndex == null) || (!gridIndex.checkIsEqual(previousGridIndex))) {
                         return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
                     } else {

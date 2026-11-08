@@ -1,17 +1,17 @@
 import {
-    CoSkills_Utils_InstantMisc_SelfUnitHpAfterWait,
     AuxiliaryTypes_GridIndex,
+    CoSkills_Utils_InstantMisc_SelfUnitHpAfterWait,
+    Helpers_Misc,
+    Players_Utils_Common,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Teams_Constants,
+    TileBuffs_Constants,
     Units_Unit,
+    Utils_ClientErrorCode,
     type AuxiliaryTypes_BattleInfo,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    TileBuffs_Constants,
-    Utils_ClientErrorCode,
-    Helpers_Misc,
-    Players_Utils_Common,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    Teams_Constants,
 } from "../../../internal.ts";
 
 import type { CommonExtraDataForWarOperation } from "../../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
@@ -93,11 +93,11 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
                     // }
                     // 暂时改成下面这段代码，不确定有没有问题
                     if (unitId !== movingUnitId) {
-                        gridVisualEffect.showEffectExplosion(gridIndex);
+                        gridVisualEffect?.showEffectExplosion(gridIndex);
                         isShownExplosionEffect = true;
                     } else {
                         if (destinationGridIndex) {
-                            gridVisualEffect.showEffectExplosion(destinationGridIndex);
+                            gridVisualEffect?.showEffectExplosion(destinationGridIndex);
                             isShownExplosionEffect = true;
                         }
                     }
@@ -156,10 +156,10 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
         if (!isFastExecute) {
             if (hasMaxHpBeforeAction) {
                 if (tile.getMaxHp() == null) {
-                    gridVisualEffect.showEffectExplosion(gridIndex);
+                    gridVisualEffect?.showEffectExplosion(gridIndex);
                     isShownExplosionEffect = true;
                 } else if (tile.getCurrentHp() < hpBeforeAction) {
-                    gridVisualEffect.showEffectDamage(gridIndex);
+                    gridVisualEffect?.showEffectDamage(gridIndex);
                 }
             }
         }
@@ -193,14 +193,14 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
                 const gridIndex = existingUnit.getGridIndex();
                 if (!isUnitJoinUnit) {
                     if (checkIsUnitRepaired(existingUnitData, unitData)) {
-                        gridVisualEffect.showEffectRepair(gridIndex);
+                        gridVisualEffect?.showEffectRepair(gridIndex);
                     } else if (checkIsUnitSupplied(existingUnitData, unitData, gameConfig)) {
-                        gridVisualEffect.showEffectSupply(gridIndex);
+                        gridVisualEffect?.showEffectSupply(gridIndex);
                     }
                 }
 
                 if (checkIsUnitDamaged(existingUnitData, unitData)) {
-                    gridVisualEffect.showEffectDamage(gridIndex);
+                    gridVisualEffect?.showEffectDamage(gridIndex);
                 }
             }
 
@@ -262,7 +262,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
             weatherManager.init(weatherManagerData);
 
             if (!isFastExecute) {
-                weatherManager.getView().resetView(false);
+                weatherManager.getView()?.resetView(false);
             }
         }
     }
@@ -388,7 +388,7 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.Battle
         for (const [, unit] of destroyedUnits) {
             const view = unit.getView();
             if (view) {
-                unitMapView.deleteUnitView(view);
+                unitMapView?.deleteUnitView(view);
             }
             unit.dispose();
 
@@ -417,24 +417,24 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.Battle
         }
 
         for (const gridId of destroyedUnitGridIdSet) {
-            gridVisualEffect.showEffectExplosion(AuxiliaryTypes_GridIndex.GridIndex.getGridIndexByGridId(gridId, mapSize));
+            gridVisualEffect?.showEffectExplosion(AuxiliaryTypes_GridIndex.GridIndex.getGridIndexByGridId(gridId, mapSize));
         }
         for (const gridId of damagedUnitGridIdSet) {
-            gridVisualEffect.showEffectDamage(AuxiliaryTypes_GridIndex.GridIndex.getGridIndexByGridId(gridId, mapSize));
+            gridVisualEffect?.showEffectDamage(AuxiliaryTypes_GridIndex.GridIndex.getGridIndexByGridId(gridId, mapSize));
         }
     }
 
     const destroyedTiles = battleInfo.destroyedTiles;
     for (const [, tile] of destroyedTiles) {
         tile.flushDataToView();
-        gridVisualEffect.showEffectExplosion(tile.getGridIndex());
+        gridVisualEffect?.showEffectExplosion(tile.getGridIndex());
     }
 
     const damagedTiles = battleInfo.damagedTiles;
     for (const [gridId, tile] of damagedTiles) {
         if (!destroyedTiles.has(gridId)) {
             tile.flushDataToView();
-            gridVisualEffect.showEffectDamage(tile.getGridIndex());
+            gridVisualEffect?.showEffectDamage(tile.getGridIndex());
         }
     }
 

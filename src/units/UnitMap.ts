@@ -27,7 +27,13 @@ export class UnitMap {
     private _mapSize?               : AuxiliaryTypes_MapSize.MapSize;
     private _unitCustomNameArray?   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitCustomName[]>;
 
-    private readonly _view          = new Units_UnitMapView.UnitMapView();
+    private _view                   : Units_UnitMapView.UnitMapView | undefined;
+
+    public constructor(isNeedView: boolean) {
+        if (isNeedView) {
+            this._setView(new Units_UnitMapView.UnitMapView());
+        }
+    }
 
     public init({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : SerialUnitMap;
@@ -52,8 +58,9 @@ export class UnitMap {
         const map           = Helpers_Collection.createEmptyMap<Units_Unit.Unit>(mapWidth);
         const loadedUnits   = new Map<number, Units_Unit.Unit>();
         const allUnits      = new Map<number, Units_Unit.Unit>();
+        const isNeedView    = this.getView() != null;
         for (const unitData of data.getUnits()) {
-            const unit = new Units_Unit.Unit(true);
+            const unit = new Units_Unit.Unit(isNeedView);
             unit.init(unitData, gameConfig);
 
             const gridIndex = unit.getGridIndex();
@@ -135,7 +142,7 @@ export class UnitMap {
         this.setNextUnitId(nextUnitId);
         this.setUnitCustomNameArray(unitCustomNameArray.map(v => v.clone()));
 
-        this.getView().init(this);
+        this.getView()?.init(this);
     }
     public fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : SerialUnitMap;
@@ -156,28 +163,40 @@ export class UnitMap {
     public startRunningView(): void {
         this._forEachUnitOnMap(unit => unit.flushDataToView());
         this._forEachUnitLoaded(unit => unit.flushDataToView());
-        this.getView().startRunning();
+        this.getView()?.startRunning();
     }
     public stopRunning(): void {
-        this.getView().stopRunning();
+        this.getView()?.stopRunning();
         this._forEachUnit(unit => unit.stopRunning());
     }
     public dispose(): void {
         this.stopRunning();
 
-        const map = this._getMap();
-        for (const column of map) {
-            for (const unit of column) {
-                unit?.dispose();
+        {
+            const map = this._getMap();
+            for (const column of map) {
+                for (const unit of column) {
+                    unit?.dispose();
+                }
+            }
+            map.length = 0;
+        }
+
+        {
+            const dict = this.getRawAllUnitsLoaded();
+            for (const [, unit] of dict) {
+                unit.dispose();
+            }
+            dict.clear();
+        }
+
+        {
+            const view = this.getView();
+            if (view) {
+                view.dispose();
+                this._setView(undefined);
             }
         }
-        map.length = 0;
-
-        const dict = this.getRawAllUnitsLoaded();
-        for (const [, unit] of dict) {
-            unit.dispose();
-        }
-        dict.clear();
     }
 
     public serialize(): SerialUnitMap {
@@ -259,8 +278,11 @@ export class UnitMap {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getView(): Units_UnitMapView.UnitMapView {
+    public getView(): Units_UnitMapView.UnitMapView | undefined {
         return this._view;
+    }
+    private _setView(view: Units_UnitMapView.UnitMapView | undefined): void {
+        this._view = view;
     }
 
     private _setWar(war: BaseWar_Model_War.War): void {
@@ -419,7 +441,7 @@ export class UnitMap {
 
         const view = unit.getView();
         if (view) {
-            this.getView().addUnitView(view, true);
+            this.getView()?.addUnitView(view, true);
         }
     }
     public setUnitUnloaded(unitId: number, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
@@ -447,7 +469,7 @@ export class UnitMap {
 
         const view = unit.getView();
         if (view) {
-            this.getView().addUnitView(view, true);
+            this.getView()?.addUnitView(view, true);
         }
     }
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
@@ -458,7 +480,7 @@ export class UnitMap {
         if ((removeView) && (unit)) {
             const view = unit.getView();
             if (view) {
-                this.getView().deleteUnitView(view);
+                this.getView()?.deleteUnitView(view);
             }
         }
 
@@ -473,7 +495,7 @@ export class UnitMap {
 
         const view = unit.getView();
         if (view) {
-            this.getView().deleteUnitView(view);
+            this.getView()?.deleteUnitView(view);
         }
 
         return unit;

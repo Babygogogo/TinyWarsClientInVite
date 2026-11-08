@@ -106,14 +106,23 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     //     this._adjustPositionOnTouch(e.data);
     // }
     private _onNotifyBwCursorGridIndexChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwCursorGridIndexChanged"]>): void {
-        const data  = Helpers_Misc.getExisted(e.data);
-        const war   = this.getOpenData()?.war;
-        if ((war?.getIsRunning()) && (data.cursor === war.getCursor())) {
+        const war = this.getOpenData()?.war;
+        if (!war?.getIsRunning()) {
+            return;
+        }
+
+        const data = Helpers_Misc.getExisted(e.data);
+        if (data.cursor === war.getCursor()) {
             this._updateView();
         }
     }
     private _onNotifyActionPlannerStateChanged(): void {
-        const planner = this.getOpenData()?.war.getActionPlanner();
+        const war = this.getOpenData()?.war;
+        if (!war?.getIsRunning()) {
+            return;
+        }
+
+        const planner = war.getActionPlanner();
         if ((planner?.getPreviousStateId() === ActionPlanners_Constants.StateId.ExecutingAction)    &&
             (planner.getStateId() !== ActionPlanners_Constants.StateId.ExecutingAction)
         ) {
@@ -121,28 +130,65 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMeTileChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwTileChanged"]>): void {
-        const data  = Helpers_Misc.getExisted(e.data);
-        const war   = this.getOpenData()?.war;
-        if ((war?.getIsRunning()) && (data.gridIndex.checkIsEqual(war.getCursor().getGridIndex()))) {
+        const war = this.getOpenData()?.war;
+        if (!war?.getIsRunning()) {
+            return;
+        }
+
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
+        if (Helpers_Misc.getExisted(e.data).gridIndex.checkIsEqual(gridIndex)) {
             this._updateView();
         }
     }
     private _onNotifyTileIsHighlightedChanged(): void {
+        const war = this.getOpenData()?.war;
+        if (!war?.getIsRunning()) {
+            return;
+        }
+
         this._updateTileView();
     }
     private _onNotifyTileBuffChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwTileBuffChanged"]>): void {
         const war = this.getOpenData()?.war;
-        if ((Helpers_Misc.getExisted(e.data)).tile === war?.getTileMap().getTile(war.getCursor().getGridIndex())) {
+        if (!war?.getIsRunning()) {
+            return;
+        }
+
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
+        if ((Helpers_Misc.getExisted(e.data)).tile === war.getTileMap().getTile(gridIndex)) {
             this._updateTileView();
         }
     }
     private _onNotifyLanguageChanged(): void {
+        const war = this.getOpenData()?.war;
+        if (!war?.getIsRunning()) {
+            return;
+        }
+
         this._updateLabelName();
     }
     private _onNotifyBwTileCustomNameArrayChanged(): void {
+        const war = this.getOpenData()?.war;
+        if (!war?.getIsRunning()) {
+            return;
+        }
+
         this._updateLabelName();
     }
     private _onNotifyBwTileCustomNameIdChanged(): void {
+        const war = this.getOpenData()?.war;
+        if (!war?.getIsRunning()) {
+            return;
+        }
+
         this._updateLabelName();
     }
 
@@ -152,7 +198,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const gridIndex = war.getCursor().getGridIndex();
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
         const tileMap   = war.getTileMap();
         const tile      = tileMap.getTile(gridIndex);
         const warType   = war.getWarType();
@@ -206,8 +256,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const gridIndex = war.getCursor().getGridIndex();
-        const tile      = war.getTileMap().getTile(gridIndex);
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
+        const tile = war.getTileMap().getTile(gridIndex);
         this._labelDefense.setText(`${Math.floor(tile.getDefenseAmount() / 10)}`);
         this._labelGridIndex.setText(`x${gridIndex.getX()} y${gridIndex.getY()}`);
         this._updateLabelName();
@@ -240,7 +294,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const tile = war.getTileMap().getTile(war.getCursor().getGridIndex());
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
+        const tile = war.getTileMap().getTile(gridIndex);
         this._labelName.setText(
             tile.getCustomName() ??
             Lang_Utils.getTileName(tile.getTileTypeId(), tile.getGameConfig()) ??
@@ -253,8 +312,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
         const tileView = this._tileView?.getView();
-        tileView?.loadViewDataFromTile(war.getTileMap().getTile(war.getCursor().getGridIndex()), war, true);
+        tileView?.loadViewDataFromTile(war.getTileMap().getTile(gridIndex), war, true);
         tileView?.refreshAllViews();
     }
 

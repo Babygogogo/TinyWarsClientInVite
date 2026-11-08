@@ -1,17 +1,17 @@
 import {
     AuxiliaryTypes_GridIndex,
-    MapEditor_Model_MeWar,
     AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
     Units_Constants,
     Utils_ClientErrorCode,
-    Helpers_Misc,
-    Lang_Utils,
     WarOperations_Executors_Utils_Common,
-    Lang_Constants,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 
@@ -80,7 +80,7 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Model_War.War, action: WoUn
         if (targetGridIndex) {
             const flareRadius = Helpers_Misc.getExisted(actionExtraData.getFlareRadius(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchFlare_01);
             for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize })) {
-                gridVisualEffect.showEffectFlare(grid);
+                gridVisualEffect?.showEffectFlare(grid);
             }
         }
 
@@ -125,7 +125,7 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Model_War.War, action: WoUn
             }
 
             for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize })) {
-                gridVisualEffect.showEffectFlare(grid);
+                gridVisualEffect?.showEffectFlare(grid);
             }
         }
 

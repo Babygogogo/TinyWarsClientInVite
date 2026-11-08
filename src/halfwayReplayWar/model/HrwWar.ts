@@ -68,7 +68,7 @@ export class HrwWar extends ReplayWar_Model_RwWarBase.RwWarBase implements Halfw
         }
 
         if (!isFastExecute) {
-            tileMap.getView().updateCoZone();
+            tileMap.getView()?.updateCoZone();
         }
 
         if (!this.getIsBatchExecuteAction()) {

@@ -1,19 +1,19 @@
 import {
-    HalfwayReplayWar_Model_HrwWar,
+    ActionPlanners_Constants,
     ActionPlanners_States_Idle,
+    CoSkills_Constants,
+    HalfwayReplayWar_Model_HrwWar,
+    Helpers_Misc,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
-    CoSkills_Constants,
     SinglePlayerWar_Model_SpwWar,
-    ActionPlanners_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     TestWar_Model_TwWar,
-    type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
-    Helpers_Misc,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
+    type AuxiliaryTypes_GridIndex,
 } from "../../internal.ts";
 
 export class ChoosingCoActiveSkillTarget implements ActionPlanners_States_IState.IState {
@@ -53,7 +53,7 @@ export class ChoosingCoActiveSkillTarget implements ActionPlanners_States_IState
                 if (targetGridIndexArray.length < selectableTargetsCount) {
                     return ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget;
                 } else {
-                    const previousGridIndex = actionPlanner.getWar().getCursor().getPreviousGridIndex();
+                    const previousGridIndex = actionPlanner.getWar().getCursor()?.getPreviousGridIndex();
                     if ((previousGridIndex != null)                                         &&
                         (previousGridIndex.checkIsEqual(gridIndex))                         &&
                         (targetGridIndexArray.some(v => v.checkIsEqual(previousGridIndex)))
@@ -87,7 +87,7 @@ export class ChoosingCoActiveSkillTarget implements ActionPlanners_States_IState
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
         } else {
             if (actionPlanner.getFocusUnitOnMap()) {
-                actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getFocusUnitDestination());
+                actionPlanner.getWar().getCursor()?.setGridIndex(actionPlanner.getFocusUnitDestination());
                 actionPlanner.clearCoActiveSkillSkillType();
                 actionPlanner.clearCoActiveSkillTargetGridIndexArray();
 
@@ -128,7 +128,7 @@ export class ChoosingCoActiveSkillTarget implements ActionPlanners_States_IState
 
         const war = actionPlanner.getWar();
         const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray();
-        war.getCursor().getView().setTargetAreaRadius(arr[actionPlanner.getCoActiveSkillTypeId() === CoSkills_Constants.SkillTypeId.Power ? 0 : 1] ?? 0);
+        war.getCursor()?.getView().setTargetAreaRadius(arr[actionPlanner.getCoActiveSkillTypeId() === CoSkills_Constants.SkillTypeId.Power ? 0 : 1] ?? 0);
 
         actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget);
         actionPlanner.updateView();
@@ -145,7 +145,7 @@ export class ChoosingCoActiveSkillTarget implements ActionPlanners_States_IState
 
         const war = actionPlanner.getWar();
         const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray();
-        war.getCursor().getView().setTargetAreaRadius(arr[actionPlanner.getCoActiveSkillTypeId() === CoSkills_Constants.SkillTypeId.Power ? 0 : 1] ?? 0);
+        war.getCursor()?.getView().setTargetAreaRadius(arr[actionPlanner.getCoActiveSkillTypeId() === CoSkills_Constants.SkillTypeId.Power ? 0 : 1] ?? 0);
 
         actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget);
         actionPlanner.updateView();
@@ -165,7 +165,7 @@ export class ChoosingCoActiveSkillTarget implements ActionPlanners_States_IState
 
         const war = actionPlanner.getWar();
         const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray();
-        war.getCursor().getView().setTargetAreaRadius(arr[coSkillTypeId === CoSkills_Constants.SkillTypeId.Power ? 0 : 1] ?? 0);
+        war.getCursor()?.getView().setTargetAreaRadius(arr[coSkillTypeId === CoSkills_Constants.SkillTypeId.Power ? 0 : 1] ?? 0);
 
         actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget);
         actionPlanner.updateView();
@@ -174,7 +174,7 @@ export class ChoosingCoActiveSkillTarget implements ActionPlanners_States_IState
     public doApplyOnTouchButton(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, coSkillTypeId: CoSkills_Constants.SkillTypeId): void {
         const war = actionPlanner.getWar();
         const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray();
-        war.getCursor().getView().setTargetAreaRadius(arr[coSkillTypeId === CoSkills_Constants.SkillTypeId.Power ? 0 : 1] ?? 0);
+        war.getCursor()?.getView().setTargetAreaRadius(arr[coSkillTypeId === CoSkills_Constants.SkillTypeId.Power ? 0 : 1] ?? 0);
 
         actionPlanner.setCoActiveSkillSkillType(coSkillTypeId);
         actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget);

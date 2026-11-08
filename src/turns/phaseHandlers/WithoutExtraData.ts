@@ -1,22 +1,22 @@
 import {
     AuxiliaryTypes_AttackableArea,
-    CoSkills_Constants,
-    Destructions_Utils,
     AuxiliaryTypes_GridIndex,
     BootTimers_Constants,
-    ReplayWar_Model_RwWarBase,
-    Units_Constants,
-    Players_Constants,
-    UnitBuffs_Constants,
-    Utils_ClientErrorCode,
+    CoSkills_Constants,
+    Destructions_Utils,
     Helpers_Misc,
     Helpers_Team,
-    Visibilities_Utils,
-    Timer_TimerModel,
-    Players_Utils_Common,
     Numbers_Utils,
-    Turns_Constants,
+    Players_Constants,
+    Players_Utils_Common,
+    ReplayWar_Model_RwWarBase,
     Tiles_Constants_MapWeapon,
+    Timer_TimerModel,
+    Turns_Constants,
+    UnitBuffs_Constants,
+    Units_Constants,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
     type BaseWar_Model_War,
     type Tiles_Tile,
     type Turns_ITurnManager,
@@ -44,7 +44,7 @@ export async function endPhaseStandby(turnManager: Turns_ITurnManager.ITurnManag
     runPhaseCheckAndUpdateUnitAiMode(turnManager, isFastExecute);
     runPhaseMain(turnManager, isFastExecute);
 
-    turnManager.setPhaseCode(Turns_Constants.PhaseCode.Main);
+    turnManager.setPhaseCode(Turns_Constants.PhaseCode.Main, true);
 }
 
 export function endPhaseMain(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
@@ -66,7 +66,7 @@ export function endPhaseMain(turnManager: Turns_ITurnManager.ITurnManager, isFas
     runPhaseResetVisionForNextPlayer(turnManager, isFastExecute);
     runPhaseWaitBeginTurn(turnManager, isFastExecute);
 
-    turnManager.setPhaseCode(Turns_Constants.PhaseCode.WaitBeginTurn);
+    turnManager.setPhaseCode(Turns_Constants.PhaseCode.WaitBeginTurn, true);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -234,7 +234,7 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
                             }
 
                             if ((!isFastExecute) && (visibleUnits?.has(unit))) {
-                                gridVisionEffect.showEffectRepair(unit.getGridIndex());
+                                gridVisionEffect?.showEffectRepair(unit.getGridIndex());
                             }
                         }
                     }
@@ -264,7 +264,7 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
 
                             if ((!isFastExecute) && (visibleUnits?.has(unit))) {
                                 if (offsetFuel > 0) {
-                                    gridVisionEffect.showEffectSupply(unitGridIndex);
+                                    gridVisionEffect?.showEffectSupply(unitGridIndex);
                                 }
                             }
                         }
@@ -296,7 +296,7 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
 
                                 if ((!isFastExecute) && (visibleUnits?.has(unit))) {
                                     if (offsetPrimaryWeaponAmmo > 0) {
-                                        gridVisionEffect.showEffectSupply(unitGridIndex);
+                                        gridVisionEffect?.showEffectSupply(unitGridIndex);
                                     }
                                 }
                             }
@@ -362,9 +362,9 @@ function runPhaseRepairUnitByTile(turnManager: Turns_ITurnManager.ITurnManager, 
 
             if ((!isFastExecute) && (visibleUnits?.has(unit))) {
                 if (offsetHp) {
-                    gridVisionEffect.showEffectRepair(gridIndex);
+                    gridVisionEffect?.showEffectRepair(gridIndex);
                 } else if ((offsetFlareAmmo) || (offsetFuel) || (offsetPrimaryWeaponAmmo)) {
-                    gridVisionEffect.showEffectSupply(gridIndex);
+                    gridVisionEffect?.showEffectSupply(gridIndex);
                 }
                 unit.flushDataToView();
             }
@@ -450,9 +450,9 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_ITurnManager.ITurnManager, 
 
             if ((!isFastExecute) && (visibleUnits?.has(loader))) {
                 if (offsetHp) {
-                    gridVisionEffect.showEffectRepair(gridIndex);
+                    gridVisionEffect?.showEffectRepair(gridIndex);
                 } else if ((offsetFlareAmmo) || (offsetFuel) || (offsetPrimaryWeaponAmmo)) {
-                    gridVisionEffect.showEffectSupply(gridIndex);
+                    gridVisionEffect?.showEffectSupply(gridIndex);
                 }
             }
 
@@ -466,7 +466,7 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_ITurnManager.ITurnManager, 
 
             if ((!isFastExecute) && (visibleUnits?.has(loader))) {
                 if ((offsetFlareAmmo) || (offsetFuel) || (offsetPrimaryWeaponAmmo)) {
-                    gridVisionEffect.showEffectSupply(gridIndex);
+                    gridVisionEffect?.showEffectSupply(gridIndex);
                 }
             }
         }
@@ -491,7 +491,7 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_ITurnManager.ITurnManager, 
 
                     if ((!isFastExecute) && (visibleUnits?.has(unit))) {
                         if ((offsetFlareAmmo) || (offsetFuel) || (offsetPrimaryWeaponAmmo)) {
-                            gridVisionEffect.showEffectSupply(gridIndex);
+                            gridVisionEffect?.showEffectSupply(gridIndex);
                         }
                     }
                 }
@@ -699,7 +699,7 @@ function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_ITurnManager.ITurnMan
 
     const info = turnManager.getNextTurnAndPlayerIndex();
     turnManager.setTurnIndex(info.turnIndex);
-    turnManager.setPlayerIndexInTurn(info.playerIndex);
+    turnManager.setPlayerIndexInTurn(info.playerIndex, true);
     turnManager.setEnterTurnTime(Timer_TimerModel.getServerTimestamp());
     war.getWarEventManager().updateWarEventCalledCountOnPlayerTurnSwitched();
 }
@@ -711,7 +711,7 @@ function runPhaseResetSkillState(turnManager: Turns_ITurnManager.ITurnManager, i
 
     if (player.checkCoIsUsingActiveSkill()) {
         player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
-        war.getTileMap().getView().updateCoZone();
+        war.getTileMap().getView()?.updateCoZone();
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -726,7 +726,7 @@ function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_ITurnManager.ITurnM
     war.getFogMap().updateOnPlayerTurnSwitched();
 
     if (!isFastExecute) {
-        weatherManager.getView().resetView(false);
+        weatherManager.getView()?.resetView(false);
     }
 }
 
@@ -750,7 +750,7 @@ function runPhaseResetVisionForNextPlayer(turnManager: Turns_ITurnManager.ITurnM
 
 function runPhaseWaitBeginTurn(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
     if (!isFastExecute) {
-        turnManager.getWar().getTileMap().getView().resetMarkLayer();
+        turnManager.getWar().getTileMap().getView()?.resetMarkLayer();
     }
 }
 
@@ -759,7 +759,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
         war.getView()?.moveGridToCenter(tileGridIndex);
-        gridVisualEffect.showEffectCharge(tileGridIndex);
+        gridVisualEffect?.showEffectCharge(tileGridIndex);
         await Timer_TimerModel.wait(400);
     }
 
@@ -902,7 +902,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
 
             for (let y = 0; y < height; ++y) {
                 if (column[y]) {
-                    gridVisualEffect.showEffectDamage(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
+                    gridVisualEffect?.showEffectDamage(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
                 }
             }
         }
@@ -920,7 +920,7 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
         war.getView()?.moveGridToCenter(tileGridIndex);
-        gridVisualEffect.showEffectCharge(tileGridIndex);
+        gridVisualEffect?.showEffectCharge(tileGridIndex);
         await Timer_TimerModel.wait(400);
     }
 
@@ -1016,7 +1016,7 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
     if (!isFastExecute) {
         if (affectedUnits.size) {
             for (const unit of affectedUnits) {
-                gridVisualEffect.showEffectDamage(unit.getGridIndex());
+                gridVisualEffect?.showEffectDamage(unit.getGridIndex());
             }
             await Timer_TimerModel.wait(200);
 
@@ -1086,7 +1086,7 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
         war.getView()?.moveGridToCenter(tileGridIndex);
-        gridVisualEffect.showEffectCharge(tileGridIndex);
+        gridVisualEffect?.showEffectCharge(tileGridIndex);
         await Timer_TimerModel.wait(400);
     }
 
@@ -1187,7 +1187,7 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
 
             for (let y = 0; y < height; ++y) {
                 if (column[y]) {
-                    gridVisualEffect.showEffectDamage(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
+                    gridVisualEffect?.showEffectDamage(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
                 }
             }
         }

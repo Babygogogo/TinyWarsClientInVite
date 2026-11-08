@@ -277,7 +277,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Model_War.War, action: WoUnitJ
             {
                 const view = targetUnit.getView();
                 if (view) {
-                    unitMap.getView().deleteUnitView(view);
+                    unitMap.getView()?.deleteUnitView(view);
                 }
                 targetUnit.dispose();
             }

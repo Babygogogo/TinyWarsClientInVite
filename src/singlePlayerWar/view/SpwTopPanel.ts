@@ -1,40 +1,40 @@
 import {
-    type Notifications_Mapping,
-    AuxiliaryTypes_ChatToTarget,
-    Chat_Model,
-    ForceSkins_Utils,
-    Campaigns_Mains_Gateway,
-    SingleCustomWar_Model_ScwWar,
-    SingleFreeWar_Model_SfwWar,
-    FloatText,
-    CoSkills_Constants,
-    SingleRankWar_Model_SrwWar,
     ActionPlanners_Constants,
+    AuxiliaryTypes_ChatToTarget,
+    Campaigns_Mains_Gateway,
     Campaigns_Wars_War,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Players_Constants,
-    SinglePlayerWar_Model_SpwModel,
-    Utils_ClientErrorCode,
+    Chat_Model,
+    CoSkills_Constants,
+    FloatText,
+    ForceSkins_Utils,
+    GamePanels_Dict,
     GamePanels_Manager,
     Graphics_Constants,
-    SinglePlayerMode_Model_SpmModel,
-    Helpers_ImageSource,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Users_Model,
-    Lang_Utils,
     Helpers_GameFlow,
-    Ui_Utils_UiSkinHelpers,
-    Turns_Constants,
-    Sounds_SoundPlayer,
-    SinglePlayerMode_Model_SpmProxy,
-    Sounds_Constants,
+    Helpers_ImageSource,
+    Helpers_Misc,
     Lang_Constants,
+    Lang_Utils,
+    Players_Constants,
+    SingleCustomWar_Model_ScwWar,
+    SingleFreeWar_Model_SfwWar,
+    SinglePlayerMode_Model_SpmModel,
+    SinglePlayerMode_Model_SpmProxy,
+    SinglePlayerWar_Model_SpwModel,
+    SingleRankWar_Model_SrwWar,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Turns_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Types_UiSkinState,
+    Ui_Utils_UiSkinHelpers,
+    Users_Model,
+    Utils_ClientErrorCode,
     WarTypes_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
+    type Notifications_Mapping,
     type SinglePlayerWar_Interface_ISpwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -47,7 +47,7 @@ import {
 
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 
- 
+
 enum PanelSkinState {
     Normal,
     Expanded,
@@ -637,7 +637,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         return (war.checkIsHumanInTurn())
             && (war.getTurnManager().getPhaseCode() === Turns_Constants.PhaseCode.Main)
-            && (war.getActionPlanner().getStateId() === ActionPlanners_Constants.StateId.Idle);
+            && ((war.getActionPlanner()?.getStateId() ?? ActionPlanners_Constants.StateId.Idle) === ActionPlanners_Constants.StateId.Idle);
     }
 }
 

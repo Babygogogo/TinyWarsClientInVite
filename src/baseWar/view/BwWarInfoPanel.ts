@@ -1,30 +1,36 @@
 import {
+    AutoTourneys_Wars_War,
+    BootTimers_Constants,
     Cos_Constants,
     ForceSkins_Utils,
+    GameModes_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_ImageSource,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
     MultiMatchWar_Model_MmwWar,
     MultiRankWar_Model_MrwWar,
+    Notifications_Dispatcher,
+    PlayerRules_Constants,
+    Players_Constants,
     ReplayWar_Model_RwWar,
     ReplayWar_Model_RwWarBase,
     SingleCustomWar_Model_ScwWar,
     SingleFreeWar_Model_SfwWar,
-    SinglePlayerWar_Model_SpwWar,
-    BootTimers_Constants,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    AutoTourneys_Wars_War,
-    Players_Constants,
     SinglePlayerWar_Model_SpwModel,
-    Utils_ClientErrorCode,
-    GamePanels_Manager,
+    SinglePlayerWar_Model_SpwWar,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
     Ui_Components_UiPlayerRuleRenderer,
-    Notifications_Dispatcher,
-    Helpers_ImageSource,
-    GamePanels_Dict,
-    GameModes_Utils,
-    Helpers_Misc,
-    Lang_Utils,
-    WarRules_Utils_CommonData,
     Users_Model,
-    PlayerRules_Constants,
+    Utils_ClientErrorCode,
+    WarRules_Utils_CommonData,
+    WarTypes_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -33,13 +39,7 @@ import {
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiList,
     type Ui_Interfaces_IUiScroller,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    Lang_Constants,
     type Ui_Types_UiListItemData,
-    Ui_Components_UiListItemRenderer,
-    Ui_Components_UiPanel,
-    WarTypes_Constants,
 } from "../../internal.ts";
 
 
@@ -255,25 +255,25 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitListPanel, {
             war                   : war,
             callbackForMoveCursor : unit => {
-                if ((war.getIsExecutingAction()) || (war.getActionPlanner().checkIsStateRequesting())) {
+                if ((war.getIsExecutingAction()) || (war.getActionPlanner()?.checkIsStateRequesting())) {
                     return;
                 }
 
                 const gridIndex = unit.getGridIndex();
                 const cursor    = war.getCursor();
-                cursor.setGridIndex(gridIndex);
-                cursor.updateView();
+                cursor?.setGridIndex(gridIndex);
+                cursor?.updateView();
                 war.getView()?.tweenGridToCentralArea(gridIndex);
-                war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
+                war.getGridVisualEffect()?.showEffectAiming(gridIndex, 800);
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             },
             callbackForSelectUnit : unit => {
-                if ((war.getIsExecutingAction()) || (war.getActionPlanner().checkIsStateRequesting())) {
+                if ((war.getIsExecutingAction()) || (war.getActionPlanner()?.checkIsStateRequesting())) {
                     return;
                 }
 
                 const gridIndex = unit.getGridIndex();
-                war.getCursor().setGridIndex(gridIndex);
+                war.getCursor()?.setGridIndex(gridIndex);
                 Notifications_Dispatcher.dispatch("BwCursorTapped", {
                     current  : gridIndex,
                     tappedOn : gridIndex,
@@ -687,7 +687,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 if (newCoId !== currentCoId) {
                     player.setCoId(newCoId);
 
-                    war.getTileMap().getView().updateCoZone();
+                    war.getTileMap().getView()?.updateCoZone();
                     this._updateView();
                 }
             },

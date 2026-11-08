@@ -88,7 +88,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedGroupTileBase(): void {
         const view = this._getWar().getField().getView();
-        view.setTileBasesVisible(!view.getTileBasesVisible());
+        view?.setTileBasesVisible(!view.getTileBasesVisible());
         this._updateGroupTileBase();
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
@@ -96,7 +96,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedGroupTileDecoration(): void {
         const view = this._getWar().getField().getView();
-        view.setTileDecorationsVisible(!view.getTileDecorationsVisible());
+        view?.setTileDecorationsVisible(!view.getTileDecorationsVisible());
         this._updateGroupTileDecoration();
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
@@ -104,7 +104,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedGroupTileObject(): void {
         const view = this._getWar().getField().getView();
-        view.setTileObjectsVisible(!view.getTileObjectsVisible());
+        view?.setTileObjectsVisible(!view.getTileObjectsVisible());
         this._updateGroupTileObject();
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
@@ -112,7 +112,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedGroupUnit(): void {
         const view = this._getWar().getField().getView();
-        view.setUnitsVisible(!view.getUnitsVisible());
+        view?.setUnitsVisible(!view.getUnitsVisible());
         this._updateGroupUnit();
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
@@ -174,16 +174,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateGroupUnit(): void {
-        this._imgUnit.setIsVisible(this._getWar().getField().getView().getUnitsVisible());
+        this._imgUnit.setIsVisible(!!this._getWar().getField().getView()?.getUnitsVisible());
     }
     private _updateGroupTileBase(): void {
-        this._imgTileBase.setIsVisible(this._getWar().getField().getView().getTileBasesVisible());
+        this._imgTileBase.setIsVisible(!!this._getWar().getField().getView()?.getTileBasesVisible());
     }
     private _updateGroupTileDecoration(): void {
-        this._imgTileDecoration.setIsVisible(this._getWar().getField().getView().getTileDecorationsVisible());
+        this._imgTileDecoration.setIsVisible(!!this._getWar().getField().getView()?.getTileDecorationsVisible());
     }
     private _updateGroupTileObject(): void {
-        this._imgTileObject.setIsVisible(this._getWar().getField().getView().getTileObjectsVisible());
+        this._imgTileObject.setIsVisible(!!this._getWar().getField().getView()?.getTileObjectsVisible());
     }
     public updateImgShowAllLocation(): void {
         const tileMap   = this._getWar().getTileMap();

@@ -1,21 +1,21 @@
 import {
     AuxiliaryTypes_GridIndex,
-    MapEditor_Model_MeWar,
     AuxiliaryTypes_MovePath,
-    MultiPlayerWar_Model_MpwWar,
     DamageCalculators_Utils,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     TestWar_Model_TwWar,
     Units_Constants,
     Utils_ClientErrorCode,
     Visibilities_Utils,
-    Helpers_Misc,
-    Lang_Utils,
     WarOperations_Executors_Utils_Common,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    Lang_Constants,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 
@@ -77,7 +77,7 @@ function fastExeUnitAttackUnit(war: BaseWar_Model_War.War, action: WoUnitAttackU
             for (const [, unit] of battleInfo.destroyedUnits) {
                 const view = unit.getView();
                 if (view) {
-                    unitMapView.deleteUnitView(view);
+                    unitMapView?.deleteUnitView(view);
                 }
                 unit.dispose();
             }
@@ -119,7 +119,7 @@ async function normalExeUnitAttackUnit(war: BaseWar_Model_War.War, action: WoUni
             ((destroyedUnitIdArray).indexOf(movingUnitId) >= 0)    &&
             (lastNode?.getIsVisible())
         ) {
-            gridVisualEffect.showEffectExplosion(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackUnit_01));
+            gridVisualEffect?.showEffectExplosion(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackUnit_01));
             if (!isWarViewVibrated) {
                 war.getView()?.showVibration();
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);

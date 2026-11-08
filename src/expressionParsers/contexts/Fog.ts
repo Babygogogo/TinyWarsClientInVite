@@ -1,18 +1,18 @@
 import {
     ExpressionParsers_Contexts_Base,
-    Utils_ClientErrorCode,
+    ExpressionParsers_Contexts_War,
     ExpressionParsers_Enums,
-    ExpressionParsers_Utils,
     ExpressionParsers_FunctionInfo,
-    Numbers_Utils,
-    Helpers_Misc,
+    type ExpressionParsers_Results_Base,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_War,
-    Lang_Constants,
-    ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
-    type FogMaps_IFogMap,
-    type ExpressionParsers_Results_Base,
+    ExpressionParsers_Utils,
+    FogMaps_FogMap,
+    Helpers_Misc,
+    Lang_Constants,
+    Numbers_Utils,
+    Utils_ClientErrorCode,
 } from "../../internal.ts";
 
 export class Fog extends ExpressionParsers_Contexts_Base.Base {
@@ -43,7 +43,7 @@ export class Fog extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argResultType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -60,10 +60,10 @@ export class Fog extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private readonly _fogMap     : FogMaps_IFogMap.IFogMap;
-    private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
+    private readonly _fogMap    : FogMaps_FogMap.FogMap;
+    private _contextWar         : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(fogMap: FogMaps_IFogMap.IFogMap) {
+    public constructor(fogMap: FogMaps_FogMap.FogMap) {
         super(fogMap.getWar());
 
         this._fogMap = fogMap;

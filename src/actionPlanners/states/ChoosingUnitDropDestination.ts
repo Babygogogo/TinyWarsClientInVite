@@ -1,17 +1,17 @@
 import {
+    ActionPlanners_Constants,
     HalfwayReplayWar_Model_HrwWar,
+    Helpers_Misc,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
-    ActionPlanners_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     TestWar_Model_TwWar,
-    type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
-    Helpers_Misc,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
+    type AuxiliaryTypes_GridIndex,
     type Units_Unit,
 } from "../../internal.ts";
 
@@ -135,7 +135,7 @@ export class ChoosingUnitDropDestination implements ActionPlanners_States_IState
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
-        actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
+        actionPlanner.getWar().getCursor()?.setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
         actionPlanner.clearChoosingUnitForDrop();
         actionPlanner.clearAvailableDropDestinations();
 

@@ -1,12 +1,11 @@
 import {
     ActionPlanners_States_ExecutingAction,
     ActionPlanners_States_Idle,
+    Helpers_Misc,
+    Notifications_Dispatcher,
     ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
     Utils_ClientErrorCode,
-    Notifications_Dispatcher,
-    WarOperations_Executors_Utils_Unknown,
-    Helpers_Misc,
     WarOperations_Executors_Utils_PlayerDeleteUnit,
     WarOperations_Executors_Utils_PlayerEndTurn,
     WarOperations_Executors_Utils_PlayerProduceUnit,
@@ -39,6 +38,7 @@ import {
     WarOperations_Executors_Utils_UnitSurface,
     WarOperations_Executors_Utils_UnitUseCoSkill,
     WarOperations_Executors_Utils_UnitWait,
+    WarOperations_Executors_Utils_Unknown,
     type BaseWar_Model_War,
 } from "../../internal.ts";
 
@@ -61,7 +61,9 @@ export async function checkAndExecute(war: BaseWar_Model_War.War, action: WoCont
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const actionPlanner = war.getActionPlanner();
     war.setIsExecutingAction(true);
-    ActionPlanners_States_ExecutingAction.ExecutingAction.getInstance().apply(actionPlanner);
+    if (actionPlanner) {
+        ActionPlanners_States_ExecutingAction.ExecutingAction.getInstance().apply(actionPlanner);
+    }
 
     await executeAction(war, action, isFast);
 
@@ -81,7 +83,9 @@ export async function checkAndExecute(war: BaseWar_Model_War.War, action: WoCont
         }
     }
 
-    ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
+    if (actionPlanner) {
+        ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
+    }
     war.setIsExecutingAction(false);
 
     if (!isFast) {

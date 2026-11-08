@@ -1,12 +1,11 @@
 import {
     Helpers_Misc,
-    type BaseWar_Interface_IBwExecutedOperationManager,
     type AuxiliaryTypes_AuxiliaryTypes,
-} from "../../internal.ts";
-import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { SerialExecutedOperationManager } from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
+} from "../internal.ts";
+import type { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { SerialExecutedOperationManager } from "../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
 
-export class BwExecutedOperationManager implements BaseWar_Interface_IBwExecutedOperationManager.IBwExecutedOperationManager {
+export class ExecutedWarOpManager {
     private _isNeedExecutedOperations?  : boolean;
     private _executedOperationArray?    : WoContainer[];
     private _executedOperationsCount    = 0;

@@ -1,24 +1,24 @@
 import {
-    AuxiliaryTypes_DamageCalculatorPlayerData,
-    DamageCalculators_Utils,
-    Common_Model_CommonModel,
-    ReplayWar_Model_RwWarBase,
-    CoSkills_Constants,
-    SinglePlayerWar_Model_SpwWar,
     ActionPlanners_Constants,
-    Helpers_Misc,
-    Graphics_Utils,
+    AuxiliaryTypes_DamageCalculatorPlayerData,
+    Common_Model_CommonModel,
+    CoSkills_Constants,
+    DamageCalculators_Utils,
     GamePanels_Dict,
-    Users_Model,
-    Stages_StageManager,
-    Lang_Utils,
-    Tiles_Constants_Common,
     GamePanels_Manager,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
+    Graphics_Utils,
+    Helpers_Misc,
     Lang_Constants,
+    Lang_Utils,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWar_Model_SpwWar,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Stages_StageManager,
+    Tiles_Constants_Common,
     Ui_Components_UiPanel,
     Units_Constants,
+    Users_Model,
     type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -106,14 +106,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const defenderGridIndex = war.getCursor().getGridIndex();
-        const defenderUnit      = war.getUnitMap().getUnitOnMap(defenderGridIndex);
+        const actionPlanner = war.getActionPlanner();
+        if (actionPlanner == null) {
+            return;
+        }
+
+        const defenderGridIndex = war.getCursor()?.getGridIndex();
+        if (defenderGridIndex == null) {
+            return;
+        }
+
+        const defenderUnit = war.getUnitMap().getUnitOnMap(defenderGridIndex);
         if (defenderUnit == null) {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             return;
         }
 
-        const actionPlanner         = war.getActionPlanner();
         const tileMap               = war.getTileMap();
         const commonSettingsManager = war.getCommonSettingManager();
         const gameConfig            = war.getGcData();
@@ -248,7 +256,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        const targetPlayerIndex = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayerIndex();
+        const gridIndex         = war.getCursor()?.getGridIndex();
+        const targetPlayerIndex = gridIndex ? war.getUnitMap().getUnitOnMap(gridIndex)?.getPlayerIndex() : undefined;
         if (targetPlayerIndex != null) {
             const settings          = war.getDamagePreviewSettings();
             const settingsForEnemy  = settings.settings.find(v => v.playerIndex === targetPlayerIndex);
@@ -272,7 +281,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const targetPlayerIndex = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayerIndex();
+        const gridIndex         = war.getCursor()?.getGridIndex();
+        const targetPlayerIndex = gridIndex ? war.getUnitMap().getUnitOnMap(gridIndex)?.getPlayerIndex() : undefined;
         if (targetPlayerIndex != null) {
             const settingsForEnemy = war.getDamagePreviewSettings().settings.find(v => v.playerIndex === targetPlayerIndex);
             if ((settingsForEnemy) && (settingsForEnemy.extraCommandTowerCount > 0)) {
@@ -290,7 +300,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const targetPlayerIndex = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayerIndex();
+        const gridIndex         = war.getCursor()?.getGridIndex();
+        const targetPlayerIndex = gridIndex ? war.getUnitMap().getUnitOnMap(gridIndex)?.getPlayerIndex() : undefined;
         if (targetPlayerIndex != null) {
             const settings          = war.getDamagePreviewSettings();
             const settingsForEnemy  = settings.settings.find(v => v.playerIndex === targetPlayerIndex);
@@ -325,8 +336,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const actionPlanner = war.getActionPlanner();
-        const stateId       = actionPlanner.getStateId();
-        const group         = this._group;
+        if (actionPlanner == null) {
+            return;
+        }
+
+        const gridIndex2 = war.getCursor()?.getGridIndex();
+        if (gridIndex2 == null) {
+            return;
+        }
+
+        const stateId   = actionPlanner.getStateId();
+        const group     = this._group;
 
         if ((stateId === ActionPlanners_Constants.StateId.ChoosingUnitMovePath)     ||
             (stateId === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget)
@@ -340,7 +360,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const unitMap       = war.getUnitMap();
             const rawMovePath   = actionPlanner.getMovePath();
             const movePath      = rawMovePath.map(v => v.getGridIndex());
-            const gridIndex2    = war.getCursor().getGridIndex();
             if (!attackerUnit.checkCanAttackTargetAfterMovePath(movePath, gridIndex2)) {
                 group.setIsVisible(false);
             } else {
@@ -412,7 +431,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
         }
 
-        const targetPlayerIndex = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayerIndex();
+        const gridIndex         = war.getCursor()?.getGridIndex();
+        const targetPlayerIndex = gridIndex ? war.getUnitMap().getUnitOnMap(gridIndex)?.getPlayerIndex() : undefined;
         const settingsForEnemy  = settings.settings.find(v => v.playerIndex === targetPlayerIndex);
         this._imgCoz.setIsVisible(!!settingsForEnemy?.isForcedInCoZone);
         this._labelCommandTower.setText(`+${settingsForEnemy?.extraCommandTowerCount ?? 0}`);
@@ -426,7 +446,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const targetPlayer = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayer();
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
+        const targetPlayer = war.getUnitMap().getUnitOnMap(gridIndex)?.getPlayer();
         this._imgCommandTower.loadSource(Common_Model_CommonModel.getCachedTileObjectImageSource({
             version    : Users_Model.getSelfSettingsTextureVersion(),
             themeType  : Tiles_Constants_Common.ThemeTypeId.Normal,
@@ -449,7 +474,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const gridIndex     = war.getCursor().getGridIndex();
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
         const stage         = Stages_StageManager.getStage();
         const group         = this._group;
         const groupWidth    = group.getUnscaledWidth();

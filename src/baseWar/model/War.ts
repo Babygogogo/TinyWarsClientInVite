@@ -3,12 +3,11 @@ import {
     AuxiliaryTypes_MapSize,
     BaseWar_Model_BwCommonSettingManager,
     BaseWar_Model_BwDrawVoteManager,
-    BaseWar_Model_BwExecutedOperationManager,
-    BaseWar_Model_BwRandomNumberManager,
     BaseWar_Model_BwWarStatisticsManager,
     BaseWar_View_WarView,
     BootTimers_Constants,
     Fields_Field,
+    FogMaps_FogMap,
     Helpers_Misc,
     Lang_Constants,
     Lang_Utils,
@@ -16,6 +15,7 @@ import {
     Players_Constants,
     Players_PlayerManager,
     Players_Utils_Common,
+    RandomNumbers_RandomNumberManager,
     SingleCustomWar_Model_ScwWar,
     SingleFreeWar_Model_SfwWar,
     Sounds_SoundPlayer,
@@ -29,6 +29,7 @@ import {
     Users_Model,
     Users_Utils,
     Utils_ClientErrorCode,
+    WarOperations_ExecutedWarOpManager,
     WarTypes_Constants,
     Weathers_Manager,
     type ActionPlanners_IActionPlanner,
@@ -36,13 +37,9 @@ import {
     type BaseWar_Interface_IBwCommonSettingManager,
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwDrawVoteManager,
-    type BaseWar_Interface_IBwExecutedOperationManager,
     type BaseWar_Interface_IBwGridVisualEffect,
-    type BaseWar_Interface_IBwRandomNumberManager,
     type BaseWar_Interface_IBwWarEventManager,
     type BaseWar_Interface_IBwWarStatisticsManager,
-    type Fields_IField,
-    type FogMaps_IFogMap,
     type GameConfigs_GameConfig,
     type Players_IPlayer,
     type Players_IPlayerManager,
@@ -51,7 +48,6 @@ import {
     type Turns_Constants,
     type Turns_ITurnManager,
     type Units_UnitMap,
-    type Weathers_IManager,
 } from "../../internal.ts";
 
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -69,18 +65,18 @@ type DamagePreviewSettings = {
 };
 
 export abstract class War {
-    private readonly _weatherManager        = new Weathers_Manager.Manager();
+    private readonly _weatherManager        : Weathers_Manager.Manager;
+    private readonly _field                 : Fields_Field.Field;
     private readonly _turnManager           = new Turns_TurnManager.TurnManager();
-    private readonly _executedActionManager = new BaseWar_Model_BwExecutedOperationManager.BwExecutedOperationManager();
-    private readonly _randomNumberManager   = new BaseWar_Model_BwRandomNumberManager.BwRandomNumberManager();
+    private readonly _executedActionManager = new WarOperations_ExecutedWarOpManager.ExecutedWarOpManager();
+    private readonly _randomNumberManager   = new RandomNumbers_RandomNumberManager.RandomNumberManager();
     private readonly _drawVoteManager       = new BaseWar_Model_BwDrawVoteManager.BwDrawVoteManager();
     private readonly _taskObjectiveManager  = new TaskObjectives_TaskObjectiveManager.TaskObjectiveManager();
-    private readonly _field                 = new Fields_Field.Field();
     private readonly _warStatisticsManager  = new BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager();
     private readonly _commonSettingManager  = new BaseWar_Model_BwCommonSettingManager.BwCommonSettingManager();
     private readonly _playerManager         = new Players_PlayerManager.PlayerManager();
 
-    private _isNeedView             = false;
+    private readonly _isNeedView    : boolean;
     private _view                   : BaseWar_View_WarView.WarView | undefined;
 
     private _gameConfig             : GameConfigs_GameConfig.GameConfig | null = null;
@@ -93,7 +89,9 @@ export abstract class War {
     private _overridingBgmCode      : number | null = null;
 
     protected constructor(isNeedView: boolean) {
-        this._setIsNeedView(isNeedView);
+        this._isNeedView        = isNeedView;
+        this._weatherManager    = new Weathers_Manager.Manager(isNeedView);
+        this._field             = new Fields_Field.Field(isNeedView);
 
         if (isNeedView) {
             this._setView(new BaseWar_View_WarView.WarView());
@@ -165,7 +163,7 @@ export abstract class War {
         const turnManagerData       = Helpers_Misc.getExisted(data.getTurnManager(), Utils_ClientErrorCode.ClientErrorCode.BwWar_BaseInit_05);
         this.getTurnManager().init(turnManagerData, playersCountUnneutral);
         this.getField().init({
-            data                  : data.getField(),
+            data                  : Helpers_Misc.getExisted(data.getField()),
             gameConfig            : gameConfig,
             playersCountUnneutral : playersCountUnneutral,
         });
@@ -232,9 +230,6 @@ export abstract class War {
 
     public getIsNeedView(): boolean {
         return this._isNeedView;
-    }
-    private _setIsNeedView(isNeedView: boolean): void {
-        this._isNeedView = isNeedView;
     }
 
     public getView(): BaseWar_View_WarView.WarView | undefined {
@@ -514,7 +509,7 @@ export abstract class War {
     public getTurnManager(): Turns_ITurnManager.ITurnManager {
         return this._turnManager;
     }
-    public getFogMap(): FogMaps_IFogMap.IFogMap {
+    public getFogMap(): FogMaps_FogMap.FogMap {
         return this.getField().getFogMap();
     }
     public getUnitMap(): Units_UnitMap.UnitMap {
@@ -523,13 +518,13 @@ export abstract class War {
     public getTileMap(): Tiles_TileMap.TileMap {
         return this.getField().getTileMap();
     }
-    public getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner {
+    public getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner | undefined {
         return this.getField().getActionPlanner();
     }
-    public getGridVisualEffect(): BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect {
+    public getGridVisualEffect(): BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect | undefined {
         return this.getField().getGridVisualEffect();
     }
-    public getCursor(): BaseWar_Interface_IBwCursor.IBwCursor {
+    public getCursor(): BaseWar_Interface_IBwCursor.IBwCursor | undefined {
         return this.getField().getCursor();
     }
 
@@ -540,22 +535,22 @@ export abstract class War {
         return this.getTurnManager().getPhaseCode();
     }
 
-    public getWeatherManager(): Weathers_IManager.IManager {
+    public getWeatherManager(): Weathers_Manager.Manager {
         return this._weatherManager;
     }
     public getDrawVoteManager(): BaseWar_Interface_IBwDrawVoteManager.IBwDrawVoteManager {
         return this._drawVoteManager;
     }
-    public getRandomNumberManager(): BaseWar_Interface_IBwRandomNumberManager.IBwRandomNumberManager {
+    public getRandomNumberManager(): RandomNumbers_RandomNumberManager.RandomNumberManager {
         return this._randomNumberManager;
     }
-    public getExecutedOperationManager(): BaseWar_Interface_IBwExecutedOperationManager.IBwExecutedOperationManager {
+    public getExecutedOperationManager(): WarOperations_ExecutedWarOpManager.ExecutedWarOpManager {
         return this._executedActionManager;
     }
     public getTaskObjectiveManager(): TaskObjectives_ITaskObjectiveManager.ITaskObjectiveManager {
         return this._taskObjectiveManager;
     }
-    public getField(): Fields_IField.IField {
+    public getField(): Fields_Field.Field {
         return this._field;
     }
     public getWarStatisticsManager(): BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager {
@@ -635,7 +630,7 @@ export abstract class War {
         {
             const existingUnitView = unitMap.getUnitById(movingUnitData.getUnitId())?.getView();
             if (existingUnitView) {
-                unitMapView.deleteUnitView(existingUnitView);
+                unitMapView?.deleteUnitView(existingUnitView);
             }
         }
 
@@ -648,7 +643,7 @@ export abstract class War {
         if (!tempUnitView) {
             await callback?.(undefined);
         } else {
-            unitMapView.addUnitView(tempUnitView, true);
+            unitMapView?.addUnitView(tempUnitView, true);
 
             await tempUnitView.moveAlongExtraPath({
                 war    : this,
@@ -657,7 +652,7 @@ export abstract class War {
             });
             await callback?.(tempUnitView);
 
-            unitMapView.deleteUnitView(tempUnitView);
+            unitMapView?.deleteUnitView(tempUnitView);
         }
 
         tempUnit.dispose();
@@ -677,14 +672,17 @@ export abstract class War {
     }
 
     public getIdleBuildingGridIndex(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex> {
+        const field             = this.getField();
+        const cursorGridIndex   = field.getCursor()?.getGridIndex();
+        if (cursorGridIndex == null) {
+            return undefined;
+        }
+
         const playerIndex               = this.getPlayerIndexInTurn();
-        const field                     = this.getField();
         const tileMap                   = field.getTileMap();
         const unitMap                   = field.getUnitMap();
-        const currGridIndex             = field.getCursor().getGridIndex();
-        const currX                     = currGridIndex.getX();
-        const currY                     = currGridIndex.getY();
-        const { width, height }          = tileMap.getMapSize().getWH();
+        const { x: currX, y: currY }    = cursorGridIndex.getXY();
+        const { width, height }         = tileMap.getMapSize().getWH();
         const checkIsIdle               = (gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
             const unit = unitMap.getUnitOnMap(gridIndex);
             if ((unit)                                                                                      &&
@@ -720,11 +718,16 @@ export abstract class War {
         return null;
     }
     public getIdleUnitGridIndex(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex> {
+        const field             = this.getField();
+        const cursorGridIndex   = field.getCursor()?.getGridIndex();
+        if (cursorGridIndex == null) {
+            return undefined;
+        }
+
         const playerIndex               = this.getPlayerIndexInTurn();
-        const field                     = this.getField();
         const unitMap                   = field.getUnitMap();
-        const { x: currX, y: currY }    = field.getCursor().getGridIndex().getXY();
-        const { width, height }          = unitMap.getMapSize().getWH();
+        const { x: currX, y: currY }    = cursorGridIndex.getXY();
+        const { width, height }         = unitMap.getMapSize().getWH();
         const checkIsIdle               = (gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
             const unit = unitMap.getUnitOnMap(gridIndex);
             return (unit?.getPlayerIndex() === playerIndex) && (unit.getActionState() === Units_Constants.ActionStateId.Idle);

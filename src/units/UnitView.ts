@@ -333,8 +333,10 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
             );
         }
 
-        const endingGridIndex = path[path.length - 1];
         return new Promise<void>(resolve => {
+            const endingGridIndex   = path[path.length - 1];
+            const gridVisualEffect  = war.getGridVisualEffect();
+
             if (!aiming?.length) {
                 tween.call(() => {
                     this._refreshImgUnitFlippedX();
@@ -349,7 +351,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                             observerTeamIndexes : watcherTeamIndexes,
                         }))
                     ) {
-                        war.getGridVisualEffect().showEffectBlock(endingGridIndex);
+                        gridVisualEffect?.showEffectBlock(endingGridIndex);
                         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
                     }
                     Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
@@ -368,16 +370,16 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
             } else {
                 const cursor = war.getCursor();
                 tween.call(() => {
-                    cursor.setIsMovableByTouches(false);
-                    cursor.setIsVisible(false);
+                    cursor?.setIsMovableByTouches(false);
+                    cursor?.setIsVisible(false);
                     for (const g of aiming) {
-                        war.getGridVisualEffect().showEffectAiming(g, AIMING_TIME_MS);
+                        gridVisualEffect?.showEffectAiming(g, AIMING_TIME_MS);
                     }
                 })
                     .wait(AIMING_TIME_MS)
                     .call(() => {
-                        cursor.setIsMovableByTouches(true);
-                        cursor.setIsVisible(true);
+                        cursor?.setIsMovableByTouches(true);
+                        cursor?.setIsVisible(true);
                         this._refreshImgUnitFlippedX();
                         if ((isBlocked)                                         &&
                             (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
@@ -390,7 +392,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                                 observerTeamIndexes : watcherTeamIndexes,
                             }))
                         ) {
-                            war.getGridVisualEffect().showEffectBlock(endingGridIndex);
+                            gridVisualEffect?.showEffectBlock(endingGridIndex);
                             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
                         }
                         Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
@@ -483,14 +485,15 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
             });
         }
 
-        const isBlockedInEnd    = !!endingNode.getIsBlocked();
-        const endingGridIndex   = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(endingNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.BwUnitView_MoveAlongExtraPath_03);
         return new Promise<void>(resolve => {
+            const isBlockedInEnd    = !!endingNode.getIsBlocked();
+            const endingGridIndex   = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(endingNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.BwUnitView_MoveAlongExtraPath_03);
+            const gridVisualEffect  = war.getGridVisualEffect();
             if (!aiming?.length) {
                 tween.call(() => {
                     this._refreshImgUnitFlippedX();
                     if ((isBlockedInEnd) && (isVisibleInEnd)) {
-                        war.getGridVisualEffect().showEffectBlock(endingGridIndex);
+                        gridVisualEffect?.showEffectBlock(endingGridIndex);
                         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
                     }
 
@@ -502,20 +505,20 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
                 const cursor = war.getCursor();
                 tween
                     .call(() => {
-                        cursor.setIsMovableByTouches(false);
-                        cursor.setIsVisible(false);
+                        cursor?.setIsMovableByTouches(false);
+                        cursor?.setIsVisible(false);
                         for (const g of aiming) {
-                            war.getGridVisualEffect().showEffectAiming(g, AIMING_TIME_MS);
+                            gridVisualEffect?.showEffectAiming(g, AIMING_TIME_MS);
                         }
                     })
                     .wait(AIMING_TIME_MS)
                     .call(() => {
-                        cursor.setIsMovableByTouches(true);
-                        cursor.setIsVisible(true);
+                        cursor?.setIsMovableByTouches(true);
+                        cursor?.setIsVisible(true);
 
                         this._refreshImgUnitFlippedX();
                         if ((isBlockedInEnd) && (isVisibleInEnd)) {
-                            war.getGridVisualEffect().showEffectBlock(endingGridIndex);
+                            gridVisualEffect?.showEffectBlock(endingGridIndex);
                             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
                         }
 

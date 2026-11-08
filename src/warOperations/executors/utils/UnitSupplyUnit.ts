@@ -1,16 +1,16 @@
 import {
-    MapEditor_Model_MeWar,
     AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
     Units_Constants,
     Utils_ClientErrorCode,
-    Helpers_Misc,
-    Lang_Utils,
     WarOperations_Executors_Utils_Common,
-    Lang_Constants,
     type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
@@ -133,7 +133,7 @@ async function normalExeUnitSupplyUnit(war: BaseWar_Model_War.War, action: WoUni
             const gridVisionEffect = war.getGridVisualEffect();
             for (const unit of suppliedUnits) {
                 unit.flushDataToView();
-                gridVisionEffect.showEffectSupply(unit.getGridIndex());
+                gridVisionEffect?.showEffectSupply(unit.getGridIndex());
             }
         }
 

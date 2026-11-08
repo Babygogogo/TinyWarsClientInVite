@@ -900,7 +900,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             const war = this._getWar();
             Destructions_Utils.destroyUnitOnMap(war, gridIndex, true);
             if (unit.getIsCoOnboard()) {
-                war.getTileMap().getView().updateCoZone();
+                war.getTileMap().getView()?.updateCoZone();
             }
 
             Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex });
@@ -1031,7 +1031,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             unit.flushDataToView();
         }
         if (addedUnits.some(v => v.getIsCoOnboard())) {
-            tileMap.getView().updateCoZone();
+            tileMap.getView()?.updateCoZone();
         }
 
         unitMap.setNextUnitId(nextUnitId);

@@ -71,7 +71,7 @@ function fastExeUnitAttackTile(war: BaseWar_Model_War.War, action: WoUnitAttackT
             for (const [, unit] of battleInfo.destroyedUnits) {
                 const view = unit.getView();
                 if (view) {
-                    unitMapView.deleteUnitView(view);
+                    unitMapView?.deleteUnitView(view);
                 }
                 unit.dispose();
             }

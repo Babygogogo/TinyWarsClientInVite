@@ -1,13 +1,13 @@
 import {
-    ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type FogMaps_IFogMap,
+    ExpressionParsers_Results_Base,
+    FogMaps_FogMap,
 } from "../../internal.ts";
 
 export class FogMap extends ExpressionParsers_Results_Base.Base {
-    public readonly fogMap: FogMaps_IFogMap.IFogMap;
+    public readonly fogMap: FogMaps_FogMap.FogMap;
 
-    public constructor(fogMap: FogMaps_IFogMap.IFogMap) {
+    public constructor(fogMap: FogMaps_FogMap.FogMap) {
         super(fogMap.getWar());
 
         this.fogMap = fogMap;

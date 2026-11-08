@@ -1,6 +1,7 @@
 import {
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Model_BwTypes,
+    type BaseWar_Model_War,
     Graphics_Utils,
     Helpers_Misc,
     Keyboard_KbTypes,
@@ -13,7 +14,6 @@ import {
     Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type BaseWar_Model_War,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
@@ -77,14 +77,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const newKeys = eventData.newKeys;
         if ((newKeys.has(Keyboard_KbTypes.KeyCode.K)) || (newKeys.has(Keyboard_KbTypes.KeyCode.Escape))) {
-            this.getOpenData()?.war.getActionPlanner().cancelCurrentState();
+            this.getOpenData()?.war.getActionPlanner()?.cancelCurrentState();
             return;
         }
 
         const list = this._listAction;
         if ((newKeys.has(Keyboard_KbTypes.KeyCode.J)) || (newKeys.has(Keyboard_KbTypes.KeyCode.Enter))) {
             const data = list.getFirstSelectedData();
-            if ((data == null) || (data.war.getActionPlanner().checkIsStateRequesting())) {
+            if ((data == null) || (data.war.getActionPlanner()?.checkIsStateRequesting())) {
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             } else {
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
@@ -263,7 +263,7 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
             return;
         }
 
-        if (openData.war.getActionPlanner().checkIsStateRequesting()) {
+        if (openData.war.getActionPlanner()?.checkIsStateRequesting()) {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
         } else {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);

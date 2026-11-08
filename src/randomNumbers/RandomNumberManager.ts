@@ -1,19 +1,18 @@
 import {
-    type BaseWar_Interface_IBwRandomNumberManager,
-    Helpers_SeedRandom,
+    RandomNumbers_SeedRandom,
     type AuxiliaryTypes_AuxiliaryTypes,
     Utils_ClientErrorCode,
     Helpers_Misc,
-} from "../../internal.ts";
+} from "../internal.ts";
 import type {
     SeedRandomState,
     SeedRandomStateJson,
-} from "../../proto/schema/CommonProto/Structure/SeedRandomState.ts";
+} from "../proto/schema/CommonProto/Structure/SeedRandomState.ts";
 
-export class BwRandomNumberManager implements BaseWar_Interface_IBwRandomNumberManager.IBwRandomNumberManager {
+export class RandomNumberManager {
     private _isNeedSeedRandom?          : boolean;
     private _seedRandomInitialState?    : SeedRandomState | null;
-    private _randomNumberGenerator?     : Helpers_SeedRandom.IGenerator | null;
+    private _randomNumberGenerator?     : RandomNumbers_SeedRandom.IGenerator | null;
 
     public init({ isNeedSeedRandom, initialState, currentState }: {
         isNeedSeedRandom: boolean;
@@ -32,7 +31,7 @@ export class BwRandomNumberManager implements BaseWar_Interface_IBwRandomNumberM
             if (currentState == null) {
                 throw Helpers_Misc.newError(`Empty currentState.`);
             }
-            this._setRandomNumberGenerator(new Helpers_SeedRandom.Generator("", { state : currentState.toJson() }));
+            this._setRandomNumberGenerator(new RandomNumbers_SeedRandom.Generator("", { state : currentState.toJson() }));
         }
     }
 
@@ -43,10 +42,10 @@ export class BwRandomNumberManager implements BaseWar_Interface_IBwRandomNumberM
         return Helpers_Misc.getExisted(this._isNeedSeedRandom);
     }
 
-    private _setRandomNumberGenerator(generator: Helpers_SeedRandom.IGenerator): void {
+    private _setRandomNumberGenerator(generator: RandomNumbers_SeedRandom.IGenerator): void {
         this._randomNumberGenerator = generator;
     }
-    private _getRandomNumberGenerator(): Helpers_SeedRandom.IGenerator | null {
+    private _getRandomNumberGenerator(): RandomNumbers_SeedRandom.IGenerator | null {
         return Helpers_Misc.getDefined(this._randomNumberGenerator, Utils_ClientErrorCode.ClientErrorCode.BwRandomNumberManager_GetRandomNumberGenerator_00);
     }
 
@@ -65,7 +64,7 @@ export class BwRandomNumberManager implements BaseWar_Interface_IBwRandomNumberM
         const generator = Helpers_Misc.getExisted(this._getRandomNumberGenerator());
         const state     = generator.state();
         const number    = generator.getNext();
-        this._setRandomNumberGenerator(new Helpers_SeedRandom.Generator("", { state : state }));
+        this._setRandomNumberGenerator(new RandomNumbers_SeedRandom.Generator("", { state : state }));
         return number;
     }
 
@@ -73,7 +72,7 @@ export class BwRandomNumberManager implements BaseWar_Interface_IBwRandomNumberM
         return Helpers_Misc.getExisted(this._getRandomNumberGenerator()).state();
     }
     public setSeedRandomCurrentStateJson(state: SeedRandomStateJson): void {
-        this._setRandomNumberGenerator(new Helpers_SeedRandom.Generator("", { state : state }));
+        this._setRandomNumberGenerator(new RandomNumbers_SeedRandom.Generator("", { state : state }));
     }
 
     private _setSeedRandomInitialState(state: SeedRandomState): void {

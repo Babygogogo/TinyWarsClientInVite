@@ -237,7 +237,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const actionPlanner = war.getActionPlanner();
-        if (!actionPlanner.checkIsStateRequesting()) {
+        if ((actionPlanner) && (!actionPlanner.checkIsStateRequesting())) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
         }
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarInfoPanel, { war });
@@ -258,15 +258,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callbackForMoveCursor : unit => {
                 const gridIndex = unit.getGridIndex();
                 const cursor    = war.getCursor();
-                cursor.setGridIndex(gridIndex);
-                cursor.updateView();
+                cursor?.setGridIndex(gridIndex);
+                cursor?.updateView();
                 war.getView()?.tweenGridToCentralArea(gridIndex);
-                war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
+                war.getGridVisualEffect()?.showEffectAiming(gridIndex, 800);
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             },
             callbackForSelectUnit : unit => {
                 const gridIndex = unit.getGridIndex();
-                war.getCursor().setGridIndex(gridIndex);
+                war.getCursor()?.setGridIndex(gridIndex);
                 Notifications_Dispatcher.dispatch("BwCursorTapped", {
                     current  : gridIndex,
                     tappedOn : gridIndex,
@@ -496,7 +496,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const actionPlanner = war.getActionPlanner();
-        if (!actionPlanner.checkIsStateRequesting()) {
+        if ((actionPlanner) && (!actionPlanner.checkIsStateRequesting())) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
         }
 
@@ -632,10 +632,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateLabelVisionTeam(): void {
         const teamIndex = this.getOpenData()?.war.getVisionTeamIndex();
-        this._labelVisionTeam.setText(teamIndex == null
-            ? Lang_Utils.getText(Lang_Constants.TextType.B0890)
-            : (Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError),
-        );
+        const label     = this._labelVisionTeam;
+        if (teamIndex == null) {
+            label.setLangText(Lang_Constants.TextType.B0890);
+        } else {
+            label.setText((Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError));
+        }
         this._layoutVisionTeam.arrangeItems();
     }
 
@@ -772,7 +774,13 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const player    = openData.war.getPlayer(openData.playerIndex);
         const userId    = player.getUserId();
         this._labelTeam.setText(String.fromCharCode(`A`.charCodeAt(0) + (player.getTeamIndex() - 1)));
-        this._labelNickname.setText(userId == null ? Lang_Utils.getText(Lang_Constants.TextType.B0607) : (await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError));
+
+        const labelNickname = this._labelNickname;
+        if (userId == null) {
+            labelNickname.setLangText(Lang_Constants.TextType.B0607);
+        } else {
+            labelNickname.setText((await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError));
+        }
     }
 
     private _updateComponentsForEnergy(): void {

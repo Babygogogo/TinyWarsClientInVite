@@ -1,12 +1,12 @@
 import {
-    MultiPlayerWar_Model_MpwWar,
-    SinglePlayerWar_Model_SpwWar,
     ActionPlanners_Constants,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
     Helpers_Misc,
     MultiPlayerWar_Model_MpwProxy,
+    MultiPlayerWar_Model_MpwWar,
     SinglePlayerWar_Model_SpwLocalProxy,
+    SinglePlayerWar_Model_SpwWar,
 } from "../../internal.ts";
 
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -54,12 +54,17 @@ export class RequestingPlayerDeleteUnit implements ActionPlanners_States_IState.
     }
 
     public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
-        const war = actionPlanner.getWar();
+        const war       = actionPlanner.getWar();
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
         if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
                 operationId        : war.getExecutedOperationManager().getExecutedOperationsCount(),
                 WoPlayerDeleteUnit : {
-                    gridIndex : war.getCursor().getGridIndex().toProto().toJson(),
+                    gridIndex : gridIndex.toProto().toJson(),
                 },
             }));
 
@@ -70,7 +75,7 @@ export class RequestingPlayerDeleteUnit implements ActionPlanners_States_IState.
             actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingPlayerDeleteUnit);
 
             actionPlanner.updateView();
-            SinglePlayerWar_Model_SpwLocalProxy.reqPlayerDeleteUnit(war, war.getCursor().getGridIndex());
+            SinglePlayerWar_Model_SpwLocalProxy.reqPlayerDeleteUnit(war, gridIndex);
         }
     }
 }

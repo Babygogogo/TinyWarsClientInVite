@@ -48,7 +48,7 @@ export abstract class SpwWar extends BaseWar_Model_War.War implements SinglePlay
         }
 
         if (!isFastExecute) {
-            tileMap.getView().updateCoZone();
+            tileMap.getView()?.updateCoZone();
         }
     }
 

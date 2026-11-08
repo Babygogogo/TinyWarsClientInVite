@@ -1,18 +1,18 @@
 import {
     AuxiliaryTypes_GridIndex,
-    MapEditor_Model_MeWar,
     AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
     Units_Constants,
-    Visibilities_Utils,
     Utils_ClientErrorCode,
-    Helpers_Misc,
-    Lang_Utils,
+    Visibilities_Utils,
     WarOperations_Executors_Utils_Common,
-    Lang_Constants,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 
@@ -45,7 +45,9 @@ function fastExeUnitDive(war: BaseWar_Model_War.War, action: WoUnitDive): void {
         war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-        (isSuccessful) && (focusUnit.setIsDiving(true));
+        if (isSuccessful) {
+            focusUnit.setIsDiving(true);
+        }
 
         WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
     }
@@ -70,7 +72,7 @@ async function normalExeUnitDive(war: BaseWar_Model_War.War, action: WoUnitDive)
         const movingPath    = movingUnitAndPath?.getPath();
         const lastNode      = movingPath ? movingPath[movingPath?.length - 1] : null;
         if ((lastNode?.getIsVisible()) && (!lastNode.getIsBlocked())) {
-            gridVisualEffect.showEffectDive(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDive_01));
+            gridVisualEffect?.showEffectDive(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDive_01));
         }
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -89,7 +91,9 @@ async function normalExeUnitDive(war: BaseWar_Model_War.War, action: WoUnitDive)
         war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-        (isSuccessful) && (focusUnit.setIsDiving(true));
+        if (isSuccessful) {
+            focusUnit.setIsDiving(true);
+        }
 
         await focusUnit.moveViewAlongPath({
             pathNodes           : pathNodes,
@@ -109,7 +113,7 @@ async function normalExeUnitDive(war: BaseWar_Model_War.War, action: WoUnitDive)
                 isDiving            : false,
                 isInvisible         : focusUnit.checkIsInvisible(endingGridIndex),
             })) {
-                gridVisualEffect.showEffectDive(endingGridIndex);
+                gridVisualEffect?.showEffectDive(endingGridIndex);
             }
         }
 

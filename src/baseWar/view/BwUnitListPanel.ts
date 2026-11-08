@@ -1,5 +1,5 @@
 import {
-    type BaseWar_Interface_IBwCursor,
+    type BaseWar_Model_War,
     Common_Model_CommonModel,
     FloatText,
     GamePanels_Dict,
@@ -17,7 +17,6 @@ import {
     Tween_Executor,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -265,7 +264,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return [];
         }
 
-        const cursor        = war.getCursor();
         const unitMap       = war.getUnitMap();
         const tileMap       = war.getTileMap();
         const teamIndexes   = war.getPlayerManager().getWatcherTeamIndexesForSelf();
@@ -275,14 +273,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             if (unit.getPlayerIndex() === playerIndex) {
                 const dataForTileView = Tiles_TileViewData.TileViewData.generateFromTile(tileMap.getTile(unit.getGridIndex()), war, true);
                 dataList.push({
-                    cursor          : cursor,
                     unit            : unit,
                     dataForTileView : dataForTileView,
                     panel           : this,
                 });
                 for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {
                     dataList.push({
-                        cursor          : cursor,
                         unit            : loadedUnit,
                         dataForTileView : dataForTileView,
                         panel           : this,
@@ -317,7 +313,6 @@ const _IMAGE_SOURCE_FLARE       = `c03_t99_s02_f02`;
 interface DataForUnitRenderer extends Ui_Types_UiListItemData.UiListItemData {
     unit                    : Units_Unit.Unit;
     dataForTileView         : Tiles_TileViewData.TileViewData;
-    cursor                  : BaseWar_Interface_IBwCursor.IBwCursor;
     panel                   : Panel;
 }
 class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUnitRenderer> {

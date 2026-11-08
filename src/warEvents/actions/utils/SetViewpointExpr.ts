@@ -1,19 +1,19 @@
 import {
-    WarEvents_Actions_Constants_SetViewpointExpr,
-    Lang_Utils,
-    Numbers_Utils,
     AuxiliaryTypes_GridIndex,
+    Egret_Egret,
+    ExpressionParsers_Contexts_War,
+    ExpressionParsers_Parser,
     ExpressionParsers_Results_NullableUnit,
     ExpressionParsers_Results_NullableUnitArray,
     ExpressionParsers_Results_Num,
-    ExpressionParsers_Parser,
     ExpressionParsers_Results_Position,
     ExpressionParsers_Results_PositionArray,
-    Egret_Egret,
-    Lang_Constants,
     ExpressionParsers_Results_Tile,
     ExpressionParsers_Results_TileArray,
-    ExpressionParsers_Contexts_War,
+    Lang_Constants,
+    Lang_Utils,
+    Numbers_Utils,
+    WarEvents_Actions_Constants_SetViewpointExpr,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -173,25 +173,25 @@ export async function doApply({ gridIndexArray, isNeedFocusEffect, isOneByOne, i
     const visualEffect  = war.getGridVisualEffect();
     if (isOneByOne) {
         for (const gridIndex of gridIndexArray) {
-            cursor.setGridIndex(gridIndex);
-            cursor.updateView();
+            cursor?.setGridIndex(gridIndex);
+            cursor?.updateView();
             warView?.moveGridToCenter(gridIndex);
 
             if (isNeedFocusEffect) {
-                visualEffect.showEffectAiming(gridIndex, interval);
+                visualEffect?.showEffectAiming(gridIndex, interval);
                 await new Promise<void>(resolve => {
                     Egret_Egret.setTimeout(() => resolve(), null, interval);
                 });
             }
         }
     } else {
-        cursor.setGridIndex(gridIndexArray[0]);
-        cursor.updateView();
+        cursor?.setGridIndex(gridIndexArray[0]);
+        cursor?.updateView();
         warView?.moveGridToCenter(getCenterGridIndex(gridIndexArray));
 
         if (isNeedFocusEffect) {
             for (const gridIndex of gridIndexArray) {
-                visualEffect.showEffectAiming(gridIndex, interval);
+                visualEffect?.showEffectAiming(gridIndex, interval);
             }
             await new Promise<void>(resolve => {
                 Egret_Egret.setTimeout(() => resolve(), null, interval);

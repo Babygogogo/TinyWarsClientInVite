@@ -1,18 +1,18 @@
 import {
-    ActionPlanners_States_Idle,
-    MapEditor_Model_MeWar,
     ActionPlanners_Constants,
+    ActionPlanners_States_Idle,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_Misc,
+    MapEditor_Model_MeWar,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     TestWar_Model_TwWar,
-    type AuxiliaryTypes_GridIndex,
+    Turns_Constants,
+    Units_Constants,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
-    Units_Constants,
-    GamePanels_Dict,
-    Helpers_Misc,
-    GamePanels_Manager,
-    Turns_Constants,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
+    type AuxiliaryTypes_GridIndex,
 } from "../../internal.ts";
 
 export class ChoosingTileProductionTarget implements ActionPlanners_States_IState.IState {
@@ -41,7 +41,7 @@ export class ChoosingTileProductionTarget implements ActionPlanners_States_IStat
         const tile                  = war.getTileMap().getTile(gridIndex);
         const unit                  = war.getUnitMap().getVisibleUnitOnMap(gridIndex);
 
-        if (war.getCursor().getPreviousGridIndex()?.checkIsEqual(gridIndex)) {
+        if (war.getCursor()?.getPreviousGridIndex()?.checkIsEqual(gridIndex)) {
             return ActionPlanners_Constants.StateId.ChoosingTileProductionTarget;
         } else {
             if (!unit) {

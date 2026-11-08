@@ -1,12 +1,12 @@
 import {
-    Units_Constants,
+    AuxiliaryTypes_MovePath,
     Destructions_Utils,
-    Helpers_Team,
     Helpers_Misc,
+    Helpers_Team,
+    Units_Constants,
     Units_Utils_Common,
     Visibilities_Utils,
     WarOperations_Executors_Utils_Common,
-    AuxiliaryTypes_MovePath,
     type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
@@ -180,7 +180,7 @@ async function normalExeUnitSelfDetonate(war: BaseWar_Model_War.War, action: WoU
             const gridVisionEffect = war.getGridVisualEffect();
             for (const unit of targetUnits) {
                 unit.flushDataToView();
-                gridVisionEffect.showEffectDamage(unit.getGridIndex());
+                gridVisionEffect?.showEffectDamage(unit.getGridIndex());
             }
         }
 

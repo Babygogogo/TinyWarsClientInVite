@@ -1,17 +1,16 @@
 import {
+    Fields_Field,
     Helpers_Misc,
     Ui_Components_UiContainer,
     type ActionPlanners_IActionPlannerView,
     type BaseWar_Interface_IBwCursorView,
     type BaseWar_Interface_IBwGridVisualEffectView,
-    type Fields_IField,
-    type Fields_IFieldView,
     type Tiles_TileMapView,
     type Units_UnitMapView,
 } from "../internal.ts";
 
-export class FieldView extends Ui_Components_UiContainer.UiContainer implements Fields_IFieldView.IFieldView {
-    private _field?                 : Fields_IField.IField;
+export class FieldView extends Ui_Components_UiContainer.UiContainer {
+    private _field?                 : Fields_Field.Field;
 
     private _tileMapView?           : Tiles_TileMapView.TileMapView;
     private _actionPlannerView?     : ActionPlanners_IActionPlannerView.IActionPlannerView;
@@ -19,32 +18,75 @@ export class FieldView extends Ui_Components_UiContainer.UiContainer implements 
     private _cursorView?            : BaseWar_Interface_IBwCursorView.IBwCursorView;
     private _gridVisualEffectView?  : BaseWar_Interface_IBwGridVisualEffectView.IBwGridVisualEffectView;
 
-    public init(field: Fields_IField.IField): void {
+    public init(field: Fields_Field.Field): void {
         if (!this._field) {
             this._field = field;
 
-            this._tileMapView           = field.getTileMap().getView();
-            this._actionPlannerView     = field.getActionPlanner().getView();
-            this._unitMapView           = field.getUnitMap().getView();
-            this._cursorView            = field.getCursor().getView();
-            this._gridVisualEffectView  = field.getGridVisualEffect().getView();
-            this.addUiChild(this._tileMapView);
-            this.addUiChild(this._actionPlannerView.getContainerForGrids());
-            this.addUiChild(this._unitMapView);
-            this.addUiChild(this._actionPlannerView.getContainerForUnits());
-            this.addUiChild(this._cursorView);
-            this.addUiChild(this._gridVisualEffectView);
+            {
+                const view          = field.getTileMap().getView();
+                this._tileMapView   = view;
+
+                if (view) {
+                    this.addUiChild(view);
+                }
+            }
+
+            {
+                const view              = field.getActionPlanner()?.getView();
+                this._actionPlannerView = view;
+
+                if (view) {
+                    this.addUiChild(view.getContainerForGrids());
+                }
+            }
+
+            {
+                const view          = field.getUnitMap().getView();
+                this._unitMapView   = view;
+
+                if (view) {
+                    this.addUiChild(view);
+                }
+            }
+
+            {
+                const view = this._actionPlannerView;
+                if (view) {
+                    this.addUiChild(view.getContainerForUnits());
+                }
+            }
+
+            {
+                const view          = field.getCursor()?.getView();
+                this._cursorView    = view;
+
+                if (view) {
+                    this.addUiChild(view);
+                }
+            }
+
+            {
+                const view                  = field.getGridVisualEffect()?.getView();
+                this._gridVisualEffectView  = view;
+
+                if (view) {
+                    this.addUiChild(view);
+                }
+            }
         }
     }
-    public fastInit(field: Fields_IField.IField): void {
+    public fastInit(field: Fields_Field.Field): void {
         this._field = field;
     }
 
-    public startRunningView(): void {
+    public startRunning(): void {
         // nothing to do
     }
-    public stopRunningView(): void {
+    public stopRunning(): void {
         // nothing to do
+    }
+    public dispose(): void {
+        this.stopRunning();
     }
 
     private _getUnitMapView(): Units_UnitMapView.UnitMapView {

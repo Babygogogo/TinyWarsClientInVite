@@ -8,7 +8,7 @@ import {
     GameConfigs_Provider,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
-    Helpers_SeedRandom,
+    RandomNumbers_SeedRandom,
     PlayerRules_Utils,
     Players_Constants,
     Timer_TimerModel,
@@ -159,7 +159,7 @@ export class TwWar extends BaseWar_Model_War.War implements TestWar_Interface_IT
 async function _createDataForCreateTwWar(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<SerialWar> {
     const dataForPlayerManager  = await _createInitialPlayerManagerDataForTw(mapRawData, gameConfig);
     const fieldData             = await _createInitialFieldData(mapRawData);
-    const seedRandomState       = new Helpers_SeedRandom.Generator("" + Math.random(), { state : true }).state();
+    const seedRandomState       = new RandomNumbers_SeedRandom.Generator("" + Math.random(), { state : true }).state();
     const instanceWarRule       = WarRules_Utils_Instance.create({
         templateWarRule           : mapRawData.getTemplateWarRuleArray()[0],
         warEventFullData          : mapRawData.getWarEventFullData(),

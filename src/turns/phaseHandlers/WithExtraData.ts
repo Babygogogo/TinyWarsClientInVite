@@ -1,13 +1,13 @@
 import {
     AuxiliaryTypes_AttackableArea,
-    CoSkills_Constants,
-    Utils_ClientErrorCode,
-    Helpers_Misc,
-    Timer_TimerModel,
     AuxiliaryTypes_GridIndex,
-    WarOperations_Executors_Utils_Common,
-    Turns_Constants,
+    CoSkills_Constants,
+    Helpers_Misc,
     Tiles_Constants_MapWeapon,
+    Timer_TimerModel,
+    Turns_Constants,
+    Utils_ClientErrorCode,
+    WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
     type Tiles_Tile,
     type Turns_ITurnManager,
@@ -34,7 +34,7 @@ export async function endPhaseStandby(turnManager: Turns_ITurnManager.ITurnManag
     runPhaseCheckAndUpdateUnitAiMode(turnManager, action, isFastExecute);
     runPhaseMain(turnManager, action, isFastExecute);
 
-    turnManager.setPhaseCode(Turns_Constants.PhaseCode.Main);
+    turnManager.setPhaseCode(Turns_Constants.PhaseCode.Main, true);
 
     const extraData = Helpers_Misc.getExisted(action.getExtraData(), Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_EndPhaseWaitBeginTurnWithExtraData_01);
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -63,7 +63,7 @@ export function endPhaseMain(turnManager: Turns_ITurnManager.ITurnManager, actio
     runPhaseResetVisionForNextPlayer(turnManager, action, isFastExecute);
     runPhaseWaitBeginTurn(turnManager, action, isFastExecute);
 
-    turnManager.setPhaseCode(Turns_Constants.PhaseCode.WaitBeginTurn);
+    turnManager.setPhaseCode(Turns_Constants.PhaseCode.WaitBeginTurn, true);
 
     const extraData = Helpers_Misc.getExisted(action.getExtraData(), Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_EndPhaseMainWithExtraData_01);
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -205,7 +205,7 @@ function runPhaseHandleUnitBuffEffect2(turnManager: Turns_ITurnManager.ITurnMana
 function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_ITurnManager.ITurnManager, data: WoPlayerEndTurn, isFastExecute: boolean): void {
     const info = turnManager.getNextTurnAndPlayerIndex();
     turnManager.setTurnIndex(info.turnIndex);
-    turnManager.setPlayerIndexInTurn(info.playerIndex);
+    turnManager.setPlayerIndexInTurn(info.playerIndex, true);
     turnManager.setEnterTurnTime(Timer_TimerModel.getServerTimestamp());
     turnManager.getWar().getWarEventManager().updateWarEventCalledCountOnPlayerTurnSwitched();
 }
@@ -225,7 +225,7 @@ function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_ITurnManager.ITurnM
     war.getFogMap().updateOnPlayerTurnSwitched();
 
     if (!isFastExecute) {
-        weatherManager.getView().resetView(false);
+        weatherManager.getView()?.resetView(false);
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -245,7 +245,7 @@ function runPhaseResetVisionForNextPlayer(turnManager: Turns_ITurnManager.ITurnM
 
 function runPhaseWaitBeginTurn(turnManager: Turns_ITurnManager.ITurnManager, data: WoPlayerEndTurn, isFastExecute: boolean): void {
     if (!isFastExecute) {
-        turnManager.getWar().getTileMap().getView().resetMarkLayer();
+        turnManager.getWar().getTileMap().getView()?.resetMarkLayer();
     }
 }
 
@@ -254,7 +254,7 @@ async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: BaseWar_
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
         war.getView()?.moveGridToCenter(tileGridIndex);
-        gridVisualEffect.showEffectCharge(tileGridIndex);
+        gridVisualEffect?.showEffectCharge(tileGridIndex);
         await Timer_TimerModel.wait(400);
     }
 
@@ -270,7 +270,7 @@ async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: BaseWar_
 
             for (let y = 0; y < height; ++y) {
                 if (column[y]) {
-                    gridVisualEffect.showEffectDamage(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
+                    gridVisualEffect?.showEffectDamage(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
                 }
             }
         }
@@ -284,7 +284,7 @@ async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: BaseWar_M
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
         war.getView()?.moveGridToCenter(tileGridIndex);
-        gridVisualEffect.showEffectCharge(tileGridIndex);
+        gridVisualEffect?.showEffectCharge(tileGridIndex);
         await Timer_TimerModel.wait(400);
     }
 }
@@ -293,7 +293,7 @@ async function handleMapWeaponTileLaserTurret(data: WoSystemBeginTurn, war: Base
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
         war.getView()?.moveGridToCenter(tileGridIndex);
-        gridVisualEffect.showEffectCharge(tileGridIndex);
+        gridVisualEffect?.showEffectCharge(tileGridIndex);
         await Timer_TimerModel.wait(400);
     }
 
@@ -309,7 +309,7 @@ async function handleMapWeaponTileLaserTurret(data: WoSystemBeginTurn, war: Base
 
             for (let y = 0; y < height; ++y) {
                 if (column[y]) {
-                    gridVisualEffect.showEffectDamage(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
+                    gridVisualEffect?.showEffectDamage(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
                 }
             }
         }

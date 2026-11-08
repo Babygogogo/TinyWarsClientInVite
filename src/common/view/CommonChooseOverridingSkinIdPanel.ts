@@ -1,17 +1,17 @@
 import {
-    ForceSkins_Utils,
-    HalfwayReplayWar_Model_HrwWar,
-    MultiPlayerWar_Model_MpwWar,
-    ReplayWar_Model_RwWar,
     FloatText,
-    SinglePlayerWar_Model_SpwWar,
-    Notifications_Dispatcher,
+    ForceSkins_Utils,
     GamePanels_Dict,
-    Helpers_ImageSource,
-    Lang_Utils,
     GamePanels_Manager,
-    LocalData_Storage,
+    HalfwayReplayWar_Model_HrwWar,
+    Helpers_ImageSource,
     Lang_Constants,
+    Lang_Utils,
+    LocalData_Storage,
+    MultiPlayerWar_Model_MpwWar,
+    Notifications_Dispatcher,
+    ReplayWar_Model_RwWar,
+    SinglePlayerWar_Model_SpwWar,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
@@ -96,7 +96,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const war = openData.war;
-        if (war.getActionPlanner().checkIsStateRequesting()) {
+        if (war.getActionPlanner()?.checkIsStateRequesting()) {
             FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }

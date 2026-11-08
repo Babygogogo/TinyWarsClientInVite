@@ -1,21 +1,20 @@
 import {
-    Notifications_Dispatcher,
-    Tween_Executor,
     Helpers_Misc,
     LocalData_Storage,
+    Notifications_Dispatcher,
     Tween_Ease,
+    Tween_Executor,
     Ui_Components_UiContainer,
-    Ui_Types_UiHorizontalAlign,
     Ui_Components_UiImage,
+    Ui_Types_UiHorizontalAlign,
     Ui_Types_UiVerticalAlign,
+    Utils_ClientErrorCode,
+    Weathers_Constants,
+    Weathers_Manager,
+    type Egret_Egret,
+    type Notifications_Types,
     type Ui_Interfaces_IUiComponent,
     type Ui_Interfaces_IUiImage,
-    type Notifications_Types,
-    Weathers_Constants,
-    Utils_ClientErrorCode,
-    type Egret_Egret,
-    type Weathers_IManager,
-    type Weathers_IView,
 } from "../internal.ts";
 
 const RAIN_DENSITY      = 0.15;
@@ -28,18 +27,18 @@ const SANDSTORM_DENSITY = 0.15;
 const SANDSTORM_ANGLE   = 70;
 const SANDSTORM_ALPHA   = 0.9;
 
-export class View extends Ui_Components_UiContainer.UiContainer implements Weathers_IView.IView {
+export class View extends Ui_Components_UiContainer.UiContainer {
     private readonly _notifyListeners   : Notifications_Types.Listener[] = [
         { type : "UserSettingsIsShowWeatherAnimationChanged",    callback : this._onNotifyUserSettingsIsShowWeatherAnimationChanged },
     ];
 
-    private _weatherManager?                : Weathers_IManager.IManager;
+    private _weatherManager?                : Weathers_Manager.Manager;
     private readonly _containerForRain      = new Ui_Components_UiContainer.UiContainer();
-    private readonly _imgArrayForRain                : Ui_Interfaces_IUiImage.IUiImage[] = [];
+    private readonly _imgArrayForRain       : Ui_Interfaces_IUiImage.IUiImage[] = [];
     private readonly _containerForSnow      = new Ui_Components_UiContainer.UiContainer();
-    private readonly _imgArrayForSnow                : Ui_Interfaces_IUiImage.IUiImage[] = [];
+    private readonly _imgArrayForSnow       : Ui_Interfaces_IUiImage.IUiImage[] = [];
     private readonly _containerForSandstorm = new Ui_Components_UiContainer.UiContainer();
-    private readonly _imgArrayForSandstorm           : Ui_Interfaces_IUiImage.IUiImage[] = [];
+    private readonly _imgArrayForSandstorm  : Ui_Interfaces_IUiImage.IUiImage[] = [];
     private _showingWeatherType             : number | null = null;
 
     public constructor() {
@@ -100,7 +99,7 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
         return true;
     }
 
-    public init(manager: Weathers_IManager.IManager): void {
+    public init(manager: Weathers_Manager.Manager): void {
         this._setWeatherManager(manager);
     }
 
@@ -113,10 +112,10 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
         this._stopView();
     }
 
-    private _getWeatherManager(): Weathers_IManager.IManager {
+    private _getWeatherManager(): Weathers_Manager.Manager {
         return Helpers_Misc.getExisted(this._weatherManager, Utils_ClientErrorCode.ClientErrorCode.BwWeatherManagerView_GetWeatherManager_00);
     }
-    private _setWeatherManager(manager: Weathers_IManager.IManager): void {
+    private _setWeatherManager(manager: Weathers_Manager.Manager): void {
         this._weatherManager = manager;
     }
 
@@ -140,11 +139,14 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
         this._showingWeatherType = weatherType;
 
         this._stopView();
-        switch (weatherManager.getWar().getGcData().getWeatherCfg(weatherType)?.getAnim()) {
-            case Weathers_Constants.AnimationType.Rainy      : this._showRain();         break;
-            case Weathers_Constants.AnimationType.Sandstorm  : this._showSandstorm();    break;
-            case Weathers_Constants.AnimationType.Snowy      : this._showSnow();         break;
-            default                                 :                           break;
+
+        const animationType = weatherManager.getWar().getGcData().getWeatherCfg(weatherType)?.getAnim();
+        if (animationType === Weathers_Constants.AnimationType.Rainy) {
+            this._showRain();
+        } else if (animationType === Weathers_Constants.AnimationType.Sandstorm) {
+            this._showSandstorm();
+        } else if (animationType === Weathers_Constants.AnimationType.Snowy) {
+            this._showSnow();
         }
     }
     private _stopView(): void {

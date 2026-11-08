@@ -1,17 +1,17 @@
 import {
+    ActionPlanners_Constants,
     HalfwayReplayWar_Model_HrwWar,
+    Helpers_Misc,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
-    ActionPlanners_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     TestWar_Model_TwWar,
-    type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
-    Helpers_Misc,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
+    type AuxiliaryTypes_GridIndex,
 } from "../../internal.ts";
 
 export class ChoosingUnitSiloDestination implements ActionPlanners_States_IState.IState {
@@ -35,7 +35,7 @@ export class ChoosingUnitSiloDestination implements ActionPlanners_States_IState
             return ActionPlanners_Constants.StateId.Idle;
 
         } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
-            const previousGridIndex = war.getCursor().getPreviousGridIndex();
+            const previousGridIndex = war.getCursor()?.getPreviousGridIndex();
             if ((previousGridIndex) && (gridIndex.checkIsEqual(previousGridIndex))) {
                 return ActionPlanners_Constants.StateId.RequestingUnitLaunchSilo;
             } else {
@@ -46,7 +46,7 @@ export class ChoosingUnitSiloDestination implements ActionPlanners_States_IState
             return ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination;
 
         } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
-            const previousGridIndex = war.getCursor().getPreviousGridIndex();
+            const previousGridIndex = war.getCursor()?.getPreviousGridIndex();
             if ((previousGridIndex != null) && (gridIndex.checkIsEqual(previousGridIndex))) {
                 return ActionPlanners_Constants.StateId.RequestingUnitLaunchSilo;
             } else {
@@ -71,7 +71,7 @@ export class ChoosingUnitSiloDestination implements ActionPlanners_States_IState
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
-        actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
+        actionPlanner.getWar().getCursor()?.setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
 
         actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
         actionPlanner.updateView();
@@ -117,7 +117,7 @@ export class ChoosingUnitSiloDestination implements ActionPlanners_States_IState
             // Nothing to do.
         }
 
-        actionPlanner.getWar().getCursor().getView().setTargetAreaRadius(siloRadius);
+        actionPlanner.getWar().getCursor()?.getView().setTargetAreaRadius(siloRadius);
         actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination);
         actionPlanner.updateView();
     }

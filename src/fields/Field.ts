@@ -10,36 +10,40 @@ import {
     Units_UnitMap,
     Utils_ClientErrorCode,
     type ActionPlanners_IActionPlanner,
-    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwGridVisualEffect,
     type BaseWar_Model_War,
-    type Fields_IField,
-    type Fields_IFieldView,
-    type FogMaps_IFogMap,
     type GameConfigs_GameConfig,
 } from "../internal.ts";
 
 import { SerialField } from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
 
-export class Field implements Fields_IField.IField {
-    private readonly _cursor            = new BaseWar_Model_BwCursor.BwCursor();
-    private readonly _gridVisualEffect  = new BaseWar_Model_BwGridVisualEffect.BwGridVisualEffect();
-    private readonly _view              = new Fields_FieldView.FieldView();
-    private readonly _actionPlanner     = new ActionPlanners_ActionPlanner.ActionPlanner();
+export class Field {
+    private readonly _view              : Fields_FieldView.FieldView | undefined;
+    private readonly _cursor            : BaseWar_Model_BwCursor.BwCursor | undefined;
+    private readonly _gridVisualEffect  : BaseWar_Model_BwGridVisualEffect.BwGridVisualEffect | undefined;
+    private readonly _actionPlanner     : ActionPlanners_ActionPlanner.ActionPlanner | undefined;
+    private readonly _tileMap           : Tiles_TileMap.TileMap;
+    private readonly _unitMap           : Units_UnitMap.UnitMap;
     private readonly _fogMap            = new FogMaps_FogMap.FogMap();
-    private readonly _tileMap           = new Tiles_TileMap.TileMap();
-    private readonly _unitMap           = new Units_UnitMap.UnitMap();
+
+    public constructor(isNeedView: boolean) {
+        this._tileMap = new Tiles_TileMap.TileMap(isNeedView);
+        this._unitMap = new Units_UnitMap.UnitMap(isNeedView);
+
+        if (isNeedView) {
+            this._view              = new Fields_FieldView.FieldView();
+            this._cursor            = new BaseWar_Model_BwCursor.BwCursor();
+            this._gridVisualEffect  = new BaseWar_Model_BwGridVisualEffect.BwGridVisualEffect();
+            this._actionPlanner     = new ActionPlanners_ActionPlanner.ActionPlanner();
+        }
+    }
 
     public init({ data, gameConfig, playersCountUnneutral }: {
-        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialField>;
+        data                    : SerialField;
         gameConfig              : GameConfigs_GameConfig.GameConfig;
         playersCountUnneutral   : number;
     }): void {
-        if (data == null) {
-            throw Helpers_Misc.newError(`Empty data.`, Utils_ClientErrorCode.ClientErrorCode.BwField_Init_00);
-        }
-
         const mapSize = AuxiliaryTypes_MapSize.MapSize.createWithSerialTileMap(data.getTileMap());
         if (!mapSize.checkIsValid()) {
             throw Helpers_Misc.newError(`Invalid mapSize.`, Utils_ClientErrorCode.ClientErrorCode.BwField_Init_01);
@@ -53,7 +57,7 @@ export class Field implements Fields_IField.IField {
 
         const tileMap = this.getTileMap();
         tileMap.init({
-            data                  : data.getTileMap(),
+            data                  : Helpers_Misc.getExisted(data.getTileMap()),
             gameConfig            : gameConfig,
             mapSize               : mapSize,
             playersCountUnneutral : playersCountUnneutral,
@@ -78,10 +82,10 @@ export class Field implements Fields_IField.IField {
         //     }
         // }
 
-        this.getActionPlanner().init(mapSize);
-        this.getCursor().init(mapSize);
-        this.getGridVisualEffect().init();
-        this.getView().init(this);
+        this.getActionPlanner()?.init(mapSize);
+        this.getCursor()?.init(mapSize);
+        this.getGridVisualEffect()?.init();
+        this.getView()?.init(this);
     }
     public fastInit({ data, gameConfig, playersCountUnneutral }: {
         data                    : SerialField;
@@ -107,35 +111,35 @@ export class Field implements Fields_IField.IField {
             playersCountUnneutral : playersCountUnneutral,
         });
 
-        this.getCursor().fastInit();
-        this.getActionPlanner().fastInit();
-        this.getGridVisualEffect().fastInit();
-        this.getView().fastInit(this);
+        this.getCursor()?.fastInit();
+        this.getActionPlanner()?.fastInit();
+        this.getGridVisualEffect()?.fastInit();
+        this.getView()?.fastInit(this);
     }
 
     public startRunning(war: BaseWar_Model_War.War): void {
         this.getTileMap().startRunning(war);
         this.getUnitMap().startRunning(war);
         this.getFogMap().startRunning(war);
-        this.getCursor().startRunning(war);
-        this.getActionPlanner().startRunning(war);
-        this.getGridVisualEffect().startRunning(war);
+        this.getCursor()?.startRunning(war);
+        this.getActionPlanner()?.startRunning(war);
+        this.getGridVisualEffect()?.startRunning(war);
     }
     public startRunningView(): void {
-        this.getView().startRunningView();
+        this.getView()?.startRunning();
         this.getTileMap().startRunningView();
         this.getUnitMap().startRunningView();
-        this.getCursor().startRunningView();
-        this.getActionPlanner().startRunningView();
-        this.getGridVisualEffect().startRunningView();
+        this.getCursor()?.startRunningView();
+        this.getActionPlanner()?.startRunningView();
+        this.getGridVisualEffect()?.startRunningView();
     }
     public stopRunning(): void {
-        this.getView().stopRunningView();
+        this.getView()?.stopRunning();
         this.getTileMap().stopRunning();
         this.getUnitMap().stopRunning();
-        this.getCursor().stopRunning();
-        this.getActionPlanner().stopRunning();
-        this.getGridVisualEffect().stopRunning();
+        this.getCursor()?.stopRunning();
+        this.getActionPlanner()?.stopRunning();
+        this.getGridVisualEffect()?.stopRunning();
     }
     public dispose(): void {
         this.stopRunning();
@@ -169,23 +173,23 @@ export class Field implements Fields_IField.IField {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getView(): Fields_IFieldView.IFieldView {
+    public getView(): Fields_FieldView.FieldView | undefined {
         return this._view;
     }
 
-    public getCursor(): BaseWar_Interface_IBwCursor.IBwCursor {
+    public getCursor(): BaseWar_Interface_IBwCursor.IBwCursor | undefined {
         return this._cursor;
     }
 
-    public getGridVisualEffect(): BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect {
+    public getGridVisualEffect(): BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect | undefined {
         return this._gridVisualEffect;
     }
 
-    public getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner {
+    public getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner | undefined {
         return this._actionPlanner;
     }
 
-    public getFogMap(): FogMaps_IFogMap.IFogMap {
+    public getFogMap(): FogMaps_FogMap.FogMap {
         return this._fogMap;
     }
 

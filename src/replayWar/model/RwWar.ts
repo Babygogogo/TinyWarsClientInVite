@@ -67,7 +67,7 @@ export class RwWar extends ReplayWar_Model_RwWarBase.RwWarBase {
         }
 
         if (!isFastExecute) {
-            tileMap.getView().updateCoZone();
+            tileMap.getView()?.updateCoZone();
         }
     }
 

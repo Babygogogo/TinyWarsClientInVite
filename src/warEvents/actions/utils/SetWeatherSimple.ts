@@ -1,9 +1,9 @@
 import {
-    Lang_Utils,
     Lang_Constants,
+    Lang_Utils,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetWeatherSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherSimple.ts";
 
@@ -63,6 +63,6 @@ export async function applyWithoutExtraData(action: WeaSetWeatherSimple, isFast:
     }
 
     if (!isFast) {
-        weatherManager.getView().resetView(false);
+        weatherManager.getView()?.resetView(false);
     }
 }

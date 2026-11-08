@@ -1,18 +1,18 @@
 import {
     AuxiliaryTypes_GridIndex,
-    MapEditor_Model_MeWar,
     AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
     Units_Constants,
-    Visibilities_Utils,
     Utils_ClientErrorCode,
-    Helpers_Misc,
-    Lang_Utils,
+    Visibilities_Utils,
     WarOperations_Executors_Utils_Common,
-    Lang_Constants,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 
@@ -45,7 +45,9 @@ function fastExeUnitSurface(war: BaseWar_Model_War.War, action: WoUnitSurface): 
         war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-        (isSuccessful) && (focusUnit.setIsDiving(false));
+        if (isSuccessful) {
+            focusUnit.setIsDiving(false);
+        }
 
         WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
     }
@@ -70,7 +72,7 @@ async function normalExeUnitSurface(war: BaseWar_Model_War.War, action: WoUnitSu
         const movingPath    = movingUnitAndPath?.getPath();
         const lastNode      = movingPath ? movingPath[movingPath?.length - 1] : null;
         if ((lastNode?.getIsVisible()) && (!lastNode.getIsBlocked())) {
-            gridVisualEffect.showEffectSurface(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitSurface_01));
+            gridVisualEffect?.showEffectSurface(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitSurface_01));
         }
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -89,7 +91,9 @@ async function normalExeUnitSurface(war: BaseWar_Model_War.War, action: WoUnitSu
         war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-        (isSuccessful) && (focusUnit.setIsDiving(false));
+        if (isSuccessful) {
+            focusUnit.setIsDiving(false);
+        }
 
         await focusUnit.moveViewAlongPath({
             pathNodes           : pathNodes,
@@ -109,7 +113,7 @@ async function normalExeUnitSurface(war: BaseWar_Model_War.War, action: WoUnitSu
                 isDiving            : false,
                 isInvisible         : focusUnit.checkIsInvisible(endingGridIndex),
             })) {
-                gridVisualEffect.showEffectSurface(endingGridIndex);
+                gridVisualEffect?.showEffectSurface(endingGridIndex);
             }
         }
 

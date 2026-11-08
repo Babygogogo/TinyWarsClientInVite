@@ -1,17 +1,17 @@
 import {
+    ActionPlanners_Constants,
     HalfwayReplayWar_Model_HrwWar,
+    Helpers_Misc,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
-    ActionPlanners_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     TestWar_Model_TwWar,
-    type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
-    Helpers_Misc,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
+    type AuxiliaryTypes_GridIndex,
 } from "../../internal.ts";
 
 export class ChoosingUnitAttackTarget implements ActionPlanners_States_IState.IState {
@@ -42,7 +42,7 @@ export class ChoosingUnitAttackTarget implements ActionPlanners_States_IState.IS
             if (!actionPlanner.checkHasAttackableGridForUnitWeapon(gridIndex)) {
                 return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
-                if (Helpers_Misc.getExisted(war.getCursor().getPreviousGridIndex()).checkIsEqual(gridIndex)) {
+                if (Helpers_Misc.getExisted(war.getCursor()?.getPreviousGridIndex()).checkIsEqual(gridIndex)) {
                     if (war.getUnitMap().getUnitOnMap(gridIndex)) {
                         return ActionPlanners_Constants.StateId.RequestingUnitAttackUnit;
                     } else {
@@ -64,7 +64,7 @@ export class ChoosingUnitAttackTarget implements ActionPlanners_States_IState.IS
             if (!actionPlanner.checkHasAttackableGridForUnitWeapon(gridIndex)) {
                 return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
-                const previousGridIndex = war.getCursor().getPreviousGridIndex();
+                const previousGridIndex = war.getCursor()?.getPreviousGridIndex();
                 if ((previousGridIndex != null) && (previousGridIndex.checkIsEqual(gridIndex))) {
                     if (war.getUnitMap().getUnitOnMap(gridIndex)) {
                         return ActionPlanners_Constants.StateId.RequestingUnitAttackUnit;
@@ -95,7 +95,7 @@ export class ChoosingUnitAttackTarget implements ActionPlanners_States_IState.IS
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const war = actionPlanner.getWar();
-        war.getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
+        war.getCursor()?.setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
 
         actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
         actionPlanner.updateView();

@@ -51,7 +51,7 @@ export abstract class MpwWar extends BaseWar_Model_War.War implements MultiPlaye
         }
 
         if (!isFastExecute) {
-            tileMap.getView().updateCoZone();
+            tileMap.getView()?.updateCoZone();
         }
 
         this._handleVisionTeamIndex(watcherTeamIndexes, isFastExecute);

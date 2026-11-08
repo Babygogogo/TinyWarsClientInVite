@@ -1,8 +1,6 @@
 import {
-    type BaseWar_Model_War,
-    type Notifications_Mapping,
     ActionPlanners_ActionPlannerView,
-    AuxiliaryTypes_AttackableArea,
+    ActionPlanners_Constants,
     ActionPlanners_States_ChoosingCoActiveSkillTarget,
     ActionPlanners_States_ChoosingTileProductionTarget,
     ActionPlanners_States_ChoosingUnitAction,
@@ -14,13 +12,7 @@ import {
     ActionPlanners_States_ChoosingUnitRepairTarget,
     ActionPlanners_States_ChoosingUnitSiloDestination,
     ActionPlanners_States_ExecutingAction,
-    CoSkills_Utils_Common,
-    HalfwayReplayWar_Model_HrwWar,
     ActionPlanners_States_Idle,
-    MapEditor_Model_MeWar,
-    AuxiliaryTypes_MovableArea,
-    AuxiliaryTypes_MovePathNode,
-    MultiPlayerWar_Model_MpwWar,
     ActionPlanners_States_PreviewingTileAttackableArea,
     ActionPlanners_States_PreviewingUnitAttackableArea,
     ActionPlanners_States_PreviewingUnitMovableArea,
@@ -50,36 +42,44 @@ import {
     ActionPlanners_States_RequestingUnitSurface,
     ActionPlanners_States_RequestingUnitUseCoActiveSkill,
     ActionPlanners_States_RequestingUnitWait,
-    ReplayWar_Model_RwWar,
-    FloatText,
+    AuxiliaryTypes_AttackableArea,
+    AuxiliaryTypes_MovableArea,
+    AuxiliaryTypes_MovePathNode,
     CoSkills_Constants,
+    CoSkills_Utils_Common,
+    FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    HalfwayReplayWar_Model_HrwWar,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    Logger,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    Notifications_Dispatcher,
+    ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
-    ActionPlanners_Constants,
     TestWar_Model_TwWar,
-    type ActionPlanners_Types,
-    type BaseWar_Model_BwTypes,
-    type AuxiliaryTypes_GridIndex,
+    Units_Constants,
+    Users_Model,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_IActionPlannerView,
     type ActionPlanners_States_IState,
-    type BaseWar_View_BwUnitActionsPanel,
+    type ActionPlanners_Types,
     type AuxiliaryTypes_AuxiliaryTypes,
-    Units_Constants,
-    Notifications_Dispatcher,
-    Visibilities_Utils,
-    Utils_ClientErrorCode,
-    GamePanels_Manager,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Lang_Utils,
-    Users_Model,
-    Logger,
-    Lang_Constants,
+    type AuxiliaryTypes_GridIndex,
+    type AuxiliaryTypes_MapSize,
+    type BaseWar_Model_BwTypes,
+    type BaseWar_Model_War,
+    type BaseWar_View_BwUnitActionsPanel,
     type Egret_Egret,
+    type Notifications_Mapping,
+    type Notifications_Types,
     type Tiles_Tile,
     type Units_Unit,
-    type Notifications_Types,
-    type AuxiliaryTypes_MapSize,
 } from "../internal.ts";
 
 import { MovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
@@ -245,7 +245,11 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onNotifyBwCursorTapped(): void {
         const war       = this.getWar();
-        const gridIndex = war.getCursor().getGridIndex();
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
         if (Users_Model.getSelfSettingsIsAutoScrollMap()) {
             war.getView()?.tweenGridToCentralArea(gridIndex);
         }
@@ -279,11 +283,18 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
             }
         }
 
-        getState(nextStateId).doApplyOnDrag(this, war.getCursor().getGridIndex());
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex) {
+            getState(nextStateId).doApplyOnDrag(this, gridIndex);
+        }
     }
 
     private _onNotifyBwCursorDragEnded(): void {
-        const gridIndex     = this.getWar().getCursor().getGridIndex();
+        const gridIndex = this.getWar().getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
         const currStateId   = this.getStateId();
         const nextStateId   = getState(currStateId).getNextStateIdOnDragEnded(this, gridIndex);
         if (nextStateId !== currStateId) {
@@ -307,7 +318,9 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
 
         Logger.log(`ActionPlanner.setStateId() ${stateId}`);
         Notifications_Dispatcher.dispatch("ActionPlannerStateSet");
-        (isChanged) && (Notifications_Dispatcher.dispatch("ActionPlannerStateChanged"));
+        if (isChanged) {
+            Notifications_Dispatcher.dispatch("ActionPlannerStateChanged");
+        }
     }
 
     public cancelCurrentState(): void {
@@ -671,7 +684,6 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
 
         const war           = this.getWar();
         const unitMap       = war.getUnitMap();
-        const tileMap       = war.getTileMap();
         const playerIndex   = focusUnit.getPlayerIndex();
         return this.getMovePathDestination().getGridIndex().getAdjacentGrids(this.getMapSize())
             .filter(v => {

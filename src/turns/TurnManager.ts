@@ -39,8 +39,8 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
         }
 
         this.setTurnIndex(data.getTurnIndex());
-        this.setPlayerIndexInTurn(playerIndex);
-        this.setPhaseCode(turnPhaseCode);
+        this.setPlayerIndexInTurn(playerIndex, false);
+        this.setPhaseCode(turnPhaseCode, false);
         this.setEnterTurnTime(data.getEnterTurnTime());
     }
     public fastInit(data: SerialTurnManager, playersCountUnneutral: number): void {
@@ -83,9 +83,11 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
     }
 
     public endPhaseMain(action: WoPlayerEndTurn, isFastExecute: boolean): void {
-        this.getWar().getIsExecuteActionsWithExtraData()
-            ? Turns_PhaseHandlers_WithExtraData.endPhaseMain(this, action, isFastExecute)
-            : Turns_PhaseHandlers_WithoutExtraData.endPhaseMain(this, isFastExecute);
+        if (this.getWar().getIsExecuteActionsWithExtraData()) {
+            Turns_PhaseHandlers_WithExtraData.endPhaseMain(this, action, isFastExecute);
+        } else {
+            Turns_PhaseHandlers_WithoutExtraData.endPhaseMain(this, isFastExecute);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,10 +106,12 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
     public getPlayerIndexInTurn(): number {
         return Helpers_Misc.getExisted(this._playerIndexInTurn);
     }
-    public setPlayerIndexInTurn(index: number): void {
+    public setPlayerIndexInTurn(index: number, needNotify: boolean): void {
         if (this._playerIndexInTurn !== index) {
             this._playerIndexInTurn = index;
-            Notifications_Dispatcher.dispatch("BwPlayerIndexInTurnChanged");
+            if (needNotify) {
+                Notifications_Dispatcher.dispatch("BwPlayerIndexInTurnChanged");
+            }
         }
     }
     public getPreviousAlivePlayerIndex(playerIndex: number, includeNeutral = false): number {
@@ -132,10 +136,12 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
     public getPhaseCode(): Turns_Constants.PhaseCode {
         return Helpers_Misc.getExisted(this._phaseCode);
     }
-    public setPhaseCode(code: Turns_Constants.PhaseCode): void {
+    public setPhaseCode(code: Turns_Constants.PhaseCode, needNotify: boolean): void {
         if (this._phaseCode !== code) {
             this._phaseCode = code;
-            Notifications_Dispatcher.dispatch("BwTurnPhaseCodeChanged");
+            if (needNotify) {
+                Notifications_Dispatcher.dispatch("BwTurnPhaseCodeChanged");
+            }
         }
     }
 

@@ -35,14 +35,14 @@ export interface ITurnManager {
     setTurnIndex(turnIndex: number): void;
 
     getPlayerIndexInTurn(): number;
-    setPlayerIndexInTurn(playerIndex: number): void;
+    setPlayerIndexInTurn(playerIndex: number, needNotify: boolean): void;
 
     getPreviousAlivePlayerIndex(playerIndex: number, includeNeutral?: boolean): number;
     getNextAlivePlayerIndex(playerIndex: number, includeNeutral?: boolean): number;
     getNextTurnAndPlayerIndex(currTurnIndex?: number, currPlayerIndex?: number): Turns_Types.TurnAndPlayerIndex;
 
     getPhaseCode(): Turns_Constants.PhaseCode;
-    setPhaseCode(phaseCode: Turns_Constants.PhaseCode): void;
+    setPhaseCode(phaseCode: Turns_Constants.PhaseCode, needNotify: boolean): void;
 
     getEnterTurnTime(): number;
     setEnterTurnTime(enterTurnTime: number): void;

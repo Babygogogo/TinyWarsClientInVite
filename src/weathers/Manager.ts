@@ -1,33 +1,37 @@
 import {
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    Notifications_Dispatcher,
+    Utils_ClientErrorCode,
     Weathers_View,
     type AuxiliaryTypes_AuxiliaryTypes,
-    Utils_ClientErrorCode,
-    Notifications_Dispatcher,
-    Helpers_Misc,
-    Lang_Utils,
-    Lang_Constants,
     type BaseWar_Model_War,
-    type Weathers_IManager,
-    type Weathers_IView,
 } from "../internal.ts";
 
 import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
 import { SerialWeatherManager } from "../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
 
-export class Manager implements Weathers_IManager.IManager {
+export class Manager {
     private _forceWeatherType?      : number | null;
     private _expirePlayerIndex?     : number | null;
     private _expireTurnIndex?       : number | null;
     private _war?                   : BaseWar_Model_War.War;
 
-    private readonly _view = new Weathers_View.View();
+    private _view                   : Weathers_View.View | undefined;
+
+    public constructor(isNeedView: boolean) {
+        if (isNeedView) {
+            this._view = new Weathers_View.View();
+        }
+    }
 
     public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWeatherManager>): void {
         this.setForceWeatherType(data?.getForceWeatherType() ?? null);
         this.setExpireTurnIndex(data?.getExpireTurnIndex() ?? null);
         this.setExpirePlayerIndex(data?.getExpirePlayerIndex() ?? null);
 
-        this.getView().init(this);
+        this.getView()?.init(this);
     }
     public fastInit(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWeatherManager>): void {
         this.init(data);
@@ -51,10 +55,10 @@ export class Manager implements Weathers_IManager.IManager {
         this._setWar(war);
     }
     public startRunningView(): void {
-        this.getView().startRunningView();
+        this.getView()?.startRunningView();
     }
     public stopRunning(): void {
-        this.getView().stopRunningView();
+        this.getView()?.stopRunningView();
     }
 
     private _setWar(war: BaseWar_Model_War.War): void {
@@ -64,7 +68,7 @@ export class Manager implements Weathers_IManager.IManager {
         return Helpers_Misc.getExisted(this._war, Utils_ClientErrorCode.ClientErrorCode.BwWeatherManager_GetWar_00);
     }
 
-    public getView(): Weathers_IView.IView {
+    public getView(): Weathers_View.View | undefined {
         return this._view;
     }
 

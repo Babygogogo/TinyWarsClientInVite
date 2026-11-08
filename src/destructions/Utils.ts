@@ -49,7 +49,7 @@ export function destroyUnitOnMap(war: BaseWar_Model_War.War, gridIndex: Auxiliar
     updatePlayersOnUnitDestroyed(destroyedUnits);
 
     if (showExplosionEffect) {
-        war.getGridVisualEffect().showEffectExplosion(gridIndex);
+        war.getGridVisualEffect()?.showEffectExplosion(gridIndex);
         war.getView()?.showVibration();
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
     }

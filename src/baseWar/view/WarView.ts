@@ -1,26 +1,26 @@
 import {
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_GridIndex,
     type BaseWar_Model_War,
     type Notifications_Mapping,
-    MapEditor_Model_MeWar,
-    ReplayWar_Model_RwWarBase,
-    Ui_Components_UiLabel,
-    Ui_Components_UiZoomableComponent,
-    type AuxiliaryTypes_GridIndex,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Notifications_Dispatcher,
-    Helpers_Misc,
-    Graphics_Utils,
-    Lang_Utils,
-    Stages_StageManager,
-    Numbers_Utils,
-    Ui_Components_UiContainer,
-    Ui_Types_UiHorizontalAlign,
-    Ui_Types_UiVerticalAlign,
-    Lang_Constants,
+    type Notifications_Types,
     type Ui_Interfaces_IUiComponent,
     type Ui_Interfaces_IUiZoomableComponent,
-    type Notifications_Types,
     Egret_Egret,
+    Graphics_Utils,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
+    Notifications_Dispatcher,
+    Numbers_Utils,
+    ReplayWar_Model_RwWarBase,
+    Stages_StageManager,
+    Ui_Components_UiContainer,
+    Ui_Components_UiLabel,
+    Ui_Components_UiZoomableComponent,
+    Ui_Types_UiHorizontalAlign,
+    Ui_Types_UiVerticalAlign,
     Users_Model,
 } from "../../internal.ts";
 
@@ -119,10 +119,19 @@ export class WarView extends Ui_Components_UiContainer.UiContainer {
             mapSize.getWidth() * getGridWidth(),
             mapSize.getHeight() * getGridHeight(),
         );
-        fieldContainer.addContent(war.getField().getView());
+
+        const fieldView = war.getField().getView();
+        if (fieldView) {
+            fieldContainer.addContent(fieldView);
+        }
         fieldContainer.setContentScale(0, true);
 
-        this._weatherContainer.addUiChild(war.getWeatherManager().getView());
+        {
+            const view = war.getWeatherManager().getView();
+            if (view) {
+                this._weatherContainer.addUiChild(view);
+            }
+        }
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public fastInit(war: BaseWar_Model_War.War): void {

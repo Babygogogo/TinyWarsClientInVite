@@ -1,20 +1,20 @@
 import {
     AuxiliaryTypes_GridIndex,
-    MapEditor_Model_MeWar,
     AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWar_Model_SpwWar,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     TestWar_Model_TwWar,
-    type AuxiliaryTypes_UnitVisionInfo,
     Units_Constants,
     Utils_ClientErrorCode,
-    Helpers_Misc,
-    Lang_Utils,
     WarOperations_Executors_Utils_Common,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    Lang_Constants,
+    type AuxiliaryTypes_UnitVisionInfo,
     type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
@@ -120,7 +120,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitD
                         extraUnitView?.setIsVisible(false);
                     } else {
                         if (actionExtraData.getIsDropBlocked()) {
-                            gridVisualEffect.showEffectBlock(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDropUnit_01));
+                            gridVisualEffect?.showEffectBlock(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDropUnit_01));
                             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
                         }
                     }
@@ -207,7 +207,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitD
             updateViewAfterMove : true,
         });
         if (action.getIsDropBlocked()) {
-            gridVisualEffect.showEffectBlock(endingGridIndex);
+            gridVisualEffect?.showEffectBlock(endingGridIndex);
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
         }
 

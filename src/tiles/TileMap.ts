@@ -30,18 +30,20 @@ export class TileMap {
     private _visibleGroupedLocationIdArray  : number[] = [];
     private _war?                           : BaseWar_Model_War.War;
 
-    private readonly _view                  = new Tiles_TileMapView.TileMapView();
+    private _view                           : Tiles_TileMapView.TileMapView | undefined;
+
+    public constructor(isNeedView: boolean) {
+        if (isNeedView) {
+            this._setView(new Tiles_TileMapView.TileMapView());
+        }
+    }
 
     public init({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTileMap>;
+        data                    : SerialTileMap;
         gameConfig              : GameConfigs_GameConfig.GameConfig;
         mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void {
-        if (data == null) {
-            throw Helpers_Misc.newError(`Empty data.`, Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_00);
-        }
-
         const tiles     = data.getTiles();
         const mapWidth  = mapSize.getWidth();
         const mapHeight = mapSize.getHeight();
@@ -59,7 +61,8 @@ export class TileMap {
             }
         }
 
-        const map = Helpers_Collection.createEmptyMap<Tiles_Tile.Tile>(mapWidth, mapHeight);
+        const isNeedView    = this.getView() != null;
+        const map           = Helpers_Collection.createEmptyMap<Tiles_Tile.Tile>(mapWidth, mapHeight);
         for (const tileData of tiles) {
             const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(tileData.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_03);
             if (!gridIndex.checkIsInsideMap(mapSize)) {
@@ -72,7 +75,7 @@ export class TileMap {
                 throw Helpers_Misc.newError(`Duplicated gridIndex: ${gridX}, ${gridY}`, Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_05);
             }
 
-            const tile = new Tiles_Tile.Tile(true);
+            const tile = new Tiles_Tile.Tile(isNeedView);
             tile.init(tileData, gameConfig);
 
             const playerIndex = tile.getPlayerIndex();
@@ -97,7 +100,7 @@ export class TileMap {
         this._setMapSize(mapWidth, mapHeight);
         this.setTileCustomNameArray(tileCustomNameArray.map(v => v.clone()));
 
-        this.getView().init(this);
+        this.getView()?.init(this);
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
@@ -112,7 +115,7 @@ export class TileMap {
             map[gridIndex.getX()][gridIndex.getY()].fastInit(tileData, gameConfig);
         }
 
-        this.getView().fastInit(this);
+        this.getView()?.fastInit(this);
     }
 
     public startRunning(war: BaseWar_Model_War.War): void {
@@ -120,23 +123,33 @@ export class TileMap {
         this.forEachTile(tile => tile.startRunning(war));
     }
     public startRunningView(): void {
-        this.getView().startRunning();
+        this.getView()?.startRunning();
         this.forEachTile(tile => tile.flushDataToView());
     }
     public stopRunning(): void {
-        this.getView().stopRunning();
+        this.getView()?.stopRunning();
         this.forEachTile(tile => tile.stopRunning());
     }
     public dispose(): void {
         this.stopRunning();
 
-        const map = this.getMap();
-        for (const column of map) {
-            for (const tile of column) {
-                tile.dispose();
+        {
+            const map = this.getMap();
+            for (const column of map) {
+                for (const tile of column) {
+                    tile.dispose();
+                }
+            }
+            map.length = 0;
+        }
+
+        {
+            const view = this.getView();
+            if (view) {
+                view.dispose();
+                this._setView(undefined);
             }
         }
-        map.length = 0;
     }
 
     public serialize(): SerialTileMap {
@@ -201,8 +214,11 @@ export class TileMap {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getView(): Tiles_TileMapView.TileMapView {
+    public getView(): Tiles_TileMapView.TileMapView | undefined {
         return this._view;
+    }
+    private _setView(view: Tiles_TileMapView.TileMapView | undefined): void {
+        this._view = view;
     }
 
     public forEachTile(func: (t: Tiles_Tile.Tile) => unknown): void {
@@ -372,7 +388,7 @@ export class TileMap {
     ////////////////////////////////////////////////////////////////////////////////
     public setVisibleGroupedLocationIdArray(idArray: number[]): void {
         this._visibleGroupedLocationIdArray = idArray;
-        this.getView().resetLocationLayer();
+        this.getView()?.resetLocationLayer();
         Notifications_Dispatcher.dispatch("BwTileMapLocationVisibleSet");
     }
     public getVisibleGroupedLocationIdArray(): number[] {
@@ -396,7 +412,7 @@ export class TileMap {
         } else {
             groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % Locations_Constants.GroupSize));
         }
-        this.getView().resetLocationLayer();
+        this.getView()?.resetLocationLayer();
         Notifications_Dispatcher.dispatch("BwTileMapLocationVisibleSet");
     }
     public setAllLocationVisible(isVisible: boolean): void {

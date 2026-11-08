@@ -1,21 +1,21 @@
 import {
-    Destructions_Utils,
-    CoSkills_Constants,
     AuxiliaryTypes_GridIndex,
-    Units_Unit,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Units_Constants,
-    Utils_ClientErrorCode,
-    Units_Utils_Serialization,
-    UnitBuffs_Utils_Common,
-    Helpers_Team,
+    CoSkills_Constants,
+    Destructions_Utils,
     Helpers_Misc,
-    Visibilities_Utils,
-    Players_Utils_Common,
+    Helpers_Team,
     Numbers_Utils,
     Players_Constants,
+    Players_Utils_Common,
     Teams_Constants,
+    UnitBuffs_Utils_Common,
+    Units_Constants,
+    Units_Unit,
+    Units_Utils_Serialization,
+    Utils_ClientErrorCode,
     Visibilities_Constants,
+    Visibilities_Utils,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type Players_IPlayer,
 } from "../../internal.ts";
 
@@ -354,7 +354,9 @@ function exeSelfHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFa
                     }
                 }
 
-                (!isFastExecute) && (unit.flushDataToView());
+                if (!isFastExecute) {
+                    unit.flushDataToView();
+                }
             }
         }
 
@@ -436,7 +438,9 @@ function exeEnemyHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isF
                     }
                 }
 
-                (!isFastExecute) && (unit.flushDataToView());
+                if (!isFastExecute) {
+                    unit.flushDataToView();
+                }
             }
         }
     }
@@ -486,7 +490,9 @@ function exeSelfFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, is
                         Math.floor(currentFuel * (100 + modifier) / 100),
                     ));
                 }
-                (!isFastExecute) && (unit.flushDataToView());
+                if (!isFastExecute) {
+                    unit.flushDataToView();
+                }
             }
         }
     }
@@ -541,7 +547,9 @@ function exeEnemyFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, i
                     Math.floor(currentFuel * (100 + modifier) / 100),
                 ));
             }
-            (!isFastExecute) && (unit.flushDataToView());
+            if (!isFastExecute) {
+                unit.flushDataToView();
+            }
         }
     }
 }
@@ -596,7 +604,9 @@ function exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList
                             Math.floor(currentBuildMaterial * (100 + modifier) / 100),
                         ));
                     }
-                    (!isFastExecute) && (unit.flushDataToView());
+                    if (!isFastExecute) {
+                        unit.flushDataToView();
+                    }
                 }
 
                 if (maxProduceMaterial != null) {
@@ -606,7 +616,9 @@ function exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList
                     } else {
                         unit.addAndValidateCurrentProduceMaterial(currentProduceMaterial * modifier / 100);
                     }
-                    (!isFastExecute) && (unit.flushDataToView());
+                    if (!isFastExecute) {
+                        unit.flushDataToView();
+                    }
                 }
             }
         }
@@ -663,7 +675,9 @@ function exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                             Math.floor(currentBuildMaterial * (100 + modifier) / 100),
                         ));
                     }
-                    (!isFastExecute) && (unit.flushDataToView());
+                    if (!isFastExecute) {
+                        unit.flushDataToView();
+                    }
                 }
 
                 if (maxProduceMaterial != null) {
@@ -673,7 +687,9 @@ function exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                     } else {
                         unit.addAndValidateCurrentProduceMaterial(currentProduceMaterial * modifier / 100);
                     }
-                    (!isFastExecute) && (unit.flushDataToView());
+                    if (!isFastExecute) {
+                        unit.flushDataToView();
+                    }
                 }
             }
         }
@@ -722,7 +738,9 @@ function exeSelfPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexL
                 } else {
                     unit.addAndValidatePrimaryWeaponCurrentAmmo(currentAmmo * modifier / 100);
                 }
-                (!isFastExecute) && (unit.flushDataToView());
+                if (!isFastExecute) {
+                    unit.flushDataToView();
+                }
             }
         }
     }
@@ -770,7 +788,9 @@ function exeEnemyPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndex
                 } else {
                     unit.addAndValidatePrimaryWeaponCurrentAmmo(currentAmmo * modifier / 100);
                 }
-                (!isFastExecute) && (unit.flushDataToView());
+                if (!isFastExecute) {
+                    unit.flushDataToView();
+                }
             }
         }
     }
@@ -829,7 +849,9 @@ function exeSelfUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexList
                 }), false, true);
             }
 
-            (!isFastExecute) && (unit.flushDataToView());
+            if (!isFastExecute) {
+                unit.flushDataToView();
+            }
         }
     }
 }
@@ -888,7 +910,9 @@ function exeEnemyUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                 }), false, true);
             }
 
-            (!isFastExecute) && (unit.flushDataToView());
+            if (!isFastExecute) {
+                unit.flushDataToView();
+            }
         }
     }
 }
@@ -925,7 +949,7 @@ function exeFixedAreaDamageWithExtraData({ skillCfg, player, skillData, targetGr
             maxDistance : cfg.getRadius(),
             mapSize     : player.getWar().getTileMap().getMapSize(),
         })) {
-            gridVisualEffect.showEffectExplosion(gridIndex);
+            gridVisualEffect?.showEffectExplosion(gridIndex);
         }
     }
 }
@@ -998,12 +1022,14 @@ function exeFixedAreaDamageWithoutExtraData({ skillCfg, player, skillData, targe
                         }
                     }
 
-                    (!isFastExecute) && (unit.flushDataToView());
+                    if (!isFastExecute) {
+                        unit.flushDataToView();
+                    }
                 }
             }
 
             if (!isFastExecute) {
-                gridVisualEffect.showEffectExplosion(gridIndex);
+                gridVisualEffect?.showEffectExplosion(gridIndex);
             }
         }
     }
@@ -1051,7 +1077,9 @@ function exeSelfPromotionGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                         currentPromotion + modifier,
                     ),
                 ));
-                (!isFastExecute) && (unit.flushDataToView());
+                if (!isFastExecute) {
+                    unit.flushDataToView();
+                }
             }
         }
     }
@@ -1095,7 +1123,9 @@ function exeSelfUnitActionStateWithoutExtraData({ skillCfg, player, coGridIndexL
                 }))
             ) {
                 unit.setActionState(actionState);
-                (!isFastExecute) && (unit.flushDataToView());
+                if (!isFastExecute) {
+                    unit.flushDataToView();
+                }
             }
         }
     }
@@ -1149,7 +1179,9 @@ function exeSelfFlareAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                         Math.floor(currentAmmo * (100 + modifier) / 100),
                     ));
                 }
-                (!isFastExecute) && (unit.flushDataToView());
+                if (!isFastExecute) {
+                    unit.flushDataToView();
+                }
             }
         }
     }
@@ -1181,7 +1213,7 @@ function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isFastExec
         }
 
         if (!isFastExecute) {
-            weatherManager.getView().resetView(false);
+            weatherManager.getView()?.resetView(false);
         }
     }
 }
@@ -1211,7 +1243,7 @@ function exeChangeWeatherWithoutExtraData({ skillCfg, player, skillData, isFastE
         }
 
         if (!isFastExecute) {
-            weatherManager.getView().resetView(false);
+            weatherManager.getView()?.resetView(false);
         }
     }
 }
@@ -1251,7 +1283,9 @@ function exeSelfCoOnboardWithoutExtraData({ skillCfg, player, coGridIndexList, i
             }))
         ) {
             unit.setIsCoOnboard(isCoOnboard);
-            (!isFastExecute) && (unit.flushDataToView());
+            if (!isFastExecute) {
+                unit.flushDataToView();
+            }
         }
     }
 }

@@ -1,31 +1,30 @@
 import {
-    FogMaps_Constants,
     AuxiliaryTypes_GridIndex,
+    FogMaps_Constants,
     HalfwayReplayWar_Model_HrwWar,
+    Helpers_Collection,
+    Helpers_Misc,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
+    Players_Constants,
     ReplayWar_Model_RwWar,
     SinglePlayerWar_Model_SpwWar,
     TestWar_Model_TwWar,
-    type BaseWar_Model_War,
-    type FogMaps_IFogMap,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    type AuxiliaryTypes_UnitVisionInfo,
     Utils_ClientErrorCode,
-    Helpers_Collection,
-    Weathers_Constants,
-    Visibilities_Utils,
-    Helpers_Misc,
-    Players_Constants,
     Visibilities_Constants,
+    Visibilities_Utils,
+    Weathers_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_UnitVisionInfo,
+    type BaseWar_Model_War,
     type Units_Unit,
 } from "../internal.ts";
 
 import { DataForFogMapFromPath } from "../proto/schema/CommonProto/WarSerialization/DataForFogMapFromPath.ts";
 import { SerialFogMap } from "../proto/schema/CommonProto/WarSerialization/SerialFogMap.ts";
 
-export class FogMap implements FogMaps_IFogMap.IFogMap {
+export class FogMap {
     private _forceFogCode?              : FogMaps_Constants.ForcedFogCode;
     private _forceExpirePlayerIndex?    : number | null;
     private _forceExpireTurnIndex?      : number | null;
@@ -288,18 +287,18 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
         }
     }
 
-    public setForceExpireTurnIndex(index: number | null): void {
+    public getForceExpireTurnIndex(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
+        return this._forceExpireTurnIndex;
+    }
+    public setForceExpireTurnIndex(index: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void {
         this._forceExpireTurnIndex = index;
     }
-    public getForceExpireTurnIndex(): number | null {
-        return Helpers_Misc.getDefined(this._forceExpireTurnIndex, Utils_ClientErrorCode.ClientErrorCode.BwFogMap_GetForceExpireTurnIndex_00);
-    }
 
-    public setForceExpirePlayerIndex(index: number | null): void {
-        this._forceExpirePlayerIndex = index;
-    }
-    public getForceExpirePlayerIndex(): number | null {
+    public getForceExpirePlayerIndex(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
         return Helpers_Misc.getDefined(this._forceExpirePlayerIndex, Utils_ClientErrorCode.ClientErrorCode.BwFogMap_GetForceExpirePlayerIndex_00);
+    }
+    public setForceExpirePlayerIndex(index: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void {
+        this._forceExpirePlayerIndex = index;
     }
 
     public updateOnPlayerTurnSwitched(): void {

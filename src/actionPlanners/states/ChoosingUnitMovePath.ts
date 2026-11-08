@@ -1,14 +1,14 @@
 import {
-    Units_Constants,
-    Helpers_Misc,
-    Users_Model,
-    ActionPlanners_States_Idle,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
     ActionPlanners_Constants,
-    type AuxiliaryTypes_GridIndex,
+    ActionPlanners_States_Idle,
+    Helpers_Misc,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Units_Constants,
+    Users_Model,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
+    type AuxiliaryTypes_GridIndex,
     type Units_Unit,
 } from "../../internal.ts";
 
@@ -32,7 +32,7 @@ export class ChoosingUnitMovePath implements ActionPlanners_States_IState.IState
                 if (!Users_Model.getSelfSettingsIsSetPathMode()) {
                     return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                 } else {
-                    const previousGridIndex = war.getCursor().getPreviousGridIndex();
+                    const previousGridIndex = war.getCursor()?.getPreviousGridIndex();
                     if ((previousGridIndex) && (gridIndex.checkIsEqual(previousGridIndex))) {
                         return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                     } else {
@@ -69,7 +69,7 @@ export class ChoosingUnitMovePath implements ActionPlanners_States_IState.IState
             }
         } else {
             if (actionPlanner.checkCanFocusUnitOnMapAttackTarget(gridIndex)) {
-                const previousGridIndex = war.getCursor().getPreviousGridIndex();
+                const previousGridIndex = war.getCursor()?.getPreviousGridIndex();
                 if ((previousGridIndex == null) || (!gridIndex.checkIsEqual(previousGridIndex))) {
                     return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
                 } else {
@@ -146,7 +146,7 @@ export class ChoosingUnitMovePath implements ActionPlanners_States_IState.IState
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const gridIndex = Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap()).getGridIndex();
-        actionPlanner.getWar().getCursor().setGridIndex(gridIndex);
+        actionPlanner.getWar().getCursor()?.setGridIndex(gridIndex);
 
         if (!actionPlanner.getFocusUnitLoaded()) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner, Sounds_Constants.ShortSfxCode.ButtonCancel01);

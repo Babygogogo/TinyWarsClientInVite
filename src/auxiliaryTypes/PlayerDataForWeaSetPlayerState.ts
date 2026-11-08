@@ -1,7 +1,7 @@
 import {
-    CoSkills_Utils_Executor,
-    CoSkills_Utils_DataGeneratorForUseCoSkill,
     CoSkills_Constants,
+    CoSkills_Utils_DataGeneratorForUseCoSkill,
+    CoSkills_Utils_Executor,
     SinglePlayerWar_Model_SpwWar,
     Visibilities_Utils,
     type BaseWar_Model_War,
@@ -99,9 +99,9 @@ export class PlayerDataForWeaSetPlayerState {
                                 unit.flushDataToView();
 
                                 if (skillType === CoSkills_Constants.SkillTypeId.Power) {
-                                    gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
+                                    gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
                                 } else {
-                                    gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                                    gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
                                 }
                             }
                         }
@@ -111,9 +111,9 @@ export class PlayerDataForWeaSetPlayerState {
                                 unit.flushDataToView();
 
                                 if (skillType === CoSkills_Constants.SkillTypeId.Power) {
-                                    gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
+                                    gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
                                 } else {
-                                    gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                                    gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
                                 }
                             }
                         }

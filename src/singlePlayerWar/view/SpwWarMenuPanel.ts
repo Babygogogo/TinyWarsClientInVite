@@ -1,19 +1,19 @@
 import {
-    Utils_ClientErrorCode,
-    GamePanels_Manager,
-    SinglePlayerMode_Model_SpmModel,
+    ActionPlanners_Constants,
+    Campaigns_Mains_Gateway,
+    FloatText,
     GamePanels_Dict,
-    MultiPlayerWar_Model_MpwModel,
-    Lang_Utils,
+    GamePanels_Manager,
     Helpers_GameFlow,
     Helpers_Misc,
-    Turns_Constants,
-    Campaigns_Mains_Gateway,
-    SinglePlayerMode_Model_SpmProxy,
-    FloatText,
-    ActionPlanners_Constants,
     Lang_Constants,
+    Lang_Utils,
+    MultiPlayerWar_Model_MpwModel,
+    SinglePlayerMode_Model_SpmModel,
+    SinglePlayerMode_Model_SpmProxy,
+    Turns_Constants,
     Ui_Components_UiPanel,
+    Utils_ClientErrorCode,
     WarTypes_Constants,
     type SinglePlayerWar_Interface_ISpwWar,
     type Ui_Interfaces_IUiButton,
@@ -399,6 +399,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return (war != null)
             && (war.checkIsHumanInTurn())
             && (war.getTurnManager().getPhaseCode() === Turns_Constants.PhaseCode.Main)
-            && (war.getActionPlanner().getStateId() === ActionPlanners_Constants.StateId.Idle);
+            && ((war.getActionPlanner()?.getStateId() ?? ActionPlanners_Constants.StateId.Idle) === ActionPlanners_Constants.StateId.Idle);
     }
 }

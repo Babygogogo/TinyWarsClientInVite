@@ -492,8 +492,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedGroupCopyTile(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
-        const war = this._getWar();
-        war.getDrawer().setDataForPasteTile(war.getTileMap().getTile(war.getCursor().getGridIndex()).serialize());
+
+        const war       = this._getWar();
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
+        war.getDrawer().setDataForPasteTile(war.getTileMap().getTile(gridIndex).serialize());
         FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0369));
     }
     private _onTouchedGroupModePasteTile(): void {
@@ -508,9 +514,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedGroupCopyUnit(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
+
         const war       = this._getWar();
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
         const unitMap   = war.getUnitMap();
-        const unit      = unitMap.getUnitOnMap(war.getCursor().getGridIndex());
+        const unit      = unitMap.getUnitOnMap(gridIndex);
         if (unit == null) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0373));
             return;
@@ -956,8 +968,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelLocation(): void {
-        const war               = this._getWar();
-        const gridIndex         = war.getCursor().getGridIndex();
+        const war       = this._getWar();
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            return;
+        }
+
         const locationIdArray   = war.getTileMap().getTile(gridIndex).getLocationIdList(true);
         const textForGridIndex  = `x${gridIndex.getX()} y${gridIndex.getY()}`;
         const textForLocation   = locationIdArray.length ? locationIdArray.join(` `) : `--`;

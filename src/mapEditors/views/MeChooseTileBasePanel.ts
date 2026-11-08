@@ -432,7 +432,11 @@ class TileBaseRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
                     panel.updateOnChooseTileBase(dataForDrawTileBase);
                     panel.closePanel();
-                    Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : war.getCursor().getGridIndex() });
+
+                    const gridIndex = war.getCursor()?.getGridIndex();
+                    if (gridIndex) {
+                        Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
+                    }
                 },
             });
         }

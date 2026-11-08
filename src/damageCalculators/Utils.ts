@@ -1100,6 +1100,7 @@ export function getEstimatedBattleInfo({
         }
 
         unit.init(unitData, gameConfig);
+        unit.flushDataToView();
         if (unit.getLoaderUnitId() == null) {
             unitMap.setUnitOnMap(unit);
         } else {
@@ -1113,6 +1114,7 @@ export function getEstimatedBattleInfo({
         }
 
         unit.init(unitData, gameConfig);
+        unit.flushDataToView();
         if (unit.getLoaderUnitId() == null) {
             unitMap.setUnitOnMap(unit);
         } else {

@@ -1,27 +1,27 @@
 import {
-    type Notifications_Mapping,
-    Maps_Constants,
+    ActionPlanners_Constants,
     ActionPlanners_States_RequestingPlayerDeleteUnit,
     ActionPlanners_States_RequestingPlayerSurrender,
     ActionPlanners_States_RequestingPlayerVoteForDraw,
     FloatText,
-    ActionPlanners_Constants,
-    TestWar_Model_TwWar,
-    Units_Constants,
     GamePanels_Dict,
-    Lang_Utils,
-    Helpers_Misc,
-    MapEditor_Model_MeModel,
-    Users_Model,
-    Helpers_GameFlow,
     GamePanels_Manager,
-    Turns_Constants,
-    MapEditor_Model_MeProxy,
-    SinglePlayerMode_Model_SpmProxy,
-    Users_Proxy,
+    Helpers_GameFlow,
+    Helpers_Misc,
     Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeModel,
+    MapEditor_Model_MeProxy,
+    Maps_Constants,
+    SinglePlayerMode_Model_SpmProxy,
+    TestWar_Model_TwWar,
+    Turns_Constants,
     Ui_Components_UiPanel,
+    Units_Constants,
+    Users_Model,
+    Users_Proxy,
     type Egret_Egret,
+    type Notifications_Mapping,
     type SinglePlayerWar_Interface_ISpwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -155,8 +155,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            return;
+        }
+
         const unitMap       = war.getUnitMap();
-        const unit          = unitMap.getVisibleUnitOnMap(war.getCursor().getGridIndex());
+        const unit          = unitMap.getVisibleUnitOnMap(gridIndex);
         const playerIndex   = war.getPlayerIndexInTurn();
         if (!unit) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0027));
@@ -165,10 +171,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else if (unitMap.countUnitsOnMapForPlayer(playerIndex) <= 1) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0076));
         } else {
+            const actionPlanner = war.getActionPlanner();
+            if (actionPlanner == null) {
+                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                return;
+            }
+
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0081),
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0029),
-                callback   : () => ActionPlanners_States_RequestingPlayerDeleteUnit.RequestingPlayerDeleteUnit.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
+                callback   : () => ActionPlanners_States_RequestingPlayerDeleteUnit.RequestingPlayerDeleteUnit.getInstance().doApplyOnChooseAction(actionPlanner),
             });
         }
     }
@@ -318,7 +330,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const actionPlanner = war.getActionPlanner();
-        const state         = ActionPlanners_States_RequestingPlayerVoteForDraw.RequestingPlayerVoteForDraw.getInstance();
+        if (actionPlanner == null) {
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            return;
+        }
+
+        const state = ActionPlanners_States_RequestingPlayerVoteForDraw.RequestingPlayerVoteForDraw.getInstance();
         if (!drawVoteManager.checkHasOngoingVote()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0031),
@@ -353,11 +370,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
+        const actionPlanner = war.getActionPlanner();
+        if (actionPlanner == null) {
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            return;
+        }
+
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0055),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0026),
             callback   : () => {
-                ActionPlanners_States_RequestingPlayerSurrender.RequestingPlayerSurrender.getInstance().doApplyOnChooseAction(war.getActionPlanner(), war.getPlayerIndexInTurn());
+                ActionPlanners_States_RequestingPlayerSurrender.RequestingPlayerSurrender.getInstance().doApplyOnChooseAction(actionPlanner, war.getPlayerIndexInTurn());
                 this.closePanel();
             },
         });
@@ -441,6 +464,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return (war != null)
             && (war.checkIsHumanInTurn())
             && (war.getTurnManager().getPhaseCode() === Turns_Constants.PhaseCode.Main)
-            && (war.getActionPlanner().getStateId() === ActionPlanners_Constants.StateId.Idle);
+            && ((war.getActionPlanner()?.getStateId() ?? ActionPlanners_Constants.StateId.Idle) === ActionPlanners_Constants.StateId.Idle);
     }
 }

@@ -257,14 +257,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return [];
         }
 
-        const war               = openData.war;
+        const war           = openData.war;
+        const actionPlanner = war.getActionPlanner();
+        if (actionPlanner == null) {
+            return [];
+        }
+
         const gridIndex         = openData.gridIndex;
         const gameConfig        = war.getGcData();
         const tile              = war.getTileMap().getTile(gridIndex);
         const player            = tile.getPlayer();
         const currentFund       = player.getFund();
         const playerIndex       = player.getPlayerIndex();
-        const actionPlanner     = war.getActionPlanner();
         const skillCfg          = tile.getEffectiveSelfUnitProductionSkillCfg(playerIndex) ?? null;
         const minNormalizedHp   = skillCfg ? Units_Utils_Common.getNormalizedHp(skillCfg.getHpLowerLimit()) : Units_Utils_Common.getNormalizedHp(Units_Constants.Hp.MaxHp);
         const dataList          : DataForUnitRenderer[] = [];

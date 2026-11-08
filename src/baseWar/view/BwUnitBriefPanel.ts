@@ -108,7 +108,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateView();
     }
     private _onNotifyBwUnitChanged(e: Egret_Egret.Event<Notifications_Mapping.Mapping["BwUnitChanged"]>): void {
-        const gridIndex = this.getOpenData()?.war.getCursor().getGridIndex();
+        const gridIndex = this.getOpenData()?.war.getCursor()?.getGridIndex();
         if (gridIndex == null) {
             return;
         }
@@ -175,6 +175,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
+        const gridIndex = war.getCursor()?.getGridIndex();
+        if (gridIndex == null) {
+            this.setIsVisible(false);
+            return;
+        }
+
         this.setIsVisible(true);
 
         const isExpanded = this._isExpanded;
@@ -186,7 +192,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         unitList.length = 0;
 
         const unitMap       = war.getUnitMap();
-        const gridIndex     = war.getCursor().getGridIndex();
         const unitOnMap     = unitMap.getUnitOnMap(gridIndex);
         const teamIndexes   = war.getPlayerManager().getWatcherTeamIndexesForSelf();
 

@@ -160,9 +160,9 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUni
                     unit.flushDataToView();
 
                     if (skillType === CoSkills_Constants.SkillTypeId.Power) {
-                        gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
+                        gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
                     } else {
-                        gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                        gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
                     }
                 }
             }
@@ -233,9 +233,9 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUni
                     unit.flushDataToView();
 
                     if (skillType === CoSkills_Constants.SkillTypeId.Power) {
-                        gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
+                        gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
                     } else {
-                        gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                        gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
                     }
                 }
             }

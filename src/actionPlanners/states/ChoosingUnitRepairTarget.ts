@@ -1,15 +1,15 @@
 import {
+    ActionPlanners_Constants,
     HalfwayReplayWar_Model_HrwWar,
+    Helpers_Misc,
     MapEditor_Model_MeWar,
     ReplayWar_Model_RwWar,
-    ActionPlanners_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     TestWar_Model_TwWar,
-    type AuxiliaryTypes_GridIndex,
     type ActionPlanners_IActionPlanner,
     type ActionPlanners_States_IState,
-    Helpers_Misc,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
+    type AuxiliaryTypes_GridIndex,
 } from "../../internal.ts";
 
 export class ChoosingUnitRepairTarget implements ActionPlanners_States_IState.IState {
@@ -64,7 +64,7 @@ export class ChoosingUnitRepairTarget implements ActionPlanners_States_IState.IS
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
-        actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
+        actionPlanner.getWar().getCursor()?.setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
         actionPlanner.clearUnitRepairTargetGridIndex();
 
         actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
