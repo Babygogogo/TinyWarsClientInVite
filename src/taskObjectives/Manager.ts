@@ -1,21 +1,20 @@
 import {
-    Utils_ClientErrorCode,
-    TaskObjectives_Utils,
+    ExpressionParsers_Contexts_TaskObjective,
+    ExpressionParsers_Parser,
+    ExpressionParsers_Results_Num,
     Helpers_Misc,
     Numbers_Utils,
-    ExpressionParsers_Results_Num,
-    ExpressionParsers_Parser,
-    ExpressionParsers_Contexts_TaskObjective,
-    type BaseWar_Model_War,
-    type TaskObjectives_ITaskObjectiveManager,
+    TaskObjectives_Utils,
+    Utils_ClientErrorCode,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../internal.ts";
 import type { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import { TaskObjectiveState } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 import { SerialTaskObjectiveManager } from "../proto/schema/CommonProto/WarSerialization/SerialTaskObjectiveManager.ts";
 
-export class TaskObjectiveManager implements TaskObjectives_ITaskObjectiveManager.ITaskObjectiveManager {
-    private readonly _stateArray             : TaskObjectiveState[] = [];
+export class Manager {
+    private readonly _stateArray    : TaskObjectiveState[] = [];
     private _war?                   : BaseWar_Model_War.War;
 
     public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TaskObjectiveFullData>): void {
@@ -48,6 +47,10 @@ export class TaskObjectiveManager implements TaskObjectives_ITaskObjectiveManage
         return SerialTaskObjectiveManager.fromJson({
             stateArray : this.getStateArray().map(v => v.toJson()),
         });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialTaskObjectiveManager {
+        return this.serialize();
     }
     public serializeForCreateMfr(): SerialTaskObjectiveManager {
         return this.serialize();

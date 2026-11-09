@@ -199,7 +199,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
                 war                 : war,
                 gridIndex           : gridIndex,
-                unitType            : unitOnMap.getUnitType(),
+                unitType            : unitOnMap.getUnitTypeId(),
                 isDiving            : unitOnMap.getIsDiving(),
                 isInvisible         : unitOnMap.checkIsInvisible(gridIndex),
                 unitPlayerIndex     : unitOnMap.getPlayerIndex(),
@@ -356,7 +356,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
 
         this._labelName.setText(
             unit.getCustomName()                                        ??
-            Lang_Utils.getUnitName(unit.getUnitType(), unit.getGcData())  ??
+            Lang_Utils.getUnitName(unit.getUnitTypeId(), unit.getGcData())  ??
             Lang_Constants.UndefinedError,
         );
     }

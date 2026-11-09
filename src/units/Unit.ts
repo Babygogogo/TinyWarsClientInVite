@@ -5,6 +5,7 @@ import {
     type AuxiliaryTypes_GridIndexAndWeight,
     AuxiliaryTypes_MovableArea,
     AuxiliaryTypes_UnitVisionInfo,
+    type BaseWar_Model_War,
     Cos_Constants,
     CoSkills_Constants,
     CoSkills_Utils_Common,
@@ -17,7 +18,6 @@ import {
     CoSkills_Utils_Persistent_SelfUnitMoveRange,
     CoSkills_Utils_Persistent_SelfUnitOffense,
     CoSkills_Utils_Persistent_SelfUnitVision,
-    type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     Helpers_Collection,
     Helpers_Misc,
@@ -26,7 +26,7 @@ import {
     Notifications_Dispatcher,
     Numbers_Constants,
     Numbers_Utils,
-    type Players_IPlayer,
+    Players_Player,
     type Tiles_Tile,
     Tiles_Utils_Common,
     UnitBuffs_Constants,
@@ -161,7 +161,7 @@ export class Unit {
         return Units_Utils_Serialization.create({
             gridIndex   : this.getGridIndex().toProto().toJson(),
             playerIndex : this.getPlayerIndex(),
-            unitType    : this.getUnitType(),
+            unitType    : this.getUnitTypeId(),
             unitId      : this.getUnitId(),
 
             actionState  : this.getActionState(),
@@ -214,20 +214,20 @@ export class Unit {
         return Helpers_Misc.getExisted(this._templateCfg);
     }
 
-    public getUnitType(): number {
+    public getUnitTypeId(): number {
         return this.getTemplateCfg().getUnitTypeId();
     }
     private _getDamageChartCfg(): { [armorType: number]: { [weaponType: number]: DamageChartCfg } } {
-        return Helpers_Misc.getExisted(this.getGcData().getDamageChartCfgs(this.getUnitType()));
+        return Helpers_Misc.getExisted(this.getGcData().getDamageChartCfgs(this.getUnitTypeId()));
     }
     private _getBuildableTileCfg(): { [srcBaseType: number]: { [srcObjectType: number]: BuildableTileCfg } } | null {
-        return this.getGcData().getBuildableTileCfgs(this.getUnitType());
+        return this.getGcData().getBuildableTileCfgs(this.getUnitTypeId());
     }
     private _getVisionBonusCfg(): { [tileType: number]: VisionBonusCfg } | null {
-        return this.getGcData().getVisionBonusCfg(this.getUnitType());
+        return this.getGcData().getVisionBonusCfg(this.getUnitTypeId());
     }
 
-    public getPlayer(): Players_IPlayer.IPlayer {
+    public getPlayer(): Players_Player.Player {
         return this.getWar().getPlayer(this.getPlayerIndex());
     }
 
@@ -430,7 +430,7 @@ export class Unit {
 
         const war                       = this.getWar();
         const gameConfig                = this.getGcData();
-        const unitTypeId                = this.getUnitType();
+        const unitTypeId                = this.getUnitTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
         const fund                      = player.getFund();
         const tileMap                   = war.getTileMap();
@@ -498,7 +498,7 @@ export class Unit {
         }
 
         const gameConfig    = war.getGcData();
-        const unitType      = this.getUnitType();
+        const unitType      = this.getUnitTypeId();
         const selfTileType  = war.getTileMap().getTile(selfGridIndex).getTileTypeId();
         const modifier      = offenseBonusCfg[2];
         if ((!modifier)                                                                 ||
@@ -549,7 +549,7 @@ export class Unit {
         }
 
         const gameConfig                = this.getGcData();
-        const unitType                  = this.getUnitType();
+        const unitType                  = this.getUnitTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
         const isCoOnboard               = this.getIsCoOnboard();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
@@ -594,7 +594,7 @@ export class Unit {
 
         const war                       = this.getWar();
         const gameConfig                = this.getGcData();
-        const selfUnitTypeId            = this.getUnitType();
+        const selfUnitTypeId            = this.getUnitTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
         const fund                      = player.getFund();
         const tileMap                   = war.getTileMap();
@@ -661,7 +661,7 @@ export class Unit {
         }
 
         const gameConfig                = this.getGcData();
-        const unitType                  = this.getUnitType();
+        const unitType                  = this.getUnitTypeId();
         const tileType                  = this.getWar().getTileMap().getTile(selfGridIndex).getTileTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
@@ -694,7 +694,7 @@ export class Unit {
         }
 
         const gameConfig                = this.getGcData();
-        const unitType                  = this.getUnitType();
+        const unitType                  = this.getUnitTypeId();
         const tileType                  = this.getWar().getTileMap().getTile(selfGridIndex).getTileTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
@@ -724,7 +724,7 @@ export class Unit {
     public getLuckLimitModifierByCo(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex): { lower: number, upper: number } {
         const player                    = this.getPlayer();
         const gameConfig                = this.getGcData();
-        const selfUnitType                  = this.getUnitType();
+        const selfUnitType                  = this.getUnitTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
         const isCoOnboard               = this.getIsCoOnboard();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
@@ -751,7 +751,7 @@ export class Unit {
     }
 
     public checkHasSecondaryWeapon(): boolean {
-        return this.getGcData().checkHasSecondaryWeapon(this.getUnitType());
+        return this.getGcData().checkHasSecondaryWeapon(this.getUnitTypeId());
     }
 
     public getCfgSecondaryWeaponBaseDamage(armorType: number): number | null {
@@ -797,7 +797,7 @@ export class Unit {
         }
 
         const gameConfig                = this.getGcData();
-        const selfUnitTypeId            = this.getUnitType();
+        const selfUnitTypeId            = this.getUnitTypeId();
         const isCoOnboard               = this.getIsCoOnboard();
         const selfOldGridIndex          = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
@@ -847,7 +847,7 @@ export class Unit {
                 return false;
             }
             if ((targetUnit.getIsDiving())                                                                                  &&
-                (!targetUnit.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray().includes(this.getUnitType()))
+                (!targetUnit.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray().includes(this.getUnitTypeId()))
             ) {
                 return false;
             }
@@ -903,7 +903,7 @@ export class Unit {
             return false;
         }
         if ((targetUnit.getIsDiving())                                                                                  &&
-            (!targetUnit.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray().includes(this.getUnitType()))
+            (!targetUnit.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray().includes(this.getUnitTypeId()))
         ) {
             return false;
         }
@@ -998,7 +998,7 @@ export class Unit {
         }
 
         const gameConfig                = this.getGcData();
-        const selfUnitTypeId            = this.getUnitType();
+        const selfUnitTypeId            = this.getUnitTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
@@ -1047,7 +1047,7 @@ export class Unit {
     public checkIsInvisible(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean {
         const player                    = this.getPlayer();
         const gameConfig                = this.getGcData();
-        const unitType                  = this.getUnitType();
+        const unitType                  = this.getUnitTypeId();
         const tileType                  = this.getWar().getTileMap().getTile(selfGridIndex).getTileTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
@@ -1116,7 +1116,7 @@ export class Unit {
     private _getFuelConsumptionModifierByCo(): number {
         const player                    = this.getPlayer();
         const gameConfig                = this.getGcData();
-        const selfUnitTypeId            = this.getUnitType();
+        const selfUnitTypeId            = this.getUnitTypeId();
         const selfGridIndex             = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
@@ -1324,7 +1324,7 @@ export class Unit {
 
         const war                       = this.getWar();
         const gameConfig                = this.getGcData();
-        const selfUnitTypeId            = this.getUnitType();
+        const selfUnitTypeId            = this.getUnitTypeId();
         const selfGridIndex             = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
         const selfTileTypeId            = war.getTileMap().getTile(selfGridIndex).getTileTypeId();
@@ -1358,7 +1358,7 @@ export class Unit {
 
         const gameConfig    = war.getGcData();
         const selfGridIndex = this.getGridIndex();
-        const unitType      = this.getUnitType();
+        const unitType      = this.getUnitTypeId();
         const selfTileType  = war.getTileMap().getTile(selfGridIndex).getTileTypeId();
         const modifier      = moveRangeBonus[2];
         if ((!modifier)                                                                 ||
@@ -1405,7 +1405,7 @@ export class Unit {
     public getProductionFinalCost(extraMultiplier = 1): number {
         return Math.floor(
             this.getProductionCfgCost()                                 *
-            this.getPlayer().getUnitCostModifier(this.getUnitType())    *
+            this.getPlayer().getUnitCostModifier(this.getUnitTypeId())    *
             extraMultiplier,
         );
     }
@@ -1449,7 +1449,7 @@ export class Unit {
     public checkCanLaunchSiloOnTile(tile: Tiles_Tile.Tile): boolean {
         const launchSiloParams = tile.getTemplateCfg().getLaunchSiloParams();
         return (!!launchSiloParams?.length)
-            && (this.getGcData().checkIsUnitTypeInCategory(this.getUnitType(), launchSiloParams[0]));
+            && (this.getGcData().checkIsUnitTypeInCategory(this.getUnitTypeId(), launchSiloParams[0]));
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -1550,7 +1550,7 @@ export class Unit {
             && (loadableTileCategoryId != null)
             && (loadUnitCategoryId != null)
             && (gameConfig.checkIsTileTypeInCategory(this.getWar().getTileMap().getTile(this.getGridIndex()).getTileTypeId(), loadableTileCategoryId))
-            && (gameConfig.checkIsUnitTypeInCategory(unit.getUnitType(), loadUnitCategoryId))
+            && (gameConfig.checkIsUnitTypeInCategory(unit.getUnitTypeId(), loadUnitCategoryId))
             && (this.getPlayerIndex() === unit.getPlayerIndex())
             && (this.getLoadedUnitsCount() < maxLoadUnitsCount);
     }
@@ -1737,7 +1737,7 @@ export class Unit {
         const modifierByCo          = this._getVisionRangeModifierByCo(gridIndex);
         if (unitVisionFixedCfg != null) {
             const gameConfig    = war.getGcData();
-            const unitType      = this.getUnitType();
+            const unitType      = this.getUnitTypeId();
             const weatherType   = weatherManager.getCurrentWeatherType();
             if ((gameConfig.checkIsUnitTypeInCategory(unitType, unitVisionFixedCfg[0])) &&
                 (gameConfig.checkIsTileTypeInCategory(tileType, unitVisionFixedCfg[1]))
@@ -1796,7 +1796,7 @@ export class Unit {
         }
 
         const gameConfig                = this.getGcData();
-        const selfUnitTypeId            = this.getUnitType();
+        const selfUnitTypeId            = this.getUnitTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
@@ -1830,7 +1830,7 @@ export class Unit {
         }
 
         const gameConfig                = this.getGcData();
-        const selfUnitTypeId            = this.getUnitType();
+        const selfUnitTypeId            = this.getUnitTypeId();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         const coZoneRadius              = player.getCoZoneRadius();
         const isCoOnboard               = this.getIsCoOnboard();
@@ -1852,7 +1852,7 @@ export class Unit {
     public checkCanJoinUnit(unit: Units_Unit.Unit): boolean {
         const playerIndex = this.getPlayerIndex();
         return (this !== unit)
-            && (this.getUnitType() === unit.getUnitType())
+            && (this.getUnitTypeId() === unit.getUnitTypeId())
             && (playerIndex === unit.getPlayerIndex())
             && (this.getWar().getCommonSettingManager().getPlayerRule(playerIndex).getCanUnitJoin())
             && (unit.getNormalizedCurrentHp() < unit.getNormalizedMaxHp())
@@ -1908,7 +1908,7 @@ export class Unit {
         const tile          = war.getTileMap().getTile(movePath[0]);
         const isOwnTile     = tile.getPlayerIndex() == playerIndex;
         const gameConfig    = this.getGcData();
-        const unitTypeId    = this.getUnitType();
+        const unitTypeId    = this.getUnitTypeId();
         const tileTypeId    = tile.getTileTypeId();
         for (const skillId of player.getCoCurrentSkills()) {
             const skillCfg = gameConfig.getCoSkillCfg(skillId);
@@ -2137,7 +2137,7 @@ export class Unit {
                                 if (!targetUnit.getIsDiving()) {
                                     return true;
                                 } else {
-                                    return targetUnit.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray().includes(this.getUnitType()) ?? false;
+                                    return targetUnit.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray().includes(this.getUnitTypeId()) ?? false;
                                 }
                             }
                         }

@@ -938,7 +938,7 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_W
             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                   : unit.getUnitType(),
+                    unitType                   : unit.getUnitTypeId(),
                     dstPlayerIndex             : unit.getPlayerIndex(),
                     unitGain                   : 1,
                     unitLoss                   : 0,

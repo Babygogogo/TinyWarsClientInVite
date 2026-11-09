@@ -1,18 +1,18 @@
 import {
+    Lang_Constants,
+    Lang_Utils,
+    Players_Player,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
     Units_Utils_Filter,
     ValueAndComparators_Utils,
     WarEvents_Actions_Constants_SetViewpointSimple,
     WarEvents_Actions_Utils_SetViewpointExpr,
-    Lang_Utils,
-    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_GridIndex,
+    type AuxiliaryTypes_MapSize,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type AuxiliaryTypes_GridIndex,
-    type Players_IPlayer,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { WeaSetViewpointSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointSimple.ts";
@@ -141,7 +141,7 @@ export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastE
         const conPlayerFilter   = data.getConPlayerFilter();
         const conUnitFilter     = data.getConUnitFilter();
         const conUnitComparator = data.getConUnitComparator();
-        const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
+        const playerFilterDict  = new Map<Players_Player.Player, boolean>();
         for (const tile of war.getTileMap().getAllTiles()) {
             if ((conTileFilter != null) && (!Tiles_Utils_Filter.checkIsMeet(conTileFilter, tile))) {
                 continue;
@@ -181,7 +181,7 @@ export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastE
         isFastExecute     : isFastExecute,
     });
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }

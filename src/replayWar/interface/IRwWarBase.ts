@@ -1,7 +1,7 @@
 import {
     type BaseWar_Interface_IBwCommonSettingManager,
-    type BaseWar_Interface_IBwWarEventManager,
-    type BaseWar_Interface_IBwWarStatisticsManager,
+    type WarEvents_Manager,
+    type BaseWar_Model_BwWarStatisticsManager,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../internal.ts";
@@ -22,8 +22,8 @@ export interface IRwWarBase extends BaseWar_Model_War.War {
     tickVisionTeamIndex(): number | null;
 
     getCommonSettingManager(): BaseWar_Interface_IBwCommonSettingManager.IBwCommonSettingManager;
-    getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager;
-    getWarStatisticsManager(): BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager;
+    getWarEventManager(): WarEvents_Manager.Manager;
+    getWarStatisticsManager(): BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager;
 
     getCanCheat(): boolean;
     getIsNeedExecutedOperations(): boolean;

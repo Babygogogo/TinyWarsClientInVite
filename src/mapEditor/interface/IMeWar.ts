@@ -1,7 +1,7 @@
 import {
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWarEventManager,
+    type WarEvents_Manager,
     type MapEditor_Interface_IMeDrawer,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
@@ -41,7 +41,7 @@ export interface IMeWar extends BaseWar_Model_War.War {
     getBootRestTime(): number | null;
     getSettingsBootTimerParams(): number[];
 
-    getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager;
+    getWarEventManager(): WarEvents_Manager.Manager;
 
     getIsExecuteActionsWithExtraData(): boolean;
 

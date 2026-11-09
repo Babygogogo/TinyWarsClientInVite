@@ -155,6 +155,13 @@ export class Field {
             tileMap : this.getTileMap().serialize().toJson(),
         });
     }
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialField {
+        return SerialField.fromJson({
+            fogMap  : this.getFogMap().serializeForTeamIndexes(teamIndexes).toJson(),
+            unitMap : this.getUnitMap().serializeForTeamIndexes(teamIndexes).toJson(),
+            tileMap : this.getTileMap().serializeForTeamIndexes(teamIndexes).toJson(),
+        });
+    }
     public serializeForCreateSfw(): SerialField {
         return SerialField.fromJson({
             fogMap  : this.getFogMap().serializeForCreateSfw().toJson(),

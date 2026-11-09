@@ -8,7 +8,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
-    type Turns_ITurnManager,
+    type Turns_Manager,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 
@@ -38,10 +38,10 @@ export class Turn extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private readonly _turnManager    : Turns_ITurnManager.ITurnManager;
+    private readonly _turnManager    : Turns_Manager.Manager;
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(turnManager: Turns_ITurnManager.ITurnManager) {
+    public constructor(turnManager: Turns_Manager.Manager) {
         super(turnManager.getWar());
 
         this._turnManager = turnManager;

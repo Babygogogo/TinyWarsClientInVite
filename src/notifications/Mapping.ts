@@ -5,7 +5,7 @@ import {
     type BaseWar_Model_War,
     type Helpers_PointerInput,
     type PlayerRules_Constants,
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
     type Units_Unit,
 } from "../internal.ts";
@@ -311,12 +311,12 @@ export type Mapping = {
     GridMarkDeleted: { war: BaseWar_Model_War.War, gridId: number };
     HiddenGridMarkTypeIdListChanged: { war: BaseWar_Model_War.War };
 
-    BwPlayerFundChanged: { player: Players_IPlayer.IPlayer };
+    BwPlayerFundChanged: { player: Players_Player.Player };
     GridMarkListChanged: { war: BaseWar_Model_War.War };
-    BwPlayerPlayerIndexArrayForShowMarkedGridUpdated: { player: Players_IPlayer.IPlayer };
+    BwPlayerPlayerIndexArrayForShowMarkedGridUpdated: { player: Players_Player.Player };
     BwCoEnergyChanged: undefined;
     BwCoUsingSkillTypeChanged: undefined;
-    BwCoIdChanged: { player: Players_IPlayer.IPlayer };
+    BwCoIdChanged: { player: Players_Player.Player };
     BwForceWeatherTypeChanged: undefined;
     BwOverridingSkinIdChanged: { war: BaseWar_Model_War.War };
     BwCustomCountersChanged: undefined;

@@ -44,6 +44,10 @@ export class Manager {
             expirePlayerIndex : this.getExpirePlayerIndex(),
         });
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialWeatherManager {
+        return this.serialize();
+    }
     public serializeForCreateMfr(): SerialWeatherManager {
         return this.serialize();
     }

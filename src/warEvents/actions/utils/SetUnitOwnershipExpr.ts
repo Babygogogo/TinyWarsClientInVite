@@ -9,7 +9,7 @@ import {
     Players_Constants,
     Lang_Constants,
     ExpressionParsers_Contexts_Unit,
-    type BaseWar_Interface_IBwWarStatisticsManager,
+    type BaseWar_Model_BwWarStatisticsManager,
     type BaseWar_Model_War,
     type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -179,8 +179,8 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, number>, war: BaseWar_M
     }
 }
 
-function updateWarStatisticsManager(warStatisticsManager: BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager, unit: Units_Unit.Unit, newPlayerIndex: number, groupedObserverTeamIndexes: number): void {
-    const unitType      = unit.getUnitType();
+function updateWarStatisticsManager(warStatisticsManager: BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager, unit: Units_Unit.Unit, newPlayerIndex: number, groupedObserverTeamIndexes: number): void {
+    const unitType      = unit.getUnitTypeId();
     const normalizedHp  = unit.getNormalizedCurrentHp();
     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
         unitType                   : unitType,

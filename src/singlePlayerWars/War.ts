@@ -1,20 +1,19 @@
 import {
     AuxiliaryTypes_AuxiliaryTypes,
-    BaseWar_Model_BwWarEventManager,
+    WarEvents_Manager,
     BaseWar_Model_War,
     Numbers_Utils,
     Retracts_RetractManager,
     SinglePlayerWars_Constants,
     Visibilities_Utils,
-    type BaseWar_Interface_IBwWarEventManager,
-    type Players_IPlayer,
+    type Players_Player,
 } from "../internal.ts";
 
 import { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
 export abstract class War extends BaseWar_Model_War.War {
-    private readonly _warEventManager       = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
+    private readonly _warEventManager       = new WarEvents_Manager.Manager();
     private readonly _retractManager        = new Retracts_RetractManager.RetractManager();
 
     private _isAiPaused                 = false;
@@ -22,6 +21,7 @@ export abstract class War extends BaseWar_Model_War.War {
     private readonly _saveSlotExtraData = new SpmWarSaveSlotExtraData();
 
     public abstract serialize(): SerialWar;
+    public abstract serializeForTeamIndexes(teamIndexes: Set<number>): SerialWar;
 
     public updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void {
         const teamIndexes   = this.getPlayerManager().getWatcherTeamIndexesForSelf();
@@ -51,7 +51,7 @@ export abstract class War extends BaseWar_Model_War.War {
         }
     }
 
-    public getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
+    public getWarEventManager(): WarEvents_Manager.Manager {
         return this._warEventManager;
     }
     public getRetractManager(): Retracts_RetractManager.RetractManager {
@@ -92,7 +92,7 @@ export abstract class War extends BaseWar_Model_War.War {
     public getHumanPlayerIndexes(): number[] {
         return this.getPlayerManager().getHumanPlayers().map(v => v.getPlayerIndex());
     }
-    public getHumanPlayers(): Players_IPlayer.IPlayer[] {
+    public getHumanPlayers(): Players_Player.Player[] {
         return this.getPlayerManager().getHumanPlayers();
     }
 

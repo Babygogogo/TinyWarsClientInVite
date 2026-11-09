@@ -1,17 +1,17 @@
 import {
+    Lang_Constants,
+    Lang_Utils,
+    Players_Player,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
     Units_Utils_Filter,
-    Lang_Utils,
-    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_GridIndex,
+    type AuxiliaryTypes_MapSize,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type AuxiliaryTypes_GridIndex,
-    type Players_IPlayer,
     type Tiles_Tile,
     type Units_Unit,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
@@ -142,7 +142,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitPositionSimple, isFa
     {
         const conUnitFilter     = data.getConUnitFilter();
         const conPlayerFilter   = data.getConPlayerFilter();
-        const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
+        const playerFilterDict  = new Map<Players_Player.Player, boolean>();
         const conTileFilter     = data.getConTileFilter();
         const tileFilterDict    = new Map<Tiles_Tile.Tile, boolean>();
         for (const unit of unitMap.getAllUnits()) {
@@ -172,7 +172,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitPositionSimple, isFa
     {
         const actTileFilter     = data.getActTileFilter();
         const actPlayerFilter   = data.getActPlayerFilter();
-        const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
+        const playerFilterDict  = new Map<Players_Player.Player, boolean>();
         for (const column of tileMap.getMap()) {
             for (const tile of column) {
                 if ((actTileFilter != null) && (!Tiles_Utils_Filter.checkIsMeet(actTileFilter, tile))) {
@@ -220,7 +220,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitPositionSimple, isFa
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }

@@ -11,7 +11,7 @@ import {
     Lang_Utils,
     Lang_Constants,
     type BaseWar_Model_War,
-    type Players_IPlayer,
+    type Players_Player,
 } from "../../../internal.ts";
 
 import type { WeaPersistentModifyPlayerAttribute } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentModifyPlayerAttribute.ts";
@@ -335,7 +335,7 @@ export function getActAiUnitProductionBonusScore({ action, playerIndex, war, uni
     }
 }
 
-function getEpResultNumberArray(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, player: Players_IPlayer.IPlayer): number[] {
+function getEpResultNumberArray(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, player: Players_Player.Player): number[] {
     if (!str) {
         return [];
     }

@@ -2,13 +2,13 @@ import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
     type BaseWar_Model_War,
-    type Players_IPlayer,
+    type Players_Player,
 } from "../../internal.ts";
 
 export class PlayerArray extends ExpressionParsers_Results_Base.Base {
-    public readonly array: Players_IPlayer.IPlayer[];
+    public readonly array: Players_Player.Player[];
 
-    public constructor(war: BaseWar_Model_War.War, array: Players_IPlayer.IPlayer[]) {
+    public constructor(war: BaseWar_Model_War.War, array: Players_Player.Player[]) {
         super(war);
 
         this.array = array;

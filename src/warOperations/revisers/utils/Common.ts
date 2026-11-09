@@ -75,7 +75,7 @@ export function getRevisedPath({ war, rawPath, launchUnitId, requesterUserId }: 
             if (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
                 war               : war,
                 gridIndex         : gridIndex,
-                unitType          : existingUnit.getUnitType(),
+                unitType          : existingUnit.getUnitTypeId(),
                 isDiving          : existingUnit.getIsDiving(),
                 isInvisible       : existingUnit.checkIsInvisible(gridIndex),
                 unitPlayerIndex   : existingUnit.getPlayerIndex(),
@@ -109,7 +109,7 @@ export function checkIsPathDestinationOccupiedByOtherVisibleUnit(war: BaseWar_Mo
             return Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
                 war,
                 gridIndex         : destination,
-                unitType          : unit.getUnitType(),
+                unitType          : unit.getUnitTypeId(),
                 isDiving          : unit.getIsDiving(),
                 isInvisible       : unit.checkIsInvisible(destination),
                 unitPlayerIndex   : unit.getPlayerIndex(),

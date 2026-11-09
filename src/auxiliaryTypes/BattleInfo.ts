@@ -1,5 +1,5 @@
 import {
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
     type Units_Unit,
 } from "../internal.ts";
@@ -17,7 +17,7 @@ export class BattleInfo {
     public readonly damagedUnits                = new Map<number, Units_Unit.Unit>();
     public readonly destroyedTiles              = new Map<number, Tiles_Tile.Tile>();
     public readonly damagedTiles                = new Map<number, Tiles_Tile.Tile>();
-    public readonly playersForDestroyedUnits    = new Set<Players_IPlayer.IPlayer>();
+    public readonly playersForDestroyedUnits    = new Set<Players_Player.Player>();
 
     public readonly damageInfoArray             : BattleDamageInfo[] = [];
 }

@@ -1,7 +1,7 @@
 import {
     CustomCounters_Constants,
-    SingleCustomWar_Model_ScwWar,
-    SingleFreeWar_Model_SfwWar,
+    SingleCustomWars_War,
+    SingleFreeWars_War,
     type AuxiliaryTypes_AuxiliaryTypes,
     Tween_Executor,
     GamePanels_Dict,
@@ -175,6 +175,6 @@ class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
 }
 
 function checkCanModify(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Model_War.War>): boolean {
-    return (war instanceof SingleCustomWar_Model_ScwWar.ScwWar)
-        || (war instanceof SingleFreeWar_Model_SfwWar.SfwWar);
+    return (war instanceof SingleCustomWars_War.War)
+        || (war instanceof SingleFreeWars_War.War);
 }

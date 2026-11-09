@@ -1,13 +1,13 @@
 import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type Turns_ITurnManager,
+    type Turns_Manager,
 } from "../../internal.ts";
 
 export class TurnManager extends ExpressionParsers_Results_Base.Base {
-    public readonly turnManager: Turns_ITurnManager.ITurnManager;
+    public readonly turnManager: Turns_Manager.Manager;
 
-    public constructor(turnManager: Turns_ITurnManager.ITurnManager) {
+    public constructor(turnManager: Turns_Manager.Manager) {
         super(turnManager.getWar());
 
         this.turnManager = turnManager;

@@ -110,7 +110,7 @@ function evalActUnitType(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): num
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const newUnitType = Math.floor(epResult.num);
-            if (newUnitType === unit.getUnitType()) {
+            if (newUnitType === unit.getUnitTypeId()) {
                 return null;
             }
 
@@ -142,7 +142,7 @@ function evalActUnitType(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): num
 
                     const loadUnitCategoryId = newUnitTemplateCfg.getLoadUnitCategoryId();
                     if ((loadUnitCategoryId == null)                                                                          ||
-                        (loadedUnits.some(v => !gameConfig.checkIsUnitTypeInCategory(v.getUnitType(), loadUnitCategoryId)))
+                        (loadedUnits.some(v => !gameConfig.checkIsUnitTypeInCategory(v.getUnitTypeId(), loadUnitCategoryId)))
                     ) {
                         return null;
                     }
@@ -205,7 +205,7 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseW
             if (observerTeamIndexes != null) {
                 const groupedObserverTeamIndexes = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                   : unit.getUnitType(),
+                    unitType                   : unit.getUnitTypeId(),
                     dstPlayerIndex             : unit.getPlayerIndex(),
                     normalizedHpGain           : 0,
                     normalizedHpLoss           : unit.getNormalizedCurrentHp(),

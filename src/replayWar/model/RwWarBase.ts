@@ -1,10 +1,9 @@
 import {
     BaseWar_Model_War,
-    BaseWar_Model_BwWarEventManager,
+    WarEvents_Manager,
     FloatText,
     BootTimers_Constants,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWarEventManager,
     type AuxiliaryTypes_AuxiliaryTypes,
     Timer_TimerModel,
     WarOperations_Executors_Executor,
@@ -41,7 +40,7 @@ type TurnIndexAndPlayerIndex = {
 };
 
 export abstract class RwWarBase extends BaseWar_Model_War.War implements ReplayWar_Interface_IRwWarBase.IRwWarBase {
-    private readonly _warEventManager               = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
+    private readonly _warEventManager               = new WarEvents_Manager.Manager();
     private _srcExecutedOperationArray              : WoContainer[] | null = null;
 
     private _settingsForMcw                         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMcw>;
@@ -96,7 +95,7 @@ export abstract class RwWarBase extends BaseWar_Model_War.War implements ReplayW
         });
     }
 
-    public getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
+    public getWarEventManager(): WarEvents_Manager.Manager {
         return this._warEventManager;
     }
 

@@ -38,7 +38,7 @@ export function checkIsMeet(data: UnitFilter, unit: Units_Unit.Unit): boolean {
 
     {
         const con = data.getConUnitType();
-        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, unit.getUnitType()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, unit.getUnitTypeId()))) {
             return false;
         }
     }

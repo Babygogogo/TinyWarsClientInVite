@@ -25,7 +25,7 @@ export async function getActionForPhase01(commonParams: Bots_CommonParams.Common
         if (player.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.SuperPower)) {
             const unitTypeSetForCoSkillSetUnitIdle = Bots_Utils.getUnitTypeSetForCoSkillSetUnitIdle(player, CoSkills_Constants.SkillTypeId.SuperPower, gameConfig);
             if (unitTypeSetForCoSkillSetUnitIdle.size > 0) {
-                const targetUnits = war.getUnitMap().getAllUnitsOnMap(v => (v.getPlayerIndex() === playerIndexInTurn) && (unitTypeSetForCoSkillSetUnitIdle.has(v.getUnitType())));
+                const targetUnits = war.getUnitMap().getAllUnitsOnMap(v => (v.getPlayerIndex() === playerIndexInTurn) && (unitTypeSetForCoSkillSetUnitIdle.has(v.getUnitTypeId())));
                 if ((!targetUnits.length)                                                                               ||
                     (targetUnits.some(v => (v.getActionState() === Units_Constants.ActionStateId.Idle) && (v.checkCanAiDoAction())))
                 ) {
@@ -52,7 +52,7 @@ export async function getActionForPhase01(commonParams: Bots_CommonParams.Common
 
             const unitTypeSetForCoSkillSetUnitIdle = Bots_Utils.getUnitTypeSetForCoSkillSetUnitIdle(player, CoSkills_Constants.SkillTypeId.Power, gameConfig);
             if (unitTypeSetForCoSkillSetUnitIdle.size > 0) {
-                const targetUnits = war.getUnitMap().getAllUnitsOnMap(v => (v.getPlayerIndex() === playerIndexInTurn) && (unitTypeSetForCoSkillSetUnitIdle.has(v.getUnitType())));
+                const targetUnits = war.getUnitMap().getAllUnitsOnMap(v => (v.getPlayerIndex() === playerIndexInTurn) && (unitTypeSetForCoSkillSetUnitIdle.has(v.getUnitTypeId())));
                 if ((!targetUnits.length)                                                                               ||
                     (targetUnits.some(v => (v.getActionState() === Units_Constants.ActionStateId.Idle) && (v.checkCanAiDoAction())))
                 ) {

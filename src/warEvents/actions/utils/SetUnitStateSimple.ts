@@ -1,27 +1,27 @@
 import {
+    ArrayModifiers_Utils,
+    Helpers_Team,
+    Lang_Constants,
+    Lang_Utils,
     Locations_Constants,
-    Units_Constants,
+    Locations_Utils,
+    MultiplierAndOffsets_Utils,
+    Numbers_Utils,
+    Players_Player,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
-    Units_Utils_Filter,
+    Units_Constants,
     Units_Utils_Common,
-    ArrayModifiers_Utils,
     Units_Utils_CustomName,
-    MultiplierAndOffsets_Utils,
-    WeightedGridIndexes_Utils,
-    Locations_Utils,
-    Helpers_Team,
-    Lang_Utils,
+    Units_Utils_Filter,
     Visibilities_Utils,
-    Numbers_Utils,
-    Lang_Constants,
+    WeightedGridIndexes_Utils,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
     type Tiles_Tile,
     type Units_Unit,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
@@ -445,7 +445,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitStateSimple, isFastE
         const tileMap           = war.getTileMap();
         const conUnitFilter     = data.getConUnitFilter();
         const conPlayerFilter   = data.getConPlayerFilter();
-        const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
+        const playerFilterDict  = new Map<Players_Player.Player, boolean>();
         const conTileFilter     = data.getConTileFilter();
         const tileFilterDict    = new Map<Tiles_Tile.Tile, boolean>();
         for (const unit of unitMap.getAllUnits()) {
@@ -494,7 +494,9 @@ export async function applyWithoutExtraData(data: WeaSetUnitStateSimple, isFastE
                 unit.init(unitData, gameConfig);
                 unit.startRunning(war);
                 // unit.startRunningView();
-                (!isFastExecute) && (unit.flushDataToView());
+                if (!isFastExecute) {
+                    unit.flushDataToView();
+                }
             }
 
             {
@@ -505,7 +507,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitStateSimple, isFastE
                     const observerTeamIndexes = observerTeamIndexesDict.get(unit.getGridIndex().getGridId(mapSize));
                     if (observerTeamIndexes != null) {
                         warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                            unitType                   : unit.getUnitType(),
+                            unitType                   : unit.getUnitTypeId(),
                             dstPlayerIndex             : unit.getPlayerIndex(),
                             unitGain                   : 0,
                             unitLoss                   : 0,
@@ -519,7 +521,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitStateSimple, isFastE
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }

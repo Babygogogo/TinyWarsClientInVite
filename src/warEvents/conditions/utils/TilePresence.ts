@@ -1,16 +1,16 @@
 import {
+    Lang_Constants,
+    Lang_Utils,
+    Players_Player,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
     Units_Utils_Filter,
     ValueAndComparators_Utils,
-    Lang_Utils,
-    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
     type Tiles_Tile,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { UnitFilter } from "../../../proto/schema/CommonProto/Structure/UnitFilter.ts";
@@ -158,7 +158,7 @@ export function checkIsMeet(data: WecTilePresence, war: BaseWar_Model_War.War): 
 
     const tileFilter        = data.getConTileFilter();
     const playerFilter      = data.getConPlayerFilter();
-    const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
+    const playerFilterDict  = new Map<Players_Player.Player, boolean>();
     const unitFilter        = data.getConUnitFilter();
     const unitComparator    = data.getConUnitComparator();
     let tilesCount          = 0;
@@ -179,7 +179,7 @@ export function checkIsMeet(data: WecTilePresence, war: BaseWar_Model_War.War): 
     }
     return ValueAndComparators_Utils.checkIsMeet(tileComparator, tilesCount);
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }

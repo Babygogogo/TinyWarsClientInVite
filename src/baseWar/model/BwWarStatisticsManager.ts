@@ -1,18 +1,17 @@
 import {
+    Helpers_Misc,
+    Helpers_Team,
     MapEditor_Model_MeWar,
-    type BaseWar_Model_War,
-    type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWarStatisticsManager,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    WarStatistics_Utils,
+    Players_Constants,
     Players_Utils_Common,
     Teams_Utils,
-    Utils_ClientErrorCode,
-    Helpers_Team,
-    Helpers_Misc,
-    Visibilities_Utils,
-    Players_Constants,
     Turns_Constants,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    WarStatistics_Utils,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
+    type GameConfigs_GameConfig,
 } from "../../internal.ts";
 
 import { Info } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/Info.ts";
@@ -21,7 +20,7 @@ import { WsPlayerStatistics } from "../../proto/schema/CommonProto/WarSerializat
 import { WsPlayerTurnStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsPlayerTurnStatistics.ts";
 import { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
-export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager {
+export class BwWarStatisticsManager {
     private _playerStatisticsArray?     : WsPlayerStatistics[];
     private _unitStatisticsArray?       : WsUnitStatistics[];
     private _war?                       : BaseWar_Model_War.War;
@@ -62,6 +61,14 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
             });
         }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialWarStatisticsManager {
+        return SerialWarStatisticsManager.fromJson({
+            hasHandledPreDeployedUnits : this._hasHandledPreDeployedUnits,
+            playerStatisticsArray      : this._getPlayerStatisticsArray().map(v => v.toJson()),
+            unitStatisticsArray        : [],
+        });
+    }
     public serializeForCreateSfw(): SerialWarStatisticsManager {
         if (this._getWar() instanceof MapEditor_Model_MeWar.MeWar) {
             return new SerialWarStatisticsManager();
@@ -100,7 +107,7 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
                 const playerIndex                   = unit.getPlayerIndex();
                 const groupedObserverTeamIndexes    = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
                 this.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                   : unit.getUnitType(),
+                    unitType                   : unit.getUnitTypeId(),
                     dstPlayerIndex             : playerIndex,
                     unitGain                   : 1,
                     unitLoss                   : 0,
@@ -110,7 +117,7 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
                 }));
                 for (const unitLoaded of unitMap.getUnitsLoadedByLoader(unit, true)) {
                     this.addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                   : unitLoaded.getUnitType(),
+                        unitType                   : unitLoaded.getUnitTypeId(),
                         dstPlayerIndex             : playerIndex,
                         unitGain                   : 1,
                         unitLoss                   : 0,

@@ -1,10 +1,9 @@
 import {
     BaseWar_Model_War,
-    BaseWar_Model_BwWarEventManager,
+    WarEvents_Manager,
     MapEditor_Model_MeDrawer,
     BootTimers_Constants,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWarEventManager,
     type AuxiliaryTypes_AuxiliaryTypes,
     WarRules_Utils_Template,
     MapEditor_Model_MeHelpers,
@@ -32,7 +31,7 @@ import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/Seria
 
 export class MeWar extends BaseWar_Model_War.War implements MapEditor_Interface_IMeWar.IMeWar {
     private readonly _drawer                = new MapEditor_Model_MeDrawer.MeDrawer();
-    private readonly _warEventManager       = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
+    private readonly _warEventManager       = new WarEvents_Manager.Manager();
 
     private _srcNormalMapIdForAddEvent      : number | null = null;
     private _mapModifiedTime?               : number;
@@ -237,7 +236,7 @@ export class MeWar extends BaseWar_Model_War.War implements MapEditor_Interface_
         return [BootTimers_Constants.TimerTypeId.NoBoot];
     }
 
-    public getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
+    public getWarEventManager(): WarEvents_Manager.Manager {
         return this._warEventManager;
     }
 

@@ -34,7 +34,7 @@ export function destroyUnitOnMap(war: BaseWar_Model_War.War, gridIndex: Auxiliar
             const groupedObserverTeamIndexes    = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
             for (const u of destroyedUnits) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                   : u.getUnitType(),
+                    unitType                   : u.getUnitTypeId(),
                     normalizedHpGain           : 0,
                     normalizedHpLoss           : u.getNormalizedCurrentHp(),
                     unitGain                   : 0,
@@ -106,7 +106,7 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
         const playerIndex             = unit.getPlayerIndex();
         for (const u of destroyedUnits) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                unitType                   : u.getUnitType(),
+                unitType                   : u.getUnitTypeId(),
                 normalizedHpGain           : 0,
                 normalizedHpLoss           : u.getNormalizedCurrentHp(),
                 unitGain                   : 0,
@@ -140,7 +140,7 @@ export function destroyUnitLoaded(war: BaseWar_Model_War.War, unitId: number): U
             const groupedObserverTeamIndexes    = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
             for (const u of destroyedUnits) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                   : u.getUnitType(),
+                    unitType                   : u.getUnitTypeId(),
                     normalizedHpGain           : 0,
                     normalizedHpLoss           : u.getNormalizedCurrentHp(),
                     unitGain                   : 0,
@@ -229,7 +229,7 @@ export function destroyPlayerForce(war: BaseWar_Model_War.War, playerIndex: numb
 
         if (groupedObserverTeamIndexes != null) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                unitType                   : unit.getUnitType(),
+                unitType                   : unit.getUnitTypeId(),
                 normalizedHpGain           : 0,
                 normalizedHpLoss           : unit.getNormalizedCurrentHp(),
                 unitGain                   : 0,
@@ -244,7 +244,7 @@ export function destroyPlayerForce(war: BaseWar_Model_War.War, playerIndex: numb
 
             if (groupedObserverTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                   : loadedUnit.getUnitType(),
+                    unitType                   : loadedUnit.getUnitTypeId(),
                     normalizedHpGain           : 0,
                     normalizedHpLoss           : loadedUnit.getNormalizedCurrentHp(),
                     unitGain                   : 0,

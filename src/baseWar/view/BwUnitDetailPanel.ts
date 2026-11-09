@@ -289,7 +289,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     coSkillType : attackerPlayer.checkCoIsUsingActiveSkill()
                         ? attackerPlayer.getCoUsingSkillType()
                         : (getIsAffectedByCo1() ? CoSkills_Constants.SkillTypeId.Passive : null),
-                    unitType               : attackerUnit.getUnitType(),
+                    unitType               : attackerUnit.getUnitTypeId(),
                     unitHp                 : attackerUnit.getCurrentHp(),
                     unitWeaponType         : null,
                     unitPromotion          : attackerUnit.getCurrentPromotion(),
@@ -516,7 +516,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             labelName.setText(customName ?? customName1 ?? Lang_Constants.UndefinedError);
             labelName1.setText(customName ? customName1 ?? `----` : `----`);
         } else {
-            const unitType      = unit.getUnitType();
+            const unitType      = unit.getUnitTypeId();
             const gameConfig    = unit.getGcData();
             labelName.setText(Lang_Utils.getUnitName(unitType, gameConfig) ?? Lang_Constants.UndefinedError);
             labelName1.setText(Lang_Utils.getUnitName(unitType, gameConfig, languageType2) ?? Lang_Constants.UndefinedError);
@@ -792,7 +792,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const gameConfig        = unit.getGcData();
-        const attackUnitType    = unit.getUnitType();
+        const attackUnitType    = unit.getUnitTypeId();
         const playerIndex       = unit.getPlayerIndex();
         const skinId            = unit.getSkinId();
         const overridingSkinId  = ForceSkins_Utils.getRawOverridingSkinId(unit.getWar(), playerIndex);
@@ -834,7 +834,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const dataArray     : DataForMoveCostRenderer[] = [];
         const gameConfig    = unit.getGcData();
-        const unitType      = unit.getUnitType();
+        const unitType      = unit.getUnitTypeId();
         let index           = 0;
         for (const tileType of gameConfig.getTileTypeArrayForTileChart()) {
             dataArray.push({

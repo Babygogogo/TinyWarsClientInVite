@@ -37,7 +37,7 @@ import {
     Teams_Constants,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
+    type Players_Player,
     type Units_Unit,
     type AuxiliaryTypes_MovePathNode,
     type Bots_Types,
@@ -137,7 +137,7 @@ async function getReachableArea({ commonParams, unit, passableGridIndex, blocked
     });
 }
 
-export function getUnitTypeSetForCoSkillSetUnitIdle(player: Players_IPlayer.IPlayer, coSkillType: CoSkills_Constants.SkillTypeId, gameConfig: GameConfigs_GameConfig.GameConfig): Set<number> {
+export function getUnitTypeSetForCoSkillSetUnitIdle(player: Players_Player.Player, coSkillType: CoSkills_Constants.SkillTypeId, gameConfig: GameConfigs_GameConfig.GameConfig): Set<number> {
     const unitTypeSet = new Set<number>();
     for (const skillId of player.getCoSkills(coSkillType)) {
         const cfg = gameConfig.getCoSkillCfg(skillId)?.getInstantManual()?.getSelfUnitActionState();
@@ -151,7 +151,7 @@ export function getUnitTypeSetForCoSkillSetUnitIdle(player: Players_IPlayer.IPla
     return unitTypeSet;
 }
 
-export function getCoPowerSkillTargetGridIndexArray(commonParams: Bots_CommonParams.CommonParams, player: Players_IPlayer.IPlayer, coSkillType: CoSkills_Constants.SkillTypeId): AuxiliaryTypes_GridIndex.GridIndex[] | null {
+export function getCoPowerSkillTargetGridIndexArray(commonParams: Bots_CommonParams.CommonParams, player: Players_Player.Player, coSkillType: CoSkills_Constants.SkillTypeId): AuxiliaryTypes_GridIndex.GridIndex[] | null {
     const count = CoSkills_Utils_Common.getPowerSkillTargetsCount(player.getCoBasicCfg(), coSkillType);
     if (count <= 0) {
         return null;
@@ -335,7 +335,7 @@ async function createDamageMap(commonParams: Bots_CommonParams.CommonParams, tar
             (maxAttackRange == null)                                                                            ||
             (maxAttackRange < minAttackRange)                                                                   ||
             (attackerTeamIndex === targetTeamIndex)                                                             ||
-            ((isDiving) && (!targetUnitCanBeAttackedByUnitTypeArrayWhenDived.includes(attacker.getUnitType())))
+            ((isDiving) && (!targetUnitCanBeAttackedByUnitTypeArrayWhenDived.includes(attacker.getUnitTypeId())))
         ) {
             continue;
         }
@@ -476,7 +476,7 @@ async function getScoreForThreatEnemies(commonParams: Bots_CommonParams.CommonPa
     const unitMap       = war.getUnitMap();
     const loaderUnit    = unitMap.getUnitOnMap(gridIndex);
     if ((loaderUnit)                                                &&
-        (loaderUnit.getUnitType() !== attackerUnit.getUnitType())   &&
+        (loaderUnit.getUnitTypeId() !== attackerUnit.getUnitTypeId())   &&
         (!loaderUnit.checkCanLaunchLoadedUnit())
     ) {
         return 0;
@@ -748,7 +748,7 @@ async function getScoreForPosition({ commonParams, unit, gridIndex, damageMap, s
     const unitTeamIndex     = unit.getTeamIndex();
     const passiveScaler     = unit.getProductionCfgCost() / 1000 / Math.max(1, commonParams.getUnitValueRatio()) * (unit.getIsCoOnboard() ? 2 : 1);
 
-    if ((tileTeamIndex === unitTeamIndex) && (tile.checkCanRepairOrSupplyUnitType(unit.getUnitType()))) {
+    if ((tileTeamIndex === unitTeamIndex) && (tile.checkCanRepairOrSupplyUnitType(unit.getUnitTypeId()))) {
         totalScore += (unit.getMaxHp() - unit.getCurrentHp()) * 1 * passiveScaler;
 
         {
@@ -847,7 +847,7 @@ async function getBestScoreAndActionForUnitAndPath(commonParams: Bots_CommonPara
         Bots_Actions_UnitCrushUnit.getScoreAndActionUnitCrushUnit(commonParams, unit, destination, pathNodes),
         Bots_Actions_UnitDive.getScoreAndActionUnitDive(unit, pathNodes),
         Bots_Actions_UnitDropUnit.getScoreAndActionUnitDropUnit({
-            commonParams, unit, gridIndex : destination, pathNodes, 
+            commonParams, unit, gridIndex : destination, pathNodes,
         }),
         Bots_Actions_UnitLaunchSilo.getScoreAndActionUnitLaunchSilo(commonParams, unit, destination, pathNodes),
         Bots_Actions_UnitLaunchFlare.getScoreAndActionUnitLaunchFlare(commonParams, unit, destination, pathNodes),
@@ -877,7 +877,7 @@ export async function getBestScoreAndActionForCandidateUnit(commonParams: Bots_C
     }
 
     const reachableArea             = await getReachableArea({
-        commonParams, unit : candidateUnit, passableGridIndex : null, blockedGridIndex : null, 
+        commonParams, unit : candidateUnit, passableGridIndex : null, blockedGridIndex : null,
     });
     const damageMapForSurface       = await createDamageMap(commonParams, candidateUnit, false, reachableArea);
     const damageMapForDive          = candidateUnit.checkIsDiver() ? await createDamageMap(commonParams, candidateUnit, true, reachableArea) : null;

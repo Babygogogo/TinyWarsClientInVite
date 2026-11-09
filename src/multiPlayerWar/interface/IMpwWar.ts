@@ -1,15 +1,15 @@
 import {
+    Players_Player,
     type BaseWar_Interface_IBwCommonSettingManager,
-    type BaseWar_Interface_IBwWarEventManager,
-    type BaseWar_Interface_IBwWarStatisticsManager,
+    type WarEvents_Manager,
+    type BaseWar_Model_BwWarStatisticsManager,
     type BaseWar_Model_War,
-    type Players_IPlayer,
 } from "../../internal.ts";
 
 export interface IMpwWar extends BaseWar_Model_War.War {
     getCommonSettingManager(): BaseWar_Interface_IBwCommonSettingManager.IBwCommonSettingManager;
-    getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager;
-    getWarStatisticsManager(): BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager;
+    getWarEventManager(): WarEvents_Manager.Manager;
+    getWarStatisticsManager(): BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager;
 
     updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void;
 
@@ -21,7 +21,7 @@ export interface IMpwWar extends BaseWar_Model_War.War {
     getIsExecuteActionsWithExtraData(): boolean;
 
     getPlayerIndexLoggedIn(): number | null;
-    getPlayerLoggedIn(): Players_IPlayer.IPlayer | null;
+    getPlayerLoggedIn(): Players_Player.Player | null;
 
     getVisionTeamIndex(): number | null;
     checkCanTickVisionTeamIndex(): boolean;

@@ -171,6 +171,32 @@ export class FogMap {
             mapsFromPath           : serialMapsFromPath.map(v => v.toJson()),
         });
     }
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialFogMap {
+        const war                   = this.getWar();
+        const mapSize               = this.getMapSize();
+        const serialMapsFromPath    : DataForFogMapFromPath[] = [];
+        for (const [playerIndex, map] of this._getAllMapsFromPath()) {
+            const player = war.getPlayer(playerIndex);
+            if ((player.getAliveState() != Players_Constants.AliveStateId.Dead) &&
+                (teamIndexes.has(player.getTeamIndex()))
+            ) {
+                const visibilityArray = Visibilities_Utils.getVisibilityArrayWithMapFromPath(map, mapSize);
+                if (visibilityArray != null) {
+                    serialMapsFromPath.push(DataForFogMapFromPath.fromJson({
+                        playerIndex     : playerIndex,
+                        visibilityArray : visibilityArray,
+                    }));
+                }
+            }
+        }
+
+        return SerialFogMap.fromJson({
+            forceFogCode           : this.getForceFogCode(),
+            forceExpirePlayerIndex : this.getForceExpirePlayerIndex(),
+            forceExpireTurnIndex   : this.getForceExpireTurnIndex(),
+            mapsFromPath           : serialMapsFromPath.map(v => v.toJson()),
+        });
+    }
     public serializeForCreateSfw(): SerialFogMap {
         const war = this.getWar();
         if (war instanceof MapEditor_Model_MeWar.MeWar) {

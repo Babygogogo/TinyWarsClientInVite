@@ -175,7 +175,7 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                   : unit.getUnitType(),
+                    unitType                   : unit.getUnitTypeId(),
                     dstPlayerIndex             : playerIndex,
                     unitGain                   : 1,
                     unitLoss                   : 0,

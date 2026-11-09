@@ -11,7 +11,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
-    type Players_IPlayer,
+    type Players_Player,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 
@@ -69,7 +69,7 @@ export class Player extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -86,10 +86,10 @@ export class Player extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private readonly _player     : Players_IPlayer.IPlayer;
+    private readonly _player     : Players_Player.Player;
     private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(player: Players_IPlayer.IPlayer) {
+    public constructor(player: Players_Player.Player) {
         super(player.getWar());
 
         this._player = player;

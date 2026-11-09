@@ -12,7 +12,7 @@ import {
     AuxiliaryTypes_PlayerDataForWeaSetPlayerState,
     Lang_Constants,
     type BaseWar_Model_War,
-    type Players_IPlayer,
+    type Players_Player,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetPlayerStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetPlayerStateExpr.ts";
@@ -230,7 +230,7 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
     return null;
 }
 
-function checkIsMeetConditionForPlayer(action: WeaSetPlayerStateExpr, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConditionForPlayer(action: WeaSetPlayerStateExpr, player: Players_Player.Player): boolean {
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConPlayerFilter() ?? ``).eval(new ExpressionParsers_Contexts_Player.Player(player), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
@@ -244,7 +244,7 @@ export async function applyWithExtraData(_action: WeaSetPlayerStateExpr): Promis
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetPlayerStateExpr, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
-    const playerList: Players_IPlayer.IPlayer[] = [];
+    const playerList: Players_Player.Player[] = [];
     for (const player of [...war.getPlayerManager().getAllPlayersDict().values()].sort((v1, v2) => v1.getPlayerIndex() - v2.getPlayerIndex())) {
         if (checkIsMeetConditionForPlayer(action, player)) {
             playerList.push(player);
@@ -265,7 +265,7 @@ export async function applyWithoutExtraData(action: WeaSetPlayerStateExpr, isFas
     }
 }
 
-function evalActFundForPlayer(action: WeaSetPlayerStateExpr, player: Players_IPlayer.IPlayer): number | null {
+function evalActFundForPlayer(action: WeaSetPlayerStateExpr, player: Players_Player.Player): number | null {
     const act = action.getActFund();
     if (!act) {
         return null;
@@ -287,7 +287,7 @@ function evalActFundForPlayer(action: WeaSetPlayerStateExpr, player: Players_IPl
     }
 }
 
-function evalActAliveStateForPlayer(action: WeaSetPlayerStateExpr, player: Players_IPlayer.IPlayer): number | null {
+function evalActAliveStateForPlayer(action: WeaSetPlayerStateExpr, player: Players_Player.Player): number | null {
     const act = action.getActAliveState();
     if (!act) {
         return null;
@@ -306,7 +306,7 @@ function evalActAliveStateForPlayer(action: WeaSetPlayerStateExpr, player: Playe
     }
 }
 
-function evalActCoId(action: WeaSetPlayerStateExpr, player: Players_IPlayer.IPlayer): number | null {
+function evalActCoId(action: WeaSetPlayerStateExpr, player: Players_Player.Player): number | null {
     const act = action.getActCoId();
     if (!act) {
         return null;
@@ -325,7 +325,7 @@ function evalActCoId(action: WeaSetPlayerStateExpr, player: Players_IPlayer.IPla
     }
 }
 
-function evalActCoEnergyForPlayer(action: WeaSetPlayerStateExpr, player: Players_IPlayer.IPlayer): number | null {
+function evalActCoEnergyForPlayer(action: WeaSetPlayerStateExpr, player: Players_Player.Player): number | null {
     const act = action.getActCoEnergy();
     if (!act) {
         return null;
@@ -343,7 +343,7 @@ function evalActCoEnergyForPlayer(action: WeaSetPlayerStateExpr, player: Players
     }
 }
 
-function evalActIsSkipTurnForPlayer(action: WeaSetPlayerStateExpr, player: Players_IPlayer.IPlayer): boolean | null {
+function evalActIsSkipTurnForPlayer(action: WeaSetPlayerStateExpr, player: Players_Player.Player): boolean | null {
     const act = action.getActIsSkipTurn();
     if (!act) {
         return null;
@@ -361,7 +361,7 @@ function evalActIsSkipTurnForPlayer(action: WeaSetPlayerStateExpr, player: Playe
     }
 }
 
-function evalActCoUsingSkillTypeForPlayer(action: WeaSetPlayerStateExpr, player: Players_IPlayer.IPlayer): number | null {
+function evalActCoUsingSkillTypeForPlayer(action: WeaSetPlayerStateExpr, player: Players_Player.Player): number | null {
     const act = action.getActCoUsingSkillType();
     if (!act) {
         return null;
@@ -380,7 +380,7 @@ function evalActCoUsingSkillTypeForPlayer(action: WeaSetPlayerStateExpr, player:
     }
 }
 
-function evalActActivateCoSkillTypeForPlayer(action: WeaSetPlayerStateExpr, player: Players_IPlayer.IPlayer): number | null {
+function evalActActivateCoSkillTypeForPlayer(action: WeaSetPlayerStateExpr, player: Players_Player.Player): number | null {
     const act = action.getActActivateCoSkillType();
     if (!act) {
         return null;

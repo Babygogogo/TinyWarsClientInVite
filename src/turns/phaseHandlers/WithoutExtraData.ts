@@ -19,13 +19,13 @@ import {
     Visibilities_Utils,
     type BaseWar_Model_War,
     type Tiles_Tile,
-    type Turns_ITurnManager,
+    type Turns_Manager,
     type Units_Unit,
 } from "../../internal.ts";
 
 import { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
-export async function endPhaseStandby(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): Promise<void> {
+export async function endPhaseStandby(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<void> {
     const phaseCode = turnManager.getPhaseCode();
     if (phaseCode !== Turns_Constants.PhaseCode.WaitBeginTurn) {
         throw Helpers_Misc.newError(`Invalid phaseCode: ${phaseCode}`, Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_EndPhaseWaitBeginTurnWithoutExtraData_00);
@@ -47,7 +47,7 @@ export async function endPhaseStandby(turnManager: Turns_ITurnManager.ITurnManag
     turnManager.setPhaseCode(Turns_Constants.PhaseCode.Main, true);
 }
 
-export function endPhaseMain(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+export function endPhaseMain(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const phaseCode = turnManager.getPhaseCode();
     if (phaseCode !== Turns_Constants.PhaseCode.Main) {
         throw Helpers_Misc.newError(`Invalid phaseCode: ${phaseCode}`, Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_EndPhaseMainWithoutExtraData_00);
@@ -70,11 +70,11 @@ export function endPhaseMain(turnManager: Turns_ITurnManager.ITurnManager, isFas
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetHasUnitOnBeginningTurn(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetHasUnitOnBeginningTurn(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     turnManager.setHasUnitOnBeginningTurn(turnManager.getWar().getUnitMap().checkHasUnitForPlayer(turnManager.getPlayerIndexInTurn()));
 }
 
-function runPhaseHandleUnitBuffEffect(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseHandleUnitBuffEffect(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const unitMap       = war.getUnitMap();
@@ -112,7 +112,7 @@ function runPhaseHandleUnitBuffEffect(turnManager: Turns_ITurnManager.ITurnManag
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseGetFund(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseGetFund(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const war           = turnManager.getWar();
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const player        = war.getPlayer(playerIndex);
@@ -125,7 +125,7 @@ function runPhaseGetFund(turnManager: Turns_ITurnManager.ITurnManager, isFastExe
     player.setFund(currentFund + totalIncome);
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseConsumeFuel(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseConsumeFuel(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const playerIndex = turnManager.getPlayerIndexInTurn();
     const turnIndex = turnManager.getTurnIndex();
     const war = turnManager.getWar();
@@ -139,7 +139,7 @@ function runPhaseConsumeFuel(turnManager: Turns_ITurnManager.ITurnManager, isFas
         }
     }
 }
-function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean, timing: number): void {
+function runPhaseRecoverUnitByCo(turnManager: Turns_Manager.Manager, isFastExecute: boolean, timing: number): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const player        = war.getPlayer(playerIndex);
@@ -166,7 +166,7 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
                     const conNeedOwnTile    = recoverCfg.getConNeedOwnTile();
                     const targetUnits       : Units_Unit.Unit[] = [];
                     for (const unit of unitMap.getAllUnits()) {
-                        const unitType      = unit.getUnitType();
+                        const unitType      = unit.getUnitTypeId();
                         const unitGridIndex = unit.getGridIndex();
                         if ((unit.getPlayerIndex() !== playerIndex)                                                 ||
                             (!gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))  ||
@@ -221,7 +221,7 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
                                     const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
                                     if (observerTeamIndexes != null) {
                                         warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                            unitType                   : unit.getUnitType(),
+                                            unitType                   : unit.getUnitTypeId(),
                                             dstPlayerIndex             : playerIndex,
                                             unitGain                   : 0,
                                             unitLoss                   : 0,
@@ -246,7 +246,7 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
                 if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
                     const loadedState   = recoverCfg.getUnitLoadedStateId();
                     for (const unit of unitMap.getAllUnits()) {
-                        const unitType      = unit.getUnitType();
+                        const unitType      = unit.getUnitTypeId();
                         const unitGridIndex = unit.getGridIndex();
                         if ((unit.getPlayerIndex() === playerIndex)                                                 &&
                             (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))   &&
@@ -277,7 +277,7 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
                 if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
                     const loadedState   = recoverCfg.getUnitLoadedStateId();
                     for (const unit of unitMap.getAllUnits()) {
-                        const unitType      = unit.getUnitType();
+                        const unitType      = unit.getUnitTypeId();
                         const unitGridIndex = unit.getGridIndex();
                         if ((unit.getPlayerIndex() === playerIndex)                                                 &&
                             (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))   &&
@@ -307,7 +307,7 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
         }
     }
 }
-function runPhaseRepairUnitByTile(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseRepairUnitByTile(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const player        = war.getPlayer(playerIndex);
@@ -348,7 +348,7 @@ function runPhaseRepairUnitByTile(turnManager: Turns_ITurnManager.ITurnManager, 
                     const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                     if (observerTeamIndexes != null) {
                         warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                            unitType                   : unit.getUnitType(),
+                            unitType                   : unit.getUnitTypeId(),
                             dstPlayerIndex             : playerIndex,
                             unitGain                   : 0,
                             unitLoss                   : 0,
@@ -371,7 +371,7 @@ function runPhaseRepairUnitByTile(turnManager: Turns_ITurnManager.ITurnManager, 
         }
     }
 }
-function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const playerIndex           = turnManager.getPlayerIndexInTurn();
     const war                   = turnManager.getWar();
     const fogMap                = war.getFogMap();
@@ -395,7 +395,7 @@ function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_ITurnManager.ITurnMana
         }
     }
 }
-function runPhaseRepairUnitByUnit(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseRepairUnitByUnit(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const playerIndex       = turnManager.getPlayerIndexInTurn();
     const war               = turnManager.getWar();
     const player            = war.getPlayer(playerIndex);
@@ -436,7 +436,7 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_ITurnManager.ITurnManager, 
                     const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                     if (observerTeamIndexes != null) {
                         warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                            unitType                   : unit.getUnitType(),
+                            unitType                   : unit.getUnitTypeId(),
                             dstPlayerIndex             : playerIndex,
                             unitGain                   : 0,
                             unitLoss                   : 0,
@@ -500,7 +500,7 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_ITurnManager.ITurnManager, 
     }
 }
 
-async function runPhaseActivateMapWeapon(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): Promise<void> {
+async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<void> {
     const war               = turnManager.getWar();
     const playerIndex       = war.getPlayerIndexInTurn();
     const tileMap           = war.getTileMap();
@@ -575,7 +575,7 @@ async function runPhaseActivateMapWeapon(turnManager: Turns_ITurnManager.ITurnMa
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseCheckAndUpdateUnitAiMode(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseCheckAndUpdateUnitAiMode(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const war           = turnManager.getWar();
     const playerInTurn  = war.getPlayerInTurn();
     if (playerInTurn.getUserId() == null) {
@@ -588,7 +588,7 @@ function runPhaseCheckAndUpdateUnitAiMode(turnManager: Turns_ITurnManager.ITurnM
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseMain(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseMain(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const war           = turnManager.getWar();
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const player        = war.getPlayer(playerIndex);
@@ -610,7 +610,7 @@ function runPhaseMain(turnManager: Turns_ITurnManager.ITurnManager, isFastExecut
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetUnitState(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetUnitState(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     for (const unit of war.getUnitMap().getAllUnits()) {
@@ -621,12 +621,12 @@ function runPhaseResetUnitState(turnManager: Turns_ITurnManager.ITurnManager, is
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVisionForCurrentPlayer(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetVisionForCurrentPlayer(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const war = turnManager.getWar();
     war.getFogMap().resetMapFromPathsForPlayerWithEncodedData(war.getPlayerIndexInTurn());
 }
 
-function runPhaseHandleUnitBuffEffect2(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseHandleUnitBuffEffect2(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const unitMap       = war.getUnitMap();
@@ -664,7 +664,7 @@ function runPhaseHandleUnitBuffEffect2(turnManager: Turns_ITurnManager.ITurnMana
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const playerIndex       = turnManager.getPlayerIndexInTurn();
     const war               = turnManager.getWar();
     const currTime          = Timer_TimerModel.getServerTimestamp();
@@ -704,7 +704,7 @@ function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_ITurnManager.ITurnMan
     war.getWarEventManager().updateWarEventCalledCountOnPlayerTurnSwitched();
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetSkillState(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetSkillState(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const war       = turnManager.getWar();
     const player    = war.getPlayerInTurn();
     player.setCoIsDestroyedInTurn(false);
@@ -715,11 +715,11 @@ function runPhaseResetSkillState(turnManager: Turns_ITurnManager.ITurnManager, i
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVotesForDraw(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetVotesForDraw(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     turnManager.getWar().getDrawVoteManager().handleTurnPhaseResetVotesForDraw();
 }
 
-function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const war               = turnManager.getWar();
     const weatherManager    = war.getWeatherManager();
     weatherManager.updateOnPlayerTurnSwitched();
@@ -730,25 +730,25 @@ function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_ITurnManager.ITurnM
     }
 }
 
-function runPhaseUpdateAllTileBuffArray(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseUpdateAllTileBuffArray(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     for (const tile of turnManager.getWar().getTileMap().getAllTiles()) {
         tile.updateUnfixedBuffArrayOnPlayerTurnSwitched(!isFastExecute);
     }
 }
 
-function runPhaseUpdateAllUnitBuffArray(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseUpdateAllUnitBuffArray(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     for (const unit of turnManager.getWar().getUnitMap().getAllUnits()) {
         unit.updateBuffArrayOnPlayerTurnSwitched(!isFastExecute);
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVisionForNextPlayer(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetVisionForNextPlayer(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // if (!isFastExecute) {
     //     turnManager.getWar().updateTilesAndUnitsOnVisibilityChanged();
     // }
 }
 
-function runPhaseWaitBeginTurn(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseWaitBeginTurn(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     if (!isFastExecute) {
         turnManager.getWar().getTileMap().getView()?.resetMarkLayer();
     }
@@ -850,7 +850,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
                                 const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                                 if (observerTeamIndexes != null) {
                                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                        unitType                   : unit.getUnitType(),
+                                        unitType                   : unit.getUnitTypeId(),
                                         dstPlayerIndex             : unit.getPlayerIndex(),
                                         unitGain                   : 0,
                                         unitLoss                   : 0,
@@ -975,7 +975,7 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
                         const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
                         if (observerTeamIndexes != null) {
                             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                unitType                   : unit.getUnitType(),
+                                unitType                   : unit.getUnitTypeId(),
                                 dstPlayerIndex             : unit.getPlayerIndex(),
                                 unitGain                   : 0,
                                 unitLoss                   : 0,
@@ -1136,7 +1136,7 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
                             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
                             if (observerTeamIndexes != null) {
                                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                    unitType                   : unit.getUnitType(),
+                                    unitType                   : unit.getUnitTypeId(),
                                     dstPlayerIndex             : unit.getPlayerIndex(),
                                     unitGain                   : 0,
                                     unitLoss                   : 0,

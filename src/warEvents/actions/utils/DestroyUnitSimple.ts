@@ -7,7 +7,7 @@ import {
     Lang_Constants,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
     type Units_Unit,
     type AuxiliaryTypes_MapSize,
@@ -103,7 +103,7 @@ export async function applyWithoutExtraData(data: WeaDestroyUnitSimple, isFastEx
     const tileMap           = war.getTileMap();
     const conUnitFilter     = data.getConUnitFilter();
     const conPlayerFilter   = data.getConPlayerFilter();
-    const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
+    const playerFilterDict  = new Map<Players_Player.Player, boolean>();
     const conTileFilter     = data.getConTileFilter();
     const tileFilterDict    = new Map<Tiles_Tile.Tile, boolean>();
     const targetUnitArray   : Units_Unit.Unit[] = [];
@@ -136,7 +136,7 @@ export async function applyWithoutExtraData(data: WeaDestroyUnitSimple, isFastEx
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }

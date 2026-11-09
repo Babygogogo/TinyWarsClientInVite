@@ -31,7 +31,7 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type Notifications_Mapping,
-    type Players_IPlayer,
+    type Players_Player,
     type Units_Unit,
 } from "../internal.ts";
 
@@ -249,6 +249,13 @@ export class Tile {
             customNameId     : this.getCustomNameId() ?? null,
         });
     }
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialTile {
+        if (Visibilities_Utils.checkIsTileVisibleToTeams(this.getWar(), this.getGridIndex(), teamIndexes)) {
+            return this.serialize();
+        } else {
+            return this.serializeAsInvisible();
+        }
+    }
     public serializeForCreateSfw(): SerialTile {
         const war = this.getWar();
         return war.getShouldSerializeFullInfoForFreeModeGames()
@@ -258,39 +265,32 @@ export class Tile {
     public serializeForCreateMfr(): SerialTile {
         return this.serializeForCreateSfw();
     }
-    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialTile {
-        const war       = this.getWar();
-        const gridIndex = this.getGridIndex();
-        if (Visibilities_Utils.checkIsTileVisibleToTeams(war, gridIndex, teamIndexes)) {
-            return this.serialize();
+    public serializeAsInvisible(): SerialTile {
+        return Tiles_Utils_Serialization.create({
+            gridIndex      : this.getGridIndex().toProto().toJson(),
+            baseType       : this.getBaseTypeId(),
+            objectType     : this.getObjectTypeId(),
+            decorationType : this.getDecorationTypeId(),
+            playerIndex    : this.getTemplateCfg().getIsAlwaysShowOwner() ? this.getPlayerIndex() : Players_Constants.PlayerIndex.Neutral,
 
-        } else {
-            return Tiles_Utils_Serialization.create({
-                gridIndex      : gridIndex.toProto().toJson(),
-                baseType       : this.getBaseTypeId(),
-                objectType     : this.getObjectTypeId(),
-                decorationType : this.getDecorationTypeId(),
-                playerIndex    : this.getTemplateCfg().getIsAlwaysShowOwner() ? this.getPlayerIndex() : Players_Constants.PlayerIndex.Neutral,
+            currentHp           : this.getCurrentHp(),
+            currentBuildPoint   : null,
+            currentCapturePoint : null,
 
-                currentHp           : this.getCurrentHp(),
-                currentBuildPoint   : null,
-                currentCapturePoint : null,
+            customCrystalData     : this.getCustomCrystalData()?.toJson() ?? null,
+            customCannonData      : this.getCustomCannonData()?.toJson() ?? null,
+            customLaserTurretData : this.getCustomLaserTurretData()?.toJson() ?? null,
+            customBuildingData    : this.getCustomBuildingData()?.toJson() ?? null,
 
-                customCrystalData     : this.getCustomCrystalData()?.toJson() ?? null,
-                customCannonData      : this.getCustomCannonData()?.toJson() ?? null,
-                customLaserTurretData : this.getCustomLaserTurretData()?.toJson() ?? null,
-                customBuildingData    : this.getCustomBuildingData()?.toJson() ?? null,
+            baseShapeId            : this.getBaseShapeId(),
+            objectShapeId          : this.getObjectShapeId(),
+            decorationShapeId      : this.getDecorationShapeId(),
+            groupedLocationIdArray : this.getGroupedLocationIdArray(),
 
-                baseShapeId            : this.getBaseShapeId(),
-                objectShapeId          : this.getObjectShapeId(),
-                decorationShapeId      : this.getDecorationShapeId(),
-                groupedLocationIdArray : this.getGroupedLocationIdArray(),
-
-                isHighlighted    : this.getIsHighlighted(),
-                unfixedBuffArray : this.getUnfixedBuffList().map(v => v.toJson()),
-                customNameId     : this.getCustomNameId() ?? null,
-            });
-        }
+            isHighlighted    : this.getIsHighlighted(),
+            unfixedBuffArray : this.getUnfixedBuffList().map(v => v.toJson()),
+            customNameId     : this.getCustomNameId() ?? null,
+        });
     }
 
     private _setWar(war: BaseWar_Model_War.War): void {
@@ -630,7 +630,7 @@ export class Tile {
 
         const war                       = this.getWar();
         const rawDefenseAmount          = this.getDefenseAmount();
-        const unitType                  = unit.getUnitType();
+        const unitType                  = unit.getUnitTypeId();
         const gameConfig                = war.getGcData();
         const unitPlayer                = unit.getPlayer();
         const unitPlayerIndex           = unitPlayer.getPlayerIndex();
@@ -679,7 +679,7 @@ export class Tile {
             templateCfg        : this.getTemplateCfg(),
             customBuildingData : this.getCustomBuildingData(),
             gameConfig         : this.getGameConfig(),
-            unitType           : unit.getUnitType(),
+            unitType           : unit.getUnitTypeId(),
         });
     }
 
@@ -845,7 +845,7 @@ export class Tile {
         return this._playerIndex;
     }
 
-    public getPlayer(): Players_IPlayer.IPlayer {
+    public getPlayer(): Players_Player.Player {
         return this.getWar().getPlayer(this.getPlayerIndex());
     }
 
@@ -875,7 +875,7 @@ export class Tile {
         return this._getMoveCostCfg()[moveType]?.getCost();
     }
     public getMoveCostByUnit(unit: Units_Unit.Unit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
-        const unitType      = unit.getUnitType();
+        const unitType      = unit.getUnitTypeId();
         const war           = this.getWar();
         if ((this.getTeamIndex() !== unit.getTeamIndex()) && (this.checkCanBlockEnemyUnitType(unitType))) {
             return null;
@@ -961,7 +961,7 @@ export class Tile {
     }
 
     public getRepairHpAndCostForUnit(unit: Units_Unit.Unit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.RepairHpAndCost> {
-        if ((this.getTeamIndex() !== unit.getTeamIndex()) || (!this.checkCanRepairOrSupplyUnitType(unit.getUnitType()))) {
+        if ((this.getTeamIndex() !== unit.getTeamIndex()) || (!this.checkCanRepairOrSupplyUnitType(unit.getUnitTypeId()))) {
             return null;
         }
 

@@ -1,23 +1,22 @@
 import {
+    WarEvents_Manager,
     BaseWar_Model_War,
-    BaseWar_Model_BwWarEventManager,
     Destructions_Utils,
-    type BaseWar_Interface_IBwWarEventManager,
     Helpers_Collection,
-    Visibilities_Utils,
-    Timer_TimerModel,
     Players_Constants,
+    Players_Player,
     Teams_Constants,
+    Timer_TimerModel,
+    Visibilities_Utils,
     type MultiPlayerWar_Interface_IMpwWar,
-    type Players_IPlayer,
 } from "../../internal.ts";
 
 export abstract class MpwWar extends BaseWar_Model_War.War implements MultiPlayerWar_Interface_IMpwWar.IMpwWar {
-    private readonly _warEventManager       = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
+    private readonly _warEventManager       = new WarEvents_Manager.Manager();
 
     private _visionTeamIndex    : number | null = null;
 
-    public getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
+    public getWarEventManager(): WarEvents_Manager.Manager {
         return this._warEventManager;
     }
 
@@ -98,7 +97,7 @@ export abstract class MpwWar extends BaseWar_Model_War.War implements MultiPlaye
     public getPlayerIndexLoggedIn(): number | null {
         return this.getPlayerManager().getPlayerIndexLoggedIn();
     }
-    public getPlayerLoggedIn(): Players_IPlayer.IPlayer | null {
+    public getPlayerLoggedIn(): Players_Player.Player | null {
         return this.getPlayerManager().getPlayerLoggedIn();
     }
 

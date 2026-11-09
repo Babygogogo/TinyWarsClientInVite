@@ -25,7 +25,7 @@ import {
     ExpressionParsers_Results_UnitStatisticArray,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
@@ -62,7 +62,7 @@ export class UnitArray extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -91,7 +91,7 @@ export class UnitArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(UnitArray.FnWhere, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_03,
                         );
@@ -131,7 +131,7 @@ export class UnitArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(UnitArray.FnSelect, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_06,
                         );
@@ -189,7 +189,7 @@ export class UnitArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(UnitArray.FnAll, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_09,
                         );
@@ -229,7 +229,7 @@ export class UnitArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(UnitArray.FnAny, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_12,
                         );
@@ -395,7 +395,7 @@ export class UnitArray extends ExpressionParsers_Contexts_Base.Base {
             return new ExpressionParsers_Results_TileBuffArray.TileBuffArray(war, resultArray);
 
         } else if (resultType === ExpressionParsers_Enums.ResultType.Player) {
-            const resultArray: Players_IPlayer.IPlayer[] = [];
+            const resultArray: Players_Player.Player[] = [];
             for (const unit of units) {
                 const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
                 if (!(result instanceof ExpressionParsers_Results_Player.Player)) {

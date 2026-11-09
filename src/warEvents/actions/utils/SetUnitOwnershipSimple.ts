@@ -11,8 +11,8 @@ import {
     Lang_Constants,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Interface_IBwWarStatisticsManager,
-    type Players_IPlayer,
+    type BaseWar_Model_BwWarStatisticsManager,
+    type Players_Player,
     type Tiles_Tile,
     type Units_Unit,
     type AuxiliaryTypes_MapSize,
@@ -126,7 +126,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitOwnershipSimple, isF
         const tileMap           = war.getTileMap();
         const conUnitFilter     = data.getConUnitFilter();
         const conPlayerFilter   = data.getConPlayerFilter();
-        const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
+        const playerFilterDict  = new Map<Players_Player.Player, boolean>();
         const conTileFilter     = data.getConTileFilter();
         const tileFilterDict    = new Map<Tiles_Tile.Tile, boolean>();
         for (const unit of unitMap.getAllUnits()) {
@@ -193,7 +193,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitOwnershipSimple, isF
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }
@@ -205,8 +205,8 @@ function checkIsMeetConTileFilter(resultDict: Map<Tiles_Tile.Tile, boolean>, fil
     }
     return !!resultDict.get(tile);
 }
-function updateWarStatisticsManager(warStatisticsManager: BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager, unit: Units_Unit.Unit, newPlayerIndex: number, groupedObserverTeamIndexes: number): void {
-    const unitType      = unit.getUnitType();
+function updateWarStatisticsManager(warStatisticsManager: BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager, unit: Units_Unit.Unit, newPlayerIndex: number, groupedObserverTeamIndexes: number): void {
+    const unitType      = unit.getUnitTypeId();
     const normalizedHp  = unit.getNormalizedCurrentHp();
     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
         unitType                   : unitType,

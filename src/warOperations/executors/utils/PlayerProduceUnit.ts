@@ -1,29 +1,29 @@
 import {
     AuxiliaryTypes_GridIndex,
     HalfwayReplayWar_Model_HrwWar,
-    MapEditor_Model_MeWar,
-    MultiPlayerWar_Model_MpwWar,
-    ReplayWar_Model_RwWar,
-    SinglePlayerWars_War,
-    TestWar_Model_TwWar,
-    Units_Unit,
-    type BaseWar_Model_War,
-    type GameConfigs_GameConfig,
-    type AuxiliaryTypes_MapSize,
-    Units_Constants,
-    TileBuffs_Constants,
-    Utils_ClientErrorCode,
-    Units_Utils_Serialization,
     Helpers_Misc,
     Helpers_Team,
-    Units_Utils_Common,
-    Visibilities_Utils,
-    Lang_Utils,
-    WarOperations_Executors_Utils_Common,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
     Lang_Constants,
-    type Players_IPlayer,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    Players_Player,
+    ReplayWar_Model_RwWar,
+    SinglePlayerWars_War,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    TestWar_Model_TwWar,
+    TileBuffs_Constants,
+    Units_Constants,
+    Units_Unit,
+    Units_Utils_Common,
+    Units_Utils_Serialization,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    WarOperations_Executors_Utils_Common,
+    type AuxiliaryTypes_MapSize,
+    type BaseWar_Model_War,
+    type GameConfigs_GameConfig,
 } from "../../../internal.ts";
 
 import { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
@@ -206,7 +206,7 @@ function getPromotionForPlayerProduceUnit(war: BaseWar_Model_War.War, gridIndex:
     return promotion;
 }
 
-function getTeleportDestinationForPlayerProduceUnit(war: BaseWar_Model_War.War, player: Players_IPlayer.IPlayer, unitTypeId: number, tileGridIndex: AuxiliaryTypes_GridIndex.GridIndex, conCoUnitActionStateId: number | null): AuxiliaryTypes_GridIndex.GridIndex | null {
+function getTeleportDestinationForPlayerProduceUnit(war: BaseWar_Model_War.War, player: Players_Player.Player, unitTypeId: number, tileGridIndex: AuxiliaryTypes_GridIndex.GridIndex, conCoUnitActionStateId: number | null): AuxiliaryTypes_GridIndex.GridIndex | null {
     const tileMap           = war.getTileMap();
     const unitMap           = war.getUnitMap();
     const mapSize           = tileMap.getMapSize();

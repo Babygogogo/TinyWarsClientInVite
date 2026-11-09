@@ -16,13 +16,13 @@ import {
     Lang_Constants,
     Lang_Utils,
     Players_Constants,
-    SingleCustomWar_Model_ScwWar,
-    SingleFreeWar_Model_SfwWar,
+    SingleCustomWars_War,
+    SingleFreeWars_War,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
     SinglePlayerWars_AutoWarOpManager,
     SinglePlayerWars_War,
-    SingleRankWar_Model_SrwWar,
+    SingleRankWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Turns_Constants,
@@ -485,8 +485,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             group.setIsVisible(false);
             return;
         }
-        if ((!(war instanceof SingleFreeWar_Model_SfwWar.SfwWar))  &&
-            (!(war instanceof SingleCustomWar_Model_ScwWar.ScwWar))
+        if ((!(war instanceof SingleFreeWars_War.War))  &&
+            (!(war instanceof SingleCustomWars_War.War))
         ) {
             group.setIsVisible(false);
             return;
@@ -516,7 +516,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             group.setIsVisible(false);
             return;
         }
-        if ((!(war instanceof SingleRankWar_Model_SrwWar.SrwWar)) &&
+        if ((!(war instanceof SingleRankWars_War.War)) &&
             (!(war instanceof Campaigns_Wars_War.War))
         ) {
             group.setIsVisible(false);

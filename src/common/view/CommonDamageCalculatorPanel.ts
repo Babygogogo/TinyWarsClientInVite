@@ -394,7 +394,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             coSkillType : attackerPlayer.checkCoIsUsingActiveSkill()
                 ? attackerPlayer.getCoUsingSkillType()
                 : (getIsAffectedByCo1() ? CoSkills_Constants.SkillTypeId.Passive : null),
-            unitType               : attackerUnit.getUnitType(),
+            unitType               : attackerUnit.getUnitTypeId(),
             unitHp                 : attackerUnit.getCurrentHp(),
             unitWeaponType         : null,
             unitPromotion          : attackerUnit.getCurrentPromotion(),

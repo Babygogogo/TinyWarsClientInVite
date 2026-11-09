@@ -33,6 +33,14 @@ export class ExecutedWarOpManager {
             halfwayReplayOperationArray : [],
         });
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialExecutedOperationManager {
+        return SerialExecutedOperationManager.fromJson({
+            executedOperationArray      : [],
+            executedOperationsCount     : this.getExecutedOperationsCount(),
+            halfwayReplayOperationArray : [],
+        });
+    }
     public serializeForSrwValidation(): SerialExecutedOperationManager {
         return SerialExecutedOperationManager.fromJson({
             executedOperationArray      : this.getAllExecutedOperationArray().map(v => v.toJson()),

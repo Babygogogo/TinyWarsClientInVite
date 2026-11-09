@@ -1,13 +1,13 @@
 import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
-    type Players_IPlayer,
+    type Players_Player,
 } from "../../internal.ts";
 
 export class Player extends ExpressionParsers_Results_Base.Base {
-    public readonly player: Players_IPlayer.IPlayer;
+    public readonly player: Players_Player.Player;
 
-    public constructor(player: Players_IPlayer.IPlayer) {
+    public constructor(player: Players_Player.Player) {
         super(player.getWar());
 
         this.player = player;

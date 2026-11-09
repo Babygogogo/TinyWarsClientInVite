@@ -17,8 +17,8 @@ import {
     Players_Constants,
     ReplayWar_Model_RwWar,
     ReplayWar_Model_RwWarBase,
-    SingleCustomWar_Model_ScwWar,
-    SingleFreeWar_Model_SfwWar,
+    SingleCustomWars_War,
+    SingleFreeWars_War,
     SinglePlayerWars_AutoWarOpManager,
     SinglePlayerWars_War,
     Sounds_Constants,
@@ -401,7 +401,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateLabelTips(): void {
         const war = this.getOpenData()?.war;
-        this._labelTips.setText((war instanceof SingleCustomWar_Model_ScwWar.ScwWar) || (war instanceof SingleFreeWar_Model_SfwWar.SfwWar)
+        this._labelTips.setText((war instanceof SingleCustomWars_War.War) || (war instanceof SingleFreeWars_War.War)
             ? Lang_Utils.getText(Lang_Constants.TextType.A0998)
             : ``,
         );

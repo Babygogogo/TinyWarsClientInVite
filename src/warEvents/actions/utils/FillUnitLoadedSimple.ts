@@ -13,7 +13,7 @@ import {
     Lang_Utils,
     Visibilities_Utils,
     Lang_Constants,
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
 } from "../../../internal.ts";
 
@@ -144,7 +144,7 @@ export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFas
     const conUnitFilter     = data.getConUnitFilter();
     const tileFilterDict    = new Map<Tiles_Tile.Tile, boolean>();
     const conPlayerFilter   = data.getConPlayerFilter();
-    const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
+    const playerFilterDict  = new Map<Players_Player.Player, boolean>();
     const conTileFilter     = data.getConTileFilter();
     const loaderUnitsDict   = new Map<Units_Unit.Unit, number>();
     const actLoadCount      = data.getActLoadCount();
@@ -204,7 +204,7 @@ export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFas
 
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                   : unit.getUnitType(),
+                    unitType                   : unit.getUnitTypeId(),
                     dstPlayerIndex             : playerIndex,
                     unitGain                   : 1,
                     unitLoss                   : 0,
@@ -216,7 +216,7 @@ export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFas
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }

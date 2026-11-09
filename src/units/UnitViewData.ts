@@ -69,7 +69,7 @@ export class UnitViewData implements IUnitViewData {
         const coUsingSkillType  = player.getCoUsingSkillType();
 
         return new UnitViewData({
-            unitTypeId           : unit.getUnitType(),
+            unitTypeId           : unit.getUnitTypeId(),
             gridX                : ignorePosition ? 0 : unit.getGridX(),
             gridY                : ignorePosition ? 0 : unit.getGridY(),
             playerIndex          : playerIndex,

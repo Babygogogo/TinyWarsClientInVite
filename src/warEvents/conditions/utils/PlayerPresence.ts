@@ -1,15 +1,15 @@
 import {
+    Lang_Constants,
+    Lang_Utils,
+    Players_Player,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
     Units_Utils_Filter,
     ValueAndComparators_Utils,
-    Lang_Utils,
-    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WecPlayerPresence } from "../../../proto/schema/CommonProto/WarEvent/WecPlayerPresence.ts";
 
@@ -168,7 +168,7 @@ export function checkIsMeet(data: WecPlayerPresence, war: BaseWar_Model_War.War)
         return false;
     }
 
-    const players: Players_IPlayer.IPlayer[] = [];
+    const players: Players_Player.Player[] = [];
     {
         const filter = data.getConPlayerFilter();
         for (const player of war.getPlayerManager().getAllPlayers(true)) {

@@ -12,7 +12,7 @@ import {
     Players_Constants,
     Lang_Constants,
     type BaseWar_Model_War,
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -258,7 +258,7 @@ export async function applyWithoutExtraData(data: WeaSetTileTypeSimple, isFastEx
         const conPlayerFilter = data.getConPlayerFilter();
         const conUnitFilter = data.getConUnitFilter();
         const conUnitComparator = data.getConUnitComparator();
-        const playerFilterDict = new Map<Players_IPlayer.IPlayer, boolean>();
+        const playerFilterDict = new Map<Players_Player.Player, boolean>();
         for (const tile of war.getTileMap().getAllTiles()) {
             if ((conTileFilter != null) && (!Tiles_Utils_Filter.checkIsMeet(conTileFilter, tile))) {
                 continue;
@@ -371,7 +371,7 @@ export async function applyWithoutExtraData(data: WeaSetTileTypeSimple, isFastEx
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }

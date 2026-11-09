@@ -65,7 +65,7 @@ function fastExeUnitSelfDetonate(war: BaseWar_Model_War.War, action: WoUnitSelfD
                                 const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : targetGridIndex });
                                 if (observerTeamIndexes) {
                                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                        unitType                   : targetUnit.getUnitType(),
+                                        unitType                   : targetUnit.getUnitTypeId(),
                                         dstPlayerIndex             : targetUnit.getPlayerIndex(),
                                         normalizedHpGain           : 0,
                                         normalizedHpLoss           : unitLostNormalizedHp2,
@@ -152,7 +152,7 @@ async function normalExeUnitSelfDetonate(war: BaseWar_Model_War.War, action: WoU
                                 const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : targetGridIndex });
                                 if (observerTeamIndexes) {
                                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                        unitType                   : targetUnit.getUnitType(),
+                                        unitType                   : targetUnit.getUnitTypeId(),
                                         dstPlayerIndex             : targetUnit.getPlayerIndex(),
                                         normalizedHpGain           : 0,
                                         normalizedHpLoss           : unitLostNormalizedHp2,

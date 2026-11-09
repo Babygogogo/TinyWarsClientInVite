@@ -79,7 +79,7 @@ function fastExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUnitLaunchS
                             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : grid });
                             if (observerTeamIndexes != null) {
                                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                    unitType                   : unit.getUnitType(),
+                                    unitType                   : unit.getUnitTypeId(),
                                     dstPlayerIndex             : unit.getPlayerIndex(),
                                     unitGain                   : 0,
                                     unitLoss                   : 0,
@@ -176,7 +176,7 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUni
                             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : grid });
                             if (observerTeamIndexes != null) {
                                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                    unitType                   : unit.getUnitType(),
+                                    unitType                   : unit.getUnitTypeId(),
                                     dstPlayerIndex             : unit.getPlayerIndex(),
                                     unitGain                   : 0,
                                     unitLoss                   : 0,

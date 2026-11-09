@@ -1,10 +1,10 @@
 import {
     type BaseWar_Interface_IBwCommonSettingManager,
-    type BaseWar_Interface_IBwWarEventManager,
-    type BaseWar_Interface_IBwWarStatisticsManager,
+    type WarEvents_Manager,
+    type BaseWar_Model_BwWarStatisticsManager,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayerManager,
+    type Players_PlayerManager,
     type WarTypes_Constants,
 } from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -13,10 +13,10 @@ import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/
 export interface ITwWar extends BaseWar_Model_War.War {
     getCanCheat(): boolean;
     getShouldSerializeFullInfoForFreeModeGames(): boolean;
-    getPlayerManager(): Players_IPlayerManager.IPlayerManager;
+    getPlayerManager(): Players_PlayerManager.PlayerManager;
     getCommonSettingManager(): BaseWar_Interface_IBwCommonSettingManager.IBwCommonSettingManager;
-    getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager;
-    getWarStatisticsManager(): BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager;
+    getWarEventManager(): WarEvents_Manager.Manager;
+    getWarStatisticsManager(): BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager;
 
     getIsExecuteActionsWithExtraData(): boolean;
     updateTilesAndUnitsOnVisibilityChanged(): void;

@@ -15,7 +15,7 @@ import {
     Lang_Constants,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
+    type Players_Player,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -267,7 +267,7 @@ export async function applyWithExtraData(_action: WeaSetPlayerStateSimple): Prom
     // nothing to do
 }
 export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
-    const targetPlayerArray: Players_IPlayer.IPlayer[] = [];
+    const targetPlayerArray: Players_Player.Player[] = [];
     {
         const getAllTiles       = Helpers_Misc.createLazyFunc(() => war.getTileMap().getAllTiles());
         const getAllUnits       = Helpers_Misc.createLazyFunc(() => war.getUnitMap().getAllUnits());
@@ -344,7 +344,7 @@ export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isF
     }
 }
 
-function evalActFund(action: WeaSetPlayerStateSimple, player: Players_IPlayer.IPlayer): number | null {
+function evalActFund(action: WeaSetPlayerStateSimple, player: Players_Player.Player): number | null {
     const act = action.getActFund();
     if (act == null) {
         return null;
@@ -366,7 +366,7 @@ function evalActCoId(action: WeaSetPlayerStateSimple): number | null {
     return act;
 }
 
-function evalActCoEnergy(action: WeaSetPlayerStateSimple, player: Players_IPlayer.IPlayer): number | null {
+function evalActCoEnergy(action: WeaSetPlayerStateSimple, player: Players_Player.Player): number | null {
     const act = action.getActCoEnergy();
     if (act == null) {
         return null;
@@ -376,7 +376,7 @@ function evalActCoEnergy(action: WeaSetPlayerStateSimple, player: Players_IPlaye
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function evalActAliveState(action: WeaSetPlayerStateSimple, player: Players_IPlayer.IPlayer): number | null {
+function evalActAliveState(action: WeaSetPlayerStateSimple, player: Players_Player.Player): number | null {
     const act = action.getActAliveState();
     if (act == null) {
         return null;
@@ -386,7 +386,7 @@ function evalActAliveState(action: WeaSetPlayerStateSimple, player: Players_IPla
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function evalActIsSkipTurn(action: WeaSetPlayerStateSimple, player: Players_IPlayer.IPlayer): boolean | null {
+function evalActIsSkipTurn(action: WeaSetPlayerStateSimple, player: Players_Player.Player): boolean | null {
     const act = action.getActIsSkipTurn();
     if (act == null) {
         return null;
@@ -396,7 +396,7 @@ function evalActIsSkipTurn(action: WeaSetPlayerStateSimple, player: Players_IPla
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function evalActCoUsingSkillType(action: WeaSetPlayerStateSimple, player: Players_IPlayer.IPlayer): number | null {
+function evalActCoUsingSkillType(action: WeaSetPlayerStateSimple, player: Players_Player.Player): number | null {
     const act = action.getActCoUsingSkillType();
     if (act == null) {
         return null;
@@ -406,7 +406,7 @@ function evalActCoUsingSkillType(action: WeaSetPlayerStateSimple, player: Player
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function evalActActivateCoSkillType(action: WeaSetPlayerStateSimple, player: Players_IPlayer.IPlayer): number | null {
+function evalActActivateCoSkillType(action: WeaSetPlayerStateSimple, player: Players_Player.Player): number | null {
     const act = action.getActActivateCoSkillType();
     if (act == null) {
         return null;

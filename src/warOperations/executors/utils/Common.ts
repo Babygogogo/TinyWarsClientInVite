@@ -506,7 +506,7 @@ export function handlePostOperationPlunder(focusUnit: Units_Unit.Unit, isFastExe
         return;
     }
 
-    const focusUnitType             = focusUnit.getUnitType();
+    const focusUnitType             = focusUnit.getUnitTypeId();
     const focusTeamIndex            = focusUnit.getTeamIndex();
     const focusPlayerIndex          = focusUnit.getPlayerIndex();
     const isCoOnboard               = focusUnit.getIsCoOnboard();

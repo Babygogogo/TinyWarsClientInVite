@@ -12,7 +12,7 @@ import {
     Tiles_Constants_MapWeapon,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -362,7 +362,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimp
         const conPlayerFilter   = action.getConPlayerFilter();
         const conUnitFilter     = action.getConUnitFilter();
         const conUnitComparator = action.getConUnitComparator();
-        const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
+        const playerFilterDict  = new Map<Players_Player.Player, boolean>();
         for (const tile of war.getTileMap().getAllTiles()) {
             if (tile.getMapWeaponType() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal) {
                 continue;
@@ -453,7 +453,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimp
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }

@@ -24,7 +24,7 @@ import {
     ExpressionParsers_Results_UnitStatistic,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
@@ -78,7 +78,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnWhere, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_02,
                         );
@@ -118,7 +118,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnSelect, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_05,
                         );
@@ -176,7 +176,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnAll, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_08,
                         );
@@ -216,7 +216,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnAny, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_11,
                         );
@@ -390,7 +390,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
             return new ExpressionParsers_Results_TileBuffArray.TileBuffArray(war, resultArray);
 
         } else if (resultType === ExpressionParsers_Enums.ResultType.Player) {
-            const resultArray: Players_IPlayer.IPlayer[] = [];
+            const resultArray: Players_Player.Player[] = [];
             for (const data of dataArray) {
                 const result = node.evalLambda(rootCtx, [data], null, localVariableDict, isRestricted);
                 if (!(result instanceof ExpressionParsers_Results_Player.Player)) {

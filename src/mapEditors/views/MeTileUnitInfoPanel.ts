@@ -156,7 +156,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _updateListUnit(): Promise<void> {
         const dict = new Map<number, Map<number, DataForUnitRenderer>>();
         for (const unit of this.getOpenData()?.war.getUnitMap().getAllUnits() ?? []) {
-            const unitType = unit.getUnitType();
+            const unitType = unit.getUnitTypeId();
             if (!dict.has(unitType)) {
                 dict.set(unitType, new Map());
             }

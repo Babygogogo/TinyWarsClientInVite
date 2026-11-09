@@ -1,11 +1,11 @@
 import {
-    Utils_ClientErrorCode,
+    BootTimers_Constants,
     Helpers_Misc,
-    Numbers_Utils,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
+    Numbers_Utils,
     SinglePlayerWars_Constants,
     SinglePlayerWars_War,
-    BootTimers_Constants,
+    Utils_ClientErrorCode,
     type GameConfigs_GameConfig,
 } from "../../internal.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
@@ -46,6 +46,28 @@ export class War extends SinglePlayerWars_War.War {
             executedOperationManager : this.getExecutedOperationManager().serialize().toJson(),
             warStatisticsManager     : this.getWarStatisticsManager().serialize().toJson(),
             taskObjectiveManager     : this.getTaskObjectiveManager().serialize().toJson(),
+        });
+    }
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialWar {
+        return SerialWar.fromJson({
+            settingsForCommon : this.getCommonSettingManager().getSettingsForCommon().toJson(),
+            settingsForCaw    : this.getSettingsForCaw().toJson(),
+
+            warId                    : this.getWarId(),
+            isEnded                  : this.getIsEnded(),
+            modifiedTime             : undefined,
+            seedRandomInitialState   : undefined,
+            seedRandomCurrentState   : undefined,
+            remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
+            drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
+            weatherManager           : this.getWeatherManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            warEventManager          : this.getWarEventManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            playerManager            : this.getPlayerManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            turnManager              : this.getTurnManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            field                    : this.getField().serializeForTeamIndexes(teamIndexes).toJson(),
+            executedOperationManager : this.getExecutedOperationManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serializeForTeamIndexes(teamIndexes).toJson(),
         });
     }
     public serializeForValidation(): SerialWar {

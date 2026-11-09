@@ -337,7 +337,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         } else if (mode === MapEditors_Constants.DrawerMode.DrawUnit) {
             const targetUnit    = Helpers_Misc.getExisted(drawer.getDrawTargetUnit());
-            const unitType      = targetUnit.getUnitType();
+            const unitType      = targetUnit.getUnitTypeId();
             const playerIndex   = targetUnit.getPlayerIndex();
             const newDataArray  = dataArray?.filter(v => {
                 const existingData = v.dataForDrawUnit;

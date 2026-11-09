@@ -11,11 +11,11 @@ import {
     Lang_Utils,
     MultiPlayerWar_Model_MpwModel,
     Players_Constants,
-    SingleFreeWar_Model_SfwWar,
+    SingleFreeWars_War,
     SinglePlayerMode_Model_SpmProxy,
     SinglePlayerWars_Constants,
     SinglePlayerWars_War,
-    SingleRankWar_Model_SrwWar,
+    SingleRankWars_War,
     Turns_Constants,
     Users_Model,
     Users_Utils,
@@ -99,7 +99,7 @@ function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
         return false;
     }
 
-    const mpwWarId = war instanceof SingleFreeWar_Model_SfwWar.SfwWar
+    const mpwWarId = war instanceof SingleFreeWars_War.War
         ? war.getSaveSlotExtraData()?.getMpwWarId()
         : null;
     if (mpwWarId != null) {
@@ -155,7 +155,7 @@ function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
                         callback   : () => Helpers_GameFlow.gotoLobby(),
                     });
                 } else {
-                    if (war instanceof SingleRankWar_Model_SrwWar.SrwWar) {
+                    if (war instanceof SingleRankWars_War.War) {
                         const turnIndex     = war.getTurnManager().getTurnIndex();
                         const actionsCount  = war.getExecutedOperationManager().getExecutedOperationsCount();
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {

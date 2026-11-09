@@ -1,15 +1,15 @@
 import {
-    Utils_ClientErrorCode,
+    BootTimers_Constants,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
     SinglePlayerWars_War,
-    BootTimers_Constants,
+    Utils_ClientErrorCode,
     type GameConfigs_GameConfig,
-} from "../../internal.ts";
-import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type { SettingsForSfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
+} from "../internal.ts";
+import { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SettingsForSfw } from "../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
 
-export class SfwWar extends SinglePlayerWars_War.War {
+export class War extends SinglePlayerWars_War.War {
     private _settingsForSfw?    : SettingsForSfw;
 
     public constructor(isNeedView: boolean) {
@@ -43,6 +43,28 @@ export class SfwWar extends SinglePlayerWars_War.War {
             executedOperationManager : this.getExecutedOperationManager().serialize().toJson(),
             warStatisticsManager     : this.getWarStatisticsManager().serialize().toJson(),
             taskObjectiveManager     : this.getTaskObjectiveManager().serialize().toJson(),
+        });
+    }
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialWar {
+        return SerialWar.fromJson({
+            settingsForCommon : this.getCommonSettingManager().getSettingsForCommon().toJson(),
+            settingsForSfw    : this.getSettingsForSfw().toJson(),
+
+            warId                    : this.getWarId(),
+            isEnded                  : this.getIsEnded(),
+            modifiedTime             : undefined,
+            seedRandomInitialState   : undefined,
+            seedRandomCurrentState   : undefined,
+            remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
+            drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
+            weatherManager           : this.getWeatherManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            warEventManager          : this.getWarEventManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            playerManager            : this.getPlayerManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            turnManager              : this.getTurnManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            field                    : this.getField().serializeForTeamIndexes(teamIndexes).toJson(),
+            executedOperationManager : this.getExecutedOperationManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serializeForTeamIndexes(teamIndexes).toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serializeForTeamIndexes(teamIndexes).toJson(),
         });
     }
 

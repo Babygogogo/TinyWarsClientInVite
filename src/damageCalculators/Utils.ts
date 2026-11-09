@@ -17,7 +17,7 @@ import {
     Units_Constants,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
     type Units_Unit,
     type Units_UnitMap,
@@ -130,7 +130,7 @@ function getDefenseBonusMultiplierForUnit({ war, attacker, attackerGridIndex, ta
     const amountFromGlobalTiles = tileMap.getTotalGlobalDefenseBonus(targetPlayerIndex, observerTeamIndexSet, useDamagePreviewSettings);
     const amountFromCo          = target.getDefenseModifierByCo({
         selfGridIndex            : targetGridIndex,
-        attackerUnitTypeId       : attacker.getUnitType(),
+        attackerUnitTypeId       : attacker.getUnitTypeId(),
         observerTeamIndexSet     : observerTeamIndexSet,
         useDamagePreviewSettings : useDamagePreviewSettings,
     });
@@ -196,7 +196,7 @@ function checkCanAttackUnit({ unit1, movePath1, maxAttackRange1, canAttackAfterM
         return false;
     }
     if ((unit2.getIsDiving())                                                                                   &&
-        (!unit2.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray().includes(unit1.getUnitType()))
+        (!unit2.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray().includes(unit1.getUnitTypeId()))
     ) {
         return false;
     }
@@ -460,7 +460,7 @@ function handleAttackUnit({ battleInfo, war, unit1, unit2, damage, isEstimated }
         });
         if (observerTeamIndexes != null) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                unitType                   : unit2.getUnitType(),
+                unitType                   : unit2.getUnitTypeId(),
                 dstPlayerIndex             : unit2.getPlayerIndex(),
                 normalizedHpGain           : 0,
                 normalizedHpLoss           : unitLostNormalizedHp2,
@@ -570,14 +570,14 @@ function handleHpForAttackUnit({ battleInfo, isEstimated, unit, unitNewHp }: {
 function handlePromotionForAttackUnit({ battleInfo, isEstimated, player1, unit1, targetLostNormalizedHp, attackerCoGridIndexListOnMap, isTargetDestroyed }: {
     battleInfo                      : AuxiliaryTypes_BattleInfo.BattleInfo;
     isEstimated                     : boolean;
-    player1                         : Players_IPlayer.IPlayer;
+    player1                         : Players_Player.Player;
     unit1                           : Units_Unit.Unit;
     targetLostNormalizedHp          : number;
     attackerCoGridIndexListOnMap    : AuxiliaryTypes_GridIndex.GridIndex[];
     isTargetDestroyed               : boolean;
 }): void {
     const gcData                = unit1.getGcData();
-    const attackerUnitTypeId    = unit1.getUnitType();
+    const attackerUnitTypeId    = unit1.getUnitTypeId();
     const attackerGridIndex     = unit1.getGridIndex();
     const unitId1               = unit1.getUnitId();
     if (isTargetDestroyed) {
@@ -629,7 +629,7 @@ function handlePromotionForAttackUnit({ battleInfo, isEstimated, player1, unit1,
 function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, attackerUnit, targetUnit, targetLostNormalizedHp, isAttackerInAttackerCoZone }: {
     battleInfo                  : AuxiliaryTypes_BattleInfo.BattleInfo;
     isEstimated                 : boolean;
-    attackerPlayer              : Players_IPlayer.IPlayer;
+    attackerPlayer              : Players_Player.Player;
     attackerUnit                : Units_Unit.Unit;
     targetUnit                  : Units_Unit.Unit;
     targetLostNormalizedHp      : number;
@@ -640,8 +640,8 @@ function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, atta
     }
 
     const gameConfig            = attackerUnit.getGcData();
-    const attackerUnitTypeId    = attackerUnit.getUnitType();
-    const targetUnitTypeId      = targetUnit.getUnitType();
+    const attackerUnitTypeId    = attackerUnit.getUnitTypeId();
+    const targetUnitTypeId      = targetUnit.getUnitTypeId();
     const targetUnitCost        = targetUnit.getProductionFinalCost();
     const targetNormalizedMaxHp = targetUnit.getNormalizedMaxHp();
     let addFund                 = 0;
@@ -679,8 +679,8 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
     battleInfo                  : AuxiliaryTypes_BattleInfo.BattleInfo;
     isEstimated                 : boolean;
     war                         : BaseWar_Model_War.War;
-    attackerPlayer              : Players_IPlayer.IPlayer;
-    targetPlayer                : Players_IPlayer.IPlayer;
+    attackerPlayer              : Players_Player.Player;
+    targetPlayer                : Players_Player.Player;
     targetLostNormalizedHp      : number;
     targetCfgEnergyValue        : number;
     isAttackerInAttackerCoZone  : boolean;

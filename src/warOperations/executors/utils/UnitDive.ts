@@ -106,7 +106,7 @@ async function normalExeUnitDive(war: BaseWar_Model_War.War, action: WoUnitDive)
             const endingGridIndex = pathNodes[pathNodes.length - 1];
             if (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
                 war                 : war,
-                unitType            : focusUnit.getUnitType(),
+                unitType            : focusUnit.getUnitTypeId(),
                 unitPlayerIndex     : focusUnit.getPlayerIndex(),
                 gridIndex           : endingGridIndex,
                 observerTeamIndexes : war.getPlayerManager().getWatcherTeamIndexesForSelf(),

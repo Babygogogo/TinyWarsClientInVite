@@ -924,7 +924,7 @@ function createNewUnitData(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): 
     const currentFuel                       = evalActCurrentFuel(action, unit);
 
     return Units_Utils_Serialization.create({
-        unitType    : unit.getUnitType(),
+        unitType    : unit.getUnitTypeId(),
         unitId      : unit.getUnitId(),
         playerIndex : unit.getPlayerIndex(),
         gridIndex   : unit.getGridIndex().toProto().toJson(),
@@ -980,7 +980,7 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseW
             const observerTeamIndexes = observerTeamIndexesDict.get(unit.getGridIndex().getGridId(mapSize));
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                   : unit.getUnitType(),
+                    unitType                   : unit.getUnitTypeId(),
                     dstPlayerIndex             : unit.getPlayerIndex(),
                     unitGain                   : 0,
                     unitLoss                   : 0,

@@ -8,7 +8,7 @@ import {
     Helpers_Collection,
     Lang_Constants,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
+    type Players_Player,
 } from "../../internal.ts";
 import type { PlayerFilter } from "../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 
@@ -16,7 +16,7 @@ export function checkIsValid(data: PlayerFilter, playersCountUnneutral: number, 
     return getErrorTip(data, playersCountUnneutral, gameConfig) == null;
 }
 
-export function checkIsMeet(data: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+export function checkIsMeet(data: PlayerFilter, player: Players_Player.Player): boolean {
     {
         const con = data.getConPlayerIndex();
         if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getPlayerIndex()))) {

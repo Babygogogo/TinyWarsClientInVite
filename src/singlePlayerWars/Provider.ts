@@ -3,10 +3,10 @@ import {
     GameConfigs_Provider,
     Helpers_Misc,
     Logger,
-    SingleCustomWar_Model_ScwWar,
-    SingleFreeWar_Model_SfwWar,
+    SingleCustomWars_War,
+    SingleFreeWars_War,
     SinglePlayerWars_War,
-    SingleRankWar_Model_SrwWar,
+    SingleRankWars_War,
     Utils_ClientErrorCode,
 } from "../internal.ts";
 
@@ -63,11 +63,11 @@ function setWar(war: SinglePlayerWars_War.War | null): void {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 function createWarByWarData(warData: SerialWar): SinglePlayerWars_War.War {
     if (warData.getSettingsForScw()) {
-        return new SingleCustomWar_Model_ScwWar.ScwWar(true);
+        return new SingleCustomWars_War.War(true);
     } else if (warData.getSettingsForSfw()) {
-        return new SingleFreeWar_Model_SfwWar.SfwWar(true);
+        return new SingleFreeWars_War.War(true);
     } else if (warData.getSettingsForSrw()) {
-        return new SingleRankWar_Model_SrwWar.SrwWar(true);
+        return new SingleRankWars_War.War(true);
     } else if (warData.getSettingsForCaw()) {
         return new Campaigns_Wars_War.War(true);
     } else {

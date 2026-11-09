@@ -130,7 +130,7 @@ async function normalExeUnitRepairUnit(war: BaseWar_Model_War.War, action: WoUni
                         const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : targetGridIndex });
                         if (observerTeamIndexes != null) {
                             war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
-                                unitType                   : targetUnit.getUnitType(),
+                                unitType                   : targetUnit.getUnitTypeId(),
                                 dstPlayerIndex             : targetUnit.getPlayerIndex(),
                                 unitGain                   : 0,
                                 unitLoss                   : 0,

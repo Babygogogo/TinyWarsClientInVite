@@ -27,7 +27,7 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitDropUnit, re
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
     const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
-        war, rawPath, launchUnitId, requesterUserId, 
+        war, rawPath, launchUnitId, requesterUserId,
     });
     const rawPathNodes  = rawPath?.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     if (WarOperations_Revisers_Utils_Common.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
@@ -134,7 +134,7 @@ function checkIsDropDestinationsValid(war: BaseWar_Model_War.War, action: WoUnit
             if (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
                 war               : war,
                 gridIndex         : droppingGridIndex,
-                unitType          : existingUnit.getUnitType(),
+                unitType          : existingUnit.getUnitTypeId(),
                 isDiving          : existingUnit.getIsDiving(),
                 isInvisible       : existingUnit.checkIsInvisible(droppingGridIndex),
                 unitPlayerIndex   : existingUnit.getPlayerIndex(),

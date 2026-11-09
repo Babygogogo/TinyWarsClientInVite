@@ -837,7 +837,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         unit.init(Units_Utils_Serialization.createDefault({
             gridIndex   : gridIndex.getXY(),
             playerIndex : targetUnit.getPlayerIndex(),
-            unitTypeId  : targetUnit.getUnitType(),
+            unitTypeId  : targetUnit.getUnitTypeId(),
             unitId      : unitId,
             gcData      : gameConfig,
         }), gameConfig);

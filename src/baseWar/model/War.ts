@@ -13,15 +13,16 @@ import {
     Lang_Utils,
     NormalMap_Model_NormalMapModel,
     Players_Constants,
+    Players_Player,
     Players_PlayerManager,
     Players_Utils_Common,
     RandomNumbers_RandomNumberManager,
-    SingleCustomWar_Model_ScwWar,
-    SingleFreeWar_Model_SfwWar,
+    SingleCustomWars_War,
+    SingleFreeWars_War,
     Sounds_SoundPlayer,
-    TaskObjectives_TaskObjectiveManager,
+    TaskObjectives_Manager,
     Timer_TimerModel,
-    Turns_TurnManager,
+    Turns_Manager,
     Units_Constants,
     Units_Unit,
     Units_UnitView,
@@ -38,15 +39,10 @@ import {
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwDrawVoteManager,
     type BaseWar_Interface_IBwGridVisualEffect,
-    type BaseWar_Interface_IBwWarEventManager,
-    type BaseWar_Interface_IBwWarStatisticsManager,
+    type WarEvents_Manager,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
-    type Players_IPlayerManager,
-    type TaskObjectives_ITaskObjectiveManager,
     type Tiles_TileMap,
     type Turns_Constants,
-    type Turns_ITurnManager,
     type Units_UnitMap,
 } from "../../internal.ts";
 
@@ -67,11 +63,11 @@ type DamagePreviewSettings = {
 export abstract class War {
     private readonly _weatherManager        : Weathers_Manager.Manager;
     private readonly _field                 : Fields_Field.Field;
-    private readonly _turnManager           = new Turns_TurnManager.TurnManager();
+    private readonly _turnManager           = new Turns_Manager.Manager();
     private readonly _executedActionManager = new WarOperations_ExecutedWarOpManager.ExecutedWarOpManager();
     private readonly _randomNumberManager   = new RandomNumbers_RandomNumberManager.RandomNumberManager();
     private readonly _drawVoteManager       = new BaseWar_Model_BwDrawVoteManager.BwDrawVoteManager();
-    private readonly _taskObjectiveManager  = new TaskObjectives_TaskObjectiveManager.TaskObjectiveManager();
+    private readonly _taskObjectiveManager  = new TaskObjectives_Manager.Manager();
     private readonly _warStatisticsManager  = new BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager();
     private readonly _commonSettingManager  = new BaseWar_Model_BwCommonSettingManager.BwCommonSettingManager();
     private readonly _playerManager         = new Players_PlayerManager.PlayerManager();
@@ -109,7 +105,7 @@ export abstract class War {
     public abstract getIsNeedSeedRandom(): boolean;
     public abstract getCanCheat(): boolean;
     public abstract getShouldSerializeFullInfoForFreeModeGames(): boolean;
-    public abstract getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager;
+    public abstract getWarEventManager(): WarEvents_Manager.Manager;
     public abstract getBootRestTime(playerIndex: number): number | null;
     public abstract getSettingsBootTimerParams(): number[];
     public abstract getIsExecuteActionsWithExtraData(): boolean;
@@ -413,7 +409,7 @@ export abstract class War {
             }
         }
 
-        return ((!hasAliveHumanPlayer) && (!(this instanceof SingleCustomWar_Model_ScwWar.ScwWar)) && (!(this instanceof SingleFreeWar_Model_SfwWar.SfwWar)))
+        return ((!hasAliveHumanPlayer) && (!(this instanceof SingleCustomWars_War.War)) && (!(this instanceof SingleFreeWars_War.War)))
             || (aliveTeamIndexSet.size <= 1)
             || (this.getDrawVoteManager().checkIsDraw());
     }
@@ -492,10 +488,10 @@ export abstract class War {
     public getPlayersCountUnneutral(): number {
         return this.getPlayerManager().getTotalPlayersCount(false);
     }
-    public getPlayer(playerIndex: number): Players_IPlayer.IPlayer {
+    public getPlayer(playerIndex: number): Players_Player.Player {
         return this.getPlayerManager().getPlayer(playerIndex);
     }
-    public getPlayerInTurn(): Players_IPlayer.IPlayer {
+    public getPlayerInTurn(): Players_Player.Player {
         return this.getPlayerManager().getPlayerInTurn();
     }
     public getPlayerIndexInTurn(): number {
@@ -506,7 +502,7 @@ export abstract class War {
         return (userId != null) && (!Users_Utils.checkIsDummy(userId));
     }
 
-    public getTurnManager(): Turns_ITurnManager.ITurnManager {
+    public getTurnManager(): Turns_Manager.Manager {
         return this._turnManager;
     }
     public getFogMap(): FogMaps_FogMap.FogMap {
@@ -547,19 +543,19 @@ export abstract class War {
     public getExecutedOperationManager(): WarOperations_ExecutedWarOpManager.ExecutedWarOpManager {
         return this._executedActionManager;
     }
-    public getTaskObjectiveManager(): TaskObjectives_ITaskObjectiveManager.ITaskObjectiveManager {
+    public getTaskObjectiveManager(): TaskObjectives_Manager.Manager {
         return this._taskObjectiveManager;
     }
     public getField(): Fields_Field.Field {
         return this._field;
     }
-    public getWarStatisticsManager(): BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager {
+    public getWarStatisticsManager(): BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager {
         return this._warStatisticsManager;
     }
     public getCommonSettingManager(): BaseWar_Interface_IBwCommonSettingManager.IBwCommonSettingManager {
         return this._commonSettingManager;
     }
-    public getPlayerManager(): Players_IPlayerManager.IPlayerManager {
+    public getPlayerManager(): Players_PlayerManager.PlayerManager {
         return this._playerManager;
     }
 

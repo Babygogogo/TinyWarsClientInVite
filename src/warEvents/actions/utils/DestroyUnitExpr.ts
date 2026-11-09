@@ -11,7 +11,7 @@ import {
     Lang_Constants,
     ExpressionParsers_Contexts_Unit,
     type BaseWar_Model_War,
-    type Players_IPlayer,
+    type Players_Player,
     type Units_Unit,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -100,7 +100,7 @@ function checkIsMeetConditionForUnit(action: WeaDestroyUnitExpr, unit: Units_Uni
         return false;
     }
 }
-function evalActPlayerAliveState(action: WeaDestroyUnitExpr, player: Players_IPlayer.IPlayer): number | null {
+function evalActPlayerAliveState(action: WeaDestroyUnitExpr, player: Players_Player.Player): number | null {
     const act = action.getActPlayerAliveState();
     if (!act) {
         return null;
@@ -146,7 +146,7 @@ export async function applyWithoutExtraData(action: WeaDestroyUnitExpr, isFast: 
     }
 
     const playerManager         = war.getPlayerManager();
-    const newAliveStateDict     = new Map<Players_IPlayer.IPlayer, number>();
+    const newAliveStateDict     = new Map<Players_Player.Player, number>();
     for (const playerIndex of new Set(destroyedUnits.map(v => v.getPlayerIndex()))) {
         const player        = playerManager.getPlayer(playerIndex);
         const aliveState    = evalActPlayerAliveState(action, player);

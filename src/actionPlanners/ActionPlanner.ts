@@ -1031,7 +1031,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
             (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
                 war               : war,
                 gridIndex         : targetGridIndex,
-                unitType          : existingUnit.getUnitType(),
+                unitType          : existingUnit.getUnitTypeId(),
                 isDiving          : existingUnit.getIsDiving(),
                 isInvisible       : existingUnit.checkIsInvisible(targetGridIndex),
                 unitPlayerIndex   : existingUnit.getPlayerIndex(),
@@ -1094,7 +1094,7 @@ function createFuncCheckIsUnitVisible(observerTeamIndexes: Set<number>): (unit: 
         const isVisible = Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
             war                 : unit.getWar(),
             gridIndex           : gridIndex,
-            unitType            : unit.getUnitType(),
+            unitType            : unit.getUnitTypeId(),
             isDiving            : unit.getIsDiving(),
             isInvisible         : unit.checkIsInvisible(gridIndex),
             unitPlayerIndex     : unit.getPlayerIndex(),

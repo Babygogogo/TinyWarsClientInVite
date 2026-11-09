@@ -8,7 +8,7 @@ import {
     Lang_Constants,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
+    type Players_Player,
     type Units_Unit,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -142,7 +142,7 @@ export async function applyWithoutExtraData(action: WeaDeleteUnitBuffSimple, isF
         const conPlayerFilter       = action.getConPlayerFilter();
         const conUnitBuffFilter     = action.getConUnitBuffFilter();
         const conMaxDeleteCount     = action.getConMaxDeleteCount() ?? Numbers_Constants.MaxInt32;
-        const playerFilterDict      = new Map<Players_IPlayer.IPlayer, boolean>();
+        const playerFilterDict      = new Map<Players_Player.Player, boolean>();
         for (const unit of war.getUnitMap().getAllUnits()) {
             if ((conUnitFilter != null) &&
                 (!Units_Utils_Filter.checkIsMeet(conUnitFilter, unit))
@@ -207,7 +207,7 @@ export async function applyWithoutExtraData(action: WeaDeleteUnitBuffSimple, isF
     }
 }
 
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }

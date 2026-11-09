@@ -425,7 +425,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer {
                         && (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
                             war                 : war,
                             gridIndex           : gridIndex,
-                            unitType            : unit.getUnitType(),
+                            unitType            : unit.getUnitTypeId(),
                             isDiving            : unit.getIsDiving(),
                             isInvisible         : unit.checkIsInvisible(gridIndex),
                             unitPlayerIndex     : playerIndex,

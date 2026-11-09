@@ -166,6 +166,20 @@ export class TileMap {
             tileCustomNameArray : this.getTileCustomNameArray()?.map(v => v.toJson()) ?? [],
         });
     }
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialTileMap {
+        const map               = this.getMap();
+        const { width, height } = this.getMapSize().getWH();
+        const tilesData         : SerialTile[] = [];
+        for (let x = 0; x < width; ++x) {
+            for (let y = 0; y < height; ++y) {
+                tilesData.push(map[x][y].serializeForTeamIndexes(teamIndexes));
+            }
+        }
+        return SerialTileMap.fromJson({
+            tiles               : tilesData.map(v => v.toJson()),
+            tileCustomNameArray : this.getTileCustomNameArray()?.map(v => v.toJson()) ?? [],
+        });
+    }
     public serializeForCreateSfw(): SerialTileMap {
         const map               = this.getMap();
         const { width, height } = this.getMapSize().getWH();

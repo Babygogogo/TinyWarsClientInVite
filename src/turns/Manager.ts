@@ -1,20 +1,20 @@
 import {
-    Players_Constants,
-    Utils_ClientErrorCode,
-    Notifications_Dispatcher,
     Helpers_Misc,
+    Notifications_Dispatcher,
+    Players_Constants,
     Turns_Constants,
     Turns_PhaseHandlers_WithExtraData,
     Turns_PhaseHandlers_WithoutExtraData,
+    Utils_ClientErrorCode,
     type BaseWar_Model_War,
-    type Turns_ITurnManager,
     type Turns_Types,
 } from "../internal.ts";
 import type { WoPlayerEndTurn } from "../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
 import type { WoSystemBeginTurn } from "../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
+import type { WoSystemEndTurn } from "../proto/schema/CommonProto/WarOperation/WoSystemEndTurn.ts";
 import { SerialTurnManager } from "../proto/schema/CommonProto/WarSerialization/SerialTurnManager.ts";
 
-export class TurnManager implements Turns_ITurnManager.ITurnManager {
+export class Manager {
     private _turnIndex?             : number;
     private _playerIndexInTurn?     : number;
     private _phaseCode?             : Turns_Constants.PhaseCode;
@@ -59,6 +59,10 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
             enterTurnTime : this.getEnterTurnTime(),
         });
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialTurnManager {
+        return this.serialize();
+    }
     public serializeForCreateSfw(): SerialTurnManager {
         return this.serialize();
     }
@@ -82,7 +86,7 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
             : Turns_PhaseHandlers_WithoutExtraData.endPhaseStandby(this, isFastExecute);
     }
 
-    public endPhaseMain(action: WoPlayerEndTurn, isFastExecute: boolean): void {
+    public endPhaseMain(action: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
         if (this.getWar().getIsExecuteActionsWithExtraData()) {
             Turns_PhaseHandlers_WithExtraData.endPhaseMain(this, action, isFastExecute);
         } else {

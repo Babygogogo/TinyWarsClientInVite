@@ -116,7 +116,7 @@ export class UnitMap {
             }
             loadUnitCounts.set(loaderId, loadCount);
 
-            const unitType          = loadedUnit.getUnitType();
+            const unitType          = loadedUnit.getUnitTypeId();
             const loadUnitCategory  = loader.getLoadUnitCategoryId();
             if ((loadUnitCategory == null)                                          ||
                 (!gameConfig.checkIsUnitTypeInCategory(unitType, loadUnitCategory))
@@ -203,6 +203,37 @@ export class UnitMap {
         const units: SerialUnit[] = [];
         for (const unit of this.getAllUnits()) {
             units.push(unit.serialize());
+        }
+
+        return SerialUnitMap.fromJson({
+            units               : units.map(v => v.toJson()),
+            nextUnitId          : this.getNextUnitId(),
+            unitCustomNameArray : this.getUnitCustomNameArray()?.map(v => v.toJson()) ?? [],
+        });
+    }
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialUnitMap {
+        const war   = this.getWar();
+        const units : SerialUnit[] = [];
+        for (const column of this._getMap()) {
+            for (const unit of column) {
+                if (unit == null) {
+                    continue;
+                }
+
+                const gridIndex = unit.getGridIndex();
+                if (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
+                    war                 : war,
+                    gridIndex           : gridIndex,
+                    unitType            : unit.getUnitTypeId(),
+                    unitPlayerIndex     : unit.getPlayerIndex(),
+                    isDiving            : unit.getIsDiving(),
+                    isInvisible         : unit.checkIsInvisible(gridIndex),
+                    observerTeamIndexes : teamIndexes,
+                })) {
+                    units.push(unit.serialize());
+                    units.push(...this.getUnitsLoadedByLoader(unit, true).map(loadedUnit => loadedUnit.serialize()));
+                }
+            }
         }
 
         return SerialUnitMap.fromJson({
@@ -365,7 +396,7 @@ export class UnitMap {
         const war = this.getWar();
         return (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
             war               : war,
-            unitType          : unit.getUnitType(),
+            unitType          : unit.getUnitTypeId(),
             isDiving          : unit.getIsDiving(),
             isInvisible       : unit.checkIsInvisible(gridIndex),
             observerTeamIndex : war.getPlayerInTurn().getTeamIndex(),

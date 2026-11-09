@@ -1,10 +1,17 @@
 import {
+    CustomCounters_Constants,
+    CustomCounters_Utils,
+    Helpers_Collection,
+    Helpers_Misc,
+    Notifications_Dispatcher,
     Players_Constants,
+    Utils_ClientErrorCode,
     WarEvents_Actions_Utils_AddTileBuffExpr,
     WarEvents_Actions_Utils_AddTileBuffSimple,
     WarEvents_Actions_Utils_AddUnitBuffSimple,
     WarEvents_Actions_Utils_AddUnitOnMapSimple,
     WarEvents_Actions_Utils_BigDialogueSimple,
+    WarEvents_Actions_Utils_Common,
     WarEvents_Actions_Utils_DeleteTileBuffExpr,
     WarEvents_Actions_Utils_DeleteTileBuffSimple,
     WarEvents_Actions_Utils_DeleteUnitBuffSimple,
@@ -59,8 +66,6 @@ import {
     WarEvents_Conditions_Utils_CustomCounter,
     WarEvents_Conditions_Utils_EventCalledCount,
     WarEvents_Conditions_Utils_Expression,
-    WarEvents_Actions_Utils_Common,
-    CustomCounters_Utils,
     WarEvents_Conditions_Utils_ManualActionStatistics,
     WarEvents_Conditions_Utils_OngoingPersistentActionPresence,
     WarEvents_Conditions_Utils_PlayerPresence,
@@ -68,32 +73,26 @@ import {
     WarEvents_Conditions_Utils_TurnAndPlayer,
     WarEvents_Conditions_Utils_UnitPresence,
     WarEvents_Conditions_Utils_WeatherAndFog,
-    Utils_ClientErrorCode,
-    CustomCounters_Constants,
-    Helpers_Collection,
-    Notifications_Dispatcher,
-    Helpers_Misc,
     WarOperations_Executors_Utils_Common,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type AuxiliaryTypes_GridIndex,
-    type BaseWar_Interface_IBwWarEventManager,
     type BaseWar_Model_War,
     type Units_Unit,
-    type AuxiliaryTypes_AuxiliaryTypes,
     type WarEvents_Types,
-} from "../../internal.ts";
-import type { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
-import type { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
-import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
-import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import type { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
-import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type { WoSystemCallWarEvent } from "../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
-import { CustomCounter } from "../../proto/schema/CommonProto/WarSerialization/CustomCounter.ts";
-import { DataForWarEventCalledCount } from "../../proto/schema/CommonProto/WarSerialization/DataForWarEventCalledCount.ts";
-import { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
+} from "../internal.ts";
+import type { ConditionIdAndFlags } from "../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
+import type { NodeIdAndFlags } from "../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
+import type { WarEvent } from "../proto/schema/CommonProto/WarEvent/WarEvent.ts";
+import type { WarEventAction } from "../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventCondition } from "../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import type { WarEventConditionNode } from "../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
+import type { WarEventFullData } from "../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WoSystemCallWarEvent } from "../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
+import { CustomCounter } from "../proto/schema/CommonProto/WarSerialization/CustomCounter.ts";
+import { DataForWarEventCalledCount } from "../proto/schema/CommonProto/WarSerialization/DataForWarEventCalledCount.ts";
+import { SerialWarEventManager } from "../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
 
-export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
+export class Manager {
     private _war?                           : BaseWar_Model_War.War;
     private _calledCountList?               : DataForWarEventCalledCount[] | null;
     private _customCounterArray?            : CustomCounter[] | null;
@@ -139,6 +138,10 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
             customCounterArray             : this._getCustomCounterArray()?.map(v => v.toJson()) ?? [],
             ongoingPersistentActionIdArray : [...this.getOpaIdArray()],
         });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialWarEventManager {
+        return this.serialize();
     }
     public serializeForCreateSfw(): SerialWarEventManager {
         return SerialWarEventManager.fromJson({
@@ -403,6 +406,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getOpaAttackPowerModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
@@ -417,6 +421,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getOpaDefenseModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
@@ -475,6 +480,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return null;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getOpaUnitVisionRangeModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
@@ -505,6 +511,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return null;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getOpaLuckLowerLimitModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
@@ -519,6 +526,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getOpaLuckUpperLimitModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
@@ -533,6 +541,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getOpaFlareRadiusModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
@@ -547,6 +556,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
         return modifier;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getOpaFlareRangeModifier(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         let modifier = 0;
         for (const actionId of this.getOpaIdArray()) {
@@ -577,14 +587,16 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for calling events.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public async callWarEvent(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void> {
-        this._getWar().getIsExecuteActionsWithExtraData()
-            ? await this._callWarEventWithExtraData(action, isFastExecute)
-            : await this._callWarEventWithoutExtraData(
+    public callWarEvent(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void> {
+        if (this._getWar().getIsExecuteActionsWithExtraData()) {
+            return this._callWarEventWithExtraData(action, isFastExecute);
+        } else {
+            return this._callWarEventWithoutExtraData(
                 action.getWarEventId(),
                 action.getNodeAndActionsIndex(),
                 isFastExecute,
             );
+        }
     }
     private async _callWarEventWithExtraData(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void> {
         for (const actionId of this.getWarEvent(action.getWarEventId()).getRootNodeAndActionsArray()[action.getNodeAndActionsIndex()].getActionIdArray()) {

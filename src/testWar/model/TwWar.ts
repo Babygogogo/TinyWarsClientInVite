@@ -1,6 +1,6 @@
 import {
     BaseWar_Model_War,
-    BaseWar_Model_BwWarEventManager,
+    WarEvents_Manager,
     BootTimers_Constants,
     Cos_Constants,
     CoSkills_Constants,
@@ -19,7 +19,6 @@ import {
     WarRules_Utils_Instance,
     WarTypes_Constants,
     type AuxiliaryTypes_AuxiliaryTypes,
-    type BaseWar_Interface_IBwWarEventManager,
     type GameConfigs_GameConfig,
     type TestWar_Interface_ITwWar,
 } from "../../internal.ts";
@@ -36,7 +35,7 @@ import { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSeriali
 import { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
 
 export class TwWar extends BaseWar_Model_War.War implements TestWar_Interface_ITwWar.ITwWar {
-    private readonly _warEventManager = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
+    private readonly _warEventManager = new WarEvents_Manager.Manager();
 
     public static async getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<Utils_ClientErrorCode.ClientErrorCode> {
         const war       = new TwWar();
@@ -119,7 +118,7 @@ export class TwWar extends BaseWar_Model_War.War implements TestWar_Interface_IT
         return false;
     }
 
-    public getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
+    public getWarEventManager(): WarEvents_Manager.Manager {
         return this._warEventManager;
     }
 

@@ -51,7 +51,7 @@ export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParam
                 war               : war,
                 observerTeamIndex : teamIndex,
                 gridIndex         : destination,
-                unitType          : unitOnDestination.getUnitType(),
+                unitType          : unitOnDestination.getUnitTypeId(),
                 unitPlayerIndex   : unitOnDestination.getPlayerIndex(),
                 isDiving          : unitOnDestination.getIsDiving(),
                 isInvisible       : unitOnDestination.checkIsInvisible(destination),
@@ -77,7 +77,7 @@ export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParam
                 continue;
             }
             if ((targetUnit.getIsDiving())                                                                                  &&
-                (!targetUnit.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray().includes(unit.getUnitType()))
+                (!targetUnit.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray().includes(unit.getUnitTypeId()))
             ) {
                 continue;
             }
@@ -126,7 +126,7 @@ export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParam
                             },
                             targetGridIndex : targetGridIndex.toProto().toJson(),
                             launchUnitId    : launchUnitId,
-                        }, 
+                        },
                     })
                     : WoContainer.fromJson({
                         WoUnitAttackTile : {
@@ -137,7 +137,7 @@ export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParam
                             },
                             targetGridIndex : targetGridIndex.toProto().toJson(),
                             launchUnitId    : launchUnitId,
-                        }, 
+                        },
                     }),
             };
         })());

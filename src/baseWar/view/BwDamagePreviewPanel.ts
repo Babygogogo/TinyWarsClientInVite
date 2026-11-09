@@ -179,7 +179,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     coSkillType : attackerPlayer.checkCoIsUsingActiveSkill()
                         ? coSkillType1
                         : (getIsAffectedByCo1() ? CoSkills_Constants.SkillTypeId.Passive : null),
-                    unitType       : attackerUnit.getUnitType(),
+                    unitType       : attackerUnit.getUnitTypeId(),
                     unitHp         : attackerUnit.getCurrentHp(),
                     unitWeaponType : (attackerUnit.getPrimaryWeaponBaseDamage(defenderArmorType) != null)
                         ? (Units_Constants.WeaponTypeId.Primary)
@@ -205,7 +205,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     coSkillType : defenderPlayer.checkCoIsUsingActiveSkill()
                         ? coSkillType2
                         : (getIsAffectedByCo2() ? CoSkills_Constants.SkillTypeId.Passive : null),
-                    unitType       : defenderUnit.getUnitType(),
+                    unitType       : defenderUnit.getUnitTypeId(),
                     unitHp         : defenderUnit.getCurrentHp(),
                     unitWeaponType : (defenderUnit.getPrimaryWeaponBaseDamage(attackerArmorType) != null)
                         ? (Units_Constants.WeaponTypeId.Primary)

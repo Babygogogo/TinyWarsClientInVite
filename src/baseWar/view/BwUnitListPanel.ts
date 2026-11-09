@@ -300,7 +300,7 @@ function sorterForDataForList(a: DataForUnitRenderer, b: DataForUnitRenderer): n
     } else if ((stateA !== Units_Constants.ActionStateId.Idle) && (stateB === Units_Constants.ActionStateId.Idle)) {
         return 1;
     } else {
-        return unitA.getUnitType() - unitB.getUnitType();
+        return unitA.getUnitTypeId() - unitB.getUnitTypeId();
     }
 }
 
@@ -409,7 +409,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const unit = openData.unit;
         this._labelHp.setText(`${unit.getCurrentHp()}`);
         this._labelFuel.setText(`${unit.getCurrentFuel()}`);
-        this._labelName.setText(Lang_Utils.getUnitName(unit.getUnitType(), unit.getGcData()) ?? Lang_Constants.UndefinedError);
+        this._labelName.setText(Lang_Utils.getUnitName(unit.getUnitTypeId(), unit.getGcData()) ?? Lang_Constants.UndefinedError);
         this._labelGridIndex.setText(`x${unit.getGridX()} y${unit.getGridY()}`);
 
         if (unit.getCurrentBuildMaterial() != null) {

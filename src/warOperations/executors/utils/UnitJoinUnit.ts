@@ -64,7 +64,7 @@ function fastExeUnitJoinUnit(war: BaseWar_Model_War.War, action: WoUnitJoinUnit)
                 if (observerTeamIndexes != null) {
                     const normalizedHpLoss = targetUnit.getNormalizedCurrentHp() + focusUnit.getNormalizedCurrentHp() - focusUnit.getNormalizedMaxHp();
                     war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                   : focusUnit.getUnitType(),
+                        unitType                   : focusUnit.getUnitTypeId(),
                         dstPlayerIndex             : focusUnit.getPlayerIndex(),
                         unitGain                   : 0,
                         unitLoss                   : 1,
@@ -193,7 +193,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Model_War.War, action: WoUnitJ
                 if (observerTeamIndexes != null) {
                     const normalizedHpLoss = targetUnit.getNormalizedCurrentHp() + focusUnit.getNormalizedCurrentHp() - focusUnit.getNormalizedMaxHp();
                     war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                   : focusUnit.getUnitType(),
+                        unitType                   : focusUnit.getUnitTypeId(),
                         dstPlayerIndex             : focusUnit.getPlayerIndex(),
                         unitGain                   : 0,
                         unitLoss                   : 1,

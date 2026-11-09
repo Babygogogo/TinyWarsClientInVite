@@ -1,29 +1,27 @@
 import {
     HalfwayReplayWar_Model_HrwWar,
+    Helpers_Misc,
+    MapEditor_Model_MeHelpers,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
+    Players_Constants,
     Players_Player,
     ReplayWar_Model_RwWar,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
+    Users_Model,
+    Utils_ClientErrorCode,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Players_Constants,
-    Utils_ClientErrorCode,
-    MapEditor_Model_MeHelpers,
-    Helpers_Misc,
-    Users_Model,
-    type Players_IPlayer,
-    type Players_IPlayerManager,
 } from "../internal.ts";
 
 import type { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 import { SerialPlayerManager } from "../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
-    private readonly _players                    = new Map<number, Players_IPlayer.IPlayer>();
+export class PlayerManager {
+    private readonly _players                    = new Map<number, Players_Player.Player>();
     private _war?                       : BaseWar_Model_War.War;
     private _watcherTeamIndexesForHrw?  : Set<number>;
 
@@ -40,7 +38,7 @@ export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
             throw Helpers_Misc.newError(`Invalid playerArray.`, Utils_ClientErrorCode.ClientErrorCode.BwPlayerManager_Init_01);
         }
 
-        const newPlayerMap  = new Map<number, Players_IPlayer.IPlayer>();
+        const newPlayerMap  = new Map<number, Players_Player.Player>();
         const skinIdSet     = new Set<number>();
         for (const playerData of playerArray) {
             const playerIndex = playerData.getPlayerIndex();
@@ -112,6 +110,16 @@ export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
             players : players.map(v => v.toJson()),
         });
     }
+    public serializeForTeamIndexes(teamIndexes: Set<number>): SerialPlayerManager {
+        const players: SerialPlayer[] = [];
+        for (const [, player] of this.getAllPlayersDict()) {
+            players.push(player.serializeForTeamIndexes(teamIndexes));
+        }
+
+        return SerialPlayerManager.fromJson({
+            players : players.map(v => v.toJson()),
+        });
+    }
     public serializeForCreateSfw(): SerialPlayerManager {
         const war = this._getWar();
         if (war instanceof MapEditor_Model_MeWar.MeWar) {
@@ -174,15 +182,15 @@ export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
     public checkHasPlayer(playerIndex: number): boolean {
         return this._players.has(playerIndex);
     }
-    public getPlayer(playerIndex: number): Players_IPlayer.IPlayer {
+    public getPlayer(playerIndex: number): Players_Player.Player {
         return Helpers_Misc.getExisted(this._players.get(playerIndex));
     }
-    public getAllPlayersDict(): Map<number, Players_IPlayer.IPlayer> {
+    public getAllPlayersDict(): Map<number, Players_Player.Player> {
         return this._players;
     }
     /** 返回结果已按playerIndex排序 */
-    public getAllPlayers(includeNeutral = true): Players_IPlayer.IPlayer[] {
-        const players: Players_IPlayer.IPlayer[] = [];
+    public getAllPlayers(includeNeutral = true): Players_Player.Player[] {
+        const players: Players_Player.Player[] = [];
         for (const [playerIndex, player] of this.getAllPlayersDict()) {
             if ((includeNeutral) || (playerIndex !== Players_Constants.PlayerIndex.Neutral)) {
                 players.push(player);
@@ -191,7 +199,7 @@ export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
         return players.sort((v1, v2) => v1.getPlayerIndex() - v2.getPlayerIndex());
     }
 
-    public getPlayerByUserId(userId: number): Players_IPlayer.IPlayer | null {
+    public getPlayerByUserId(userId: number): Players_Player.Player | null {
         for (const [, player] of this._players) {
             if (player.getUserId() === userId) {
                 return player;
@@ -200,7 +208,7 @@ export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
         return null;
     }
 
-    public getPlayerLoggedIn(): Players_IPlayer.IPlayer | null {
+    public getPlayerLoggedIn(): Players_Player.Player | null {
         const userId = Helpers_Misc.getExisted(Users_Model.getSelfUserId());
         for (const [, player] of this.getAllPlayersDict()) {
             if (player.getUserId() === userId) {
@@ -214,12 +222,12 @@ export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
         return this.getPlayerLoggedIn()?.getPlayerIndex() ?? null;
     }
 
-    public getPlayerInTurn(): Players_IPlayer.IPlayer {
+    public getPlayerInTurn(): Players_Player.Player {
         return this.getPlayer(this._getWar().getPlayerIndexInTurn());
     }
 
-    public getHumanPlayers(): Players_IPlayer.IPlayer[] {
-        const players: Players_IPlayer.IPlayer[] = [];
+    public getHumanPlayers(): Players_Player.Player[] {
+        const players: Players_Player.Player[] = [];
         for (const [, player] of this.getAllPlayersDict()) {
             if (player.getUserId() != null) {
                 players.push(player);
@@ -322,9 +330,11 @@ export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
         return (p1 != null) && (p2 != null) && (p1.getTeamIndex() === p2.getTeamIndex());
     }
 
-    public forEachPlayer(includeNeutral: boolean, func: (p: Players_IPlayer.IPlayer) => void): void {
+    public forEachPlayer(includeNeutral: boolean, func: (p: Players_Player.Player) => void): void {
         for (const [playerIndex, player] of this._players) {
-            ((includeNeutral) || (playerIndex !== 0)) && (func(player));
+            if ((includeNeutral) || (playerIndex !== 0)) {
+                func(player);
+            }
         }
     }
 

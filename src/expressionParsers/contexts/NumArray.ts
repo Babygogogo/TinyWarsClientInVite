@@ -25,7 +25,7 @@ import {
     ExpressionParsers_Results_UnitStatisticArray,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
@@ -60,7 +60,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
             NumArray.FnGet,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
                 Lang_Constants.TextType.A0490,
-                 
+
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -70,7 +70,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -99,7 +99,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnWhere, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_03,
                         );
@@ -139,7 +139,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnSelect, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_06,
                         );
@@ -197,7 +197,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argResultType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -226,7 +226,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argResultType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -255,7 +255,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argResultType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -284,7 +284,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argResultType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -313,7 +313,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnAll, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_17,
                         );
@@ -353,7 +353,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnAny, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
-                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                             })),
                             Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_20,
                         );
@@ -391,7 +391,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
 
                     for (let i = 0; i < argArray.length; ++i) {
                         const argType = argArray[i].getResultType({
-                            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                         });
                         if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                             throw Helpers_Misc.newError(
@@ -418,7 +418,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -445,7 +445,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
 
                     for (let i = 0; i < argArray.length; ++i) {
                         const argType = argArray[i].getResultType({
-                            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
                         });
                         if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                             throw Helpers_Misc.newError(
@@ -607,7 +607,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
             return new ExpressionParsers_Results_TileBuffArray.TileBuffArray(war, resultArray);
 
         } else if (resultType === ExpressionParsers_Enums.ResultType.Player) {
-            const resultArray: Players_IPlayer.IPlayer[] = [];
+            const resultArray: Players_Player.Player[] = [];
             for (const num of numbers) {
                 const result = node.evalLambda(rootCtx, [new ExpressionParsers_Results_Num.Num(war, num)], null, localVariableDict, isRestricted);
                 if (!(result instanceof ExpressionParsers_Results_Player.Player)) {

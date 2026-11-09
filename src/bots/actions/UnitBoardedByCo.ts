@@ -23,7 +23,7 @@ export async function getScoreAndActionUnitBoardedByCo(unit: Units_Unit.Unit, pa
                     isBlocked       : false,
                 },
                 launchUnitId : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-            }, 
+            },
         }),
     };
 }
@@ -36,7 +36,7 @@ async function getScoreForActionUnitBoardedByCo(unit: Units_Unit.Unit): Promise<
     if (scoreArray == null) {
         totalScore += -20000;
     } else {
-        const unitType  = unit.getUnitType();
+        const unitType  = unit.getUnitTypeId();
         let hasFound    = false;
         for (let i = 0; i < scoreArray.length; i += 2) {
             if (scoreArray[i] === unitType) {

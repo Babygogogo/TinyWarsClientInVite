@@ -309,7 +309,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
         if (unit.getTeamIndex() !== producingTeamIndex) {
             hasEnemyUnit = true;
         } else {
-            if (unit.getUnitType() === producingUnitType) {
+            if (unit.getUnitTypeId() === producingUnitType) {
                 score += -unitCurrentHp * productionCost / 1000;
 
                 if (unit.getPlayerIndex() == playerIndexInTurn) {

@@ -103,7 +103,7 @@ export function getObserverTeamIndexListForUnitOnMap({ war, gridIndex }: {
         return null;
     }
 
-    const unitType          = unit.getUnitType();
+    const unitType          = unit.getUnitTypeId();
     const isDiving          = unit.getIsDiving();
     const isInvisible       = unit.checkIsInvisible(gridIndex);
     const unitPlayerIndex   = unit.getPlayerIndex();
@@ -142,7 +142,7 @@ export function getAllUnitsOnMapVisibleToTeams(war: BaseWar_Model_War.War, teamI
         ) {
             units.add(unit);
         } else {
-            const unitType = unit.getUnitType();
+            const unitType = unit.getUnitTypeId();
             if ((unit.getIsDiving()) || (unit.checkIsInvisible(gridIndex))) {
                 // Do nothing.
             } else {
@@ -296,7 +296,7 @@ function _checkIsUnitHiddenByTileToTeam(war: BaseWar_Model_War.War, unit: Units_
     const gridIndex = unit.getGridIndex();
     const tileMap   = war.getTileMap();
     const tile      = tileMap.getTile(gridIndex);
-    const unitType  = unit.getUnitType();
+    const unitType  = unit.getUnitTypeId();
     return (tile.getTeamIndex() !== teamIndex) && (tile.checkCanHideUnitType(unitType));
 }
 

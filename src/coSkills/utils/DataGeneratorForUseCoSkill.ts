@@ -7,7 +7,7 @@ import {
     Units_Constants,
     AuxiliaryTypes_MapSize,
     type BaseWar_Model_War,
-    type Players_IPlayer,
+    type Players_Player,
     type Units_UnitMap,
 } from "../../internal.ts";
 import type { FixedAreaDamage } from "../../proto/schema/CommonProto/Config/CoSkillCfg/InstantManual/FixedAreaDamage.ts";
@@ -28,7 +28,7 @@ interface ValueMaps {
 
 export function generate({ war, player, skillType, skillIndex }: {
     war         : BaseWar_Model_War.War;
-    player      : Players_IPlayer.IPlayer;
+    player      : Players_Player.Player;
     skillType   : number;
     skillIndex  : number;
 }): DataForUseCoSkill {
@@ -58,7 +58,7 @@ export function generate({ war, player, skillType, skillIndex }: {
     return dataForUseCoSkill;
 }
 
-function getFixedAreaDamageCenter(war: BaseWar_Model_War.War, player: Players_IPlayer.IPlayer, cfg: FixedAreaDamage): AuxiliaryTypes_GridIndex.GridIndex | null {
+function getFixedAreaDamageCenter(war: BaseWar_Model_War.War, player: Players_Player.Player, cfg: FixedAreaDamage): AuxiliaryTypes_GridIndex.GridIndex | null {
     const targetType        = cfg.getTargetTypeId();
     const radius            = cfg.getRadius();
     const hpDamage          = cfg.getDamage();
@@ -66,31 +66,31 @@ function getFixedAreaDamageCenter(war: BaseWar_Model_War.War, player: Players_IP
     if (targetType === CoSkills_Constants.FixedAreaDamageTargetTypeId.Hp) { // HP
         const valueMaps = getValueMap(war.getUnitMap(), player.getTeamIndex());
         return getFixedAreaDamageCenterForType1({
-            war, valueMaps, radius, hpDamage, isIndiscriminate, 
+            war, valueMaps, radius, hpDamage, isIndiscriminate,
         });
 
     } else if (targetType === CoSkills_Constants.FixedAreaDamageTargetTypeId.Value) {  // fund
         const valueMaps = getValueMap(war.getUnitMap(), player.getTeamIndex());
         return getFixedAreaDamageCenterForType2({
-            war, valueMaps, radius, hpDamage, isIndiscriminate, 
+            war, valueMaps, radius, hpDamage, isIndiscriminate,
         });
 
     } else if (targetType === CoSkills_Constants.FixedAreaDamageTargetTypeId.RandomOfHpAndValue) {  // random: HP or fund
         const valueMaps = getValueMap(war.getUnitMap(), player.getTeamIndex());
         return getFixedAreaDamageCenterForType3({
-            war, valueMaps, radius, hpDamage, isIndiscriminate, 
+            war, valueMaps, radius, hpDamage, isIndiscriminate,
         });
 
     } else if (targetType === CoSkills_Constants.FixedAreaDamageTargetTypeId.CapturerHp) {  // HP of inf/mech/bike
         const valueMaps = getValueMap(war.getUnitMap(), player.getTeamIndex());
         return getFixedAreaDamageCenterForType4({
-            war, valueMaps, radius, hpDamage, isIndiscriminate, 
+            war, valueMaps, radius, hpDamage, isIndiscriminate,
         });
 
     } else if (targetType === CoSkills_Constants.FixedAreaDamageTargetTypeId.UnitsCount) {  // number of units
         const valueMaps = getValueMap(war.getUnitMap(), player.getTeamIndex());
         return getFixedAreaDamageCenterForType5({
-            war, valueMaps, radius, hpDamage, isIndiscriminate, 
+            war, valueMaps, radius, hpDamage, isIndiscriminate,
         });
 
     } else if (targetType === CoSkills_Constants.FixedAreaDamageTargetTypeId.Appointed) {
@@ -142,10 +142,10 @@ function getFixedAreaDamageCenterForType3({ war, valueMaps, radius, hpDamage, is
 }): AuxiliaryTypes_GridIndex.GridIndex {
     return war.getRandomNumberManager().getAndTickNextNumber() < 0.5
         ? getFixedAreaDamageCenterForType1({
-            war, valueMaps, radius, hpDamage, isIndiscriminate, 
+            war, valueMaps, radius, hpDamage, isIndiscriminate,
         })
         : getFixedAreaDamageCenterForType2({
-            war, valueMaps, radius, hpDamage, isIndiscriminate, 
+            war, valueMaps, radius, hpDamage, isIndiscriminate,
         });
 }
 
@@ -200,7 +200,7 @@ function getValueMap(unitMap: Units_UnitMap.UnitMap, teamIndex: number): ValueMa
     }
 
     return {
-        hpMap, fundMap, capturerMap, sameTeamMap, 
+        hpMap, fundMap, capturerMap, sameTeamMap,
     };
 }
 
@@ -245,7 +245,7 @@ function getDamageMap({ valueMaps, hpDamage, isIndiscriminate }: {
         }
     }
     return {
-        hpMap, fundMap, unitCountMap, capturerValueMap, 
+        hpMap, fundMap, unitCountMap, capturerValueMap,
     };
 }
 

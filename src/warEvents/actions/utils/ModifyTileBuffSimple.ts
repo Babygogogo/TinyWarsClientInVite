@@ -13,7 +13,7 @@ import {
     Lang_Constants,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type Players_IPlayer,
+    type Players_Player,
     type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -302,7 +302,7 @@ export async function applyWithoutExtraData(action: WeaModifyTileBuffSimple, isF
         const conPlayerFilter       = action.getConPlayerFilter();
         const conTileBuffFilter     = action.getConTileBuffFilter();
         const conMaxModifyCount     = action.getConMaxModifyCount() ?? Numbers_Constants.MaxInt32;
-        const playerFilterDict      = new Map<Players_IPlayer.IPlayer, boolean>();
+        const playerFilterDict      = new Map<Players_Player.Player, boolean>();
         for (const column of tileMap.getMap()) {
             for (const tile of column) {
                 const oldBuffList = tile.getUnfixedBuffList();
@@ -383,7 +383,7 @@ export async function applyWithoutExtraData(action: WeaModifyTileBuffSimple, isF
     }
 }
 
-function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
         resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }
