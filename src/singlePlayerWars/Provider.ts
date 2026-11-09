@@ -6,7 +6,7 @@ import {
     SingleCustomWars_War,
     SingleFreeWars_War,
     SinglePlayerWars_War,
-    SingleRankWars_War,
+    // SingleRankedWars_War,
     Utils_ClientErrorCode,
 } from "../internal.ts";
 
@@ -66,8 +66,8 @@ function createWarByWarData(warData: SerialWar): SinglePlayerWars_War.War {
         return new SingleCustomWars_War.War(true);
     } else if (warData.getSettingsForSfw()) {
         return new SingleFreeWars_War.War(true);
-    } else if (warData.getSettingsForSrw()) {
-        return new SingleRankWars_War.War(true);
+    // } else if (warData.getSettingsForSrw()) {
+    //     return new SingleRankedWars_War.War(true);
     } else if (warData.getSettingsForCaw()) {
         return new Campaigns_Wars_War.War(true);
     } else {

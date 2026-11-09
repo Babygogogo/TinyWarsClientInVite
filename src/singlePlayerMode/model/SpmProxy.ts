@@ -6,7 +6,7 @@ import {
     Notifications_Dispatcher,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerWars_War,
-    SingleRankWars_War,
+    SingleRankedWars_War,
     type Egret_Egret,
 } from "../../internal.ts";
 import type { C as SpmCreateScwRequest } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/C.ts";
@@ -226,7 +226,7 @@ function _onMsgSpmGetRankList(e: Egret_Egret.Event<Networks_Manager.ResponseMapp
     }
 }
 
-export function reqSpmValidateSrw(war: SingleRankWars_War.War): void {
+export function reqSpmValidateSrw(war: SingleRankedWars_War.War): void {
     Networks_Manager.send({
         MsgSpmValidateSrw : {
             c : {

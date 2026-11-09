@@ -22,7 +22,7 @@ import {
     SinglePlayerMode_Model_SpmProxy,
     SinglePlayerWars_AutoWarOpManager,
     SinglePlayerWars_War,
-    SingleRankWars_War,
+    SingleRankedWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Turns_Constants,
@@ -516,7 +516,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             group.setIsVisible(false);
             return;
         }
-        if ((!(war instanceof SingleRankWars_War.War)) &&
+        if ((!(war instanceof SingleRankedWars_War.War)) &&
             (!(war instanceof Campaigns_Wars_War.War))
         ) {
             group.setIsVisible(false);

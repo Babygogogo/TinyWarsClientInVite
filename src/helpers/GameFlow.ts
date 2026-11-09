@@ -58,6 +58,7 @@ import {
     SinglePlayerMode_Model_SpmProxy,
     SinglePlayerWars_AutoWarOpManager,
     SinglePlayerWars_Provider,
+    SingleRankedWars_Provider,
     Sounds_SoundPlayer,
     Stages_StageManager,
     TestWar_Model_TwWar,
@@ -191,6 +192,7 @@ async function doStartGame(stage: Egret_Egret.Stage): Promise<void> {
     SinglePlayerMode_Model_SpmProxy.init();
     SinglePlayerMode_Model_SpmModel.init();
     SinglePlayerWars_Provider.init();
+    SingleRankedWars_Provider.init();
     MapEditor_Model_MeProxy.init();
     MapEditor_Model_MeModel.init();
     Chat_Proxy.init();
@@ -220,6 +222,7 @@ export function gotoLogin(): void {
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
     SinglePlayerWars_Provider.unloadWar();
+    SingleRankedWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -240,6 +243,7 @@ export function gotoLobby(): void {
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
     SinglePlayerWars_Provider.unloadWar();
+    SingleRankedWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
     GamePanels_Manager.closeAllPanelsExcept([
         GamePanels_Dict.getDict().BroadcastPanel,
@@ -264,6 +268,7 @@ export async function gotoMultiPlayerWar(data: SerialWar): Promise<void> {
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
     SinglePlayerWars_Provider.unloadWar();
+    SingleRankedWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -290,6 +295,7 @@ export async function gotoReplayWar(warData: SerialWar, replayId: number): Promi
     HalfwayReplayWar_Model_HrwModel.unloadWar();
     MultiPlayerWar_Model_MpwModel.unloadWar();
     SinglePlayerWars_Provider.unloadWar();
+    SingleRankedWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -315,6 +321,7 @@ export async function gotoHalfwayReplayWar(warData: SerialWar): Promise<void> {
     ReplayWar_Model_RwModel.unloadWar();
     MultiPlayerWar_Model_MpwModel.unloadWar();
     SinglePlayerWars_Provider.unloadWar();
+    SingleRankedWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -341,7 +348,9 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
     warData             : SerialWar;
     overridingBgmCode?  : number | null;
 }): Promise<void> {
-    const war = await SinglePlayerWars_Provider.loadWar({ warData, slotIndex, slotExtraData });
+    const war = warData.getSettingsForSrw()
+        ? await SingleRankedWars_Provider.loadWar({ warData, slotIndex, slotExtraData })
+        : await SinglePlayerWars_Provider.loadWar({ warData, slotIndex, slotExtraData });
     war.setOverridingBgmCode(overridingBgmCode ?? null);
 
     MultiPlayerWar_Model_MpwModel.unloadWar();
@@ -386,6 +395,7 @@ export async function gotoMapEditorWar({ mapRawData, slotIndex, isReview, srcNor
     });
     MultiPlayerWar_Model_MpwModel.unloadWar();
     SinglePlayerWars_Provider.unloadWar();
+    SingleRankedWars_Provider.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
 
@@ -520,6 +530,7 @@ export async function gotoMfrCreateSettingsPanel(warData: SerialWar): Promise<vo
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
     SinglePlayerWars_Provider.unloadWar();
+    SingleRankedWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -643,6 +654,7 @@ export function unloadAllWarsAndOpenCommonPanels(): void {
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
     SinglePlayerWars_Provider.unloadWar();
+    SingleRankedWars_Provider.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -671,6 +683,7 @@ export function getOngoingWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseW
         ?? (ReplayWar_Model_RwModel.getWar())
         ?? (HalfwayReplayWar_Model_HrwModel.getWar())
         ?? (SinglePlayerWars_Provider.getWar())
+        ?? (SingleRankedWars_Provider.getWar())
         ?? (MapEditor_Model_MeModel.getWar());
 }
 

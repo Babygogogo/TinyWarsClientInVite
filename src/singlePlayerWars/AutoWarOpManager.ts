@@ -15,7 +15,7 @@ import {
     SinglePlayerMode_Model_SpmProxy,
     SinglePlayerWars_Constants,
     SinglePlayerWars_War,
-    SingleRankWars_War,
+    SingleRankedWars_War,
     Turns_Constants,
     Users_Model,
     Users_Utils,
@@ -155,7 +155,7 @@ function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
                         callback   : () => Helpers_GameFlow.gotoLobby(),
                     });
                 } else {
-                    if (war instanceof SingleRankWars_War.War) {
+                    if (war instanceof SingleRankedWars_War.War) {
                         const turnIndex     = war.getTurnManager().getTurnIndex();
                         const actionsCount  = war.getExecutedOperationManager().getExecutedOperationsCount();
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {

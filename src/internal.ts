@@ -665,8 +665,9 @@ export * as SingleRankRoom_View_SrrCreateMapListPanel from "./singleRankRoom/vie
 export * as SingleRankRoom_View_SrrCreatePlayerInfoPage from "./singleRankRoom/view/SrrCreatePlayerInfoPage.ts";
 export * as SingleRankRoom_View_SrrCreateQuickSettingsPanel from "./singleRankRoom/view/SrrCreateQuickSettingsPanel.ts";
 export * as SingleRankRoom_View_SrrCreateSettingsPanel from "./singleRankRoom/view/SrrCreateSettingsPanel.ts";
-export * as SingleRankWars_War from "./singleRankWars/War.ts";
+export * as SingleRankedWars_War from "./singleRankedWars/War.ts";
 export * as SingleRankedWars_Constants from "./singleRankedWars/Constants.ts";
+export * as SingleRankedWars_Provider from "./singleRankedWars/Provider.ts";
 export * as Sounds_Constants from "./sounds/Constants.ts";
 export * as Sounds_SoundPlayer from "./sounds/SoundPlayer.ts";
 export * as Sounds_Types from "./sounds/Types.ts";
