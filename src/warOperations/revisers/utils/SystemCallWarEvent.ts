@@ -1,6 +1,6 @@
 import {
-    Utils_ClientErrorCode,
     Helpers_Misc,
+    Utils_ClientErrorCode,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -14,15 +14,15 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoSystemCallWarEve
 
     const warEventId = rawAction.getWarEventId();
     const dataIndex  = rawAction.getNodeAndActionsIndex();
-    if (war.getRandomNumberManager().getIsNeedSeedRandom()) {   // 由于随机条件在没有seedrandom的情况下会出现验算不通过的情况，所以只能针对性跳过验算
-        const callableWarEventIdAndDataIndex = war.getWarEventManager().getCallableWarEventIdAndDataIndex();
-        if ((callableWarEventIdAndDataIndex == null)                    ||
-            (warEventId !== callableWarEventIdAndDataIndex.warEventId)  ||
-            (dataIndex !== callableWarEventIdAndDataIndex.dataIndex)
-        ) {
-            throw Helpers_Misc.newError(`Invalid warEventId: ${warEventId}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemCallWarEvent_03);
-        }
-    }
+    // if (war.getRandomNumberManager().getIsNeedSeedRandom()) {   // 由于随机条件在没有seedrandom的情况下会出现验算不通过的情况，所以只能针对性跳过验算
+    //     const callableWarEventIdAndDataIndex = war.getWarEventManager().getCallableWarEventIdAndDataIndex();
+    //     if ((callableWarEventIdAndDataIndex == null)                    ||
+    //         (warEventId !== callableWarEventIdAndDataIndex.warEventId)  ||
+    //         (dataIndex !== callableWarEventIdAndDataIndex.dataIndex)
+    //     ) {
+    //         throw Helpers_Misc.newError(`Invalid warEventId: ${warEventId}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemCallWarEvent_03);
+    //     }
+    // }
 
     return WoContainer.fromJson({
         WoSystemCallWarEvent : {

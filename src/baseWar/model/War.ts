@@ -16,7 +16,7 @@ import {
     Players_Player,
     Players_PlayerManager,
     Players_Utils_Common,
-    RandomNumbers_RandomNumberManager,
+    RandomNumbers_Manager,
     SingleCustomWars_War,
     SingleFreeWars_War,
     Sounds_SoundPlayer,
@@ -65,7 +65,7 @@ export abstract class War {
     private readonly _field                 : Fields_Field.Field;
     private readonly _turnManager           = new Turns_Manager.Manager();
     private readonly _executedActionManager = new WarOperations_ExecutedWarOpManager.ExecutedWarOpManager();
-    private readonly _randomNumberManager   = new RandomNumbers_RandomNumberManager.RandomNumberManager();
+    private readonly _randomNumberManager   = new RandomNumbers_Manager.Manager();
     private readonly _drawVoteManager       = new BaseWar_Model_BwDrawVoteManager.BwDrawVoteManager();
     private readonly _taskObjectiveManager  = new TaskObjectives_Manager.Manager();
     private readonly _warStatisticsManager  = new BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager();
@@ -102,7 +102,6 @@ export abstract class War {
     public abstract init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void;
     public abstract getNormalMapId(): number | null;
     public abstract getIsNeedExecutedOperations(): boolean;
-    public abstract getIsNeedSeedRandom(): boolean;
     public abstract getCanCheat(): boolean;
     public abstract getShouldSerializeFullInfoForFreeModeGames(): boolean;
     public abstract getWarEventManager(): WarEvents_Manager.Manager;
@@ -143,9 +142,8 @@ export abstract class War {
         const instanceWarRule = settingsForCommon.getInstanceWarRule();
         this.getWarEventManager().init(data.getWarEventManager(), instanceWarRule?.getWarEventFullData());
         this.getRandomNumberManager().init({
-            isNeedSeedRandom : this.getIsNeedSeedRandom(),
-            initialState     : data.getSeedRandomInitialState(),
-            currentState     : data.getSeedRandomCurrentState(),
+            initialState : data.getSeedRandomInitialState(),
+            currentState : data.getSeedRandomCurrentState(),
         });
         this.getExecutedOperationManager().init({
             isNeedExecutedOperations : this.getIsNeedExecutedOperations(),
@@ -195,9 +193,8 @@ export abstract class War {
             warData.getDrawVoteManager(),
         );
         this.getRandomNumberManager().init({
-            isNeedSeedRandom : this.getIsNeedSeedRandom(),
-            initialState     : warData.getSeedRandomInitialState(),
-            currentState     : warData.getSeedRandomCurrentState(),
+            initialState : warData.getSeedRandomInitialState(),
+            currentState : warData.getSeedRandomCurrentState(),
         });
         this.getWarStatisticsManager().fastInit(warData.getWarStatisticsManager());
         this.getTaskObjectiveManager().fastInit(warData.getTaskObjectiveManager());
@@ -537,7 +534,7 @@ export abstract class War {
     public getDrawVoteManager(): BaseWar_Interface_IBwDrawVoteManager.IBwDrawVoteManager {
         return this._drawVoteManager;
     }
-    public getRandomNumberManager(): RandomNumbers_RandomNumberManager.RandomNumberManager {
+    public getRandomNumberManager(): RandomNumbers_Manager.Manager {
         return this._randomNumberManager;
     }
     public getExecutedOperationManager(): WarOperations_ExecutedWarOpManager.ExecutedWarOpManager {

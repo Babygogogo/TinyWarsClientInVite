@@ -96,9 +96,6 @@ export class War extends SinglePlayerWars_War.War {
     public getIsNeedExecutedOperations(): boolean {
         return true;
     }
-    public getIsNeedSeedRandom(): boolean {
-        return true;
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.

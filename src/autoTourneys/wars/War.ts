@@ -31,9 +31,6 @@ export class War extends MultiPlayerWar_Model_MpwWar.MpwWar {
     public getIsNeedExecutedOperations(): boolean {
         return false;
     }
-    public getIsNeedSeedRandom(): boolean {
-        return false;
-    }
     public getNormalMapId(): number {
         return this.getSettingsForAtw().getNormalMapId();
     }

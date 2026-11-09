@@ -28,9 +28,6 @@ export class HrwWar extends ReplayWar_Model_RwWarBase.RwWarBase {
     public getShouldSerializeFullInfoForFreeModeGames(): boolean {
         return false;
     }
-    public getIsNeedSeedRandom(): boolean {
-        return false;
-    }
     public getIsExecuteActionsWithExtraData(): boolean {
         return true;
     }

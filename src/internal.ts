@@ -126,7 +126,7 @@ export * as BaseWar_Model_BwCursor from "./baseWar/model/BwCursor.ts";
 export * as BaseWar_Model_BwDrawVoteManager from "./baseWar/model/BwDrawVoteManager.ts";
 export * as WarOperations_ExecutedWarOpManager from "./warOperations/ExecutedWarOpManager.ts";
 export * as BaseWar_Model_BwGridVisualEffect from "./baseWar/model/BwGridVisualEffect.ts";
-export * as RandomNumbers_RandomNumberManager from "./randomNumbers/RandomNumberManager.ts";
+export * as RandomNumbers_Manager from "./randomNumbers/Manager.ts";
 export * as BaseWar_Model_BwTypes from "./baseWar/model/BwTypes.ts";
 export * as WarEvents_Manager from "./warEvents/Manager.ts";
 export * as BaseWar_Model_BwWarStatisticsManager from "./baseWar/model/BwWarStatisticsManager.ts";

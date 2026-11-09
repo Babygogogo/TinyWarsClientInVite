@@ -1330,7 +1330,7 @@ export class Manager {
         }
 
         const randomNumberManager   = war.getRandomNumberManager();
-        const randomState           = randomNumberManager.getIsNeedSeedRandom() ? randomNumberManager.getSeedRandomCurrentStateJson() : null;
+        const randomState           = randomNumberManager.getSeedRandomCurrentStateJson();
         const nodeResultDict        = new Map<number, boolean>();
         const conditionResultDict   = new Map<number, boolean>();
         let result                  : WarEvents_Types.WarEventIdAndDataIndex | null = null;
@@ -1344,9 +1344,7 @@ export class Manager {
             }
         }
 
-        if (randomState) {
-            randomNumberManager.setSeedRandomCurrentStateJson(randomState);
-        }
+        randomNumberManager.setSeedRandomCurrentStateJson(randomState);
         return result;
     }
     private _getCallableNodeAndActionsIndex(warEventId: number, nodeResultDict: Map<number, boolean>, conditionResultDict: Map<number, boolean>): number | null {   // DONE
