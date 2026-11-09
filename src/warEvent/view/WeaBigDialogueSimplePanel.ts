@@ -20,7 +20,7 @@ import {
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -41,7 +41,7 @@ import { DataForPlayBgm } from "../../proto/schema/CommonProto/WarEvent/WeaBigDi
 import { DataForPlaySfx } from "../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForMisc/DataForPlaySfx.ts";
 
 export interface OpenData {
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }

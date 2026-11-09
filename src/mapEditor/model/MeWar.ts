@@ -16,7 +16,7 @@ import {
     Players_Constants,
     WarTypes_Constants,
     type MapEditor_Interface_IMeDrawer,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
 } from "../../internal.ts";
 
 import type { CampaignMapData } from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";
@@ -29,7 +29,7 @@ import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/Tem
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export class MeWar extends BaseWar_Model_War.War implements MapEditor_Interface_IMeWar.IMeWar {
+export class MeWar extends BaseWar_Model_War.War implements MapEditor_Model_MeWar.MeWar {
     private readonly _drawer                = new MapEditor_Model_MeDrawer.MeDrawer();
     private readonly _warEventManager       = new WarEvents_Manager.Manager();
 
@@ -83,14 +83,14 @@ export class MeWar extends BaseWar_Model_War.War implements MapEditor_Interface_
         this._setGridMarkData(gridMarkData);
     }
 
-    public startRunning(): MapEditor_Interface_IMeWar.IMeWar {
+    public startRunning(): MapEditor_Model_MeWar.MeWar {
         super.startRunning();
 
         this.getDrawer().startRunning(this);
 
         return this;
     }
-    public stopRunning(): MapEditor_Interface_IMeWar.IMeWar {
+    public stopRunning(): MapEditor_Model_MeWar.MeWar {
         super.stopRunning();
 
         this.getDrawer().stopRunning();

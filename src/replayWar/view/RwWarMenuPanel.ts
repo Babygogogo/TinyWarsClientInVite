@@ -17,16 +17,15 @@ import {
     Lang_Constants,
     Ui_Components_UiPanel,
     type Egret_Egret,
-    type ReplayWar_Interface_IRwWar,
+    type ReplayWar_Model_RwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
 } from "../../internal.ts";
 
-
 export interface OpenData {
-    war     : ReplayWar_Interface_IRwWar.IRwWar;
+    war     : ReplayWar_Model_RwWar.RwWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;

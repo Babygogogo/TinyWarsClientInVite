@@ -15,7 +15,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -28,7 +28,7 @@ import { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAva
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 
 export interface OpenData {
-    war     : MapEditor_Interface_IMeWar.IMeWar;
+    war     : MapEditor_Model_MeWar.MeWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
@@ -660,16 +660,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             let count           = 0;
             if (availability) {
                 if (availability.getCanCcw()) {
-                    ++count; 
+                    ++count;
                 }
                 if (availability.getCanMcw()) {
-                    ++count; 
+                    ++count;
                 }
                 if (availability.getCanMrw()) {
-                    ++count; 
+                    ++count;
                 }
                 if (availability.getCanSrw()) {
-                    ++count; 
+                    ++count;
                 }
             }
             label.setText(`${count}`);

@@ -16,7 +16,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -30,7 +30,7 @@ let _isShowDetail           = false;
 let _prevWarEventId         : number | null = null;
 
 export interface OpenData {
-    war: MapEditor_Interface_IMeWar.IMeWar;
+    war: MapEditor_Model_MeWar.MeWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
@@ -297,7 +297,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 function generateDataArrayForListWarEventDesc({ war, eventId }: {
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
     eventId     : number;
 }): DataForWarEventDetailRenderer[] {
     const prefixArray   = [`E${eventId}`];
@@ -374,7 +374,7 @@ function generateDataArrayForListWarEventDesc({ war, eventId }: {
     return dataArray;
 }
 function generateNodeDataArrayForListWarEventDesc({ war, eventId, parentNodeId, nodeId, prefixArray }: {
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
     eventId     : number;
     parentNodeId: number | null;
     nodeId      : number;
@@ -451,7 +451,7 @@ class WarEventIdRenderer
 
 interface DataForWarEventDetailRenderer extends Ui_Types_UiListItemData.UiListItemData {
     isSeparator         : boolean;
-    war                 : MapEditor_Interface_IMeWar.IMeWar;
+    war                 : MapEditor_Model_MeWar.MeWar;
     descType            : WarEvents_Constants.DescType;
     prefixArray         : string[];
     eventId             : number;

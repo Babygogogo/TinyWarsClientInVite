@@ -7,7 +7,7 @@ import {
     Lang_Utils,
     Notifications_Dispatcher,
     Ui_Components_UiPanel,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -19,7 +19,7 @@ import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEve
 
 export interface OpenData {
     srcMapRawData   : MapRawData;
-    war             : MapEditor_Interface_IMeWar.IMeWar;
+    war             : MapEditor_Model_MeWar.MeWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                              : Ui_Interfaces_IUiImage.IUiImage;

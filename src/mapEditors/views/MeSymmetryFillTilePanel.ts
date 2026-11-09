@@ -13,7 +13,7 @@ import {
     Geometries_Constants,
     Lang_Constants,
     Ui_Components_UiPanel,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -22,7 +22,7 @@ import {
 } from "../../internal.ts";
 
 export interface OpenData {
-    war     : MapEditor_Interface_IMeWar.IMeWar;
+    war     : MapEditor_Model_MeWar.MeWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
@@ -525,7 +525,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 }
 
-function autoFillTile(war: MapEditor_Interface_IMeWar.IMeWar, dstGridIndex: AuxiliaryTypes_GridIndex.GridIndex, symmetryType: Geometries_Constants.SymmetryTypeId): void {
+function autoFillTile(war: MapEditor_Model_MeWar.MeWar, dstGridIndex: AuxiliaryTypes_GridIndex.GridIndex, symmetryType: Geometries_Constants.SymmetryTypeId): void {
     const tileMap           = war.getTileMap();
     const gameConfig        = war.getGcData();
     const drawer            = war.getDrawer();

@@ -14,7 +14,7 @@ import {
     ValueAndComparators_Utils,
     WarEvents_Actions_Utils_Common,
     type AuxiliaryTypes_AuxiliaryTypes,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -27,7 +27,7 @@ import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/W
 import type { WeaSetTileTypeSimple } from "../../proto/schema/CommonProto/WarEvent/WeaSetTileTypeSimple.ts";
 
 export interface OpenData {
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }

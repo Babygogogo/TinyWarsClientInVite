@@ -1,14 +1,14 @@
 import {
     FloatText,
-    TestWar_Model_TwWar,
-    GamePanels_Manager,
     GamePanels_Dict,
-    Lang_Utils,
-    MultiPlayerWar_Model_MpwModel,
+    GamePanels_Manager,
+    HalfwayReplayWar_Model_HrwWar,
     Helpers_GameFlow,
     Lang_Constants,
+    Lang_Utils,
+    MultiPlayerWar_Model_MpwModel,
+    TestWar_Model_TwWar,
     Ui_Components_UiPanel,
-    type HalfwayReplayWar_Interface_IHrwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -18,7 +18,7 @@ import {
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 
 export interface OpenData {
-    war     : HalfwayReplayWar_Interface_IHrwWar.IHrwWar;
+    war     : HalfwayReplayWar_Model_HrwWar.HrwWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;

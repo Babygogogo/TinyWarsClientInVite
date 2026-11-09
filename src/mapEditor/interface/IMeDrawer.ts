@@ -1,7 +1,7 @@
 import {
     type MapEditor_Model_MeTypes,
     type MapEditors_Constants,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Units_Unit,
     type Geometries_Constants,
 } from "../../internal.ts";
@@ -10,7 +10,7 @@ import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization
 export interface IMeDrawer {
     init(): IMeDrawer;
 
-    startRunning(war: MapEditor_Interface_IMeWar.IMeWar): void;
+    startRunning(war: MapEditor_Model_MeWar.MeWar): void;
     stopRunning(): void;
 
     setModeDeleteUnit(): void;

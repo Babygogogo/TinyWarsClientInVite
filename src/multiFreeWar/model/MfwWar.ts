@@ -1,15 +1,14 @@
 import {
-    Utils_ClientErrorCode,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
     MultiPlayerWar_Model_MpwWar,
+    Utils_ClientErrorCode,
     type GameConfigs_GameConfig,
-    type MultiFreeWar_Interface_IMfwWar,
 } from "../../internal.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
 
-export class MfwWar extends MultiPlayerWar_Model_MpwWar.MpwWar implements MultiFreeWar_Interface_IMfwWar.IMfwWar {
+export class MfwWar extends MultiPlayerWar_Model_MpwWar.MpwWar {
     private _settingsForMfw?    : SettingsForMfw;
 
     public constructor(isNeedView: boolean) {

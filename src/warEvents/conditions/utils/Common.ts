@@ -21,7 +21,7 @@ import {
     Lang_Constants,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type AuxiliaryTypes_MapSize,
 } from "../../../internal.ts";
 import { ConditionIdAndFlags } from "../../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
@@ -153,7 +153,7 @@ export function resetCondition(condition: WarEventCondition, conditionType: WarE
 export function openConditionModifyPanel({ fullData, condition, war }: {
     fullData    : WarEventFullData;
     condition   : WarEventCondition;
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
 }): void {
     // todo: handle more condition types.
     GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecPlayerPresencePanel);
@@ -168,27 +168,27 @@ export function openConditionModifyPanel({ fullData, condition, war }: {
     GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecManualActionStatisticsPanel);
 
     if      (condition.getWecPlayerPresence())                  {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecPlayerPresencePanel,                 { fullData, condition, war }); 
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecPlayerPresencePanel,                 { fullData, condition, war });
     } else if (condition.getWecTurnAndPlayer())                   {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecTurnAndPlayerPanel,                  { fullData, condition, war }); 
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecTurnAndPlayerPanel,                  { fullData, condition, war });
     } else if (condition.getWecEventCalledCount())                {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecEventCalledCountPanel,               { fullData, condition, war }); 
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecEventCalledCountPanel,               { fullData, condition, war });
     } else if (condition.getWecTilePresence())                    {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecTilePresencePanel,                   { fullData, condition, war }); 
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecTilePresencePanel,                   { fullData, condition, war });
     } else if (condition.getWecUnitPresence())                    {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecUnitPresencePanel,                   { fullData, condition, war }); 
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecUnitPresencePanel,                   { fullData, condition, war });
     } else if (condition.getWecWeatherAndFog())                   {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecWeatherAndFogPanel,                  { fullData, condition, war }); 
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecWeatherAndFogPanel,                  { fullData, condition, war });
     } else if (condition.getWecExpression())                      {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecExpressionPanel,                     { fullData, condition, war }); 
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecExpressionPanel,                     { fullData, condition, war });
     } else if (condition.getWecCustomCounter())                   {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionModifyPanel60,               { fullData, condition, war }); 
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionModifyPanel60,               { fullData, condition, war });
     } else if (condition.getWecOngoingPersistentActionPresence()) {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecOngoingPersistentActionPanel,        { fullData, condition, war }); 
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecOngoingPersistentActionPanel,        { fullData, condition, war });
     } else if (condition.getWecManualActionStatistics())          {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecManualActionStatisticsPanel,         { fullData, condition, war }); 
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecManualActionStatisticsPanel,         { fullData, condition, war });
     } else                                                        {
-        throw Helpers_Misc.newError(`Invalid condition.`, Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_OpenConditionModifyPanel_00); 
+        throw Helpers_Misc.newError(`Invalid condition.`, Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_OpenConditionModifyPanel_00);
     }
 }
 

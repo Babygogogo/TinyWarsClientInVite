@@ -12,7 +12,7 @@ import {
     Lang_Constants,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -22,7 +22,7 @@ import {
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 
 export interface OpenData {
-    war     : MapEditor_Interface_IMeWar.IMeWar;
+    war     : MapEditor_Model_MeWar.MeWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                              : Ui_Interfaces_IUiImage.IUiImage;

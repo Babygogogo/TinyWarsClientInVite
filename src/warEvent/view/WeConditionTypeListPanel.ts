@@ -8,7 +8,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -20,7 +20,7 @@ import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 
 export interface OpenData {
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
     fullData    : WarEventFullData;
     condition   : WarEventCondition;
 }
@@ -92,7 +92,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForTypeRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    war             : MapEditor_Interface_IMeWar.IMeWar;
+    war             : MapEditor_Model_MeWar.MeWar;
     fullData        : WarEventFullData;
     newConditionType: WarEvents_Conditions_Constants.ConditionTypeId;
     condition       : WarEventCondition;
@@ -166,26 +166,26 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
 function getConditionType(condition: WarEventCondition): WarEvents_Conditions_Constants.ConditionTypeId | null {
     if      (condition.getWecPlayerPresence())                  {
-        return WarEvents_Conditions_Constants.ConditionTypeId.WecPlayerPresence; 
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecPlayerPresence;
     } else if (condition.getWecTurnAndPlayer())                   {
-        return WarEvents_Conditions_Constants.ConditionTypeId.WecTurnAndPlayer; 
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecTurnAndPlayer;
     } else if (condition.getWecEventCalledCount())                {
-        return WarEvents_Conditions_Constants.ConditionTypeId.WecEventCalledCount; 
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecEventCalledCount;
     } else if (condition.getWecWeatherAndFog())                   {
-        return WarEvents_Conditions_Constants.ConditionTypeId.WecWeatherAndFog; 
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecWeatherAndFog;
     } else if (condition.getWecTilePresence())                    {
-        return WarEvents_Conditions_Constants.ConditionTypeId.WecTilePresence; 
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecTilePresence;
     } else if (condition.getWecUnitPresence())                    {
-        return WarEvents_Conditions_Constants.ConditionTypeId.WecUnitPresence; 
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecUnitPresence;
     } else if (condition.getWecExpression())                      {
-        return WarEvents_Conditions_Constants.ConditionTypeId.WecExpression; 
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecExpression;
     } else if (condition.getWecCustomCounter())                   {
-        return WarEvents_Conditions_Constants.ConditionTypeId.WecCustomCounter; 
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecCustomCounter;
     } else if (condition.getWecOngoingPersistentActionPresence()) {
-        return WarEvents_Conditions_Constants.ConditionTypeId.WecOngoingPersistentActionPresence; 
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecOngoingPersistentActionPresence;
     } else if (condition.getWecManualActionStatistics())          {
-        return WarEvents_Conditions_Constants.ConditionTypeId.WecManualActionStatistics; 
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecManualActionStatistics;
     } else                                                        {
-        return null; 
+        return null;
     }
 }

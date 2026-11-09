@@ -11,7 +11,7 @@ import {
     Sounds_Constants,
     Lang_Constants,
     Ui_Components_UiPanel,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -25,7 +25,7 @@ import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/W
 import type { WeaSetCustomLaserTurretStateExpr } from "../../proto/schema/CommonProto/WarEvent/WeaSetCustomLaserTurretStateExpr.ts";
 
 export interface OpenData {
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }

@@ -1,18 +1,17 @@
 import {
     AuxiliaryTypes_CachedDataAccessor,
     GameConfigs_Provider,
-    MapEditor_Model_MeWar,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    MapEditor_Model_MeHelpers,
     Helpers_Misc,
-    Users_Model,
-    NormalMap_Model_NormalMapModel,
-    MapEditor_Model_MeProxy,
-    Maps_Constants,
-    MapEditors_Constants,
     LocalData_Storage,
     Logger,
-    type MapEditor_Interface_IMeWar,
+    MapEditor_Model_MeHelpers,
+    MapEditor_Model_MeProxy,
+    MapEditor_Model_MeWar,
+    MapEditors_Constants,
+    Maps_Constants,
+    NormalMap_Model_NormalMapModel,
+    Users_Model,
+    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 
 import type { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
@@ -35,7 +34,7 @@ const _dataArrayAccessor            = new AuxiliaryTypes_CachedDataAccessor.Cach
 const _mapEditorDataAccessor        = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, AuxiliaryTypes_AuxiliaryTypes.DecodedMapEditorData | null>({
     reqData : slotIndex => MapEditor_Model_MeProxy.reqMeGetMapData(slotIndex),
 });
-let _war                        : MapEditor_Interface_IMeWar.IMeWar | null = null;
+let _war                        : MapEditor_Model_MeWar.MeWar | null = null;
 
 export function init(): void {
     // nothing to do.
@@ -163,7 +162,7 @@ export async function loadWar({ mapRawData, slotIndex, isReview, srcNormalMapIdF
     isReview                    : boolean;
     srcNormalMapIdForAddEvent   : number | null;
     gridMarkData                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<GridMarkData>;
-}): Promise<MapEditor_Interface_IMeWar.IMeWar> {
+}): Promise<MapEditor_Model_MeWar.MeWar> {
     if (_war) {
         Logger.warn(`MeManager.loadWar() another war has been loaded already!`);
         unloadWar();
@@ -193,7 +192,7 @@ export function unloadWar(): void {
     }
 }
 
-export function getWar(): MapEditor_Interface_IMeWar.IMeWar | null {
+export function getWar(): MapEditor_Model_MeWar.MeWar | null {
     return _war;
 }
 

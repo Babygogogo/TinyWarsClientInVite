@@ -24,7 +24,7 @@ import {
     Ui_Components_UiPanel,
     Units_Constants,
     Users_Model,
-    type ReplayWar_Interface_IRwWar,
+    type ReplayWar_Model_RwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -35,7 +35,7 @@ import {
 } from "../../internal.ts";
 
 export interface OpenData {
-    war : ReplayWar_Interface_IRwWar.IRwWar;
+    war : ReplayWar_Model_RwWar.RwWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _btnPlayerList!        : Ui_Interfaces_IUiButton.IUiButton;
@@ -714,7 +714,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForListPlayer extends Ui_Types_UiListItemData.UiListItemData {
-    war         : ReplayWar_Interface_IRwWar.IRwWar;
+    war         : ReplayWar_Model_RwWar.RwWar;
     playerIndex : number;
 }
 class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForListPlayer> {

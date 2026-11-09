@@ -19,7 +19,7 @@ import {
     FloatText,
     Lang_Constants,
     Ui_Components_UiPanel,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -35,7 +35,7 @@ import { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/W
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 
 export interface OpenData {
-    war                 : MapEditor_Interface_IMeWar.IMeWar;
+    war                 : MapEditor_Model_MeWar.MeWar;
     descType            : WarEvents_Constants.DescType;
     eventId             : number;
     actionId?           : number;

@@ -13,7 +13,7 @@ import {
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -27,7 +27,7 @@ import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/W
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 
 export interface OpenData {
-    war                     : MapEditor_Interface_IMeWar.IMeWar;
+    war                     : MapEditor_Model_MeWar.MeWar;
     gameConfig              : GameConfigs_GameConfig.GameConfig;
     templateWarRuleArray    : TemplateWarRule[];
     fullData                : WarEventFullData;
@@ -161,7 +161,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForEventRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    war                     : MapEditor_Interface_IMeWar.IMeWar;
+    war                     : MapEditor_Model_MeWar.MeWar;
     gameConfig              : GameConfigs_GameConfig.GameConfig;
     templateWarRuleArray    : TemplateWarRule[];
     selectedEventId         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;

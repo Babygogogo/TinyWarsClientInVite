@@ -6,7 +6,7 @@ import {
 } from "../../../internal.ts";
 import type { WoSystemCallWarEvent } from "../../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
 
-// let _meWarClass     : new () => MapEditor.IMeWar;
+// let _meWarClass     : new () => MapEditor.MeWar;
 // let _mpwWarClass    : new () => MultiPlayerWar.IMpwWar;
 // let _rwWarBaseClass : new () => ReplayWar.IRwWarBase;
 // let _spwWarClass    : new () => SinglePlayerWar.ISpwWar;

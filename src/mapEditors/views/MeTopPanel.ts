@@ -2,7 +2,7 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
     type MapEditor_Interface_IMeDrawer,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type MapEditor_Model_MeTypes,
     type Notifications_Mapping,
     type Ui_Interfaces_IUiButton,
@@ -231,7 +231,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelMouseHover.setAutoShrinkWidth(width);
     }
 
-    private _getWar(): MapEditor_Interface_IMeWar.IMeWar {
+    private _getWar(): MapEditor_Model_MeWar.MeWar {
         return Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar());
     }
     private _getDrawer(): MapEditor_Interface_IMeDrawer.IMeDrawer {
@@ -1006,7 +1006,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForRecentRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    war                         : MapEditor_Interface_IMeWar.IMeWar;
+    war                         : MapEditor_Model_MeWar.MeWar;
     panel                       : Panel;
     dataForDrawUnit             : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapEditor_Model_MeTypes.DataForDrawUnit>;
     dataForDrawTileBase         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapEditor_Model_MeTypes.DataForDrawTileBase>;

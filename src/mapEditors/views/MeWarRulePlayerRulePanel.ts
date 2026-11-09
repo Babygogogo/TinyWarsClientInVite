@@ -3,7 +3,7 @@ import {
     GamePanels_Dict,
     Helpers_Misc,
     Lang_Utils,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -22,7 +22,7 @@ import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRu
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 
 export interface OpenData {
-    war                     : MapEditor_Interface_IMeWar.IMeWar;
+    war                     : MapEditor_Model_MeWar.MeWar;
     templateWarRule         : TemplateWarRule;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {

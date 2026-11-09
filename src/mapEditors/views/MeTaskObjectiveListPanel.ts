@@ -11,7 +11,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -23,7 +23,7 @@ import { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/Tas
 import { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 
 export interface OpenData {
-    war: MapEditor_Interface_IMeWar.IMeWar;
+    war: MapEditor_Model_MeWar.MeWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
@@ -145,7 +145,7 @@ interface DataForTaskObjectiveRenderer extends Ui_Types_UiListItemData.UiListIte
     taskObjective           : TaskObjective;
     fullData                : TaskObjectiveFullData;
     customCounterNameSet    : Set<string>;
-    war                     : MapEditor_Interface_IMeWar.IMeWar;
+    war                     : MapEditor_Model_MeWar.MeWar;
 }
 class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTaskObjectiveRenderer> {
     private readonly _labelError!       : Ui_Interfaces_IUiLabel.IUiLabel;

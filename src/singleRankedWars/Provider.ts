@@ -1,7 +1,6 @@
 import {
     GameConfigs_Provider,
     Helpers_Misc,
-    Logger,
     SinglePlayerWars_War,
     SingleRankedWars_War,
     Utils_ClientErrorCode,
@@ -10,7 +9,8 @@ import {
 import type { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-let _war: SinglePlayerWars_War.War | null = null;
+let _outerWar: SinglePlayerWars_War.War | undefined;
+let _innerWar: SinglePlayerWars_War.War | undefined;
 
 export function init(): void {
     // nothing to do.
@@ -24,43 +24,54 @@ export async function loadWar({ warData, slotIndex, slotExtraData }: {
     slotIndex       : number | null;
     slotExtraData   : SpmWarSaveSlotExtraData | null;
 }): Promise<SinglePlayerWars_War.War> {
-    if (getWar()) {
-        Logger.warn(`SpwModel.loadWar() another war has been loaded already!`);
-        unloadWar();
+    unloadWar();
+
+    const innerData = warData.clone();
+    const innerWar  = createWarByWarData(innerData, false);
+    innerWar.setSaveSlotIndex(slotIndex);
+    innerWar.setSaveSlotExtraData(slotExtraData?.clone());
+    innerWar.init(innerData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(innerData.getSettingsForCommon()?.getConfigVersion())));
+    innerWar.startRunning().startRunningView();
+
+    const teamIndexes = new Set<number>(innerWar.getHumanPlayers().map(v => v.getTeamIndex()));
+    if (teamIndexes.size !== 1) {
+        throw Helpers_Misc.newError(`Invalid teamIndexes: ${teamIndexes.size}`);
     }
 
-    const data  = warData.clone();
-    const war   = createWarByWarData(data);
-    war.setSaveSlotIndex(slotIndex);
-    war.setSaveSlotExtraData(slotExtraData?.clone());
-    war.init(data, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(data.getSettingsForCommon()?.getConfigVersion())));
-    war.startRunning().startRunningView();
-    setWar(war);
+    const outerData = innerWar.serializeForTeamIndexes(teamIndexes);
+    const outerWar  = createWarByWarData(outerData, true);
+    outerWar.setSaveSlotIndex(slotIndex);
+    outerWar.setSaveSlotExtraData(slotExtraData?.clone());
+    outerWar.init(outerData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(outerData.getSettingsForCommon()?.getConfigVersion())));
+    outerWar.startRunning().startRunningView();
 
-    return war;
+    setWars(outerWar, innerWar);
+    return outerWar;
 }
 
 export function unloadWar(): void {
-    const war = getWar();
-    if (war) {
-        war.dispose();
-        setWar(null);
-    }
+    getOuterWar()?.dispose();
+    getInnerWar()?.dispose();
+    setWars(undefined, undefined);
 }
 
-export function getWar(): SinglePlayerWars_War.War | null {
-    return _war;
+export function getOuterWar(): SinglePlayerWars_War.War | undefined {
+    return _outerWar;
 }
-function setWar(war: SinglePlayerWars_War.War | null): void {
-    _war = war;
+export function getInnerWar(): SinglePlayerWars_War.War | undefined {
+    return _innerWar;
+}
+function setWars(outerWar: SinglePlayerWars_War.War | undefined, innerWar: SinglePlayerWars_War.War | undefined): void {
+    _outerWar = outerWar;
+    _innerWar = innerWar;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Util functions.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-function createWarByWarData(warData: SerialWar): SinglePlayerWars_War.War {
+function createWarByWarData(warData: SerialWar, isNeedView: boolean): SinglePlayerWars_War.War {
     if (warData.getSettingsForSrw()) {
-        return new SingleRankedWars_War.War(true);
+        return new SingleRankedWars_War.War(isNeedView);
     } else {
         throw Helpers_Misc.newError(`Invalid warData.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_CreateWarByWarData_00);
     }

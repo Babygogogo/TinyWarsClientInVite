@@ -20,7 +20,6 @@ import {
     Units_Utils_Serialization,
     WarEvents_Actions_Utils_Common,
     type AuxiliaryTypes_AuxiliaryTypes,
-    type MapEditor_Interface_IMeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -37,7 +36,7 @@ import type { WeaFillUnitOnMapSimple } from "../../proto/schema/CommonProto/WarE
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 
 export interface OpenData {
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
@@ -291,7 +290,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForUnitRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
     unitData    : SerialUnit;
 }
 class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUnitRenderer> {
@@ -933,7 +932,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
 function getErrorTipsForAddUnit({ unitData, war }: {
     unitData    : SerialUnit;
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
 }): string | null {
     const gameConfig    = war.getGcData();
     const unitCfg       = gameConfig.getUnitTemplateCfg(unitData.getUnitType());

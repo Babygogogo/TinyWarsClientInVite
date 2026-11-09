@@ -1,16 +1,15 @@
 import {
-    Helpers_Collection,
-    Visibilities_Utils,
     Destructions_Utils,
+    Helpers_Collection,
     ReplayWar_Model_RwWarBase,
     Teams_Constants,
-    type GameConfigs_GameConfig,
-    type HalfwayReplayWar_Interface_IHrwWar,
+    Visibilities_Utils,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type GameConfigs_GameConfig,
 } from "../../internal.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export class HrwWar extends ReplayWar_Model_RwWarBase.RwWarBase implements HalfwayReplayWar_Interface_IHrwWar.IHrwWar {
+export class HrwWar extends ReplayWar_Model_RwWarBase.RwWarBase {
     public constructor(isNeedView: boolean) {
         super(isNeedView);
     }

@@ -20,7 +20,6 @@ import {
     WarTypes_Constants,
     type AuxiliaryTypes_AuxiliaryTypes,
     type GameConfigs_GameConfig,
-    type TestWar_Interface_ITwWar,
 } from "../../internal.ts";
 
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -34,7 +33,7 @@ import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/Seria
 import { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
 import { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
 
-export class TwWar extends BaseWar_Model_War.War implements TestWar_Interface_ITwWar.ITwWar {
+export class TwWar extends BaseWar_Model_War.War {
     private readonly _warEventManager = new WarEvents_Manager.Manager();
 
     public static async getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<Utils_ClientErrorCode.ClientErrorCode> {

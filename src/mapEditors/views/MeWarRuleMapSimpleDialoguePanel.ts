@@ -9,7 +9,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -21,7 +21,7 @@ import {
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 
 export interface OpenData {
-    war                     : MapEditor_Interface_IMeWar.IMeWar;
+    war                     : MapEditor_Model_MeWar.MeWar;
     templateWarRule         : TemplateWarRule;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
@@ -179,7 +179,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForItemRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    war                 : MapEditor_Interface_IMeWar.IMeWar;
+    war                 : MapEditor_Model_MeWar.MeWar;
     dialogueId          : number;
     templateWarRule     : TemplateWarRule;
 }

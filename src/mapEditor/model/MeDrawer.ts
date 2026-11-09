@@ -22,7 +22,7 @@ import {
     type MapEditor_Model_MeTypes,
     type Egret_Egret,
     type MapEditor_Interface_IMeDrawer,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Tiles_Tile,
     type Notifications_Types,
 } from "../../internal.ts";
@@ -34,7 +34,7 @@ const MaxCheckpointCount            = 1000;
 const SymmetricalPlayerIndexArray   = [0, 2, 1, 4, 3, 6, 5, 8, 7];
 
 export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
-    private _war?                               : MapEditor_Interface_IMeWar.IMeWar;
+    private _war?                               : MapEditor_Model_MeWar.MeWar;
     private _mode                               = MapEditors_Constants.DrawerMode.Preview;
     private _dataForDrawTileObject              : MapEditor_Model_MeTypes.DataForDrawTileObject | null = null;
     private _dataForDrawTileBase                : MapEditor_Model_MeTypes.DataForDrawTileBase | null = null;
@@ -92,7 +92,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         return this;
     }
 
-    public startRunning(war: MapEditor_Interface_IMeWar.IMeWar): void {
+    public startRunning(war: MapEditor_Model_MeWar.MeWar): void {
         this._setWar(war);
 
         Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);
@@ -113,10 +113,10 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         this._handleAction(data.draggedTo);
     }
 
-    private _setWar(war: MapEditor_Interface_IMeWar.IMeWar): void {
+    private _setWar(war: MapEditor_Model_MeWar.MeWar): void {
         this._war = war;
     }
-    private _getWar(): MapEditor_Interface_IMeWar.IMeWar {
+    private _getWar(): MapEditor_Model_MeWar.MeWar {
         return Helpers_Misc.getExisted(this._war);
     }
 

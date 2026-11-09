@@ -20,7 +20,7 @@ import {
     Units_Utils_Serialization,
     WarEvents_Actions_Constants_AddUnitOnMapSimple,
     type GameConfigs_GameConfig,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -34,7 +34,7 @@ import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/W
 import { DataForAddUnit } from "../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple/DataForAddUnit.ts";
 
 export interface OpenData {
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
@@ -182,7 +182,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
 interface DataForUnitRenderer extends Ui_Types_UiListItemData.UiListItemData {
     panel           : Panel;
-    war             : MapEditor_Interface_IMeWar.IMeWar;
+    war             : MapEditor_Model_MeWar.MeWar;
     action          : WarEventAction;
     dataForAddUnit  : DataForAddUnit;
 }
@@ -957,7 +957,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
 function getErrorTipsForAddUnit({ dataForAddUnit, war }: {
     dataForAddUnit  : DataForAddUnit;
-    war             : MapEditor_Interface_IMeWar.IMeWar;
+    war             : MapEditor_Model_MeWar.MeWar;
 }): string | null {
     if (dataForAddUnit.getCanBeBlockedByUnit() == null) {
         return Lang_Utils.getText(Lang_Constants.TextType.A0192);

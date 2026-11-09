@@ -683,7 +683,7 @@ export function getOngoingWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseW
         ?? (ReplayWar_Model_RwModel.getWar())
         ?? (HalfwayReplayWar_Model_HrwModel.getWar())
         ?? (SinglePlayerWars_Provider.getWar())
-        ?? (SingleRankedWars_Provider.getWar())
+        ?? (SingleRankedWars_Provider.getOuterWar())
         ?? (MapEditor_Model_MeModel.getWar());
 }
 

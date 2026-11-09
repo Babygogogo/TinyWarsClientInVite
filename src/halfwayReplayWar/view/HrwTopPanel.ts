@@ -1,41 +1,41 @@
 import {
-    Players_Constants,
-    Units_Constants,
+    ActionPlanners_States_Idle,
     AuxiliaryTypes_ChatToTarget,
-    Timer_TimerModel,
     Chat_Model,
-    GamePanels_Manager,
-    Notifications_Dispatcher,
-    Cos_Constants,
-    Keyboard_KbTypes,
     Common_Model_CommonModel,
-    Helpers_ImageSource,
-    GamePanels_Dict,
+    Cos_Constants,
+    CoSkills_Constants,
+    FloatText,
     ForceSkins_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    HalfwayReplayWar_Model_HrwWar,
+    Helpers_ImageSource,
+    Keyboard_KbTypes,
+    Lang_Constants,
     Lang_Utils,
     LocalData_Storage,
-    Users_Model,
+    Notifications_Dispatcher,
+    Players_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
     Stages_StageManager,
-    ActionPlanners_States_Idle,
-    type HalfwayReplayWar_Interface_IHrwWar,
+    Timer_TimerModel,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Units_Constants,
+    Users_Model,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    FloatText,
-    CoSkills_Constants,
-    Lang_Constants,
     type Ui_Types_UiListItemData,
-    Ui_Components_UiListItemRenderer,
-    Ui_Components_UiPanel,
 } from "../../internal.ts";
 
 export interface OpenData {
-    war : HalfwayReplayWar_Interface_IHrwWar.IHrwWar;
+    war : HalfwayReplayWar_Model_HrwWar.HrwWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _btnPlayerList!        : Ui_Interfaces_IUiButton.IUiButton;
@@ -676,7 +676,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForListPlayer extends Ui_Types_UiListItemData.UiListItemData {
-    war         : HalfwayReplayWar_Interface_IHrwWar.IHrwWar;
+    war         : HalfwayReplayWar_Model_HrwWar.HrwWar;
     playerIndex : number;
 }
 class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForListPlayer> {

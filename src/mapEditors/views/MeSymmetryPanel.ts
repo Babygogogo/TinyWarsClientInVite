@@ -12,7 +12,7 @@ import {
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeTypes,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -22,7 +22,7 @@ import {
 } from "../../internal.ts";
 
 export interface OpenData {
-    war     : MapEditor_Interface_IMeWar.IMeWar
+    war     : MapEditor_Model_MeWar.MeWar
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;

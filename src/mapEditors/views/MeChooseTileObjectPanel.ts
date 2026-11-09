@@ -18,7 +18,7 @@ import {
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Users_Model,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type MapEditor_Model_MeTypes,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -32,7 +32,7 @@ import {
 const MAX_RECENT_COUNT = 10;
 
 export interface OpenData {
-    war     : MapEditor_Interface_IMeWar.IMeWar;
+    war     : MapEditor_Model_MeWar.MeWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
@@ -314,7 +314,7 @@ interface DataForTileObjectRenderer extends Ui_Types_UiListItemData.UiListItemDa
     dataForDrawTileObject   : MapEditor_Model_MeTypes.DataForDrawTileObject;
     gameConfig              : GameConfigs_GameConfig.GameConfig;
     panel                   : Panel;
-    war                     : MapEditor_Interface_IMeWar.IMeWar;
+    war                     : MapEditor_Model_MeWar.MeWar;
 }
 class TileObjectRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTileObjectRenderer> {
     private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;

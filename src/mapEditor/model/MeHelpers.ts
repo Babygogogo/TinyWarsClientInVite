@@ -1,32 +1,31 @@
 import {
+    AuxiliaryTypes_GridIndex,
     Cos_Constants,
+    CoSkills_Constants,
     FogMaps_Constants,
     GameConfigs_GameConfig,
     GameConfigs_Provider,
-    AuxiliaryTypes_GridIndex,
+    Geometries_Constants,
+    Helpers_Misc,
     MapEditor_Model_MeWar,
-    CoSkills_Constants,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    type AuxiliaryTypes_MapSize,
+    Maps_Constants,
+    PlayerRules_Utils,
     Players_Constants,
-    Tiles_Constants_Common,
     TileBases_Utils,
     TileDecorations_Utils,
     TileObjects_Utils,
-    Utils_ClientErrorCode,
-    WarRules_Utils_Instance,
-    PlayerRules_Utils,
+    Tiles_Constants_Common,
     Tiles_Utils_Serialization,
-    WarRules_Utils_Template,
-    Geometries_Constants,
-    Helpers_Misc,
-    Users_Model,
     Timer_TimerModel,
-    Maps_Constants,
     Turns_Constants,
+    Users_Model,
+    Utils_ClientErrorCode,
     WarOperations_Constants,
+    WarRules_Utils_Instance,
+    WarRules_Utils_Template,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
     type MapEditor_Model_MeTypes,
-    type MapEditor_Interface_IMeWar,
     type Tiles_Tile,
     type Tiles_TileMap,
     type Units_Unit,
@@ -567,7 +566,7 @@ export function reviseAllUnitIds(unitMap: Units_UnitMap.UnitMap): void {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getAsymmetricalCounters(war: MapEditor_Interface_IMeWar.IMeWar): MapEditor_Model_MeTypes.AsymmetricalCounters {
+export function getAsymmetricalCounters(war: MapEditor_Model_MeWar.MeWar): MapEditor_Model_MeTypes.AsymmetricalCounters {
     const tileMap               = war.getTileMap();
     const mapSize               = tileMap.getMapSize();
     const { width, height }     = mapSize.getWH();

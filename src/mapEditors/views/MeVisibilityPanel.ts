@@ -10,7 +10,7 @@ import {
     Lang_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
-    type MapEditor_Interface_IMeWar,
+    type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -82,7 +82,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         await super._onClosed();
     }
 
-    private _getWar(): MapEditor_Interface_IMeWar.IMeWar {
+    private _getWar(): MapEditor_Model_MeWar.MeWar {
         return Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar());
     }
 
@@ -212,7 +212,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForLocationRenderer extends Ui_Types_UiListItemData.UiListItemData {
-    war         : MapEditor_Interface_IMeWar.IMeWar;
+    war         : MapEditor_Model_MeWar.MeWar;
     locationId  : number;
     panel       : Panel;
 }

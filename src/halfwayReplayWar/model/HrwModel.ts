@@ -1,13 +1,12 @@
 import {
-    GameConfigs_Provider,
     AuxiliaryTypes_GridIndex,
+    GameConfigs_Provider,
     HalfwayReplayWar_Model_HrwWar,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Utils_ClientErrorCode,
-    Helpers_Misc,
     Helpers_Collection,
+    Helpers_Misc,
     Logger,
-    type HalfwayReplayWar_Interface_IHrwWar,
+    Utils_ClientErrorCode,
+    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 
 import { CommonExtraDataForWarOperation } from "../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
@@ -53,7 +52,7 @@ import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SerialWeatherManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
 
-let _war    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<HalfwayReplayWar_Interface_IHrwWar.IHrwWar>;
+let _war    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<HalfwayReplayWar_Model_HrwWar.HrwWar>;
 
 export function init(): void {
     // nothing to do
@@ -62,7 +61,7 @@ export function init(): void {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for managing war.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function loadWar(warData: SerialWar): Promise<HalfwayReplayWar_Interface_IHrwWar.IHrwWar> {
+export async function loadWar(warData: SerialWar): Promise<HalfwayReplayWar_Model_HrwWar.HrwWar> {
     if (_war) {
         Logger.warn(`HrwModel.loadWar() another war has been loaded already!`);
         unloadWar();
@@ -82,7 +81,7 @@ export function unloadWar(): void {
     }
 }
 
-export function getWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<HalfwayReplayWar_Interface_IHrwWar.IHrwWar> {
+export function getWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<HalfwayReplayWar_Model_HrwWar.HrwWar> {
     return _war;
 }
 

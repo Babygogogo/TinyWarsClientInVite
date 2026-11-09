@@ -1,15 +1,14 @@
 import {
     AuxiliaryTypes_CachedDataAccessor,
     GameConfigs_Provider,
-    ReplayWar_Model_RwWar,
-    type AuxiliaryTypes_AuxiliaryTypes,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
-    NormalMap_Model_NormalMapModel,
-    ReplayWar_Model_RwProxy,
     LocalData_Storage,
     Logger,
-    type ReplayWar_Interface_IRwWar,
+    NormalMap_Model_NormalMapModel,
+    ReplayWar_Model_RwProxy,
+    ReplayWar_Model_RwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 
 import type { S as ReplayGetAllInfoVersionsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetAllInfoVersions/S.ts";
@@ -24,7 +23,7 @@ import { SerialTileMap } from "../../proto/schema/CommonProto/WarSerialization/S
 import { SerialUnitMap } from "../../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-let _war                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ReplayWar_Interface_IRwWar.IRwWar>;
+let _war                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ReplayWar_Model_RwWar.RwWar>;
 
 const _replaySelfRatingAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, number>({
     reqData : (replayId: number) => ReplayWar_Model_RwProxy.reqReplayGetSelfRating(replayId),
@@ -166,7 +165,7 @@ export function updateOnFailedMsgReplayGetData(data: ReplayGetDataResponse): voi
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for managing war.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function loadWar(warData: SerialWar, replayId: number): Promise<ReplayWar_Interface_IRwWar.IRwWar> {
+export async function loadWar(warData: SerialWar, replayId: number): Promise<ReplayWar_Model_RwWar.RwWar> {
     if (_war) {
         Logger.warn(`RwModel.loadWar() another war has been loaded already!`);
         unloadWar();
@@ -222,7 +221,7 @@ export function unloadWar(): void {
     }
 }
 
-export function getWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<ReplayWar_Interface_IRwWar.IRwWar> {
+export function getWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<ReplayWar_Model_RwWar.RwWar> {
     return _war;
 }
 

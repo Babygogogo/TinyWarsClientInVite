@@ -3,12 +3,11 @@ import {
     Helpers_ProtoSchema_WarSerialization_SerialWar,
     MultiPlayerWar_Model_MpwWar,
     type GameConfigs_GameConfig,
-    type AutoTourneys_Wars_IWar,
 } from "../../internal.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
 
-export class War extends MultiPlayerWar_Model_MpwWar.MpwWar implements AutoTourneys_Wars_IWar.IWar {
+export class War extends MultiPlayerWar_Model_MpwWar.MpwWar {
     private _settingsForAtw?    : SettingsForAtw;
 
     public constructor(isNeedView: boolean) {
