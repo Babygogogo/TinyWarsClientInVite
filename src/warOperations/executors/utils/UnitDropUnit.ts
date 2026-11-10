@@ -1,6 +1,5 @@
 import {
     AuxiliaryTypes_GridIndex,
-    AuxiliaryTypes_MovePath,
     Helpers_Misc,
     Lang_Constants,
     Lang_Utils,
@@ -51,9 +50,9 @@ function fastExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitDropUnit)
         }
 
     } else {
-        const path                              = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
+        const path                              = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes                         = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
         const launchUnitId                      = action.getLaunchUnitId();
-        const pathNodes                         = path.nodes;
         const endingGridIndex                   = pathNodes[pathNodes.length - 1];
         const focusUnit                         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         const shouldUpdateFogMap                = (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) && (war.getPlayerManager().getWatcherTeamIndexesForSelf().has(focusUnit.getTeamIndex()));
@@ -65,7 +64,11 @@ function fastExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitDropUnit)
                 visionInfoDictForDroppedUnits.set(unitId, Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId)?.getVisionInfo()));
             }
         }
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -156,9 +159,9 @@ async function normalExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitD
         }
 
     } else {
-        const path                              = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
+        const path                              = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes                         = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
         const launchUnitId                      = action.getLaunchUnitId();
-        const pathNodes                         = path.nodes;
         const endingGridIndex                   = pathNodes[pathNodes.length - 1];
         const focusUnit                         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         const shouldUpdateFogMap                = (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) && (war.getPlayerManager().getWatcherTeamIndexesForSelf().has(focusUnit.getTeamIndex()));
@@ -170,7 +173,11 @@ async function normalExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitD
                 visionInfoDictForDroppedUnits.set(unitId, Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId)?.getVisionInfo()));
             }
         }
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -202,7 +209,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitD
         await focusUnit.moveViewAlongPath({
             pathNodes           : pathNodes,
             isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : path.isBlocked,
+            isBlocked           : path.getIsBlocked(),
             aiming              : null,
             updateViewAfterMove : true,
         });

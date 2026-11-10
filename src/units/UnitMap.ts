@@ -453,6 +453,11 @@ export class UnitMap {
         return units;
     }
 
+    public getAllDestroyedUnitIdArray(originUnits: Set<Units_Unit.Unit>): number[] {
+        const unitIdsOnMap = new Set(this.getAllUnitsOnMap().map(v => v.getUnitId()));
+        return [...originUnits].map(v => v.getUnitId()).filter(v => (this.getUnitLoadedById(v) == null) && (!unitIdsOnMap.has(v)));
+    }
+
     public setUnitLoaded(unit: Units_Unit.Unit): void {
         const loadedUnits = this.getRawAllUnitsLoaded();
         if (loadedUnits == null) {
@@ -674,5 +679,15 @@ export class UnitMap {
             }
         }
         return coUnits;
+    }
+
+    public checkHasUnitWithTeamIndexesOnAdjacentGrids(origin: AuxiliaryTypes_GridIndex.GridIndex, teamIndexes: Set<number>): boolean {
+        return origin.getAdjacentGrids(this.getMapSize())
+            .map(v => this.getUnitOnMap(v))
+            .some(unit => (unit) && (teamIndexes.has(unit.getTeamIndex())));
+    }
+    public checkHasUnitWithTeamIndexesOnGrid(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, teamIndexes: Set<number>): boolean {
+        const unit = this.getUnitOnMap(gridIndex);
+        return (unit != null) && (teamIndexes.has(unit.getTeamIndex()));
     }
 }

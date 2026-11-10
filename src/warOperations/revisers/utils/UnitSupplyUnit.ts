@@ -1,14 +1,15 @@
 import {
-    Players_Constants,
-    WarOperations_Revisers_Utils_Common,
-    Utils_ClientErrorCode,
-    Helpers_Misc,
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Players_Constants,
     Turns_Constants,
+    Utils_ClientErrorCode,
+    WarOperations_Revisers_Utils_Common,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type Units_Unit,
     type Units_UnitMap,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitSupplyUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSupplyUnit.ts";
@@ -25,8 +26,8 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitSupplyUnit, 
 
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
-        war, rawPath, launchUnitId, requesterUserId, 
+    const revisedPath   = AuxiliaryTypes_MovePath.MovePath.getRevisedPath({
+        war, rawPath, launchUnitId, requesterUserId,
     });
     const rawPathNodes  = rawPath?.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     if (WarOperations_Revisers_Utils_Common.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
@@ -34,14 +35,14 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitSupplyUnit, 
     }
 
     const unitMap   = war.getUnitMap();
-    const focusUnit = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.nodes[0], launchUnitId),Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_03);
+    const focusUnit = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.getNodes()[0].gridIndex, launchUnitId),Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_03);
     if (!checkCanDoSupply(unitMap, focusUnit, rawPathNodes[rawPathNodes.length - 1])) {
         throw Helpers_Misc.newError(`Can not supply.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_04);
     }
 
     return WoContainer.fromJson({
         WoUnitSupplyUnit : {
-            path         : revisedPath.toProto().toJson(),
+            path         : revisedPath.toProtoMovePath().toJson(),
             launchUnitId : launchUnitId,
         },
     });

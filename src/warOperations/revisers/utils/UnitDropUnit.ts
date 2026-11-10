@@ -1,13 +1,13 @@
 import {
-    Players_Constants,
-    WarOperations_Revisers_Utils_Common,
-    Visibilities_Utils,
-    Utils_ClientErrorCode,
     AuxiliaryTypes_DropDestination,
-    Helpers_Misc,
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Players_Constants,
     Turns_Constants,
-    type AuxiliaryTypes_MovePath,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    WarOperations_Revisers_Utils_Common,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -26,7 +26,7 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitDropUnit, re
 
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
+    const revisedPath   = AuxiliaryTypes_MovePath.MovePath.getRevisedPath({
         war, rawPath, launchUnitId, requesterUserId,
     });
     const rawPathNodes  = rawPath?.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
@@ -40,10 +40,10 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitDropUnit, re
     }
 
     const revisedDropDestinations   = getRevisedDropDestinations(war, rawAction, revisedPath);
-    const isDropBlocked             =  (!revisedPath.isBlocked) && (revisedDropDestinations.length < dropDestinations.length);
+    const isDropBlocked             =  (!revisedPath.getIsBlocked()) && (revisedDropDestinations.length < dropDestinations.length);
     return WoContainer.fromJson({
         WoUnitDropUnit : {
-            path             : revisedPath.toProto().toJson(),
+            path             : revisedPath.toProtoMovePath().toJson(),
             launchUnitId     : launchUnitId,
             dropDestinations : revisedDropDestinations.map(v => v.toProto().toJson()),
             isDropBlocked    : isDropBlocked,
@@ -161,9 +161,9 @@ function checkIsDropDestinationsValid(war: BaseWar_Model_War.War, action: WoUnit
 
 function getRevisedDropDestinations(war: BaseWar_Model_War.War, action: WoUnitDropUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): AuxiliaryTypes_DropDestination.DropDestination[] {
     const destinations: AuxiliaryTypes_DropDestination.DropDestination[] = [];
-    if (!revisedPath.isBlocked) {
+    if (!revisedPath.getIsBlocked()) {
         const unitMap       = war.getUnitMap();
-        const loaderUnit    = unitMap.getUnit(revisedPath.nodes[0], action.getLaunchUnitId());
+        const loaderUnit    = unitMap.getUnit(revisedPath.getNodes()[0].gridIndex, action.getLaunchUnitId());
         for (const raw of action.getDropDestinations()) {
             const gridIndex     = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(raw.getGridIndex()));
             const existingUnit  = unitMap.getUnitOnMap(gridIndex);

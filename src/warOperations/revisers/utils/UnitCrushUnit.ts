@@ -1,9 +1,10 @@
 import {
-    Players_Constants,
-    WarOperations_Revisers_Utils_Common,
-    Helpers_Misc,
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Players_Constants,
     Turns_Constants,
+    WarOperations_Revisers_Utils_Common,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -27,8 +28,8 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitCrushUnit, r
     }
 
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
-        war, rawPath, launchUnitId, requesterUserId, 
+    const revisedPath   = AuxiliaryTypes_MovePath.MovePath.getRevisedPath({
+        war, rawPath, launchUnitId, requesterUserId,
     });
     if (WarOperations_Revisers_Utils_Common.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
         throw Helpers_Misc.newError(`Destination occupied.`);
@@ -44,7 +45,7 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitCrushUnit, r
         throw Helpers_Misc.newError(`Invalid target gridIndex.`);
     }
 
-    const focusUnit     = Helpers_Misc.getExisted(war.getUnitMap().getUnit(revisedPath.nodes[0], launchUnitId));
+    const focusUnit     = Helpers_Misc.getExisted(war.getUnitMap().getUnit(revisedPath.getNodes()[0].gridIndex, launchUnitId));
     const targetUnit    = unitMap.getUnitOnMap(targetGridIndex);
     if ((!focusUnit.getTemplateCfg().getCanCrushAdjacentTargetUnit())                                           ||
         (war.getTileMap().getTile(targetGridIndex).getMoveCostByMoveType(focusUnit.getMoveTypeId()) == null)    ||
@@ -56,7 +57,7 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitCrushUnit, r
 
     return WoContainer.fromJson({
         WoUnitCrushUnit : {
-            path            : revisedPath.toProto().toJson(),
+            path            : revisedPath.toProtoMovePath().toJson(),
             launchUnitId    : launchUnitId,
             targetGridIndex : targetGridIndex.toProto().toJson(),
         },

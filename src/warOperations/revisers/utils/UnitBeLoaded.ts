@@ -1,10 +1,10 @@
 import {
-    Players_Constants,
-    Utils_ClientErrorCode,
-    Helpers_Misc,
-    WarOperations_Revisers_Utils_Common,
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Players_Constants,
     Turns_Constants,
+    Utils_ClientErrorCode,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -23,11 +23,11 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitBeLoaded, re
 
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
-        war, rawPath, launchUnitId, requesterUserId, 
+    const revisedPath   = AuxiliaryTypes_MovePath.MovePath.getRevisedPath({
+        war, rawPath, launchUnitId, requesterUserId,
     });
     const unitMap       = war.getUnitMap();
-    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.nodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitBeLoaded_02);
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.getNodes()[0].gridIndex, launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitBeLoaded_02);
     const rawPathNodes  = rawPath?.getNodes()?.map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     const destination   = rawPathNodes[rawPathNodes.length - 1];
     const loaderUnit    = unitMap.getUnitOnMap(destination);
@@ -40,7 +40,7 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitBeLoaded, re
 
     return WoContainer.fromJson({
         WoUnitBeLoaded : {
-            path         : revisedPath.toProto().toJson(),
+            path         : revisedPath.toProtoMovePath().toJson(),
             launchUnitId : launchUnitId,
         },
     });

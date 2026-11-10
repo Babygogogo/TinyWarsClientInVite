@@ -1,23 +1,23 @@
 import {
-    CoSkills_Utils_Executor,
-    CoSkills_Utils_DataGeneratorForUseCoSkill,
-    MapEditor_Model_MeWar,
-    AuxiliaryTypes_MovePath,
-    MultiPlayerWar_Model_MpwWar,
-    ReplayWar_Model_RwWarBase,
+    AuxiliaryTypes_GridIndex,
     CoSkills_Constants,
-    SinglePlayerWars_War,
-    TestWar_Model_TwWar,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    type BaseWar_Model_War,
-    Units_Constants,
-    Players_Constants,
-    Utils_ClientErrorCode,
+    CoSkills_Utils_DataGeneratorForUseCoSkill,
+    CoSkills_Utils_Executor,
     Helpers_Collection,
     Helpers_Misc,
-    Lang_Utils,
-    WarOperations_Executors_Utils_Common,
     Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    Players_Constants,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWars_War,
+    TestWar_Model_TwWar,
+    Units_Constants,
+    Utils_ClientErrorCode,
+    WarOperations_Executors_Utils_Common,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WoUnitUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoUnitUseCoSkill.ts";
@@ -62,15 +62,19 @@ function fastExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUnitUseCoSk
         const playerManager     = war.getPlayerManager();
         const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
         const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
-        const revisedPath       = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
-        const pathNodes         = revisedPath.nodes;
+        const path              = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes         = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
         const launchUnitId      = action.getLaunchUnitId();
         const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_03);
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
-        if (!revisedPath.isBlocked) {
+        if (!path.getIsBlocked()) {
             const skillType = Helpers_Misc.getExisted(action.getSkillType());
             playerInTurn.updateOnUseCoSkill(skillType);
 
@@ -169,23 +173,27 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUni
         }
 
     } else {
-        const revisedPath       = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
-        const pathNodes         = revisedPath.nodes;
-        const launchUnitId      = action.getLaunchUnitId();
-        const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_03);
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
+        const path          = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+        const launchUnitId  = action.getLaunchUnitId();
+        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_03);
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
         await focusUnit.moveViewAlongPath({
             pathNodes           : pathNodes,
             isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : revisedPath.isBlocked,
+            isBlocked           : path.getIsBlocked(),
             aiming              : null,
             updateViewAfterMove : true,
         });
 
-        if (!revisedPath.isBlocked) {
+        if (!path.getIsBlocked()) {
             const playerManager     = war.getPlayerManager();
             const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
             const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));

@@ -1,19 +1,18 @@
 import {
     AuxiliaryTypes_GridIndex,
-    MapEditor_Model_MeWar,
-    AuxiliaryTypes_MovePath,
-    MultiPlayerWar_Model_MpwWar,
     DamageCalculators_Utils,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Units_Constants,
     Utils_ClientErrorCode,
     Visibilities_Utils,
-    Helpers_Misc,
-    Lang_Utils,
     WarOperations_Executors_Utils_Common,
-    Lang_Constants,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 
@@ -38,21 +37,28 @@ function fastExeUnitAttackTile(war: BaseWar_Model_War.War, action: WoUnitAttackT
         });
 
     } else {
-        const path          = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
+        const path          = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
         const launchUnitId  = action.getLaunchUnitId();
-        const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        if (path.isBlocked) {
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+        if (path.getIsBlocked()) {
+            war.moveUnit({
+                pathNodes       : pathNodes,
+                launchUnitId    : launchUnitId,
+                fuelConsumption : path.getFuelConsumption(),
+            });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
         } else {
             const maxAttackRange1       = focusUnit.getFinalMaxAttackRange();
             const canAttackAfterMoving1 = focusUnit.getFinalCanAttackAfterMoving();
-
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+            war.moveUnit({
+                pathNodes       : pathNodes,
+                launchUnitId    : launchUnitId,
+                fuelConsumption : path.getFuelConsumption(),
+            });
             unitMap.setUnitOnMap(focusUnit);
 
             const battleInfo = DamageCalculators_Utils.runBattleForAttackTile({
@@ -102,13 +108,17 @@ async function normalExeUnitAttackTile(war: BaseWar_Model_War.War, action: WoUni
         });
 
     } else {
-        const path              = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
-        const launchUnitId      = action.getLaunchUnitId();
-        const pathNodes         = path.nodes;
-        const unitMap           = war.getUnitMap();
-        const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        if (path.isBlocked) {
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+        const path          = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+        const launchUnitId  = action.getLaunchUnitId();
+        const unitMap       = war.getUnitMap();
+        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+        if (path.getIsBlocked()) {
+            war.moveUnit({
+                pathNodes       : pathNodes,
+                launchUnitId    : launchUnitId,
+                fuelConsumption : path.getFuelConsumption(),
+            });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -123,8 +133,11 @@ async function normalExeUnitAttackTile(war: BaseWar_Model_War.War, action: WoUni
         } else {
             const maxAttackRange1       = focusUnit.getFinalMaxAttackRange();
             const canAttackAfterMoving1 = focusUnit.getFinalCanAttackAfterMoving();
-
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+            war.moveUnit({
+                pathNodes       : pathNodes,
+                launchUnitId    : launchUnitId,
+                fuelConsumption : path.getFuelConsumption(),
+            });
             unitMap.setUnitOnMap(focusUnit);
 
             const gridIndex2        = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackTile_01);

@@ -1,6 +1,7 @@
 import {
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_MapSize,
+    AuxiliaryTypes_VisibleThings,
     BaseWar_Model_BwCommonSettingManager,
     BaseWar_Model_BwDrawVoteManager,
     BaseWar_Model_BwWarStatisticsManager,
@@ -30,6 +31,7 @@ import {
     Users_Model,
     Users_Utils,
     Utils_ClientErrorCode,
+    Visibilities_Constants,
     WarOperations_ExecutedWarOpManager,
     WarTypes_Constants,
     Weathers_Manager,
@@ -39,11 +41,11 @@ import {
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwDrawVoteManager,
     type BaseWar_Interface_IBwGridVisualEffect,
-    type WarEvents_Manager,
     type GameConfigs_GameConfig,
     type Tiles_TileMap,
     type Turns_Constants,
     type Units_UnitMap,
+    type WarEvents_Manager,
 } from "../../internal.ts";
 
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -818,5 +820,90 @@ export abstract class War {
 
         hints.push(Lang_Utils.getText(Lang_Constants.TextType.A0024));
         return hints.join(`\n\n`);
+    }
+
+    public getVisibleThingsForEachTeam(): Map<number, AuxiliaryTypes_VisibleThings.VisibleThings> {
+        const allTeamIndexes  = this.getPlayerManager().getAllTeamIndexes(false);
+        const visibilityDict  = new Map<number, number[][]>();
+        const result          = new Map<number, AuxiliaryTypes_VisibleThings.VisibleThings>();
+        const fogMap          = this.getFogMap();
+        for (const teamIndex of allTeamIndexes) {
+            const visibilityMap = fogMap.getMergedVisibilityMapForTeams(new Set([teamIndex]));
+            visibilityDict.set(teamIndex, visibilityMap);
+            result.set(teamIndex, new AuxiliaryTypes_VisibleThings.VisibleThings(new Set(), new Set(), visibilityMap));
+        }
+
+        const unitMap   = this.getUnitMap();
+        const tileMap   = this.getTileMap();
+        const hasFog    = fogMap.checkHasFogCurrently();
+        for (const column of tileMap.getMap()) {
+            for (const tile of column) {
+                const gridIndex = tile.getGridIndex();
+                for (const teamIndex of allTeamIndexes) {
+                    const teamIndexes   = new Set([teamIndex]);
+                    let isVisible       = false;
+                    if ((!hasFog)                                                                   ||
+                        (teamIndexes.has(tile.getTeamIndex()))                                      ||
+                        (unitMap.checkHasUnitWithTeamIndexesOnGrid(gridIndex, teamIndexes))         ||
+                        (unitMap.checkHasUnitWithTeamIndexesOnAdjacentGrids(gridIndex, teamIndexes))
+                    ) {
+                        isVisible = true;
+                    } else {
+                        const visibility = visibilityDict.get(teamIndex)![gridIndex.getX()][gridIndex.getY()];
+                        if ((visibility == Visibilities_Constants.VisibilityTypeId.Penetrating)                             ||
+                            ((visibility == Visibilities_Constants.VisibilityTypeId.Inside) && (!tile.checkIsUnitHider()))
+                        ) {
+                            isVisible = true;
+                        }
+                    }
+
+                    if (isVisible) {
+                        result.get(teamIndex)!.getTiles().add(tile);
+                    }
+                }
+            }
+        }
+
+        const isLoadedUnitVisibleInFog = true;
+        for (const unit of unitMap.getAllUnitsOnMap()) {
+            const unitTeamIndex = unit.getTeamIndex();
+            const gridIndex     = unit.getGridIndex();
+            const tile          = tileMap.getTile(gridIndex);
+            for (const teamIndex of allTeamIndexes) {
+                let isVisible = false;
+                if ((teamIndex == unitTeamIndex)                                                            ||
+                    (teamIndex == tile.getTeamIndex())                                                      ||
+                    (unitMap.checkHasUnitWithTeamIndexesOnAdjacentGrids(gridIndex, new Set([teamIndex])))
+                ) {
+                    isVisible = true;
+                } else {
+                    if ((unit.getIsDiving()) || (unit.checkIsInvisible(gridIndex))) {
+                        // Do nothing.
+                    } else {
+                        const visibility = visibilityDict.get(teamIndex)![gridIndex.getX()][gridIndex.getY()];
+                        if ((visibility == Visibilities_Constants.VisibilityTypeId.Penetrating)                                                     ||
+                            ((visibility == Visibilities_Constants.VisibilityTypeId.Inside) && (!tile.checkCanHideUnitType(unit.getUnitTypeId())))
+                        ) {
+                            isVisible = true;
+                        }
+                    }
+                }
+
+                if (isVisible) {
+                    const units = result.get(teamIndex)!.getUnits();
+                    units.add(unit);
+                    if ((!hasFog)                   ||
+                        (isLoadedUnitVisibleInFog)  ||
+                        (teamIndex == unitTeamIndex)
+                    ) {
+                        for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {
+                            units.add(loadedUnit);
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 }

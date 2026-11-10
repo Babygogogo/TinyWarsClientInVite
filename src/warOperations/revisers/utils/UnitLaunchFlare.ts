@@ -1,10 +1,11 @@
 import {
-    Players_Constants,
-    WarOperations_Revisers_Utils_Common,
-    Utils_ClientErrorCode,
-    Helpers_Misc,
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Players_Constants,
     Turns_Constants,
+    Utils_ClientErrorCode,
+    WarOperations_Revisers_Utils_Common,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -45,9 +46,9 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitLaunchFlare,
 
     return WoContainer.fromJson({
         WoUnitLaunchFlare : {
-            path : WarOperations_Revisers_Utils_Common.getRevisedPath({
-                war, rawPath, launchUnitId, requesterUserId, 
-            }).toProto().toJson(),
+            path : AuxiliaryTypes_MovePath.MovePath.getRevisedPath({
+                war, rawPath, launchUnitId, requesterUserId,
+            }).toProtoMovePath().toJson(),
             launchUnitId    : launchUnitId,
             targetGridIndex : targetGridIndex.toProto().toJson(),
         },

@@ -1,10 +1,11 @@
 import {
-    Players_Constants,
-    WarOperations_Revisers_Utils_Common,
-    Utils_ClientErrorCode,
-    Helpers_Misc,
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Players_Constants,
     Turns_Constants,
+    Utils_ClientErrorCode,
+    WarOperations_Revisers_Utils_Common,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -23,8 +24,8 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitLaunchSilo, 
 
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
-        war, rawPath, launchUnitId, requesterUserId, 
+    const revisedPath   = AuxiliaryTypes_MovePath.MovePath.getRevisedPath({
+        war, rawPath, launchUnitId, requesterUserId,
     });
     const rawPathNodes  = rawPath?.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     if (WarOperations_Revisers_Utils_Common.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
@@ -32,7 +33,7 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitLaunchSilo, 
     }
 
     const unitMap   = war.getUnitMap();
-    const focusUnit = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.nodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitLaunchSilo_03);
+    const focusUnit = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.getNodes()[0].gridIndex, launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitLaunchSilo_03);
     const mapSize   = unitMap.getMapSize();
     const tile      = war.getTileMap().getTile(rawPathNodes[rawPathNodes.length - 1]);
     if ((tile == null) || (!focusUnit.checkCanLaunchSiloOnTile(tile))) {
@@ -48,7 +49,7 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitLaunchSilo, 
 
     return WoContainer.fromJson({
         WoUnitLaunchSilo : {
-            path            : revisedPath.toProto().toJson(),
+            path            : revisedPath.toProtoMovePath().toJson(),
             launchUnitId    : launchUnitId,
             targetGridIndex : targetGridIndex.toProto().toJson(),
         },

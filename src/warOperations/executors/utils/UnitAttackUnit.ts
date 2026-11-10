@@ -1,6 +1,5 @@
 import {
     AuxiliaryTypes_GridIndex,
-    AuxiliaryTypes_MovePath,
     DamageCalculators_Utils,
     Helpers_Misc,
     Lang_Constants,
@@ -40,13 +39,17 @@ function fastExeUnitAttackUnit(war: BaseWar_Model_War.War, action: WoUnitAttackU
         });
 
     } else {
-        const path          = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
+        const path          = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
         const launchUnitId  = action.getLaunchUnitId();
-        const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        if (path.isBlocked) {
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+        if (path.getIsBlocked()) {
+            war.moveUnit({
+                pathNodes       : pathNodes,
+                launchUnitId    : launchUnitId,
+                fuelConsumption : path.getFuelConsumption(),
+            });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -57,8 +60,11 @@ function fastExeUnitAttackUnit(war: BaseWar_Model_War.War, action: WoUnitAttackU
             const unit2                 = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex2));
             const maxAttackRange2       = unit2.getFinalMaxAttackRange() ?? null;
             const canAttackAfterMoving2 = unit2.getFinalCanAttackAfterMoving();
-
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+            war.moveUnit({
+                pathNodes       : pathNodes,
+                launchUnitId    : launchUnitId,
+                fuelConsumption : path.getFuelConsumption(),
+            });
             unitMap.setUnitOnMap(focusUnit);
 
             const battleInfo = DamageCalculators_Utils.runBattleForAttackUnit({
@@ -127,13 +133,17 @@ async function normalExeUnitAttackUnit(war: BaseWar_Model_War.War, action: WoUni
         }
 
     } else {
-        const path          = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
+        const path          = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
         const launchUnitId  = action.getLaunchUnitId();
-        const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        if (path.isBlocked) {
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+        if (path.getIsBlocked()) {
+            war.moveUnit({
+                pathNodes       : pathNodes,
+                launchUnitId    : launchUnitId,
+                fuelConsumption : path.getFuelConsumption(),
+            });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -153,7 +163,11 @@ async function normalExeUnitAttackUnit(war: BaseWar_Model_War.War, action: WoUni
             const maxAttackRange2       = unit2.getFinalMaxAttackRange();
             const canAttackAfterMoving2 = unit2.getFinalCanAttackAfterMoving();
 
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+            war.moveUnit({
+                pathNodes       : pathNodes,
+                launchUnitId    : launchUnitId,
+                fuelConsumption : path.getFuelConsumption(),
+            });
             unitMap.setUnitOnMap(focusUnit);
 
             const allVisibleUnits = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());

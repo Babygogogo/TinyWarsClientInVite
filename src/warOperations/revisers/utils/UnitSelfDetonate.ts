@@ -1,9 +1,10 @@
 import {
-    Players_Constants,
-    WarOperations_Revisers_Utils_Common,
-    Helpers_Misc,
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MovePath,
+    Helpers_Misc,
+    Players_Constants,
     Turns_Constants,
+    WarOperations_Revisers_Utils_Common,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -22,8 +23,8 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitSelfDetonate
 
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
-        war, rawPath, launchUnitId, requesterUserId, 
+    const revisedPath   = AuxiliaryTypes_MovePath.MovePath.getRevisedPath({
+        war, rawPath, launchUnitId, requesterUserId,
     });
     const rawPathNodes  = rawPath?.getNodes()?.map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     if (WarOperations_Revisers_Utils_Common.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
@@ -31,14 +32,14 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitSelfDetonate
     }
 
     const unitMap   = war.getUnitMap();
-    const focusUnit = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.nodes[0], launchUnitId));
+    const focusUnit = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.getNodes()[0].gridIndex, launchUnitId));
     if (!focusUnit.getTemplateCfg().getSelfDetonateCfg()) {
         throw Helpers_Misc.newError(`Can not self detonate.`);
     }
 
     return WoContainer.fromJson({
         WoUnitSelfDetonate : {
-            path         : revisedPath.toProto().toJson(),
+            path         : revisedPath.toProtoMovePath().toJson(),
             launchUnitId : launchUnitId,
         },
     });

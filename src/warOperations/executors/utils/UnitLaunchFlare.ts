@@ -1,6 +1,5 @@
 import {
     AuxiliaryTypes_GridIndex,
-    AuxiliaryTypes_MovePath,
     Helpers_Misc,
     Lang_Constants,
     Lang_Utils,
@@ -36,16 +35,20 @@ function fastExeUnitLaunchFlare(war: BaseWar_Model_War.War, action: WoUnitLaunch
             isFastExecute   : true,
         });
     } else {
-        const path          = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
-        const pathNodes     = path.nodes;
+        const path          = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
         const unitMap       = war.getUnitMap();
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
-        if (!path.isBlocked) {
+        if (!path.getIsBlocked()) {
             focusUnit.setFlareCurrentAmmo(focusUnit.getFlareCurrentAmmo() - 1);
             fogMap.updateMapFromPathsByFlare(
                 focusUnit.getPlayerIndex(),
@@ -91,16 +94,20 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Model_War.War, action: WoUn
         });
 
     } else {
-        const path          = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
-        const pathNodes     = path.nodes;
+        const path          = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
         const unitMap       = war.getUnitMap();
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
-        const isFlareSucceeded  = !path.isBlocked;
+        const isFlareSucceeded  = !path.getIsBlocked();
         const flareRadius       = Helpers_Misc.getExisted(focusUnit.getFlareRadius(pathNodes[pathNodes.length - 1]));
         const targetGridIndex   = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex());
         if (isFlareSucceeded) {
@@ -115,7 +122,7 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Model_War.War, action: WoUn
         await focusUnit.moveViewAlongPath({
             pathNodes           : pathNodes,
             isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : path.isBlocked,
+            isBlocked           : path.getIsBlocked(),
             aiming              : null,
             updateViewAfterMove : true,
         });

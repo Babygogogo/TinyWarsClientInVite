@@ -1,22 +1,34 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOp,
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_ThingsForMovePath,
+    AuxiliaryTypes_TileAppearanceInfo,
+    AuxiliaryTypes_VisibleThings,
     CoSkills_Utils_InstantMisc_SelfUnitHpAfterWait,
+    Helpers_Collection,
     Helpers_Misc,
     Players_Utils_Common,
+    SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Teams_Constants,
     TileBuffs_Constants,
+    Tiles_Tile,
     Units_Unit,
     Utils_ClientErrorCode,
     type AuxiliaryTypes_BattleInfo,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
 } from "../../../internal.ts";
-
+import { MessageContainer } from "../../../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
 import type { CommonExtraDataForWarOperation } from "../../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
+import type { MovingUnitAndPath } from "../../../proto/schema/CommonProto/Structure/MovingUnitAndPath.ts";
 import { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { SerialTile } from "../../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
+
+type MessageCreator = (extraData: CommonExtraDataForWarOperation, movingUnitAndPathList: MovingUnitAndPath[]) => WoContainer;
 
 /**
  * @return the war view is vibrated or not
@@ -562,4 +574,92 @@ export function handlePostOperationPlunder(focusUnit: Units_Unit.Unit, isFastExe
 
         return;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function postProcessInnerWarOperation({ war, allTileAppearanceInfosBeforeAction, visibilityArrayFromPathsBeforeAction, visibleThingsForEachTeamBeforeAction, changedThings, thingsForMovePath, createMessage }: {
+    war                                     : SinglePlayerWars_War.War;
+    allTileAppearanceInfosBeforeAction      : Map<Tiles_Tile.Tile, AuxiliaryTypes_TileAppearanceInfo.TileAppearanceInfo>;
+    visibilityArrayFromPathsBeforeAction    : number[] | undefined;
+    visibleThingsForEachTeamBeforeAction    : Map<number, AuxiliaryTypes_VisibleThings.VisibleThings>;
+    changedThings                           : AuxiliaryTypes_ChangedThingsForWarOp.ChangedThingsForWarOp;
+    thingsForMovePath                       : AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath | undefined;
+    createMessage                           : MessageCreator;
+}): Map<number, WoContainer> {
+    const destroyedUnitIdArray                  = war.getUnitMap().getAllDestroyedUnitIdArray(changedThings.getUnits() ?? new Set());
+    const currentVisibleThingsForEachTeam       = war.getVisibleThingsForEachTeam();
+    const visibilityArrayFromPathsAfterAction   = visibilityArrayFromPathsBeforeAction != null
+        ? getDifferencesForVisibilityArray(visibilityArrayFromPathsBeforeAction, war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerInTurn().getPlayerIndex()))
+        : undefined;
+    const serializedVisibleTiles    = new Map<number, SerialTile>();
+    const serializedInvisibleTiles  = new Map<number, SerialTile>();
+    const serializedUnits           = new Map<number, SerialUnit>();
+    const outerWarOpDict            = new Map<number, WoContainer>();   // teamIndex, warOp
+
+    for (const teamIndex of war.getPlayerManager().getAllTeamIndexes(true)) {
+        outerWarOpDict.set(
+            teamIndex,
+            generateMessageForExecuteWarOperation({
+                war                                  : war,
+                teamIndexes                          : new Set([teamIndex]),
+                allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+                visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+                currentVisibleThingsForEachTeam      : currentVisibleThingsForEachTeam,
+                affectedThings                       : changedThings,
+                destroyedUnitIdArray                 : destroyedUnitIdArray,
+                visibilityArrayFromPathsAfterAction  : visibilityArrayFromPathsAfterAction,
+                thingsForMovePath                    : thingsForMovePath,
+                serializedVisibleTiles               : serializedVisibleTiles,
+                serializedInvisibleTiles             : serializedInvisibleTiles,
+                serializedUnits                      : serializedUnits,
+                createMessage                        : createMessage,
+            }),
+        );
+    }
+
+    return outerWarOpDict;
+}
+
+function generateMessageForExecuteWarOperation({
+    war,
+    teamIndexes,
+    allTileAppearanceInfosBeforeAction,
+    visibleThingsForEachTeamBeforeAction,
+    currentVisibleThingsForEachTeam,
+    affectedThings,
+    destroyedUnitIdArray,
+    visibilityArrayFromPathsAfterAction,
+    thingsForMovePath,
+    serializedVisibleTiles,
+    serializedInvisibleTiles,
+    serializedUnits,
+    createMessage
+}: {
+    war                                     : SinglePlayerWars_War.War;
+    teamIndexes                             : Set<number>;
+    allTileAppearanceInfosBeforeAction      : Map<Tiles_Tile.Tile, AuxiliaryTypes_TileAppearanceInfo.TileAppearanceInfo>;
+    visibleThingsForEachTeamBeforeAction    : Map<number, AuxiliaryTypes_VisibleThings.VisibleThings>;
+    currentVisibleThingsForEachTeam         : Map<number, AuxiliaryTypes_VisibleThings.VisibleThings>;
+    affectedThings                          : AuxiliaryTypes_ChangedThingsForWarOp.ChangedThingsForWarOp;
+    destroyedUnitIdArray                    : number[];
+    visibilityArrayFromPathsAfterAction     : number[] | undefined;
+    thingsForMovePath                       : AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath | undefined;
+    serializedVisibleTiles                  : Map<number, SerialTile>;
+    serializedInvisibleTiles                : Map<number, SerialTile>;
+    serializedUnits                         : Map<number, SerialUnit>;
+    createMessage                           : MessageCreator;
+}): WoContainer {
+    // TODO
+    return new WoContainer();
+}
+
+function getDifferencesForVisibilityArray(arrayBeforeAction: number[], arrayAfterAction: number[]): number[] {
+    const differences: number[] = [];
+    for (let i = arrayAfterAction.length - 1; i >= 0; --i) {
+        const valueAfterAction = arrayAfterAction[i];
+        if (arrayBeforeAction[i] != valueAfterAction) {
+            differences.push(valueAfterAction);
+        }
+    }
+    return differences;
 }

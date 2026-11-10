@@ -108,7 +108,7 @@ export function getObserverTeamIndexListForUnitOnMap({ war, gridIndex }: {
     const isInvisible       = unit.checkIsInvisible(gridIndex);
     const unitPlayerIndex   = unit.getPlayerIndex();
     const teamIndexList     : number[] = [];
-    for (const teamIndex of war.getPlayerManager().getAllTeamIndexSet()) {
+    for (const teamIndex of war.getPlayerManager().getAllTeamIndexes(true)) {
         if (checkIsUnitOnMapVisibleToTeams({
             war                 : war,
             gridIndex           : gridIndex,

@@ -242,8 +242,8 @@ export class PlayerManager {
     public getTeamIndexSet(playerIndexArray: number[]): Set<number> {
         return new Set(playerIndexArray.map(v => this.getTeamIndex(v)));
     }
-    public getAllTeamIndexSet(): Set<number> {
-        return new Set([...this._players.values()].map(v => v.getTeamIndex()));
+    public getAllTeamIndexes(includeNeutral: boolean): Set<number> {
+        return new Set([...this._players.values()].filter(v => (includeNeutral) || (v.checkIsNeutral())).map(v => v.getTeamIndex()));
     }
 
     public getPlayerIndexesInTeam(teamIndex: number): number[] {
@@ -404,5 +404,45 @@ export class PlayerManager {
         } else {
             throw Helpers_Misc.newError(`Invalid war.`);
         }
+    }
+
+    public getWatchDstTeamIndexes(watchSrcUserId: number): Set<number> {
+        const dstTeamIndexes = new Set<number>();
+        for (const [, player] of this.getAllPlayersDict()) {
+            if (player.checkIsNeutral()) {
+                continue;
+            }
+
+            if ((player.getUserId() == watchSrcUserId)                  ||
+                (player.getWatchOngoingSrcUserIds().has(watchSrcUserId))
+            ) {
+                dstTeamIndexes.add(player.getTeamIndex());
+            }
+        }
+
+        return dstTeamIndexes;
+    }
+    public getWatchDstTeamIndexesForEachUser(): Map<number, Set<number>> {
+        const result = new Map<number, Set<number>>();
+        for (const [, player] of this.getAllPlayersDict()) {
+            if (player.checkIsNeutral()) {
+                continue;
+            }
+
+            {
+                const userId = player.getUserId();
+                if ((userId != null) && (!result.has(userId))) {
+                    result.set(userId, this.getWatchDstTeamIndexes(userId));
+                }
+            }
+
+            for (const userId of player.getWatchOngoingSrcUserIds()) {
+                if (!result.has(userId)) {
+                    result.set(userId, this.getWatchDstTeamIndexes(userId));
+                }
+            }
+        }
+
+        return result;
     }
 }

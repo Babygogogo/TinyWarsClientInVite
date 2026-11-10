@@ -425,6 +425,18 @@ export class FogMap {
             return this.checkHasFogCurrently() ? visibility : Visibilities_Constants.VisibilityTypeId.Penetrating;
         }
     }
+    public getVisibilityArrayFromPaths(playerIndex: number): number[] {
+        const mapSize           = this.getMapSize();
+        const array             : number[] = [];
+        const map               = this._getMapFromPath(playerIndex);
+        const { width, height } = mapSize.getWH();
+        for (let x = 0; x < width; ++x) {
+            for (let y = 0; y < height; ++y) {
+                array.push(AuxiliaryTypes_GridIndex.GridIndex.getGridId(x, y, mapSize) * 10 + map[x][y]);
+            }
+        }
+        return array;
+    }
     public getVisibilityMapFromPathsForTeams(teamIndexes: Set<number>): Visibilities_Constants.VisibilityTypeId[][] {
         const { width, height } = this.getMapSize().getWH();
         if (!this.checkHasFogCurrently()) {
@@ -636,9 +648,20 @@ export class FogMap {
         }
         return resultMap;
     }
-    // public getVisibilityMapFromUnitsForUser(userId: number): Visibility[][] {
-    //     return this.getVisibilityMapFromUnitsForTeams(this._getWar().getWatcherTeamIndexes(userId));
-    // }
+    public getMergedVisibilityMapForTeams(teamIndexes: Set<number>): number[][] {
+        const { width, height } = this.getMapSize().getWH();
+        const mapFromPaths      = this.getVisibilityMapFromPathsForTeams(teamIndexes);
+        const mapFromTiles      = this.getVisibilityMapFromTilesForTeams(teamIndexes);
+        const mapFromUnits      = this.getVisibilityMapFromUnitsForTeams(teamIndexes);
+        const mergedMap         = Helpers_Collection.createEmptyMap<number>(width, height);
+        for (let x = 0; x < width; ++x) {
+            for (let y = 0; y < height; ++y) {
+                mergedMap[x][y] = Math.max(mapFromPaths[x][y], mapFromTiles[x][y], mapFromUnits[x][y]);
+            }
+        }
+
+        return mergedMap;
+    }
 }
 
 function createEmptyMaps<T extends (number | Visibilities_Constants.VisibilityTypeId)>(mapSize: AuxiliaryTypes_MapSize.MapSize, maxPlayerIndex: number): Map<number, T[][]> {

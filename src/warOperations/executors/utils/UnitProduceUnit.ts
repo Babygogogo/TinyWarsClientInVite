@@ -1,22 +1,22 @@
 import {
+    AuxiliaryTypes_GridIndex,
+    Helpers_Misc,
+    Helpers_Team,
+    Lang_Constants,
+    Lang_Utils,
     MapEditor_Model_MeWar,
-    AuxiliaryTypes_MovePath,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWars_War,
-    TestWar_Model_TwWar,
-    Units_Unit,
-    Units_Constants,
-    Utils_ClientErrorCode,
-    Units_Utils_Serialization,
-    Helpers_Misc,
-    Helpers_Team,
-    Visibilities_Utils,
-    Lang_Utils,
-    WarOperations_Executors_Utils_Common,
-    Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Sounds_SoundPlayer,
+    TestWar_Model_TwWar,
+    Units_Constants,
+    Units_Unit,
+    Units_Utils_Serialization,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 
@@ -41,16 +41,20 @@ function fastExeUnitProduceUnit(war: BaseWar_Model_War.War, action: WoUnitProduc
             isFastExecute   : true,
         });
     } else {
-        const path          = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
-        const pathNodes     = path.nodes;
+        const path          = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
         const unitMap       = war.getUnitMap();
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
-        if (path.isBlocked) {
+        if (path.getIsBlocked()) {
             // nothing to do.
         } else {
             const gridIndex         = focusUnit.getGridIndex();
@@ -148,21 +152,24 @@ async function normalExeUnitProduceUnit(war: BaseWar_Model_War.War, action: WoUn
         }
 
     } else {
-        const path          = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
-        const pathNodes     = path.nodes;
+        const path          = Helpers_Misc.getExisted(action.getPath());
+        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
         const unitMap       = war.getUnitMap();
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
-        if (path.isBlocked) {
+        if (path.getIsBlocked()) {
             await focusUnit.moveViewAlongPath({
                 pathNodes           : pathNodes,
                 isDiving            : focusUnit.getIsDiving(),
-                isBlocked           : path.isBlocked,
+                isBlocked           : path.getIsBlocked(),
                 aiming              : null,
                 updateViewAfterMove : true,
             });
@@ -230,7 +237,7 @@ async function normalExeUnitProduceUnit(war: BaseWar_Model_War.War, action: WoUn
             await focusUnit.moveViewAlongPath({
                 pathNodes           : pathNodes,
                 isDiving            : focusUnit.getIsDiving(),
-                isBlocked           : path.isBlocked,
+                isBlocked           : path.getIsBlocked(),
                 aiming              : null,
                 updateViewAfterMove : true,
             });
