@@ -44,11 +44,12 @@ export async function handlePlayerOpAndAutoOps(war: SinglePlayerWars_War.War, ac
         throw Helpers_Misc.newError(`war.getIsRunning() is false.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_02);
     }
 
-    await WarOperations_Executors_Executor.checkAndExecute(
-        war,
-        WarOperations_Revisers_Reviser.revise(war, action, Users_Model.getSelfUserId()),
-        false,
-    );
+    const revisedOperation = WarOperations_Revisers_Reviser.revise(war, action, Users_Model.getSelfUserId()).operation;
+    if (!revisedOperation) {
+        throw Helpers_Misc.newError(`Revised operation is null.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_03);
+    }
+
+    await WarOperations_Executors_Executor.checkAndExecute(war, revisedOperation, false);
 
     await generateAndRunAutoOps(war);
 }
@@ -88,7 +89,7 @@ export async function generateAndRunAutoOps(war: SinglePlayerWars_War.War): Prom
 
         await WarOperations_Executors_Executor.checkAndExecute(
             war,
-            WarOperations_Revisers_Reviser.revise(war, data.warOperation, data.userId),
+            Helpers_Misc.getExisted(WarOperations_Revisers_Reviser.revise(war, data.warOperation, data.userId).operation),
             false,
         );
     }

@@ -1087,6 +1087,7 @@ export * as WarOperations_Executors_Utils_UnitUseCoSkill from "./warOperations/e
 export * as WarOperations_Executors_Utils_UnitWait from "./warOperations/executors/utils/UnitWait.ts";
 export * as WarOperations_Executors_Utils_Unknown from "./warOperations/executors/utils/Unknown.ts";
 export * as WarOperations_Revisers_Reviser from "./warOperations/revisers/Reviser.ts";
+export * as WarOperations_Revisers_Result from "./warOperations/revisers/Result.ts";
 export * as WarOperations_Revisers_Utils_Common from "./warOperations/revisers/utils/Common.ts";
 export * as WarOperations_Revisers_Utils_PlayerDeleteUnit from "./warOperations/revisers/utils/PlayerDeleteUnit.ts";
 export * as WarOperations_Revisers_Utils_PlayerEndTurn from "./warOperations/revisers/utils/PlayerEndTurn.ts";

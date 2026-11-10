@@ -1,44 +1,44 @@
 import {
     Players_Constants,
     Utils_ClientErrorCode,
-    Helpers_Misc,
+    WarOperations_Revisers_Result,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
 
-export function revise(war: BaseWar_Model_War.War, rawAction: WoPlayerVoteForDraw, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoPlayerVoteForDraw, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WarOperations_Revisers_Result.Result {
     const playerIndex = rawAction.getPlayerIndex();
     if (playerIndex == null) {
-        throw Helpers_Misc.newError(`Empty playerIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_00);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_00);
     }
     if (!war.getPlayerManager().checkHasPlayer(playerIndex)) {
-        throw Helpers_Misc.newError(`Invalid playerIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_01);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_01);
     }
     if (playerIndex === Players_Constants.PlayerIndex.Neutral) {
-        throw Helpers_Misc.newError(`Invalid neutral playerIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_02);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_02);
     }
 
     const player = war.getPlayer(playerIndex);
     if ((player.getAliveState() !== Players_Constants.AliveStateId.Alive)   ||
         (player.getUserId() != requesterUserId)
     ) {
-        throw Helpers_Misc.newError(`Invalid aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_03);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_03);
     }
 
     const isAgree = rawAction.getIsAgree();
     if (isAgree == null) {
-        throw Helpers_Misc.newError(`Invalid isAgree: ${isAgree}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_04);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_04);
     }
     if (!war.getDrawVoteManager().checkCanVote(playerIndex, isAgree)) {
-        throw Helpers_Misc.newError(`Cannot vote currently: ${isAgree}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_05);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_05);
     }
 
-    return WoContainer.fromJson({
+    return WarOperations_Revisers_Result.Result.create2(WoContainer.fromJson({
         WoPlayerVoteForDraw : {
             playerIndex : playerIndex,
             isAgree     : isAgree,
         },
-    });
+    }));
 }

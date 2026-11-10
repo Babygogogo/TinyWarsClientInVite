@@ -1,8 +1,8 @@
 import {
     Players_Constants,
     Utils_ClientErrorCode,
-    Helpers_Misc,
     Turns_Constants,
+    WarOperations_Revisers_Result,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -10,9 +10,9 @@ import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoCo
 import type { WoPlayerEndTurn } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
 
  
-export function revise(war: BaseWar_Model_War.War, rawAction: WoPlayerEndTurn, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoPlayerEndTurn, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WarOperations_Revisers_Result.Result {
     if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
-        throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerEndTurn_00);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerEndTurn_00);
     }
 
     const playerInTurn = war.getPlayerInTurn();
@@ -20,14 +20,14 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoPlayerEndTurn, r
         (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Alive) ||
         (playerInTurn.getUserId() != requesterUserId)
     ) {
-        throw Helpers_Misc.newError(`Invalid aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerEndTurn_01);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerEndTurn_01);
     }
 
     if (war.getDrawVoteManager().checkNeedVoteBeforeEndTurn(playerInTurn.getPlayerIndex())) {
-        throw Helpers_Misc.newError(`The player hasn't voted for draw.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerEndTurn_02);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerEndTurn_02);
     }
 
-    return WoContainer.fromJson({
+    return WarOperations_Revisers_Result.Result.create2(WoContainer.fromJson({
         WoPlayerEndTurn : {},
-    });
+    }));
 }

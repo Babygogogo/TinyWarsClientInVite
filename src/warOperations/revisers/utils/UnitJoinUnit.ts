@@ -5,20 +5,21 @@ import {
     Players_Constants,
     Turns_Constants,
     Utils_ClientErrorCode,
+    WarOperations_Revisers_Result,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitJoinUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitJoinUnit.ts";
 
-export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitJoinUnit, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitJoinUnit, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WarOperations_Revisers_Result.Result {
     if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
-        throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitJoinUnit_00);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitJoinUnit_00);
     }
 
     const playerInTurn = war.getPlayerInTurn();
     if ((playerInTurn == null) || (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Alive)) {
-        throw Helpers_Misc.newError(`Invalid aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitJoinUnit_01);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitJoinUnit_01);
     }
 
     const rawPath       = rawAction.getPath();
@@ -27,17 +28,21 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitJoinUnit, re
         war, rawPath, launchUnitId, requesterUserId,
     });
     const unitMap       = war.getUnitMap();
-    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.getNodes()[0].gridIndex, launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitJoinUnit_02);
+    const focusUnit     = unitMap.getUnit(revisedPath.getNodes()[0].gridIndex, launchUnitId);
+    if (focusUnit == null) {
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitJoinUnit_02);
+    }
+
     const rawPathNodes  = rawPath?.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     const existingUnit  = unitMap.getUnitOnMap(rawPathNodes[rawPathNodes.length - 1]);
     if ((!existingUnit) || (!focusUnit.checkCanJoinUnit(existingUnit))) {
-        throw Helpers_Misc.newError(`Invalid existingUnit.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitJoinUnit_03);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitJoinUnit_03);
     }
 
-    return WoContainer.fromJson({
+    return WarOperations_Revisers_Result.Result.create2(WoContainer.fromJson({
         WoUnitJoinUnit : {
             path         : revisedPath.toProtoMovePath().toJson(),
             launchUnitId : launchUnitId,
         },
-    });
+    }), revisedPath);
 }

@@ -6,20 +6,21 @@ import {
     Turns_Constants,
     Utils_ClientErrorCode,
     WarOperations_Revisers_Utils_Common,
+    WarOperations_Revisers_Result,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitSurface } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSurface.ts";
 
-export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitSurface, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitSurface, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WarOperations_Revisers_Result.Result {
     if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
-        throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSurface_00);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSurface_00);
     }
 
     const playerInTurn = war.getPlayerInTurn();
     if ((playerInTurn == null) || (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Alive)) {
-        throw Helpers_Misc.newError(`Invalid aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSurface_01);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSurface_01);
     }
 
     const rawPath       = rawAction.getPath();
@@ -29,18 +30,22 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoUnitSurface, req
     });
     const rawPathNodes  = rawPath?.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     if (WarOperations_Revisers_Utils_Common.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
-        throw Helpers_Misc.newError(`Destination occupied.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSurface_02);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSurface_02);
     }
 
-    const focusUnit = Helpers_Misc.getExisted(war.getUnitMap().getUnit(revisedPath.getNodes()[0].gridIndex, launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSurface_03);
+    const focusUnit = war.getUnitMap().getUnit(revisedPath.getNodes()[0].gridIndex, launchUnitId);
+    if (focusUnit == null) {
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSurface_03);
+    }
+
     if (!focusUnit.checkCanSurface()) {
-        throw Helpers_Misc.newError(`Can not surface.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSurface_04);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSurface_04);
     }
 
-    return WoContainer.fromJson({
+    return WarOperations_Revisers_Result.Result.create2(WoContainer.fromJson({
         WoUnitSurface : {
             path         : revisedPath.toProtoMovePath().toJson(),
             launchUnitId : launchUnitId,
         },
-    });
+    }), revisedPath);
 }

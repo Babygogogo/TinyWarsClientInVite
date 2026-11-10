@@ -1,6 +1,6 @@
 import {
     Utils_ClientErrorCode,
-    Helpers_Misc,
+    WarOperations_Revisers_Result,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -8,17 +8,17 @@ import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoCo
 import type { WoSystemHandleBootPlayer } from "../../../proto/schema/CommonProto/WarOperation/WoSystemHandleBootPlayer.ts";
 
  
-export function revise(war: BaseWar_Model_War.War, rawAction: WoSystemHandleBootPlayer, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoSystemHandleBootPlayer, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WarOperations_Revisers_Result.Result {
     if (requesterUserId != null) {
-        throw Helpers_Misc.newError(`Invalid requesterUserId.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemHandleBootPlayer_00);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemHandleBootPlayer_00);
     }
 
     if (!war.checkIsBoot()) {
-        throw Helpers_Misc.newError(`Is not boot.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemHandleBootPlayer_01);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemHandleBootPlayer_01);
     }
 
-    return WoContainer.fromJson({
+    return WarOperations_Revisers_Result.Result.create2(WoContainer.fromJson({
         WoSystemHandleBootPlayer : {
         },
-    });
+    }));
 }

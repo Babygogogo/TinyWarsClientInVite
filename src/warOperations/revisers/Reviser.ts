@@ -1,6 +1,6 @@
 import {
-    Helpers_Misc,
     Utils_ClientErrorCode,
+    WarOperations_Revisers_Result,
     WarOperations_Revisers_Utils_PlayerDeleteUnit,
     WarOperations_Revisers_Utils_PlayerEndTurn,
     WarOperations_Revisers_Utils_PlayerProduceUnit,
@@ -39,22 +39,23 @@ import {
 } from "../../internal.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export function revise(war: BaseWar_Model_War.War, rawAction: WoContainer, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
-    // if (Object.keys(rawAction).length !== 2) {
-    //     throw Helpers.Misc.newError(`Invalid rawAction.keys.`, ClientErrorCode.WarOperationReviser_Revise_00);
-    // }
+export function revise(war: BaseWar_Model_War.War, rawAction: WoContainer, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WarOperations_Revisers_Result.Result {
+    try {
+        const operationId = rawAction.getOperationId();
+        if ((operationId == null) || (operationId !== war.getExecutedOperationManager().getExecutedOperationsCount())) {
+            return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_Revise_00);
+        }
 
-    const operationId = rawAction.getOperationId();
-    if ((operationId == null) || (operationId !== war.getExecutedOperationManager().getExecutedOperationsCount())) {
-        throw Helpers_Misc.newError(`Invalid actionId: ${operationId}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_Revise_01);
+        const result = doRevise(war, rawAction, requesterUserId);
+        result.operation?.setOperationId(operationId);
+        return result;
+
+    } catch (e) {
+        return WarOperations_Revisers_Result.Result.create((e as AuxiliaryTypes_AuxiliaryTypes.CustomError)?.errorCode ?? Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_Revise_01);
     }
-
-    const action = doRevise(war, rawAction, requesterUserId);
-    action.setOperationId(operationId);
-    return action;
 }
 
-function doRevise(war: BaseWar_Model_War.War, rawAction: WoContainer, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+function doRevise(war: BaseWar_Model_War.War, rawAction: WoContainer, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WarOperations_Revisers_Result.Result {
     const woPlayerDeleteUnit = rawAction.getWoPlayerDeleteUnit();
     if (woPlayerDeleteUnit) {
         return WarOperations_Revisers_Utils_PlayerDeleteUnit.revise(war, woPlayerDeleteUnit, requesterUserId);

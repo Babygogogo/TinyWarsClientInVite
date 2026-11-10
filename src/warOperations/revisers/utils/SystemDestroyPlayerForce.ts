@@ -1,36 +1,36 @@
 import {
     Players_Constants,
     Utils_ClientErrorCode,
-    Helpers_Misc,
     Turns_Constants,
+    WarOperations_Revisers_Result,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemDestroyPlayerForce } from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
 
-export function revise(war: BaseWar_Model_War.War, rawAction: WoSystemDestroyPlayerForce, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Model_War.War, rawAction: WoSystemDestroyPlayerForce, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WarOperations_Revisers_Result.Result {
     if (requesterUserId != null) {
-        throw Helpers_Misc.newError(`Invalid requesterUserId.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_00);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_00);
     }
 
     if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
-        throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_01);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_01);
     }
 
     const targetPlayerIndex = rawAction.getTargetPlayerIndex();
     if ((targetPlayerIndex == null) || (targetPlayerIndex === Players_Constants.PlayerIndex.Neutral)) {
-        throw Helpers_Misc.newError(`Invalid targetPlayerIndex: ${targetPlayerIndex}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_02);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_02);
     }
 
     const player = war.getPlayer(targetPlayerIndex);
     if ((player == null) || (player.getAliveState() !== Players_Constants.AliveStateId.Dying)) {
-        throw Helpers_Misc.newError(`Invalid aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_03);
+        return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_03);
     }
 
-    return WoContainer.fromJson({
+    return WarOperations_Revisers_Result.Result.create2(WoContainer.fromJson({
         WoSystemDestroyPlayerForce : {
             targetPlayerIndex,
         },
-    });
+    }));
 }
