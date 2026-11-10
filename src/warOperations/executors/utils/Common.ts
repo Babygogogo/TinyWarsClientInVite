@@ -1,11 +1,11 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOp,
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_RawMovingUnitAndPath,
     AuxiliaryTypes_ThingsForMovePath,
     AuxiliaryTypes_TileAppearanceInfo,
     AuxiliaryTypes_VisibleThings,
     CoSkills_Utils_InstantMisc_SelfUnitHpAfterWait,
-    Helpers_Collection,
     Helpers_Misc,
     Players_Utils_Common,
     SinglePlayerWars_War,
@@ -20,8 +20,7 @@ import {
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
 } from "../../../internal.ts";
-import { MessageContainer } from "../../../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
-import type { CommonExtraDataForWarOperation } from "../../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
+import { CommonExtraDataForWarOperation } from "../../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
 import type { MovingUnitAndPath } from "../../../proto/schema/CommonProto/Structure/MovingUnitAndPath.ts";
 import { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -599,7 +598,7 @@ export function postProcessInnerWarOperation({ war, allTileAppearanceInfosBefore
     for (const teamIndex of war.getPlayerManager().getAllTeamIndexes(true)) {
         outerWarOpDict.set(
             teamIndex,
-            generateMessageForExecuteWarOperation({
+            generateOuterWarOperation({
                 war                                  : war,
                 teamIndexes                          : new Set([teamIndex]),
                 allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
@@ -620,7 +619,7 @@ export function postProcessInnerWarOperation({ war, allTileAppearanceInfosBefore
     return outerWarOpDict;
 }
 
-function generateMessageForExecuteWarOperation({
+function generateOuterWarOperation({
     war,
     teamIndexes,
     allTileAppearanceInfosBeforeAction,
@@ -633,7 +632,7 @@ function generateMessageForExecuteWarOperation({
     serializedVisibleTiles,
     serializedInvisibleTiles,
     serializedUnits,
-    createMessage
+    createMessage,
 }: {
     war                                     : SinglePlayerWars_War.War;
     teamIndexes                             : Set<number>;
@@ -649,8 +648,147 @@ function generateMessageForExecuteWarOperation({
     serializedUnits                         : Map<number, SerialUnit>;
     createMessage                           : MessageCreator;
 }): WoContainer {
-    // TODO
-    return new WoContainer();
+    const visibleTilesToSend            = new Set<Tiles_Tile.Tile>();
+    const invisibleTilesToSend          = new Set<Tiles_Tile.Tile>();
+    const unitsToSend                   = new Set<Units_Unit.Unit>();
+    const visibleUnitIdSetBeforeAction  = new Set<number>();
+    const visibleUnitIdSetAfterAction   = new Set<number>();
+    const rawMovingUnitAndPath          = thingsForMovePath != null ? AuxiliaryTypes_RawMovingUnitAndPath.RawMovingUnitAndPath.create(thingsForMovePath.getFocusUnitDataBeforeAction(), thingsForMovePath.getRevisedPath()) : undefined;
+    const rawDroppingUnitAndPathArray   = thingsForMovePath?.getRevisedDropInfo()?.map(v => AuxiliaryTypes_RawMovingUnitAndPath.RawMovingUnitAndPath.create2(v)) ?? [];
+    const affectedTiles                 = affectedThings.getTiles();
+    const affectedUnits                 = affectedThings.getUnits();
+    for (const teamIndex of teamIndexes) {
+        const visibleThingsBeforeAction = visibleThingsForEachTeamBeforeAction.get(teamIndex);
+        const visibleThingsAfterAction  = currentVisibleThingsForEachTeam.get(teamIndex);
+        {
+            const previousVisibleTiles  = visibleThingsBeforeAction?.getTiles() ?? new Set();
+            const currentVisibleTiles   = visibleThingsAfterAction?.getTiles() ?? new Set();
+            if (affectedTiles != null) {
+                for (const tile of affectedTiles) {
+                    if (currentVisibleTiles.has(tile)) {
+                        visibleTilesToSend.add(tile);
+                    } else {
+                        if ((previousVisibleTiles.has(tile))                                    ||
+                            (!allTileAppearanceInfosBeforeAction.get(tile)?.checkIsSame(tile))
+                        ) {
+                            invisibleTilesToSend.add(tile);
+                        }
+                    }
+                }
+            }
+            for (const tile of currentVisibleTiles) {
+                if (!previousVisibleTiles.has(tile)) {
+                    visibleTilesToSend.add(tile);
+                }
+            }
+        }
+
+        {
+            const previousVisibleUnits = visibleThingsBeforeAction?.getUnits() ?? new Set();
+            for (const unit of visibleThingsAfterAction?.getUnits() ?? new Set()) {
+                visibleUnitIdSetAfterAction.add(unit.getUnitId());
+                if ((affectedUnits?.has(unit) === true) || (!previousVisibleUnits.has(unit))) {
+                    unitsToSend.add(unit);
+                }
+            }
+            for (const unit of previousVisibleUnits) {
+                visibleUnitIdSetBeforeAction.add(unit.getUnitId());
+            }
+        }
+
+        if (thingsForMovePath != null) {
+            const visibilityMap                         = visibleThingsBeforeAction?.getVisibilityMap();
+            const unitGridIdsForEachTeamBeforeAction    = thingsForMovePath.getUnitGridIdsForEachTeamBeforeAction();
+            rawMovingUnitAndPath?.updatePathToSend(
+                war,
+                teamIndex,
+                unitGridIdsForEachTeamBeforeAction,
+                visibilityMap,
+            );
+            for (const unitAndPath of rawDroppingUnitAndPathArray) {
+                unitAndPath.updatePathToSend(
+                    war,
+                    teamIndex,
+                    unitGridIdsForEachTeamBeforeAction,
+                    visibilityMap,
+                );
+            }
+        }
+    }
+
+    const mapSize               = war.getTileMap().getMapSize();
+    const tileArrayAfterAction  : SerialTile[] = [];
+    for (const tile of visibleTilesToSend) {
+        const gridId = tile.getGridIndex().getGridId(mapSize);
+        if (!serializedVisibleTiles.has(gridId)) {
+            serializedVisibleTiles.set(gridId, tile.serialize());
+        }
+        tileArrayAfterAction.push(serializedVisibleTiles.get(gridId)!);
+    }
+    for (const tile of invisibleTilesToSend) {
+        if (visibleTilesToSend.has(tile)) {
+            continue;
+        }
+
+        const gridId = tile.getGridIndex().getGridId(mapSize);
+        if (!serializedInvisibleTiles.has(gridId)) {
+            serializedInvisibleTiles.set(gridId, tile.serializeAsInvisible());
+        }
+        tileArrayAfterAction.push(serializedInvisibleTiles.get(gridId)!);
+    }
+
+    const unitArrayAfterAction : SerialUnit[] = [];
+    for (const unit of unitsToSend) {
+        const unitId = unit.getUnitId();
+        if (!serializedUnits.has(unitId)) {
+            serializedUnits.set(unitId, unit.serialize());
+        }
+        unitArrayAfterAction.push(serializedUnits.get(unitId)!);
+    }
+
+    const hiddenUnitIdSet = new Set(visibleUnitIdSetBeforeAction);
+    for (const unitId of visibleUnitIdSetAfterAction) {
+        hiddenUnitIdSet.delete(unitId);
+    }
+    for (const unitId of destroyedUnitIdArray) {
+        hiddenUnitIdSet.delete(unitId);
+    }
+
+    const commonExtraData = CommonExtraDataForWarOperation.fromJson({
+        nextUnitId                            : war.getUnitMap().getNextUnitId(),
+        movingUnitAndPath                     : rawMovingUnitAndPath?.createFinalMovingUnitAndPath()?.toJson(),
+        weatherManager                        : affectedThings.getWeatherManager()?.toJson(),
+        forceFog                              : affectedThings.getForceFog()?.toJson(),
+        playerArrayAfterAction                : [...affectedThings.getPlayers() ?? new Set()].map(v => v.serializeForTeamIndexes(teamIndexes).toJson()),
+        unitArrayAfterAction                  : unitArrayAfterAction.map(v => v.toJson()),
+        destroyedUnitIdArray                  : destroyedUnitIdArray,
+        tileArrayAfterAction                  : tileArrayAfterAction.map(v => v.toJson()),
+        visibilityArrayFromPathsAfterWarEvent : [],
+        visibilityArrayFromPathsAfterAction   : teamIndexes.has(war.getPlayerInTurn().getTeamIndex()) ? visibilityArrayFromPathsAfterAction ?? [] : [],
+        hiddenUnitIdArray                     : [...hiddenUnitIdSet],
+        customCounterArray                    : affectedThings.getCustomCounters().map(v => v.toJson()),
+        taskObjectiveStateArray               : affectedThings.getTaskObjectiveStates().map(v => v.toJson()),
+    });
+    {
+        const affectedUnitMovePathVisibilityDictForWarEvent = affectedThings.getUnitMovePathVisibilityDictForWarEvent();
+        if (affectedUnitMovePathVisibilityDictForWarEvent != null) {
+            const playerManager = war.getPlayerManager();
+            for (const [key, visibility] of affectedUnitMovePathVisibilityDictForWarEvent) {
+                if (teamIndexes.has(playerManager.getPlayer(key % 100).getTeamIndex())) {
+                    commonExtraData.getVisibilityArrayFromPathsAfterWarEvent().push((key * 10) + visibility);
+                }
+            }
+        }
+    }
+
+    const droppingMovingUnitAndPathList: MovingUnitAndPath[] = [];
+    for (const v of rawDroppingUnitAndPathArray) {
+        const movingUnitAndPath = v.createFinalMovingUnitAndPath();
+        if (movingUnitAndPath != null) {
+            droppingMovingUnitAndPathList.push(movingUnitAndPath);
+        }
+    }
+    return createMessage(commonExtraData, droppingMovingUnitAndPathList);
 }
 
 function getDifferencesForVisibilityArray(arrayBeforeAction: number[], arrayAfterAction: number[]): number[] {

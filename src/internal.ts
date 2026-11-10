@@ -78,6 +78,7 @@ export * as AuxiliaryTypes_GridIndexAndInvisibility from "./auxiliaryTypes/GridI
 export * as AuxiliaryTypes_RevisedDropUnitInfo from "./auxiliaryTypes/RevisedDropUnitInfo.ts";
 export * as AuxiliaryTypes_ThingsForMovePath from "./auxiliaryTypes/ThingsForMovePath.ts";
 export * as AuxiliaryTypes_RawGridIndexAndPathInfo from "./auxiliaryTypes/RawGridIndexAndPathInfo.ts";
+export * as AuxiliaryTypes_RawMovingUnitAndPath from "./auxiliaryTypes/RawMovingUnitAndPath.ts";
 export * as AutoTourneys_Mains_Provider from "./autoTourneys/mains/Provider.ts";
 export * as AutoTourneys_Mains_Views_AtGlobalSettingsPanel from "./autoTourneys/mains/views/AtGlobalSettingsPanel.ts";
 export * as AutoTourneys_Mains_Views_AtRegisterPanel from "./autoTourneys/mains/views/AtRegisterPanel.ts";

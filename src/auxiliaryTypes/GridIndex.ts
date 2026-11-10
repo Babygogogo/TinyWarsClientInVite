@@ -67,6 +67,9 @@ export class GridIndex {
     public static getGridId(x: number, y: number, mapSize: AuxiliaryTypes_MapSize.MapSize): number {
         return y * mapSize.getWidth() + x;
     }
+    public getAdjacentGridIds(mapSize: AuxiliaryTypes_MapSize.MapSize): number[] {
+        return this.getAdjacentGrids(mapSize).map(gridIndex => gridIndex.getGridId(mapSize));
+    }
 
     public constructor(x: number, y: number) {
         this._x = x;
