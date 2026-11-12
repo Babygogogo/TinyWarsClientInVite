@@ -1,43 +1,43 @@
 import {
-    type Notifications_Mapping,
-    AuxiliaryTypes_CachedDataAccessor,
-    CoopCustomWar_Model_CcwWar,
-    BootTimers_Constants,
-    GameConfigs_Provider,
-    MultiCustomWar_Model_McwWar,
-    MultiFreeWar_Model_MfwWar,
-    MultiMatchWar_Model_MmwWar,
-    MultiRankWar_Model_MrwWar,
-    FloatText,
-    AutoTourneys_Wars_War,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type Common_View_CommonWarAdvancedSettingsPage,
     type Common_View_CommonWarBasicSettingsPage,
     type Common_View_CommonWarPlayerInfoPage,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Notifications_Dispatcher,
-    Players_Constants,
-    Wars_Constants,
-    WarOperations_Executors_Executor,
-    Helpers_Misc,
+    type Egret_Egret,
+    type Notifications_Mapping,
+    type Notifications_Types,
+    AutoTourneys_Wars_War,
+    AuxiliaryTypes_CachedDataAccessor,
+    BootTimers_Constants,
+    CoopCustomWar_Model_CcwWar,
+    FloatText,
+    GameConfigs_Provider,
+    GameModes_Utils,
+    GamePanels_Dict,
     GamePanels_Manager,
     HalfwayReplayWar_Model_HrwModel,
-    GamePanels_Dict,
-    Lang_Utils,
-    GameModes_Utils,
-    NormalMap_Model_NormalMapModel,
-    WarRules_Utils_CommonData,
-    Users_Model,
-    WarSettings_Utils_MpwWarSettings,
     Helpers_GameFlow,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    LocalData_Storage,
+    Logger,
+    MultiCustomWar_Model_McwWar,
+    MultiFreeWar_Model_MfwWar,
+    MultiMatchWar_Model_MmwWar,
     MultiPlayerWar_Model_MpwModel,
     MultiPlayerWar_Model_MpwProxy,
-    LocalData_Storage,
-    Lang_Constants,
-    Logger,
+    MultiPlayerWar_Model_MpwWar,
+    MultiRankWar_Model_MrwWar,
+    NormalMap_Model_NormalMapModel,
+    Notifications_Dispatcher,
+    Players_Constants,
+    Users_Model,
+    WarOperations_Executors_Executor,
+    WarRules_Utils_CommonData,
+    Wars_Constants,
+    WarSettings_Utils_MpwWarSettings,
     WarTypes_Constants,
-    type Egret_Egret,
-    type MultiPlayerWar_Interface_IMpwWar,
-    type Notifications_Types,
 } from "../../internal.ts";
 
 import type { MpwWarProgressInfo } from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarProgressInfo.ts";
@@ -91,7 +91,7 @@ const _unitStatisticsAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedData
 });
 
 const _cachedActions        : WoContainer[] = [];
-let _war                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MultiPlayerWar_Interface_IMpwWar.IMpwWar>;
+let _war                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MultiPlayerWar_Model_MpwWar.MpwWar>;
 let _cachedSyncWarData      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MpwCommonSyncWarResponse>;
 
 export function init(): void {
@@ -1196,7 +1196,7 @@ export async function createDataForCommonWarPlayerInfoPage(warId: AuxiliaryTypes
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for managing war.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function loadWar(data: SerialWar): Promise<MultiPlayerWar_Interface_IMpwWar.IMpwWar> {
+export async function loadWar(data: SerialWar): Promise<MultiPlayerWar_Model_MpwWar.MpwWar> {
     if (getWar()) {
         Logger.warn(`MpwModel.loadWar() another war has been loaded already!`);
         unloadWar();
@@ -1218,10 +1218,10 @@ export function unloadWar(): void {
     }
 }
 
-export function getWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<MultiPlayerWar_Interface_IMpwWar.IMpwWar> {
+export function getWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<MultiPlayerWar_Model_MpwWar.MpwWar> {
     return _war;
 }
-function _setWar(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<MultiPlayerWar_Interface_IMpwWar.IMpwWar>): void {
+function _setWar(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<MultiPlayerWar_Model_MpwWar.MpwWar>): void {
     _war = war;
 }
 
@@ -1299,7 +1299,7 @@ export function updateOnMsgMpwExecuteWarOperation(container: WoContainer, warId:
     }
 }
 
-async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Interface_IMpwWar.IMpwWar, actionList: WoContainer[]): Promise<void> {
+async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Model_MpwWar.MpwWar, actionList: WoContainer[]): Promise<void> {
     if ((!war.getIsRunning()) || (war.getIsEnded()) || (war.getIsExecutingAction())) {
         return;
     }
@@ -1446,7 +1446,7 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Interface_IM
     }
 }
 
-function createWarByWarData(data: SerialWar): MultiPlayerWar_Interface_IMpwWar.IMpwWar {
+function createWarByWarData(data: SerialWar): MultiPlayerWar_Model_MpwWar.MpwWar {
     if (data.getSettingsForMcw()) {
         return new MultiCustomWar_Model_McwWar.McwWar(true);
     } else if (data.getSettingsForMrw()) {

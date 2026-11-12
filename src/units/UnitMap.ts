@@ -509,7 +509,7 @@ export class UnitMap {
         }
     }
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
-    public removeUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, removeView: boolean): Units_Unit.Unit | null {
+    public deleteUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, removeView: boolean): Units_Unit.Unit | null {
         const unit = this.getUnitOnMap(gridIndex);
         this._getMap()[gridIndex.getX()][gridIndex.getY()] = null;
 
@@ -524,7 +524,7 @@ export class UnitMap {
     }
 
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
-    public removeUnitLoaded(unitId: number): Units_Unit.Unit {
+    public deleteUnitLoaded(unitId: number): Units_Unit.Unit {
         const loadedUnits   = this.getRawAllUnitsLoaded();
         const unit          = Helpers_Misc.getExisted(loadedUnits.get(unitId));
         loadedUnits.delete(unitId);
@@ -544,9 +544,9 @@ export class UnitMap {
             return null;
         } else {
             if (unit.getLoaderUnitId() == null) {
-                return this.removeUnitOnMap(unit.getGridIndex(), removeView);
+                return this.deleteUnitOnMap(unit.getGridIndex(), removeView);
             } else {
-                return this.removeUnitLoaded(unitId);
+                return this.deleteUnitLoaded(unitId);
             }
         }
     }

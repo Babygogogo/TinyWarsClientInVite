@@ -1,5 +1,6 @@
 import {
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_TileAppearanceInfo,
     CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction,
     CoSkills_Utils_Persistent_SelfTileIncome,
     GameConfigs_GameConfig,
@@ -1437,6 +1438,21 @@ export class Tile {
         const war = this.getWar();
         return war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
             ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public getTileAppearanceInfo(): AuxiliaryTypes_TileAppearanceInfo.TileAppearanceInfo {
+        return new AuxiliaryTypes_TileAppearanceInfo.TileAppearanceInfo({
+            baseTypeId           : this.getBaseTypeId(),
+            baseShapeId          : this.getBaseShapeId(),
+            objectTypeId         : this.getObjectTypeId(),
+            objectShapeId        : this.getObjectShapeId(),
+            decorationTypeId     : this.getDecorationTypeId(),
+            decorationShapeId    : this.getDecorationShapeId(),
+            isHighlighted        : this.getIsHighlighted(),
+            currentHp            : this.getCurrentHp(),
+            unfixedBuffTypeIdSet : new Set(this.getUnfixedBuffList().map(v => v.getBuffTypeId())),
+        });
     }
 }
 

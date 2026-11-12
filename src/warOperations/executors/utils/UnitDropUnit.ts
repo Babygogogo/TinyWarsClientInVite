@@ -44,7 +44,7 @@ function fastExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitDropUnit)
             for (const data of actionExtraData.getDroppingUnitAndPathArray()) {
                 const unitId = data.getUnit()?.getUnitId() ?? 0;
                 if (unitMap.getUnitLoadedById(unitId) != null) {
-                    unitMap.removeUnitLoaded(unitId).dispose();
+                    unitMap.deleteUnitLoaded(unitId).dispose();
                 }
             }
         }
@@ -149,7 +149,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitD
                 const unitId        = data.getUnit()?.getUnitId() ?? 0;
                 const loadedUnit    = unitMap.getUnitLoadedById(unitId);
                 if (loadedUnit != null) {
-                    unitMap.removeUnitLoaded(unitId).dispose();
+                    unitMap.deleteUnitLoaded(unitId).dispose();
                     affectedLoaderUnits.add(unitMap.getUnitById(Helpers_Misc.getExisted(loadedUnit.getLoaderUnitId())));
                 }
             }

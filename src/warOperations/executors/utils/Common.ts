@@ -1,5 +1,5 @@
 import {
-    AuxiliaryTypes_ChangedThingsForWarOp,
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_RawMovingUnitAndPath,
     AuxiliaryTypes_ThingsForMovePath,
@@ -87,11 +87,11 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
             }
 
             if (unit.getLoaderUnitId()) {
-                unitMap.removeUnitLoaded(unitId).dispose();
+                unitMap.deleteUnitLoaded(unitId).dispose();
 
             } else {
                 const gridIndex = unit.getGridIndex();
-                unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
+                unitMap.deleteUnitOnMap(gridIndex, true)?.dispose();
 
                 if (!isFastExecute) {
                     // 这段代码会导致我方自杀式攻击时，在该部队的起点和终点分别出现一个爆炸特效（起点的是多余的）；在第三势力看来，如果进攻方从明处走到暗处进行自杀式攻击，也会在起点出现多余的爆炸特效
@@ -581,7 +581,7 @@ export function postProcessInnerWarOperation({ war, allTileAppearanceInfosBefore
     allTileAppearanceInfosBeforeAction      : Map<Tiles_Tile.Tile, AuxiliaryTypes_TileAppearanceInfo.TileAppearanceInfo>;
     visibilityArrayFromPathsBeforeAction    : number[] | undefined;
     visibleThingsForEachTeamBeforeAction    : Map<number, AuxiliaryTypes_VisibleThings.VisibleThings>;
-    changedThings                           : AuxiliaryTypes_ChangedThingsForWarOp.ChangedThingsForWarOp;
+    changedThings                           : AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation;
     thingsForMovePath                       : AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath | undefined;
     createMessage                           : MessageCreator;
 }): Map<number, WoContainer> {
@@ -639,7 +639,7 @@ function generateOuterWarOperation({
     allTileAppearanceInfosBeforeAction      : Map<Tiles_Tile.Tile, AuxiliaryTypes_TileAppearanceInfo.TileAppearanceInfo>;
     visibleThingsForEachTeamBeforeAction    : Map<number, AuxiliaryTypes_VisibleThings.VisibleThings>;
     currentVisibleThingsForEachTeam         : Map<number, AuxiliaryTypes_VisibleThings.VisibleThings>;
-    affectedThings                          : AuxiliaryTypes_ChangedThingsForWarOp.ChangedThingsForWarOp;
+    affectedThings                          : AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation;
     destroyedUnitIdArray                    : number[];
     visibilityArrayFromPathsAfterAction     : number[] | undefined;
     thingsForMovePath                       : AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath | undefined;

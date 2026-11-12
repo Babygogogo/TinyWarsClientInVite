@@ -8,11 +8,11 @@ import {
     Lang_Utils,
     MultiPlayerWar_Model_MpwModel,
     MultiPlayerWar_Model_MpwProxy,
+    MultiPlayerWar_Model_MpwWar,
     Turns_Constants,
     Ui_Components_UiPanel,
     Wars_Constants,
     WatchWar_Model_WwModel,
-    type MultiPlayerWar_Interface_IMpwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -23,7 +23,7 @@ import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePl
 import { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 
 export interface OpenData {
-    war     : MultiPlayerWar_Interface_IMpwWar.IMpwWar;
+    war     : MultiPlayerWar_Model_MpwWar.MpwWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;

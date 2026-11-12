@@ -336,12 +336,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     }
 
                     for (const u of unitMap.getUnitsLoadedByLoader(unit, true)) {
-                        unitMap.removeUnitLoaded(u.getUnitId()).dispose();
+                        unitMap.deleteUnitLoaded(u.getUnitId()).dispose();
                     }
                     if (unit.getLoaderUnitId() == null) {
-                        unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
+                        unitMap.deleteUnitOnMap(gridIndex, true)?.dispose();
                     } else {
-                        unitMap.removeUnitLoaded(unit.getUnitId()).dispose();
+                        unitMap.deleteUnitLoaded(unit.getUnitId()).dispose();
                     }
 
                     if (unit.getIsCoOnboard()) {

@@ -1,6 +1,7 @@
 import {
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_MapSize,
+    AuxiliaryTypes_TileAppearanceInfo,
     Helpers_Collection,
     Helpers_Misc,
     Locations_Constants,
@@ -436,5 +437,16 @@ export class TileMap {
             const locationIdArray = Helpers_Collection.createRange(Locations_Constants.MinId, Locations_Constants.MaxId + 1, 1);
             this.setVisibleGroupedLocationIdArray(Locations_Utils.encode(locationIdArray));
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public generateAllTileAppearanceInfos(): Map<Tiles_Tile.Tile, AuxiliaryTypes_TileAppearanceInfo.TileAppearanceInfo> {
+        const tileTypes = new Map<Tiles_Tile.Tile, AuxiliaryTypes_TileAppearanceInfo.TileAppearanceInfo>();
+        for (const column of this.getMap()) {
+            for (const tile of column) {
+                tileTypes.set(tile, tile.getTileAppearanceInfo());
+            }
+        }
+        return tileTypes;
     }
 }

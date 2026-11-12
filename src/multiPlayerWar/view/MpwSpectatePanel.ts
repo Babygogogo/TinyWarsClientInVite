@@ -1,17 +1,17 @@
 import {
-    Graphics_Constants,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Lang_Utils,
-    Users_Model,
-    MultiPlayerWar_Model_MpwModel,
-    WatchWar_Model_WwModel,
-    GamePanels_Manager,
-    WatchWar_Model_WwProxy,
     FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Graphics_Constants,
+    Helpers_Misc,
     Lang_Constants,
+    Lang_Utils,
+    MultiPlayerWar_Model_MpwModel,
+    MultiPlayerWar_Model_MpwWar,
     Ui_Components_UiPanel,
-    type MultiPlayerWar_Interface_IMpwWar,
+    Users_Model,
+    WatchWar_Model_WwModel,
+    WatchWar_Model_WwProxy,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -19,7 +19,7 @@ import {
 } from "../../internal.ts";
 
 export interface OpenData {
-    war: MultiPlayerWar_Interface_IMpwWar.IMpwWar;
+    war: MultiPlayerWar_Model_MpwWar.MpwWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;

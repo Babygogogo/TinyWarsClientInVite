@@ -1,46 +1,45 @@
 import {
-    type Notifications_Mapping,
-    Players_Constants,
-    AuxiliaryTypes_ChatToTarget,
-    Chat_Model,
-    GamePanels_Manager,
-    Graphics_Constants,
-    Helpers_ImageSource,
-    GamePanels_Dict,
-    Helpers_Misc,
-    ForceSkins_Utils,
-    Users_Model,
-    Lang_Utils,
-    Timer_TimerModel,
-    Ui_Utils_UiSkinHelpers,
-    Sounds_SoundPlayer,
-    MultiPlayerWar_Model_MpwProxy,
-    Sounds_Constants,
-    CoSkills_Constants,
-    Lang_Constants,
-    Ui_Components_UiListItemRenderer,
-    Ui_Components_UiPanel,
-    Ui_Types_UiSkinState,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
-    type MultiPlayerWar_Interface_IMpwWar,
+    type Notifications_Mapping,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScrollList,
-    type AuxiliaryTypes_AuxiliaryTypes,
     type Ui_Types_UiListItemData,
+    AuxiliaryTypes_ChatToTarget,
+    Chat_Model,
+    CoSkills_Constants,
+    ForceSkins_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Graphics_Constants,
+    Helpers_ImageSource,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
+    MultiPlayerWar_Model_MpwProxy,
+    MultiPlayerWar_Model_MpwWar,
+    Players_Constants,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Timer_TimerModel,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Types_UiSkinState,
+    Ui_Utils_UiSkinHelpers,
+    Users_Model,
 } from "../../internal.ts";
 
- 
 enum PanelSkinState {
     Normal,
     Expanded,
 }
 
 export interface OpenData {
-    war     : MultiPlayerWar_Interface_IMpwWar.IMpwWar;
+    war     : MultiPlayerWar_Model_MpwWar.MpwWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _listPlayer!           : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForListPlayer>;
@@ -543,7 +542,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 interface DataForListPlayer extends Ui_Types_UiListItemData.UiListItemData {
-    war         : MultiPlayerWar_Interface_IMpwWar.IMpwWar;
+    war         : MultiPlayerWar_Model_MpwWar.MpwWar;
     playerIndex : number;
 }
 class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForListPlayer> {

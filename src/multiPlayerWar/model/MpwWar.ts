@@ -1,5 +1,4 @@
 import {
-    WarEvents_Manager,
     BaseWar_Model_War,
     Destructions_Utils,
     Helpers_Collection,
@@ -8,10 +7,10 @@ import {
     Teams_Constants,
     Timer_TimerModel,
     Visibilities_Utils,
-    type MultiPlayerWar_Interface_IMpwWar,
+    WarEvents_Manager,
 } from "../../internal.ts";
 
-export abstract class MpwWar extends BaseWar_Model_War.War implements MultiPlayerWar_Interface_IMpwWar.IMpwWar {
+export abstract class MpwWar extends BaseWar_Model_War.War {
     private readonly _warEventManager       = new WarEvents_Manager.Manager();
 
     private _visionTeamIndex    : number | null = null;

@@ -1018,10 +1018,10 @@ export function getEstimatedBattleInfo({
         }
 
         if (launchUnitId1 != null) {
-            unitMap.removeUnitLoaded(launchUnitId1);
+            unitMap.deleteUnitLoaded(launchUnitId1);
 
         } else {
-            unitMap.removeUnitOnMap(beginningGridIndex, false);
+            unitMap.deleteUnitOnMap(beginningGridIndex, false);
 
             const tile    = tileMap.getTile(beginningGridIndex);
             const gridId  = beginningGridIndex.getGridId(mapSize);
@@ -1094,9 +1094,9 @@ export function getEstimatedBattleInfo({
 
         const unit = Helpers_Misc.getExisted(unitMap.getUnitById(unitId));
         if (unit.getLoaderUnitId() == null) {
-            unitMap.removeUnitOnMap(unit.getGridIndex(), false);
+            unitMap.deleteUnitOnMap(unit.getGridIndex(), false);
         } else {
-            unitMap.removeUnitLoaded(unitId);
+            unitMap.deleteUnitLoaded(unitId);
         }
 
         unit.init(unitData, gameConfig);

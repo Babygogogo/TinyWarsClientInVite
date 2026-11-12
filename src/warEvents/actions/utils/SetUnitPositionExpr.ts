@@ -184,7 +184,7 @@ export function applyWithoutExtraData(action: WeaSetUnitPositionExpr, isFast: bo
 
     return applyDestinationDict(destinationDict, war, action, isFast);
 }
- 
+
 async function applyDestinationDict(dict: Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>, war: BaseWar_Model_War.War, action: WeaSetUnitPositionExpr, isFast: boolean): Promise<void> {
     const unitMap       = war.getUnitMap();
     const tileMap       = war.getTileMap();
@@ -247,7 +247,7 @@ async function applyDestinationDict(dict: Map<Units_Unit.Unit, AuxiliaryTypes_Gr
             }
         }
 
-        unitMap.removeUnitOnMap(unitGridIndex, false);
+        unitMap.deleteUnitOnMap(unitGridIndex, false);
 
         unit.setGridIndex(newDestination);
         for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {

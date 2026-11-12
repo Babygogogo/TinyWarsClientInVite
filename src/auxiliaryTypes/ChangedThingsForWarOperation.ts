@@ -8,7 +8,7 @@ import type { TaskObjectiveState } from "../proto/schema/CommonProto/TaskObjecti
 import { CustomCounter } from "../proto/schema/CommonProto/WarSerialization/CustomCounter";
 import type { SerialWeatherManager } from "../proto/schema/CommonProto/WarSerialization/SerialWeatherManager";
 
-export class ChangedThingsForWarOp {
+export class ChangedThingsForWarOperation {
     private _players                                : Set<Players_Player.Player> | undefined;
     private _tiles                                  : Set<Tiles_Tile.Tile> | undefined;
     private _units                                  : Set<Units_Unit.Unit> | undefined;
@@ -27,7 +27,7 @@ export class ChangedThingsForWarOp {
         forceFog?                               : ForceFog;
         taskObjectiveStateDict?                 : Map<number, TaskObjectiveState>;
         unitMovePathVisibilityDictForWarEvent?  : Map<number, number>;
-    }) {
+    } = {}) {
         if (players) {
             this.addPlayers(players);
         }
@@ -56,6 +56,63 @@ export class ChangedThingsForWarOp {
         if (unitMovePathVisibilityDictForWarEvent) {
             this.setUnitMovePathVisibilityDictForWarEvent(unitMovePathVisibilityDictForWarEvent);
         }
+    }
+
+    public mergeFrom(other: ChangedThingsForWarOperation): this {
+        {
+            const players = other._players;
+            if (players) {
+                this.addPlayers(players);
+            }
+        }
+        {
+            const tiles = other._tiles;
+            if (tiles) {
+                this.addTiles(tiles);
+            }
+        }
+        {
+            const units = other._units;
+            if (units) {
+                this.addUnits(units);
+            }
+        }
+        {
+            const weatherManager = other._weatherManager;
+            if (weatherManager) {
+                this.setWeatherManager(weatherManager);
+            }
+        }
+        {
+            const customCounterDict = other._customCounterDict;
+            if (customCounterDict) {
+                for (const [customCounterId, value] of customCounterDict) {
+                    this.setCustomCounter(customCounterId, value);
+                }
+            }
+        }
+        {
+            const forceFog = other._forceFog;
+            if (forceFog) {
+                this.setForceFog(forceFog);
+            }
+        }
+        {
+            const taskObjectiveStateDict = other._taskObjectiveStateDict;
+            if (taskObjectiveStateDict) {
+                for (const taskObjectiveState of taskObjectiveStateDict.values()) {
+                    this.setTaskObjectiveState(taskObjectiveState);
+                }
+            }
+        }
+        {
+            const unitMovePathVisibilityDictForWarEvent = other._unitMovePathVisibilityDictForWarEvent;
+            if (unitMovePathVisibilityDictForWarEvent) {
+                this.setUnitMovePathVisibilityDictForWarEvent(unitMovePathVisibilityDictForWarEvent);
+            }
+        }
+
+        return this;
     }
 
     public getPlayers(): Set<Players_Player.Player> | undefined {

@@ -581,9 +581,9 @@ export abstract class War {
 
         focusUnit.setCurrentFuel(focusUnit.getCurrentFuel() - fuelConsumption);
         if (launchUnitId == null) {
-            unitMap.removeUnitOnMap(beginningGridIndex, false);
+            unitMap.deleteUnitOnMap(beginningGridIndex, false);
         } else {
-            unitMap.removeUnitLoaded(launchUnitId);
+            unitMap.deleteUnitLoaded(launchUnitId);
         }
 
         if (pathNodes.length > 1) {

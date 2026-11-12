@@ -39,11 +39,13 @@ import {
     WarOperations_Executors_Utils_UnitUseCoSkill,
     WarOperations_Executors_Utils_UnitWait,
     WarOperations_Executors_Utils_Unknown,
+    WarOperations_Revisers_Result,
     type BaseWar_Model_War,
 } from "../../internal.ts";
 
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function checkAndExecute(war: BaseWar_Model_War.War, action: WoContainer, isFast: boolean): Promise<void> {
     if (!war.getIsRunning()) {
         throw Helpers_Misc.newError(`!war.getIsRunning().`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_CheckAndExecute_00);
@@ -257,6 +259,28 @@ async function executeAction(war: BaseWar_Model_War.War, action: WoContainer, is
     return await WarOperations_Executors_Utils_Unknown.fastExeUnknownAction();
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, revisedResult: WarOperations_Revisers_Result.Result, requesterUserId: number): void {
+    {
+        const errorCode = revisedResult.errorCode;
+        if (errorCode !== Utils_ClientErrorCode.ClientErrorCode.NoError) {
+            throw Helpers_Misc.newError(`Revised result error: ${errorCode}`, errorCode);
+        }
+    }
+
+    const operationContainer = revisedResult.operation;
+    if (operationContainer == null) {
+        throw Helpers_Misc.newError(`Operation container is null`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_ExecuteForInnerWar_00);
+    }
+
+    // 结束回合会改写turnIndex和playerIndex，所以要提前保存
+    const turnManager   = war.getTurnManager();
+    const turnIndex     = turnManager.getTurnIndex();
+    const playerIndex   = turnManager.getPlayerIndexInTurn();
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 function checkIsPlayerManualOperation(operationContainer: WoContainer): boolean {
     return (operationContainer.getWoPlayerDeleteUnit() != null)
         || (operationContainer.getWoPlayerEndTurn() != null)

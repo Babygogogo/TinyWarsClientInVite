@@ -368,7 +368,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 const destination       = destinationNode.getGridIndex();
                 const unitOnDestination = pathLength > 1 ? unitMap.getUnitOnMap(destination) : null;
                 if (unitOnDestination) {
-                    unitMap.removeUnitOnMap(destination, false);
+                    unitMap.deleteUnitOnMap(destination, false);
                 }
 
                 const attackerUnitId    = attackerUnit.getUnitId();

@@ -1,19 +1,19 @@
 import {
-    Players_Utils_Common,
     Destructions_Utils,
-    WarEvents_Actions_Constants_DestroyUnitExpr,
-    Lang_Utils,
-    Numbers_Utils,
+    ExpressionParsers_Contexts_Player,
+    ExpressionParsers_Contexts_Unit,
+    ExpressionParsers_Parser,
     ExpressionParsers_Results_NullableUnit,
     ExpressionParsers_Results_Num,
-    ExpressionParsers_Parser,
-    ExpressionParsers_Contexts_Player,
     Lang_Constants,
-    ExpressionParsers_Contexts_Unit,
+    Lang_Utils,
+    Numbers_Utils,
+    Players_Utils_Common,
+    WarEvents_Actions_Constants_DestroyUnitExpr,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type Players_Player,
     type Units_Unit,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaDestroyUnitExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaDestroyUnitExpr.ts";
 
@@ -96,7 +96,7 @@ function checkIsMeetConditionForUnit(action: WeaDestroyUnitExpr, unit: Units_Uni
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -137,7 +137,7 @@ export async function applyWithoutExtraData(action: WeaDestroyUnitExpr, isFast: 
 
     const destroyedUnits: Units_Unit.Unit[] = [];
     for (const unit of unitMap.getAllUnitsOnMap(v => checkIsMeetConditionForUnit(action, v))) {
-        destroyedUnits.push(...Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFast));
+        destroyedUnits.push(...(Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFast).getUnits() ?? new Set()));
     }
     for (const unitId of targetLoadedUnitIdList) {
         if (unitMap.getUnitLoadedById(unitId) != null) {

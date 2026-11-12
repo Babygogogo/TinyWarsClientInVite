@@ -14,6 +14,7 @@ import {
     Lang_Constants,
     Lang_Utils,
     MultiPlayerWar_Model_MpwModel,
+    MultiPlayerWar_Model_MpwWar,
     Sounds_Constants,
     Sounds_SoundPlayer,
     Timer_TimerModel,
@@ -26,7 +27,6 @@ import {
     Users_Model,
     WatchWar_Model_WwModel,
     type BaseWar_Model_War,
-    type MultiPlayerWar_Interface_IMpwWar,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -41,7 +41,7 @@ import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObje
 let _showTaskObjective = false;
 
 export interface OpenData {
-    war : MultiPlayerWar_Interface_IMpwWar.IMpwWar;
+    war : MultiPlayerWar_Model_MpwWar.MpwWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _groupLeft!                : Ui_Interfaces_IUiContainer.IUiContainer;

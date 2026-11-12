@@ -12,7 +12,9 @@ import {
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
     type BaseWar_Model_War,
+    WarOperations_Executors_Types,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 import type { WoPlayerDeleteUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerDeleteUnit.ts";
 
@@ -90,9 +92,42 @@ async function normalExePlayerDeleteUnit(war: BaseWar_Model_War.War, action: WoP
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerDeleteUnit): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const gridIndex                             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(operation.getGridIndex()));
+    const allTileAppearanceInfosBeforeAction    = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibleThingsForEachTeamBeforeAction  = war.getVisibleThingsForEachTeam();
+    const visibilityArrayFromPathsBeforeAction  = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const focusUnit                             = Helpers_Misc.getExisted(war.getUnitMap().getUnitOnMap(gridIndex));
+    if (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
+        war.getFogMap().updateMapFromPathsByUnitAndPath({
+            unit           : focusUnit,
+            unitVisionInfo : focusUnit.getVisionInfo(),
+            path           : [gridIndex],
+        });
+    }
+
+    const changedThings = Destructions_Utils.destroyUnitOnMap(war, gridIndex, false);
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : undefined,
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+            woContainer.createIfNotExistsWoPlayerDeleteUnit().createIfNotExistsExtraData().setCommonExtraData(commonExtraData);
+
+            return woContainer;
+        },
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): Promise<string | null> {
-
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {

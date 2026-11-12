@@ -13,6 +13,7 @@ import {
     MapEditor_Model_MeModel,
     MapEditor_Model_MeProxy,
     Maps_Constants,
+    MultiPlayerWar_Model_MpwWar,
     Players_Constants,
     TestWar_Model_TwWar,
     Turns_Constants,
@@ -21,7 +22,6 @@ import {
     Users_Model,
     Users_Proxy,
     type Egret_Egret,
-    type MultiPlayerWar_Interface_IMpwWar,
     type Notifications_Mapping,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -30,9 +30,8 @@ import {
     type Ui_Interfaces_IUiLayout,
 } from "../../internal.ts";
 
-
 export interface OpenData {
-    war: MultiPlayerWar_Interface_IMpwWar.IMpwWar;
+    war: MultiPlayerWar_Model_MpwWar.MpwWar;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;

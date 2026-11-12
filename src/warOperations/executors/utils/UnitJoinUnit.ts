@@ -57,7 +57,7 @@ function fastExeUnitJoinUnit(war: BaseWar_Model_War.War, action: WoUnitJoinUnit)
         } else {
             const targetUnit    = Helpers_Misc.getExisted(unitMap.getUnitOnMap(endingGridIndex));
             const player        = war.getPlayer(focusUnit.getPlayerIndex());
-            unitMap.removeUnitOnMap(endingGridIndex, true)?.dispose();
+            unitMap.deleteUnitOnMap(endingGridIndex, true)?.dispose();
             war.moveUnit({
                 pathNodes       : pathNodes,
                 launchUnitId    : launchUnitId,
@@ -157,7 +157,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Model_War.War, action: WoUnitJ
         if ((lastNode?.getIsVisible()) && (!lastNode.getIsBlocked())) {
             const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitJoinUnit_01);
             if (unitMap.getUnitOnMap(gridIndex)) {
-                unitMap.removeUnitOnMap(gridIndex, true)?.dispose();
+                unitMap.deleteUnitOnMap(gridIndex, true)?.dispose();
             }
         }
 
@@ -194,7 +194,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Model_War.War, action: WoUnitJ
 
         } else {
             const player        = war.getPlayer(focusUnit.getPlayerIndex());
-            const targetUnit    = Helpers_Misc.getExisted(unitMap.removeUnitOnMap(endingGridIndex, false));
+            const targetUnit    = Helpers_Misc.getExisted(unitMap.deleteUnitOnMap(endingGridIndex, false));
             war.moveUnit({
                 pathNodes       : pathNodes,
                 launchUnitId    : launchUnitId,

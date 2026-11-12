@@ -22,18 +22,18 @@ export async function endPhaseStandby(turnManager: Turns_Manager.Manager, action
         throw Helpers_Misc.newError(`Invalid phaseCode: ${phaseCode}`, Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_EndPhaseWaitBeginTurnWithExtraData_00);
     }
 
-    runPhaseResetHasUnitOnBeginningTurn(turnManager, action, isFastExecute);
-    runPhaseHandleUnitBuffEffect(turnManager, action, isFastExecute);
-    runPhaseGetFund(turnManager, action, isFastExecute);
-    runPhaseConsumeFuel(turnManager, action, isFastExecute);
+    runPhaseResetHasUnitOnBeginningTurn(turnManager, isFastExecute);
+    runPhaseHandleUnitBuffEffect(turnManager, isFastExecute);
+    runPhaseGetFund(turnManager, isFastExecute);
+    runPhaseConsumeFuel(turnManager, isFastExecute);
     runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkills_Constants.AutoRecoveryTimingId.BeforeRegularRepair);
-    runPhaseRepairUnitByTile(turnManager, action, isFastExecute);
-    runPhaseDestroyUnitsOutOfFuel(turnManager, action, isFastExecute);
-    runPhaseRepairUnitByUnit(turnManager, action, isFastExecute);
+    runPhaseRepairUnitByTile(turnManager, isFastExecute);
+    runPhaseDestroyUnitsOutOfFuel(turnManager, isFastExecute);
+    runPhaseRepairUnitByUnit(turnManager, isFastExecute);
     runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkills_Constants.AutoRecoveryTimingId.AfterRegularRepair);
-    await runPhaseActivateMapWeapon(turnManager, action, isFastExecute);
-    runPhaseCheckAndUpdateUnitAiMode(turnManager, action, isFastExecute);
-    runPhaseMain(turnManager, action, isFastExecute);
+    await runPhaseActivateMapWeapon(turnManager, isFastExecute);
+    runPhaseCheckAndUpdateUnitAiMode(turnManager, isFastExecute);
+    runPhaseMain(turnManager, isFastExecute);
 
     turnManager.setPhaseCode(Turns_Constants.PhaseCode.Main, true);
 
@@ -52,17 +52,17 @@ export function endPhaseMain(turnManager: Turns_Manager.Manager, action: WoPlaye
     }
 
     runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkills_Constants.AutoRecoveryTimingId.BeforeEndTurn);
-    runPhaseResetUnitState(turnManager, action, isFastExecute);
-    runPhaseResetVisionForCurrentPlayer(turnManager, action, isFastExecute);
-    runPhaseHandleUnitBuffEffect2(turnManager, action, isFastExecute);
-    runPhaseTickTurnAndPlayerIndex(turnManager, action, isFastExecute);
-    runPhaseResetSkillState(turnManager, action, isFastExecute);
-    runPhaseResetVotesForDraw(turnManager, action, isFastExecute);
-    runPhaseUpdateWeatherAndForceFog(turnManager, action, isFastExecute);
-    runPhaseUpdateAllTileBuffArray(turnManager, action, isFastExecute);
-    runPhaseUpdateAllUnitBuffArray(turnManager, action, isFastExecute);
-    runPhaseResetVisionForNextPlayer(turnManager, action, isFastExecute);
-    runPhaseWaitBeginTurn(turnManager, action, isFastExecute);
+    runPhaseResetUnitState(turnManager, isFastExecute);
+    runPhaseResetVisionForCurrentPlayer(turnManager, isFastExecute);
+    runPhaseHandleUnitBuffEffect2(turnManager, isFastExecute);
+    runPhaseTickTurnAndPlayerIndex(turnManager, isFastExecute);
+    runPhaseResetSkillState(turnManager, isFastExecute);
+    runPhaseResetVotesForDraw(turnManager, isFastExecute);
+    runPhaseUpdateWeatherAndForceFog(turnManager, isFastExecute);
+    runPhaseUpdateAllTileBuffArray(turnManager, isFastExecute);
+    runPhaseUpdateAllUnitBuffArray(turnManager, isFastExecute);
+    runPhaseResetVisionForNextPlayer(turnManager, isFastExecute);
+    runPhaseWaitBeginTurn(turnManager, isFastExecute);
 
     turnManager.setPhaseCode(Turns_Constants.PhaseCode.WaitBeginTurn, true);
 
@@ -75,19 +75,19 @@ export function endPhaseMain(turnManager: Turns_Manager.Manager, action: WoPlaye
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetHasUnitOnBeginningTurn(turnManager: Turns_Manager.Manager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
+function runPhaseResetHasUnitOnBeginningTurn(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseHandleUnitBuffEffect(turnManager: Turns_Manager.Manager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
+function runPhaseHandleUnitBuffEffect(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseGetFund(turnManager: Turns_Manager.Manager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
+function runPhaseGetFund(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseConsumeFuel(turnManager: Turns_Manager.Manager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
+function runPhaseConsumeFuel(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -95,19 +95,19 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_Manager.Manager, isFastExecu
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseRepairUnitByTile(turnManager: Turns_Manager.Manager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
+function runPhaseRepairUnitByTile(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_Manager.Manager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
+function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseRepairUnitByUnit(turnManager: Turns_Manager.Manager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
+function runPhaseRepairUnitByUnit(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 
-async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, data: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
+async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<void> {
     const war               = turnManager.getWar();
     const playerIndex       = war.getPlayerIndexInTurn();
     const tileMap           = war.getTileMap();
@@ -117,7 +117,7 @@ async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, dat
         const crystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.Crystal)
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of crystalArray) {
-            await handleMapWeaponTileCrystal(data, war, tile, isFastExecute);
+            await handleMapWeaponTileCrystal(war, tile, isFastExecute);
         }
     }
     {
@@ -132,14 +132,14 @@ async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, dat
                 }
             });
         for (const tile of customCrystalArray) {
-            await handleMapWeaponTileCrystal(data, war, tile, isFastExecute);
+            await handleMapWeaponTileCrystal(war, tile, isFastExecute);
         }
     }
     {
         const cannonArray = allTileArray.filter(v => v.checkIsNormalCannon())
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of cannonArray) {
-            await handleMapWeaponTileCannon(data, war, tile, isFastExecute);
+            await handleMapWeaponTileCannon(war, tile, isFastExecute);
         }
     }
     {
@@ -154,14 +154,14 @@ async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, dat
                 }
             });
         for (const tile of customCannonArray) {
-            await handleMapWeaponTileCannon(data, war, tile, isFastExecute);
+            await handleMapWeaponTileCannon(war, tile, isFastExecute);
         }
     }
     {
         const laserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.LaserTurret)
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of laserTurretArray) {
-            await handleMapWeaponTileLaserTurret(data, war, tile, isFastExecute);
+            await handleMapWeaponTileLaserTurret(war, tile, isFastExecute);
         }
     }
     {
@@ -176,34 +176,34 @@ async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, dat
                 }
             });
         for (const tile of customLaserTurretArray) {
-            await handleMapWeaponTileLaserTurret(data, war, tile, isFastExecute);
+            await handleMapWeaponTileLaserTurret(war, tile, isFastExecute);
         }
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseCheckAndUpdateUnitAiMode(turnManager: Turns_Manager.Manager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
+function runPhaseCheckAndUpdateUnitAiMode(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseMain(turnManager: Turns_Manager.Manager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
+function runPhaseMain(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetUnitState(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseResetUnitState(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVisionForCurrentPlayer(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseResetVisionForCurrentPlayer(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const war = turnManager.getWar();
     war.getFogMap().resetMapFromPathsForPlayerWithEncodedData(war.getPlayerIndexInTurn());
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseHandleUnitBuffEffect2(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseHandleUnitBuffEffect2(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const info = turnManager.getNextTurnAndPlayerIndex();
     turnManager.setTurnIndex(info.turnIndex);
     turnManager.setPlayerIndexInTurn(info.playerIndex, true);
@@ -211,15 +211,15 @@ function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_Manager.Manager, data
     turnManager.getWar().getWarEventManager().updateWarEventCalledCountOnPlayerTurnSwitched();
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetSkillState(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseResetSkillState(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVotesForDraw(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseResetVotesForDraw(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     turnManager.getWar().getDrawVoteManager().handleTurnPhaseResetVotesForDraw();
 }
 
-function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const war               = turnManager.getWar();
     const weatherManager    = war.getWeatherManager();
     weatherManager.updateOnPlayerTurnSwitched();
@@ -230,27 +230,27 @@ function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_Manager.Manager, da
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseUpdateAllTileBuffArray(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseUpdateAllTileBuffArray(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseUpdateAllUnitBuffArray(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseUpdateAllUnitBuffArray(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVisionForNextPlayer(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseResetVisionForNextPlayer(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // if (!isFastExecute) {
     //     turnManager.getWar().updateTilesAndUnitsOnVisibilityChanged();
     // }
 }
 
-function runPhaseWaitBeginTurn(turnManager: Turns_Manager.Manager, data: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+function runPhaseWaitBeginTurn(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     if (!isFastExecute) {
         turnManager.getWar().getTileMap().getView()?.resetMarkLayer();
     }
 }
 
-async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -280,7 +280,7 @@ async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: BaseWar_
         await Timer_TimerModel.wait(400);
     }
 }
-async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -289,7 +289,7 @@ async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: BaseWar_M
         await Timer_TimerModel.wait(400);
     }
 }
-async function handleMapWeaponTileLaserTurret(data: WoSystemBeginTurn, war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {

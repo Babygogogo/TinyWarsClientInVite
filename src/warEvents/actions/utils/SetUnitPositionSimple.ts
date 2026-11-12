@@ -247,9 +247,9 @@ function getAvailableLoader(rootLoader: Units_Unit.Unit, target: Units_Unit.Unit
 function moveUnit(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
     const unitMap = unit.getWar().getUnitMap();
     if (unit.getLoaderUnitId() == null) {
-        unitMap.removeUnitOnMap(unit.getGridIndex(), false);
+        unitMap.deleteUnitOnMap(unit.getGridIndex(), false);
     } else {
-        unitMap.removeUnitLoaded(unit.getUnitId());
+        unitMap.deleteUnitLoaded(unit.getUnitId());
     }
 
     unit.setGridIndex(gridIndex);
