@@ -98,7 +98,7 @@ export function getErrorTip(data: WeaDestroyUnitSimple, mapSize: AuxiliaryTypes_
 export async function applyWithExtraData(_action: WeaDestroyUnitSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaDestroyUnitSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaDestroyUnitSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     const conUnitFilter     = data.getConUnitFilter();

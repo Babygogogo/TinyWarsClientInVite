@@ -272,7 +272,7 @@ export async function applyWithExtraData(_action: WeaModifyUnitBuffSimple): Prom
     // nothing to do
 }
 
-export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaModifyUnitBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetUnitDict = new Map<Units_Unit.Unit, UnitBuff[]>();
     {
         const tileMap               = war.getTileMap();

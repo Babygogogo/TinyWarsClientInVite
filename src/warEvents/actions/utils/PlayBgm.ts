@@ -52,9 +52,9 @@ export function getErrorTip(data: WeaPlayBgm): string | null {
 }
 
 export async function applyWithExtraData(action: WeaPlayBgm, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
-    return applyWithoutExtraData(action, isFast, war);
+    return applyAsInnerWar(action, isFast, war);
 }
-export async function applyWithoutExtraData(action: WeaPlayBgm, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaPlayBgm, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     if (isFast) {
         return;
     }

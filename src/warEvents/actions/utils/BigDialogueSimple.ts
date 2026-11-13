@@ -232,9 +232,9 @@ export function getErrorTipForWeaDialogueData(dialogueData: DataForDialogue, pla
 }
 
 export async function applyWithExtraData(action: WeaBigDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
-    return applyWithoutExtraData(action, isFast, war);
+    return applyAsInnerWar(action, isFast, war);
 }
-export async function applyWithoutExtraData(action: WeaBigDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaBigDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     if (isFast) {
         return;
     }

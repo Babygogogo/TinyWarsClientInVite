@@ -375,7 +375,7 @@ export function getErrorTip(data: WeaSetCustomLaserTurretStateSimple, mapSize: A
 export async function applyWithExtraData(_action: WeaSetCustomLaserTurretStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetTileArray: Tiles_Tile.Tile[] = [];
     {
         const unitMap           = war.getUnitMap();

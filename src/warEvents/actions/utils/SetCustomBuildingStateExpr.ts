@@ -419,7 +419,7 @@ function checkIsMeetConditionForTile(action: WeaSetCustomBuildingStateExpr, tile
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -441,7 +441,7 @@ function evalActDefenseAmount(action: WeaSetCustomBuildingStateExpr, tile: Tiles
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -471,7 +471,7 @@ function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -498,7 +498,7 @@ function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateExpr, tile: Til
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -516,7 +516,7 @@ function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateExpr, tile:
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -543,7 +543,7 @@ function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateExpr, tile: 
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -573,7 +573,7 @@ function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile:
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -595,7 +595,7 @@ function evalActIncomePerTurn(action: WeaSetCustomBuildingStateExpr, tile: Tiles
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -617,7 +617,7 @@ function evalActVisionRange(action: WeaSetCustomBuildingStateExpr, tile: Tiles_T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -635,7 +635,7 @@ function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateEx
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -665,7 +665,7 @@ function evalActHideUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -695,7 +695,7 @@ function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -717,7 +717,7 @@ function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateExpr, tile: T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -739,7 +739,7 @@ function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateExpr, tile: 
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -769,7 +769,7 @@ function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateExpr, t
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -799,7 +799,7 @@ function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateExpr, t
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -808,7 +808,7 @@ function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateExpr, t
 export async function applyWithExtraData(action: WeaSetCustomBuildingStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetCustomBuildingStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomBuildingData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if ((!tile.getIsCustomizableBuilding()) || (!checkIsMeetConditionForTile(action, tile))) {

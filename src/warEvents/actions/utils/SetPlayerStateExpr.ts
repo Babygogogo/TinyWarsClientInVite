@@ -243,7 +243,7 @@ function checkIsMeetConditionForPlayer(action: WeaSetPlayerStateExpr, player: Pl
 export async function applyWithExtraData(_action: WeaSetPlayerStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetPlayerStateExpr, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetPlayerStateExpr, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const playerList: Players_Player.Player[] = [];
     for (const player of [...war.getPlayerManager().getAllPlayersDict().values()].sort((v1, v2) => v1.getPlayerIndex() - v2.getPlayerIndex())) {
         if (checkIsMeetConditionForPlayer(action, player)) {
@@ -356,7 +356,7 @@ function evalActIsSkipTurnForPlayer(action: WeaSetPlayerStateExpr, player: Playe
         } else {
             return null;
         }
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }
@@ -375,7 +375,7 @@ function evalActCoUsingSkillTypeForPlayer(action: WeaSetPlayerStateExpr, player:
         } else {
             return null;
         }
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }
@@ -394,7 +394,7 @@ function evalActActivateCoSkillTypeForPlayer(action: WeaSetPlayerStateExpr, play
         } else {
             return null;
         }
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }

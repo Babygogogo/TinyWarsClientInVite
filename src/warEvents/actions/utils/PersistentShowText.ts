@@ -56,6 +56,6 @@ export function getErrorTip(data: WeaPersistentShowText): string | null {
 export function applyWithExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyWithoutExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): void {
+export function applyAsInnerWar(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }

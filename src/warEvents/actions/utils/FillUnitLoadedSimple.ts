@@ -138,7 +138,7 @@ export function getErrorTip(data: WeaFillUnitLoadedSimple, mapSize: AuxiliaryTyp
 export async function applyWithExtraData(_action: WeaFillUnitLoadedSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaFillUnitLoadedSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     const conUnitFilter     = data.getConUnitFilter();
@@ -184,7 +184,10 @@ export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFas
         const gridIndex             = loaderUnit.getGridIndex();
         const loaderUnitId          = loaderUnit.getUnitId();
         const playerIndex           = loaderUnit.getPlayerIndex();
-        const observerTeamIndexes   = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+        const observerTeamIndexes   = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+            war       : war,
+            gridIndex : gridIndex,
+        });
 
         for (let i = 0; i < loadCount; ++i) {
             const revisedUnitData   = rawUnitData;

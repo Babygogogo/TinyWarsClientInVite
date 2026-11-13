@@ -198,7 +198,7 @@ export function getErrorTip(
 export async function applyWithExtraData(_action: WeaAddTileBuffSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaAddTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaAddTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newBuff = generateNewBuff(data, war);
     if (newBuff == null) {
         return;

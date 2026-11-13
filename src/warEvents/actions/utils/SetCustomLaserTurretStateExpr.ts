@@ -347,7 +347,7 @@ function checkIsMeetConditionForTile(action: WeaSetCustomLaserTurretStateExpr, t
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -369,7 +369,7 @@ function evalActRangeForUp(action: WeaSetCustomLaserTurretStateExpr, tile: Tiles
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -391,7 +391,7 @@ function evalActRangeForDown(action: WeaSetCustomLaserTurretStateExpr, tile: Til
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -413,7 +413,7 @@ function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateExpr, tile: Til
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -435,7 +435,7 @@ function evalActRangeForRight(action: WeaSetCustomLaserTurretStateExpr, tile: Ti
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -457,7 +457,7 @@ function evalActPriority(action: WeaSetCustomLaserTurretStateExpr, tile: Tiles_T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -475,7 +475,7 @@ function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateExpr, tile: Ti
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -493,7 +493,7 @@ function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateExpr, tile: Ti
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -511,7 +511,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateExpr, tile: T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -533,7 +533,7 @@ function evalActOffsetHp(action: WeaSetCustomLaserTurretStateExpr, tile: Tiles_T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -551,7 +551,7 @@ function evalActCanBeFatal(action: WeaSetCustomLaserTurretStateExpr, tile: Tiles
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -573,7 +573,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateExpr, t
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -595,7 +595,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretState
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -604,7 +604,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretState
 export async function applyWithExtraData(_action: WeaSetCustomLaserTurretStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomLaserTurretData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customLaserTurretData = tile.getFinalLaserTurretData();

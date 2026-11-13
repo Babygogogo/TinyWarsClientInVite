@@ -35,9 +35,9 @@ export function getErrorTip(data: WeaPlaySfx): string | null {
 }
 
 export async function applyWithExtraData(action: WeaPlaySfx, isFast: boolean): Promise<void> {
-    return applyWithoutExtraData(action, isFast);
+    return applyAsInnerWar(action, isFast);
 }
-export async function applyWithoutExtraData(action: WeaPlaySfx, isFast: boolean): Promise<void> {
+export async function applyAsInnerWar(action: WeaPlaySfx, isFast: boolean): Promise<void> {
     if (isFast) {
         return;
     }

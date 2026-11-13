@@ -118,7 +118,7 @@ export function getErrorTip(data: WeaSetUnitOwnershipSimple, mapSize: AuxiliaryT
 export async function applyWithExtraData(_action: WeaSetUnitOwnershipSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaSetUnitOwnershipSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaSetUnitOwnershipSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetUnitSet     = new Set<Units_Unit.Unit>();
     const unitMap           = war.getUnitMap();
     const newPlayerIndex    = data.getActPlayerIndex();
@@ -162,7 +162,10 @@ export async function applyWithoutExtraData(data: WeaSetUnitOwnershipSimple, isF
             const gridIndex   = unit.getGridIndex();
             const gridId      = gridIndex.getGridId(mapSize);
             if (!observerTeamIndexesDict.has(gridId)) {
-                observerTeamIndexesDict.set(gridId, Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex }));
+                observerTeamIndexesDict.set(gridId, Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+                    war       : war,
+                    gridIndex : gridIndex,
+                }));
             }
         }
 

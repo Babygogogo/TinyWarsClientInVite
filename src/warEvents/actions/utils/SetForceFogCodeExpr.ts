@@ -92,8 +92,8 @@ export function getErrorTip(data: WeaSetForceFogCodeExpr, customCounterNameSet: 
 export async function applyWithExtraData(_action: WeaSetForceFogCodeExpr): Promise<void> {
     // nothing to do
 }
- 
-export async function applyWithoutExtraData(action: WeaSetForceFogCodeExpr, _isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+
+export async function applyAsInnerWar(action: WeaSetForceFogCodeExpr, _isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const forceFogCode = getForceFogCode(action.getForceFogCode() ?? ``, war);
     if (forceFogCode == null) {
         return;
@@ -134,7 +134,7 @@ function getForceFogCode(str: string, war: BaseWar_Model_War.War): number | null
         }
         return null;
 
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }
@@ -151,7 +151,7 @@ function getTurnsCount(str: string, war: BaseWar_Model_War.War): number | null {
             return null;
         }
 
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }

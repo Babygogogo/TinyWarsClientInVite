@@ -141,9 +141,9 @@ export function getErrorTip(data: WeaSetViewpointExpr, customCounterNameSet: Set
 }
 
 export async function applyWithExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
-    return applyWithoutExtraData(action, isFast, war);
+    return applyAsInnerWar(action, isFast, war);
 }
-export async function applyWithoutExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     return doApply({
         gridIndexArray    : getTargetGridIndexArray(action.getTargets() ?? ``, war),
         isNeedFocusEffect : getIsNeedFocusEffect(action.getNeedFocusEffect(), war),

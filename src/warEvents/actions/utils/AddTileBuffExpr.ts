@@ -162,7 +162,7 @@ function evalConTileFilter(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): b
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -173,7 +173,7 @@ function evalActBuffType(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): num
         return result instanceof ExpressionParsers_Results_Num.Num
             ? Numbers_Utils.getValueInInt32(result.num)
             : defaultValue;
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -189,7 +189,7 @@ function evalActExpiringTurnIndex(action: WeaAddTileBuffExpr, tile: Tiles_Tile.T
         return result instanceof ExpressionParsers_Results_Num.Num
             ? Numbers_Utils.getValueInInt32(result.num)
             : defaultValue;
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -205,7 +205,7 @@ function evalActExpiringPlayerIndex(action: WeaAddTileBuffExpr, tile: Tiles_Tile
         return result instanceof ExpressionParsers_Results_Num.Num
             ? Numbers_Utils.getValueInInt32(result.num)
             : defaultValue;
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -221,7 +221,7 @@ function evalActExtraParams(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): 
         return result instanceof ExpressionParsers_Results_NumArray.NumArray
             ? result.numberArray.map(v => Numbers_Utils.getValueInInt32(v))
             : defaultValue;
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -231,7 +231,7 @@ export async function applyWithExtraData(action: WeaAddTileBuffExpr, war: BaseWa
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithoutExtraData(action: WeaAddTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
+export async function applyAsInnerWar(action: WeaAddTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     const newBuffDict = new Map<Tiles_Tile.Tile, TileBuff>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {

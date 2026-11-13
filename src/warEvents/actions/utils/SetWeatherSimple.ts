@@ -47,9 +47,9 @@ export function getErrorTip(data: WeaSetWeatherSimple, gameConfig: GameConfigs_G
 }
 
 export async function applyWithExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
-    return applyWithoutExtraData(action, isFast, war);
+    return applyAsInnerWar(action, isFast, war);
 }
-export async function applyWithoutExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const weatherManager = war.getWeatherManager();
     weatherManager.setForceWeatherType(action.getWeatherType());
 

@@ -88,8 +88,8 @@ export function getErrorTip(data: WeaSetCustomCounters, customCounterNameSet: Se
 export async function applyWithExtraData(_action: WeaSetCustomCounters): Promise<void> {
     // nothing to do
 }
- 
-export async function applyWithoutExtraData(action: WeaSetCustomCounters, _isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+
+export async function applyAsInnerWar(action: WeaSetCustomCounters, _isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const customCounterIdArray: number[] = [];
     try {
         const idResult = ExpressionParsers_Parser.Parser.getParseResult(action.getIdExpression() ?? "").eval(new ExpressionParsers_Contexts_War.War(war), false);

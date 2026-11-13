@@ -49,7 +49,7 @@ export function getErrorTip(data: WeaSetForceFogCodeSimple): string | null {
 export function applyWithExtraData(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     return apply(action, war, isFast);
 }
-export function applyWithoutExtraData(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
+export function applyAsInnerWar(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     return apply(action, war, isFast);
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -497,7 +497,7 @@ function checkIsMeetConditionForTile(action: WeaFillUnitOnMapExpr, tile: Tiles_T
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -515,7 +515,7 @@ function evalActPlayerIndex(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile)
         } else {
             return null;
         }
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }
@@ -533,7 +533,7 @@ function evalActUnitType(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): n
         } else {
             return null;
         }
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }
@@ -552,7 +552,7 @@ function evalActActionState(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile)
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -578,7 +578,7 @@ function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Til
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -600,7 +600,7 @@ function evalActCurrentHp(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, u
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -622,7 +622,7 @@ function evalActCurrentHp(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, u
 //         } else {
 //             return defaultValue;
 //         }
-//     } catch (Exception) {
+//     } catch {
 //         return defaultValue;
 //     }
 // }
@@ -645,7 +645,7 @@ function evalActIsDiving(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, un
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -671,7 +671,7 @@ function evalActFlareCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -693,7 +693,7 @@ function evalActCurrentFuel(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile,
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -719,7 +719,7 @@ function evalActCurrentBuildMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles_T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -745,7 +745,7 @@ function evalActCurrentProduceMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -767,7 +767,7 @@ function evalActCurrentPromotion(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -790,7 +790,7 @@ function evalActCurrentPromotion(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.
 //         } else {
 //             return defaultValue;
 //         }
-//     } catch (Exception) {
+//     } catch {
 //         return defaultValue;
 //     }
 // }
@@ -808,7 +808,7 @@ function evalActIsCoOnboard(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile)
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -827,7 +827,7 @@ function evalActAiMode(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile): num
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -849,7 +849,7 @@ function evalActGroupedTagId(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -870,7 +870,7 @@ function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitOnMapExpr, ti
         } else {
             return [];
         }
-    } catch (Exception) {
+    } catch {
         return [];
     }
 }
@@ -897,7 +897,7 @@ function evalActAiWeightedDestination(action: WeaFillUnitOnMapExpr, tile: Tiles_
         } else {
             return null;
         }
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }
@@ -906,7 +906,7 @@ function evalActAiWeightedDestination(action: WeaFillUnitOnMapExpr, tile: Tiles_
 export async function applyWithExtraData(_action: WeaFillUnitOnMapExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaFillUnitOnMapExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaFillUnitOnMapExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap         = war.getUnitMap();
     let nextUnitId      = unitMap.getNextUnitId();
     const newUnitDataList : SerialUnit[] = [];
@@ -1002,7 +1002,10 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_W
 
     const warStatisticsManager = war.getWarStatisticsManager();
     for (const unit of unitArray) {
-        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
+        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+            war       : war,
+            gridIndex : unit.getGridIndex(),
+        });
         if (observerTeamIndexes != null) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                 unitType                   : unit.getUnitTypeId(),

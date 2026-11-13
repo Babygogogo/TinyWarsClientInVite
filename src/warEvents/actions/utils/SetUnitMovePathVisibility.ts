@@ -123,7 +123,7 @@ function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: BaseW
 export function applyWithExtraData(_action: WeaSetUnitMovePathVisibility): void {
     // nothing to do
 }
-export function applyWithoutExtraData(action: WeaSetUnitMovePathVisibility, war: BaseWar_Model_War.War): void {
+export function applyAsInnerWar(action: WeaSetUnitMovePathVisibility, war: BaseWar_Model_War.War): void {
     const fogMap            = war.getFogMap();
     const { width, height } = fogMap.getMapSize().getWH();
     const newVisibilityDict = new Map<AuxiliaryTypes_GridIndex.GridIndex, number[]>();

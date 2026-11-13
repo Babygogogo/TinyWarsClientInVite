@@ -186,7 +186,7 @@ function evalConTileFilter(action: WeaModifyTileBuffExpr, tile: Tiles_Tile.Tile)
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -194,7 +194,7 @@ function evalConBuffFilter(action: WeaModifyTileBuffExpr, tile: Tiles_Tile.Tile,
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConBuffFilter() ?? ``).eval(new ExpressionParsers_Contexts_TileBuff.TileBuff(oldBuff, tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -210,7 +210,7 @@ function evalActBuffType(action: WeaModifyTileBuffExpr, tile: Tiles_Tile.Tile, o
         return result instanceof ExpressionParsers_Results_Num.Num
             ? Numbers_Utils.getValueInInt32(result.num)
             : defaultValue;
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -229,7 +229,7 @@ function evalActExpiringTurnIndex(action: WeaModifyTileBuffExpr, tile: Tiles_Til
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -248,7 +248,7 @@ function evalActExpiringPlayerIndex(action: WeaModifyTileBuffExpr, tile: Tiles_T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -264,7 +264,7 @@ function evalActExtraParams(action: WeaModifyTileBuffExpr, tile: Tiles_Tile.Tile
         return result instanceof ExpressionParsers_Results_NumArray.NumArray
             ? result.numberArray.map(v => Numbers_Utils.getValueInInt32(v))
             : defaultValue;
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -274,7 +274,7 @@ export async function applyWithExtraData(action: WeaModifyTileBuffExpr, war: Bas
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithoutExtraData(action: WeaModifyTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
+export async function applyAsInnerWar(action: WeaModifyTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     const newBuffArrayDict = new Map<Tiles_Tile.Tile, ProtoTileBuff[]>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {

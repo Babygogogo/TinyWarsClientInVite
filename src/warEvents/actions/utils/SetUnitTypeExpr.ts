@@ -96,7 +96,7 @@ function checkIsMeetConditionForUnit(action: WeaSetUnitTypeExpr, unit: Units_Uni
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -163,7 +163,7 @@ function evalActUnitType(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): num
 export async function applyWithExtraData(_action: WeaSetUnitTypeExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetUnitTypeExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetUnitTypeExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newUnitDataDict = new Map<Units_Unit.Unit, SerialUnit>();
     for (const unit of war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId())) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -193,7 +193,10 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseW
         const gridIndex   = unit.getGridIndex();
         const gridId      = gridIndex.getGridId(mapSize);
         if (!observerTeamIndexesDict.has(gridId)) {
-            observerTeamIndexesDict.set(gridId, Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex }));
+            observerTeamIndexesDict.set(gridId, Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+                war       : war,
+                gridIndex : gridIndex,
+            }));
         }
     }
 

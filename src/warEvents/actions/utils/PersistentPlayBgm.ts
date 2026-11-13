@@ -39,9 +39,9 @@ export function getErrorTip(data: WeaPersistentPlayBgm): string | null {
 }
 
 export function applyWithExtraData(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Model_War.War): void {
-    return applyWithoutExtraData(action, isFastExecute, actionId, war);
+    return applyAsInnerWar(action, isFastExecute, actionId, war);
 }
-export function applyWithoutExtraData(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Model_War.War): void {
+export function applyAsInnerWar(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Model_War.War): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 
     if (!isFastExecute) {

@@ -370,7 +370,7 @@ function checkIsMeetConditionForTile(action: WeaSetCustomCannonStateExpr, tile: 
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -392,7 +392,7 @@ function evalActRangeForUp(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -414,7 +414,7 @@ function evalActRangeForDown(action: WeaSetCustomCannonStateExpr, tile: Tiles_Ti
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -436,7 +436,7 @@ function evalActRangeForLeft(action: WeaSetCustomCannonStateExpr, tile: Tiles_Ti
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -458,7 +458,7 @@ function evalActRangeForRight(action: WeaSetCustomCannonStateExpr, tile: Tiles_T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -480,7 +480,7 @@ function evalActPriority(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -498,7 +498,7 @@ function evalActCanAffectSelf(action: WeaSetCustomCannonStateExpr, tile: Tiles_T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -516,7 +516,7 @@ function evalActCanAffectAlly(action: WeaSetCustomCannonStateExpr, tile: Tiles_T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -534,7 +534,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomCannonStateExpr, tile: Tiles_
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -556,7 +556,7 @@ function evalActMaxTargetCount(action: WeaSetCustomCannonStateExpr, tile: Tiles_
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -578,7 +578,7 @@ function evalActOffsetHp(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.T
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -596,7 +596,7 @@ function evalActCanBeFatal(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -618,7 +618,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateExpr, tile: 
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -640,7 +640,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr,
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -649,7 +649,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr,
 export async function applyWithExtraData(_action: WeaSetCustomCannonStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomCannonStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetCustomCannonStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomCannonData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customCannonData = tile.getFinalCannonData();

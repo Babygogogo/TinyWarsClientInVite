@@ -266,7 +266,7 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: AuxiliaryTyp
 export async function applyWithExtraData(_action: WeaSetPlayerStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetPlayerStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetPlayerArray: Players_Player.Player[] = [];
     {
         const getAllTiles       = Helpers_Misc.createLazyFunc(() => war.getTileMap().getAllTiles());

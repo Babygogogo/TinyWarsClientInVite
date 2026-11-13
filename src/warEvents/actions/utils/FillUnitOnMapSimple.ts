@@ -123,7 +123,7 @@ export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: AuxiliaryType
 export async function applyWithExtraData(_action: WeaFillUnitOnMapSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaFillUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const rawUnitData = Helpers_Misc.getExisted(action.getActUnitData());
     if (rawUnitData.getLoaderUnitId() != null) {
         throw Helpers_Misc.newError(`non-null loaderUnitId.`);
@@ -172,7 +172,10 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
         (!isFastExecute) && (unit.flushDataToView());
 
         {
-            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+                war       : war,
+                gridIndex : gridIndex,
+            });
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                   : unit.getUnitTypeId(),
@@ -212,7 +215,7 @@ function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovabl
         const gridIndex = origin.getGridsWithinDistance({
             minDistance : distance,
             maxDistance : distance,
-            mapSize,
+            mapSize     : mapSize,
             predicate   : (g): boolean => {
                 if (unitMap.getUnitOnMap(g)) {
                     return false;

@@ -125,7 +125,7 @@ function evalActPlayerAliveState(action: WeaDestroyUnitExpr, player: Players_Pla
 export async function applyWithExtraData(_action: WeaDestroyUnitExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaDestroyUnitExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaDestroyUnitExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap                   = war.getUnitMap();
     const allLoadedUnits            = [...unitMap.getRawAllUnitsLoaded().values()].sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
     const targetLoadedUnitIdList    : number[] = [];

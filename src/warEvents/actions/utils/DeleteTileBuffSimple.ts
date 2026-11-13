@@ -148,7 +148,7 @@ export async function applyWithExtraData(_action: WeaDeleteTileBuffSimple): Prom
     // nothing to do
 }
 
-export async function applyWithoutExtraData(action: WeaDeleteTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaDeleteTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetTileDict = new Map<Tiles_Tile.Tile, TileBuff[]>();
     {
         const unitMap               = war.getUnitMap();

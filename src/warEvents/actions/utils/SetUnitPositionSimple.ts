@@ -135,7 +135,7 @@ export function getErrorTip(data: WeaSetUnitPositionSimple, mapSize: AuxiliaryTy
 export async function applyWithExtraData(_action: WeaSetUnitPositionSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaSetUnitPositionSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaSetUnitPositionSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     const targetUnitArray   : Units_Unit.Unit[] = [];

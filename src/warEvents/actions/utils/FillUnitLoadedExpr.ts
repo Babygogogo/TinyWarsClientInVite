@@ -427,7 +427,7 @@ function checkIsMeetConditionForUnit(action: WeaFillUnitLoadedExpr, unit: Units_
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -445,7 +445,7 @@ function checkIsMeetConditionForUnit(action: WeaFillUnitLoadedExpr, unit: Units_
 //         } else {
 //             return null;
 //         }
-//     } catch (Exception) {
+//     } catch {
 //         return null;
 //     }
 // }
@@ -464,7 +464,7 @@ function evalActUnitType(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): 
         } else {
             return null;
         }
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }
@@ -483,7 +483,7 @@ function evalActActionState(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -509,7 +509,7 @@ function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitLoadedExpr, unit: Un
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -531,7 +531,7 @@ function evalActCurrentHp(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit, 
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -553,7 +553,7 @@ function evalActCurrentHp(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit, 
 //         } else {
 //             return defaultValue;
 //         }
-//     } catch (Exception) {
+//     } catch {
 //         return defaultValue;
 //     }
 // }
@@ -576,7 +576,7 @@ function evalActIsDiving(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit, u
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -602,7 +602,7 @@ function evalActFlareCurrentAmmo(action: WeaFillUnitLoadedExpr, unit: Units_Unit
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -624,7 +624,7 @@ function evalActCurrentFuel(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -650,7 +650,7 @@ function evalActCurrentBuildMaterial(action: WeaFillUnitLoadedExpr, unit: Units_
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -676,7 +676,7 @@ function evalActCurrentProduceMaterial(action: WeaFillUnitLoadedExpr, unit: Unit
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -698,7 +698,7 @@ function evalActCurrentPromotion(action: WeaFillUnitLoadedExpr, unit: Units_Unit
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -721,7 +721,7 @@ function evalActCurrentPromotion(action: WeaFillUnitLoadedExpr, unit: Units_Unit
 //         } else {
 //             return defaultValue;
 //         }
-//     } catch (Exception) {
+//     } catch {
 //         return defaultValue;
 //     }
 // }
@@ -739,7 +739,7 @@ function evalActIsCoOnboard(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -758,7 +758,7 @@ function evalActAiMode(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Unit): nu
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -780,7 +780,7 @@ function evalActGroupedTagId(action: WeaFillUnitLoadedExpr, unit: Units_Unit.Uni
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -801,7 +801,7 @@ function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitLoadedExpr, u
         } else {
             return [];
         }
-    } catch (Exception) {
+    } catch {
         return [];
     }
 }
@@ -828,7 +828,7 @@ function evalActAiWeightedDestination(action: WeaFillUnitLoadedExpr, unit: Units
         } else {
             return null;
         }
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }
@@ -837,7 +837,7 @@ function evalActAiWeightedDestination(action: WeaFillUnitLoadedExpr, unit: Units
 export async function applyWithExtraData(_action: WeaFillUnitLoadedExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaFillUnitLoadedExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaFillUnitLoadedExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap           = war.getUnitMap();
     const allUnits          = war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
     let nextUnitId          = unitMap.getNextUnitId();
@@ -935,7 +935,10 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_W
     {
         const warStatisticsManager = war.getWarStatisticsManager();
         for (const unit of unitArray) {
-            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
+            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+                war       : war,
+                gridIndex : unit.getGridIndex(),
+            });
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                   : unit.getUnitTypeId(),

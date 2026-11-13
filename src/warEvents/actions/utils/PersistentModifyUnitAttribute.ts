@@ -579,6 +579,6 @@ export function getCanAttackAfterMovingForUnit(action: WeaPersistentModifyUnitAt
 export function applyWithExtraData(_action: WeaPersistentModifyUnitAttribute, war: BaseWar_Model_War.War, actionId: number): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyWithoutExtraData(_action: WeaPersistentModifyUnitAttribute, war: BaseWar_Model_War.War, actionId: number): void {
+export function applyAsInnerWar(_action: WeaPersistentModifyUnitAttribute, war: BaseWar_Model_War.War, actionId: number): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }

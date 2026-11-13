@@ -120,7 +120,7 @@ function checkIsMeetConditionForUnit(action: WeaSetUnitPositionExpr, unit: Units
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -146,7 +146,7 @@ function evalActDestination(action: WeaSetUnitPositionExpr, unit: Units_Unit.Uni
             return null;
         }
 
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }
@@ -169,7 +169,7 @@ function evalActAlternativeTileFilter(action: WeaSetUnitPositionExpr, tile: Tile
 export async function applyWithExtraData(_action: WeaSetUnitPositionExpr): Promise<void> {
     // nothing to do
 }
-export function applyWithoutExtraData(action: WeaSetUnitPositionExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export function applyAsInnerWar(action: WeaSetUnitPositionExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const destinationDict = new Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>();
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         if (!checkIsMeetConditionForUnit(action, unit)) {

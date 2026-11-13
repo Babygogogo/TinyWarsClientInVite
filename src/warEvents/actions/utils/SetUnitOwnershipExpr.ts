@@ -95,7 +95,7 @@ function checkIsMeetConditionForUnit(action: WeaSetUnitOwnershipExpr, unit: Unit
     try {
         const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
         return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -116,7 +116,7 @@ function evalActPlayerIndex(action: WeaSetUnitOwnershipExpr, unit: Units_Unit.Un
             return null;
         }
 
-    } catch (Exception) {
+    } catch {
         return null;
     }
 }
@@ -125,7 +125,7 @@ function evalActPlayerIndex(action: WeaSetUnitOwnershipExpr, unit: Units_Unit.Un
 export async function applyWithExtraData(action: WeaSetUnitOwnershipExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetUnitOwnershipExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetUnitOwnershipExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newPlayerIndexDict = new Map<Units_Unit.Unit, number>();
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -148,7 +148,10 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, number>, war: BaseWar_M
         const gridIndex   = unit.getGridIndex();
         const gridId      = gridIndex.getGridId(mapSize);
         if (!observerTeamIndexesDict.has(gridId)) {
-            observerTeamIndexesDict.set(gridId, Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex }));
+            observerTeamIndexesDict.set(gridId, Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+                war       : war,
+                gridIndex : gridIndex,
+            }));
         }
     }
 

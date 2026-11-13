@@ -47,11 +47,11 @@ export function getErrorTip(data: WeaStopPersistentAction, fullData: WarEventFul
     return null;
 }
 
- 
+
 export async function applyWithExtraData(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     war.getWarEventManager().updateOpaIdArrayOnDeleteAction(action.getActionIdArray());
 }
- 
-export async function applyWithoutExtraData(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+
+export async function applyAsInnerWar(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     war.getWarEventManager().updateOpaIdArrayOnDeleteAction(action.getActionIdArray());
 }

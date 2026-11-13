@@ -73,10 +73,10 @@ export function checkIsValid({ action, gameConfig, mapSize, playersCountUnneutra
         }
 
         if (Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
-            unitData,
-            playersCountUnneutral,
-            gameConfig,
-            mapSize,
+            unitData              : unitData,
+            playersCountUnneutral : playersCountUnneutral,
+            gameConfig            : gameConfig,
+            mapSize               : mapSize,
         })) {
             return false;
         }
@@ -100,10 +100,10 @@ export function getErrorTip(data: WeaAddUnitOnMapSimple, war: BaseWar_Model_War.
             && (v.getNeedMovableTile() != null)
             && (unitData.getLoaderUnitId() == null)
             && (!Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
-                unitData,
-                mapSize,
-                playersCountUnneutral,
-                gameConfig : war.getGcData(),
+                unitData              : unitData,
+                mapSize               : mapSize,
+                playersCountUnneutral : playersCountUnneutral,
+                gameConfig            : war.getGcData(),
             }));
     };
     if (!unitArray.every(validator)) {
@@ -117,7 +117,7 @@ export function getErrorTip(data: WeaAddUnitOnMapSimple, war: BaseWar_Model_War.
 export async function applyWithExtraData(action: WeaAddUnitOnMapSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaAddUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitArray = action.getUnitArray();
     if ((unitArray == null) || (!unitArray.length)) {
         throw Helpers_Misc.newError(`Empty unitArray.`);
@@ -142,9 +142,9 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
         const moveType              = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveTypeId());
         const rawGridIndex          = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(unitData.getGridIndex()));
         if (Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
-            unitData,
-            mapSize,
-            gameConfig,
+            unitData              : unitData,
+            mapSize               : mapSize,
+            gameConfig            : gameConfig,
             playersCountUnneutral : Players_Constants.PlayerIndex.Max,
         })) {
             throw Helpers_Misc.newError(`Invalid unitData: ${JSON.stringify(unitData)}`);
@@ -160,12 +160,12 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
         }
 
         const gridIndex = getGridIndexForAddUnit({
-            origin : rawGridIndex,
-            tileMap,
-            unitMap,
-            canBeBlockedByUnit,
-            needMovableTile,
-            moveType,
+            origin             : rawGridIndex,
+            tileMap            : tileMap,
+            unitMap            : unitMap,
+            canBeBlockedByUnit : canBeBlockedByUnit,
+            needMovableTile    : needMovableTile,
+            moveType           : moveType,
         });
         if (gridIndex == null) {
             continue;
@@ -184,7 +184,7 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
         (!isFastExecute) && (unit.flushDataToView());
 
         {
-            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                   : unitType,
@@ -224,7 +224,7 @@ function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovabl
         const gridIndex = origin.getGridsWithinDistance({
             minDistance : distance,
             maxDistance : distance,
-            mapSize,
+            mapSize     : mapSize,
             predicate   : (g): boolean => {
                 if (unitMap.getUnitOnMap(g)) {
                     return false;

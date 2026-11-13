@@ -393,7 +393,7 @@ function evalActCustomNameId(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile)
 export async function applyWithExtraData(_action: WeaSetTileStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetTileStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetTileStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, SerialTile>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!checkIsMeetConditionForTile(action, tile)) {

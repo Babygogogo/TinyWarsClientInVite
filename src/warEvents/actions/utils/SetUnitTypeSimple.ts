@@ -118,7 +118,7 @@ export function getErrorTip(data: WeaSetUnitTypeSimple, mapSize: AuxiliaryTypes_
 export async function applyWithExtraData(_action: WeaSetUnitTypeSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaSetUnitTypeSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetUnitArray       : Units_Unit.Unit[] = [];
     const unitMap               = war.getUnitMap();
     const newUnitType           = data.getActUnitType();
@@ -148,7 +148,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastEx
                 continue;
             }
 
-            unitInfoArray.push({ unit, depth : getLoadDepth(unit) });
+            unitInfoArray.push({ unit : unit, depth : getLoadDepth(unit) });
         }
 
         if (!unitInfoArray.length) {
@@ -168,7 +168,10 @@ export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastEx
             const gridIndex   = unit.getGridIndex();
             const gridId      = gridIndex.getGridId(mapSize);
             if (!observerTeamIndexesDict.has(gridId)) {
-                observerTeamIndexesDict.set(gridId, Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex }));
+                observerTeamIndexesDict.set(gridId, Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+                    war       : war,
+                    gridIndex : gridIndex,
+                }));
             }
         }
 

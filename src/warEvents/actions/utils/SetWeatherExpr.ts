@@ -89,7 +89,7 @@ export function getErrorTip(data: WeaSetWeatherExpr, customCounterNameSet: Set<s
 export async function applyWithExtraData(action: WeaSetWeatherExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetWeatherExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetWeatherExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const weatherManager = war.getWeatherManager();
     try {
         const context           = new ExpressionParsers_Contexts_Weather.Weather(weatherManager);

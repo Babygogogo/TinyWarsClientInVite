@@ -131,9 +131,9 @@ export function getErrorTip(data: WeaSetViewpointSimple, mapSize: AuxiliaryTypes
 }
 
 export async function applyWithExtraData(action: WeaSetViewpointSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
-    return applyWithoutExtraData(action, isFast, war);
+    return applyAsInnerWar(action, isFast, war);
 }
-export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaSetViewpointSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const targetGridIndexArray: AuxiliaryTypes_GridIndex.GridIndex[] = [];
     {
         const unitMap           = war.getUnitMap();

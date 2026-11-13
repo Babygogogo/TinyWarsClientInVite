@@ -438,7 +438,7 @@ export function getErrorTip(data: WeaSetUnitStateSimple, mapSize: AuxiliaryTypes
 export async function applyWithExtraData(_action: WeaSetUnitStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaSetUnitStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaSetUnitStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     const unitMap           = war.getUnitMap();
     const targetUnitArray   : Units_Unit.Unit[] = [];
     {
@@ -478,7 +478,10 @@ export async function applyWithoutExtraData(data: WeaSetUnitStateSimple, isFastE
             const gridIndex   = unit.getGridIndex();
             const gridId      = gridIndex.getGridId(mapSize);
             if (!observerTeamIndexesDict.has(gridId)) {
-                observerTeamIndexesDict.set(gridId, Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex }));
+                observerTeamIndexesDict.set(gridId, Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+                    war       : war,
+                    gridIndex : gridIndex,
+                }));
             }
         }
 

@@ -23,9 +23,9 @@ async function fastExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: WoS
     const warEventManager = war.getWarEventManager();
     warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
     if (action.getExtraData()) {
-        await warEventManager.callWarEventWithExtraData(action, true);
+        await warEventManager.callWarEventAsOuterWar(action, true);
     } else {
-        await warEventManager.callWarEventWithoutExtraData(action.getWarEventId(), action.getNodeAndActionsIndex(), true);
+        await warEventManager.callWarEventAsInnerWar(action.getWarEventId(), action.getNodeAndActionsIndex(), true);
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(true);
@@ -40,9 +40,9 @@ async function normalExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: W
     const warEventManager = war.getWarEventManager();
     warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
     if (action.getExtraData()) {
-        await warEventManager.callWarEventWithExtraData(action, false);
+        await warEventManager.callWarEventAsOuterWar(action, false);
     } else {
-        await warEventManager.callWarEventWithoutExtraData(action.getWarEventId(), action.getNodeAndActionsIndex(), false);
+        await warEventManager.callWarEventAsInnerWar(action.getWarEventId(), action.getNodeAndActionsIndex(), false);
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);

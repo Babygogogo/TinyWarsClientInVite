@@ -175,7 +175,7 @@ function evalActIsHidden(action: WeaSetTaskObjectiveState, war: BaseWar_Model_Wa
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -194,7 +194,7 @@ function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war:
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -203,7 +203,7 @@ function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war:
 export function applyWithExtraData(_action: WeaSetTaskObjectiveState): void {
     // nothing to do
 }
-export function applyWithoutExtraData(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War): void {
+export function applyAsInnerWar(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War): void {
     const newStateArray: TaskObjectiveState[] = [];
     for (const objectiveId of war.getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray().map(v => v.getObjectiveId()).sort((v1, v2) => v1 - v2) ?? []) {
         if (checkIsMeetConditionForTaskObjective(action, war, objectiveId)) {
