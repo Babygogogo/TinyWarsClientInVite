@@ -39,7 +39,6 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Interface_IBwCommonSettingManager,
     type BaseWar_Interface_IBwCursor,
-    type BaseWar_Interface_IBwDrawVoteManager,
     type BaseWar_Interface_IBwGridVisualEffect,
     type GameConfigs_GameConfig,
     type Tiles_TileMap,
@@ -533,7 +532,7 @@ export abstract class War {
     public getWeatherManager(): Weathers_Manager.Manager {
         return this._weatherManager;
     }
-    public getDrawVoteManager(): BaseWar_Interface_IBwDrawVoteManager.IBwDrawVoteManager {
+    public getDrawVoteManager(): BaseWar_Model_BwDrawVoteManager.BwDrawVoteManager {
         return this._drawVoteManager;
     }
     public getRandomNumberManager(): RandomNumbers_Manager.Manager {

@@ -1,5 +1,6 @@
 import {
     AuxiliaryTypes_AttackableArea,
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
     BootTimers_Constants,
     CoSkills_Constants,
@@ -22,63 +23,70 @@ import {
     type Turns_Manager,
     type Units_Unit,
 } from "../../internal.ts";
-
 import { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
-export async function endPhaseStandby(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<void> {
+export async function endPhaseStandby(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const phaseCode = turnManager.getPhaseCode();
     if (phaseCode !== Turns_Constants.PhaseCode.WaitBeginTurn) {
         throw Helpers_Misc.newError(`Invalid phaseCode: ${phaseCode}`, Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_EndPhaseWaitBeginTurnWithoutExtraData_00);
     }
 
-    runPhaseResetHasUnitOnBeginningTurn(turnManager, isFastExecute);
-    runPhaseHandleUnitBuffEffect(turnManager, isFastExecute);
-    runPhaseGetFund(turnManager, isFastExecute);
-    runPhaseConsumeFuel(turnManager, isFastExecute);
-    runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkills_Constants.AutoRecoveryTimingId.BeforeRegularRepair);
-    runPhaseRepairUnitByTile(turnManager, isFastExecute);
-    runPhaseDestroyUnitsOutOfFuel(turnManager, isFastExecute);
-    runPhaseRepairUnitByUnit(turnManager, isFastExecute);
-    runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkills_Constants.AutoRecoveryTimingId.AfterRegularRepair);
-    await runPhaseActivateMapWeapon(turnManager, isFastExecute);
-    runPhaseCheckAndUpdateUnitAiMode(turnManager, isFastExecute);
-    runPhaseMain(turnManager, isFastExecute);
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation()
+        .mergeFrom(runPhaseResetHasUnitOnBeginningTurn(turnManager, isFastExecute))
+        .mergeFrom(runPhaseHandleUnitBuffEffect(turnManager, isFastExecute))
+        .mergeFrom(runPhaseGetFund(turnManager, isFastExecute))
+        .mergeFrom(runPhaseConsumeFuel(turnManager, isFastExecute))
+        .mergeFrom(runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkills_Constants.AutoRecoveryTimingId.BeforeRegularRepair))
+        .mergeFrom(runPhaseRepairUnitByTile(turnManager, isFastExecute))
+        .mergeFrom(runPhaseDestroyUnitsOutOfFuel(turnManager, isFastExecute))
+        .mergeFrom(runPhaseRepairUnitByUnit(turnManager, isFastExecute))
+        .mergeFrom(runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkills_Constants.AutoRecoveryTimingId.AfterRegularRepair))
+        .mergeFrom(await runPhaseActivateMapWeapon(turnManager, isFastExecute))
+        .mergeFrom(runPhaseCheckAndUpdateUnitAiMode(turnManager, isFastExecute))
+        .mergeFrom(runPhaseMain(turnManager, isFastExecute));
 
     turnManager.setPhaseCode(Turns_Constants.PhaseCode.Main, true);
+
+    return changedThings;
 }
 
-export function endPhaseMain(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+export function endPhaseMain(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const phaseCode = turnManager.getPhaseCode();
     if (phaseCode !== Turns_Constants.PhaseCode.Main) {
         throw Helpers_Misc.newError(`Invalid phaseCode: ${phaseCode}`, Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_EndPhaseMainWithoutExtraData_00);
     }
 
-    runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkills_Constants.AutoRecoveryTimingId.BeforeEndTurn);
-    runPhaseResetUnitState(turnManager, isFastExecute);
-    runPhaseResetVisionForCurrentPlayer(turnManager, isFastExecute);
-    runPhaseHandleUnitBuffEffect2(turnManager, isFastExecute);
-    runPhaseTickTurnAndPlayerIndex(turnManager, isFastExecute);
-    runPhaseResetSkillState(turnManager, isFastExecute);
-    runPhaseResetVotesForDraw(turnManager, isFastExecute);
-    runPhaseUpdateWeatherAndForceFog(turnManager, isFastExecute);
-    runPhaseUpdateAllTileBuffArray(turnManager, isFastExecute);
-    runPhaseUpdateAllUnitBuffArray(turnManager, isFastExecute);
-    runPhaseResetVisionForNextPlayer(turnManager, isFastExecute);
-    runPhaseWaitBeginTurn(turnManager, isFastExecute);
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation()
+        .mergeFrom(runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkills_Constants.AutoRecoveryTimingId.BeforeEndTurn))
+        .mergeFrom(runPhaseResetUnitState(turnManager, isFastExecute))
+        .mergeFrom(runPhaseResetVisionForCurrentPlayer(turnManager, isFastExecute))
+        .mergeFrom(runPhaseHandleUnitBuffEffect2(turnManager, isFastExecute))
+        .mergeFrom(runPhaseTickTurnAndPlayerIndex(turnManager, isFastExecute))
+        .mergeFrom(runPhaseResetSkillState(turnManager, isFastExecute))
+        .mergeFrom(runPhaseResetVotesForDraw(turnManager, isFastExecute))
+        .mergeFrom(runPhaseUpdateWeatherAndForceFog(turnManager, isFastExecute))
+        .mergeFrom(runPhaseUpdateAllTileBuffArray(turnManager, isFastExecute))
+        .mergeFrom(runPhaseUpdateAllUnitBuffArray(turnManager, isFastExecute))
+        .mergeFrom(runPhaseResetVisionForNextPlayer(turnManager, isFastExecute))
+        .mergeFrom(runPhaseWaitBeginTurn(turnManager, isFastExecute));
 
     turnManager.setPhaseCode(Turns_Constants.PhaseCode.WaitBeginTurn, true);
+
+    return changedThings;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetHasUnitOnBeginningTurn(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseResetHasUnitOnBeginningTurn(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     turnManager.setHasUnitOnBeginningTurn(turnManager.getWar().getUnitMap().checkHasUnitForPlayer(turnManager.getPlayerIndexInTurn()));
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }
 
-function runPhaseHandleUnitBuffEffect(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseHandleUnitBuffEffect(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const unitMap       = war.getUnitMap();
     const units         = unitMap.getAllUnits().filter(v => v.getPlayerIndex() === playerIndex).sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const unit of units) {
         const gridIndex = unit.getGridIndex();
         const unitId    = unit.getUnitId();
@@ -95,11 +103,13 @@ function runPhaseHandleUnitBuffEffect(turnManager: Turns_Manager.Manager, isFast
                 const newHp = unit.getCurrentHp() - 10;
                 if (newHp > 0) {
                     unit.setCurrentHp(newHp);
+                    changedThings.addUnit(unit);
+
                 } else {
                     if (unit.getLoaderUnitId() != null) {
-                        Destructions_Utils.destroyUnitLoaded(war, unitId);
+                        changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId));
                     } else {
-                        Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute);
+                        changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute));
                     }
                     break;
                 }
@@ -110,160 +120,224 @@ function runPhaseHandleUnitBuffEffect(turnManager: Turns_Manager.Manager, isFast
             unit.flushDataToView();
         }
     }
+
+    return changedThings;
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseGetFund(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseGetFund(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const war           = turnManager.getWar();
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const player        = war.getPlayer(playerIndex);
     const currentFund   = player.getFund();
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     let totalIncome     = war.getTileMap().getTotalIncomeForPlayer(playerIndex);
     if (turnManager.getTurnIndex() === Turns_Constants.TurnIndex.FirstIndex) {
         totalIncome += war.getCommonSettingManager().getPlayerRule(playerIndex).getInitialFund();
     }
 
     player.setFund(currentFund + totalIncome);
+    changedThings.addPlayer(player);
+
+    return changedThings;
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseConsumeFuel(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
-    const playerIndex = turnManager.getPlayerIndexInTurn();
-    const turnIndex = turnManager.getTurnIndex();
-    const war = turnManager.getWar();
+function runPhaseConsumeFuel(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    const playerIndex   = turnManager.getPlayerIndexInTurn();
+    const turnIndex     = turnManager.getTurnIndex();
+    const war           = turnManager.getWar();
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     if (turnIndex > Turns_Constants.TurnIndex.FirstIndex) {
         for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
             if (unit.getPlayerIndex() === playerIndex) {
                 const currentFuel = unit.getCurrentFuel();
                 const consumption = unit.getFuelConsumptionPerTurn();
-                unit.setCurrentFuel(Math.max(0, currentFuel - consumption));
+                if (consumption !== 0) {
+                    unit.setCurrentFuel(Math.max(0, currentFuel - consumption));
+                    changedThings.addUnit(unit);
+                }
             }
         }
     }
+
+    return changedThings;
 }
-function runPhaseRecoverUnitByCo(turnManager: Turns_Manager.Manager, isFastExecute: boolean, timing: number): void {
+function runPhaseRecoverUnitByCo(turnManager: Turns_Manager.Manager, isFastExecute: boolean, timing: number): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const player        = war.getPlayer(playerIndex);
-    if (player.getCoId()) {
-        const gameConfig                = war.getGcData();
-        const coZoneRadius              = player.getCoZoneRadius();
-        const unitMap                   = war.getUnitMap();
-        const tileMap                   = war.getTileMap();
-        const gridVisionEffect          = war.getGridVisualEffect();
-        const warStatisticsManager      = war.getWarStatisticsManager();
-        const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
-        const visibleUnits              = ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction()))
-            ? null
-            : Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
-        for (const skillId of player.getCoCurrentSkills() || []) {
-            const skillCfg = gameConfig.getCoSkillCfg(skillId);
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
+    if (!player.getCoId()) {
+        return changedThings;
+    }
 
-            {
-                const recoverCfg = skillCfg?.getInstantPeriodic()?.getSelfHpRecovery();
-                if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
-                    const loadedState       = recoverCfg.getUnitLoadedStateId();
-                    const unitActionStateId = recoverCfg.getUnitActionStateId();
-                    const tileCategoryId    = recoverCfg.getTileCategoryId();
-                    const conNeedOwnTile    = recoverCfg.getConNeedOwnTile();
-                    const targetUnits       : Units_Unit.Unit[] = [];
-                    for (const unit of unitMap.getAllUnits()) {
-                        const unitType      = unit.getUnitTypeId();
-                        const unitGridIndex = unit.getGridIndex();
-                        if ((unit.getPlayerIndex() !== playerIndex)                                                 ||
-                            (!gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))  ||
-                            (!unit.checkIsMeetLoadedState(loadedState))                                             ||
-                            ((unitActionStateId != null) && (unit.getActionState() !== unitActionStateId))          ||
-                            (!unitGridIndex.checkIsInsideCoSkillArea({
-                                coSkillAreaType          : recoverCfg.getCoSkillAreaTypeId(),
-                                coZoneRadius             : coZoneRadius,
-                                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                            }))
-                        ) {
-                            continue;
-                        }
+    const gameConfig                = war.getGcData();
+    const coZoneRadius              = player.getCoZoneRadius();
+    const unitMap                   = war.getUnitMap();
+    const tileMap                   = war.getTileMap();
+    const gridVisionEffect          = war.getGridVisualEffect();
+    const warStatisticsManager      = war.getWarStatisticsManager();
+    const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+    const visibleUnits              = ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction()))
+        ? null
+        : Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
+    for (const skillId of player.getCoCurrentSkills() || []) {
+        const skillCfg = gameConfig.getCoSkillCfg(skillId);
 
-                        const tile = tileMap.getTile(unit.getGridIndex());
-                        if (((conNeedOwnTile != null) && ((tile.getPlayerIndex() == playerIndex) != conNeedOwnTile))                    ||
-                            ((tileCategoryId != null) && (!gameConfig.checkIsTileTypeInCategory(tile.getTileTypeId(), tileCategoryId)))
-                        ) {
-                            continue;
-                        }
-
-                        targetUnits.push(unit);
+        {
+            const recoverCfg = skillCfg?.getInstantPeriodic()?.getSelfHpRecovery();
+            if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
+                const loadedState       = recoverCfg.getUnitLoadedStateId();
+                const unitActionStateId = recoverCfg.getUnitActionStateId();
+                const tileCategoryId    = recoverCfg.getTileCategoryId();
+                const conNeedOwnTile    = recoverCfg.getConNeedOwnTile();
+                const targetUnits       : Units_Unit.Unit[] = [];
+                for (const unit of unitMap.getAllUnits()) {
+                    const unitType      = unit.getUnitTypeId();
+                    const unitGridIndex = unit.getGridIndex();
+                    if ((unit.getPlayerIndex() !== playerIndex)                                                 ||
+                        (!gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))  ||
+                        (!unit.checkIsMeetLoadedState(loadedState))                                             ||
+                        ((unitActionStateId != null) && (unit.getActionState() !== unitActionStateId))          ||
+                        (!unitGridIndex.checkIsInsideCoSkillArea({
+                            coSkillAreaType          : recoverCfg.getCoSkillAreaTypeId(),
+                            coZoneRadius             : coZoneRadius,
+                            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                        }))
+                    ) {
+                        continue;
                     }
 
-                    const recoverAmount         = recoverCfg.getHpGain();
-                    const recoverCostModifier   = (recoverCfg.getCostMultiplierPct()) / 100;
-                    for (const unit of targetUnits.sort(sorterForRepairUnits)) {
-                        const normalizedMaxHp       = unit.getNormalizedMaxHp();
-                        const normalizedCurrentHp   = unit.getNormalizedCurrentHp();
-                        const currentFund           = player.getFund();
-                        const revisedProductionCost = unit.getProductionFinalCost() * recoverCostModifier;
-                        const currentHp             = unit.getCurrentHp();
-                        const normalizedRepairHp    = revisedProductionCost <= 0
-                            ? Math.min(
-                                normalizedMaxHp - normalizedCurrentHp,
-                                recoverAmount,
-                            )
-                            : Math.min(
-                                normalizedMaxHp - normalizedCurrentHp,
-                                recoverAmount,
-                                Math.floor(currentFund * normalizedMaxHp / revisedProductionCost),
-                            );
-                        const repairAmount = (normalizedRepairHp + normalizedCurrentHp) * Units_Constants.Hp.Normalizer - currentHp;
+                    const tile = tileMap.getTile(unit.getGridIndex());
+                    if (((conNeedOwnTile != null) && ((tile.getPlayerIndex() == playerIndex) != conNeedOwnTile))                    ||
+                        ((tileCategoryId != null) && (!gameConfig.checkIsTileTypeInCategory(tile.getTileTypeId(), tileCategoryId)))
+                    ) {
+                        continue;
+                    }
 
-                        if (repairAmount > 0) {
-                            unit.addCurrentHp(repairAmount);
-                            player.setFund(Players_Utils_Common.getValidFund(currentFund - Math.floor(normalizedRepairHp * revisedProductionCost / normalizedMaxHp)));
+                    targetUnits.push(unit);
+                }
 
-                            {
-                                const offsetNormalizedHp = unit.getNormalizedCurrentHp() - normalizedCurrentHp;
-                                if (offsetNormalizedHp !== 0) {
-                                    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
-                                    if (observerTeamIndexes != null) {
-                                        warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                            unitType                   : unit.getUnitTypeId(),
-                                            dstPlayerIndex             : playerIndex,
-                                            unitGain                   : 0,
-                                            unitLoss                   : 0,
-                                            normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
-                                            normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                            groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
-                                        }));
-                                    }
+                const recoverAmount         = recoverCfg.getHpGain();
+                const recoverCostModifier   = (recoverCfg.getCostMultiplierPct()) / 100;
+                for (const unit of targetUnits.sort(sorterForRepairUnits)) {
+                    const normalizedMaxHp       = unit.getNormalizedMaxHp();
+                    const normalizedCurrentHp   = unit.getNormalizedCurrentHp();
+                    const currentFund           = player.getFund();
+                    const revisedProductionCost = unit.getProductionFinalCost() * recoverCostModifier;
+                    const currentHp             = unit.getCurrentHp();
+                    const normalizedRepairHp    = revisedProductionCost <= 0
+                        ? Math.min(
+                            normalizedMaxHp - normalizedCurrentHp,
+                            recoverAmount,
+                        )
+                        : Math.min(
+                            normalizedMaxHp - normalizedCurrentHp,
+                            recoverAmount,
+                            Math.floor(currentFund * normalizedMaxHp / revisedProductionCost),
+                        );
+                    const repairAmount = (normalizedRepairHp + normalizedCurrentHp) * Units_Constants.Hp.Normalizer - currentHp;
+
+                    if (repairAmount > 0) {
+                        unit.addCurrentHp(repairAmount);
+
+                        const offsetFund = - Math.floor(normalizedRepairHp * revisedProductionCost / normalizedMaxHp);
+                        player.setFund(Players_Utils_Common.getValidFund(currentFund + offsetFund));
+
+                        {
+                            const offsetNormalizedHp = unit.getNormalizedCurrentHp() - normalizedCurrentHp;
+                            if (offsetNormalizedHp !== 0) {
+                                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : unit.getGridIndex() });
+                                if (observerTeamIndexes != null) {
+                                    warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
+                                        unitType                   : unit.getUnitTypeId(),
+                                        dstPlayerIndex             : playerIndex,
+                                        unitGain                   : 0,
+                                        unitLoss                   : 0,
+                                        normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                                        normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                                    }));
                                 }
                             }
+                        }
 
-                            if ((!isFastExecute) && (visibleUnits?.has(unit))) {
-                                gridVisionEffect?.showEffectRepair(unit.getGridIndex());
+                        changedThings.addUnit(unit);
+
+                        if (offsetFund != 0) {
+                            changedThings.addPlayer(player);
+                        }
+
+                        if ((!isFastExecute) && (visibleUnits?.has(unit))) {
+                            gridVisionEffect?.showEffectRepair(unit.getGridIndex());
+                        }
+                    }
+                }
+            }
+        }
+
+        {
+            const recoverCfg = skillCfg?.getInstantPeriodic()?.getSelfFuelRecovery();
+            if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
+                const loadedState   = recoverCfg.getUnitLoadedStateId();
+                for (const unit of unitMap.getAllUnits()) {
+                    const unitType      = unit.getUnitTypeId();
+                    const unitGridIndex = unit.getGridIndex();
+                    if ((unit.getPlayerIndex() === playerIndex)                                                 &&
+                        (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))   &&
+                        (unit.checkIsMeetLoadedState(loadedState))                                              &&
+                        (unitGridIndex.checkIsInsideCoSkillArea({
+                            coSkillAreaType          : recoverCfg.getCoSkillAreaTypeId(),
+                            coZoneRadius             : coZoneRadius,
+                            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                        }))
+                    ) {
+                        const maxFuel       = unit.getMaxFuel();
+                        const currentFuel   = unit.getCurrentFuel();
+                        const offsetFuel    = Math.min(Math.floor(maxFuel * (recoverCfg.getFuelGainPct()) / 100), maxFuel - currentFuel);
+                        unit.addCurrentFuel(offsetFuel);
+
+                        if (offsetFuel != 0) {
+                            changedThings.addUnit(unit);
+                        }
+
+                        if ((!isFastExecute) && (visibleUnits?.has(unit))) {
+                            if (offsetFuel > 0) {
+                                gridVisionEffect?.showEffectSupply(unitGridIndex);
                             }
                         }
                     }
                 }
             }
+        }
 
-            {
-                const recoverCfg = skillCfg?.getInstantPeriodic()?.getSelfFuelRecovery();
-                if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
-                    const loadedState   = recoverCfg.getUnitLoadedStateId();
-                    for (const unit of unitMap.getAllUnits()) {
-                        const unitType      = unit.getUnitTypeId();
-                        const unitGridIndex = unit.getGridIndex();
-                        if ((unit.getPlayerIndex() === playerIndex)                                                 &&
-                            (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))   &&
-                            (unit.checkIsMeetLoadedState(loadedState))                                              &&
-                            (unitGridIndex.checkIsInsideCoSkillArea({
-                                coSkillAreaType          : recoverCfg.getCoSkillAreaTypeId(),
-                                coZoneRadius             : coZoneRadius,
-                                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                            }))
-                        ) {
-                            const maxFuel       = unit.getMaxFuel();
-                            const currentFuel   = unit.getCurrentFuel();
-                            const offsetFuel    = Math.min(Math.floor(maxFuel * (recoverCfg.getFuelGainPct()) / 100), maxFuel - currentFuel);
-                            unit.addCurrentFuel(offsetFuel);
+        {
+            const recoverCfg = skillCfg?.getInstantPeriodic()?.getSelfPrimaryAmmoRecovery();
+            if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
+                const loadedState   = recoverCfg.getUnitLoadedStateId();
+                for (const unit of unitMap.getAllUnits()) {
+                    const unitType      = unit.getUnitTypeId();
+                    const unitGridIndex = unit.getGridIndex();
+                    if ((unit.getPlayerIndex() === playerIndex)                                                 &&
+                        (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))   &&
+                        (unit.checkIsMeetLoadedState(loadedState))                                              &&
+                        (unitGridIndex.checkIsInsideCoSkillArea({
+                            coSkillAreaType          : recoverCfg.getCoSkillAreaTypeId(),
+                            coZoneRadius             : coZoneRadius,
+                            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                        }))
+                    ) {
+                        const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
+                        if (maxAmmo) {
+                            const currentAmmo               = unit.getPrimaryWeaponCurrentAmmo();
+                            const offsetPrimaryWeaponAmmo   = Math.min(Math.floor(maxAmmo * (recoverCfg.getAmmoGainPct()) / 100), maxAmmo - currentAmmo);
+                            unit.addAndValidatePrimaryWeaponCurrentAmmo(offsetPrimaryWeaponAmmo);
+
+                            if (offsetPrimaryWeaponAmmo != 0) {
+                                changedThings.addUnit(unit);
+                            }
 
                             if ((!isFastExecute) && (visibleUnits?.has(unit))) {
-                                if (offsetFuel > 0) {
+                                if (offsetPrimaryWeaponAmmo > 0) {
                                     gridVisionEffect?.showEffectSupply(unitGridIndex);
                                 }
                             }
@@ -271,45 +345,15 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_Manager.Manager, isFastExecu
                     }
                 }
             }
-
-            {
-                const recoverCfg = skillCfg?.getInstantPeriodic()?.getSelfPrimaryAmmoRecovery();
-                if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
-                    const loadedState   = recoverCfg.getUnitLoadedStateId();
-                    for (const unit of unitMap.getAllUnits()) {
-                        const unitType      = unit.getUnitTypeId();
-                        const unitGridIndex = unit.getGridIndex();
-                        if ((unit.getPlayerIndex() === playerIndex)                                                 &&
-                            (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))   &&
-                            (unit.checkIsMeetLoadedState(loadedState))                                              &&
-                            (unitGridIndex.checkIsInsideCoSkillArea({
-                                coSkillAreaType          : recoverCfg.getCoSkillAreaTypeId(),
-                                coZoneRadius             : coZoneRadius,
-                                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                            }))
-                        ) {
-                            const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
-                            if (maxAmmo) {
-                                const currentAmmo               = unit.getPrimaryWeaponCurrentAmmo();
-                                const offsetPrimaryWeaponAmmo   = Math.min(Math.floor(maxAmmo * (recoverCfg.getAmmoGainPct()) / 100), maxAmmo - currentAmmo);
-                                unit.addAndValidatePrimaryWeaponCurrentAmmo(offsetPrimaryWeaponAmmo);
-
-                                if ((!isFastExecute) && (visibleUnits?.has(unit))) {
-                                    if (offsetPrimaryWeaponAmmo > 0) {
-                                        gridVisionEffect?.showEffectSupply(unitGridIndex);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
+
+    return changedThings;
 }
-function runPhaseRepairUnitByTile(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseRepairUnitByTile(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     const player        = war.getPlayer(playerIndex);
     const allUnitsOnMap : Units_Unit.Unit[] = [];
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
@@ -340,12 +384,16 @@ function runPhaseRepairUnitByTile(turnManager: Turns_Manager.Manager, isFastExec
             unit.addAndValidatePrimaryWeaponCurrentAmmo(offsetPrimaryWeaponAmmo);
             unit.addFlareCurrentAmmo(offsetFlareAmmo);
 
-            player.setFund(fund - repairData.cost);
+            const offsetFund = -repairData.cost;
+            player.setFund(fund + offsetFund);
 
             {
                 const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                 if (offsetNormalizedHp != 0) {
-                    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+                    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+                        war       : war,
+                        gridIndex : gridIndex,
+                    });
                     if (observerTeamIndexes != null) {
                         warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                             unitType                   : unit.getUnitTypeId(),
@@ -360,6 +408,13 @@ function runPhaseRepairUnitByTile(turnManager: Turns_Manager.Manager, isFastExec
                 }
             }
 
+            if ((offsetHp != 0) || (offsetFuel != 0) || (offsetPrimaryWeaponAmmo != 0) || (offsetFlareAmmo != 0)) {
+                changedThings.addUnit(unit);
+            }
+            if (offsetFund != 0) {
+                changedThings.addPlayer(player);
+            }
+
             if ((!isFastExecute) && (visibleUnits?.has(unit))) {
                 if (offsetHp) {
                     gridVisionEffect?.showEffectRepair(gridIndex);
@@ -370,12 +425,15 @@ function runPhaseRepairUnitByTile(turnManager: Turns_Manager.Manager, isFastExec
             }
         }
     }
+
+    return changedThings;
 }
-function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex           = turnManager.getPlayerIndexInTurn();
     const war                   = turnManager.getWar();
     const fogMap                = war.getFogMap();
     const isPathVisionEnabled   = war.getGcData().getSystemCfg().getIsPathVisionEnabled();
+    const changedThings         = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         if ((unit.checkIsDestroyedOnOutOfFuel())    &&
@@ -391,17 +449,20 @@ function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_Manager.Manager, isFas
                 });
             }
 
-            Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute);
+            changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute));
         }
     }
+
+    return changedThings;
 }
-function runPhaseRepairUnitByUnit(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseRepairUnitByUnit(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex       = turnManager.getPlayerIndexInTurn();
     const war               = turnManager.getWar();
     const player            = war.getPlayer(playerIndex);
     const unitMap           = war.getUnitMap();
     const mapSize           = unitMap.getMapSize();
     const gridVisionEffect  = war.getGridVisualEffect();
+    const changedThings     = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     const visibleUnits      = ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction()))
         ? null
         : Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
@@ -428,12 +489,13 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_Manager.Manager, isFastExec
             unit.addAndValidatePrimaryWeaponCurrentAmmo(offsetPrimaryWeaponAmmo);
             unit.addFlareCurrentAmmo(offsetFlareAmmo);
 
-            player.setFund(player.getFund() - repairData.cost);
+            const offsetFund = -repairData.cost;
+            player.setFund(player.getFund() + offsetFund);
 
             {
                 const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                 if (offsetNormalizedHp !== 0) {
-                    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+                    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
                     if (observerTeamIndexes != null) {
                         warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                             unitType                   : unit.getUnitTypeId(),
@@ -446,6 +508,13 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_Manager.Manager, isFastExec
                         }));
                     }
                 }
+            }
+
+            if ((offsetHp != 0) || (offsetFuel != 0) || (offsetPrimaryWeaponAmmo != 0) || (offsetFlareAmmo != 0)) {
+                changedThings.addUnit(unit);
+            }
+            if (offsetFund != 0) {
+                changedThings.addPlayer(player);
             }
 
             if ((!isFastExecute) && (visibleUnits?.has(loader))) {
@@ -463,6 +532,10 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_Manager.Manager, isFastExec
             unit.addCurrentFuel(offsetFuel);
             unit.addAndValidatePrimaryWeaponCurrentAmmo(offsetPrimaryWeaponAmmo);
             unit.addFlareCurrentAmmo(offsetFlareAmmo);
+
+            if ((offsetFuel != 0) || (offsetPrimaryWeaponAmmo != 0) || (offsetFlareAmmo != 0)) {
+                changedThings.addUnit(unit);
+            }
 
             if ((!isFastExecute) && (visibleUnits?.has(loader))) {
                 if ((offsetFlareAmmo) || (offsetFuel) || (offsetPrimaryWeaponAmmo)) {
@@ -488,6 +561,9 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_Manager.Manager, isFastExec
                     unit.addFlareCurrentAmmo(offsetFlareAmmo);
 
                     suppliedUnitIds.add(unitId);
+                    if ((offsetFuel != 0) || (offsetPrimaryWeaponAmmo != 0) || (offsetFlareAmmo != 0)) {
+                        changedThings.addUnit(unit);
+                    }
 
                     if ((!isFastExecute) && (visibleUnits?.has(unit))) {
                         if ((offsetFlareAmmo) || (offsetFuel) || (offsetPrimaryWeaponAmmo)) {
@@ -498,20 +574,23 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_Manager.Manager, isFastExec
             }
         }
     }
+
+    return changedThings;
 }
 
-async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<void> {
-    const war               = turnManager.getWar();
-    const playerIndex       = war.getPlayerIndexInTurn();
-    const tileMap           = war.getTileMap();
-    const mapSize           = tileMap.getMapSize();
-    const allTileArray      = tileMap.getAllTiles().filter(v => v.getPlayerIndex() === playerIndex);
+async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    const war           = turnManager.getWar();
+    const playerIndex   = war.getPlayerIndexInTurn();
+    const tileMap       = war.getTileMap();
+    const mapSize       = tileMap.getMapSize();
+    const allTileArray  = tileMap.getAllTiles().filter(v => v.getPlayerIndex() === playerIndex);
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 
     {
         const crystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.Crystal)
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of crystalArray) {
-            await handleMapWeaponTileCrystal(war, tile, isFastExecute);
+            changedThings.mergeFrom(await handleMapWeaponTileCrystal(war, tile, isFastExecute));
         }
     }
     {
@@ -526,14 +605,14 @@ async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, isF
                 }
             });
         for (const tile of customCrystalArray) {
-            await handleMapWeaponTileCrystal(war, tile, isFastExecute);
+            changedThings.mergeFrom(await handleMapWeaponTileCrystal(war, tile, isFastExecute));
         }
     }
     {
         const cannonArray = allTileArray.filter(v => v.checkIsNormalCannon())
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of cannonArray) {
-            await handleMapWeaponTileCannon(war, tile, isFastExecute);
+            changedThings.mergeFrom(await handleMapWeaponTileCannon(war, tile, isFastExecute));
         }
     }
     {
@@ -548,14 +627,14 @@ async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, isF
                 }
             });
         for (const tile of customCannonArray) {
-            await handleMapWeaponTileCannon(war, tile, isFastExecute);
+            changedThings.mergeFrom(await handleMapWeaponTileCannon(war, tile, isFastExecute));
         }
     }
     {
         const laserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.LaserTurret)
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of laserTurretArray) {
-            await handleMapWeaponTileLaserTurret(war, tile, isFastExecute);
+            changedThings.mergeFrom(await handleMapWeaponTileLaserTurret(war, tile, isFastExecute));
         }
     }
     {
@@ -570,67 +649,84 @@ async function runPhaseActivateMapWeapon(turnManager: Turns_Manager.Manager, isF
                 }
             });
         for (const tile of customLaserTurretArray) {
-            await handleMapWeaponTileLaserTurret(war, tile, isFastExecute);
+            changedThings.mergeFrom(await handleMapWeaponTileLaserTurret(war, tile, isFastExecute));
         }
     }
+
+    return changedThings;
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseCheckAndUpdateUnitAiMode(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseCheckAndUpdateUnitAiMode(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const war           = turnManager.getWar();
     const playerInTurn  = war.getPlayerInTurn();
+    const changedTings  = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     if (playerInTurn.getUserId() == null) {
         const playerIndex = playerInTurn.getPlayerIndex();
         for (const unit of war.getUnitMap().getAllUnits()) {
-            if (unit.getPlayerIndex() === playerIndex) {
-                unit.checkAndUpdateAiMode();
+            if ((unit.getPlayerIndex() === playerIndex) && (unit.checkAndUpdateAiMode())) {
+                changedTings.addUnit(unit);
             }
         }
     }
+
+    return changedTings;
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseMain(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseMain(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const war           = turnManager.getWar();
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const player        = war.getPlayer(playerIndex);
     const unitMap       = war.getUnitMap();
     const hasUnit       = unitMap.checkHasUnitForPlayer(playerIndex);
-    if ((turnManager.getHasUnitOnBeginningTurn())                     &&
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
+    if ((turnManager.getHasUnitOnBeginningTurn())   &&
         (!hasUnit)
     ) {
         player.setAliveState(Players_Constants.AliveStateId.Dying);
+        changedThings.addPlayer(player);
     }
 
-    if (hasUnit) {
+    if ((!isFastExecute) && (hasUnit)) {
         for (const unit of unitMap.getAllUnitsOnMap()) {
             if (unit.getPlayerIndex() === playerIndex) {
                 unit.flushDataToView();
             }
         }
     }
+
+    return changedThings;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetUnitState(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+
+function runPhaseResetUnitState(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
-    const war           = turnManager.getWar();
-    for (const unit of war.getUnitMap().getAllUnits()) {
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
+    for (const unit of (turnManager.getWar()).getUnitMap().getAllUnits()) {
         if (unit.getPlayerIndex() === playerIndex) {
             unit.setActionState(Units_Constants.ActionStateId.Idle);
-            unit.flushDataToView();
+            changedThings.addUnit(unit);
+
+            if (!isFastExecute) {
+                unit.flushDataToView();
+            }
         }
     }
+
+    return changedThings;
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVisionForCurrentPlayer(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseResetVisionForCurrentPlayer(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const war = turnManager.getWar();
     war.getFogMap().resetMapFromPathsForPlayerWithEncodedData(war.getPlayerIndexInTurn());
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }
 
-function runPhaseHandleUnitBuffEffect2(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseHandleUnitBuffEffect2(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const unitMap       = war.getUnitMap();
     const units         = unitMap.getAllUnits().filter(v => v.getPlayerIndex() === playerIndex).sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const unit of units) {
         const gridIndex = unit.getGridIndex();
         const unitId    = unit.getUnitId();
@@ -647,11 +743,12 @@ function runPhaseHandleUnitBuffEffect2(turnManager: Turns_Manager.Manager, isFas
                 const newHp = unit.getCurrentHp() - 10;
                 if (newHp > 0) {
                     unit.setCurrentHp(newHp);
+                    changedThings.addUnit(unit);
                 } else {
                     if (unit.getLoaderUnitId() != null) {
-                        Destructions_Utils.destroyUnitLoaded(war, unitId);
+                        changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId));
                     } else {
-                        Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute);
+                        changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute));
                     }
                     break;
                 }
@@ -662,12 +759,15 @@ function runPhaseHandleUnitBuffEffect2(turnManager: Turns_Manager.Manager, isFas
             unit.flushDataToView();
         }
     }
+
+    return changedThings;
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex       = turnManager.getPlayerIndexInTurn();
     const war               = turnManager.getWar();
     const currTime          = Timer_TimerModel.getServerTimestamp();
+    const changedThings     = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     const player            = war.getPlayer(playerIndex);
     const bootTimerParams   = war.getSettingsBootTimerParams();
     const timerType         : BootTimers_Constants.TimerTypeId = bootTimerParams[0];
@@ -696,30 +796,35 @@ function runPhaseTickTurnAndPlayerIndex(turnManager: Turns_Manager.Manager, isFa
     }
 
     player.setIsSkipTurn(false);
+    changedThings.addPlayer(player);
 
     const info = turnManager.getNextTurnAndPlayerIndex();
     turnManager.setTurnIndex(info.turnIndex);
     turnManager.setPlayerIndexInTurn(info.playerIndex, true);
     turnManager.setEnterTurnTime(Timer_TimerModel.getServerTimestamp());
     war.getWarEventManager().updateWarEventCalledCountOnPlayerTurnSwitched();
+
+    return changedThings;
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetSkillState(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+
+function runPhaseResetSkillState(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const war       = turnManager.getWar();
     const player    = war.getPlayerInTurn();
     player.setCoIsDestroyedInTurn(false);
+    player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
 
-    if (player.checkCoIsUsingActiveSkill()) {
-        player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
+    if (!isFastExecute) {
         war.getTileMap().getView()?.updateCoZone();
     }
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ players : [player] });
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVotesForDraw(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
-    turnManager.getWar().getDrawVoteManager().handleTurnPhaseResetVotesForDraw();
+function runPhaseResetVotesForDraw(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return turnManager.getWar().getDrawVoteManager().handleTurnPhaseResetVotesForDraw();
 }
 
-function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const war               = turnManager.getWar();
     const weatherManager    = war.getWeatherManager();
     weatherManager.updateOnPlayerTurnSwitched();
@@ -728,33 +833,34 @@ function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_Manager.Manager, is
     if (!isFastExecute) {
         weatherManager.getView()?.resetView(false);
     }
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }
 
-function runPhaseUpdateAllTileBuffArray(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
-    for (const tile of turnManager.getWar().getTileMap().getAllTiles()) {
-        tile.updateUnfixedBuffArrayOnPlayerTurnSwitched(!isFastExecute);
-    }
+function runPhaseUpdateAllTileBuffArray(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({
+        tiles : turnManager.getWar().getTileMap().getAllTiles().filter(v => v.updateUnfixedBuffArrayOnPlayerTurnSwitched(!isFastExecute)),
+    });
 }
 
-function runPhaseUpdateAllUnitBuffArray(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
-    for (const unit of turnManager.getWar().getUnitMap().getAllUnits()) {
-        unit.updateBuffArrayOnPlayerTurnSwitched(!isFastExecute);
-    }
+function runPhaseUpdateAllUnitBuffArray(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({
+        units : turnManager.getWar().getUnitMap().getAllUnits().filter(v => v.updateBuffArrayOnPlayerTurnSwitched(!isFastExecute)),
+    });
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVisionForNextPlayer(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
-    // if (!isFastExecute) {
-    //     turnManager.getWar().updateTilesAndUnitsOnVisibilityChanged();
-    // }
+function runPhaseResetVisionForNextPlayer(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }
 
-function runPhaseWaitBeginTurn(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
+function runPhaseWaitBeginTurn(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     if (!isFastExecute) {
         turnManager.getWar().getTileMap().getView()?.resetMarkLayer();
     }
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }
 
-async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -771,6 +877,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
     const canAffectAlly     = data.getCanAffectAlly();
     const canAffectEnemy    = data.getCanAffectEnemy();
     const canAffectSelf     = data.getCanAffectSelf();
+    const changedThings     = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 
     {
         const deltaFund             = data.getOffsetFund();
@@ -784,6 +891,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
                 ) {
                     if (deltaFund) {
                         player.setFund(Math.max(0, player.getFund() + deltaFund));
+                        changedThings.addPlayer(player);
                     }
 
                     if (deltaEnergyPercentage) {
@@ -792,6 +900,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
                         } else {
                             player.addAndValidateCoCurrentEnergy(player.getCoMaxEnergy() * deltaEnergyPercentage / 100);
                         }
+                        changedThings.addPlayer(player);
                     }
                 }
             }
@@ -828,6 +937,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
                                 Math.floor(unit.getCurrentFuel() + maxFuel * deltaFuelPercentage / 100),
                             ));
                         }
+                        changedThings.addUnit(unit);
                     }
 
                     if (deltaPrimaryAmmoPercentage) {
@@ -839,6 +949,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
                             } else {
                                 unit.addAndValidatePrimaryWeaponCurrentAmmo(maxAmmo * deltaPrimaryAmmoPercentage / 100);
                             }
+                            changedThings.addUnit(unit);
                         }
                     }
 
@@ -847,7 +958,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
                         const warStatisticsUpdater  = () => {
                             const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                             if (offsetNormalizedHp != 0) {
-                                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+                                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
                                 if (observerTeamIndexes != null) {
                                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                         unitType                   : unit.getUnitTypeId(),
@@ -872,7 +983,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
                         } else {
                             const rawNewHp = unit.getCurrentHp() + deltaHp * Units_Constants.Hp.Normalizer;
                             if ((rawNewHp <= 0) && (canBeFatal)) {
-                                Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute);
+                                changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute));
                             } else {
                                 unit.setCurrentHp(Numbers_Utils.getValueInRange({
                                     rawValue : rawNewHp,
@@ -882,6 +993,8 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
                                 warStatisticsUpdater();
                             }
                         }
+
+                        changedThings.addUnit(unit);
                     }
 
                     affectedUnits.add(unit);
@@ -913,9 +1026,11 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
         }
         await Timer_TimerModel.wait(400);
     }
+
+    return changedThings;
 }
 
-async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -933,6 +1048,8 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
     const deltaPrimaryAmmoPercentage    = data.getOffsetPrimaryAmmoPercentage();
     const canBeFatal                    = data.getCanBeFatal();
     const affectedUnits                 = new Set<Units_Unit.Unit>();
+    const changedThings                 = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
+
     for (let i = 0; i < maxTargetCount; ++i) {
         const unit = getCandidateUnitArray()[i];
         if (unit == null) {
@@ -953,6 +1070,7 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
                         Math.floor(unit.getCurrentFuel() + maxFuel * deltaFuelPercentage / 100),
                     ));
                 }
+                changedThings.addUnit(unit);
             }
 
             if (deltaPrimaryAmmoPercentage) {
@@ -964,6 +1082,7 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
                     } else {
                         unit.addAndValidatePrimaryWeaponCurrentAmmo(maxAmmo * deltaPrimaryAmmoPercentage / 100);
                     }
+                    changedThings.addUnit(unit);
                 }
             }
 
@@ -972,7 +1091,7 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
                 const warStatisticsUpdater  = () => {
                     const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                     if (offsetNormalizedHp != 0) {
-                        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
+                        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : unit.getGridIndex() });
                         if (observerTeamIndexes != null) {
                             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                 unitType                   : unit.getUnitTypeId(),
@@ -997,7 +1116,7 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
                 } else {
                     const rawNewHp = unit.getCurrentHp() + deltaHp * Units_Constants.Hp.Normalizer;
                     if ((rawNewHp <= 0) && (canBeFatal)) {
-                        Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute);
+                        changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute));
                     } else {
                         unit.setCurrentHp(Numbers_Utils.getValueInRange({
                             rawValue : rawNewHp,
@@ -1007,6 +1126,8 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
                         warStatisticsUpdater();
                     }
                 }
+
+                changedThings.addUnit(unit);
             }
 
             affectedUnits.add(unit);
@@ -1026,6 +1147,8 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
             await Timer_TimerModel.wait(400);
         }
     }
+
+    return changedThings;
 }
 function generateCandidateUnitArrayForCannon(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): Units_Unit.Unit[] {
     const data              = Helpers_Misc.getExisted(tile.getFinalCannonData(), Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_GenerateCandidateUnitArrayForCannon_00);
@@ -1059,7 +1182,7 @@ function generateCandidateUnitArrayForCannon(war: BaseWar_Model_War.War, tile: T
         }
     })) {
         unitAndFinalCostArray.push({
-            unit,
+            unit : unit,
             cost : unit.getProductionFinalCost() * unit.getNormalizedCurrentHp() / unit.getNormalizedMaxHp(),
         });
     }
@@ -1081,7 +1204,7 @@ function generateCandidateUnitArrayForCannon(war: BaseWar_Model_War.War, tile: T
     return candidateUnitArray;
 }
 
-async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -1093,6 +1216,7 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
     const data                  = Helpers_Misc.getExisted(tile.getFinalLaserTurretData(), Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_HandleMapWeaponTileLaserTurret_00);
     const candidateUnitArray    = generateCandidateUnitArrayForLaserTurret(war, tile);
     const affectedUnits         = new Set<Units_Unit.Unit>();
+    const changedThings         = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     {
         const deltaHp                       = data.getOffsetHp();
         const deltaFuelPercentage           = data.getOffsetFuelPercentage();
@@ -1114,6 +1238,7 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
                             Math.floor(unit.getCurrentFuel() + maxFuel * deltaFuelPercentage / 100),
                         ));
                     }
+                    changedThings.addUnit(unit);
                 }
 
                 if (deltaPrimaryAmmoPercentage) {
@@ -1125,6 +1250,7 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
                         } else {
                             unit.addAndValidatePrimaryWeaponCurrentAmmo(maxAmmo * deltaPrimaryAmmoPercentage / 100);
                         }
+                        changedThings.addUnit(unit);
                     }
                 }
 
@@ -1133,7 +1259,7 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
                     const warStatisticsUpdater  = () => {
                         const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                         if (offsetNormalizedHp != 0) {
-                            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
+                            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : unit.getGridIndex() });
                             if (observerTeamIndexes != null) {
                                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                     unitType                   : unit.getUnitTypeId(),
@@ -1158,7 +1284,7 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
                     } else {
                         const rawNewHp = unit.getCurrentHp() + deltaHp * Units_Constants.Hp.Normalizer;
                         if ((rawNewHp <= 0) && (canBeFatal)) {
-                            Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute);
+                            changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute));
                         } else {
                             unit.setCurrentHp(Numbers_Utils.getValueInRange({
                                 rawValue : rawNewHp,
@@ -1168,6 +1294,8 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
                             warStatisticsUpdater();
                         }
                     }
+
+                    changedThings.addUnit(unit);
                 }
 
                 affectedUnits.add(unit);
@@ -1198,6 +1326,8 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
         }
         await Timer_TimerModel.wait(400);
     }
+
+    return changedThings;
 }
 function generateCandidateUnitArrayForLaserTurret(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): Units_Unit.Unit[] {
     const data                  = Helpers_Misc.getExisted(tile.getFinalLaserTurretData(), Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_GenerateCandidateUnitArrayForLaserTurret_00);

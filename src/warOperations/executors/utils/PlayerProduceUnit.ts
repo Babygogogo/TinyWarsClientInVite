@@ -1,4 +1,6 @@
 import {
+    AuxiliaryTypes_AuxiliaryTypes,
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
     HalfwayReplayWar_Model_HrwWar,
     Helpers_Misc,
@@ -20,6 +22,7 @@ import {
     Units_Utils_Serialization,
     Utils_ClientErrorCode,
     Visibilities_Utils,
+    WarOperations_Executors_Types,
     WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_MapSize,
     type BaseWar_Model_War,
@@ -27,7 +30,9 @@ import {
 } from "../../../internal.ts";
 
 import { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerProduceUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerProduceUnit.ts";
+import { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -206,7 +211,7 @@ function getPromotionForPlayerProduceUnit(war: BaseWar_Model_War.War, gridIndex:
     return promotion;
 }
 
-function getTeleportDestinationForPlayerProduceUnit(war: BaseWar_Model_War.War, player: Players_Player.Player, unitTypeId: number, tileGridIndex: AuxiliaryTypes_GridIndex.GridIndex, conCoUnitActionStateId: number | null): AuxiliaryTypes_GridIndex.GridIndex | null {
+function getTeleportDestinationForPlayerProduceUnit(war: BaseWar_Model_War.War, player: Players_Player.Player, unitTypeId: number, tileGridIndex: AuxiliaryTypes_GridIndex.GridIndex, conCoUnitActionStateId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): AuxiliaryTypes_GridIndex.GridIndex | null {
     const tileMap           = war.getTileMap();
     const unitMap           = war.getUnitMap();
     const mapSize           = tileMap.getMapSize();
@@ -296,9 +301,140 @@ function compareDistanceList(list1: number[], list2: number[]): number {
     return 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerProduceUnit): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const playerInTurn          = war.getPlayerInTurn();
+    const gcData                = war.getGcData();
+    const unitMap               = war.getUnitMap();
+    const tileMap               = war.getTileMap();
+    const unitType              = Helpers_Misc.getExisted(operation.getUnitType());
+    const unitHp                = Helpers_Misc.getExisted(operation.getUnitHp());
+    const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(operation.getGridIndex()));
+    const unitTemplateCfg       = Helpers_Misc.getExisted(gcData.getUnitTemplateCfg(unitType));
+    const playerIndexInTurn     = playerInTurn.getPlayerIndex();
+    const tile                  = tileMap.getTile(gridIndex);
+    const productionSkillCfg    = tile.getEffectiveSelfUnitProductionSkillCfg(playerIndexInTurn);
+    const finalCost             = Math.floor(
+        unitTemplateCfg.getProductionCost()                 *
+        (productionSkillCfg?.getCostMultiplierPct() ?? 100) *
+        Units_Utils_Common.getNormalizedHp(unitHp)          *
+        playerInTurn.getUnitCostModifier(unitType)          /
+        100                                                 /
+        Units_Constants.Hp.MaxNormalizedHp,
+    );
+
+    const unitData = SerialUnit.fromJson({
+        unitType    : unitType,
+        unitId      : unitMap.getNextUnitId(),
+        playerIndex : playerIndexInTurn,
+        gridIndex   : gridIndex.toProto().toJson(),
+
+        actionState  : productionSkillCfg?.getUnitActionStateId() ?? Units_Constants.ActionStateId.Acted,
+        currentHp    : unitHp,
+        aiMode       : 0,
+        groupedTagId : 0,
+        customNameId : null,
+
+        currentPromotion     : getPromotionForPlayerProduceUnit(war, gridIndex, unitType),
+        isDiving             : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? false,
+        isCoOnboard          : false,
+        currentBuildMaterial : unitTemplateCfg.getMaxBuildMaterial() ?? 0,
+
+        aiWeightedDestination           : null,
+        forbiddenGroupedLocationIdArray : [],
+        buffArray                       : [],
+
+        primaryWeaponCurrentAmmo : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? 0,
+        flareCurrentAmmo         : unitTemplateCfg.getFlareMaxAmmo()         ?? 0,
+        currentProduceMaterial   : unitTemplateCfg.getMaxProduceMaterial()   ?? 0,
+        currentFuel              : unitTemplateCfg.getMaxFuel(),
+        loaderUnitId             : null,
+    });
+
+    const allTileAppearanceInfosBeforeAction    = tileMap.generateAllTileAppearanceInfos();
+    const visibleThingsForEachTeamBeforeAction  = war.getVisibleThingsForEachTeam();
+    const changedThings                        = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
+    for (const skillId of playerInTurn.getCoCurrentSkills()) {
+        const cfg               = gcData.getCoSkillCfg(skillId)?.getInstantMisc()?.getSelfUnitTeleportAfterProduction();
+        const unitCategoryId    = cfg?.getUnitCategoryId();
+        if ((cfg)                            &&
+            ((unitCategoryId == null) || (gcData.checkIsUnitTypeInCategory(unitType, unitCategoryId)))
+        ) {
+            const buff = new TileBuff();
+            buff.setBuffTypeId(TileBuffs_Constants.BuffTypeId.NoProduction);
+            buff.setExpiringTurnIndex(war.getTurnManager().getTurnIndex() + 1);
+            buff.setExpiringPlayerIndex(playerIndexInTurn);
+
+            tile.addUnfixedBuff(buff, false);
+            changedThings.addTile(tile);
+
+            const maxCount = cfg.getConMaxCountOfNoProductionBuilding();
+            if ((maxCount == null)                                                                                                                                          ||
+                (tileMap.getTilesCount(v => (v.getPlayerIndex() == playerIndexInTurn) && (v.checkHasUnfixedBuff(TileBuffs_Constants.BuffTypeId.NoProduction))) <= maxCount)
+            ) {
+                const destination = getTeleportDestinationForPlayerProduceUnit(war, playerInTurn, unitType, gridIndex, cfg.getConCoUnitActionStateId());
+                if (destination) {
+                    unitData.setGridIndex(destination.toProto());
+
+                    const unitActionStateId = cfg.getUnitActionStateId();
+                    if (unitActionStateId != null) {
+                        unitData.setActionState(unitActionStateId);
+                    }
+                }
+            }
+
+            break;
+        }
+    }
+
+    const unit = new Units_Unit.Unit(false);
+    unit.init(unitData, gcData);
+    unit.startRunning(war);
+    unitMap.setNextUnitId(unitData.getUnitId() + 1);
+    unitMap.setUnitOnMap(unit);
+    playerInTurn.setFund(playerInTurn.getFund() - finalCost);
+
+    {
+        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+            war       : war,
+            gridIndex : unit.getGridIndex(),
+        });
+        if (observerTeamIndexes) {
+            war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
+                unitType                   : unitType,
+                dstPlayerIndex             : unit.getPlayerIndex(),
+                normalizedHpGain           : unit.getNormalizedCurrentHp(),
+                normalizedHpLoss           : 0,
+                unitGain                   : 1,
+                unitLoss                   : 0,
+                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+            }));
+        }
+    }
+
+    changedThings.addPlayer(playerInTurn);
+    changedThings.addUnit(unit);
+
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : undefined,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : undefined,
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+            woContainer.createIfNotExistsWoPlayerProduceUnit().createIfNotExistsExtraData().setCommonExtraData(commonExtraData);
+
+            return woContainer;
+        },
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit, gcData: GameConfigs_GameConfig.GameConfig): Promise<string | null> {
-
     if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
         return `${Lang_Utils.getText(Lang_Constants.TextType.B0095)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof MapEditor_Model_MeWar.MeWar) {

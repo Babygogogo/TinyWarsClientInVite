@@ -11,7 +11,9 @@ import {
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
     type BaseWar_Model_War,
+    WarOperations_Executors_Types,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 import type { WoPlayerVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
 
@@ -28,7 +30,7 @@ function fastExePlayerVoteForDraw(war: BaseWar_Model_War.War, action: WoPlayerVo
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
+            war             : war,
             commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerVoteForDraw_00),
             isFastExecute   : true,
         });
@@ -42,7 +44,9 @@ function fastExePlayerVoteForDraw(war: BaseWar_Model_War.War, action: WoPlayerVo
 
 async function normalExePlayerVoteForDraw(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): Promise<void> {
     const desc = await getDesc(war, action);
-    (desc) && (FloatText.show(desc));
+    if (desc) {
+        FloatText.show(desc);
+    }
 
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
@@ -66,9 +70,37 @@ async function normalExePlayerVoteForDraw(war: BaseWar_Model_War.War, action: Wo
     );
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerVoteForDraw): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+    const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const playerIndex                          = Helpers_Misc.getExisted(operation.getPlayerIndex());
+    const isAgree                              = Helpers_Misc.getExisted(operation.getIsAgree());
+    const changedThings                        = war.getDrawVoteManager().handleVote(playerIndex, isAgree);
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : undefined,
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
 
+            const extraData = woContainer.createIfNotExistsWoPlayerVoteForDraw().createIfNotExistsExtraData();
+            extraData.setCommonExtraData(commonExtraData);
+            extraData.setPlayerIndex(playerIndex);
+            extraData.setIsAgree(isAgree);
+
+            return woContainer;
+        },
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): Promise<string | null> {
-
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {

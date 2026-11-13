@@ -1,16 +1,14 @@
 import {
-    Lang_Utils,
     FloatText,
     Lang_Constants,
+    Lang_Utils,
+    SinglePlayerWars_War,
+    WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemCallWarEvent } from "../../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
-
-// let _meWarClass     : new () => MapEditor.MeWar;
-// let _mpwWarClass    : new () => MultiPlayerWar.IMpwWar;
-// let _rwWarBaseClass : new () => ReplayWar.IRwWarBase;
-// let _spwWarClass    : new () => SinglePlayerWar.ISpwWar;
-// let _twWarClass     : new () => TestWar.ITwWar;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function execute(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent, isFast: boolean): Promise<void> {
@@ -24,7 +22,11 @@ export async function execute(war: BaseWar_Model_War.War, action: WoSystemCallWa
 async function fastExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<void> {
     const warEventManager = war.getWarEventManager();
     warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
-    await warEventManager.callWarEvent(action, true);
+    if (action.getExtraData()) {
+        await warEventManager.callWarEventWithExtraData(action, true);
+    } else {
+        await warEventManager.callWarEventWithoutExtraData(action.getWarEventId(), action.getNodeAndActionsIndex(), true);
+    }
 
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
@@ -37,15 +39,51 @@ async function normalExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: W
 
     const warEventManager = war.getWarEventManager();
     warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
-    await warEventManager.callWarEvent(action, false);
+    if (action.getExtraData()) {
+        await warEventManager.callWarEventWithExtraData(action, false);
+    } else {
+        await warEventManager.callWarEventWithoutExtraData(action.getWarEventId(), action.getNodeAndActionsIndex(), false);
+    }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
     war.getView()?.updatePersistentText();
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// export async function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemCallWarEvent): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
+//     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+//     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+//     const warEventManager                      = war.getWarEventManager();
+//     const warEventId                           = operation.getWarEventId();
+//     const nodeAndActionsIndex                  = operation.getNodeAndActionsIndex();
+//     warEventManager.updateWarEventCalledCountOnCall(warEventId);
 
+//     const changedThings = await warEventManager.callWarEventWithoutExtraData(warEventId, nodeAndActionsIndex, true);
+//     return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+//         war                                  : war,
+//         allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+//         visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+//         visibilityArrayFromPathsBeforeAction : undefined,
+//         changedThings                        : changedThings.mergeFrom(extraChangedThings),
+//         thingsForMovePath                    : undefined,
+//         createMessage                        : commonExtraData => {
+//             const woContainer = new WoContainer();
+//             woContainer.setOperationId(operationId);
+
+//             const warOp = woContainer.createIfNotExistsWoSystemCallWarEvent();
+//             warOp.setWarEventId(warEventId);
+//             warOp.setNodeAndActionsIndex(nodeAndActionsIndex);
+
+//             const extraData = warOp.createIfNotExistsExtraData();
+//             extraData.setCommonExtraData(commonExtraData);
+
+//             return woContainer;
+//         },
+//     });
+// }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 async function getDesc(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<string | null> {
-
     // if (war instanceof _meWarClass) {
     //     return null;
     // } else if (war instanceof _mpwWarClass) {

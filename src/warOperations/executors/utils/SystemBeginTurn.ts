@@ -11,9 +11,11 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
+    WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
-
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemBeginTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +28,11 @@ export async function execute(war: BaseWar_Model_War.War, action: WoSystemBeginT
 }
 
 async function fastExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
-    await war.getTurnManager().endPhaseStandby(action, true);
+    if (action.getExtraData()) {
+        await war.getTurnManager().endPhaseStandbyWithExtraData(action, true);
+    } else {
+        war.getTurnManager().endPhaseStandbyWithoutExtraData(true);
+    }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
@@ -59,13 +65,41 @@ async function normalExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSy
         }
     }
 
-    await war.getTurnManager().endPhaseStandby(action, false);
+    if (action.getExtraData()) {
+        await war.getTurnManager().endPhaseStandbyWithExtraData(action, false);
+    } else {
+        war.getTurnManager().endPhaseStandbyWithoutExtraData(false);
+    }
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemBeginTurn): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+    const changedThings                        = await war.getTurnManager().endPhaseStandbyWithoutExtraData(true);
+
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : undefined,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : undefined,
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+            woContainer.createIfNotExistsWoSystemBeginTurn().createIfNotExistsExtraData().setCommonExtraData(commonExtraData);
+
+            return woContainer;
+        },
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<string | null> {
-
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {

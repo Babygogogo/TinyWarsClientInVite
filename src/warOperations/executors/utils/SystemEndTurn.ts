@@ -21,15 +21,20 @@ export async function execute(war: BaseWar_Model_War.War, action: WoSystemEndTur
 }
 
 function fastExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
-    war.getTurnManager().endPhaseMain(action, true);
+    if (action.getExtraData()) {
+        war.getTurnManager().endPhaseMainWithExtraData(action, true);
+    } else {
+        war.getTurnManager().endPhaseMainWithoutExtraData(true);
+    }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
 function normalExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
-    // const desc = await war.getDescForExeSystemEndTurn(action);
-    // (desc) && (FloatText.show(desc));
-
-    war.getTurnManager().endPhaseMain(action, false);
+    if (action.getExtraData()) {
+        war.getTurnManager().endPhaseMainWithExtraData(action, false);
+    } else {
+        war.getTurnManager().endPhaseMainWithoutExtraData(false);
+    }
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 

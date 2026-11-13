@@ -1,18 +1,21 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
+    FloatText,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
+    Players_Constants,
     ReplayWar_Model_RwWarBase,
-    FloatText,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
-    Players_Constants,
     Utils_ClientErrorCode,
-    Helpers_Misc,
-    Lang_Utils,
+    WarOperations_Executors_Types,
     WarOperations_Executors_Utils_Common,
-    Lang_Constants,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 import type { WoPlayerSurrender } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerSurrender.ts";
 
@@ -40,7 +43,9 @@ function fastExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPlayerSurr
 
 async function normalExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPlayerSurrender): Promise<void> {
     const desc = await getDesc(war, action);
-    (desc) && (FloatText.show(desc));
+    if (desc) {
+        FloatText.show(desc);
+    }
 
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
@@ -62,9 +67,38 @@ async function normalExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPl
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerSurrender): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const playerIndex                           = Helpers_Misc.getExisted(operation.getPlayerIndex());
+    const allTileAppearanceInfosBeforeAction    = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibleThingsForEachTeamBeforeAction  = war.getVisibleThingsForEachTeam();
+    const visibilityArrayFromPathsBeforeAction  = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const player                                = war.getPlayer(playerIndex);
+    player.setAliveState(Players_Constants.AliveStateId.Dying);
 
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ players : [player] });
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : undefined,
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+
+            const actionData = woContainer.createIfNotExistsWoPlayerSurrender();
+            actionData.setPlayerIndex(playerIndex);
+            actionData.createIfNotExistsExtraData().setCommonExtraData(commonExtraData);
+
+            return woContainer;
+        },
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerSurrender): Promise<string | null> {
-
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {

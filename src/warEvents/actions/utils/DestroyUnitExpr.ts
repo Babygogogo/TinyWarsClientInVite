@@ -141,7 +141,7 @@ export async function applyWithoutExtraData(action: WeaDestroyUnitExpr, isFast: 
     }
     for (const unitId of targetLoadedUnitIdList) {
         if (unitMap.getUnitLoadedById(unitId) != null) {
-            destroyedUnits.push(...Destructions_Utils.destroyUnitLoaded(war, unitId));
+            destroyedUnits.push(...(Destructions_Utils.destroyUnitLoaded(war, unitId).getUnits() ?? new Set()));
         }
     }
 

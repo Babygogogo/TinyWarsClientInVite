@@ -128,7 +128,7 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
         battleInfo.destroyedUnits.set(u.getUnitId(), u);
     }
 }
-export function destroyUnitLoaded(war: BaseWar_Model_War.War, unitId: number): Units_Unit.Unit[] {
+export function destroyUnitLoaded(war: BaseWar_Model_War.War, unitId: number): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const unitMap           = war.getUnitMap();
     const targetUnit        = Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId));
     const destroyedUnits    = [targetUnit];
@@ -158,9 +158,10 @@ export function destroyUnitLoaded(war: BaseWar_Model_War.War, unitId: number): U
         }
     }
 
-    updatePlayersOnUnitDestroyed(destroyedUnits, war);
-
-    return destroyedUnits;
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
+    changedThings.addPlayers(updatePlayersOnUnitDestroyed(destroyedUnits, war));
+    changedThings.addUnits(destroyedUnits);
+    return changedThings;
 }
 /** @param destroyedUnits 必须属于同一个玩家 */
 function updatePlayersOnUnitDestroyed(destroyedUnits: Units_Unit.Unit[], war: BaseWar_Model_War.War): Set<Players_Player.Player> {

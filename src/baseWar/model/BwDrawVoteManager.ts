@@ -1,15 +1,15 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
+    Helpers_Misc,
     Players_Utils_Common,
     Utils_ClientErrorCode,
-    Helpers_Misc,
-    type BaseWar_Interface_IBwDrawVoteManager,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../internal.ts";
 import type { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import type { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
 
-export class BwDrawVoteManager implements BaseWar_Interface_IBwDrawVoteManager.IBwDrawVoteManager {
+export class BwDrawVoteManager {
     private _remainingVotes     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     private _drawVoteData       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager>;
     private _war?               : BaseWar_Model_War.War;
@@ -112,7 +112,7 @@ export class BwDrawVoteManager implements BaseWar_Interface_IBwDrawVoteManager.I
         }
     }
 
-    public handleVote(playerIndex: number, isAgree: boolean): void {
+    public handleVote(playerIndex: number, isAgree: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
         const data = this.getDrawVoteData();
         if (data != null) {
             if (!isAgree) {
@@ -124,13 +124,18 @@ export class BwDrawVoteManager implements BaseWar_Interface_IBwDrawVoteManager.I
                 }
                 arr.push(playerIndex);
             }
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
+
         } else {
             if (!isAgree) {
                 this._setRemainingVotes(null);
             } else {
                 this._setRemainingVotes((this.getRemainingVotes() || this._getMaxVotes()) - 1);
             }
-            this._getWar().getPlayer(playerIndex).setHasVotedForDraw(true);
+
+            const player = this._getWar().getPlayer(playerIndex);
+            player.setHasVotedForDraw(true);
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ players : [player] });
         }
     }
     public handlePlayerForceDestruction(): void {
@@ -141,12 +146,15 @@ export class BwDrawVoteManager implements BaseWar_Interface_IBwDrawVoteManager.I
             this._setRemainingVotes(null);
         }
     }
-    public handleTurnPhaseResetVotesForDraw(): void {
+    public handleTurnPhaseResetVotesForDraw(): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
         const data = this.getDrawVoteData();
         if (data != null) {
             data.setIsProposedInCurrentTurn(null);
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         } else {
-            this._getWar().getPlayerInTurn().setHasVotedForDraw(false);
+            const player = this._getWar().getPlayerInTurn();
+            player.setHasVotedForDraw(false);
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ players : [player] });
         }
     }
 

@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Helpers_Misc,
     Notifications_Dispatcher,
     Players_Constants,
@@ -80,18 +81,18 @@ export class Manager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The functions for running turn.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public endPhaseStandby(action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
-        return this.getWar().getIsExecuteActionsWithExtraData()
-            ? Turns_PhaseHandlers_WithExtraData.endPhaseStandby(this, action, isFastExecute)
-            : Turns_PhaseHandlers_WithoutExtraData.endPhaseStandby(this, isFastExecute);
+    public endPhaseStandbyWithExtraData(action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
+        return Turns_PhaseHandlers_WithExtraData.endPhaseStandby(this, action, isFastExecute);
+    }
+    public endPhaseStandbyWithoutExtraData(isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+        return Turns_PhaseHandlers_WithoutExtraData.endPhaseStandby(this, isFastExecute);
     }
 
-    public endPhaseMain(action: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
-        if (this.getWar().getIsExecuteActionsWithExtraData()) {
-            Turns_PhaseHandlers_WithExtraData.endPhaseMain(this, action, isFastExecute);
-        } else {
-            Turns_PhaseHandlers_WithoutExtraData.endPhaseMain(this, isFastExecute);
-        }
+    public endPhaseMainWithExtraData(action: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+        Turns_PhaseHandlers_WithExtraData.endPhaseMain(this, action, isFastExecute);
+    }
+    public endPhaseMainWithoutExtraData(isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+        return Turns_PhaseHandlers_WithoutExtraData.endPhaseMain(this, isFastExecute);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

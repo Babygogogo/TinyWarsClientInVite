@@ -587,18 +587,7 @@ export class Manager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for calling events.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public callWarEvent(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void> {
-        if (this._getWar().getIsExecuteActionsWithExtraData()) {
-            return this._callWarEventWithExtraData(action, isFastExecute);
-        } else {
-            return this._callWarEventWithoutExtraData(
-                action.getWarEventId(),
-                action.getNodeAndActionsIndex(),
-                isFastExecute,
-            );
-        }
-    }
-    private async _callWarEventWithExtraData(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void> {
+    public async callWarEventWithExtraData(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void> {
         for (const actionId of this.getWarEvent(action.getWarEventId()).getRootNodeAndActionsArray()[action.getNodeAndActionsIndex()].getActionIdArray()) {
             await this._callActionWithExtraData(actionId, isFastExecute);
         }
@@ -610,7 +599,7 @@ export class Manager {
             isFastExecute   : isFastExecute,
         });
     }
-    private async _callWarEventWithoutExtraData(warEventId: number, dataIndex: number, isFastExecute: boolean): Promise<void> { // DONE
+    public async callWarEventWithoutExtraData(warEventId: number, dataIndex: number, isFastExecute: boolean): Promise<void> { // DONE
         const war           = this._getWar();
         const unitMap       = war.getUnitMap();
         const playerManager = war.getPlayerManager();
@@ -641,15 +630,15 @@ export class Manager {
             }
         }
         {
-            const act = action.getWeaFillUnitOnMapExpr();
-            if (act) {
-                return WarEvents_Actions_Utils_FillUnitOnMapExpr.applyWithExtraData(act);
-            }
-        }
-        {
             const act = action.getWeaFillUnitOnMapSimple();
             if (act) {
                 return WarEvents_Actions_Utils_FillUnitOnMapSimple.applyWithExtraData(act);
+            }
+        }
+        {
+            const act = action.getWeaFillUnitOnMapExpr();
+            if (act) {
+                return WarEvents_Actions_Utils_FillUnitOnMapExpr.applyWithExtraData(act);
             }
         }
         {
@@ -984,15 +973,15 @@ export class Manager {
             }
         }
         {
-            const act = action.getWeaFillUnitOnMapExpr();
-            if (act) {
-                return WarEvents_Actions_Utils_FillUnitOnMapExpr.applyWithoutExtraData(act, isFastExecute, war);
-            }
-        }
-        {
             const act = action.getWeaFillUnitOnMapSimple();
             if (act) {
                 return WarEvents_Actions_Utils_FillUnitOnMapSimple.applyWithoutExtraData(act, isFastExecute, war);
+            }
+        }
+        {
+            const act = action.getWeaFillUnitOnMapExpr();
+            if (act) {
+                return WarEvents_Actions_Utils_FillUnitOnMapExpr.applyWithoutExtraData(act, isFastExecute, war);
             }
         }
         {

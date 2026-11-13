@@ -40,12 +40,11 @@ function fastExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUnitUseCoSk
             const skillIdArray      = playerInTurn.getCoSkills(skillType);
             const skillDataArray    = actionExtraData.getSkillDataArray();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                CoSkills_Utils_Executor.executeInstantSkill({
+                CoSkills_Utils_Executor.executeInstantSkillWithExtraData({
                     player            : playerInTurn,
                     skillId           : skillIdArray[skillIndex],
                     skillData         : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_01),
                     targetGridIndexes : action.getTargetGridIndexArray(),
-                    hasExtraData      : true,
                     isFastExecute     : true,
                 });
             }
@@ -86,12 +85,11 @@ function fastExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUnitUseCoSk
                     skillType  : skillType,
                     skillIndex : skillIndex,
                 });
-                CoSkills_Utils_Executor.executeInstantSkill({
+                CoSkills_Utils_Executor.executeInstantSkillWithoutExtraData({
                     player            : playerInTurn,
                     skillId           : skillIdArray[skillIndex],
-                    skillData         : dataForUseCoSkill,
+                    dataForUseCoSkill         : dataForUseCoSkill,
                     targetGridIndexes : action.getTargetGridIndexArray(),
-                    hasExtraData      : false,
                     isFastExecute     : true,
                 });
             }
@@ -141,12 +139,11 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUni
             const skillIdArray      = playerInTurn.getCoSkills(skillType);
             const skillDataArray    = actionExtraData.getSkillDataArray();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                CoSkills_Utils_Executor.executeInstantSkill({
+                CoSkills_Utils_Executor.executeInstantSkillWithExtraData({
                     player            : playerInTurn,
                     skillId           : skillIdArray[skillIndex],
                     skillData         : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_02),
                     targetGridIndexes : action.getTargetGridIndexArray(),
-                    hasExtraData      : true,
                     isFastExecute     : false,
                 });
             }
@@ -202,17 +199,16 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUni
 
             const skillIdArray = playerInTurn.getCoCurrentSkills();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                CoSkills_Utils_Executor.executeInstantSkill({
+                CoSkills_Utils_Executor.executeInstantSkillWithoutExtraData({
                     player    : playerInTurn,
                     skillId   : skillIdArray[skillIndex],
-                    skillData : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
+                    dataForUseCoSkill : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
                         war        : war,
                         player     : playerInTurn,
                         skillType  : skillType,
                         skillIndex : skillIndex,
                     }),
                     targetGridIndexes : action.getTargetGridIndexArray(),
-                    hasExtraData      : false,
                     isFastExecute     : false,
                 });
             }

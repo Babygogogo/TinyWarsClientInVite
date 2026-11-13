@@ -27,6 +27,7 @@ export default defineConfig([
             "semi"                         : ["error", "always"],
             "no-extra-semi"                : "error",
             "object-curly-spacing"         : ["error", "always"],
+            "object-shorthand"             : ["error", "never"],
             "brace-style"                  : ["error", "1tbs", {
                 "allowSingleLine" : false,
             }],
