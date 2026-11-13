@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Units_Utils_Common,
     Units_Utils_CustomName,
     Units_Utils_Serialization,
@@ -887,7 +888,7 @@ function evalActAiWeightedDestination(action: WeaSetUnitStateExpr, unit: Units_U
 export async function applyWithExtraData(_action: WeaSetUnitStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetUnitStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetUnitStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newUnitDataDict = new Map<Units_Unit.Unit, SerialUnit>();
     for (const unit of war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId())) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -902,7 +903,7 @@ export async function applyAsInnerWar(action: WeaSetUnitStateExpr, isFast: boole
         newUnitDataDict.set(unit, newUnitData);
     }
 
-    applyNewUnitDataDict(newUnitDataDict, war, isFast);
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataDict(newUnitDataDict, war, isFast) });
 }
 function createNewUnitData(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): SerialUnit {
     // 为防止随机数导致结果不稳定，此处eval系列函数的顺序一旦写下就不能更改，后续新属性只能添加在最后
@@ -951,7 +952,7 @@ function createNewUnitData(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): 
         loaderUnitId             : unit.getLoaderUnitId() ?? null,
     });
 }
-function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseWar_Model_War.War, isFast: boolean): void {
+function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseWar_Model_War.War, isFast: boolean): Units_Unit.Unit[] {
     const unitMap                   = war.getUnitMap();
     const mapSize                   = unitMap.getMapSize();
     const observerTeamIndexesDict   = new Map<number, number[] | null>();
@@ -969,10 +970,12 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseW
     const gameConfig            = war.getGcData();
     const warStatisticsManager  = war.getWarStatisticsManager();
     const isLoadedUnitVisible   = true;
+    const affectedUnits         : Units_Unit.Unit[] = [];
     for (const [unit, unitData] of dict) {
         const normalizedHp = unit.getNormalizedCurrentHp();
         unit.init(unitData, gameConfig);
         unit.startRunning(war);
+        affectedUnits.push(unit);
         // unit.startRunningView();
         (!isFast) && (unit.flushDataToView());
 
@@ -994,4 +997,5 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseW
             }
         }
     }
+    return affectedUnits;
 }

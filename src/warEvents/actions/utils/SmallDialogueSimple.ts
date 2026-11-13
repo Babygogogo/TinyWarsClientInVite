@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Dialogues_Constants,
     Lang_Utils,
     Players_Utils_Common,
@@ -189,19 +190,21 @@ export function getErrorTipForWeaSimpleDialogueData(dialogueData: DataForDialogu
     return Lang_Utils.getText(Lang_Constants.TextType.A0230);
 }
 
-export async function applyWithExtraData(action: WeaSmallDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyWithExtraData(action: WeaSmallDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     return applyAsInnerWar(action, isFast, war);
 }
-export async function applyAsInnerWar(action: WeaSmallDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSmallDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     if (isFast) {
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 
-    return new Promise<void>(resolve => {
+    await new Promise<void>(resolve => {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwSmallDialoguePanel, {
             war             : war,
             actionData      : action,
             callbackOnClose : () => resolve(),
         });
     });
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }

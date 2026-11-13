@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Helpers_Misc,
     Helpers_Team,
     Lang_Constants,
@@ -118,7 +119,7 @@ export function getErrorTip(data: WeaSetUnitTypeSimple, mapSize: AuxiliaryTypes_
 export async function applyWithExtraData(_action: WeaSetUnitTypeSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaSetUnitTypeSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaSetUnitTypeSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const targetUnitArray       : Units_Unit.Unit[] = [];
     const unitMap               = war.getUnitMap();
     const newUnitType           = data.getActUnitType();
@@ -152,7 +153,7 @@ export async function applyAsInnerWar(data: WeaSetUnitTypeSimple, isFastExecute:
         }
 
         if (!unitInfoArray.length) {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
 
         unitInfoArray.sort((v1, v2) => (v2.depth - v1.depth));
@@ -180,6 +181,7 @@ export async function applyAsInnerWar(data: WeaSetUnitTypeSimple, isFastExecute:
         const newUnitTemplateCfg    = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(newUnitType));
         const newMaxLoadCount       = newUnitTemplateCfg.getMaxLoadUnitsCount() ?? 0;
         const newLoadUnitCategoryId = newUnitTemplateCfg.getLoadUnitCategoryId();
+        const affectedUnits         : Units_Unit.Unit[] = [];
         for (const unit of targetUnitArray) {
             {
                 const loaderUnit = unit.getLoaderUnit();
@@ -232,11 +234,13 @@ export async function applyAsInnerWar(data: WeaSetUnitTypeSimple, isFastExecute:
 
             unit.init(newUnitData, gameConfig);
             unit.startRunning(war);
+            affectedUnits.push(unit);
 
             if (!isFastExecute) {
                 unit.flushDataToView();
             }
         }
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : affectedUnits });
     }
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {

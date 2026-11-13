@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Sounds_Utils,
     Lang_Utils,
     Helpers_Misc,
@@ -51,12 +52,12 @@ export function getErrorTip(data: WeaPlayBgm): string | null {
         : null;
 }
 
-export async function applyWithExtraData(action: WeaPlayBgm, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyWithExtraData(action: WeaPlayBgm, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     return applyAsInnerWar(action, isFast, war);
 }
-export async function applyAsInnerWar(action: WeaPlayBgm, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaPlayBgm, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     if (isFast) {
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 
     if (action.getUseCoBgm()) {
@@ -68,4 +69,6 @@ export async function applyAsInnerWar(action: WeaPlayBgm, isFast: boolean, war: 
     } else {
         Sounds_SoundPlayer.playBgm(Helpers_Misc.getExisted(action.getBgmCode()));
     }
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }

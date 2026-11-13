@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     WarEvents_Actions_Constants_SetTaskObjectiveState,
     Lang_Utils,
     Numbers_Utils,
@@ -203,18 +204,28 @@ function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war:
 export function applyWithExtraData(_action: WeaSetTaskObjectiveState): void {
     // nothing to do
 }
-export function applyAsInnerWar(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War): void {
+export function applyAsInnerWar(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    const objectiveIdArray = war.getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray().map(v => v.getObjectiveId());
+    if (objectiveIdArray == null) {
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
+    }
+
     const newStateArray: TaskObjectiveState[] = [];
-    for (const objectiveId of war.getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray().map(v => v.getObjectiveId()).sort((v1, v2) => v1 - v2) ?? []) {
+    for (const objectiveId of objectiveIdArray.sort((v1, v2) => v1 - v2)) {
         if (checkIsMeetConditionForTaskObjective(action, war, objectiveId)) {
             newStateArray.push(createNewTaskObjectiveState(action, war, objectiveId));
         }
     }
 
     const taskObjectiveManager = war.getTaskObjectiveManager();
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const newState of newStateArray) {
-        taskObjectiveManager.updateState(newState);
+        if (taskObjectiveManager.updateState(newState)) {
+            changedThings.setTaskObjectiveState(newState);
+        }
     }
+
+    return changedThings;
 }
 
 function createNewTaskObjectiveState(action: WeaSetTaskObjectiveState, war: BaseWar_Model_War.War, objectiveId: number): TaskObjectiveState {

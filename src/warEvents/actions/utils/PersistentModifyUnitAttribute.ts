@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     MultiPlayerWar_Model_MpwWar,
     ExpressionParsers_Results_NullableUnit,
     ExpressionParsers_Results_Num,
@@ -579,6 +580,8 @@ export function getCanAttackAfterMovingForUnit(action: WeaPersistentModifyUnitAt
 export function applyWithExtraData(_action: WeaPersistentModifyUnitAttribute, war: BaseWar_Model_War.War, actionId: number): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyAsInnerWar(_action: WeaPersistentModifyUnitAttribute, war: BaseWar_Model_War.War, actionId: number): void {
+export function applyAsInnerWar(_action: WeaPersistentModifyUnitAttribute, war: BaseWar_Model_War.War, actionId: number): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }

@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Tiles_Utils_Serialization,
     WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr,
     Lang_Utils,
@@ -604,7 +605,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretState
 export async function applyWithExtraData(_action: WeaSetCustomLaserTurretStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomLaserTurretData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customLaserTurretData = tile.getFinalLaserTurretData();
@@ -620,6 +621,7 @@ export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateExpr, 
     }
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newTileDataDict.keys()] });
 }
 function createNewTileCustomLaserTurretData(action: WeaSetCustomLaserTurretStateExpr, tile: Tiles_Tile.Tile, customLaserTurretData: TileCustomLaserTurretData): TileCustomLaserTurretData {
     const rangeForUp                    = evalActRangeForUp(action, tile, customLaserTurretData);

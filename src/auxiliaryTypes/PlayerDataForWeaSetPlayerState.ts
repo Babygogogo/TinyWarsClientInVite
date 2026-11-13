@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     CoSkills_Constants,
     CoSkills_Utils_DataGeneratorForUseCoSkill,
     CoSkills_Utils_Executor,
@@ -37,36 +38,43 @@ export class PlayerDataForWeaSetPlayerState {
         this._activateCoSkillType   = activateCoSkillType;
     }
 
-    public async apply(war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<void> {
+    public async apply(war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
         const player = war.getPlayer(this._playerIndex);
+        const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         {
             if (this._fund != null) {
                 player.setFund(this._fund);
+                changedThings.addPlayer(player);
             }
         }
         {
             if (this._aliveState != null) {
                 player.setAliveState(this._aliveState);
+                changedThings.addPlayer(player);
             }
         }
         {
             if (this._coId != null) {
                 player.setCoId(this._coId);
+                changedThings.addPlayer(player);
             }
         }
         {
             if (this._coEnergy != null) {
                 player.setAndValidateCoCurrentEnergy(this._coEnergy);
+                changedThings.addPlayer(player);
             }
         }
         {
             if (this._isSkipTurn != null) {
                 player.setIsSkipTurn(this._isSkipTurn);
+                changedThings.addPlayer(player);
             }
         }
         {
             if (this._coUsingSkillType != null) {
                 player.setCoUsingSkillType(this._coUsingSkillType);
+                changedThings.addPlayer(player);
             }
         }
         {
@@ -74,9 +82,9 @@ export class PlayerDataForWeaSetPlayerState {
             if (skillType != null) {
                 const skillIdArray = player.getCoSkills(skillType);
                 for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                    CoSkills_Utils_Executor.executeInstantSkillWithoutExtraData({
-                        player    : player,
-                        skillId   : skillIdArray[skillIndex],
+                    changedThings.mergeFrom(CoSkills_Utils_Executor.executeInstantSkillWithoutExtraData({
+                        player            : player,
+                        skillId           : skillIdArray[skillIndex],
                         dataForUseCoSkill : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
                             war        : war,
                             player     : player,
@@ -85,7 +93,7 @@ export class PlayerDataForWeaSetPlayerState {
                         }),
                         targetGridIndexes : null,
                         isFastExecute     : isFastExecute,
-                    });
+                    }));
                 }
 
                 if (!isFastExecute) {
@@ -120,5 +128,7 @@ export class PlayerDataForWeaSetPlayerState {
                 }
             }
         }
+
+        return changedThings;
     }
 }

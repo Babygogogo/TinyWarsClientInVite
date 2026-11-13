@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Helpers_Team,
     WarEvents_Actions_Constants_SetUnitOwnershipExpr,
     Lang_Utils,
@@ -125,7 +126,7 @@ function evalActPlayerIndex(action: WeaSetUnitOwnershipExpr, unit: Units_Unit.Un
 export async function applyWithExtraData(action: WeaSetUnitOwnershipExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetUnitOwnershipExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetUnitOwnershipExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newPlayerIndexDict = new Map<Units_Unit.Unit, number>();
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -138,9 +139,9 @@ export async function applyAsInnerWar(action: WeaSetUnitOwnershipExpr, isFast: b
         }
     }
 
-    applyNewUnitDataDict(newPlayerIndexDict, war, isFast);
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataDict(newPlayerIndexDict, war, isFast) });
 }
-function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, number>, war: BaseWar_Model_War.War, isFast: boolean): void {
+function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, number>, war: BaseWar_Model_War.War, isFast: boolean): Units_Unit.Unit[] {
     const unitMap                   = war.getUnitMap();
     const mapSize                   = unitMap.getMapSize();
     const observerTeamIndexesDict   = new Map<number, number[] | null>();
@@ -157,6 +158,7 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, number>, war: BaseWar_M
 
     const warStatisticsManager  = war.getWarStatisticsManager();
     const isLoadedUnitVisible   = true;
+    const affectedUnits         : Units_Unit.Unit[] = [];
     for (const [unit, newPlayerIndex] of dict) {
         const loadedUnits = unitMap.getUnitsLoadedByLoader(unit, true);
         const observerTeamIndexes   = observerTeamIndexesDict.get(unit.getGridIndex().getGridId(mapSize));
@@ -172,14 +174,17 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, number>, war: BaseWar_M
         }
 
         unit.setPlayerIndex(newPlayerIndex);
+        affectedUnits.push(unit);
         for (const loadedUnit of loadedUnits) {
             loadedUnit.setPlayerIndex(newPlayerIndex);
+            affectedUnits.push(loadedUnit);
         }
 
         if (!isFast) {
             unit.flushDataToView();
         }
     }
+    return affectedUnits;
 }
 
 function updateWarStatisticsManager(warStatisticsManager: BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager, unit: Units_Unit.Unit, newPlayerIndex: number, groupedObserverTeamIndexes: number): void {

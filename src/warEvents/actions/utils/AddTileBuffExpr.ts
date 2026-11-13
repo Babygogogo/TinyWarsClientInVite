@@ -8,6 +8,7 @@ import {
     ExpressionParsers_Parser,
     Lang_Constants,
     ExpressionParsers_Contexts_Tile,
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     type BaseWar_Model_War,
     type Tiles_Tile,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -231,7 +232,7 @@ export async function applyWithExtraData(action: WeaAddTileBuffExpr, war: BaseWa
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyAsInnerWar(action: WeaAddTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
+export async function applyAsInnerWar(action: WeaAddTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newBuffDict = new Map<Tiles_Tile.Tile, TileBuff>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {
@@ -247,6 +248,8 @@ export async function applyAsInnerWar(action: WeaAddTileBuffExpr, war: BaseWar_M
     for (const [tile, buff] of newBuffDict) {
         tile.addUnfixedBuff(buff, false);
     }
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newBuffDict.keys()] });
 }
 function createTileBuff(action: WeaAddTileBuffExpr, tile: Tiles_Tile.Tile): TileBuff | null {
     const buffType      = evalActBuffType(action, tile);

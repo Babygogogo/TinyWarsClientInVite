@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     WarEvents_Actions_Constants_SetUnitPositionExpr,
     Lang_Utils,
     AuxiliaryTypes_GridIndex,
@@ -169,7 +170,7 @@ function evalActAlternativeTileFilter(action: WeaSetUnitPositionExpr, tile: Tile
 export async function applyWithExtraData(_action: WeaSetUnitPositionExpr): Promise<void> {
     // nothing to do
 }
-export function applyAsInnerWar(action: WeaSetUnitPositionExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetUnitPositionExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const destinationDict = new Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>();
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -182,14 +183,15 @@ export function applyAsInnerWar(action: WeaSetUnitPositionExpr, isFast: boolean,
         }
     }
 
-    return applyDestinationDict(destinationDict, war, action, isFast);
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : await applyDestinationDict(destinationDict, war, action, isFast) });
 }
 
-async function applyDestinationDict(dict: Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>, war: BaseWar_Model_War.War, action: WeaSetUnitPositionExpr, isFast: boolean): Promise<void> {
+async function applyDestinationDict(dict: Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>, war: BaseWar_Model_War.War, action: WeaSetUnitPositionExpr, isFast: boolean): Promise<Units_Unit.Unit[]> {
     const unitMap       = war.getUnitMap();
     const tileMap       = war.getTileMap();
     const mapSize       = tileMap.getMapSize();
     const promiseArray  : Promise<void>[] = [];
+    const affectedUnits : Units_Unit.Unit[] = [];
     for (const [unit, oldDestination] of dict) {
         const unitGridIndex = unit.getGridIndex();
         if (unitGridIndex.checkIsEqual(oldDestination)) {
@@ -250,14 +252,17 @@ async function applyDestinationDict(dict: Map<Units_Unit.Unit, AuxiliaryTypes_Gr
         unitMap.deleteUnitOnMap(unitGridIndex, false);
 
         unit.setGridIndex(newDestination);
+        affectedUnits.push(unit);
         for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {
             loadedUnit.setGridIndex(newDestination);
+            affectedUnits.push(loadedUnit);
         }
 
         unitMap.setUnitOnMap(unit);
     }
 
     await Promise.all(promiseArray);
+    return affectedUnits;
 }
 
 function getAlternativeDestination(action: WeaSetUnitPositionExpr, unit: Units_Unit.Unit, oldDestination: AuxiliaryTypes_GridIndex.GridIndex): AuxiliaryTypes_GridIndex.GridIndex | null {

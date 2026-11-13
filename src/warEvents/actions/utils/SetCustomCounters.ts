@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     CustomCounters_Utils,
     ExpressionParsers_Contexts_CustomCounter,
     WarEvents_Actions_Constants_SetCustomCounters,
@@ -89,7 +90,7 @@ export async function applyWithExtraData(_action: WeaSetCustomCounters): Promise
     // nothing to do
 }
 
-export async function applyAsInnerWar(action: WeaSetCustomCounters, _isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetCustomCounters, _isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const customCounterIdArray: number[] = [];
     try {
         const idResult = ExpressionParsers_Parser.Parser.getParseResult(action.getIdExpression() ?? "").eval(new ExpressionParsers_Contexts_War.War(war), false);
@@ -98,10 +99,10 @@ export async function applyAsInnerWar(action: WeaSetCustomCounters, _isFast: boo
         } else if (idResult instanceof ExpressionParsers_Results_NumArray.NumArray) {
             customCounterIdArray.push(...idResult.numberArray);
         } else {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
     } catch {
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 
     const customCounterIdSet    = new Set(customCounterIdArray.map(v => Math.floor(v)).filter(v => CustomCounters_Utils.checkIsValidId(v)));
@@ -124,4 +125,6 @@ export async function applyAsInnerWar(action: WeaSetCustomCounters, _isFast: boo
     for (const [counterId, counterValue] of newValueDict) {
         warEventManager.setCustomCounter(counterId, counterValue);
     }
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ customCounterDict : newValueDict });
 }

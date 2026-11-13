@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Units_Utils_Serialization,
     Helpers_Team,
     WarEvents_Actions_Constants_SetUnitTypeExpr,
@@ -163,7 +164,7 @@ function evalActUnitType(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): num
 export async function applyWithExtraData(_action: WeaSetUnitTypeExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetUnitTypeExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetUnitTypeExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newUnitDataDict = new Map<Units_Unit.Unit, SerialUnit>();
     for (const unit of war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId())) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -176,7 +177,7 @@ export async function applyAsInnerWar(action: WeaSetUnitTypeExpr, isFast: boolea
         }
     }
 
-    applyNewUnitDataDict(newUnitDataDict, war, isFast);
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataDict(newUnitDataDict, war, isFast) });
 }
 function createNewUnitData(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): SerialUnit | null {
     const newUnitType = evalActUnitType(action, unit);
@@ -186,7 +187,7 @@ function createNewUnitData(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): S
 
     return Units_Utils_Serialization.createNewUnitDataForChangeType(unit, newUnitType);
 }
-function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseWar_Model_War.War, isFast: boolean): void {
+function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseWar_Model_War.War, isFast: boolean): Units_Unit.Unit[] {
     const mapSize                 = war.getTileMap().getMapSize();
     const observerTeamIndexesDict = new Map<number, number[] | null>();
     for (const [unit] of dict) {
@@ -202,6 +203,7 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseW
 
     const gameConfig              = war.getGcData();
     const warStatisticsManager    = war.getWarStatisticsManager();
+    const affectedUnits           : Units_Unit.Unit[] = [];
     for (const [unit, unitData] of dict) {
         {
             const observerTeamIndexes = observerTeamIndexesDict.get(unit.getGridIndex().getGridId(mapSize));
@@ -232,8 +234,10 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseW
 
         unit.init(unitData, gameConfig);
         unit.startRunning(war);
+        affectedUnits.push(unit);
         if (!isFast) {
             unit.flushDataToView();
         }
     }
+    return affectedUnits;
 }

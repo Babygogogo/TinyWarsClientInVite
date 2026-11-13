@@ -92,9 +92,9 @@ export class FogMap {
         playersCountUnneutral   : number;
     }): void {
         this.init({
-            data,
-            mapSize,
-            playersCountUnneutral,
+            data                  : data,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
     }
 
@@ -211,8 +211,8 @@ export class FogMap {
                 const visibilityArray = Visibilities_Utils.getVisibilityArrayWithMapFromPath(map, mapSize);
                 if (visibilityArray != null) {
                     serialMapsFromPath.push(DataForFogMapFromPath.fromJson({
-                        playerIndex,
-                        visibilityArray,
+                        playerIndex     : playerIndex,
+                        visibilityArray : visibilityArray,
                     }));
                 }
             }
@@ -374,12 +374,16 @@ export class FogMap {
         const mapSize       = this.getMapSize();
         const mapFromPath   = this._getMapFromPath(playerIndex);
         for (const pathNode of path) {
-            for (const gridIndex of pathNode.getGridsWithinDistance({ minDistance : 0, maxDistance : 1, mapSize })) {
+            for (const gridIndex of pathNode.getGridsWithinDistance({
+                minDistance : 0,
+                maxDistance : 1,
+                mapSize     : mapSize,
+            })) {
                 mapFromPath[gridIndex.getX()][gridIndex.getY()] = Visibilities_Constants.VisibilityTypeId.Penetrating;
             }
 
             const visionRange = unit.getFinalVisionRange(unitVisionInfo, pathNode);
-            for (const gridIndex of pathNode.getGridsWithinDistance({ minDistance : 2, maxDistance : visionRange, mapSize })) {
+            for (const gridIndex of pathNode.getGridsWithinDistance({ minDistance : 2, maxDistance : visionRange, mapSize : mapSize })) {
                 if (unitVisionInfo.isPenetrating) {
                     mapFromPath[gridIndex.getX()][gridIndex.getY()] = Visibilities_Constants.VisibilityTypeId.Penetrating;
                 } else {
@@ -468,14 +472,16 @@ export class FogMap {
         }
         return array;
     }
-    public updateRawVisibilityFromPathsForAllPlayers(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, visibilityArray: number[]): void {
+    public updateRawVisibilityFromPathsForAllPlayers(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, visibilityArray: number[]): Map<number, number> | null {
         const length = visibilityArray.length;
         if (length <= 0) {
-            return;
+            return null;
         }
 
         const maxPlayerIndex  = Math.min(this.getWar().getPlayerManager().getTotalPlayersCount(true), length);
         const { x, y }        = gridIndex.getXY();
+        const gridId          = gridIndex.getGridId(this.getMapSize());
+        const changedDict     = new Map<number, number>();
         for (let playerIndex = 0; playerIndex < maxPlayerIndex; ++playerIndex) {
             const visibility = visibilityArray[playerIndex];
             if ((visibility !== Visibilities_Constants.VisibilityTypeId.Inside)      &&
@@ -485,8 +491,14 @@ export class FogMap {
                 continue;
             }
 
-            this._getMapFromPath(playerIndex)[x][y] = visibility;
+            const map = this._getMapFromPath(playerIndex);
+            if (map[x][y] !== visibility) {
+                map[x][y] = visibility;
+                changedDict.set(gridId * 100 + playerIndex, visibility);
+            }
         }
+
+        return changedDict;
     }
     // public getVisibilityMapFromPathsForUser(userId: number): Visibility[][] {
     //     return this.getVisibilityMapFromPathsForTeams(this._getWar().getWatcherTeamIndexes(userId));
@@ -629,12 +641,12 @@ export class FogMap {
                         continue;
                     }
 
-                    for (const g of unitGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : 1, mapSize })) {
+                    for (const g of unitGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : 1, mapSize : mapSize })) {
                         resultMap[g.getX()][g.getY()] = Visibilities_Constants.VisibilityTypeId.Penetrating;
                     }
 
                     const isPenetrating = visionInfo.isPenetrating;
-                    for (const g of unitGridIndex.getGridsWithinDistance({ minDistance : 2, maxDistance : visionRange, mapSize })) {
+                    for (const g of unitGridIndex.getGridsWithinDistance({ minDistance : 2, maxDistance : visionRange, mapSize : mapSize })) {
                         if (isPenetrating) {
                             resultMap[g.getX()][g.getY()] = Visibilities_Constants.VisibilityTypeId.Penetrating;
                         } else {

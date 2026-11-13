@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Lang_Utils,
     Lang_Constants,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -52,6 +53,8 @@ export async function applyWithExtraData(action: WeaStopPersistentAction, isFast
     war.getWarEventManager().updateOpaIdArrayOnDeleteAction(action.getActionIdArray());
 }
 
-export async function applyAsInnerWar(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     war.getWarEventManager().updateOpaIdArrayOnDeleteAction(action.getActionIdArray());
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }

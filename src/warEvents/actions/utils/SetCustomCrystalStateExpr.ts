@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Tiles_Utils_Serialization,
     Tiles_Constants_CustomLimits,
     WarEvents_Actions_Constants_SetCustomCrystalStateExpr,
@@ -559,7 +560,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateExpr
 export async function applyWithExtraData(_action: WeaSetCustomCrystalStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetCustomCrystalStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetCustomCrystalStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomCrystalData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customCrystalData = tile.getFinalCrystalData();
@@ -575,6 +576,7 @@ export async function applyAsInnerWar(action: WeaSetCustomCrystalStateExpr, isFa
     }
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newTileDataDict.keys()] });
 }
 function createNewTileCustomCrystalData(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): TileCustomCrystalData {
     const radius                        = evalActRadius(action, tile, customCrystalData);

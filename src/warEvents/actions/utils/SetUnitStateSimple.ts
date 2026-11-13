@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     ArrayModifiers_Utils,
     Helpers_Team,
     Lang_Constants,
@@ -438,7 +439,7 @@ export function getErrorTip(data: WeaSetUnitStateSimple, mapSize: AuxiliaryTypes
 export async function applyWithExtraData(_action: WeaSetUnitStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaSetUnitStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaSetUnitStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap           = war.getUnitMap();
     const targetUnitArray   : Units_Unit.Unit[] = [];
     {
@@ -467,7 +468,7 @@ export async function applyAsInnerWar(data: WeaSetUnitStateSimple, isFastExecute
         targetUnitArray.sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
 
         if (!targetUnitArray.length) {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
     }
 
@@ -523,6 +524,7 @@ export async function applyAsInnerWar(data: WeaSetUnitStateSimple, isFastExecute
             }
         }
     }
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : targetUnitArray });
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {

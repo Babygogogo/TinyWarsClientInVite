@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Sounds_Utils,
     Lang_Utils,
     Sounds_SoundPlayer,
@@ -34,13 +35,15 @@ export function getErrorTip(data: WeaPlaySfx): string | null {
         : null;
 }
 
-export async function applyWithExtraData(action: WeaPlaySfx, isFast: boolean): Promise<void> {
+export async function applyWithExtraData(action: WeaPlaySfx, isFast: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     return applyAsInnerWar(action, isFast);
 }
-export async function applyAsInnerWar(action: WeaPlaySfx, isFast: boolean): Promise<void> {
+export async function applyAsInnerWar(action: WeaPlaySfx, isFast: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     if (isFast) {
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 
     Sounds_SoundPlayer.playShortSfx(action.getSfxCode() ?? 0);
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }

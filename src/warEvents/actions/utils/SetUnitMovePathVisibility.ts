@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     WarEvents_Actions_Constants_SetUnitMovePathVisibility,
     Lang_Utils,
     Numbers_Utils,
@@ -123,7 +124,7 @@ function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: BaseW
 export function applyWithExtraData(_action: WeaSetUnitMovePathVisibility): void {
     // nothing to do
 }
-export function applyAsInnerWar(action: WeaSetUnitMovePathVisibility, war: BaseWar_Model_War.War): void {
+export function applyAsInnerWar(action: WeaSetUnitMovePathVisibility, war: BaseWar_Model_War.War): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const fogMap            = war.getFogMap();
     const { width, height } = fogMap.getMapSize().getWH();
     const newVisibilityDict = new Map<AuxiliaryTypes_GridIndex.GridIndex, number[]>();
@@ -138,7 +139,15 @@ export function applyAsInnerWar(action: WeaSetUnitMovePathVisibility, war: BaseW
         }
     }
 
+    const changedDict = new Map<number, number>();
     for (const [gridIndex, visibilityArray] of newVisibilityDict) {
-        fogMap.updateRawVisibilityFromPathsForAllPlayers(gridIndex, visibilityArray);
+        const dict = fogMap.updateRawVisibilityFromPathsForAllPlayers(gridIndex, visibilityArray);
+        if (dict) {
+            for (const [key, value] of dict) {
+                changedDict.set(key, value);
+            }
+        }
     }
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ unitMovePathVisibilityDictForWarEvent : changedDict });
 }

@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     WarEvents_Actions_Constants_Common,
     UnitBuffs_Utils_Common,
     Players_Utils_Filter,
@@ -272,7 +273,7 @@ export async function applyWithExtraData(_action: WeaModifyUnitBuffSimple): Prom
     // nothing to do
 }
 
-export async function applyAsInnerWar(action: WeaModifyUnitBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaModifyUnitBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const targetUnitDict = new Map<Units_Unit.Unit, UnitBuff[]>();
     {
         const tileMap               = war.getTileMap();
@@ -345,7 +346,7 @@ export async function applyAsInnerWar(action: WeaModifyUnitBuffSimple, isFastExe
         }
 
         if (targetUnitDict.size <= 0) {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
     }
 
@@ -358,6 +359,7 @@ export async function applyAsInnerWar(action: WeaModifyUnitBuffSimple, isFastExe
             }
         }
     }
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : [...targetUnitDict.keys()] });
 }
 
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {

@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Units_Unit,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
@@ -138,7 +139,7 @@ export function getErrorTip(data: WeaFillUnitLoadedSimple, mapSize: AuxiliaryTyp
 export async function applyWithExtraData(_action: WeaFillUnitLoadedSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaFillUnitLoadedSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaFillUnitLoadedSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     const conUnitFilter     = data.getConUnitFilter();
@@ -173,6 +174,7 @@ export async function applyAsInnerWar(data: WeaFillUnitLoadedSimple, isFastExecu
     const unitType              = rawUnitData.getUnitType();
     const gameConfig            = war.getGcData();
     const warStatisticsManager  = war.getWarStatisticsManager();
+    const changedThings         = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const [loaderUnit, loadCount] of loaderUnitsDict) {
         {
             const loadUnitCategory = loaderUnit.getLoadUnitCategoryId();
@@ -190,7 +192,7 @@ export async function applyAsInnerWar(data: WeaFillUnitLoadedSimple, isFastExecu
         });
 
         for (let i = 0; i < loadCount; ++i) {
-            const revisedUnitData   = rawUnitData;
+            const revisedUnitData   = rawUnitData.clone();
             const unitId            = unitMap.getNextUnitId();
             revisedUnitData.setGridIndex(gridIndex.toProto());
             revisedUnitData.setLoaderUnitId(loaderUnitId);
@@ -203,6 +205,7 @@ export async function applyAsInnerWar(data: WeaFillUnitLoadedSimple, isFastExecu
             unit.flushDataToView();
             unitMap.setNextUnitId(unitId + 1);
             unitMap.setUnitLoaded(unit);
+            changedThings.addUnit(unit);
             (!isFastExecute) && (unit.flushDataToView());
 
             if (observerTeamIndexes != null) {
@@ -218,6 +221,7 @@ export async function applyAsInnerWar(data: WeaFillUnitLoadedSimple, isFastExecu
             }
         }
     }
+    return changedThings;
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {

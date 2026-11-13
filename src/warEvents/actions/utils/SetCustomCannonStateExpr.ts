@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Tiles_Constants_CustomLimits,
     Tiles_Utils_Serialization,
     WarEvents_Actions_Constants_SetCustomCannonStateExpr,
@@ -649,7 +650,7 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr,
 export async function applyWithExtraData(_action: WeaSetCustomCannonStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetCustomCannonStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetCustomCannonStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomCannonData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customCannonData = tile.getFinalCannonData();
@@ -665,6 +666,7 @@ export async function applyAsInnerWar(action: WeaSetCustomCannonStateExpr, isFas
     }
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newTileDataDict.keys()] });
 }
 function createNewTileCustomCannonData(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): TileCustomCannonData {
     const rangeForUp                    = evalActRangeForUp(action, tile, customCannonData);

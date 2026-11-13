@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Destructions_Utils,
     ExpressionParsers_Contexts_Player,
     ExpressionParsers_Contexts_Unit,
@@ -125,7 +126,7 @@ function evalActPlayerAliveState(action: WeaDestroyUnitExpr, player: Players_Pla
 export async function applyWithExtraData(_action: WeaDestroyUnitExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaDestroyUnitExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaDestroyUnitExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap                   = war.getUnitMap();
     const allLoadedUnits            = [...unitMap.getRawAllUnitsLoaded().values()].sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
     const targetLoadedUnitIdList    : number[] = [];
@@ -135,19 +136,19 @@ export async function applyAsInnerWar(action: WeaDestroyUnitExpr, isFast: boolea
         }
     }
 
-    const destroyedUnits: Units_Unit.Unit[] = [];
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const unit of unitMap.getAllUnitsOnMap(v => checkIsMeetConditionForUnit(action, v))) {
-        destroyedUnits.push(...(Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFast).getUnits() ?? new Set()));
+        changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFast));
     }
     for (const unitId of targetLoadedUnitIdList) {
         if (unitMap.getUnitLoadedById(unitId) != null) {
-            destroyedUnits.push(...(Destructions_Utils.destroyUnitLoaded(war, unitId).getUnits() ?? new Set()));
+            changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId));
         }
     }
 
     const playerManager         = war.getPlayerManager();
     const newAliveStateDict     = new Map<Players_Player.Player, number>();
-    for (const playerIndex of new Set(destroyedUnits.map(v => v.getPlayerIndex()))) {
+    for (const playerIndex of new Set([...(changedThings.getUnits() ?? [])].map(v => v.getPlayerIndex()))) {
         const player        = playerManager.getPlayer(playerIndex);
         const aliveState    = evalActPlayerAliveState(action, player);
         if (aliveState != null) {
@@ -156,5 +157,7 @@ export async function applyAsInnerWar(action: WeaDestroyUnitExpr, isFast: boolea
     }
     for (const [player, aliveState] of newAliveStateDict) {
         player.setAliveState(aliveState);
+        changedThings.addPlayer(player);
     }
+    return changedThings;
 }

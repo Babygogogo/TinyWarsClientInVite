@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     WarEvents_Actions_Constants_DeleteTileBuffExpr,
     Lang_Utils,
     ExpressionParsers_Results_Num,
@@ -109,7 +110,7 @@ export async function applyWithExtraData(action: WeaDeleteTileBuffExpr, war: Bas
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyAsInnerWar(action: WeaDeleteTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
+export async function applyAsInnerWar(action: WeaDeleteTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, ProtoTileBuff[]>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {
@@ -134,4 +135,5 @@ export async function applyAsInnerWar(action: WeaDeleteTileBuffExpr, war: BaseWa
         //     tile.flushDataToView();
         // }
     }
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newTileDataDict.keys()] });
 }

@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Tiles_Utils_Serialization,
     Tiles_Constants_CustomLimits,
     Tiles_Constants_DefaultCustomTileData,
@@ -808,7 +809,7 @@ function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateExpr, t
 export async function applyWithExtraData(action: WeaSetCustomBuildingStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetCustomBuildingStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetCustomBuildingStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomBuildingData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if ((!tile.getIsCustomizableBuilding()) || (!checkIsMeetConditionForTile(action, tile))) {
@@ -819,6 +820,7 @@ export async function applyAsInnerWar(action: WeaSetCustomBuildingStateExpr, isF
     }
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newTileDataDict.keys()] });
 }
 function createNewTileCustomBuildingData(action: WeaSetCustomBuildingStateExpr, tile: Tiles_Tile.Tile, customBuildingData: TileCustomBuildingData): TileCustomBuildingData {
     const defenseAmount                 = evalActDefenseAmount(action, tile, customBuildingData);

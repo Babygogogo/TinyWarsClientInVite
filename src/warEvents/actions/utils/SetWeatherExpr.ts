@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     ExpressionParsers_Contexts_Weather,
     ExpressionParsers_Parser,
     ExpressionParsers_Results_Num,
@@ -89,7 +90,7 @@ export function getErrorTip(data: WeaSetWeatherExpr, customCounterNameSet: Set<s
 export async function applyWithExtraData(action: WeaSetWeatherExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetWeatherExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetWeatherExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const weatherManager = war.getWeatherManager();
     try {
         const context           = new ExpressionParsers_Contexts_Weather.Weather(weatherManager);
@@ -131,7 +132,8 @@ export async function applyAsInnerWar(action: WeaSetWeatherExpr, isFast: boolean
             weatherManager.getView()?.resetView(false);
         }
 
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ weatherManager : weatherManager.serialize() });
     } catch {
-        // ignored
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 }

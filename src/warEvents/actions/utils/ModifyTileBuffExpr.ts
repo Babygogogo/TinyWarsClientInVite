@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     TileBuffs_Utils_Common,
     WarEvents_Actions_Constants_ModifyTileBuffExpr,
     Lang_Utils,
@@ -274,7 +275,7 @@ export async function applyWithExtraData(action: WeaModifyTileBuffExpr, war: Bas
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyAsInnerWar(action: WeaModifyTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
+export async function applyAsInnerWar(action: WeaModifyTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newBuffArrayDict = new Map<Tiles_Tile.Tile, ProtoTileBuff[]>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {
@@ -315,6 +316,7 @@ export async function applyAsInnerWar(action: WeaModifyTileBuffExpr, war: BaseWa
         //     tile.flushDataToView();
         // }
     }
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newBuffArrayDict.keys()] });
 }
 function createModifiedBuff(action: WeaModifyTileBuffExpr, tile: Tiles_Tile.Tile, oldBuff: ProtoTileBuff): ProtoTileBuff | null {
     const newBuffType               = evalActBuffType(action, tile, oldBuff);

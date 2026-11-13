@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_GridIndexAndWeight,
     ExpressionParsers_Results_NullableUnit,
@@ -837,7 +838,7 @@ function evalActAiWeightedDestination(action: WeaFillUnitLoadedExpr, unit: Units
 export async function applyWithExtraData(_action: WeaFillUnitLoadedExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaFillUnitLoadedExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaFillUnitLoadedExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap           = war.getUnitMap();
     const allUnits          = war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
     let nextUnitId          = unitMap.getNextUnitId();
@@ -863,7 +864,7 @@ export async function applyAsInnerWar(action: WeaFillUnitLoadedExpr, isFast: boo
     }
 
     unitMap.setNextUnitId(nextUnitId);
-    applyNewUnitDataArray(newUnitDataList, war, isFast);
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataArray(newUnitDataList, war, isFast) });
 }
 function createNewUnitData(action: WeaFillUnitLoadedExpr, loaderUnit: Units_Unit.Unit, unitId: number): SerialUnit | null {
     const unitType = evalActUnitType(action, loaderUnit);
@@ -917,7 +918,7 @@ function createNewUnitData(action: WeaFillUnitLoadedExpr, loaderUnit: Units_Unit
     });
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_War.War, isFast: boolean): void {
+function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_War.War, isFast: boolean): Units_Unit.Unit[] {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
     const unitArray     : Units_Unit.Unit[] = [];
@@ -952,4 +953,5 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_W
             }
         }
     }
+    return unitArray;
 }

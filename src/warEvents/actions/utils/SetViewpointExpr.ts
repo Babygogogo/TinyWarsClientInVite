@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
     Egret_Egret,
     ExpressionParsers_Contexts_War,
@@ -140,11 +141,11 @@ export function getErrorTip(data: WeaSetViewpointExpr, customCounterNameSet: Set
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyWithExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     return applyAsInnerWar(action, isFast, war);
 }
-export async function applyAsInnerWar(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
-    return doApply({
+export async function applyAsInnerWar(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    await doApply({
         gridIndexArray    : getTargetGridIndexArray(action.getTargets() ?? ``, war),
         isNeedFocusEffect : getIsNeedFocusEffect(action.getNeedFocusEffect(), war),
         isOneByOne        : getIsOneByOne(action.getIsOneByOne(), war),
@@ -152,6 +153,8 @@ export async function applyAsInnerWar(action: WeaSetViewpointExpr, isFast: boole
         war               : war,
         isFastExecute     : isFast,
     });
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }
 export async function doApply({ gridIndexArray, isNeedFocusEffect, isOneByOne, interval, war, isFastExecute }: {
     gridIndexArray      : AuxiliaryTypes_GridIndex.GridIndex[];

@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Lang_Utils,
     WarEvents_Actions_Constants_PersistentShowText,
     Lang_Constants,
@@ -56,6 +57,8 @@ export function getErrorTip(data: WeaPersistentShowText): string | null {
 export function applyWithExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyAsInnerWar(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): void {
+export function applyAsInnerWar(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }

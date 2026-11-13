@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Lang_Constants,
     Lang_Utils,
     Players_Player,
@@ -130,10 +131,10 @@ export function getErrorTip(data: WeaSetViewpointSimple, mapSize: AuxiliaryTypes
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetViewpointSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyWithExtraData(action: WeaSetViewpointSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     return applyAsInnerWar(action, isFast, war);
 }
-export async function applyAsInnerWar(data: WeaSetViewpointSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaSetViewpointSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const targetGridIndexArray: AuxiliaryTypes_GridIndex.GridIndex[] = [];
     {
         const unitMap           = war.getUnitMap();
@@ -168,11 +169,11 @@ export async function applyAsInnerWar(data: WeaSetViewpointSimple, isFastExecute
         }
 
         if (!targetGridIndexArray.length) {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
     }
 
-    return WarEvents_Actions_Utils_SetViewpointExpr.doApply({
+    await WarEvents_Actions_Utils_SetViewpointExpr.doApply({
         gridIndexArray    : targetGridIndexArray,
         isNeedFocusEffect : !!data.getActNeedFocusEffect(),
         isOneByOne        : !!data.getActIsOneByOne(),
@@ -180,6 +181,8 @@ export async function applyAsInnerWar(data: WeaSetViewpointSimple, isFastExecute
         war               : war,
         isFastExecute     : isFastExecute,
     });
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {

@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
     Units_Utils_Filter,
@@ -266,7 +267,7 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: AuxiliaryTyp
 export async function applyWithExtraData(_action: WeaSetPlayerStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetPlayerStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetPlayerStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const targetPlayerArray: Players_Player.Player[] = [];
     {
         const getAllTiles       = Helpers_Misc.createLazyFunc(() => war.getTileMap().getAllTiles());
@@ -317,7 +318,7 @@ export async function applyAsInnerWar(action: WeaSetPlayerStateSimple, isFastExe
         }
 
         if (!targetPlayerArray.length) {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
     }
 
@@ -338,9 +339,12 @@ export async function applyAsInnerWar(action: WeaSetPlayerStateSimple, isFastExe
     }
 
     {
+        const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         for (const data of dataArray) {
-            await data.apply(war, isFastExecute);
+            changedThings.mergeFrom(await data.apply(war, isFastExecute));
         }
+
+        return changedThings;
     }
 }
 

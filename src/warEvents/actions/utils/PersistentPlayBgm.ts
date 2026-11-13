@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Sounds_Utils,
     Lang_Utils,
     Helpers_Misc,
@@ -38,13 +39,15 @@ export function getErrorTip(data: WeaPersistentPlayBgm): string | null {
         : null;
 }
 
-export function applyWithExtraData(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Model_War.War): void {
+export function applyWithExtraData(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Model_War.War): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     return applyAsInnerWar(action, isFastExecute, actionId, war);
 }
-export function applyAsInnerWar(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Model_War.War): void {
+export function applyAsInnerWar(action: WeaPersistentPlayBgm, isFastExecute: boolean, actionId: number, war: BaseWar_Model_War.War): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 
     if (!isFastExecute) {
         Sounds_SoundPlayer.playBgm(Helpers_Misc.getExisted(action.getBgmCode()));
     }
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }

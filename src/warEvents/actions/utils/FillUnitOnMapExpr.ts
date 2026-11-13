@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_GridIndexAndWeight,
     ExpressionParsers_Results_Num,
@@ -906,7 +907,7 @@ function evalActAiWeightedDestination(action: WeaFillUnitOnMapExpr, tile: Tiles_
 export async function applyWithExtraData(_action: WeaFillUnitOnMapExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaFillUnitOnMapExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaFillUnitOnMapExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap         = war.getUnitMap();
     let nextUnitId      = unitMap.getNextUnitId();
     const newUnitDataList : SerialUnit[] = [];
@@ -927,7 +928,7 @@ export async function applyAsInnerWar(action: WeaFillUnitOnMapExpr, isFast: bool
     }
 
     unitMap.setNextUnitId(nextUnitId);
-    applyNewUnitDataArray(newUnitDataList, war, isFast);
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataArray(newUnitDataList, war, isFast) });
 }
 function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, unitId: number): SerialUnit | null {
     const unitType = evalActUnitType(action, tile);
@@ -985,7 +986,7 @@ function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: Tiles_Tile.Tile, 
         loaderUnitId             : null,
     });
 }
-function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_War.War, isFast: boolean): void {
+function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_War.War, isFast: boolean): Units_Unit.Unit[] {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
     const unitArray     : Units_Unit.Unit[] = [];
@@ -1018,4 +1019,5 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Model_W
             }));
         }
     }
+    return unitArray;
 }

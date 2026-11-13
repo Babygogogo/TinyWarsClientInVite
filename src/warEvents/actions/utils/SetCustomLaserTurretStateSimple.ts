@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
     Units_Utils_Filter,
@@ -375,7 +376,7 @@ export function getErrorTip(data: WeaSetCustomLaserTurretStateSimple, mapSize: A
 export async function applyWithExtraData(_action: WeaSetCustomLaserTurretStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const targetTileArray: Tiles_Tile.Tile[] = [];
     {
         const unitMap           = war.getUnitMap();
@@ -413,7 +414,7 @@ export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateSimple
         }
 
         if (!targetTileArray.length) {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
     }
 
@@ -474,6 +475,7 @@ export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateSimple
             }
         }
     }
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...dataDict.keys()] });
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {

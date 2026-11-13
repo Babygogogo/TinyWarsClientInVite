@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
     Units_Utils_Filter,
@@ -98,7 +99,7 @@ export function getErrorTip(data: WeaDestroyUnitSimple, mapSize: AuxiliaryTypes_
 export async function applyWithExtraData(_action: WeaDestroyUnitSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaDestroyUnitSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaDestroyUnitSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     const conUnitFilter     = data.getConUnitFilter();
@@ -122,19 +123,21 @@ export async function applyAsInnerWar(data: WeaDestroyUnitSimple, isFastExecute:
 
         targetUnitArray.push(unit);
     }
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const unit of targetUnitArray) {
         if (unit.getLoaderUnitId() == null) {
             const gridIndex = unit.getGridIndex();
             if (unitMap.getUnitOnMap(gridIndex) === unit) {
-                Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute);
+                changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute));
             }
         } else {
             const unitId = unit.getUnitId();
             if (unitMap.getUnitLoadedById(unitId) === unit) {
-                Destructions_Utils.destroyUnitLoaded(war, unitId);
+                changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId));
             }
         }
     }
+    return changedThings;
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {

@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Lang_Constants,
     Lang_Utils,
     Players_Player,
@@ -135,7 +136,7 @@ export function getErrorTip(data: WeaSetUnitPositionSimple, mapSize: AuxiliaryTy
 export async function applyWithExtraData(_action: WeaSetUnitPositionSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaSetUnitPositionSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaSetUnitPositionSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     const targetUnitArray   : Units_Unit.Unit[] = [];
@@ -164,7 +165,7 @@ export async function applyAsInnerWar(data: WeaSetUnitPositionSimple, isFastExec
         targetUnitArray.sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
 
         if (!targetUnitArray.length) {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
     }
 
@@ -188,10 +189,11 @@ export async function applyAsInnerWar(data: WeaSetUnitPositionSimple, isFastExec
         }
 
         if (!targetTileArray.length) {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
     }
 
+    const affectedUnits = new Set<Units_Unit.Unit>();
     for (const unit of targetUnitArray) {
         const oldGridIndex = unit.getGridIndex();
 
@@ -203,7 +205,9 @@ export async function applyAsInnerWar(data: WeaSetUnitPositionSimple, isFastExec
 
             const existingUnit = unitMap.getUnitOnMap(newGridIndex);
             if (existingUnit == null) {
-                moveUnit(unit, newGridIndex);
+                for (const affectedUnit of moveUnit(unit, newGridIndex)) {
+                    affectedUnits.add(affectedUnit);
+                }
                 unit.setLoaderUnitId(null);
                 unitMap.setUnitOnMap(unit);
                 break;
@@ -211,7 +215,9 @@ export async function applyAsInnerWar(data: WeaSetUnitPositionSimple, isFastExec
             } else {
                 const loader = getAvailableLoader(existingUnit, unit);
                 if (loader != null) {
-                    moveUnit(unit, newGridIndex);
+                    for (const affectedUnit of moveUnit(unit, newGridIndex)) {
+                        affectedUnits.add(affectedUnit);
+                    }
                     unit.setLoaderUnitId(loader.getUnitId());
                     unitMap.setUnitLoaded(unit);
                     break;
@@ -219,6 +225,7 @@ export async function applyAsInnerWar(data: WeaSetUnitPositionSimple, isFastExec
             }
         }
     }
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : affectedUnits });
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {
@@ -244,7 +251,7 @@ function getAvailableLoader(rootLoader: Units_Unit.Unit, target: Units_Unit.Unit
     }
     return null;
 }
-function moveUnit(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
+function moveUnit(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Units_Unit.Unit[] {
     const unitMap = unit.getWar().getUnitMap();
     if (unit.getLoaderUnitId() == null) {
         unitMap.deleteUnitOnMap(unit.getGridIndex(), false);
@@ -252,8 +259,11 @@ function moveUnit(unit: Units_Unit.Unit, gridIndex: AuxiliaryTypes_GridIndex.Gri
         unitMap.deleteUnitLoaded(unit.getUnitId());
     }
 
+    const affectedUnits = [unit];
     unit.setGridIndex(gridIndex);
     for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {
         loadedUnit.setGridIndex(gridIndex);
+        affectedUnits.push(loadedUnit);
     }
+    return affectedUnits;
 }

@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Lang_Constants,
     Lang_Utils,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -46,10 +47,10 @@ export function getErrorTip(data: WeaSetWeatherSimple, gameConfig: GameConfigs_G
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyWithExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     return applyAsInnerWar(action, isFast, war);
 }
-export async function applyAsInnerWar(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const weatherManager = war.getWeatherManager();
     weatherManager.setForceWeatherType(action.getWeatherType());
 
@@ -65,4 +66,8 @@ export async function applyAsInnerWar(action: WeaSetWeatherSimple, isFast: boole
     if (!isFast) {
         weatherManager.getView()?.resetView(false);
     }
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({
+        weatherManager : weatherManager.serialize(),
+    });
 }

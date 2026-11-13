@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Tiles_Utils_Common,
     TileObjects_Utils,
     Tiles_Utils_Serialization,
@@ -393,7 +394,7 @@ function evalActCustomNameId(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile)
 export async function applyWithExtraData(_action: WeaSetTileStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetTileStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetTileStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, SerialTile>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!checkIsMeetConditionForTile(action, tile)) {
@@ -404,6 +405,8 @@ export async function applyAsInnerWar(action: WeaSetTileStateExpr, isFast: boole
     }
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newTileDataDict.keys()] });
 }
 function createNewTileData(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile): SerialTile {
     // 为防止随机数导致结果不稳定，此处eval系列函数的顺序一旦写下就不能更改，后续新属性只能添加在最后

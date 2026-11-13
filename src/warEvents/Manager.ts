@@ -75,6 +75,7 @@ import {
     WarEvents_Conditions_Utils_WeatherAndFog,
     WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_ChangedThingsForWarOperation,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Model_War,
     type Units_Unit,
@@ -620,7 +621,7 @@ export class Manager {
         }
     }
 
-    private async _callActionWithExtraData(warEventActionId: number, isFastExecute: boolean): Promise<void> {
+    private async _callActionWithExtraData(warEventActionId: number, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation | void> {
         const action    = this.getWarEventAction(warEventActionId);
         const war       = this._getWar();
         {
@@ -963,7 +964,7 @@ export class Manager {
         // todo: add more actions.
         throw Helpers_Misc.newError(`Invalid action.`);
     }
-    private async _callActionAsInnerWar(warEventActionId: number, isFastExecute: boolean): Promise<void> {
+    private async _callActionAsInnerWar(warEventActionId: number, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
         const action    = this.getWarEventAction(warEventActionId);
         const war       = this._getWar();
         {

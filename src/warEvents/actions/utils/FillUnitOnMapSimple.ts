@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
     Units_Unit,
     type BaseWar_Model_War,
@@ -123,7 +124,7 @@ export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: AuxiliaryType
 export async function applyWithExtraData(_action: WeaFillUnitOnMapSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaFillUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaFillUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const rawUnitData = Helpers_Misc.getExisted(action.getActUnitData());
     if (rawUnitData.getLoaderUnitId() != null) {
         throw Helpers_Misc.newError(`non-null loaderUnitId.`);
@@ -131,7 +132,7 @@ export async function applyAsInnerWar(action: WeaFillUnitOnMapSimple, isFastExec
 
     const playerIndex = action.getActIsInTurn() ? war.getPlayerIndexInTurn() : (rawUnitData.getPlayerIndex());
     if (playerIndex === Players_Constants.PlayerIndex.Neutral) {
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 
     const gameConfig                = war.getGcData();
@@ -144,6 +145,7 @@ export async function applyAsInnerWar(action: WeaFillUnitOnMapSimple, isFastExec
     const conTileFilter             = action.getConTileFilter();
     const candidateGridIndexArray   = tileMap.getTiles(t => (conTileFilter == null) || (Tiles_Utils_Filter.checkIsMeet(conTileFilter, t))).map(v => v.getGridIndex());
 
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const gridIndex of candidateGridIndexArray) {
         const targetGridIndex = getGridIndexForAddUnit({
             origin             : gridIndex,
@@ -169,6 +171,7 @@ export async function applyAsInnerWar(action: WeaFillUnitOnMapSimple, isFastExec
         unit.flushDataToView();
         unitMap.setNextUnitId(unitId + 1);
         unitMap.setUnitOnMap(unit);
+        changedThings.addUnit(unit);
         (!isFastExecute) && (unit.flushDataToView());
 
         {
@@ -189,6 +192,7 @@ export async function applyAsInnerWar(action: WeaFillUnitOnMapSimple, isFastExec
             }
         }
     }
+    return changedThings;
 }
 function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovableTile, canBeBlockedByUnit }: {
     origin              : AuxiliaryTypes_GridIndex.GridIndex;

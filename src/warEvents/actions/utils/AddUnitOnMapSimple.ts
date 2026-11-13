@@ -15,6 +15,7 @@ import {
     Lang_Constants,
     type Tiles_TileMap,
     type Units_UnitMap,
+    AuxiliaryTypes_ChangedThingsForWarOperation,
 } from "../../../internal.ts";
 
 import type { WeaAddUnitOnMapSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple.ts";
@@ -117,7 +118,7 @@ export function getErrorTip(data: WeaAddUnitOnMapSimple, war: BaseWar_Model_War.
 export async function applyWithExtraData(action: WeaAddUnitOnMapSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaAddUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaAddUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitArray = action.getUnitArray();
     if ((unitArray == null) || (!unitArray.length)) {
         throw Helpers_Misc.newError(`Empty unitArray.`);
@@ -129,6 +130,7 @@ export async function applyAsInnerWar(action: WeaAddUnitOnMapSimple, isFastExecu
     const gameConfig            = war.getGcData();
     const warStatisticsManager  = war.getWarStatisticsManager();
     const mapSize               = unitMap.getMapSize();
+    const changedThings         = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const data of unitArray) {
         const unitData = Helpers_Misc.getExisted(data.getUnitData());
         if (unitData.getLoaderUnitId() != null) {
@@ -137,10 +139,13 @@ export async function applyAsInnerWar(action: WeaAddUnitOnMapSimple, isFastExecu
 
         const canBeBlockedByUnit    = Helpers_Misc.getExisted(data.getCanBeBlockedByUnit());
         const needMovableTile       = Helpers_Misc.getExisted(data.getNeedMovableTile());
-        const unitId                = unitMap.getNextUnitId();
         const unitType              = unitData.getUnitType();
-        const moveType              = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveTypeId());
         const rawGridIndex          = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(unitData.getGridIndex()));
+        const playerIndex           = unitData.getPlayerIndex();
+        if (playerManager.getPlayer(playerIndex).getAliveState() === Players_Constants.AliveStateId.Dead) {
+            continue;
+        }
+
         if (Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
             unitData              : unitData,
             mapSize               : mapSize,
@@ -150,22 +155,14 @@ export async function applyAsInnerWar(action: WeaAddUnitOnMapSimple, isFastExecu
             throw Helpers_Misc.newError(`Invalid unitData: ${JSON.stringify(unitData)}`);
         }
 
-        const playerIndex   = unitData.getPlayerIndex();
-        const player        = playerManager.getPlayer(playerIndex);
-        if (player == null) {
-            continue;
-        }
-        if (player.getAliveState() === Players_Constants.AliveStateId.Dead) {
-            continue;
-        }
-
+        const unitId    = unitMap.getNextUnitId();
         const gridIndex = getGridIndexForAddUnit({
             origin             : rawGridIndex,
             tileMap            : tileMap,
             unitMap            : unitMap,
             canBeBlockedByUnit : canBeBlockedByUnit,
             needMovableTile    : needMovableTile,
-            moveType           : moveType,
+            moveType           : Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveTypeId()),
         });
         if (gridIndex == null) {
             continue;
@@ -197,7 +194,11 @@ export async function applyAsInnerWar(action: WeaAddUnitOnMapSimple, isFastExecu
                 }));
             }
         }
+
+        changedThings.addUnit(unit);
     }
+
+    return changedThings;
 }
 function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovableTile, canBeBlockedByUnit }: {
     origin              : AuxiliaryTypes_GridIndex.GridIndex;

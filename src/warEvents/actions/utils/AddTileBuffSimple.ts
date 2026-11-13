@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     TileBuffs_Utils_Common,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
@@ -198,10 +199,10 @@ export function getErrorTip(
 export async function applyWithExtraData(_action: WeaAddTileBuffSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaAddTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(data: WeaAddTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newBuff = generateNewBuff(data, war);
     if (newBuff == null) {
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 
     const targetTileArray: Tiles_Tile.Tile[] = [];
@@ -237,7 +238,7 @@ export async function applyAsInnerWar(data: WeaAddTileBuffSimple, isFastExecute:
         }
 
         if (!targetTileArray.length) {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
     }
 
@@ -247,6 +248,7 @@ export async function applyAsInnerWar(data: WeaAddTileBuffSimple, isFastExecute:
             tile.addUnfixedBuff(newBuff.clone(), needUpdateView);
         }
     }
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : targetTileArray });
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
     if (!resultDict.has(player)) {

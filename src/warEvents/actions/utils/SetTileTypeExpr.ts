@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     TileBases_Utils,
     TileDecorations_Utils,
     TileObjects_Utils,
@@ -517,7 +518,7 @@ function getAutoTileObjectShapeId(tileMap: Tiles_TileMap.TileMap, tile: Tiles_Ti
 export async function applyWithExtraData(_action: WeaSetTileTypeExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetTileTypeExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetTileTypeExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, NewTileData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!checkIsMeetConditionForTile(action, tile)) {
@@ -530,7 +531,7 @@ export async function applyAsInnerWar(action: WeaSetTileTypeExpr, isFast: boolea
         }
     }
 
-    applyNewTileDataDict(newTileDataDict, war, isFast);
+    return applyNewTileDataDict(newTileDataDict, war, isFast);
 }
 function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): NewTileData | null {
     const newBaseType           = evalActBaseType(action, tile);
@@ -604,16 +605,17 @@ function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): N
         destroyUnit          : shouldDestroyUnit,
     };
 }
-function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: BaseWar_Model_War.War, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: BaseWar_Model_War.War, isFast: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
     const affectedTiles = new Set<Tiles_Tile.Tile>();
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const [tile, newTileData] of dict) {
         if (newTileData.destroyUnit) {
             const gridIndex = tile.getGridIndex();
             if (unitMap.getUnitOnMap(gridIndex) != null) {
-                Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFast);
                 affectedTiles.add(tile);
+                changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFast));
             }
         }
 
@@ -622,6 +624,7 @@ function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: Base
             tile.init(serialTile, gameConfig);
             tile.startRunning(war);
             affectedTiles.add(tile);
+            changedThings.addTile(tile);
         }
     }
 
@@ -632,6 +635,7 @@ function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: Base
             if ((shapeId != null) && (shapeId != tile.getBaseShapeId())) {
                 tile.setBaseShapeId(shapeId);
                 affectedTiles.add(tile);
+                changedThings.addTile(tile);
             }
         }
 
@@ -640,6 +644,7 @@ function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: Base
             if ((shapeId != null) && (shapeId != tile.getObjectShapeId())) {
                 tile.setObjectShapeId(shapeId);
                 affectedTiles.add(tile);
+                changedThings.addTile(tile);
             }
         }
     }
@@ -656,6 +661,7 @@ function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: Base
         tile.setDecorationTypeId(decorationType);
         tile.setDecorationShapeId(shapeId);
         affectedTiles.add(tile);
+        changedThings.addTile(tile);
     }
 
     if (!isFast) {
@@ -663,4 +669,6 @@ function applyNewTileDataDict(dict: Map<Tiles_Tile.Tile, NewTileData>, war: Base
             tile.flushDataToView();
         }
     }
+
+    return changedThings;
 }

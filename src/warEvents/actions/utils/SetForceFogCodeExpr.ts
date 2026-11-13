@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     FogMaps_Utils,
     WarEvents_Actions_Constants_SetForceFogCodeExpr,
     Lang_Utils,
@@ -12,6 +13,7 @@ import {
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { WeaSetForceFogCodeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeExpr.ts";
+import { ForceFog } from "../../../proto/schema/CommonProto/Structure/ForceFog.ts";
 
 export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetForceFogCodeExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
@@ -93,18 +95,19 @@ export async function applyWithExtraData(_action: WeaSetForceFogCodeExpr): Promi
     // nothing to do
 }
 
-export async function applyAsInnerWar(action: WeaSetForceFogCodeExpr, _isFast: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetForceFogCodeExpr, _isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const forceFogCode = getForceFogCode(action.getForceFogCode() ?? ``, war);
     if (forceFogCode == null) {
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 
     const turnsCount = getTurnsCount(action.getTurnsCount() ?? ``, war);
     if (turnsCount == null) {
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 
     const fogMap = war.getFogMap();
+    const forceFog = ForceFog.fromJson({ forceFogCode : forceFogCode });
     fogMap.setForceFogCode(forceFogCode);
 
     if (turnsCount <= 0) {
@@ -119,9 +122,13 @@ export async function applyAsInnerWar(action: WeaSetForceFogCodeExpr, _isFast: b
             maxValue : Numbers_Constants.MaxInt32,
             rawValue : turnIndex + turnsCount,
         });
+        forceFog.setExpirePlayerIndex(expirePlayerIndex);
+        forceFog.setExpireTurnIndex(expireTurnIndex);
         fogMap.setForceExpirePlayerIndex(expirePlayerIndex);
         fogMap.setForceExpireTurnIndex(expireTurnIndex);
     }
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ forceFog : forceFog });
 }
 function getForceFogCode(str: string, war: BaseWar_Model_War.War): number | null {
     try {

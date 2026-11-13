@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Players_Utils_Common,
     CoSkills_Utils_Common,
     WarEvents_Actions_Constants_SetPlayerStateExpr,
@@ -243,7 +244,7 @@ function checkIsMeetConditionForPlayer(action: WeaSetPlayerStateExpr, player: Pl
 export async function applyWithExtraData(_action: WeaSetPlayerStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetPlayerStateExpr, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaSetPlayerStateExpr, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const playerList: Players_Player.Player[] = [];
     for (const player of [...war.getPlayerManager().getAllPlayersDict().values()].sort((v1, v2) => v1.getPlayerIndex() - v2.getPlayerIndex())) {
         if (checkIsMeetConditionForPlayer(action, player)) {
@@ -251,6 +252,7 @@ export async function applyAsInnerWar(action: WeaSetPlayerStateExpr, isFastExecu
         }
     }
 
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const newPlayerData of playerList.map(player => new AuxiliaryTypes_PlayerDataForWeaSetPlayerState.PlayerDataForWeaSetPlayerState({
         playerIndex         : player.getPlayerIndex(),
         fund                : evalActFundForPlayer(action, player),
@@ -261,8 +263,10 @@ export async function applyAsInnerWar(action: WeaSetPlayerStateExpr, isFastExecu
         coUsingSkillType    : evalActCoUsingSkillTypeForPlayer(action, player),
         activateCoSkillType : evalActActivateCoSkillTypeForPlayer(action, player),
     }))) {
-        await newPlayerData.apply(war, isFastExecute);
+        changedThings.mergeFrom(await newPlayerData.apply(war, isFastExecute));
     }
+
+    return changedThings;
 }
 
 function evalActFundForPlayer(action: WeaSetPlayerStateExpr, player: Players_Player.Player): number | null {

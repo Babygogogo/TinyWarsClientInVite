@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Players_Utils_Filter,
     TileBuffs_Utils_Filter,
     Tiles_Utils_Filter,
@@ -148,7 +149,7 @@ export async function applyWithExtraData(_action: WeaDeleteTileBuffSimple): Prom
     // nothing to do
 }
 
-export async function applyAsInnerWar(action: WeaDeleteTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function applyAsInnerWar(action: WeaDeleteTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const targetTileDict = new Map<Tiles_Tile.Tile, TileBuff[]>();
     {
         const unitMap               = war.getUnitMap();
@@ -215,7 +216,7 @@ export async function applyAsInnerWar(action: WeaDeleteTileBuffSimple, isFastExe
         }
 
         if (targetTileDict.size <= 0) {
-            return;
+            return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         }
     }
 
@@ -228,6 +229,7 @@ export async function applyAsInnerWar(action: WeaDeleteTileBuffSimple, isFastExe
             }
         }
     }
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...targetTileDict.keys()] });
 }
 
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_Player.Player, boolean>, filter: PlayerFilter, player: Players_Player.Player): boolean {
