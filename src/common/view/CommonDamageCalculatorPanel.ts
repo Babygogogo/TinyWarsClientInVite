@@ -323,8 +323,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _setCalculatorData(data: CalculatorData): void {
         this._calculatorData = data;
     }
-    private _getCalculatorData(): CalculatorData {
-        return Helpers_Misc.getExisted(this._calculatorData);
+    private _getCalculatorData(): CalculatorData | undefined {
+        return this._calculatorData;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -336,6 +336,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSelect1(): void {
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
         const war = Helpers_Misc.getExisted(this.getOpenData()?.war);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitListPanel, {
             war                   : war,
@@ -343,7 +348,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 // nothing to do
             },
             callbackForSelectUnit : unit => {
-                this._getCalculatorData().attackerData = this._createPlayerDataForUnit(unit);
+                calculatorData.attackerData = this._createPlayerDataForUnit(unit);
                 this._reviseWeaponType();
                 this._updateView();
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitListPanel);
@@ -351,6 +356,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnSelect2(): void {
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
         const war = Helpers_Misc.getExisted(this.getOpenData()?.war);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitListPanel, {
             war                   : war,
@@ -358,7 +368,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 // nothing to do
             },
             callbackForSelectUnit : unit => {
-                this._getCalculatorData().defenderData = this._createPlayerDataForUnit(unit);
+                calculatorData.defenderData = this._createPlayerDataForUnit(unit);
                 this._reviseWeaponType();
                 this._updateView();
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitListPanel);
@@ -413,13 +423,26 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedImgCo1(): void {
-        this._handleTouchedImgCo(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedImgCo(calculatorData.attackerData);
     }
     private _onTouchedImgCo2(): void {
-        this._handleTouchedImgCo(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedImgCo(calculatorData.defenderData);
     }
     private _handleTouchedImgCo(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
-        const gameConfig = this._getCalculatorData().gameConfig;
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
+        const gameConfig = calculatorData.gameConfig;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
             gameConfig         : gameConfig,
             currentCoId        : playerData.coId,
@@ -435,24 +458,50 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSkill1(): void {
-        this._handleTouchedBtnSkill(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnSkill(calculatorData.attackerData);
     }
     private _onTouchedBtnSkill2(): void {
-        this._handleTouchedBtnSkill(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnSkill(calculatorData.defenderData);
     }
     private _handleTouchedBtnSkill(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
-        playerData.coSkillType  = getNextCoSkillType(this._getCalculatorData().gameConfig, playerData.coId, playerData.coSkillType);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
+        playerData.coSkillType = getNextCoSkillType(calculatorData.gameConfig, playerData.coId, playerData.coSkillType);
         this._updateView();
     }
 
     private _onTouchedBtnUnitView1(): void {
-        this._handleTouchedConUnitView(this.getOpenData()?.war, this._getCalculatorData().attackerData, 1);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedConUnitView(this.getOpenData()?.war, calculatorData.attackerData, 1);
     }
     private _onTouchedBtnUnitView2(): void {
-        this._handleTouchedConUnitView(this.getOpenData()?.war, this._getCalculatorData().defenderData, 2);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedConUnitView(this.getOpenData()?.war, calculatorData.defenderData, 2);
     }
     private _handleTouchedConUnitView(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Model_War.War>, playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData, playerIndex: number): void {
-        const gameConfig = this._getCalculatorData().gameConfig;
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
+        const gameConfig = calculatorData.gameConfig;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleUnitTypePanel, {
             gameConfig       : gameConfig,
             currentUnitType  : playerData.unitType,
@@ -472,14 +521,23 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
     }
     private _reviseWeaponType(): void {
-        const calculatorData    = this._getCalculatorData();
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
         const playerData1       = calculatorData.attackerData;
         const playerData2       = calculatorData.defenderData;
         this._doReviseWeaponType(playerData1, playerData2);
         this._doReviseWeaponType(playerData2, playerData1);
     }
     private _doReviseWeaponType(playerData1: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData, playerData2: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
-        const gameConfig    = this._getCalculatorData().gameConfig;
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
+        const gameConfig    = calculatorData.gameConfig;
         const armorType2    = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(playerData2.unitType)?.getArmorTypeId());
         const damageCfg     = (gameConfig.getDamageChartCfgs(playerData1.unitType) ?? {})[armorType2];
         if ((damageCfg[Units_Constants.WeaponTypeId.Primary].getDamage() != null) && (playerData1.hasPrimaryAmmo)) {
@@ -492,13 +550,26 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnTileView1(): void {
-        this._handleTouchedConTileView(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedConTileView(calculatorData.attackerData);
     }
     private _onTouchedBtnTileView2(): void {
-        this._handleTouchedConTileView(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedConTileView(calculatorData.defenderData);
     }
     private _handleTouchedConTileView(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
-        const gameConfig = this._getCalculatorData().gameConfig;
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
+        const gameConfig = calculatorData.gameConfig;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleTileTypePanel, {
             gameConfig      : gameConfig,
             currentTileType : playerData.tileType,
@@ -511,10 +582,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHp1(): void {
-        this._handleTouchedBtnHp(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnHp(calculatorData.attackerData);
     }
     private _onTouchedBtnHp2(): void {
-        this._handleTouchedBtnHp(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnHp(calculatorData.defenderData);
     }
     private _handleTouchedBtnHp(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.unitHp;
@@ -523,8 +602,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
             currentValue : currValue,
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 playerData.unitHp = value;
                 this._updateView();
@@ -533,35 +612,69 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnWeapon1(): void {
-        this._handleTouchedBtnWeapon(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnWeapon(calculatorData.attackerData);
     }
     private _onTouchedBtnWeapon2(): void {
-        this._handleTouchedBtnWeapon(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnWeapon(calculatorData.defenderData);
     }
     private _handleTouchedBtnWeapon(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
-        playerData.unitWeaponType = getNextUnitWeaponType(this._getCalculatorData().gameConfig, playerData.unitType, playerData.unitWeaponType);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
+        playerData.unitWeaponType = getNextUnitWeaponType(calculatorData.gameConfig, playerData.unitType, playerData.unitWeaponType);
         this._updateView();
     }
 
     private _onTouchedBtnPromotion1(): void {
-        this._handleTouchedBtnPromotion(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnPromotion(calculatorData.attackerData);
     }
     private _onTouchedBtnPromotion2(): void {
-        this._handleTouchedBtnPromotion(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnPromotion(calculatorData.defenderData);
     }
     private _handleTouchedBtnPromotion(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
         const minValue              = 0;
-        const maxValue              = this._getCalculatorData().gameConfig.getUnitMaxPromotion();
+        const maxValue              = calculatorData.gameConfig.getUnitMaxPromotion();
         const newValue              = playerData.unitPromotion + 1;
         playerData.unitPromotion    = newValue > maxValue ? minValue : newValue;
         this._updateView();
     }
 
     private _onTouchedBtnTower1(): void {
-        this._handleTouchedBtnTower(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnTower(calculatorData.attackerData);
     }
     private _onTouchedBtnTower2(): void {
-        this._handleTouchedBtnTower(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnTower(calculatorData.defenderData);
     }
     private _handleTouchedBtnTower(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.towersCount;
@@ -570,8 +683,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0833),
             currentValue : currValue,
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 playerData.towersCount = value;
                 this._updateView();
@@ -580,10 +693,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnOffenseBonus1(): void {
-        this._handleTouchedBtnOffenseBonus(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnOffenseBonus(calculatorData.attackerData);
     }
     private _onTouchedBtnOffenseBonus2(): void {
-        this._handleTouchedBtnOffenseBonus(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnOffenseBonus(calculatorData.defenderData);
     }
     private _handleTouchedBtnOffenseBonus(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.offenseBonus;
@@ -592,8 +713,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0183),
             currentValue : currValue,
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 playerData.offenseBonus = value;
                 this._updateView();
@@ -602,10 +723,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnDefenseBonus1(): void {
-        this._handleTouchedBtnDefenseBonus(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnDefenseBonus(calculatorData.attackerData);
     }
     private _onTouchedBtnDefenseBonus2(): void {
-        this._handleTouchedBtnDefenseBonus(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnDefenseBonus(calculatorData.defenderData);
     }
     private _handleTouchedBtnDefenseBonus(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.defenseBonus;
@@ -614,8 +743,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.DefBonus$),
             currentValue : currValue,
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 playerData.defenseBonus = value;
                 this._updateView();
@@ -624,10 +753,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnLuck1(): void {
-        this._handleTouchedBtnLuck(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnLuck(calculatorData.attackerData);
     }
     private _onTouchedBtnLuck2(): void {
-        this._handleTouchedBtnLuck(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnLuck(calculatorData.defenderData);
     }
     private _handleTouchedBtnLuck(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
@@ -654,10 +791,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnCoOnboard1(): void {
-        this._handleTouchedBtnCoOnboard(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnCoOnboard(calculatorData.attackerData);
     }
     private _onTouchedBtnCoOnboard2(): void {
-        this._handleTouchedBtnCoOnboard(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnCoOnboard(calculatorData.defenderData);
     }
     private _handleTouchedBtnCoOnboard(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         playerData.coOnboard = !playerData.coOnboard;
@@ -665,10 +810,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnFund1(): void {
-        this._handleTouchedBtnFund(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnFund(calculatorData.attackerData);
     }
     private _onTouchedBtnFund2(): void {
-        this._handleTouchedBtnFund(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnFund(calculatorData.defenderData);
     }
     private _handleTouchedBtnFund(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.fund;
@@ -677,8 +830,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Fund),
             currentValue : currValue,
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 playerData.fund = value;
                 this._updateView();
@@ -687,10 +840,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnCity1(): void {
-        this._handleTouchedBtnProperty(this._getCalculatorData().attackerData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnProperty(calculatorData.attackerData);
     }
     private _onTouchedBtnCity2(): void {
-        this._handleTouchedBtnProperty(this._getCalculatorData().defenderData);
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+        this._handleTouchedBtnProperty(calculatorData.defenderData);
     }
     private _handleTouchedBtnProperty(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.citiesCount;
@@ -699,8 +860,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0834),
             currentValue : currValue,
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 playerData.citiesCount = value;
                 this._updateView();
@@ -709,14 +870,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSwitchPlayer(): void {
-        const data                              = this._getCalculatorData();
+        const data = this._getCalculatorData();
+        if (data == null) {
+            return;
+        }
+
         [data.attackerData, data.defenderData]  = [data.defenderData, data.attackerData];
         this._updateView();
     }
 
     private _onTouchedBtnSaveState(): void {
-        _savedData = cloneCalculatorData(this._getCalculatorData());
+        const data = this._getCalculatorData();
+        if (data == null) {
+            return;
+        }
 
+        _savedData = cloneCalculatorData(data);
         FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0288));
     }
     private _onTouchedBtnLoadState(): void {
@@ -730,7 +899,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnWeather(): void {
-        const data          = this._getCalculatorData();
+        const data = this._getCalculatorData();
+        if (data == null) {
+            return;
+        }
+
         const typeArray     = data.gameConfig.getAllWeatherTypeArray();
         data.weatherType    = typeArray[(typeArray.indexOf(data.weatherType) + 1) % typeArray.length];
         this._updateView();
@@ -745,7 +918,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _updateView(): void {
         this._updateComponentsForLanguage();
 
-        const data          = this._getCalculatorData();
+        const data = this._getCalculatorData();
+        if (data == null) {
+            return;
+        }
+
         const attackerData  = data.attackerData;
         const defenderData  = data.defenderData;
         const gameConfig    = data.gameConfig;
@@ -797,11 +974,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
         const war           = openData.war;
         const playerIndex   = 1;
         const unitView1     = this._unitView1;
         unitView1?.loadViewData({
-            unitTypeId  : this._getCalculatorData().attackerData.unitType,
+            unitTypeId  : calculatorData.attackerData.unitType,
             playerIndex : playerIndex,
             skinId      : war == null ? ForceSkins_Utils.getDefaultSkinId(playerIndex) : ForceSkins_Utils.getFinalSkinId(war, playerIndex),
         }, true);
@@ -814,11 +996,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
         const war           = openData.war;
         const playerIndex   = 2;
         const unitView2     = this._unitView2;
         unitView2?.loadViewData({
-            unitTypeId  : this._getCalculatorData().defenderData.unitType,
+            unitTypeId  : calculatorData.defenderData.unitType,
             playerIndex : playerIndex,
             skinId      : war == null ? ForceSkins_Utils.getDefaultSkinId(playerIndex) : ForceSkins_Utils.getFinalSkinId(war, playerIndex),
         }, true);
@@ -831,8 +1018,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const calculatorData    = this._getCalculatorData();
-        const tileView1         = this._tileView1?.getView();
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
+        const tileView1 = this._tileView1?.getView();
         tileView1?.loadViewData(createTileViewData(openData.war, calculatorData.attackerData.tileType, 1, calculatorData.gameConfig));
         tileView1?.refreshAllViews();
     }
@@ -843,8 +1034,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const calculatorData    = this._getCalculatorData();
-        const tileView2         = this._tileView2?.getView();
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
+        const tileView2 = this._tileView2?.getView();
         tileView2?.loadViewData(createTileViewData(openData.war, calculatorData.defenderData.tileType, 2, calculatorData.gameConfig));
         tileView2?.refreshAllViews();
     }
@@ -884,7 +1079,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForDamage(): void {
-        const calculatorData        = this._getCalculatorData();
+        const calculatorData = this._getCalculatorData();
+        if (calculatorData == null) {
+            return;
+        }
+
         const attackDamageInfoArray = getAttackDamageInfoArray(calculatorData, false);
         const labelAttackDamage     = this._labelAttackDamage;
         if (!attackDamageInfoArray.length) {
@@ -948,7 +1147,7 @@ function cloneCalculatorData(data: CalculatorData): CalculatorData {
 async function createDefaultCalculatorData(): Promise<CalculatorData> {
     const gameConfig = await GameConfigs_Provider.getLatestGameConfig();
     return {
-        gameConfig,
+        gameConfig   : gameConfig,
         weatherType  : gameConfig.getDefaultWeatherType(),
         attackerData : Panel.createDefaultPlayerData(gameConfig),
         defenderData : Panel.createDefaultPlayerData(gameConfig),
@@ -1044,7 +1243,7 @@ function getAttackDamageInfoArray(calculatorData: CalculatorData, isCounter: boo
     const attackerUnitType  = attackerData.unitType;
     const defenderUnitType  = defenderData.unitType;
     const cfgAttackDamage   = getCfgDamage({
-        gameConfig, attackerUnitType, defenderUnitType, weaponType : attackerData.unitWeaponType,
+        gameConfig : gameConfig, attackerUnitType : attackerUnitType, defenderUnitType : defenderUnitType, weaponType : attackerData.unitWeaponType,
     });
     if (cfgAttackDamage == null) {
         return [];
@@ -1054,14 +1253,14 @@ function getAttackDamageInfoArray(calculatorData: CalculatorData, isCounter: boo
     const attackerLuckLimit = getAttackerLuckLimit(calculatorData);
     for (let luckValue = attackerLuckLimit.lower; luckValue <= attackerLuckLimit.upper; ++luckValue) {
         const damage    = getAttackDamage({
-            luckValue, isCounter, calculatorData, cfgAttackDamage,
+            luckValue : luckValue, isCounter : isCounter, calculatorData : calculatorData, cfgAttackDamage : cfgAttackDamage,
         });
         const info      = damageInfoArray.find(v => v.damage === damage);
         if (info) {
             ++info.times;
         } else {
             damageInfoArray.push({
-                damage,
+                damage      : damage,
                 times       : 1,
                 possibility : 0,
             });
@@ -1082,7 +1281,7 @@ function getAttackDamageRange(calculatorData: CalculatorData, isCounter: boolean
     const attackerUnitType  = attackerData.unitType;
     const defenderUnitType  = defenderData.unitType;
     const cfgAttackDamage   = getCfgDamage({
-        gameConfig, attackerUnitType, defenderUnitType, weaponType : attackerData.unitWeaponType,
+        gameConfig : gameConfig, attackerUnitType : attackerUnitType, defenderUnitType : defenderUnitType, weaponType : attackerData.unitWeaponType,
     });
     if (cfgAttackDamage == null) {
         return null;
@@ -1091,16 +1290,16 @@ function getAttackDamageRange(calculatorData: CalculatorData, isCounter: boolean
     const attackerLuckLimit = getAttackerLuckLimit(calculatorData);
     return {
         minDamage : getAttackDamage({
-            luckValue : attackerLuckLimit.lower,
-            isCounter,
-            calculatorData,
-            cfgAttackDamage,
+            luckValue       : attackerLuckLimit.lower,
+            isCounter       : isCounter,
+            calculatorData  : calculatorData,
+            cfgAttackDamage : cfgAttackDamage,
         }),
         maxDamage : getAttackDamage({
-            luckValue : attackerLuckLimit.upper,
-            isCounter,
-            calculatorData,
-            cfgAttackDamage,
+            luckValue       : attackerLuckLimit.upper,
+            isCounter       : isCounter,
+            calculatorData  : calculatorData,
+            cfgAttackDamage : cfgAttackDamage,
         }),
     };
 }
@@ -1325,7 +1524,7 @@ function getAttackBonusMultiplier({ isCounter, calculatorData }: {
     const amountFromPromotion       = gameConfig.getUnitPromotionAttackBonus(attackerData.unitPromotion);
     const amountFromWarRule         = attackerData.offenseBonus;
     const amountFromGlobalTiles     = attackerData.towersCount * (commandTowerTemplateCfg == null ? 0 : commandTowerTemplateCfg.getGlobalAttackBonus());
-    const amountFromCo              = getAttackModifierByCo({ isCounter, calculatorData });
+    const amountFromCo              = getAttackModifierByCo({ isCounter : isCounter, calculatorData : calculatorData });
 
     const totalAmount = amountFromWarRule
         + amountFromPromotion
@@ -1417,7 +1616,7 @@ function getAttackDamage({ luckValue, isCounter, calculatorData, cfgAttackDamage
         return 0;
     }
 
-    const attackBonusMultiplier     = getAttackBonusMultiplier({ isCounter, calculatorData });
+    const attackBonusMultiplier     = getAttackBonusMultiplier({ isCounter : isCounter, calculatorData : calculatorData });
     const defenseBonusMultiplier    = getDefenseBonusMultiplier(calculatorData);
     return Math.max(0, Math.floor(0.000001 +
         (cfgAttackDamage * attackBonusMultiplier + luckValue)   *

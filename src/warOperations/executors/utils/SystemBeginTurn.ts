@@ -29,9 +29,9 @@ export async function execute(war: BaseWar_Model_War.War, action: WoSystemBeginT
 
 async function fastExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
     if (action.getExtraData()) {
-        await war.getTurnManager().endPhaseStandbyWithExtraData(action, true);
+        await war.getTurnManager().endPhaseStandbyAsOuterWar(action, true);
     } else {
-        war.getTurnManager().endPhaseStandbyWithoutExtraData(true);
+        await war.getTurnManager().endPhaseStandbyAsInnerWar(true);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
@@ -66,9 +66,9 @@ async function normalExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSy
     }
 
     if (action.getExtraData()) {
-        await war.getTurnManager().endPhaseStandbyWithExtraData(action, false);
+        await war.getTurnManager().endPhaseStandbyAsOuterWar(action, false);
     } else {
-        war.getTurnManager().endPhaseStandbyWithoutExtraData(false);
+        await war.getTurnManager().endPhaseStandbyAsInnerWar(false);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
@@ -78,7 +78,7 @@ async function normalExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSy
 export async function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemBeginTurn): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
-    const changedThings                        = await war.getTurnManager().endPhaseStandbyWithoutExtraData(true);
+    const changedThings                        = await war.getTurnManager().endPhaseStandbyAsInnerWar(true);
 
     return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
         war                                  : war,

@@ -6,17 +6,15 @@ import {
 
 const _DISPATCHER = new Egret_Egret.EventDispatcher();
 
- 
 export function dispatch<T extends keyof Notifications_Mapping.Mapping>(
     t: T,
     ...[data]: undefined extends Notifications_Mapping.Mapping[T]
         ? [data?: Notifications_Mapping.Mapping[T]]
         : [data: Notifications_Mapping.Mapping[T]]
 ): void {
-    _DISPATCHER.dispatchEventWith(t, false, data);
+    _DISPATCHER.dispatchEventWith(t, true, data);
 }
 
- 
 export function addEventListener<T extends keyof Notifications_Mapping.Mapping>(
     type: T,
     callback: (e: Egret_Egret.Event<Notifications_Mapping.Mapping[NoInfer<T>]>) => void,
@@ -27,7 +25,7 @@ export function addEventListener<T extends keyof Notifications_Mapping.Mapping>(
     // Egret stores untyped callbacks; retain their identity for removal.
     _DISPATCHER.addEventListener(type, callback as Egret_Egret.EventListener, thisObject, useCapture, priority);
 }
- 
+
 export function addEventListeners(listeners: Notifications_Types.Listener[], thisObject: unknown, useCapture?: boolean, priority?: number): void {
     for (const l of listeners) {
         _DISPATCHER.addEventListener(
@@ -40,7 +38,6 @@ export function addEventListeners(listeners: Notifications_Types.Listener[], thi
     }
 }
 
- 
 export function removeEventListener<T extends keyof Notifications_Mapping.Mapping>(
     type: T,
     callback: (e: Egret_Egret.Event<Notifications_Mapping.Mapping[NoInfer<T>]>) => void,
@@ -49,7 +46,7 @@ export function removeEventListener<T extends keyof Notifications_Mapping.Mappin
 ): void {
     _DISPATCHER.removeEventListener(type, callback as Egret_Egret.EventListener, thisObject, useCapture);
 }
- 
+
 export function removeEventListeners(listeners: Notifications_Types.Listener[], thisObject: unknown, useCapture?: boolean): void {
     for (const l of listeners) {
         _DISPATCHER.removeEventListener(

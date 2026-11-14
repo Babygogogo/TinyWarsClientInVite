@@ -25,18 +25,18 @@ export async function execute(war: BaseWar_Model_War.War, action: WoSystemEndTur
 
 function fastExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
     if (action.getExtraData()) {
-        war.getTurnManager().endPhaseMainWithExtraData(action, true);
+        war.getTurnManager().endPhaseMainAsOuterWar(action, true);
     } else {
-        war.getTurnManager().endPhaseMainWithoutExtraData(true);
+        war.getTurnManager().endPhaseMainAsInnerWar(true);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
 function normalExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
     if (action.getExtraData()) {
-        war.getTurnManager().endPhaseMainWithExtraData(action, false);
+        war.getTurnManager().endPhaseMainAsOuterWar(action, false);
     } else {
-        war.getTurnManager().endPhaseMainWithoutExtraData(false);
+        war.getTurnManager().endPhaseMainAsInnerWar(false);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
@@ -46,7 +46,7 @@ function normalExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndT
 export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemEndTurn): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
-    const changedThings                        = war.getTurnManager().endPhaseMainWithoutExtraData(true);
+    const changedThings                        = war.getTurnManager().endPhaseMainAsInnerWar(true);
 
     return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
         war                                  : war,

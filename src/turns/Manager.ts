@@ -4,8 +4,8 @@ import {
     Notifications_Dispatcher,
     Players_Constants,
     Turns_Constants,
-    Turns_PhaseHandlers_WithExtraData,
-    Turns_PhaseHandlers_WithoutExtraData,
+    Turns_PhaseHandlers_AsOuterWar,
+    Turns_PhaseHandlers_AsInnerWar,
     Utils_ClientErrorCode,
     type BaseWar_Model_War,
     type Turns_Types,
@@ -81,18 +81,18 @@ export class Manager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The functions for running turn.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public endPhaseStandbyWithExtraData(action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
-        return Turns_PhaseHandlers_WithExtraData.endPhaseStandby(this, action, isFastExecute);
+    public endPhaseStandbyAsOuterWar(action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
+        return Turns_PhaseHandlers_AsOuterWar.endPhaseStandby(this, action, isFastExecute);
     }
-    public endPhaseStandbyWithoutExtraData(isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-        return Turns_PhaseHandlers_WithoutExtraData.endPhaseStandby(this, isFastExecute);
+    public endPhaseStandbyAsInnerWar(isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+        return Turns_PhaseHandlers_AsInnerWar.endPhaseStandby(this, isFastExecute);
     }
 
-    public endPhaseMainWithExtraData(action: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
-        Turns_PhaseHandlers_WithExtraData.endPhaseMain(this, action, isFastExecute);
+    public endPhaseMainAsOuterWar(action: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
+        Turns_PhaseHandlers_AsOuterWar.endPhaseMain(this, action, isFastExecute);
     }
-    public endPhaseMainWithoutExtraData(isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-        return Turns_PhaseHandlers_WithoutExtraData.endPhaseMain(this, isFastExecute);
+    public endPhaseMainAsInnerWar(isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+        return Turns_PhaseHandlers_AsInnerWar.endPhaseMain(this, isFastExecute);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

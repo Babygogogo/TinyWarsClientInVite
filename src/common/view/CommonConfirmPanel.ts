@@ -1,24 +1,26 @@
 import {
-    Stages_Constants,
+    Egret_Egret,
     Keyboard_KbTypes,
+    Lang_Constants,
     Lang_Utils,
+    Notifications_Mapping,
     Numbers_Utils,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Stages_Constants,
+    Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiScroller,
-    Sounds_SoundPlayer,
-    Sounds_Constants,
-    Lang_Constants,
-    Ui_Components_UiPanel,
 } from "../../internal.ts";
 
 export interface OpenData {
     getTitle?           : () => string;
     getContent          : () => string;
-    callback            : () => any;
-    callbackOnCancel?   : () => any;
+    callback            : () => unknown;
+    callbackOnCancel?   : () => unknown;
     getTextForConfirm?  : () => string;
     getTextForCancel?   : () => string;
     showButtonClose?    : boolean;
@@ -42,6 +44,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { ui : this._btnCancel,      callback : this._onTouchedBtnCancel },
             { ui : this._btnConfirm1,    callback : this._onTouchedBtnConfirm },
             { ui : this._btnConfirm2,    callback : this._onTouchedBtnConfirm },
+        ]);
+        this._setNotifyListenerArray([
+            { type : "MouseRightButtonClicked",  callback : this._onNotifyMouseRightButtonClicked, priority : 10 },
         ]);
         this._setKeyboardListener({
             callback   : this._onKeyboard,
@@ -77,13 +82,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnCancel(): void {
         const callback = this.getOpenData()?.callbackOnCancel;
         this.closePanel();
-        (callback) && (callback());
+        callback?.();
     }
 
     private _onTouchedBtnConfirm(): void {
         const callback = this.getOpenData()?.callback;
         this.closePanel();
-        (callback) && (callback());
+        callback?.();
+    }
+
+    private _onNotifyMouseRightButtonClicked(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MouseRightButtonClicked"]>): void {
+        e.stopImmediatePropagation();
     }
 
     private _onKeyboard(data: Keyboard_KbTypes.EventData): void {
