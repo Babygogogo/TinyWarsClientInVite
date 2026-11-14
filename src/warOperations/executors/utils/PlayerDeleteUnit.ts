@@ -31,7 +31,7 @@ function fastExePlayerDeleteUnit(war: BaseWar_Model_War.War, action: WoPlayerDel
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
+            war             : war,
             commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerDeleteUnit_00),
             isFastExecute   : true,
         });
@@ -68,9 +68,9 @@ async function normalExePlayerDeleteUnit(war: BaseWar_Model_War.War, action: WoP
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
-            commonExtraData,
-            isFastExecute : false,
+            war             : war,
+            commonExtraData : commonExtraData,
+            isFastExecute   : false,
         });
 
     } else {

@@ -11,8 +11,11 @@ import {
     Lang_Utils,
     WarOperations_Executors_Utils_Common,
     Lang_Constants,
+    AuxiliaryTypes_ChangedThingsForWarOperation,
+    WarOperations_Executors_Types,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 import type { WoSystemHandleBootPlayer } from "../../../proto/schema/CommonProto/WarOperation/WoSystemHandleBootPlayer.ts";
 
@@ -29,7 +32,7 @@ function fastExeSystemHandleBootPlayer(war: BaseWar_Model_War.War, action: WoSys
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
+            war             : war,
             commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeSystemHandleBootPlayer_00),
             isFastExecute   : true,
         });
@@ -40,7 +43,9 @@ function fastExeSystemHandleBootPlayer(war: BaseWar_Model_War.War, action: WoSys
 
 async function normalExeSystemHandleBootPlayer(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): Promise<void> {
     const desc = await getDesc(war, action);
-    (desc) && (FloatText.show(desc));
+    if (desc) {
+        FloatText.show(desc);
+    }
 
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
@@ -52,9 +57,9 @@ async function normalExeSystemHandleBootPlayer(war: BaseWar_Model_War.War, actio
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
-            commonExtraData,
-            isFastExecute : false,
+            war             : war,
+            commonExtraData : commonExtraData,
+            isFastExecute   : false,
         });
 
     } else {
@@ -62,6 +67,34 @@ async function normalExeSystemHandleBootPlayer(war: BaseWar_Model_War.War, actio
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemHandleBootPlayer): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+    const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const player                              = war.getPlayerInTurn();
+    player.setAliveState(Players_Constants.AliveStateId.Dying);
+
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ players : [player] });
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : undefined,
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+            woContainer.createIfNotExistsWoSystemHandleBootPlayer().createIfNotExistsExtraData().setCommonExtraData(commonExtraData);
+
+            return woContainer;
+        },
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): Promise<string | null> {
 

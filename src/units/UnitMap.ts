@@ -151,7 +151,10 @@ export class UnitMap {
         playersCountUnneutral   : number;
     }): void {
         this.init({
-            data, gameConfig, mapSize, playersCountUnneutral,
+            data                  : data,
+            gameConfig            : gameConfig,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
     }
 
@@ -442,6 +445,21 @@ export class UnitMap {
         });
         return units;
     }
+    public getUnitGridIdArrayForEachTeam(): Map<number, Set<number>> {
+        const gridIdsForEachTeam = new Map<number, Set<number>>();
+        const mapSize           = this.getMapSize();
+        this._forEachUnitOnMap(unit => {
+            const teamIndex = unit.getTeamIndex();
+            let gridIds     = gridIdsForEachTeam.get(teamIndex);
+            if (gridIds == null) {
+                gridIds = new Set<number>();
+                gridIdsForEachTeam.set(teamIndex, gridIds);
+            }
+            gridIds.add(unit.getGridIndex().getGridId(mapSize));
+        });
+        return gridIdsForEachTeam;
+    }
+
     public getAllUnitsLoaded(): Units_Unit.Unit[] {
         const units: Units_Unit.Unit[] = [];
         this._forEachUnitLoaded(unit => units.push(unit));

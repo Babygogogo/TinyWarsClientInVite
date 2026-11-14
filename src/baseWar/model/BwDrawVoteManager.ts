@@ -138,13 +138,14 @@ export class BwDrawVoteManager {
             return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ players : [player] });
         }
     }
-    public handlePlayerForceDestruction(): void {
+    public handlePlayerForceDestruction(): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
         const data = this.getDrawVoteData();
         if (data != null) {
             data.setAgreedPlayerIndexArray([]);
         } else {
             this._setRemainingVotes(null);
         }
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
     public handleTurnPhaseResetVotesForDraw(): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
         const data = this.getDrawVoteData();

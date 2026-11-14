@@ -2,8 +2,12 @@ import {
     FloatText,
     Lang_Constants,
     Lang_Utils,
+    SinglePlayerWars_War,
+    WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemCallWarEvent } from "../../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,37 +50,37 @@ async function normalExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: W
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// export async function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemCallWarEvent): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
-//     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
-//     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
-//     const warEventManager                      = war.getWarEventManager();
-//     const warEventId                           = operation.getWarEventId();
-//     const nodeAndActionsIndex                  = operation.getNodeAndActionsIndex();
-//     warEventManager.updateWarEventCalledCountOnCall(warEventId);
+export async function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemCallWarEvent): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+    const warEventManager                      = war.getWarEventManager();
+    const warEventId                           = operation.getWarEventId();
+    const nodeAndActionsIndex                  = operation.getNodeAndActionsIndex();
+    warEventManager.updateWarEventCalledCountOnCall(warEventId);
 
-//     const changedThings = await warEventManager.callWarEventWithoutExtraData(warEventId, nodeAndActionsIndex, true);
-//     return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
-//         war                                  : war,
-//         allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
-//         visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
-//         visibilityArrayFromPathsBeforeAction : undefined,
-//         changedThings                        : changedThings.mergeFrom(extraChangedThings),
-//         thingsForMovePath                    : undefined,
-//         createMessage                        : commonExtraData => {
-//             const woContainer = new WoContainer();
-//             woContainer.setOperationId(operationId);
+    const changedThings = await warEventManager.callWarEventAsInnerWar(warEventId, nodeAndActionsIndex, true);
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : undefined,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : undefined,
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
 
-//             const warOp = woContainer.createIfNotExistsWoSystemCallWarEvent();
-//             warOp.setWarEventId(warEventId);
-//             warOp.setNodeAndActionsIndex(nodeAndActionsIndex);
+            const warOp = woContainer.createIfNotExistsWoSystemCallWarEvent();
+            warOp.setWarEventId(warEventId);
+            warOp.setNodeAndActionsIndex(nodeAndActionsIndex);
 
-//             const extraData = warOp.createIfNotExistsExtraData();
-//             extraData.setCommonExtraData(commonExtraData);
+            const extraData = warOp.createIfNotExistsExtraData();
+            extraData.setCommonExtraData(commonExtraData);
 
-//             return woContainer;
-//         },
-//     });
-// }
+            return woContainer;
+        },
+    });
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 async function getDesc(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<string | null> {

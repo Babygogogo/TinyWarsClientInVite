@@ -1,18 +1,20 @@
 import {
     Destructions_Utils,
     HalfwayReplayWar_Model_HrwWar,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWar,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Utils_ClientErrorCode,
-    Helpers_Misc,
-    Lang_Utils,
+    WarOperations_Executors_Types,
     WarOperations_Executors_Utils_Common,
-    Lang_Constants,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 import type { WoSystemDestroyPlayerForce } from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
 
@@ -67,9 +69,38 @@ async function normalExeSystemDestroyPlayerForce(war: BaseWar_Model_War.War, act
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemDestroyPlayerForce): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+    const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const playerIndex                          = Helpers_Misc.getExisted(operation.getTargetPlayerIndex());
+    const changedThings                        = Destructions_Utils.destroyPlayerForce(war, playerIndex, false);
+
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : undefined,
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+
+            const warOp     = woContainer.createIfNotExistsWoSystemDestroyPlayerForce();
+            const extraData = warOp.createIfNotExistsExtraData();
+            extraData.setCommonExtraData(commonExtraData);
+            extraData.setTargetPlayerIndex(playerIndex);
+
+            return woContainer;
+        },
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): Promise<string | null> {
-
     if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
         const playerIndex = Helpers_Misc.getExisted(action.getExtraData()?.getTargetPlayerIndex());
         return `P${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0450)} ${war.getWarOperationDescSuffix()}`;

@@ -1,5 +1,6 @@
 import {
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_ThingsForMovePath,
     CoSkills_Constants,
     CoSkills_Utils_DataGeneratorForUseCoSkill,
     CoSkills_Utils_Executor,
@@ -16,9 +17,13 @@ import {
     Units_Constants,
     Utils_ClientErrorCode,
     WarOperations_Executors_Utils_Common,
+    WarOperations_Executors_Types,
+    type AuxiliaryTypes_MovePath,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
+import type { DataForUseCoSkill } from "../../../proto/schema/CommonProto/Structure/DataForUseCoSkill.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 import type { WoUnitUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoUnitUseCoSkill.ts";
 
@@ -51,7 +56,7 @@ function fastExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUnitUseCoSk
         }
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
+            war             : war,
             commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_02),
             isFastExecute   : true,
         });
@@ -88,7 +93,7 @@ function fastExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUnitUseCoSk
                 CoSkills_Utils_Executor.executeInstantSkillWithoutExtraData({
                     player            : playerInTurn,
                     skillId           : skillIdArray[skillIndex],
-                    dataForUseCoSkill         : dataForUseCoSkill,
+                    dataForUseCoSkill : dataForUseCoSkill,
                     targetGridIndexes : action.getTargetGridIndexArray(),
                     isFastExecute     : true,
                 });
@@ -150,9 +155,9 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUni
         }
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
-            commonExtraData,
-            isFastExecute : false,
+            war             : war,
+            commonExtraData : commonExtraData,
+            isFastExecute   : false,
         });
 
         if (skillType != null) {
@@ -200,8 +205,8 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUni
             const skillIdArray = playerInTurn.getCoCurrentSkills();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
                 CoSkills_Utils_Executor.executeInstantSkillWithoutExtraData({
-                    player    : playerInTurn,
-                    skillId   : skillIdArray[skillIndex],
+                    player            : playerInTurn,
+                    skillId           : skillIdArray[skillIndex],
                     dataForUseCoSkill : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
                         war        : war,
                         player     : playerInTurn,
@@ -251,6 +256,130 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUni
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitUseCoSkill, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const unitMap                              = war.getUnitMap();
+    const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
+    const launchUnitId                         = revisedPath.getLaunchUnitId();
+    const focusUnit                            = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    const focusUnitDataBeforeAction            = focusUnit.serialize();
+    const player                              = focusUnit.getPlayer();
+    const skillType                           = Helpers_Misc.getExisted(operation.getSkillType());
+    const targetGridIndexes                   = operation.getTargetGridIndexArray();
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const unitGridIdsForEachTeamBeforeAction   = unitMap.getUnitGridIdArrayForEachTeam();
+    const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+
+    if (revisedPath.getIsBlocked()) {
+        const changedThings = war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : revisedPath.getFuelConsumption(),
+        });
+        unitMap.setUnitOnMap(focusUnit);
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+        changedThings.mergeFrom(WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true));
+
+        return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+            war                                  : war,
+            allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+            visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+            visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+            changedThings                        : changedThings.mergeFrom(extraChangedThings),
+            thingsForMovePath                    : new AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath(unitGridIdsForEachTeamBeforeAction, focusUnitDataBeforeAction, revisedPath, undefined),
+            createMessage                        : commonExtraData => {
+                const woContainer = new WoContainer();
+                woContainer.setOperationId(operationId);
+                woContainer.createIfNotExistsWoUnitUseCoSkill().createIfNotExistsExtraData().setCommonExtraData(commonExtraData);
+
+                return woContainer;
+            },
+        });
+
+    } else {
+        const playerManager    = war.getPlayerManager();
+        const playerIndexArray = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(false) + 1, 1);
+        const oldHasUnitFlags  = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
+        const changedThings   = war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : revisedPath.getFuelConsumption(),
+        });
+        unitMap.setUnitOnMap(focusUnit);
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+        player.updateOnUseCoSkill(skillType);
+        changedThings.addPlayer(player);
+
+        const skillDataArray: DataForUseCoSkill[] = [];
+        const skillIdArray = player.getCoCurrentSkills();
+        for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
+            const dataForUseCoSkill = CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
+                war        : war,
+                player     : player,
+                skillType  : skillType,
+                skillIndex : skillIndex,
+            });
+            changedThings.mergeFrom(CoSkills_Utils_Executor.executeInstantSkillWithoutExtraData({
+                player            : player,
+                skillId           : skillIdArray[skillIndex],
+                targetGridIndexes : targetGridIndexes,
+                dataForUseCoSkill : dataForUseCoSkill,
+                isFastExecute     : true,
+            }));
+            skillDataArray.push(dataForUseCoSkill);
+        }
+
+        if (player.getUserId() == null) {
+            const playerIndex = player.getPlayerIndex();
+            for (const unit of unitMap.getAllUnits()) {
+                if (unit.getPlayerIndex() === playerIndex) {
+                    if (unit.checkAndUpdateAiMode()) {
+                        changedThings.addUnit(unit);
+                    }
+                }
+            }
+        }
+
+        for (const playerIndex of playerIndexArray) {
+            if (!oldHasUnitFlags[playerIndex - 1]) {
+                continue;
+            }
+            const targetPlayer = playerManager.getPlayer(playerIndex);
+            if ((targetPlayer.getAliveState() !== Players_Constants.AliveStateId.Dead) && !unitMap.checkHasUnitForPlayer(playerIndex)) {
+                targetPlayer.setAliveState(Players_Constants.AliveStateId.Dying);
+                changedThings.addPlayer(targetPlayer);
+            }
+        }
+        changedThings.mergeFrom(WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true));
+
+        return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+            war                                  : war,
+            allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+            visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+            visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+            changedThings                        : changedThings.mergeFrom(extraChangedThings),
+            thingsForMovePath                    : new AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath(unitGridIdsForEachTeamBeforeAction, focusUnitDataBeforeAction, revisedPath, undefined),
+            createMessage                        : commonExtraData => {
+                const woContainer = new WoContainer();
+                woContainer.setOperationId(operationId);
+
+                const action = woContainer.createIfNotExistsWoUnitUseCoSkill();
+                action.setTargetGridIndexArray(targetGridIndexes);
+
+                const extraData = action.createIfNotExistsExtraData();
+                extraData.setCommonExtraData(commonExtraData);
+                extraData.setSkillType(skillType);
+                extraData.setSkillDataArray(skillDataArray);
+
+                return woContainer;
+            },
+        });
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoUnitUseCoSkill): Promise<string | null> {
 

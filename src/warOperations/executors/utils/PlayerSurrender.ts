@@ -32,7 +32,7 @@ function fastExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPlayerSurr
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
+            war             : war,
             commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerSurrender_00),
             isFastExecute   : true,
         });
@@ -57,9 +57,9 @@ async function normalExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPl
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
-            commonExtraData,
-            isFastExecute : false,
+            war             : war,
+            commonExtraData : commonExtraData,
+            isFastExecute   : false,
         });
 
     } else {

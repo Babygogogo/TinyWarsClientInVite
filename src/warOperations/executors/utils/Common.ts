@@ -5,7 +5,6 @@ import {
     AuxiliaryTypes_ThingsForMovePath,
     AuxiliaryTypes_TileAppearanceInfo,
     AuxiliaryTypes_VisibleThings,
-    CoSkills_Utils_InstantMisc_SelfUnitHpAfterWait,
     Helpers_Misc,
     Players_Utils_Common,
     SinglePlayerWars_War,
@@ -459,62 +458,16 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypes_BattleInfo.Battle
     }
 }
 
-export function handleSelfUnitHpAfterWait(focusUnit: Units_Unit.Unit, isFastExecute: boolean): void {
-    const war       = focusUnit.getWar();
-    const gridIndex = focusUnit.getGridIndex();
-    if (war.getUnitMap().getUnitOnMap(gridIndex) != focusUnit) {
-        return;
-    }
-
-    const isCoOnboard               = focusUnit.getIsCoOnboard();
-    const focusPlayer               = focusUnit.getPlayer();
-    const maxHp                     = focusUnit.getMaxHp();
-    const currentHp                 = focusUnit.getCurrentHp();
-    const focusCoZoneRadius         = focusPlayer.getCoZoneRadius();
-    const gameConfig                = war.getGcData();
-    const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => focusPlayer.getCoGridIndexListOnMap());
-    let newHp                       = currentHp;
-    for (const skillId of focusPlayer.getCoCurrentSkills()) {
-        const skillCfg = gameConfig.getCoSkillCfg(skillId)?.getInstantMisc()?.getSelfUnitHpAfterWait();
-        if (skillCfg == null) {
-            continue;
-        }
-
-        if ((!isCoOnboard) && (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType          : skillCfg.getCoSkillAreaTypeId(),
-            coZoneRadius             : focusCoZoneRadius,
-            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-        }))) {
-            continue;
-        }
-
-        newHp += CoSkills_Utils_InstantMisc_SelfUnitHpAfterWait.getTotalOffset({
-            cfg        : skillCfg,
-            gameConfig : gameConfig,
-            maxHp      : maxHp,
-            currentHp  : newHp,
-        });
-    }
-
-    if (newHp != currentHp) {
-        focusUnit.setCurrentHp(newHp);
-
-        if (!isFastExecute) {
-            focusUnit.flushDataToView();
-        }
-    }
-}
-
-export function handlePostOperationPlunder(focusUnit: Units_Unit.Unit, isFastExecute: boolean): void {
+export function handlePostOperationPlunder(focusUnit: Units_Unit.Unit, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const gridIndex = focusUnit.getGridIndex();
     const war       = focusUnit.getWar();
     if (war.getUnitMap().getUnitOnMap(gridIndex) !== focusUnit) {
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 
     const tile = war.getTileMap().getTile(gridIndex);
     if (tile.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === TileBuffs_Constants.BuffTypeId.NoIncome)) {
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 
     const focusUnitType             = focusUnit.getUnitTypeId();
@@ -571,8 +524,10 @@ export function handlePostOperationPlunder(focusUnit: Units_Unit.Unit, isFastExe
             extraParamArray     : [],
         }), !isFastExecute);
 
-        return;
+        return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ players : [focusPlayer], tiles : [tile] });
     }
+
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

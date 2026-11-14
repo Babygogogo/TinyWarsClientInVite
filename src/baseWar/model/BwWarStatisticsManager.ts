@@ -265,7 +265,7 @@ export class BwWarStatisticsManager {
         array.push(data);
     }
 
-    public tickPlayerManualActionsCount(turnIndex: number, playerIndex: number): void {
+    public tickPlayerManualOperationsCount(turnIndex: number, playerIndex: number): void {
         const playerStatisticsArray = this._getPlayerStatisticsArray();
         const existingDataForPlayer = playerStatisticsArray.find(v => v.getPlayerIndex() === playerIndex);
         if (existingDataForPlayer == null) {

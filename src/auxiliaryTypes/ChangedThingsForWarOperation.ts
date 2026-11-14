@@ -50,7 +50,7 @@ export class ChangedThingsForWarOperation {
         }
         if (taskObjectiveStateDict) {
             for (const taskObjectiveState of taskObjectiveStateDict.values()) {
-                this.setTaskObjectiveState(taskObjectiveState);
+                this.addTaskObjectiveState(taskObjectiveState);
             }
         }
         if (unitMovePathVisibilityDictForWarEvent) {
@@ -101,7 +101,7 @@ export class ChangedThingsForWarOperation {
             const taskObjectiveStateDict = other._taskObjectiveStateDict;
             if (taskObjectiveStateDict) {
                 for (const taskObjectiveState of taskObjectiveStateDict.values()) {
-                    this.setTaskObjectiveState(taskObjectiveState);
+                    this.addTaskObjectiveState(taskObjectiveState);
                 }
             }
         }
@@ -189,7 +189,7 @@ export class ChangedThingsForWarOperation {
         const dict = this._taskObjectiveStateDict;
         return dict ? [...dict.values()] : [];
     }
-    public setTaskObjectiveState(taskObjectiveState: TaskObjectiveState): void {
+    public addTaskObjectiveState(taskObjectiveState: TaskObjectiveState): void {
         (this._taskObjectiveStateDict ??= new Map()).set(taskObjectiveState.getObjectiveId(), taskObjectiveState);
     }
 

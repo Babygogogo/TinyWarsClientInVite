@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_MapSize,
     AuxiliaryTypes_VisibleThings,
@@ -565,10 +566,11 @@ export abstract class War {
         pathNodes       : AuxiliaryTypes_GridIndex.GridIndex[];
         launchUnitId    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
         fuelConsumption : number;
-    }): void {
+    }): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
         const unitMap               = this.getUnitMap();
         const beginningGridIndex    = pathNodes[0];
         const focusUnit             = Helpers_Misc.getExisted(unitMap.getUnit(beginningGridIndex, launchUnitId));
+        const changedThings         = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : [focusUnit] });
 
         if (this.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
             this.getFogMap().updateMapFromPathsByUnitAndPath({
@@ -591,12 +593,17 @@ export abstract class War {
             focusUnit.setGridIndex(endingGridIndex);
             for (const unit of unitMap.getUnitsLoadedByLoader(focusUnit, true)) {
                 unit.setGridIndex(endingGridIndex);
+                changedThings.addUnit(unit);
             }
 
             if (launchUnitId == null) {
-                this.getTileMap().getTile(beginningGridIndex).updateOnUnitLeave();
+                const tile = this.getTileMap().getTile(beginningGridIndex);
+                tile.updateOnUnitLeave();
+                changedThings.addTile(tile);
             }
         }
+
+        return changedThings;
     }
     public async showTempUnitMoveAnimation({ movingUnitAndPath, aiming, callback }: {
         movingUnitAndPath : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MovingUnitAndPath>;

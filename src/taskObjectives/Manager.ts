@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     ExpressionParsers_Contexts_TaskObjective,
     ExpressionParsers_Parser,
     ExpressionParsers_Results_Num,
@@ -113,11 +114,12 @@ export class Manager {
         }
     }
 
-    public autoUpdateAllCurrentProgresses(): void {
+    public autoUpdateAllCurrentProgresses(): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+        const changedThings         = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         const war                   = this.getWar();
         const allTaskObjectiveArray = war.getCommonSettingManager().getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray();
         if (!allTaskObjectiveArray?.length) {
-            return;
+            return changedThings;
         }
 
         const newStateList    : TaskObjectiveState[] = [];
@@ -145,8 +147,12 @@ export class Manager {
         }
 
         for (const newState of newStateList) {
-            this.updateState(newState);
+            if (this.updateState(newState)) {
+                changedThings.addTaskObjectiveState(newState);
+            }
         }
+
+        return changedThings;
     }
 
     public getScore(): number {

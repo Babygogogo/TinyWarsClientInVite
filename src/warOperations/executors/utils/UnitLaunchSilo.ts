@@ -1,5 +1,6 @@
 import {
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_ThingsForMovePath,
     Helpers_Misc,
     Helpers_Team,
     Lang_Constants,
@@ -16,9 +17,12 @@ import {
     Utils_ClientErrorCode,
     Visibilities_Utils,
     WarOperations_Executors_Utils_Common,
+    WarOperations_Executors_Types,
+    type AuxiliaryTypes_MovePath,
     type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 import type { WoUnitLaunchSilo } from "../../../proto/schema/CommonProto/WarOperation/WoUnitLaunchSilo.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
@@ -36,7 +40,7 @@ function fastExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUnitLaunchS
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
+            war             : war,
             commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitLaunchFlare_00),
             isFastExecute   : true,
         });
@@ -79,7 +83,7 @@ function fastExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUnitLaunchS
                     {
                         const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                         if (offsetNormalizedHp != 0) {
-                            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : grid });
+                            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : grid });
                             if (observerTeamIndexes != null) {
                                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                     unitType                   : unit.getUnitTypeId(),
@@ -123,16 +127,16 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUni
         const launchSiloParams  = Helpers_Misc.getExisted([...war.getGcData().getTileTemplateCfgDict().values()].find(v => v.getLaunchSiloParams() != null)?.getLaunchSiloParams());
         const targetGridIndex   = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(actionExtraData.getTargetGridIndex());
         if (targetGridIndex) {
-            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize })) {
+            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize : mapSize })) {
                 gridVisualEffect?.showEffectSiloExplosion(grid);
             }
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
         }
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
-            commonExtraData,
-            isFastExecute : false,
+            war             : war,
+            commonExtraData : commonExtraData,
+            isFastExecute   : false,
         });
 
     } else {
@@ -168,7 +172,7 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUni
 
             const warStatisticsManager  = war.getWarStatisticsManager();
             const targetGridIndex       = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
-            const targetGrids           = targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize });
+            const targetGrids           = targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize : mapSize });
             const targetUnits           : Units_Unit.Unit[] = [];
             for (const grid of targetGrids) {
                 const unit = unitMap.getUnitOnMap(grid);
@@ -180,7 +184,7 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUni
                     {
                         const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                         if (offsetNormalizedHp != 0) {
-                            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : grid });
+                            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : grid });
                             if (observerTeamIndexes != null) {
                                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                     unitType                   : unit.getUnitTypeId(),
@@ -221,9 +225,82 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUni
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitLaunchSilo, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const unitMap                              = war.getUnitMap();
+    const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
+    const launchUnitId                         = revisedPath.getLaunchUnitId();
+    const focusUnit                            = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    const targetGridIndex                      = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(operation.getTargetGridIndex()));
+    const focusUnitDataBeforeAction            = focusUnit.serialize();
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+    const unitGridIdsForEachTeamBeforeAction   = unitMap.getUnitGridIdArrayForEachTeam();
+    const changedThings                        = war.moveUnit({ pathNodes : pathNodes, launchUnitId : launchUnitId, fuelConsumption : revisedPath.getFuelConsumption() });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (!revisedPath.getIsBlocked()) {
+        const tile             = war.getTileMap().getTile(pathNodes[pathNodes.length - 1]);
+        const launchSiloParams = tile.getTemplateCfg().getLaunchSiloParams();
+        tile.resetByTypeAndPlayerIndex({
+            baseType    : tile.getBaseTypeId(),
+            objectType  : Helpers_Misc.getExisted(launchSiloParams[1]),
+            playerIndex : Players_Constants.PlayerIndex.Neutral,
+        });
+        changedThings.addTile(tile);
+
+        for (const gridIndex of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize : unitMap.getMapSize() })) {
+            const unit = unitMap.getUnitOnMap(gridIndex);
+            if (unit) {
+                const oldNormalizedHp = unit.getNormalizedCurrentHp();
+                unit.setCurrentHp(Math.max(1, unit.getCurrentHp() - launchSiloParams[3]));
+                changedThings.addUnit(unit);
+
+                const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
+                if (offsetNormalizedHp !== 0) {
+                    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
+                    if (observerTeamIndexes != null) {
+                        war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
+                            unitType                   : unit.getUnitTypeId(),
+                            dstPlayerIndex             : unit.getPlayerIndex(),
+                            unitGain                   : 0,
+                            unitLoss                   : 0,
+                            normalizedHpGain           : Math.max(0, offsetNormalizedHp),
+                            normalizedHpLoss           : Math.max(0, -offsetNormalizedHp),
+                            groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                        }));
+                    }
+                }
+            }
+        }
+    }
+    changedThings.mergeFrom(WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true));
+
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : new AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath(unitGridIdsForEachTeamBeforeAction, focusUnitDataBeforeAction, revisedPath, undefined),
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+
+            const extraData = woContainer.createIfNotExistsWoUnitLaunchSilo().createIfNotExistsExtraData();
+            extraData.setCommonExtraData(commonExtraData);
+            extraData.setTargetGridIndex(revisedPath.getIsBlocked() ? undefined : targetGridIndex.toProto());
+
+            return woContainer;
+        },
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoUnitLaunchSilo): Promise<string | null> {
-
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {

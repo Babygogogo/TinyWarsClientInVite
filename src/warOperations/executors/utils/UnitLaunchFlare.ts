@@ -1,5 +1,6 @@
 import {
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_ThingsForMovePath,
     Helpers_Misc,
     Lang_Constants,
     Lang_Utils,
@@ -11,8 +12,11 @@ import {
     Units_Constants,
     Utils_ClientErrorCode,
     WarOperations_Executors_Utils_Common,
+    WarOperations_Executors_Types,
+    type AuxiliaryTypes_MovePath,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 import type { WoUnitLaunchFlare } from "../../../proto/schema/CommonProto/WarOperation/WoUnitLaunchFlare.ts";
 
@@ -30,7 +34,7 @@ function fastExeUnitLaunchFlare(war: BaseWar_Model_War.War, action: WoUnitLaunch
     const actionExtraData   = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
+            war             : war,
             commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitLaunchFlare_01),
             isFastExecute   : true,
         });
@@ -82,15 +86,15 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Model_War.War, action: WoUn
         const targetGridIndex   = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(actionExtraData.getTargetGridIndex());
         if (targetGridIndex) {
             const flareRadius = Helpers_Misc.getExisted(actionExtraData.getFlareRadius(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchFlare_01);
-            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize })) {
+            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize : mapSize })) {
                 gridVisualEffect?.showEffectFlare(grid);
             }
         }
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
-            commonExtraData,
-            isFastExecute : false,
+            war             : war,
+            commonExtraData : commonExtraData,
+            isFastExecute   : false,
         });
 
     } else {
@@ -131,7 +135,7 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Model_War.War, action: WoUn
                 throw Helpers_Misc.newError(`Empty targetGridIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchFlare_03);
             }
 
-            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize })) {
+            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize : mapSize })) {
                 gridVisualEffect?.showEffectFlare(grid);
             }
         }
@@ -142,9 +146,56 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Model_War.War, action: WoUn
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitLaunchFlare, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const unitMap                              = war.getUnitMap();
+    const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
+    const launchUnitId                         = revisedPath.getLaunchUnitId();
+    const focusUnit                            = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    const targetGridIndex                      = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(operation.getTargetGridIndex()));
+    const focusUnitDataBeforeAction            = focusUnit.serialize();
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+    const unitGridIdsForEachTeamBeforeAction   = unitMap.getUnitGridIdArrayForEachTeam();
+    const changedThings                        = war.moveUnit({ pathNodes : pathNodes, launchUnitId : launchUnitId, fuelConsumption : revisedPath.getFuelConsumption() });
+    const flareRadius                          = Helpers_Misc.getExisted(focusUnit.getFlareRadius(pathNodes[pathNodes.length - 1]));
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (!revisedPath.getIsBlocked()) {
+        focusUnit.setFlareCurrentAmmo(focusUnit.getFlareCurrentAmmo() - 1);
+        war.getFogMap().updateMapFromPathsByFlare(focusUnit.getPlayerIndex(), targetGridIndex, flareRadius);
+    }
+    changedThings.mergeFrom(WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true));
+
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : new AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath(unitGridIdsForEachTeamBeforeAction, focusUnitDataBeforeAction, revisedPath, undefined),
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+
+            const extraData = woContainer.createIfNotExistsWoUnitLaunchFlare().createIfNotExistsExtraData();
+            extraData.setCommonExtraData(commonExtraData);
+
+            if (!revisedPath.getIsBlocked()) {
+                extraData.setTargetGridIndex(targetGridIndex.toProto());
+                extraData.setFlareRadius(flareRadius);
+            }
+
+            return woContainer;
+        },
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoUnitLaunchFlare): Promise<string | null> {
-
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {

@@ -7,8 +7,11 @@ import {
     TestWar_Model_TwWar,
     Lang_Utils,
     Lang_Constants,
+    WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 import type { WoSystemEndWar } from "../../../proto/schema/CommonProto/WarOperation/WoSystemEndWar.ts";
 
@@ -28,11 +31,39 @@ function fastExeSystemEndWar(war: BaseWar_Model_War.War, action: WoSystemEndWar)
 
 async function normalExeSystemEndWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): Promise<void> {
     const desc = await getDesc(war, action);
-    (desc) && (FloatText.show(desc));
+    if (desc) {
+        FloatText.show(desc);
+    }
 
     war.setIsEnded(true);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemEndWar): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+    const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    war.setIsEnded(true);
+
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : extraChangedThings,
+        thingsForMovePath                    : undefined,
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+            woContainer.createIfNotExistsWoSystemEndWar().createIfNotExistsExtraData().setCommonExtraData(commonExtraData);
+
+            return woContainer;
+        },
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoSystemEndWar): Promise<string | null> {
 

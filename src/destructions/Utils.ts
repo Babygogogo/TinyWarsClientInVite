@@ -22,7 +22,7 @@ export function destroyUnitOnMap(war: BaseWar_Model_War.War, gridIndex: Auxiliar
     const unit                  = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex), Utils_ClientErrorCode.ClientErrorCode.DestructionHelpers_DestroyUnitOnMap_00);
     const tile                  = war.getTileMap().getTile(gridIndex);
     const destroyedUnits        = [unit];
-    const observerTeamIndexes   = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+    const observerTeamIndexes   = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
     unitMap.deleteUnitOnMap(gridIndex, true)?.dispose();
     tile.updateOnUnitLeave();
     for (const u of unitMap.getUnitsLoadedByLoader(unit, true)) {
@@ -71,11 +71,11 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
     const unitMap             = war.getUnitMap();
     const unit                = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex));
     const tile                = war.getTileMap().getTile(gridIndex);
-    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
     const destroyedUnits      = [unit];
     const unitId              = unit.getUnitId();
     if (!isEstimated) {
-        // battleInfo.affectedThings.add(unit);
+        battleInfo.changedThings.addUnit(unit);
     } else {
         if (!battleInfo.oldUnits.has(unitId)) {
             battleInfo.oldUnits.set(unitId, unit.serialize());
@@ -85,7 +85,7 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
 
     const gridId = gridIndex.getGridId(unitMap.getMapSize());
     if (!isEstimated) {
-        // battleInfo.affectedThings.add(tile);
+        battleInfo.changedThings.addTile(tile);
     } else {
         if (!battleInfo.oldTiles.has(gridId)) {
             battleInfo.oldTiles.set(gridId, tile.serialize());
@@ -96,7 +96,7 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
     for (const u of unitMap.getUnitsLoadedByLoader(unit, true)) {
         const loadedUnitId = u.getUnitId();
         if (!isEstimated) {
-            // battleInfo.affectedThings.add(u);
+            battleInfo.changedThings.addUnit(u);
         } else {
             if (!battleInfo.oldUnits.has(loadedUnitId)) {
                 battleInfo.oldUnits.set(loadedUnitId, u.serialize());
@@ -139,7 +139,7 @@ export function destroyUnitLoaded(war: BaseWar_Model_War.War, unitId: number): A
     }
 
     {
-        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : targetUnit.getGridIndex() });
+        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : targetUnit.getGridIndex() });
         if (observerTeamIndexes != null) {
             const warStatisticsManager          = war.getWarStatisticsManager();
             const playerIndex                   = targetUnit.getPlayerIndex();
@@ -196,7 +196,7 @@ function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: Auxiliar
         const player      = destroyedUnits[0].getPlayer();
         const playerIndex = player.getPlayerIndex();
         if (!isEstimated) {
-            // battleInfo.affectedThings.add(player);
+            battleInfo.changedThings.addPlayer(player);
         } else {
             if (!battleInfo.oldPlayers.has(playerIndex)) {
                 battleInfo.oldPlayers.set(playerIndex, player.serialize());
@@ -219,11 +219,12 @@ function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: Auxiliar
     }
 }
 
-export function destroyPlayerForce(war: BaseWar_Model_War.War, playerIndex: number, showExplosionEffect: boolean): void {
+export function destroyPlayerForce(war: BaseWar_Model_War.War, playerIndex: number, showExplosionEffect: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const unitMap               = war.getUnitMap();
     const tileMap               = war.getTileMap();
     const warStatisticsManager  = war.getWarStatisticsManager();
     const gridVisionEffect      = showExplosionEffect ? war.getGridVisualEffect() : null;
+    const changedThings         = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     let hasRemovedUnit          = false;
     for (const unit of unitMap.getAllUnitsOnMap()) {
         if (unit.getPlayerIndex() !== playerIndex) {
@@ -233,11 +234,18 @@ export function destroyPlayerForce(war: BaseWar_Model_War.War, playerIndex: numb
         hasRemovedUnit = true;
 
         const gridIndex                     = unit.getGridIndex();
-        const observerTeamIndexes           = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+        const tile                          = tileMap.getTile(gridIndex);
+        const observerTeamIndexes           = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+            war       : war,
+            gridIndex : gridIndex,
+        });
         const groupedObserverTeamIndexes    = observerTeamIndexes != null ? Helpers_Team.encodeTeamIndex(observerTeamIndexes) : null;
         unitMap.deleteUnitOnMap(gridIndex, true)?.dispose();
-        tileMap.getTile(gridIndex).updateOnUnitLeave();
+        tile.updateOnUnitLeave();
         gridVisionEffect?.showEffectExplosion(gridIndex);
+
+        changedThings.addUnit(unit);
+        changedThings.addTile(tile);
 
         if (groupedObserverTeamIndexes != null) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
@@ -253,6 +261,7 @@ export function destroyPlayerForce(war: BaseWar_Model_War.War, playerIndex: numb
 
         for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {
             unitMap.deleteUnitLoaded(loadedUnit.getUnitId()).dispose();
+            changedThings.addUnit(loadedUnit);
 
             if (groupedObserverTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
@@ -285,18 +294,25 @@ export function destroyPlayerForce(war: BaseWar_Model_War.War, playerIndex: numb
             tile.setCurrentHp(hp);
             tile.setCurrentBuildPoint(buildPoint);
             tile.setCurrentCapturePoint(capturePoint);
+
+            changedThings.addTile(tile);
         }
     }
 
     war.getFogMap().resetAllMapsForPlayer(playerIndex);
 
-    const player = war.getPlayer(playerIndex);
-    player.setAliveState(Players_Constants.AliveStateId.Dead);
-    player.setCoIsDestroyedInTurn(true);
-    player.setAndValidateCoCurrentEnergy(0);
-    player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
+    {
+        const player = war.getPlayer(playerIndex);
+        player.setAliveState(Players_Constants.AliveStateId.Dead);
+        player.setCoIsDestroyedInTurn(true);
+        player.setAndValidateCoCurrentEnergy(0);
+        player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
+        changedThings.addPlayer(player);
+    }
 
-    war.getDrawVoteManager().handlePlayerForceDestruction();
+    changedThings.mergeFrom(war.getDrawVoteManager().handlePlayerForceDestruction());
+
+    return changedThings;
 }
 
 export function removeUnitOnMap(war: BaseWar_Model_War.War, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {

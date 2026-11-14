@@ -164,7 +164,7 @@ function handlePlayerProduceUnit(war: BaseWar_Model_War.War, action: WoPlayerPro
         playerInTurn.setFund(playerInTurn.getFund() - cost);
 
         {
-            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
+            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : unit.getGridIndex() });
             if (observerTeamIndexes != null) {
                 war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                   : unitType,
@@ -199,9 +199,9 @@ function getPromotionForPlayerProduceUnit(war: BaseWar_Model_War.War, gridIndex:
         if ((cfg)                                                                       &&
             (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))   &&
             (gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType : cfg.getCoSkillAreaTypeId(),
-                getCoGridIndexArrayOnMap,
-                coZoneRadius,
+                coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                coZoneRadius             : coZoneRadius,
             }))
         ) {
             promotion += cfg.getBonus();

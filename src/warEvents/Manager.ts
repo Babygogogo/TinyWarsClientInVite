@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     CustomCounters_Constants,
     CustomCounters_Utils,
     Helpers_Collection,
@@ -75,7 +76,6 @@ import {
     WarEvents_Conditions_Utils_WeatherAndFog,
     WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_AuxiliaryTypes,
-    type AuxiliaryTypes_ChangedThingsForWarOperation,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Model_War,
     type Units_Unit,
@@ -600,15 +600,16 @@ export class Manager {
             isFastExecute   : isFastExecute,
         });
     }
-    public async callWarEventAsInnerWar(warEventId: number, dataIndex: number, isFastExecute: boolean): Promise<void> { // DONE
+    public async callWarEventAsInnerWar(warEventId: number, dataIndex: number, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> { // DONE
         const war           = this._getWar();
         const unitMap       = war.getUnitMap();
         const playerManager = war.getPlayerManager();
         const playerIndexes = playerManager.getPlayerIndexArray(Players_Constants.PlayerIndex.First, false)
             .filter(v => (playerManager.getPlayer(v).getAliveState() === Players_Constants.AliveStateId.Alive) && (unitMap.checkHasUnitForPlayer(v)));
 
+        const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         for (const actionId of this.getWarEvent(warEventId).getRootNodeAndActionsArray()[dataIndex].getActionIdArray()) {
-            await this._callActionAsInnerWar(actionId, isFastExecute);
+            changedThings.mergeFrom(await this._callActionAsInnerWar(actionId, isFastExecute));
         }
 
         for (const playerIndex of playerIndexes) {
@@ -617,8 +618,11 @@ export class Manager {
                 (!unitMap.checkHasUnitForPlayer(playerIndex))
             ) {
                 player.setAliveState(Players_Constants.AliveStateId.Dying);
+                changedThings.addPlayer(player);
             }
         }
+
+        return changedThings;
     }
 
     private async _callActionWithExtraData(warEventActionId: number, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation | void> {

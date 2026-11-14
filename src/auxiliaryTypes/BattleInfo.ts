@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     type Players_Player,
     type Tiles_Tile,
     type Units_Unit,
@@ -9,6 +10,7 @@ import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/Se
 import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 
 export class BattleInfo {
+    public readonly changedThings               = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     public readonly oldUnits                    = new Map<number, SerialUnit>();
     public readonly oldPlayers                  = new Map<number, SerialPlayer>();
     public readonly oldTiles                    = new Map<number, SerialTile>();

@@ -1,12 +1,17 @@
 import {
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_ThingsForMovePath,
     Helpers_Misc,
     Helpers_Team,
     Units_Constants,
     Visibilities_Utils,
     WarOperations_Executors_Utils_Common,
+    type AuxiliaryTypes_MovePath,
     type BaseWar_Model_War,
+    type SinglePlayerWars_War,
+    type WarOperations_Executors_Types,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitRepairUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitRepairUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
@@ -134,7 +139,10 @@ async function normalExeUnitRepairUnit(war: BaseWar_Model_War.War, action: WoUni
                     targetUnit.setCurrentHp((normalizedCurrentHp + 1) * Units_Constants.Hp.Normalizer);
 
                     {
-                        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : targetGridIndex });
+                        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
+                            war       : war,
+                            gridIndex : targetGridIndex,
+                        });
                         if (observerTeamIndexes != null) {
                             war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
                                 unitType                   : targetUnit.getUnitTypeId(),
@@ -158,4 +166,83 @@ async function normalExeUnitRepairUnit(war: BaseWar_Model_War.War, action: WoUni
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitRepairUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const unitMap                               = war.getUnitMap();
+    const pathNodes                             = revisedPath.getNodes().map(v => v.gridIndex);
+    const launchUnitId                          = revisedPath.getLaunchUnitId();
+    const focusUnit                             = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    const targetGridIndex                       = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(operation.getTargetGridIndex()));
+    const focusUnitDataBeforeAction             = focusUnit.serialize();
+    const allTileAppearanceInfosBeforeAction    = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibilityArrayFromPathsBeforeAction  = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const visibleThingsForEachTeamBeforeAction  = war.getVisibleThingsForEachTeam();
+    const unitGridIdsForEachTeamBeforeAction    = unitMap.getUnitGridIdArrayForEachTeam();
+    const changedThings                         = war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : revisedPath.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (!revisedPath.getIsBlocked()) {
+        const targetUnit = Helpers_Misc.getExisted(unitMap.getUnitOnMap(targetGridIndex));
+        targetUnit.setCurrentFuel(targetUnit.getMaxFuel());
+        targetUnit.addAndValidatePrimaryWeaponCurrentAmmo(targetUnit.getPrimaryWeaponUsedAmmo() ?? 0);
+        targetUnit.setCurrentHp(targetUnit.getNormalizedCurrentHp() * Units_Constants.Hp.Normalizer);
+        changedThings.addUnit(targetUnit);
+
+        const normalizedCurrentHp = targetUnit.getNormalizedCurrentHp();
+        if (normalizedCurrentHp < targetUnit.getNormalizedMaxHp()) {
+            const repairCost = Math.floor(targetUnit.getProductionFinalCost() / 10);
+            const player     = focusUnit.getPlayer();
+            const fund       = player.getFund();
+            if (fund >= repairCost) {
+                player.setFund(fund - repairCost);
+                targetUnit.setCurrentHp((normalizedCurrentHp + 1) * Units_Constants.Hp.Normalizer);
+
+                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : targetGridIndex });
+                if (observerTeamIndexes != null) {
+                    war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
+                        unitType                   : targetUnit.getUnitTypeId(),
+                        dstPlayerIndex             : targetUnit.getPlayerIndex(),
+                        unitGain                   : 0,
+                        unitLoss                   : 0,
+                        normalizedHpGain           : 1,
+                        normalizedHpLoss           : 0,
+                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                    }));
+                }
+                changedThings.addPlayer(player);
+            }
+        }
+    }
+    changedThings.mergeFrom(WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true));
+
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : new AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath(
+            unitGridIdsForEachTeamBeforeAction,
+            focusUnitDataBeforeAction,
+            revisedPath,
+            undefined,
+        ),
+        createMessage : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+
+            const extraData = woContainer.createIfNotExistsWoUnitRepairUnit().createIfNotExistsExtraData();
+            extraData.setCommonExtraData(commonExtraData);
+            extraData.setTargetGridIndex(revisedPath.getIsBlocked() ? null : targetGridIndex.toProto());
+
+            return woContainer;
+        },
+    });
 }

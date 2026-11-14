@@ -1,12 +1,17 @@
 import {
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_ThingsForMovePath,
     Destructions_Utils,
     Helpers_Misc,
     Players_Constants,
     Units_Constants,
     WarOperations_Executors_Utils_Common,
+    WarOperations_Executors_Types,
+    type AuxiliaryTypes_MovePath,
+    type SinglePlayerWars_War,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitCrushUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitCrushUnit.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,4 +148,60 @@ async function normalExeUnitCrushUnit(war: BaseWar_Model_War.War, action: WoUnit
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitCrushUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const unitMap                              = war.getUnitMap();
+    const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
+    const launchUnitId                         = revisedPath.getLaunchUnitId();
+    const focusUnit                            = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    const targetGridIndex                     = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(operation.getTargetGridIndex()));
+    const focusUnitDataBeforeAction            = focusUnit.serialize();
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+    const unitGridIdsForEachTeamBeforeAction   = unitMap.getUnitGridIdArrayForEachTeam();
+    const changedThings                       = war.moveUnit({ pathNodes : pathNodes, launchUnitId : launchUnitId, fuelConsumption : revisedPath.getFuelConsumption() });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (!revisedPath.getIsBlocked()) {
+        const targetPlayer = Helpers_Misc.getExisted(unitMap.getUnitOnMap(targetGridIndex)?.getPlayer());
+        changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, targetGridIndex, false));
+        changedThings.mergeFrom(war.moveUnit({
+            pathNodes       : [pathNodes[pathNodes.length - 1], targetGridIndex],
+            launchUnitId    : launchUnitId,
+            fuelConsumption : 0,
+        }));
+        unitMap.setUnitOnMap(focusUnit);
+
+        if ((!targetPlayer.checkIsNeutral()) &&
+            (targetPlayer.getAliveState() !== Players_Constants.AliveStateId.Dead) &&
+            (!unitMap.checkHasUnitForPlayer(targetPlayer.getPlayerIndex()))
+        ) {
+            targetPlayer.setAliveState(Players_Constants.AliveStateId.Dying);
+            changedThings.addPlayer(targetPlayer);
+        }
+    }
+    changedThings.mergeFrom(WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true));
+
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : new AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath(unitGridIdsForEachTeamBeforeAction, focusUnitDataBeforeAction, revisedPath, undefined),
+        createMessage                        : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+
+            const extraData = woContainer.createIfNotExistsWoUnitCrushUnit().createIfNotExistsExtraData();
+            extraData.setCommonExtraData(commonExtraData);
+            extraData.setTargetGridIndex(revisedPath.getIsBlocked() ? undefined : targetGridIndex.toProto());
+
+            return woContainer;
+        },
+    });
 }

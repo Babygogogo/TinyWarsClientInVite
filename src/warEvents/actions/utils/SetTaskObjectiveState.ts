@@ -221,7 +221,7 @@ export function applyAsInnerWar(action: WeaSetTaskObjectiveState, war: BaseWar_M
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const newState of newStateArray) {
         if (taskObjectiveManager.updateState(newState)) {
-            changedThings.setTaskObjectiveState(newState);
+            changedThings.addTaskObjectiveState(newState);
         }
     }
 

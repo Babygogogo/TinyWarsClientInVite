@@ -422,7 +422,7 @@ function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, m
             (!unitMap.checkHasUnitForPlayer(playerIndex))
         ) {
             if (!isEstimated) {
-                // battleInfo.affectedThings.add(player);
+                battleInfo.changedThings.addPlayer(player);
             } else {
                 if (!battleInfo.oldPlayers.has(playerIndex)) {
                     battleInfo.oldPlayers.set(playerIndex, player.serialize());
@@ -535,7 +535,7 @@ function handlePrimaryWeaponAmmoForAttackUnit({ battleInfo, isEstimated, unit1, 
         (unit1.getCfgBaseDamage(targetUnit.getArmorType(), Units_Constants.WeaponTypeId.Primary) != null)
     ) {
         if (!isEstimated) {
-            // battleInfo.affectedThings.add(unit1);
+            battleInfo.changedThings.addUnit(unit1);
         } else {
             const unitId1 = unit1.getUnitId();
             if (!battleInfo.oldUnits.has(unitId1)) {
@@ -557,7 +557,7 @@ function handleHpForAttackUnit({ battleInfo, isEstimated, unit, unitNewHp }: {
 
     if (unit.getCurrentHp() != unitNewHp) {
         if (!isEstimated) {
-            // battleInfo.affectedThings.add(unit);
+            battleInfo.changedThings.addUnit(unit);
         } else {
             if (!battleInfo.oldUnits.has(unitId)) {
                 battleInfo.oldUnits.set(unitId, unit.serialize());
@@ -582,7 +582,7 @@ function handlePromotionForAttackUnit({ battleInfo, isEstimated, player1, unit1,
     const unitId1               = unit1.getUnitId();
     if (isTargetDestroyed) {
         if (!isEstimated) {
-            // battleInfo.affectedThings.add(unit1);
+            battleInfo.changedThings.addUnit(unit1);
         } else {
             if (!battleInfo.oldUnits.has(unitId1)) {
                 battleInfo.oldUnits.set(unitId1, unit1.serialize());
@@ -615,7 +615,7 @@ function handlePromotionForAttackUnit({ battleInfo, isEstimated, player1, unit1,
 
         if (offset !== 0) {
             if (!isEstimated) {
-                // battleInfo.affectedThings.add(unit1);
+                battleInfo.changedThings.addUnit(unit1);
             } else {
                 if (!battleInfo.oldUnits.has(unitId1)) {
                     battleInfo.oldUnits.set(unitId1, unit1.serialize());
@@ -661,7 +661,7 @@ function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, atta
     if (addFund !== 0) {
         const playerIndex = attackerPlayer.getPlayerIndex();
         if (!isEstimated) {
-            // battleInfo.affectedThings.add(attackerPlayer);
+            battleInfo.changedThings.addPlayer(attackerPlayer);
         } else {
             if (!battleInfo.oldPlayers.has(playerIndex)) {
                 battleInfo.oldPlayers.set(playerIndex, attackerPlayer.serialize());
@@ -698,7 +698,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
         const playerIndex1    = attackerPlayer.getPlayerIndex();
         if (coEnergyType1 == Cos_Constants.EnergyTypeId.Trilogy) {
             if (!isEstimated) {
-                // battleInfo.affectedThings.add(attackerPlayer);
+                battleInfo.changedThings.addPlayer(attackerPlayer);
             } else {
                 if (!battleInfo.oldPlayers.has(playerIndex1)) {
                     battleInfo.oldPlayers.set(playerIndex1, attackerPlayer.serialize());
@@ -713,7 +713,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
         } else if (coEnergyType1 == Cos_Constants.EnergyTypeId.Dor) {
             if (isAttackerInAttackerCoZone) {
                 if (!isEstimated) {
-                    // battleInfo.affectedThings.add(attackerPlayer);
+                    battleInfo.changedThings.addPlayer(attackerPlayer);
                 } else {
                     if (!battleInfo.oldPlayers.has(playerIndex1)) {
                         battleInfo.oldPlayers.set(playerIndex1, attackerPlayer.serialize());
@@ -735,7 +735,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
         const playerIndex2    = targetPlayer.getPlayerIndex();
         if (coEnergyType2 == Cos_Constants.EnergyTypeId.Trilogy) {
             if (!isEstimated) {
-                // battleInfo.affectedThings.add(targetPlayer);
+                battleInfo.changedThings.addPlayer(targetPlayer);
             } else {
                 if (!battleInfo.oldPlayers.has(playerIndex2)) {
                     battleInfo.oldPlayers.set(playerIndex2, targetPlayer.serialize());
@@ -750,7 +750,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
         } else if (coEnergyType2 == Cos_Constants.EnergyTypeId.Dor) {
             if (isTargetInTargetCoZone) {
                 if (!isEstimated) {
-                    // battleInfo.affectedThings.add(targetPlayer);
+                    battleInfo.changedThings.addPlayer(targetPlayer);
                 } else {
                     if (!battleInfo.oldPlayers.has(playerIndex2)) {
                         battleInfo.oldPlayers.set(playerIndex2, targetPlayer.serialize());
@@ -850,7 +850,7 @@ function doRunBattleForAttackTile({ battleInfo, war, movePath1, launchUnitId1, m
             (!unitMap.checkHasUnitForPlayer(playerIndex))
         ) {
             if (!isEstimated) {
-                // battleInfo.affectedThings.add(player);
+                battleInfo.changedThings.addPlayer(player);
             } else {
                 if (!battleInfo.oldPlayers.has(playerIndex)) {
                     battleInfo.oldPlayers.set(playerIndex, player.serialize());
@@ -902,7 +902,7 @@ function handlePrimaryWeaponAmmoForAttackTile({ battleInfo, isEstimated, unit1, 
         (unit1.getCfgBaseDamage(armorType2, Units_Constants.WeaponTypeId.Primary) != null)
     ) {
         if (!isEstimated) {
-            // battleInfo.affectedThings.add(unit1);
+            battleInfo.changedThings.addUnit(unit1);
         } else {
             const unitId1 = unit1.getUnitId();
             if (!battleInfo.oldUnits.has(unitId1)) {
@@ -924,7 +924,7 @@ function handleHpForAttackTile({ battleInfo, isEstimated, tile2, tileNewHp2 }: {
 
     if (tile2.getCurrentHp() != tileNewHp2) {
         if (!isEstimated) {
-            // battleInfo.affectedThings.add(tile2);
+            battleInfo.changedThings.addTile(tile2);
         } else {
             if (!battleInfo.oldTiles.has(gridId2)) {
                 battleInfo.oldTiles.set(gridId2, tile2.serialize());
@@ -953,7 +953,7 @@ function handleDestructionForAttackTile({ battleInfo, isEstimated, war, tile2 }:
                 battleInfo.destroyedTiles.set(connectedGridId, connectedTile);
 
                 if (!isEstimated) {
-                    // battleInfo.affectedThings.add(connectedTile);
+                    battleInfo.changedThings.addTile(connectedTile);
                 } else {
                     if (!battleInfo.oldTiles.has(connectedGridId)) {
                         battleInfo.oldTiles.set(connectedGridId, connectedTile.serialize());
@@ -967,7 +967,7 @@ function handleDestructionForAttackTile({ battleInfo, isEstimated, war, tile2 }:
         const gridId2 = gridIndex2.getGridId(mapSize);
         battleInfo.destroyedTiles.set(gridId2, tile2);
         if (!isEstimated) {
-            // battleInfo.affectedThings.add(tile2);
+            battleInfo.changedThings.addTile(tile2);
         } else {
             if (!battleInfo.oldTiles.has(gridId2)) {
                 battleInfo.oldTiles.set(gridId2, tile2.serialize());
@@ -1243,5 +1243,8 @@ export function getAttackAndCounterDamage({ battleDamageInfoArray, attackerUnitI
         }
     }
 
-    return { attackDamage, counterDamage };
+    return {
+        attackDamage  : attackDamage,
+        counterDamage : counterDamage,
+    };
 }

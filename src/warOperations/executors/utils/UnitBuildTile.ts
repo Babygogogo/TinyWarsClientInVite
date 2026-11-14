@@ -1,5 +1,6 @@
 import {
     AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_ThingsForMovePath,
     GamePanels_Dict,
     GamePanels_Manager,
     Helpers_Misc,
@@ -15,9 +16,12 @@ import {
     Users_Model,
     Utils_ClientErrorCode,
     WarOperations_Executors_Utils_Common,
+    type AuxiliaryTypes_MovePath,
     type BaseWar_Model_War,
+    type WarOperations_Executors_Types,
 } from "../../../internal.ts";
 
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitBuildTile } from "../../../proto/schema/CommonProto/WarOperation/WoUnitBuildTile.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,7 +37,7 @@ function fastExeUnitBuildTile(war: BaseWar_Model_War.War, action: WoUnitBuildTil
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
+            war             : war,
             commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBuildTile_00),
             isFastExecute   : true,
         });
@@ -125,9 +129,9 @@ async function normalExeUnitBuildTile(war: BaseWar_Model_War.War, action: WoUnit
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war,
-            commonExtraData,
-            isFastExecute : false,
+            war             : war,
+            commonExtraData : commonExtraData,
+            isFastExecute   : false,
         });
 
     } else {
@@ -200,9 +204,69 @@ async function normalExeUnitBuildTile(war: BaseWar_Model_War.War, action: WoUnit
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitBuildTile, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+    const unitMap                               = war.getUnitMap();
+    const pathNodes                             = revisedPath.getNodes().map(v => v.gridIndex);
+    const launchUnitId                          = revisedPath.getLaunchUnitId();
+    const focusUnit                             = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    const focusUnitDataBeforeAction             = focusUnit.serialize();
+    const allTileAppearanceInfosBeforeAction    = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibilityArrayFromPathsBeforeAction  = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
+    const visibleThingsForEachTeamBeforeAction  = war.getVisibleThingsForEachTeam();
+    const unitGridIdsForEachTeamBeforeAction    = unitMap.getUnitGridIdArrayForEachTeam();
+    const changedThings                         = war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : revisedPath.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+    if (!revisedPath.getIsBlocked()) {
+        const tile          = war.getTileMap().getTile(focusUnit.getGridIndex());
+        const buildAmount   = Helpers_Misc.getExisted(focusUnit.getBuildAmount());
+        const maxBuildPoint = Helpers_Misc.getExisted(tile.getMaxBuildPoint());
+        const newBuildPoint = tile.getCurrentBuildPoint() + buildAmount;
+        if (newBuildPoint < maxBuildPoint) {
+            tile.setCurrentBuildPoint(newBuildPoint);
+        } else {
+            focusUnit.setCurrentBuildMaterial(focusUnit.getCurrentBuildMaterial() - 1);
+            const targetTileCfg = Helpers_Misc.getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseTypeId(), tile.getObjectTypeId()));
+            tile.resetByTypeAndPlayerIndex({
+                baseType    : targetTileCfg.getDstTileBaseTypeId(),
+                objectType  : targetTileCfg.getDstTileObjectTypeId(),
+                playerIndex : targetTileCfg.getIsDstNeutral() ? Players_Constants.PlayerIndex.Neutral : focusUnit.getPlayerIndex(),
+            });
+            tile.setCurrentBuildPoint(0);
+        }
+        changedThings.addTile(tile);
+    }
+    changedThings.mergeFrom(WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true));
+
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+        war                                  : war,
+        allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
+        visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
+        visibilityArrayFromPathsBeforeAction : visibilityArrayFromPathsBeforeAction,
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
+        thingsForMovePath                    : new AuxiliaryTypes_ThingsForMovePath.ThingsForMovePath(
+            unitGridIdsForEachTeamBeforeAction,
+            focusUnitDataBeforeAction,
+            revisedPath,
+            undefined,
+        ),
+        createMessage : commonExtraData => {
+            const woContainer = new WoContainer();
+            woContainer.setOperationId(operationId);
+            woContainer.createIfNotExistsWoUnitBuildTile().createIfNotExistsExtraData().setCommonExtraData(commonExtraData);
+
+            return woContainer;
+        },
+    });
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoUnitBuildTile): Promise<string | null> {
-
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {

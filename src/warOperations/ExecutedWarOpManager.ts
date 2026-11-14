@@ -76,8 +76,8 @@ export class ExecutedWarOpManager {
     public getExecutedOperationsCount(): number {
         return this._executedOperationsCount;
     }
-    public tickExecutedOperationsCount(): void {
-        ++this._executedOperationsCount;
+    public tickExecutedOperationsCount(): number {
+        return this._executedOperationsCount++;
     }
 
     private _setAllExecutedOperationArray(operations: WoContainer[]): void {
