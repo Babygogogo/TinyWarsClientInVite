@@ -243,7 +243,7 @@ export class PlayerManager {
         return new Set(playerIndexArray.map(v => this.getTeamIndex(v)));
     }
     public getAllTeamIndexes(includeNeutral: boolean): Set<number> {
-        return new Set([...this._players.values()].filter(v => (includeNeutral) || (v.checkIsNeutral())).map(v => v.getTeamIndex()));
+        return new Set([...this._players.values()].filter(v => (includeNeutral) || (!v.checkIsNeutral())).map(v => v.getTeamIndex()));
     }
 
     public getPlayerIndexesInTeam(teamIndex: number): number[] {

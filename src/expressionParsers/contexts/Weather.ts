@@ -46,7 +46,10 @@ export class Weather extends ExpressionParsers_Contexts_Base.Base {
                     }
 
                     const argType = argArray[0].getResultType({
-                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
+                        contextType            : contextType,
+                        lambdaArgumentInfoDict : lambdaArgumentInfoDict,
+                        localVariableDict      : localVariableDict,
+                        customCounterNameSet   : customCounterNameSet,
                     });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
@@ -67,7 +70,7 @@ export class Weather extends ExpressionParsers_Contexts_Base.Base {
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(weatherManager: Weathers_Manager.Manager) {
-        super(weatherManager.getWar());
+        super(Helpers_Misc.getExisted(weatherManager.getWar()));
 
         this._weatherManager = weatherManager;
     }
@@ -77,19 +80,20 @@ export class Weather extends ExpressionParsers_Contexts_Base.Base {
     }
 
     public override resolveVariable(identifierName: string): ExpressionParsers_Results_Base.Base {
-        const weatherManager = this._weatherManager;
+        const weatherManager    = this._weatherManager;
+        const war               = Helpers_Misc.getExisted(weatherManager.getWar());
         switch (identifierName) {
-            case Weather.VnExpiringPlayerIndex : return new ExpressionParsers_Results_Num.Num(weatherManager.getWar(), weatherManager.getExpirePlayerIndex() ?? -1);
-            case Weather.VnExpiringTurnIndex   : return new ExpressionParsers_Results_Num.Num(weatherManager.getWar(), weatherManager.getExpireTurnIndex() ?? -1);
-            case Weather.VnWar                 : return new ExpressionParsers_Results_War.War(weatherManager.getWar());
-            default                                     : return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(weatherManager.getWar())).resolveVariable(identifierName);
+            case Weather.VnExpiringPlayerIndex  : return new ExpressionParsers_Results_Num.Num(war, weatherManager.getExpirePlayerIndex() ?? -1);
+            case Weather.VnExpiringTurnIndex    : return new ExpressionParsers_Results_Num.Num(war, weatherManager.getExpireTurnIndex() ?? -1);
+            case Weather.VnWar                  : return new ExpressionParsers_Results_War.War(war);
+            default                             : return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(war)).resolveVariable(identifierName);
         }
     }
 
     public override callFunction(identifierName: string, argumentArray: ExpressionParsers_Results_Base.Base[], rootCtx: ExpressionParsers_Contexts_Base.Base, localVariableDict: Map<string, ExpressionParsers_Results_Base.Base> | null, isRestricted: boolean): ExpressionParsers_Results_Base.Base {
         switch (identifierName) {
-            case Weather.FnType    : return this.callType(argumentArray[0]);
-            default                         : return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(this._weatherManager.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
+            case Weather.FnType : return this.callType(argumentArray[0]);
+            default             : return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(Helpers_Misc.getExisted(this._weatherManager.getWar()))).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }
     }
     public callType(arg: ExpressionParsers_Results_Base.Base): ExpressionParsers_Results_Base.Base {
@@ -99,13 +103,13 @@ export class Weather extends ExpressionParsers_Contexts_Base.Base {
 
         const weatherManager    = this._weatherManager;
         const num               = arg.num;
-        const war               = weatherManager.getWar();
+        const war               = Helpers_Misc.getExisted(weatherManager.getWar());
         if (num === 1) {
-            return new ExpressionParsers_Results_Num.Num(war, weatherManager.getDefaultWeatherType());
+            return new ExpressionParsers_Results_Num.Num(war, Helpers_Misc.getExisted(weatherManager.getDefaultWeatherType()));
         } else if (num === 2) {
-            return new ExpressionParsers_Results_Num.Num(war, this._weatherManager.getForceWeatherType() ?? -1);
+            return new ExpressionParsers_Results_Num.Num(war, weatherManager.getForceWeatherType() ?? -1);
         } else {
-            return new ExpressionParsers_Results_Num.Num(war, this._weatherManager.getCurrentWeatherType());
+            return new ExpressionParsers_Results_Num.Num(war, Helpers_Misc.getExisted(weatherManager.getCurrentWeatherType()));
         }
     }
 }

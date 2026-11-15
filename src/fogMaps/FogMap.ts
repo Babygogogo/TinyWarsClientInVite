@@ -131,16 +131,18 @@ export class FogMap {
             }
 
         } else if (war instanceof SinglePlayerWars_War.War) {
-            const teamIndexes   = war.getPlayerManager().getWatcherTeamIndexesForSelf();
-            const visibleUnits  = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, teamIndexes);
-            for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
-                unit.setViewVisible(visibleUnits.has(unit));
-            }
+            if (war.getView() != null) {
+                const teamIndexes   = war.getPlayerManager().getWatcherTeamIndexesForSelf();
+                const visibleUnits  = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, teamIndexes);
+                for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
+                    unit.setViewVisible(visibleUnits.has(unit));
+                }
 
-            const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeams(war, teamIndexes);
-            for (const tile of war.getTileMap().getAllTiles()) {
-                tile.setHasFog(!visibleTiles.has(tile));
-                tile.flushDataToView();
+                const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeams(war, teamIndexes);
+                for (const tile of war.getTileMap().getAllTiles()) {
+                    tile.setHasFog(!visibleTiles.has(tile));
+                    tile.flushDataToView();
+                }
             }
 
         } else if (war instanceof TestWar_Model_TwWar.TwWar) {
@@ -302,7 +304,8 @@ export class FogMap {
             return false;
         } else {
             const war               = this.getWar();
-            const weatherFogType    = war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getFog();
+            const weatherTypeId     = war.getWeatherManager().getCurrentWeatherType();
+            const weatherFogType    = weatherTypeId == null ? undefined : war.getGcData().getWeatherCfg(weatherTypeId)?.getFog();
             if (weatherFogType === Weathers_Constants.FogType.Fog) {
                 return true;
             } else if (weatherFogType === Weathers_Constants.FogType.NoFog) {

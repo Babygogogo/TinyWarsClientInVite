@@ -16,7 +16,7 @@ export class Manager {
     private _forceWeatherType?      : number | null;
     private _expirePlayerIndex?     : number | null;
     private _expireTurnIndex?       : number | null;
-    private _war?                   : BaseWar_Model_War.War;
+    private _war                    : BaseWar_Model_War.War | undefined;
 
     private _view                   : Weathers_View.View | undefined;
 
@@ -65,31 +65,39 @@ export class Manager {
         this.getView()?.stopRunningView();
     }
 
+    public getWar(): BaseWar_Model_War.War | undefined {
+        return this._war;
+    }
     private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
-    }
-    public getWar(): BaseWar_Model_War.War {
-        return Helpers_Misc.getExisted(this._war, Utils_ClientErrorCode.ClientErrorCode.BwWeatherManager_GetWar_00);
     }
 
     public getView(): Weathers_View.View | undefined {
         return this._view;
     }
 
-    public getDefaultWeatherType(): number {
-        return this.getWar().getCommonSettingManager().getSettingsDefaultWeatherType();
+    public getDefaultWeatherType(): number | undefined {
+        return this.getWar()?.getCommonSettingManager().getSettingsDefaultWeatherType();
     }
-    public getCurrentWeatherType(): number {
+    public getCurrentWeatherType(): number | undefined {
         return this.getForceWeatherType() ?? this.getDefaultWeatherType();
     }
-    public getCurrentWeatherCfg(): WeatherCfg {
-        return Helpers_Misc.getExisted(this.getWar().getGcData().getWeatherCfg(this.getCurrentWeatherType()));
+    public getCurrentWeatherCfg(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeatherCfg> {
+        const currentWeatherType = this.getCurrentWeatherType();
+        if (currentWeatherType == null) {
+            return undefined;
+        }
+
+        return this.getWar()?.getGcData().getWeatherCfg(currentWeatherType);
     }
 
     public setForceWeatherType(type: number | null): void {
         if (this._forceWeatherType !== type) {
             this._forceWeatherType = type;
-            Notifications_Dispatcher.dispatch("BwForceWeatherTypeChanged");
+
+            if (this.getWar()?.getView() != null) {
+                Notifications_Dispatcher.dispatch("BwForceWeatherTypeChanged");
+            }
         }
     }
     public getForceWeatherType(): number | null {
@@ -117,7 +125,7 @@ export class Manager {
             return;
         }
 
-        const turnManager       = this.getWar().getTurnManager();
+        const turnManager       = Helpers_Misc.getExisted(this.getWar()?.getTurnManager());
         const currentTurnIndex  = turnManager.getTurnIndex();
         if ((expireTurnIndex < currentTurnIndex)                                                                ||
             (expireTurnIndex === currentTurnIndex) && (expirePlayerIndex <= turnManager.getPlayerIndexInTurn())
@@ -128,12 +136,26 @@ export class Manager {
         }
     }
 
-    public getDesc(): string {
-        const war               = this.getWar();
+    public getDesc(): string | undefined {
+        const war = this.getWar();
+        if (war == null) {
+            return undefined;
+        }
+
+        const currentWeatherType = this.getCurrentWeatherType();
+        if (currentWeatherType == null) {
+            return undefined;
+        }
+
+        const defaultWeatherType = this.getDefaultWeatherType();
+        if (defaultWeatherType == null) {
+            return undefined;
+        }
+
         const gameConfig        = war.getGcData();
         const expireTurnIndex   = this.getExpireTurnIndex();
-        const currentWeatherName = Lang_Utils.getWeatherName(this.getCurrentWeatherType(), gameConfig);
-        const defaultWeatherName = Lang_Utils.getWeatherName(this.getDefaultWeatherType(), gameConfig);
+        const currentWeatherName = Lang_Utils.getWeatherName(currentWeatherType, gameConfig);
+        const defaultWeatherName = Lang_Utils.getWeatherName(defaultWeatherType, gameConfig);
         if (expireTurnIndex == null) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0073, currentWeatherName, defaultWeatherName)}`
                 + `\n\n${Lang_Utils.getWeatherFullDesc(gameConfig)}`;

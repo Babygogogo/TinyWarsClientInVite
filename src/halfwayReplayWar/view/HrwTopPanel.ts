@@ -227,7 +227,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
-            getContent : () => war.getWeatherManager().getDesc(),
+            getContent : () => war.getWeatherManager().getDesc() ?? Lang_Constants.UndefinedError,
         });
     }
     private _onTouchedBtnInfo(): void {
@@ -240,7 +240,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if ((actionPlanner) && (!actionPlanner.checkIsStateRequesting())) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
         }
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarInfoPanel, { war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarInfoPanel, { war : war });
     }
     private _onTouchedBtnUnitInfo(): void {
         const war = this.getOpenData()?.war;
@@ -286,7 +286,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwPauseTimePanel, { war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwPauseTimePanel, { war : war });
     }
     private _onTouchedGroupProgress(): void {
         const war = this.getOpenData()?.war;
@@ -306,7 +306,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else if (war.getIsExecutingAction()) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
         } else {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwReplayProgressPanel, { war });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwReplayProgressPanel, { war : war });
         }
     }
     private _onTouchedGroupVisionTeam(): void {
@@ -500,7 +500,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
         }
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().HrwWarMenuPanel, { war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().HrwWarMenuPanel, { war : war });
     }
 
     private _onKeyboard(data: Keyboard_KbTypes.EventData): void {
@@ -622,7 +622,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._btnWeather.setIconSource(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getIcon() ?? ``);
+        const weatherTypeId = war.getWeatherManager().getCurrentWeatherType();
+        if (weatherTypeId == null) {
+            return;
+        }
+
+        this._btnWeather.setIconSource(war.getGcData().getWeatherCfg(weatherTypeId)?.getIcon() ?? ``);
     }
 
     private _updateLabelPauseTime(): void {
@@ -729,7 +734,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         const userId = openData.war.getPlayer(openData.playerIndex).getUserId();
         if (userId != null) {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : userId });
         }
     }
 

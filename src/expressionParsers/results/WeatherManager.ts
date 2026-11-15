@@ -1,6 +1,7 @@
 import {
     ExpressionParsers_Enums,
     ExpressionParsers_Results_Base,
+    Helpers_Misc,
     type Weathers_Manager,
 } from "../../internal.ts";
 
@@ -8,7 +9,7 @@ export class WeatherManager extends ExpressionParsers_Results_Base.Base {
     public readonly weatherManager: Weathers_Manager.Manager;
 
     public constructor(weatherManager: Weathers_Manager.Manager) {
-        super(weatherManager.getWar());
+        super(Helpers_Misc.getExisted(weatherManager.getWar()));
 
         this.weatherManager = weatherManager;
     }

@@ -30,9 +30,9 @@ import { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContaine
 const _warsWithRobotRunning = new Set<SinglePlayerWars_War.War>();
 
 export async function handlePlayerOpAndAutoOps(war: SinglePlayerWars_War.War, action: WoContainer): Promise<void> {
-    if (war instanceof SingleRankedWars_War.War) {
-        return SingleRankedWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, action);
-    }
+    // if (war instanceof SingleRankedWars_War.War) {
+    //     return SingleRankedWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, action);
+    // }
 
     if (war.getIsEnded()) {
         throw Helpers_Misc.newError(`war.getIsEnded() is true.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_00);
@@ -55,9 +55,9 @@ export async function handlePlayerOpAndAutoOps(war: SinglePlayerWars_War.War, ac
 }
 
 export async function generateAndRunAutoOps(war: SinglePlayerWars_War.War): Promise<void> {
-    if (war instanceof SingleRankedWars_War.War) {
-        return SingleRankedWars_AutoWarOpManager.generateAndRunAutoOps(war);
-    }
+    // if (war instanceof SingleRankedWars_War.War) {
+    //     return SingleRankedWars_AutoWarOpManager.generateAndRunAutoOps(war);
+    // }
 
     if (_warsWithRobotRunning.has(war)) {
         return;

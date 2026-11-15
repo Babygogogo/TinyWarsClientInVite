@@ -276,12 +276,12 @@ export async function gotoMultiPlayerWar(data: SerialWar): Promise<void> {
         GamePanels_Dict.getDict().BroadcastPanel,
     ]);
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBackgroundPanel, void 0);
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwTopPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwSidePanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwTopPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwSidePanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war : war });
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
     Sounds_SoundPlayer.playCoBgmWithWar({
@@ -303,11 +303,11 @@ export async function gotoReplayWar(warData: SerialWar, replayId: number): Promi
         GamePanels_Dict.getDict().BroadcastPanel,
     ]);
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBackgroundPanel, void 0);
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwTopPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwTopPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war : war });
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
     Sounds_SoundPlayer.playCoBgmWithWar({
@@ -329,11 +329,11 @@ export async function gotoHalfwayReplayWar(warData: SerialWar): Promise<void> {
         GamePanels_Dict.getDict().BroadcastPanel,
     ]);
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBackgroundPanel, void 0);
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().HrwTopPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().HrwTopPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war : war });
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
     Sounds_SoundPlayer.playCoBgmWithWar({
@@ -348,9 +348,10 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
     warData             : SerialWar;
     overridingBgmCode?  : number | null;
 }): Promise<void> {
-    const war = warData.getSettingsForSrw()
-        ? await SingleRankedWars_Provider.loadWar({ warData, slotIndex, slotExtraData })
-        : await SinglePlayerWars_Provider.loadWar({ warData, slotIndex, slotExtraData });
+    // const war = warData.getSettingsForSrw()
+    //     ? await SingleRankedWars_Provider.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData })
+    //     : await SinglePlayerWars_Provider.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData });
+    const war = await SinglePlayerWars_Provider.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData });
     war.setOverridingBgmCode(overridingBgmCode ?? null);
 
     MultiPlayerWar_Model_MpwModel.unloadWar();
@@ -363,12 +364,12 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
         GamePanels_Dict.getDict().BroadcastPanel,
     ]);
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBackgroundPanel, void 0);
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpwTopPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpwSidePanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpwTopPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpwSidePanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war : war });
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
     Sounds_SoundPlayer.playCoBgmWithWar({
@@ -405,10 +406,10 @@ export async function gotoMapEditorWar({ mapRawData, slotIndex, isReview, srcNor
     ]);
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBackgroundPanel, void 0);
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTopPanel, void 0);
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war });
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war : war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war : war });
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
     Sounds_SoundPlayer.playBgm(Users_Model.getSelfSettingsBgmCodeForMapEditor());
@@ -514,15 +515,15 @@ export function gotoWatchWarListPanel(): void {
 
 export function gotoMcrRoomInfoPanel(roomId: number): void {
     unloadAllWarsAndOpenCommonPanels();
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrRoomInfoPanel, { roomId });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrRoomInfoPanel, { roomId : roomId });
 }
 export function gotoCcrRoomInfoPanel(roomId: number): void {
     unloadAllWarsAndOpenCommonPanels();
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrRoomInfoPanel, { roomId });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrRoomInfoPanel, { roomId : roomId });
 }
 export function gotoMfrRoomInfoPanel(roomId: number): void {
     unloadAllWarsAndOpenCommonPanels();
-    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MfrRoomInfoPanel, { roomId });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MfrRoomInfoPanel, { roomId : roomId });
 }
 
 export async function gotoMfrCreateSettingsPanel(warData: SerialWar): Promise<void> {

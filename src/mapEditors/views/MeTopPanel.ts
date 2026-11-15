@@ -2,8 +2,8 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
     type MapEditor_Interface_IMeDrawer,
-    type MapEditor_Model_MeWar,
     type MapEditor_Model_MeTypes,
+    type MapEditor_Model_MeWar,
     type Notifications_Mapping,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -420,7 +420,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.createGridIndexByPoint(warView.getFieldContainer().getContentsContainerGlobalToLocal({ x, y }));
+        const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.createGridIndexByPoint(warView.getFieldContainer().getContentsContainerGlobalToLocal({ x : x, y : y }));
         label.setIsVisible(true);
         if (!gridIndex.checkIsInsideMap(war.getTileMap().getMapSize())) {
             label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1112)}: --`);
@@ -467,7 +467,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 if (!locationIdArray.length) {
                     FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0266));
                 } else {
-                    war.getDrawer().setModeAddTileToLocation({ locationIdArray });
+                    war.getDrawer().setModeAddTileToLocation({ locationIdArray : locationIdArray });
                 }
             },
         });
@@ -484,7 +484,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 if (!locationIdArray.length) {
                     FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0266));
                 } else {
-                    war.getDrawer().setModeDeleteTileFromLocation({ locationIdArray });
+                    war.getDrawer().setModeDeleteTileFromLocation({ locationIdArray : locationIdArray });
                 }
             },
         });
@@ -1151,7 +1151,7 @@ class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
                 skinId      : dataForDrawTileObject?.playerIndex ?? Players_Constants.PlayerIndex.Neutral,
                 themeTypeId : war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
-                    ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme()),
+                    ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType()))?.getTileTheme()),
             }, true);
             tileView?.refreshAllViews();
         }

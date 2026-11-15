@@ -169,11 +169,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const defenderUpperLuck = defenderRule.getLuckUpperLimit() + warEventManager.getOpaLuckUpperLimitModifier(defenderUnit, defenderGridIndex);
         const defenderLowerLuck = defenderRule.getLuckLowerLimit() + warEventManager.getOpaLuckLowerLimitModifier(defenderUnit, defenderGridIndex);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageCalculatorPanel, {
-            war,
+            war                  : war,
             needReviseWeaponType : false,
             data                 : {
-                gameConfig,
-                weatherType  : war.getWeatherManager().getCurrentWeatherType(),
+                gameConfig   : gameConfig,
+                weatherType  : Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType()),
                 attackerData : new AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData({
                     coId        : attackerPlayer.getCoId(),
                     coSkillType : attackerPlayer.checkCoIsUsingActiveSkill()

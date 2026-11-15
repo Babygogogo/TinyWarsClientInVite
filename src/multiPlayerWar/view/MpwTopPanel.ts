@@ -400,10 +400,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             group.setIsVisible(true);
 
             const teamIndex = war.getVisionTeamIndex();
-            this._labelVisionTeam.setText(teamIndex == null
-                ? Lang_Utils.getText(Lang_Constants.TextType.B0890)
-                : (Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError),
-            );
+            if (teamIndex == null) {
+                this._labelVisionTeam.setLangText(Lang_Constants.TextType.B0890);
+            } else {
+                this._labelVisionTeam.setText(Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError);
+            }
 
             group.arrangeItems();
             this._layoutButton.arrangeItems();
@@ -416,7 +417,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._btnWeather.setIconSource(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getIcon() ?? ``);
+        const weatherTypeId = war.getWeatherManager().getCurrentWeatherType();
+        if (weatherTypeId == null) {
+            return;
+        }
+
+        this._btnWeather.setIconSource(war.getGcData().getWeatherCfg(weatherTypeId)?.getIcon() ?? ``);
     }
 
     private _updateGroupTimer(): void {
@@ -527,14 +533,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray             : DataForListPlayer[] = [];
         for (let playerIndex = playerIndexInTurn + 1; playerIndex <= playersCountUnneutral; ++playerIndex) {
             dataArray.push({
-                war,
-                playerIndex,
+                war         : war,
+                playerIndex : playerIndex,
             });
         }
         for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex < playerIndexInTurn; ++playerIndex) {
             dataArray.push({
-                war,
-                playerIndex,
+                war         : war,
+                playerIndex : playerIndex,
             });
         }
         return dataArray;

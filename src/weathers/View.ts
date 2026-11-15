@@ -39,7 +39,7 @@ export class View extends Ui_Components_UiContainer.UiContainer {
     private readonly _imgArrayForSnow       : Ui_Interfaces_IUiImage.IUiImage[] = [];
     private readonly _containerForSandstorm = new Ui_Components_UiContainer.UiContainer();
     private readonly _imgArrayForSandstorm  : Ui_Interfaces_IUiImage.IUiImage[] = [];
-    private _showingWeatherType             : number | null = null;
+    private _showingWeatherType             : number | undefined;
 
     public constructor() {
         super();
@@ -125,13 +125,20 @@ export class View extends Ui_Components_UiContainer.UiContainer {
 
     public resetView(isForce: boolean): void {
         if (!LocalData_Storage.getShowWeatherAnimation()) {
-            this._showingWeatherType = null;
+            this._showingWeatherType = undefined;
             this._stopView();
             return;
         }
 
         const weatherManager    = this._getWeatherManager();
         const weatherType       = weatherManager.getCurrentWeatherType();
+        const war               = weatherManager.getWar();
+        if ((weatherType == null) || (war == null)) {
+            this._showingWeatherType = undefined;
+            this._stopView();
+            return;
+        }
+
         if ((!isForce) && (weatherType === this._showingWeatherType)) {
             return;
         }
@@ -140,7 +147,7 @@ export class View extends Ui_Components_UiContainer.UiContainer {
 
         this._stopView();
 
-        const animationType = weatherManager.getWar().getGcData().getWeatherCfg(weatherType)?.getAnim();
+        const animationType = war.getGcData().getWeatherCfg(weatherType)?.getAnim();
         if (animationType === Weathers_Constants.AnimationType.Rainy) {
             this._showRain();
         } else if (animationType === Weathers_Constants.AnimationType.Sandstorm) {

@@ -215,7 +215,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
             }
 
         } else {
-            const unit = new Units_Unit.Unit(true);
+            const unit = new Units_Unit.Unit(war.getView() != null);
             unit.init(unitData, gameConfig);
 
             if (unit.getLoaderUnitId() == null) {

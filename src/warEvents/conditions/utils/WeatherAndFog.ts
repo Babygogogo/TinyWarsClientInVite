@@ -1,9 +1,9 @@
 import {
-    Lang_Utils,
     Lang_Constants,
+    Lang_Utils,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WecWeatherAndFog } from "../../../proto/schema/CommonProto/WarEvent/WecWeatherAndFog.ts";
 
@@ -70,8 +70,13 @@ export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinabl
 }
 
 export function checkIsMeet(condition: WecWeatherAndFog, war: BaseWar_Model_War.War): boolean {
-    const weatherTypeArray  = condition.getWeatherTypeArray();
-    if ((weatherTypeArray?.length) && (weatherTypeArray.indexOf(war.getWeatherManager().getCurrentWeatherType()) < 0)) {
+    const weatherTypeId = war.getWeatherManager().getCurrentWeatherType();
+    if (weatherTypeId == null) {
+        return false;
+    }
+
+    const weatherTypeArray = condition.getWeatherTypeArray();
+    if ((weatherTypeArray?.length) && (weatherTypeArray.indexOf(weatherTypeId) < 0)) {
         return false;
     }
 

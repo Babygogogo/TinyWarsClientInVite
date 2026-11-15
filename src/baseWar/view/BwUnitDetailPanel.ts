@@ -279,11 +279,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return (distance != null) && (distance <= attackerPlayer.getCoZoneRadius());
         });
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageCalculatorPanel, {
-            war,
+            war                  : war,
             needReviseWeaponType : true,
             data                 : {
                 gameConfig   : war.getGcData(),
-                weatherType  : war.getWeatherManager().getCurrentWeatherType(),
+                weatherType  : Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType()),
                 attackerData : new AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData({
                     coId        : attackerPlayer.getCoId(),
                     coSkillType : attackerPlayer.checkCoIsUsingActiveSkill()
@@ -305,7 +305,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     fund                   : canSeeHiddenInfo1 ? attackerPlayer.getFund() : 0,
                     citiesCount            : canSeeHiddenInfo1 ? allCities.filter(v => v.getPlayerIndex() === attackerPlayerIndex).length : 0,
                 }),
-                defenderData,
+                defenderData : defenderData,
             },
         });
         this.closePanel();
@@ -352,7 +352,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     if (actionPlanner) {
                         ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
                     }
-                    Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex });
+                    Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex : gridIndex });
 
                     this.closePanel();
                 },
@@ -1523,8 +1523,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.BuildMaterial),
             currentValue : unit.getCurrentBuildMaterial(),
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 unit.setCurrentBuildMaterial(value);
                 unit.flushDataToView();
@@ -1550,8 +1550,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.FlareAmmo),
             currentValue : unit.getFlareCurrentAmmo(),
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 unit.setFlareCurrentAmmo(value);
                 unit.flushDataToView();
@@ -1578,8 +1578,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Fuel),
             currentValue : currValue,
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 unit.setCurrentFuel(value);
                 unit.flushDataToView();
@@ -1632,8 +1632,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
             currentValue : currValue,
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 unit.setCurrentHp(value);
                 unit.flushDataToView();
@@ -1748,8 +1748,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Promotion),
             currentValue : currValue,
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
                 unit.setCurrentPromotion(value);
                 unit.flushDataToView();
