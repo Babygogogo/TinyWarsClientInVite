@@ -7,27 +7,17 @@ import {
     type Turns_Manager,
 } from "../../../internal.ts";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const info = turnManager.getNextTurnAndPlayerIndex();
-    turnManager.setTurnIndex(info.turnIndex);
-    turnManager.setPlayerIndexInTurn(info.playerIndex, true);
+    turnManager.setTurnIndex(info.turnIndex, !isFastExecute);
+    turnManager.setPlayerIndexInTurn(info.playerIndex, !isFastExecute);
     turnManager.setEnterTurnTime(Timer_TimerModel.getServerTimestamp());
-    turnManager.getWar().getWarEventManager().updateWarEventCalledCountOnPlayerTurnSwitched();
+    Helpers_Misc.getExisted(turnManager.getWar()).getWarEventManager().updateWarEventCalledCountOnPlayerTurnSwitched();
 }
 
-export function runAsInnerWar(turnManager: Turns_Manager.Manager): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-    return runAsLocalWar(turnManager, true);
-}
-
-export function runAsUnifiedWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-    return runAsLocalWar(turnManager, isFastExecute);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+export function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex       = turnManager.getPlayerIndexInTurn();
-    const war               = turnManager.getWar();
+    const war               = Helpers_Misc.getExisted(turnManager.getWar());
     const currTime          = Timer_TimerModel.getServerTimestamp();
     const changedThings     = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     const player            = war.getPlayer(playerIndex);
@@ -61,8 +51,8 @@ function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolea
     changedThings.addPlayer(player);
 
     const info = turnManager.getNextTurnAndPlayerIndex();
-    turnManager.setTurnIndex(info.turnIndex);
-    turnManager.setPlayerIndexInTurn(info.playerIndex, true);
+    turnManager.setTurnIndex(info.turnIndex, !isFastExecute);
+    turnManager.setPlayerIndexInTurn(info.playerIndex, !isFastExecute);
     turnManager.setEnterTurnTime(Timer_TimerModel.getServerTimestamp());
     war.getWarEventManager().updateWarEventCalledCountOnPlayerTurnSwitched();
 

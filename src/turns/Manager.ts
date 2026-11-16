@@ -15,7 +15,7 @@ export class Manager {
     private _phaseCode?             : Turns_Constants.PhaseCode;
     private _enterTurnTime?         : number;
 
-    private _war?                   : BaseWar_Model_War.War;
+    private _war                    : BaseWar_Model_War.War | undefined;
     private _hasUnitOnBeginningTurn = false;
 
     public init(data: SerialTurnManager, playersCountUnneutral: number): void {
@@ -33,7 +33,7 @@ export class Manager {
             throw Helpers_Misc.newError(`Invalid turnPhaseCode: ${turnPhaseCode}`, Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_Init_02);
         }
 
-        this.setTurnIndex(data.getTurnIndex());
+        this.setTurnIndex(data.getTurnIndex(), false);
         this.setPlayerIndexInTurn(playerIndex, false);
         this.setPhaseCode(turnPhaseCode, false);
         this.setEnterTurnTime(data.getEnterTurnTime());
@@ -65,11 +65,11 @@ export class Manager {
         return this.serializeForCreateSfw();
     }
 
+    public getWar(): BaseWar_Model_War.War | undefined {
+        return this._war;
+    }
     private _setWar(war: BaseWar_Model_War.War): void {
         this._war = war;
-    }
-    public getWar(): BaseWar_Model_War.War {
-        return Helpers_Misc.getExisted(this._war);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,20 +78,24 @@ export class Manager {
     public getTurnIndex(): number {
         return Helpers_Misc.getExisted(this._turnIndex);
     }
-    public setTurnIndex(index: number): void {
+    public setTurnIndex(index: number, needUpdateView: boolean): void {
         if (this._turnIndex !== index){
             this._turnIndex = index;
-            Notifications_Dispatcher.dispatch("BwTurnIndexChanged");
+
+            if ((needUpdateView) && (this.getWar()?.getView())) {
+                Notifications_Dispatcher.dispatch("BwTurnIndexChanged");
+            }
         }
     }
 
     public getPlayerIndexInTurn(): number {
         return Helpers_Misc.getExisted(this._playerIndexInTurn);
     }
-    public setPlayerIndexInTurn(index: number, needNotify: boolean): void {
+    public setPlayerIndexInTurn(index: number, needUpdateView: boolean): void {
         if (this._playerIndexInTurn !== index) {
             this._playerIndexInTurn = index;
-            if (needNotify) {
+
+            if ((needUpdateView) && (this.getWar()?.getView())) {
                 Notifications_Dispatcher.dispatch("BwPlayerIndexInTurnChanged");
             }
         }
@@ -105,7 +109,7 @@ export class Manager {
         }
     }
     public getNextAlivePlayerIndex(playerIndex: number, includeNeutral = false): number {
-        const data          = this._getNextAliveTurnAndPlayerIndex(null, playerIndex);
+        const data          = this._getNextAliveTurnAndPlayerIndex(undefined, playerIndex);
         const playerIndex1  = data.playerIndex;
         if ((playerIndex1 !== Players_Constants.PlayerIndex.Neutral) || (includeNeutral)) {
             return playerIndex1;
@@ -118,10 +122,11 @@ export class Manager {
     public getPhaseCode(): Turns_Constants.PhaseCode {
         return Helpers_Misc.getExisted(this._phaseCode);
     }
-    public setPhaseCode(code: Turns_Constants.PhaseCode, needNotify: boolean): void {
+    public setPhaseCode(code: Turns_Constants.PhaseCode, needUpdateView: boolean): void {
         if (this._phaseCode !== code) {
             this._phaseCode = code;
-            if (needNotify) {
+
+            if ((needUpdateView) && (this.getWar()?.getView())) {
                 Notifications_Dispatcher.dispatch("BwTurnPhaseCodeChanged");
             }
         }
@@ -135,7 +140,7 @@ export class Manager {
     }
 
     private _getPreviousAlivePlayerIndex(currPlayerIndex = this.getPlayerIndexInTurn()): number {
-        const playerManager = this.getWar().getPlayerManager();
+        const playerManager = Helpers_Misc.getExisted(this.getWar()?.getPlayerManager());
         const playersCount  = playerManager.getTotalPlayersCount(true);
         let previousPlayerIndex = currPlayerIndex - 1;
         for (;;) {
@@ -155,7 +160,7 @@ export class Manager {
         currTurnIndex   = this.getTurnIndex(),
         currPlayerIndex = this.getPlayerIndexInTurn(),
     ): Turns_Types.TurnAndPlayerIndex {
-        if (currPlayerIndex < this.getWar().getPlayerManager().getTotalPlayersCount(false)) {
+        if (currPlayerIndex < Helpers_Misc.getExisted(this.getWar()?.getPlayerManager().getTotalPlayersCount(false))) {
             return {
                 turnIndex   : currTurnIndex,
                 playerIndex : currPlayerIndex + 1,
@@ -168,12 +173,10 @@ export class Manager {
         }
     }
     private _getNextAliveTurnAndPlayerIndex(
-        currTurnIndex   : number | null,
+        currTurnIndex   = this.getTurnIndex(),
         currPlayerIndex = this.getPlayerIndexInTurn(),
     ): Turns_Types.TurnAndPlayerIndex {
-        const war           = this.getWar();
-        currTurnIndex       = currTurnIndex ?? this.getTurnIndex();
-        const playerManager = war.getPlayerManager();
+        const playerManager = Helpers_Misc.getExisted(this.getWar()?.getPlayerManager());
         const playersCount  = playerManager.getTotalPlayersCount(true);
         let nextTurnIndex   = currTurnIndex;
         let nextPlayerIndex = currPlayerIndex + 1;

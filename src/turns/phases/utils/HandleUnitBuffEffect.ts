@@ -2,6 +2,7 @@ import {
     type Turns_Manager,
     AuxiliaryTypes_ChangedThingsForWarOperation,
     Destructions_Utils,
+    Helpers_Misc,
     UnitBuffs_Constants,
 } from "../../../internal.ts";
 
@@ -10,17 +11,9 @@ export function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastExecute:
     // nothing to do
 }
 
-export function runAsInnerWar(turnManager: Turns_Manager.Manager): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-    return runAsLocalWar(turnManager, true);
-}
-
-export function runAsUnifiedWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-    return runAsLocalWar(turnManager, isFastExecute);
-}
-
-function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+export function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
-    const war           = turnManager.getWar();
+    const war           = Helpers_Misc.getExisted(turnManager.getWar());
     const unitMap       = war.getUnitMap();
     const units         = unitMap.getAllUnits().filter(v => v.getPlayerIndex() === playerIndex).sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();

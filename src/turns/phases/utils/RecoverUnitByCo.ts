@@ -17,17 +17,9 @@ export function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastExecute:
     // nothing to do
 }
 
-export function runAsInnerWar(turnManager: Turns_Manager.Manager, timing: number): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-    return runAsLocalWar(turnManager, timing, true);
-}
-
-export function runAsUnifiedWar(turnManager: Turns_Manager.Manager, timing: number, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-    return runAsLocalWar(turnManager, timing, isFastExecute);
-}
-
-function runAsLocalWar(turnManager: Turns_Manager.Manager, timing: number, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+export function runAsLocalWar(turnManager: Turns_Manager.Manager, timing: number, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
-    const war           = turnManager.getWar();
+    const war           = Helpers_Misc.getExisted(turnManager.getWar());
     const player        = war.getPlayer(playerIndex);
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     if (!player.getCoId()) {

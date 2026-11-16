@@ -1,15 +1,16 @@
 import {
     ExpressionParsers_Contexts_Base,
+    ExpressionParsers_Contexts_War,
     ExpressionParsers_Enums,
-    ExpressionParsers_Utils,
+    type ExpressionParsers_Results_Base,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_Player,
     ExpressionParsers_Results_War,
-    Lang_Constants,
-    ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
+    ExpressionParsers_Utils,
+    Helpers_Misc,
+    Lang_Constants,
     type Turns_Manager,
-    type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
 
 export class Turn extends ExpressionParsers_Contexts_Base.Base {
@@ -42,7 +43,7 @@ export class Turn extends ExpressionParsers_Contexts_Base.Base {
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(turnManager: Turns_Manager.Manager) {
-        super(turnManager.getWar());
+        super(Helpers_Misc.getExisted(turnManager.getWar()));
 
         this._turnManager = turnManager;
     }
@@ -59,14 +60,14 @@ export class Turn extends ExpressionParsers_Contexts_Base.Base {
             case Turn.VnPlayer         : return new ExpressionParsers_Results_Player.Player(war.getPlayer(this._turnManager.getPlayerIndexInTurn()));
             case Turn.VnIndex          : return new ExpressionParsers_Results_Num.Num(war, this._turnManager.getTurnIndex());
             case Turn.VnPhase          : return new ExpressionParsers_Results_Num.Num(war, this._turnManager.getPhaseCode());
-            case Turn.VnWar            : return new ExpressionParsers_Results_War.War(this._turnManager.getWar());
-            default                             : return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(this._turnManager.getWar())).resolveVariable(identifierName);
+            case Turn.VnWar            : return new ExpressionParsers_Results_War.War(war);
+            default                    : return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(war)).resolveVariable(identifierName);
         }
     }
 
     public override callFunction(identifierName: string, argumentArray: ExpressionParsers_Results_Base.Base[], rootCtx: ExpressionParsers_Contexts_Base.Base, localVariableDict: Map<string, ExpressionParsers_Results_Base.Base> | null, isRestricted: boolean): ExpressionParsers_Results_Base.Base {
         switch (identifierName) {
-            default : return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(this._turnManager.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
+            default : return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }
     }
 }

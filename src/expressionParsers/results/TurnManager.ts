@@ -2,13 +2,14 @@ import {
     ExpressionParsers_Results_Base,
     ExpressionParsers_Enums,
     type Turns_Manager,
+    Helpers_Misc,
 } from "../../internal.ts";
 
 export class TurnManager extends ExpressionParsers_Results_Base.Base {
     public readonly turnManager: Turns_Manager.Manager;
 
     public constructor(turnManager: Turns_Manager.Manager) {
-        super(turnManager.getWar());
+        super(Helpers_Misc.getExisted(turnManager.getWar()));
 
         this.turnManager = turnManager;
     }

@@ -1,6 +1,7 @@
 import {
     type Turns_Manager,
     AuxiliaryTypes_ChangedThingsForWarOperation,
+    Helpers_Misc,
     Players_Constants,
 } from "../../../internal.ts";
 
@@ -9,16 +10,8 @@ export function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastExecute:
     // nothing to do
 }
 
-export function runAsInnerWar(turnManager: Turns_Manager.Manager): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-    return runAsLocalWar(turnManager, true);
-}
-
-export function runAsUnifiedWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-    return runAsLocalWar(turnManager, isFastExecute);
-}
-
-function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-    const war           = turnManager.getWar();
+export function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    const war           = Helpers_Misc.getExisted(turnManager.getWar());
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const player        = war.getPlayer(playerIndex);
     const unitMap       = war.getUnitMap();

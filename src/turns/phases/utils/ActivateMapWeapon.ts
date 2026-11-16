@@ -20,7 +20,7 @@ import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerializa
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<void> {
-    const war               = turnManager.getWar();
+    const war               = Helpers_Misc.getExisted(turnManager.getWar());
     const playerIndex       = war.getPlayerIndexInTurn();
     const tileMap           = war.getTileMap();
     const mapSize           = tileMap.getMapSize();
@@ -166,16 +166,8 @@ async function handleMapWeaponTileLaserTurretForOuterWar(war: BaseWar_Model_War.
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function runAsInnerWar(turnManager: Turns_Manager.Manager): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-    return runAsLocalWar(turnManager, true);
-}
-
-export function runAsUnifiedWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-    return runAsLocalWar(turnManager, isFastExecute);
-}
-
-async function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-    const war           = turnManager.getWar();
+export async function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    const war           = Helpers_Misc.getExisted(turnManager.getWar());
     const playerIndex   = war.getPlayerIndexInTurn();
     const tileMap       = war.getTileMap();
     const mapSize       = tileMap.getMapSize();
