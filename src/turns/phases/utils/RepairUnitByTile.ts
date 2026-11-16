@@ -1,21 +1,28 @@
 import {
-    type Turns_Manager,
     AuxiliaryTypes_ChangedThingsForWarOperation,
     Helpers_Team,
     ReplayWar_Model_RwWarBase,
-    Turns_PhaseHandlers_SortRepairUnits,
+    Turns_Phases_Utils_SortRepairUnits,
     Visibilities_Utils,
+    type Turns_Manager,
     type Units_Unit,
-} from "../../internal.ts";
-import {
-    WsUnitStatistics,
-} from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+} from "../../../internal.ts";
+import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 
-export function runAsInnerWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+export function runAsInnerWar(turnManager: Turns_Manager.Manager): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return runAsLocalWar(turnManager, true);
+}
+
+export function runAsUnifiedWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return runAsLocalWar(turnManager, isFastExecute);
+}
+
+function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
@@ -33,7 +40,7 @@ export function runAsInnerWar(turnManager: Turns_Manager.Manager, isFastExecute:
     const visibleUnits          = ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction()))
         ? null
         : Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
-    for (const unit of allUnitsOnMap.sort(Turns_PhaseHandlers_SortRepairUnits.sorterForRepairUnits)) {
+    for (const unit of allUnitsOnMap.sort(Turns_Phases_Utils_SortRepairUnits.sorterForRepairUnits)) {
         const gridIndex     = unit.getGridIndex();
         const tile          = tileMap.getTile(gridIndex);
         const repairData    = tile.getRepairHpAndCostForUnit(unit);

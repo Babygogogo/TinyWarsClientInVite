@@ -3,14 +3,22 @@ import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     Destructions_Utils,
     UnitBuffs_Constants,
-} from "../../internal.ts";
+} from "../../../internal.ts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 
-export function runAsInnerWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+export function runAsInnerWar(turnManager: Turns_Manager.Manager): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return runAsLocalWar(turnManager, true);
+}
+
+export function runAsUnifiedWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return runAsLocalWar(turnManager, isFastExecute);
+}
+
+function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const unitMap       = war.getUnitMap();
@@ -26,13 +34,14 @@ export function runAsInnerWar(turnManager: Turns_Manager.Manager, isFastExecute:
         let isModified = false;
         for (const buff of unit.getBuffList()) {
             const buffTypeId = buff.getBuffTypeId();
-            if (buffTypeId === UnitBuffs_Constants.BuffTypeId.Disease) {
+            if (buffTypeId === UnitBuffs_Constants.BuffTypeId.Fire) {
                 isModified = true;
 
                 const newHp = unit.getCurrentHp() - 10;
                 if (newHp > 0) {
                     unit.setCurrentHp(newHp);
                     changedThings.addUnit(unit);
+
                 } else {
                     if (unit.getLoaderUnitId() != null) {
                         changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId));

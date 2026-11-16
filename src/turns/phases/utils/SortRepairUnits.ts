@@ -2,7 +2,7 @@ import {
     Helpers_Misc,
     Utils_ClientErrorCode,
     type Units_Unit,
-} from "../../internal.ts";
+} from "../../../internal.ts";
 
 export function sorterForRepairUnits(unit1: Units_Unit.Unit, unit2: Units_Unit.Unit): number {
     const cost1 = unit1.getProductionFinalCost();

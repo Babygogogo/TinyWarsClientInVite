@@ -6,6 +6,7 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
+    Turns_Phases_Handler,
     WarOperations_Executors_Types,
     WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
@@ -24,38 +25,38 @@ export async function execute(war: BaseWar_Model_War.War, action: WoPlayerEndTur
 }
 
 function fastExePlayerEndTurn(war: BaseWar_Model_War.War, action: WoPlayerEndTurn): void {
+    const turnManager = war.getTurnManager();
     if (action.getExtraData()) {
-        war.getTurnManager().endPhaseMainAsOuterWar(action, true);
+        Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, true);
     } else {
-        war.getTurnManager().endPhaseMainAsInnerWar(true);
+        Turns_Phases_Handler.endPhaseMainAsInnerWar(turnManager);
     }
-
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
 function normalExePlayerEndTurn(war: BaseWar_Model_War.War, action: WoPlayerEndTurn): void {
+    const turnManager = war.getTurnManager();
     if (action.getExtraData()) {
-        war.getTurnManager().endPhaseMainAsOuterWar(action, false);
+        Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, false);
     } else {
-        war.getTurnManager().endPhaseMainAsInnerWar(false);
+        Turns_Phases_Handler.endPhaseMainAsInnerWar(turnManager);
     }
-
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerEndTurn): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
-    const allTileAppearanceInfosBeforeAction    = war.getTileMap().generateAllTileAppearanceInfos();
-    const visibleThingsForEachTeamBeforeAction  = war.getVisibleThingsForEachTeam();
-    const changedThings                         = war.getTurnManager().endPhaseMainAsInnerWar(true);
+    const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
+    const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
+    const changedThings                        = Turns_Phases_Handler.endPhaseMainAsInnerWar(war.getTurnManager());
 
-    return (extraAffectedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
+    return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
         war                                  : war,
         allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,
         visibleThingsForEachTeamBeforeAction : visibleThingsForEachTeamBeforeAction,
         visibilityArrayFromPathsBeforeAction : undefined,
-        changedThings                        : changedThings.mergeFrom(extraAffectedThings),
+        changedThings                        : changedThings.mergeFrom(extraChangedThings),
         thingsForMovePath                    : undefined,
         createMessage                        : commonExtraData => {
             const woContainer = new WoContainer();

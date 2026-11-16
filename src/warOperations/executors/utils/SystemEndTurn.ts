@@ -1,17 +1,17 @@
 import {
+    Lang_Constants,
+    Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
-    Lang_Utils,
-    Lang_Constants,
+    Turns_Phases_Handler,
     WarOperations_Executors_Types,
     WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoSystemEndTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemEndTurn.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,19 +24,21 @@ export async function execute(war: BaseWar_Model_War.War, action: WoSystemEndTur
 }
 
 function fastExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
+    const turnManager = war.getTurnManager();
     if (action.getExtraData()) {
-        war.getTurnManager().endPhaseMainAsOuterWar(action, true);
+        Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, true);
     } else {
-        war.getTurnManager().endPhaseMainAsInnerWar(true);
+        Turns_Phases_Handler.endPhaseMainAsInnerWar(turnManager);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
 function normalExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
+    const turnManager = war.getTurnManager();
     if (action.getExtraData()) {
-        war.getTurnManager().endPhaseMainAsOuterWar(action, false);
+        Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, false);
     } else {
-        war.getTurnManager().endPhaseMainAsInnerWar(false);
+        Turns_Phases_Handler.endPhaseMainAsInnerWar(turnManager);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
@@ -46,7 +48,7 @@ function normalExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndT
 export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemEndTurn): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
-    const changedThings                        = war.getTurnManager().endPhaseMainAsInnerWar(true);
+    const changedThings                        = Turns_Phases_Handler.endPhaseMainAsInnerWar(war.getTurnManager());
 
     return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
         war                                  : war,
@@ -68,7 +70,6 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoS
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoSystemEndTurn): Promise<string | null> {
-
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {

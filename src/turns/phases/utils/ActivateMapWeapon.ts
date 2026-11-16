@@ -1,25 +1,24 @@
 import {
     AuxiliaryTypes_AttackableArea,
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
+    Destructions_Utils,
     Helpers_Misc,
+    Helpers_Team,
+    Numbers_Utils,
     Tiles_Constants_MapWeapon,
     Timer_TimerModel,
+    Units_Constants,
     Utils_ClientErrorCode,
+    Visibilities_Utils,
     type BaseWar_Model_War,
     type Tiles_Tile,
     type Turns_Manager,
-    AuxiliaryTypes_ChangedThingsForWarOperation,
-    Destructions_Utils,
-    Helpers_Team,
-    Numbers_Utils,
-    Units_Constants,
-    Visibilities_Utils,
     type Units_Unit,
-} from "../../internal.ts";
-import {
-    WsUnitStatistics,
-} from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+} from "../../../internal.ts";
+import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<void> {
     const war               = turnManager.getWar();
     const playerIndex       = war.getPlayerIndexInTurn();
@@ -94,84 +93,6 @@ export async function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastEx
     }
 }
 
-export async function runAsInnerWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-    const war           = turnManager.getWar();
-    const playerIndex   = war.getPlayerIndexInTurn();
-    const tileMap       = war.getTileMap();
-    const mapSize       = tileMap.getMapSize();
-    const allTileArray  = tileMap.getAllTiles().filter(v => v.getPlayerIndex() === playerIndex);
-    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
-
-    {
-        const crystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.Crystal)
-            .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
-        for (const tile of crystalArray) {
-            changedThings.mergeFrom(await handleMapWeaponTileCrystal(war, tile, isFastExecute));
-        }
-    }
-    {
-        const customCrystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
-            .sort((v1, v2) => {
-                const priority1 = Helpers_Misc.getExisted(v1.getFinalCrystalData()).getPriority();
-                const priority2 = Helpers_Misc.getExisted(v2.getFinalCrystalData()).getPriority();
-                if (priority1 !== priority2) {
-                    return priority2 - priority1;
-                } else {
-                    return v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize);
-                }
-            });
-        for (const tile of customCrystalArray) {
-            changedThings.mergeFrom(await handleMapWeaponTileCrystal(war, tile, isFastExecute));
-        }
-    }
-    {
-        const cannonArray = allTileArray.filter(v => v.checkIsNormalCannon())
-            .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
-        for (const tile of cannonArray) {
-            changedThings.mergeFrom(await handleMapWeaponTileCannon(war, tile, isFastExecute));
-        }
-    }
-    {
-        const customCannonArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCannon)
-            .sort((v1, v2) => {
-                const priority1 = Helpers_Misc.getExisted(v1.getFinalCannonData()).getPriority();
-                const priority2 = Helpers_Misc.getExisted(v2.getFinalCannonData()).getPriority();
-                if (priority1 !== priority2) {
-                    return priority2 - priority1;
-                } else {
-                    return v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize);
-                }
-            });
-        for (const tile of customCannonArray) {
-            changedThings.mergeFrom(await handleMapWeaponTileCannon(war, tile, isFastExecute));
-        }
-    }
-    {
-        const laserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.LaserTurret)
-            .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
-        for (const tile of laserTurretArray) {
-            changedThings.mergeFrom(await handleMapWeaponTileLaserTurret(war, tile, isFastExecute));
-        }
-    }
-    {
-        const customLaserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
-            .sort((v1, v2) => {
-                const priority1 = Helpers_Misc.getExisted(v1.getFinalLaserTurretData()).getPriority();
-                const priority2 = Helpers_Misc.getExisted(v2.getFinalLaserTurretData()).getPriority();
-                if (priority1 !== priority2) {
-                    return priority2 - priority1;
-                } else {
-                    return v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize);
-                }
-            });
-        for (const tile of customLaserTurretArray) {
-            changedThings.mergeFrom(await handleMapWeaponTileLaserTurret(war, tile, isFastExecute));
-        }
-    }
-
-    return changedThings;
-}
-
 async function handleMapWeaponTileCrystalForOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
@@ -203,7 +124,135 @@ async function handleMapWeaponTileCrystalForOuterWar(war: BaseWar_Model_War.War,
     }
 }
 
-async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+async function handleMapWeaponTileCannonForOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+    const gridVisualEffect  = war.getGridVisualEffect();
+    const tileGridIndex     = tile.getGridIndex();
+    if (!isFastExecute) {
+        war.getView()?.moveGridToCenter(tileGridIndex);
+        gridVisualEffect?.showEffectCharge(tileGridIndex);
+        await Timer_TimerModel.wait(400);
+    }
+}
+
+async function handleMapWeaponTileLaserTurretForOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+    const gridVisualEffect  = war.getGridVisualEffect();
+    const tileGridIndex     = tile.getGridIndex();
+    if (!isFastExecute) {
+        war.getView()?.moveGridToCenter(tileGridIndex);
+        gridVisualEffect?.showEffectCharge(tileGridIndex);
+        await Timer_TimerModel.wait(400);
+    }
+
+    if (!isFastExecute) {
+        const mapSize           = war.getTileMap().getMapSize();
+        const attackableArea    = AuxiliaryTypes_AttackableArea.AttackableArea.createForTile(tile, mapSize);
+        const { width, height } = mapSize.getWH();
+        for (let x = 0; x < width; ++x) {
+            const column = attackableArea.getColumn(x);
+            if (column == null) {
+                continue;
+            }
+
+            for (let y = 0; y < height; ++y) {
+                if (column[y]) {
+                    gridVisualEffect?.showEffectDamage(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
+                }
+            }
+        }
+        await Timer_TimerModel.wait(200);
+
+        await Timer_TimerModel.wait(400);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function runAsInnerWar(turnManager: Turns_Manager.Manager): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    return runAsLocalWar(turnManager, true);
+}
+
+export function runAsUnifiedWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    return runAsLocalWar(turnManager, isFastExecute);
+}
+
+async function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    const war           = turnManager.getWar();
+    const playerIndex   = war.getPlayerIndexInTurn();
+    const tileMap       = war.getTileMap();
+    const mapSize       = tileMap.getMapSize();
+    const allTileArray  = tileMap.getAllTiles().filter(v => v.getPlayerIndex() === playerIndex);
+    const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
+
+    {
+        const crystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.Crystal)
+            .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
+        for (const tile of crystalArray) {
+            changedThings.mergeFrom(await handleMapWeaponTileCrystalForLocalWar(war, tile, isFastExecute));
+        }
+    }
+    {
+        const customCrystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
+            .sort((v1, v2) => {
+                const priority1 = Helpers_Misc.getExisted(v1.getFinalCrystalData()).getPriority();
+                const priority2 = Helpers_Misc.getExisted(v2.getFinalCrystalData()).getPriority();
+                if (priority1 !== priority2) {
+                    return priority2 - priority1;
+                } else {
+                    return v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize);
+                }
+            });
+        for (const tile of customCrystalArray) {
+            changedThings.mergeFrom(await handleMapWeaponTileCrystalForLocalWar(war, tile, isFastExecute));
+        }
+    }
+    {
+        const cannonArray = allTileArray.filter(v => v.checkIsNormalCannon())
+            .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
+        for (const tile of cannonArray) {
+            changedThings.mergeFrom(await handleMapWeaponTileCannonForLocalWar(war, tile, isFastExecute));
+        }
+    }
+    {
+        const customCannonArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCannon)
+            .sort((v1, v2) => {
+                const priority1 = Helpers_Misc.getExisted(v1.getFinalCannonData()).getPriority();
+                const priority2 = Helpers_Misc.getExisted(v2.getFinalCannonData()).getPriority();
+                if (priority1 !== priority2) {
+                    return priority2 - priority1;
+                } else {
+                    return v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize);
+                }
+            });
+        for (const tile of customCannonArray) {
+            changedThings.mergeFrom(await handleMapWeaponTileCannonForLocalWar(war, tile, isFastExecute));
+        }
+    }
+    {
+        const laserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.LaserTurret)
+            .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
+        for (const tile of laserTurretArray) {
+            changedThings.mergeFrom(await handleMapWeaponTileLaserTurretForLocalWar(war, tile, isFastExecute));
+        }
+    }
+    {
+        const customLaserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
+            .sort((v1, v2) => {
+                const priority1 = Helpers_Misc.getExisted(v1.getFinalLaserTurretData()).getPriority();
+                const priority2 = Helpers_Misc.getExisted(v2.getFinalLaserTurretData()).getPriority();
+                if (priority1 !== priority2) {
+                    return priority2 - priority1;
+                } else {
+                    return v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize);
+                }
+            });
+        for (const tile of customLaserTurretArray) {
+            changedThings.mergeFrom(await handleMapWeaponTileLaserTurretForLocalWar(war, tile, isFastExecute));
+        }
+    }
+
+    return changedThings;
+}
+
+async function handleMapWeaponTileCrystalForLocalWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -373,17 +422,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Model_War.War, tile: Tile
     return changedThings;
 }
 
-async function handleMapWeaponTileCannonForOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
-    const gridVisualEffect  = war.getGridVisualEffect();
-    const tileGridIndex     = tile.getGridIndex();
-    if (!isFastExecute) {
-        war.getView()?.moveGridToCenter(tileGridIndex);
-        gridVisualEffect?.showEffectCharge(tileGridIndex);
-        await Timer_TimerModel.wait(400);
-    }
-}
-
-async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+async function handleMapWeaponTileCannonForLocalWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -394,7 +433,7 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
 
     const warStatisticsManager          = war.getWarStatisticsManager();
     const data                          = Helpers_Misc.getExisted(tile.getFinalCannonData(), Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_HandleMapWeaponTileCannon_00);
-    const getCandidateUnitArray         = Helpers_Misc.createLazyFunc(() => generateCandidateUnitArrayForCannon(war, tile));
+    const getCandidateUnitArray         = Helpers_Misc.createLazyFunc(() => generateCandidateUnitArrayForCannonForLocalWar(war, tile));
     const maxTargetCount                = data.getMaxTargetCount();
     const deltaHp                       = data.getOffsetHp();
     const deltaFuelPercentage           = data.getOffsetFuelPercentage();
@@ -504,38 +543,7 @@ async function handleMapWeaponTileCannon(war: BaseWar_Model_War.War, tile: Tiles
     return changedThings;
 }
 
-async function handleMapWeaponTileLaserTurretForOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
-    const gridVisualEffect  = war.getGridVisualEffect();
-    const tileGridIndex     = tile.getGridIndex();
-    if (!isFastExecute) {
-        war.getView()?.moveGridToCenter(tileGridIndex);
-        gridVisualEffect?.showEffectCharge(tileGridIndex);
-        await Timer_TimerModel.wait(400);
-    }
-
-    if (!isFastExecute) {
-        const mapSize           = war.getTileMap().getMapSize();
-        const attackableArea    = AuxiliaryTypes_AttackableArea.AttackableArea.createForTile(tile, mapSize);
-        const { width, height } = mapSize.getWH();
-        for (let x = 0; x < width; ++x) {
-            const column = attackableArea.getColumn(x);
-            if (column == null) {
-                continue;
-            }
-
-            for (let y = 0; y < height; ++y) {
-                if (column[y]) {
-                    gridVisualEffect?.showEffectDamage(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
-                }
-            }
-        }
-        await Timer_TimerModel.wait(200);
-
-        await Timer_TimerModel.wait(400);
-    }
-}
-
-async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+async function handleMapWeaponTileLaserTurretForLocalWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -545,7 +553,7 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
     }
 
     const data                  = Helpers_Misc.getExisted(tile.getFinalLaserTurretData(), Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_HandleMapWeaponTileLaserTurret_00);
-    const candidateUnitArray    = generateCandidateUnitArrayForLaserTurret(war, tile);
+    const candidateUnitArray    = generateCandidateUnitArrayForLaserTurretForLocalWar(war, tile);
     const affectedUnits         = new Set<Units_Unit.Unit>();
     const changedThings         = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     {
@@ -661,7 +669,8 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Model_War.War, tile: 
     return changedThings;
 }
 
-function generateCandidateUnitArrayForCannon(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): Units_Unit.Unit[] {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+function generateCandidateUnitArrayForCannonForLocalWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): Units_Unit.Unit[] {
     const data              = Helpers_Misc.getExisted(tile.getFinalCannonData(), Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_GenerateCandidateUnitArrayForCannon_00);
     const playerIndexInTurn = tile.getPlayerIndex();
     const teamIndexInTurn   = tile.getTeamIndex();
@@ -694,7 +703,7 @@ function generateCandidateUnitArrayForCannon(war: BaseWar_Model_War.War, tile: T
     })) {
         unitAndFinalCostArray.push({
             unit : unit,
-            cost : unit.getProductionFinalCost() * unit.getNormalizedCurrentHp() / unit.getNormalizedMaxHp(),
+            cost : Math.floor(unit.getProductionFinalCost() * unit.getNormalizedCurrentHp() / unit.getNormalizedMaxHp()),
         });
     }
     unitAndFinalCostArray.sort((info1, info2) => {
@@ -715,7 +724,7 @@ function generateCandidateUnitArrayForCannon(war: BaseWar_Model_War.War, tile: T
     return candidateUnitArray;
 }
 
-function generateCandidateUnitArrayForLaserTurret(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): Units_Unit.Unit[] {
+function generateCandidateUnitArrayForLaserTurretForLocalWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile): Units_Unit.Unit[] {
     const data                  = Helpers_Misc.getExisted(tile.getFinalLaserTurretData(), Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_GenerateCandidateUnitArrayForLaserTurret_00);
     const playerIndexInTurn     = tile.getPlayerIndex();
     const teamIndexInTurn       = tile.getTeamIndex();

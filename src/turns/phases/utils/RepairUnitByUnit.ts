@@ -1,23 +1,30 @@
 import {
-    Helpers_Misc,
-    Utils_ClientErrorCode,
-    type Turns_Manager,
     AuxiliaryTypes_ChangedThingsForWarOperation,
+    Helpers_Misc,
     Helpers_Team,
     ReplayWar_Model_RwWarBase,
-    Turns_PhaseHandlers_SortRepairUnits,
+    Turns_Phases_Utils_SortRepairUnits,
+    Utils_ClientErrorCode,
     Visibilities_Utils,
+    type Turns_Manager,
     type Units_Unit,
-} from "../../internal.ts";
-import {
-    WsUnitStatistics,
-} from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+} from "../../../internal.ts";
+import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 
-export function runAsInnerWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+export function runAsInnerWar(turnManager: Turns_Manager.Manager): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return runAsLocalWar(turnManager, true);
+}
+
+export function runAsUnifiedWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return runAsLocalWar(turnManager, isFastExecute);
+}
+
+function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex       = turnManager.getPlayerIndexInTurn();
     const war               = turnManager.getWar();
     const player            = war.getPlayer(playerIndex);
@@ -36,7 +43,7 @@ export function runAsInnerWar(turnManager: Turns_Manager.Manager, isFastExecute:
     }
 
     const warStatisticsManager = war.getWarStatisticsManager();
-    for (const unit of allUnitsLoaded.sort(Turns_PhaseHandlers_SortRepairUnits.sorterForRepairUnits)) {
+    for (const unit of allUnitsLoaded.sort(Turns_Phases_Utils_SortRepairUnits.sorterForRepairUnits)) {
         const loader        = Helpers_Misc.getExisted(unit.getLoaderUnit(), Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_RunPhaseRepairUnitByUnitWithoutExtraData_00);
         const gridIndex     = loader.getGridIndex();
         const repairData    = loader.getRepairHpAndCostForLoadedUnit(unit);

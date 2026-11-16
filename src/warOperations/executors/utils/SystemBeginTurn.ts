@@ -11,6 +11,7 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
+    Turns_Phases_Handler,
     WarOperations_Executors_Types,
     WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
@@ -28,10 +29,11 @@ export async function execute(war: BaseWar_Model_War.War, action: WoSystemBeginT
 }
 
 async function fastExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
+    const turnManager = war.getTurnManager();
     if (action.getExtraData()) {
-        await war.getTurnManager().endPhaseStandbyAsOuterWar(action, true);
+        await Turns_Phases_Handler.endPhaseStandbyAsOuterWar(turnManager, action, true);
     } else {
-        await war.getTurnManager().endPhaseStandbyAsInnerWar(true);
+        await Turns_Phases_Handler.endPhaseStandbyAsInnerWar(turnManager);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
@@ -65,10 +67,11 @@ async function normalExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSy
         }
     }
 
+    const turnManager = war.getTurnManager();
     if (action.getExtraData()) {
-        await war.getTurnManager().endPhaseStandbyAsOuterWar(action, false);
+        await Turns_Phases_Handler.endPhaseStandbyAsOuterWar(turnManager, action, false);
     } else {
-        await war.getTurnManager().endPhaseStandbyAsInnerWar(false);
+        await Turns_Phases_Handler.endPhaseStandbyAsInnerWar(turnManager);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
@@ -78,7 +81,7 @@ async function normalExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSy
 export async function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemBeginTurn): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
-    const changedThings                        = await war.getTurnManager().endPhaseStandbyAsInnerWar(true);
+    const changedThings                        = await Turns_Phases_Handler.endPhaseStandbyAsInnerWar(war.getTurnManager());
 
     return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
         war                                  : war,

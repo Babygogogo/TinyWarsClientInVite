@@ -100,8 +100,8 @@ export class Manager {
             }
         }
     }
-    public getForceWeatherType(): number | null {
-        return Helpers_Misc.getDefined(this._forceWeatherType, Utils_ClientErrorCode.ClientErrorCode.BwWeatherManager_GetForceWeatherType_00);
+    public getForceWeatherType(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
+        return this._forceWeatherType;
     }
 
     public setExpirePlayerIndex(playerIndex: number | null): void {

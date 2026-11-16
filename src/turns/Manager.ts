@@ -1,18 +1,12 @@
 import {
-    AuxiliaryTypes_ChangedThingsForWarOperation,
     Helpers_Misc,
     Notifications_Dispatcher,
     Players_Constants,
     Turns_Constants,
-    Turns_PhaseHandlers_AsOuterWar,
-    Turns_PhaseHandlers_AsInnerWar,
     Utils_ClientErrorCode,
     type BaseWar_Model_War,
     type Turns_Types,
 } from "../internal.ts";
-import type { WoPlayerEndTurn } from "../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
-import type { WoSystemBeginTurn } from "../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
-import type { WoSystemEndTurn } from "../proto/schema/CommonProto/WarOperation/WoSystemEndTurn.ts";
 import { SerialTurnManager } from "../proto/schema/CommonProto/WarSerialization/SerialTurnManager.ts";
 
 export class Manager {
@@ -76,23 +70,6 @@ export class Manager {
     }
     public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    // The functions for running turn.
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public endPhaseStandbyAsOuterWar(action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
-        return Turns_PhaseHandlers_AsOuterWar.endPhaseStandby(this, action, isFastExecute);
-    }
-    public endPhaseStandbyAsInnerWar(isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-        return Turns_PhaseHandlers_AsInnerWar.endPhaseStandby(this, isFastExecute);
-    }
-
-    public endPhaseMainAsOuterWar(action: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void {
-        Turns_PhaseHandlers_AsOuterWar.endPhaseMain(this, action, isFastExecute);
-    }
-    public endPhaseMainAsInnerWar(isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-        return Turns_PhaseHandlers_AsInnerWar.endPhaseMain(this, isFastExecute);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

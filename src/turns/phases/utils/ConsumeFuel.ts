@@ -1,16 +1,24 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Turns_Constants,
     type Turns_Manager,
-    AuxiliaryTypes_ChangedThingsForWarOperation,
-} from "../../internal.ts";
+} from "../../../internal.ts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     // nothing to do
 }
 
+export function runAsInnerWar(turnManager: Turns_Manager.Manager): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return runAsLocalWar(turnManager, true);
+}
+
+export function runAsUnifiedWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return runAsLocalWar(turnManager, isFastExecute);
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function runAsInnerWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const turnIndex     = turnManager.getTurnIndex();
     const war           = turnManager.getWar();
