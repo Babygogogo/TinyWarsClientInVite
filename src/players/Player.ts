@@ -175,7 +175,7 @@ export class Player implements Players_Player.Player {
         const teamIndexes           = war.getPlayerManager().getWatcherTeamIndexesForSelf();
         const shouldShowFund        = (war.getShouldSerializeFullInfoForFreeModeGames()) || (!war.getFogMap().checkHasFogCurrently()) || (teamIndexes.has(this.getTeamIndex()));
         return SerialPlayer.fromJson({
-            playerIndex,
+            playerIndex                 : playerIndex,
             fund                        : shouldShowFund ? this.getFund() : 0,
             hasVotedForDraw             : this.getHasVotedForDraw(),
             aliveState                  : this.getAliveState(),
@@ -201,7 +201,7 @@ export class Player implements Players_Player.Player {
         const teamIndexes           = war.getPlayerManager().getWatcherTeamIndexesForSelf();
         const shouldShowFund        = (war.getShouldSerializeFullInfoForFreeModeGames()) || (!war.getFogMap().checkHasFogCurrently()) || (teamIndexes.has(this.getTeamIndex()));
         return SerialPlayer.fromJson({
-            playerIndex,
+            playerIndex                 : playerIndex,
             fund                        : shouldShowFund ? this.getFund() : 0,
             hasVotedForDraw             : this.getHasVotedForDraw(),
             aliveState                  : this.getAliveState(),
@@ -222,17 +222,23 @@ export class Player implements Players_Player.Player {
         });
     }
 
-    private _setWar(war: BaseWar_Model_War.War): void {
-        this._war = war;
-    }
     public getWar(): BaseWar_Model_War.War {
         return Helpers_Misc.getExisted(this._war);
+    }
+    public getWar2(): BaseWar_Model_War.War | undefined {
+        return this._war;
+    }
+    private _setWar(war: BaseWar_Model_War.War): void {
+        this._war = war;
     }
 
     public setFund(fund: number): void {
         if (this._fund !== fund) {
             this._fund = fund;
-            Notifications_Dispatcher.dispatch("BwPlayerFundChanged", { player : this });
+
+            if (this.getWar2()?.getView()) {
+                Notifications_Dispatcher.dispatch("BwPlayerFundChanged", { player : this });
+            }
         }
     }
     public getFund(): number {
@@ -413,7 +419,10 @@ export class Player implements Players_Player.Player {
     public setCoId(coId: number): void {
         if (this._coId !== coId) {
             this._coId = coId;
-            Notifications_Dispatcher.dispatch("BwCoIdChanged", { player : this });
+
+            if (this.getWar2()?.getView()) {
+                Notifications_Dispatcher.dispatch("BwCoIdChanged", { player : this });
+            }
         }
     }
     public getCoId(): number {
@@ -429,7 +438,10 @@ export class Player implements Players_Player.Player {
             throw Helpers_Misc.newError(`Invalid energy: ${energy}`);
         }
         this._coCurrentEnergy = energy;
-        Notifications_Dispatcher.dispatch("BwCoEnergyChanged");
+
+        if (this.getWar2()?.getView()) {
+            Notifications_Dispatcher.dispatch("BwCoEnergyChanged");
+        }
     }
     public setAndValidateCoCurrentEnergy(energy: number): void {
         this._setCoCurrentEnergy(Cos_Utils.getValidEnergy(energy));
@@ -529,7 +541,10 @@ export class Player implements Players_Player.Player {
     public setCoUsingSkillType(skillType: CoSkills_Constants.SkillTypeId): void {
         if (this._coUsingSkillType !== skillType) {
             this._coUsingSkillType = skillType;
-            Notifications_Dispatcher.dispatch("BwCoUsingSkillTypeChanged");
+
+            if (this.getWar2()?.getView()) {
+                Notifications_Dispatcher.dispatch("BwCoUsingSkillTypeChanged");
+            }
         }
     }
     public getCoCurrentSkills(): number[] {

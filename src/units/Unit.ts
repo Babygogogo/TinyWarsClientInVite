@@ -446,7 +446,7 @@ export class Unit {
         const isInCozByPreviewSettings  = ((useDamagePreviewSettings) && (damagePreviewSettings.isEnabled))
             ? damagePreviewSettings.settings.find(v => v.playerIndex === selfPlayerIndex)?.isForcedInCoZone ?? false
             : false;
-        const weatherTypeId             = war.getWeatherManager().getCurrentWeatherType();
+        const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() =>
             observerTeamIndexSet == null
                 ? player.getCoGridIndexListOnMap()
@@ -492,7 +492,7 @@ export class Unit {
     public getAttackModifierByWeather(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex, observerTeamIndexSet: Set<number> | null, useDamagePreviewSettings: boolean): number {
         const war               = this.getWar();
         const weatherManager    = war.getWeatherManager();
-        const offenseBonusCfg   = weatherManager.getCurrentWeatherCfg().getOffenseBonus();
+        const offenseBonusCfg   = weatherManager.getCurrentWeatherCfg()?.getOffenseBonus();
         if (offenseBonusCfg == null) {
             return 0;
         }
@@ -508,7 +508,7 @@ export class Unit {
             return 0;
         }
 
-        const weatherType               = weatherManager.getCurrentWeatherType();
+        const weatherType               = Helpers_Misc.getExisted(weatherManager.getCurrentWeatherType());
         const isCoOnboard               = this.getIsCoOnboard();
         const player                    = this.getPlayer();
         const coZoneRadius              = player.getCoZoneRadius();
@@ -601,7 +601,7 @@ export class Unit {
         const selfTile                  = tileMap.getTile(selfGridIndex);
         const selfTileTypeId            = selfTile.getTileTypeId();
         const selfPlayerIndex           = player.getPlayerIndex();
-        const weatherTypeId             = war.getWeatherManager().getCurrentWeatherType();
+        const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const promotion                 = this.getCurrentPromotion();
         const isCoOnboard               = this.getIsCoOnboard();
         const selfHp                    = this.getCurrentHp();
@@ -1328,7 +1328,7 @@ export class Unit {
         const selfGridIndex             = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
         const selfTileTypeId            = war.getTileMap().getTile(selfGridIndex).getTileTypeId();
-        const weatherTypeId             = war.getWeatherManager().getCurrentWeatherType();
+        const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const isCoOnboard               = this.getIsCoOnboard();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifier                    = 0;
@@ -1351,7 +1351,7 @@ export class Unit {
     private _getMoveRangeModifierByWeather(): number {
         const war               = this.getWar();
         const weatherManager    = war.getWeatherManager();
-        const moveRangeBonus    = weatherManager.getCurrentWeatherCfg().getMovementBonus();
+        const moveRangeBonus    = weatherManager.getCurrentWeatherCfg()?.getMovementBonus();
         if (moveRangeBonus == null) {
             return 0;
         }
@@ -1368,7 +1368,7 @@ export class Unit {
             return 0;
         }
 
-        const weatherType               = weatherManager.getCurrentWeatherType();
+        const weatherType               = Helpers_Misc.getExisted(weatherManager.getCurrentWeatherType());
         const isCoOnboard               = this.getIsCoOnboard();
         const player                    = this.getPlayer();
         const coZoneRadius              = player.getCoZoneRadius();
@@ -1603,7 +1603,7 @@ export class Unit {
             }
         }
 
-        return { amountModifier, costMultiplierPct };
+        return { amountModifier : amountModifier, costMultiplierPct : costMultiplierPct };
     }
 
     public setLoaderUnitId(loaderUnitId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void {
@@ -1733,12 +1733,12 @@ export class Unit {
         const gridIndex             = this.getGridIndex();
         const tileType              = war.getTileMap().getTile(gridIndex).getTileTypeId();
         const weatherManager        = war.getWeatherManager();
-        const unitVisionFixedCfg    = weatherManager.getCurrentWeatherCfg().getUnitVisionFixed();
+        const unitVisionFixedCfg    = weatherManager.getCurrentWeatherCfg()?.getUnitVisionFixed();
         const modifierByCo          = this._getVisionRangeModifierByCo(gridIndex);
         if (unitVisionFixedCfg != null) {
             const gameConfig    = war.getGcData();
             const unitType      = this.getUnitTypeId();
-            const weatherType   = weatherManager.getCurrentWeatherType();
+            const weatherType   = Helpers_Misc.getExisted(weatherManager.getCurrentWeatherType());
             if ((gameConfig.checkIsUnitTypeInCategory(unitType, unitVisionFixedCfg[0])) &&
                 (gameConfig.checkIsTileTypeInCategory(tileType, unitVisionFixedCfg[1]))
             ) {

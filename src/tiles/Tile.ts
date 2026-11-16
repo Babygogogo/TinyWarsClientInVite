@@ -137,7 +137,7 @@ export class Tile {
         const objectType    = data.getObjectType();
         const baseType      = data.getBaseType();
         const playerIndex   = data.getPlayerIndex();
-        if (!TileObjects_Utils.checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType : objectType })) {
+        if (!TileObjects_Utils.checkIsValidPlayerIndexForTileObject({ playerIndex : playerIndex, tileObjectType : objectType })) {
             throw Helpers_Misc.newError(`Invalid playerIndex: ${playerIndex}`, Utils_ClientErrorCode.ClientErrorCode.BwTile_Deserialize_04);
         }
 
@@ -721,7 +721,7 @@ export class Tile {
         playerIndex     : number;
     }): void {
         const gameConfig = this.getGameConfig();
-        if (!TileObjects_Utils.checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType : objectType })) {
+        if (!TileObjects_Utils.checkIsValidPlayerIndexForTileObject({ playerIndex : playerIndex, tileObjectType : objectType })) {
             throw Helpers_Misc.newError(`Invalid playerIndex: ${playerIndex}, baseType: ${baseType}, objectType: ${objectType}`);
         }
 
@@ -893,17 +893,17 @@ export class Tile {
 
         const tileType                  = this.getTileTypeId();
         const gameConfig                = war.getGcData();
-        const weatherType               = war.getWeatherManager().getCurrentWeatherType();
+        const weatherType               = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const player                    = unit.getPlayer();
         const gridIndex                 = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         for (const skillId of player.getCoCurrentSkills() || []) {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitMoveCost();
-            if ((cfg)                                                                                   &&
-                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))          &&
-                (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId()))          &&
-                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId())) &&
+            if ((cfg)                                                                               &&
+                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))           &&
+                (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId()))           &&
+                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
                     coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
@@ -946,7 +946,7 @@ export class Tile {
             }
         }
 
-        return { amountModifier, costMultiplierPct };
+        return { amountModifier : amountModifier, costMultiplierPct : costMultiplierPct };
     }
 
     public checkCanRepairOrSupplyUnitType(unitType: number): boolean {
@@ -1095,7 +1095,7 @@ export class Tile {
 
     public getFinalVisionRange(): number {
         const war                   = this.getWar();
-        const tileVisionFixedCfg    = war.getWeatherManager().getCurrentWeatherCfg().getTileVisionFixed();
+        const tileVisionFixedCfg    = war.getWeatherManager().getCurrentWeatherCfg()?.getTileVisionFixed();
         if ((tileVisionFixedCfg)                                                                        &&
             (war.getGcData().checkIsTileTypeInCategory(this.getTileTypeId(), tileVisionFixedCfg[0]))
         ) {
@@ -1434,10 +1434,19 @@ export class Tile {
         this.deserialize(data, this.getGameConfig());
     }
 
-    public getThemeTypeId(): number {
-        const war = this.getWar();
-        return war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
-            ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme());
+    public getThemeTypeId(): number | undefined {
+        const war               = this.getWar();
+        const fixedTileTheme    = war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme();
+        if (fixedTileTheme != null) {
+            return fixedTileTheme;
+        }
+
+        const currentWeatherType = war.getWeatherManager().getCurrentWeatherType();
+        if (currentWeatherType == null) {
+            return undefined;
+        }
+
+        return war.getGcData().getWeatherCfg(currentWeatherType)?.getTileTheme();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

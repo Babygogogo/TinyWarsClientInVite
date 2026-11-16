@@ -52,7 +52,7 @@ export async function applyWithExtraData(action: WeaSetWeatherSimple, isFast: bo
 }
 export async function applyAsInnerWar(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const weatherManager = war.getWeatherManager();
-    weatherManager.setForceWeatherType(action.getWeatherType());
+    weatherManager.setForceWeatherType(action.getWeatherType(), !isFast);
 
     const weatherTurnsCount = action.getWeatherTurnsCount();
     if (weatherTurnsCount == 0) {

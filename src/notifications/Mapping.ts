@@ -348,8 +348,6 @@ export type Mapping = {
     BwTileCustomNameArrayChanged: undefined;
     BwTileCustomNameIdChanged: undefined;
 
-    BwTileMapLocationVisibleSet: undefined;
-
     WarOperationNormalExecuted: undefined;
 
     ReplayAutoReplayChanged: undefined;

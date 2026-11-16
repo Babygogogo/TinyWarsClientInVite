@@ -21,7 +21,7 @@ export function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isF
         const weatherManager    = war.getWeatherManager();
         const fogMap            = war.getFogMap();
         const hasFog            = fogMap.checkHasFogCurrently();
-        weatherManager.setForceWeatherType(Helpers_Misc.getExisted(skillData.getNewWeatherType(), Utils_ClientErrorCode.ClientErrorCode.WarCoSkillHelpers_ExeChangeWeatherWithExtraData_00));
+        weatherManager.setForceWeatherType(Helpers_Misc.getExisted(skillData.getNewWeatherType(), Utils_ClientErrorCode.ClientErrorCode.WarCoSkillHelpers_ExeChangeWeatherWithExtraData_00), !isFastExecute);
         weatherManager.setExpirePlayerIndex(playerIndex);
         weatherManager.setExpireTurnIndex(war.getTurnManager().getTurnIndex() + (cfg.getTurns()));
         // war.getFogMap().resetMapFromPathsForPlayer(playerIndex);
@@ -52,7 +52,7 @@ export function exeChangeWeatherWithoutExtraData({ skillCfg, player, skillData, 
         const weatherManager    = war.getWeatherManager();
         const fogMap            = war.getFogMap();
         const hasFog            = fogMap.checkHasFogCurrently();
-        weatherManager.setForceWeatherType(Helpers_Misc.getExisted(skillData.getNewWeatherType(), Utils_ClientErrorCode.ClientErrorCode.WarCoSkillHelpers_ExeChangeWeatherWithoutExtraData_00));
+        weatherManager.setForceWeatherType(Helpers_Misc.getExisted(skillData.getNewWeatherType(), Utils_ClientErrorCode.ClientErrorCode.WarCoSkillHelpers_ExeChangeWeatherWithoutExtraData_00), !isFastExecute);
         weatherManager.setExpirePlayerIndex(playerIndex);
         weatherManager.setExpireTurnIndex(war.getTurnManager().getTurnIndex() + (cfg.getTurns()));
         // war.getFogMap().resetMapFromPathsForPlayer(playerIndex);

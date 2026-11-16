@@ -222,7 +222,7 @@ function runPhaseResetVotesForDraw(turnManager: Turns_Manager.Manager, isFastExe
 function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_Manager.Manager, isFastExecute: boolean): void {
     const war               = turnManager.getWar();
     const weatherManager    = war.getWeatherManager();
-    weatherManager.updateOnPlayerTurnSwitched();
+    weatherManager.updateOnPlayerTurnSwitched(!isFastExecute);
     war.getFogMap().updateOnPlayerTurnSwitched();
 
     if (!isFastExecute) {

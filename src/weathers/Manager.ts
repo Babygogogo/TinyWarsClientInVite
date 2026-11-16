@@ -27,7 +27,7 @@ export class Manager {
     }
 
     public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWeatherManager>): void {
-        this.setForceWeatherType(data?.getForceWeatherType() ?? null);
+        this.setForceWeatherType(data?.getForceWeatherType(), false);
         this.setExpireTurnIndex(data?.getExpireTurnIndex() ?? null);
         this.setExpirePlayerIndex(data?.getExpirePlayerIndex() ?? null);
 
@@ -91,11 +91,11 @@ export class Manager {
         return this.getWar()?.getGcData().getWeatherCfg(currentWeatherType);
     }
 
-    public setForceWeatherType(type: number | null): void {
-        if (this._forceWeatherType !== type) {
-            this._forceWeatherType = type;
+    public setForceWeatherType(weatherTypeId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>, needUpdateView: boolean): void {
+        if (this._forceWeatherType !== weatherTypeId) {
+            this._forceWeatherType = weatherTypeId;
 
-            if (this.getWar()?.getView() != null) {
+            if ((needUpdateView) && (this.getWar()?.getView() != null)) {
                 Notifications_Dispatcher.dispatch("BwForceWeatherTypeChanged");
             }
         }
@@ -118,7 +118,7 @@ export class Manager {
         return Helpers_Misc.getDefined(this._expireTurnIndex, Utils_ClientErrorCode.ClientErrorCode.BwWeatherManager_GetExpireTurnIndex_00);
     }
 
-    public updateOnPlayerTurnSwitched(): void {
+    public updateOnPlayerTurnSwitched(needUpdateView: boolean): void {
         const expireTurnIndex   = this.getExpireTurnIndex();
         const expirePlayerIndex = this.getExpirePlayerIndex();
         if ((expireTurnIndex == null) || (expirePlayerIndex == null)) {
@@ -130,7 +130,7 @@ export class Manager {
         if ((expireTurnIndex < currentTurnIndex)                                                                ||
             (expireTurnIndex === currentTurnIndex) && (expirePlayerIndex <= turnManager.getPlayerIndexInTurn())
         ) {
-            this.setForceWeatherType(null);
+            this.setForceWeatherType(null, needUpdateView);
             this.setExpireTurnIndex(null);
             this.setExpirePlayerIndex(null);
         }

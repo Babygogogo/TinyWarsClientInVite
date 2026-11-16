@@ -610,7 +610,7 @@ export abstract class War {
         aiming            : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
         callback          : ((tempUnitView: Units_UnitView.UnitView | undefined) => void | Promise<void>) | undefined;
     }): Promise<void> {
-        if (movingUnitAndPath == null) {
+        if ((this.getView() == null) || (movingUnitAndPath == null)) {
             await callback?.(undefined);
             return;
         }

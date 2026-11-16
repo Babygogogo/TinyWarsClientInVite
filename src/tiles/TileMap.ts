@@ -6,7 +6,6 @@ import {
     Helpers_Misc,
     Locations_Constants,
     Locations_Utils,
-    Notifications_Dispatcher,
     Players_Constants,
     Tiles_Constants_Common,
     Tiles_Tile,
@@ -404,7 +403,6 @@ export class TileMap {
     public setVisibleGroupedLocationIdArray(idArray: number[]): void {
         this._visibleGroupedLocationIdArray = idArray;
         this.getView()?.resetLocationLayer();
-        Notifications_Dispatcher.dispatch("BwTileMapLocationVisibleSet");
     }
     public getVisibleGroupedLocationIdArray(): number[] {
         return this._visibleGroupedLocationIdArray;
@@ -428,7 +426,6 @@ export class TileMap {
             groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % Locations_Constants.GroupSize));
         }
         this.getView()?.resetLocationLayer();
-        Notifications_Dispatcher.dispatch("BwTileMapLocationVisibleSet");
     }
     public setAllLocationVisible(isVisible: boolean): void {
         if (!isVisible) {

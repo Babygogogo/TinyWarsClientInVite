@@ -114,7 +114,7 @@ export async function applyAsInnerWar(action: WeaSetWeatherExpr, isFast: boolean
             throw Helpers_Misc.newError(`Invalid turnsCount: ${turnsCount}.`, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_CallActionSetWeatherWithoutExtraData_03);
         }
 
-        weatherManager.setForceWeatherType(weatherType);
+        weatherManager.setForceWeatherType(weatherType, !isFast);
         if (turnsCount <= 0) {
             weatherManager.setExpirePlayerIndex(null);
             weatherManager.setExpireTurnIndex(null);
