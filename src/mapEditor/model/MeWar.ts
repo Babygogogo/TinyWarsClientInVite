@@ -237,10 +237,6 @@ export class MeWar extends BaseWar_Model_War.War implements MapEditor_Model_MeWa
         return this._warEventManager;
     }
 
-    public getIsExecuteActionsWithExtraData(): boolean {
-        return false;
-    }
-
     public updateTilesAndUnitsOnVisibilityChanged(): void {
         // nothing to do.
     }

@@ -116,10 +116,10 @@ export function getErrorTip(data: WeaSetUnitTypeSimple, mapSize: AuxiliaryTypes_
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetUnitTypeSimple): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetUnitTypeSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaSetUnitTypeSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(data: WeaSetUnitTypeSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const targetUnitArray       : Units_Unit.Unit[] = [];
     const unitMap               = war.getUnitMap();
     const newUnitType           = data.getActUnitType();

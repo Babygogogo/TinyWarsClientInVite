@@ -47,12 +47,12 @@ export function getErrorTip(data: WeaSetWeatherSimple, gameConfig: GameConfigs_G
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-    return applyAsInnerWar(action, isFast, war);
+export async function executeAsOuterWar(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    return executeAsLocalWar(action, war, isFast);
 }
-export async function applyAsInnerWar(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetWeatherSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const weatherManager = war.getWeatherManager();
-    weatherManager.setForceWeatherType(action.getWeatherType(), !isFast);
+    weatherManager.setForceWeatherType(action.getWeatherType(), !isFastExecute);
 
     const weatherTurnsCount = action.getWeatherTurnsCount();
     if (weatherTurnsCount == 0) {
@@ -63,7 +63,7 @@ export async function applyAsInnerWar(action: WeaSetWeatherSimple, isFast: boole
         weatherManager.setExpireTurnIndex(war.getTurnManager().getTurnIndex() + weatherTurnsCount);
     }
 
-    if (!isFast) {
+    if (!isFastExecute) {
         weatherManager.getView()?.resetView(false);
     }
 

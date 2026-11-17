@@ -355,10 +355,10 @@ function getEpResultNumberArray(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<s
     }
 }
 
-export function applyWithExtraData(_action: WeaPersistentModifyPlayerAttribute, war: BaseWar_Model_War.War, actionId: number): void {
+export function executeAsOuterWar(_action: WeaPersistentModifyPlayerAttribute, war: BaseWar_Model_War.War, actionId: number): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyAsInnerWar(_action: WeaPersistentModifyPlayerAttribute, war: BaseWar_Model_War.War, actionId: number): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+export function executeAsLocalWar(_action: WeaPersistentModifyPlayerAttribute, war: BaseWar_Model_War.War, actionId: number): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 
     return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();

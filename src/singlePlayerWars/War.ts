@@ -58,10 +58,6 @@ export abstract class War extends BaseWar_Model_War.War {
         return this._retractManager;
     }
 
-    public getIsExecuteActionsWithExtraData(): boolean {
-        return false;
-    }
-
     public getIsAiPaused(): boolean {
         return this._isAiPaused;
     }

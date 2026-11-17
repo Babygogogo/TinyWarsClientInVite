@@ -89,10 +89,6 @@ export abstract class MpwWar extends BaseWar_Model_War.War {
         }
     }
 
-    public getIsExecuteActionsWithExtraData(): boolean {
-        return true;
-    }
-
     public getPlayerIndexLoggedIn(): number | null {
         return this.getPlayerManager().getPlayerIndexLoggedIn();
     }

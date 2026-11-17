@@ -26,9 +26,6 @@ export class RwWar extends ReplayWar_Model_RwWarBase.RwWarBase {
     public getShouldSerializeFullInfoForFreeModeGames(): boolean {
         return true;
     }
-    public getIsExecuteActionsWithExtraData(): boolean {
-        return false;
-    }
 
     public updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void {
         const visionTeamIndex = this.getVisionTeamIndex() ?? this.getPlayerInTurn().getTeamIndex();

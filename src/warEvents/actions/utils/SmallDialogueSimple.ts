@@ -190,11 +190,11 @@ export function getErrorTipForWeaSimpleDialogueData(dialogueData: DataForDialogu
     return Lang_Utils.getText(Lang_Constants.TextType.A0230);
 }
 
-export async function applyWithExtraData(action: WeaSmallDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-    return applyAsInnerWar(action, isFast, war);
+export async function executeAsOuterWar(action: WeaSmallDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    return executeAsLocalWar(action, war, isFast);
 }
-export async function applyAsInnerWar(action: WeaSmallDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-    if (isFast) {
+export async function executeAsLocalWar(action: WeaSmallDialogueSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    if (isFastExecute) {
         return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 

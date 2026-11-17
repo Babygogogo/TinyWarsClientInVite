@@ -6,13 +6,13 @@ import {
 import type { CoSkillCfg } from "../../../proto/schema/CommonProto/Config/CoSkillCfg";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function exeEnemyEnergyWithExtraData({ isFastExecute }: {
+export function executeAsOuterWar({ isFastExecute }: {
     isFastExecute   : boolean;
 }): void {
     // nothing to do
 }
 
-export function exeEnemyEnergyWithoutExtraData({ skillCfg, player, isFastExecute }: {
+export function executeAsLocalWar({ skillCfg, player, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_Player.Player;
     isFastExecute   : boolean;

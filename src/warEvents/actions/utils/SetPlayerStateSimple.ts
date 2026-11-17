@@ -264,10 +264,10 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: AuxiliaryTyp
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetPlayerStateSimple): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetPlayerStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetPlayerStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetPlayerStateSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const targetPlayerArray: Players_Player.Player[] = [];
     {
         const getAllTiles       = Helpers_Misc.createLazyFunc(() => war.getTileMap().getAllTiles());

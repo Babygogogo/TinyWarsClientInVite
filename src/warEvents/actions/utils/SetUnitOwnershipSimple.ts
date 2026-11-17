@@ -1,23 +1,23 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
+    Helpers_Misc,
+    Helpers_Team,
+    Lang_Constants,
+    Lang_Utils,
+    Players_Constants,
+    Players_Utils_Common,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
     Units_Utils_Filter,
-    Players_Utils_Common,
-    Helpers_Team,
-    Helpers_Misc,
-    Lang_Utils,
     Visibilities_Utils,
-    Players_Constants,
-    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
+    type BaseWar_Model_BwWarStatisticsManager,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type BaseWar_Model_BwWarStatisticsManager,
     type Players_Player,
     type Tiles_Tile,
     type Units_Unit,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
@@ -116,10 +116,10 @@ export function getErrorTip(data: WeaSetUnitOwnershipSimple, mapSize: AuxiliaryT
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetUnitOwnershipSimple): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetUnitOwnershipSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaSetUnitOwnershipSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(data: WeaSetUnitOwnershipSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const targetUnitSet     = new Set<Units_Unit.Unit>();
     const unitMap           = war.getUnitMap();
     const newPlayerIndex    = data.getActPlayerIndex();

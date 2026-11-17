@@ -394,10 +394,10 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: Auxili
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetCustomCannonStateSimple): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetCustomCannonStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetCustomCannonStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetCustomCannonStateSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const targetTileArray: Tiles_Tile.Tile[] = [];
     {
         const unitMap           = war.getUnitMap();

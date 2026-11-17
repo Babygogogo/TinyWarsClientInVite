@@ -1,17 +1,17 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
-    UnitBuffs_Utils_Common,
+    Lang_Constants,
+    Lang_Utils,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
+    UnitBuffs_Utils_Common,
     Units_Utils_Filter,
-    Lang_Utils,
-    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type Players_Player,
     type Units_Unit,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import { UnitBuff } from "../../../proto/schema/CommonProto/Structure/UnitBuff.ts";
@@ -183,10 +183,10 @@ export function getErrorTip(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaAddUnitBuffSimple): Promise<void> {
+export async function executeAsOuterWar(_action: WeaAddUnitBuffSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaAddUnitBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(data: WeaAddUnitBuffSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newBuff = generateNewBuff(data, war);
     if (newBuff == null) {
         return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();

@@ -1,19 +1,19 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
-    Units_Utils_Serialization,
-    Helpers_Team,
-    WarEvents_Actions_Constants_SetUnitTypeExpr,
-    Lang_Utils,
-    Units_Utils_Common,
-    Visibilities_Utils,
+    ExpressionParsers_Contexts_Unit,
+    ExpressionParsers_Parser,
     ExpressionParsers_Results_NullableUnit,
     ExpressionParsers_Results_Num,
-    ExpressionParsers_Parser,
+    Helpers_Team,
     Lang_Constants,
-    ExpressionParsers_Contexts_Unit,
+    Lang_Utils,
+    Units_Utils_Common,
+    Units_Utils_Serialization,
+    Visibilities_Utils,
+    WarEvents_Actions_Constants_SetUnitTypeExpr,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type Units_Unit,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetUnitTypeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitTypeExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
@@ -161,10 +161,10 @@ function evalActUnitType(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): num
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetUnitTypeExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetUnitTypeExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetUnitTypeExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetUnitTypeExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newUnitDataDict = new Map<Units_Unit.Unit, SerialUnit>();
     for (const unit of war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId())) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -177,7 +177,7 @@ export async function applyAsInnerWar(action: WeaSetUnitTypeExpr, isFast: boolea
         }
     }
 
-    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataDict(newUnitDataDict, war, isFast) });
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataDict(newUnitDataDict, war, isFastExecute) });
 }
 function createNewUnitData(action: WeaSetUnitTypeExpr, unit: Units_Unit.Unit): SerialUnit | null {
     const newUnitType = evalActUnitType(action, unit);

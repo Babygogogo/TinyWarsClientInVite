@@ -1,6 +1,6 @@
 import {
-    AuxiliaryTypes_ChangedThingsForWarOperation,
     ArrayModifiers_Utils,
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     Helpers_Team,
     Lang_Constants,
     Lang_Utils,
@@ -436,10 +436,10 @@ export function getErrorTip(data: WeaSetUnitStateSimple, mapSize: AuxiliaryTypes
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetUnitStateSimple): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetUnitStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaSetUnitStateSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(data: WeaSetUnitStateSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap           = war.getUnitMap();
     const targetUnitArray   : Units_Unit.Unit[] = [];
     {

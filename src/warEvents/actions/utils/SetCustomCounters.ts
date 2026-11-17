@@ -86,11 +86,12 @@ export function getErrorTip(data: WeaSetCustomCounters, customCounterNameSet: Se
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetCustomCounters): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetCustomCounters): Promise<void> {
     // nothing to do
 }
 
-export async function applyAsInnerWar(action: WeaSetCustomCounters, _isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function executeAsLocalWar(action: WeaSetCustomCounters, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const customCounterIdArray: number[] = [];
     try {
         const idResult = ExpressionParsers_Parser.Parser.getParseResult(action.getIdExpression() ?? "").eval(new ExpressionParsers_Contexts_War.War(war), false);

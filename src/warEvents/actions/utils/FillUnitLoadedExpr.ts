@@ -2,26 +2,26 @@ import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_GridIndexAndWeight,
+    ExpressionParsers_Contexts_Unit,
+    ExpressionParsers_Parser,
     ExpressionParsers_Results_NullableUnit,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_NumArray,
-    ExpressionParsers_Parser,
-    ExpressionParsers_Contexts_Unit,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    type BaseWar_Model_War,
+    Helpers_Misc,
+    Helpers_Team,
+    Lang_Constants,
+    Lang_Utils,
+    Locations_Constants,
+    Locations_Utils,
+    Numbers_Utils,
     Units_Constants,
+    Units_Unit,
     Units_Utils_Common,
     Units_Utils_Serialization,
-    Locations_Utils,
-    Helpers_Team,
-    WarEvents_Actions_Constants_FillUnitLoadedExpr,
-    Helpers_Misc,
-    Lang_Utils,
     Visibilities_Utils,
-    Numbers_Utils,
-    Locations_Constants,
-    Lang_Constants,
-    Units_Unit,
+    WarEvents_Actions_Constants_FillUnitLoadedExpr,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 
 import type { WeaFillUnitLoadedExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitLoadedExpr.ts";
@@ -835,10 +835,10 @@ function evalActAiWeightedDestination(action: WeaFillUnitLoadedExpr, unit: Units
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaFillUnitLoadedExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaFillUnitLoadedExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaFillUnitLoadedExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaFillUnitLoadedExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap           = war.getUnitMap();
     const allUnits          = war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
     let nextUnitId          = unitMap.getNextUnitId();
@@ -847,7 +847,7 @@ export async function applyAsInnerWar(action: WeaFillUnitLoadedExpr, isFast: boo
         const maxLoadUnitsCount = unit.getMaxLoadUnitsCount();
         if ((maxLoadUnitsCount == null)                         ||
             (maxLoadUnitsCount <= 0)                            ||
-            (unit.getLoadUnitCategoryId() == null)                ||
+            (unit.getLoadUnitCategoryId() == null)              ||
             (unit.getLoadedUnitsCount() >= maxLoadUnitsCount)   ||
             (!checkIsMeetConditionForUnit(action, unit))
         ) {
@@ -864,7 +864,7 @@ export async function applyAsInnerWar(action: WeaFillUnitLoadedExpr, isFast: boo
     }
 
     unitMap.setNextUnitId(nextUnitId);
-    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataArray(newUnitDataList, war, isFast) });
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataArray(newUnitDataList, war, isFastExecute) });
 }
 function createNewUnitData(action: WeaFillUnitLoadedExpr, loaderUnit: Units_Unit.Unit, unitId: number): SerialUnit | null {
     const unitType = evalActUnitType(action, loaderUnit);

@@ -647,10 +647,10 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetCustomCannonStateExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetCustomCannonStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetCustomCannonStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetCustomCannonStateExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomCannonData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customCannonData = tile.getFinalCannonData();
@@ -665,7 +665,7 @@ export async function applyAsInnerWar(action: WeaSetCustomCannonStateExpr, isFas
         newTileDataDict.set(tile, createNewTileCustomCannonData(action, tile, customCannonData));
     }
 
-    applyNewTileDataDict(newTileDataDict, war, isFast);
+    applyNewTileDataDict(newTileDataDict, war, isFastExecute);
     return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newTileDataDict.keys()] });
 }
 function createNewTileCustomCannonData(action: WeaSetCustomCannonStateExpr, tile: Tiles_Tile.Tile, customCannonData: TileCustomCannonData): TileCustomCannonData {

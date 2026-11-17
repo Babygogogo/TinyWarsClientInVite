@@ -14,14 +14,14 @@ import type { CoSkillCfg } from "../../../proto/schema/CommonProto/Config/CoSkil
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function exeSelfAddUnitWithExtraData({ isFastExecute }: {
+export function executeAsOuterWar({ isFastExecute }: {
     isFastExecute   : boolean;
 }): void {
     // nothing to do
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function exeSelfAddUnitWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
+export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_Player.Player;
     coGridIndexList : AuxiliaryTypes_GridIndex.GridIndex[];

@@ -391,10 +391,10 @@ function evalActCustomNameId(action: WeaSetTileStateExpr, tile: Tiles_Tile.Tile)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetTileStateExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetTileStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetTileStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetTileStateExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, SerialTile>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!checkIsMeetConditionForTile(action, tile)) {
@@ -404,7 +404,7 @@ export async function applyAsInnerWar(action: WeaSetTileStateExpr, isFast: boole
         newTileDataDict.set(tile, createNewTileData(action, tile));
     }
 
-    applyNewTileDataDict(newTileDataDict, war, isFast);
+    applyNewTileDataDict(newTileDataDict, war, isFastExecute);
 
     return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newTileDataDict.keys()] });
 }

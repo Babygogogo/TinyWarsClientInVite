@@ -271,11 +271,11 @@ function evalActExtraParams(action: WeaModifyTileBuffExpr, tile: Tiles_Tile.Tile
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(action: WeaModifyTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(action: WeaModifyTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyAsInnerWar(action: WeaModifyTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaModifyTileBuffExpr, war: BaseWar_Model_War.War, isFast: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newBuffArrayDict = new Map<Tiles_Tile.Tile, ProtoTileBuff[]>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {

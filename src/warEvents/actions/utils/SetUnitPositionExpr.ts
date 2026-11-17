@@ -1,22 +1,22 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
-    WarEvents_Actions_Constants_SetUnitPositionExpr,
-    Lang_Utils,
     AuxiliaryTypes_GridIndex,
-    Numbers_Constants,
     AuxiliaryTypes_MovableArea,
+    ExpressionParsers_Contexts_Tile,
+    ExpressionParsers_Contexts_Unit,
+    ExpressionParsers_Parser,
     ExpressionParsers_Results_NullableUnit,
     ExpressionParsers_Results_Num,
-    ExpressionParsers_Parser,
     ExpressionParsers_Results_Position,
     ExpressionParsers_Results_Tile,
     Lang_Constants,
-    ExpressionParsers_Contexts_Tile,
-    ExpressionParsers_Contexts_Unit,
+    Lang_Utils,
+    Numbers_Constants,
+    WarEvents_Actions_Constants_SetUnitPositionExpr,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type Tiles_Tile,
     type Units_Unit,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetUnitPositionExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitPositionExpr.ts";
 
@@ -167,10 +167,10 @@ function evalActAlternativeTileFilter(action: WeaSetUnitPositionExpr, tile: Tile
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetUnitPositionExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetUnitPositionExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetUnitPositionExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetUnitPositionExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const destinationDict = new Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>();
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -183,7 +183,7 @@ export async function applyAsInnerWar(action: WeaSetUnitPositionExpr, isFast: bo
         }
     }
 
-    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : await applyDestinationDict(destinationDict, war, action, isFast) });
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : await applyDestinationDict(destinationDict, war, action, isFastExecute) });
 }
 
 async function applyDestinationDict(dict: Map<Units_Unit.Unit, AuxiliaryTypes_GridIndex.GridIndex>, war: BaseWar_Model_War.War, action: WeaSetUnitPositionExpr, isFast: boolean): Promise<Units_Unit.Unit[]> {

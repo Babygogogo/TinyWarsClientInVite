@@ -515,10 +515,10 @@ function getAutoTileObjectShapeId(tileMap: Tiles_TileMap.TileMap, tile: Tiles_Ti
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetTileTypeExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetTileTypeExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetTileTypeExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetTileTypeExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, NewTileData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!checkIsMeetConditionForTile(action, tile)) {
@@ -531,7 +531,7 @@ export async function applyAsInnerWar(action: WeaSetTileTypeExpr, isFast: boolea
         }
     }
 
-    return applyNewTileDataDict(newTileDataDict, war, isFast);
+    return applyNewTileDataDict(newTileDataDict, war, isFastExecute);
 }
 function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_Tile.Tile): NewTileData | null {
     const newBaseType           = evalActBaseType(action, tile);

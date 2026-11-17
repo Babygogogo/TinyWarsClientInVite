@@ -87,10 +87,10 @@ export function getErrorTip(data: WeaSetWeatherExpr, customCounterNameSet: Set<s
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(action: WeaSetWeatherExpr): Promise<void> {
+export async function executeAsOuterWar(action: WeaSetWeatherExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetWeatherExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetWeatherExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const weatherManager = war.getWeatherManager();
     try {
         const context           = new ExpressionParsers_Contexts_Weather.Weather(weatherManager);
@@ -114,7 +114,7 @@ export async function applyAsInnerWar(action: WeaSetWeatherExpr, isFast: boolean
             throw Helpers_Misc.newError(`Invalid turnsCount: ${turnsCount}.`, Utils_ClientErrorCode.ClientErrorCode.BwWarEventManager_CallActionSetWeatherWithoutExtraData_03);
         }
 
-        weatherManager.setForceWeatherType(weatherType, !isFast);
+        weatherManager.setForceWeatherType(weatherType, !isFastExecute);
         if (turnsCount <= 0) {
             weatherManager.setExpirePlayerIndex(null);
             weatherManager.setExpireTurnIndex(null);
@@ -128,7 +128,7 @@ export async function applyAsInnerWar(action: WeaSetWeatherExpr, isFast: boolean
             }));
         }
 
-        if (!isFast) {
+        if (!isFastExecute) {
             weatherManager.getView()?.resetView(false);
         }
 

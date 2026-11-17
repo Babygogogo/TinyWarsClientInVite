@@ -91,11 +91,12 @@ export function getErrorTip(data: WeaSetForceFogCodeExpr, customCounterNameSet: 
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetForceFogCodeExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetForceFogCodeExpr): Promise<void> {
     // nothing to do
 }
 
-export async function applyAsInnerWar(action: WeaSetForceFogCodeExpr, _isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function executeAsLocalWar(action: WeaSetForceFogCodeExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const forceFogCode = getForceFogCode(action.getForceFogCode() ?? ``, war);
     if (forceFogCode == null) {
         return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();

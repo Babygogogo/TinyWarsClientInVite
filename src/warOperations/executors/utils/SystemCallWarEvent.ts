@@ -25,7 +25,7 @@ async function fastExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: WoS
     if (action.getExtraData()) {
         await warEventManager.callWarEventAsOuterWar(action, true);
     } else {
-        await warEventManager.callWarEventAsInnerWar(action.getWarEventId(), action.getNodeAndActionsIndex(), true);
+        await warEventManager.callWarEventAsUnifiedWar(action.getWarEventId(), action.getNodeAndActionsIndex(), true);
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(true);
@@ -42,7 +42,7 @@ async function normalExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: W
     if (action.getExtraData()) {
         await warEventManager.callWarEventAsOuterWar(action, false);
     } else {
-        await warEventManager.callWarEventAsInnerWar(action.getWarEventId(), action.getNodeAndActionsIndex(), false);
+        await warEventManager.callWarEventAsUnifiedWar(action.getWarEventId(), action.getNodeAndActionsIndex(), false);
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
@@ -58,7 +58,7 @@ export async function executeForInnerWar(war: SinglePlayerWars_War.War, operatio
     const nodeAndActionsIndex                  = operation.getNodeAndActionsIndex();
     warEventManager.updateWarEventCalledCountOnCall(warEventId);
 
-    const changedThings = await warEventManager.callWarEventAsInnerWar(warEventId, nodeAndActionsIndex, true);
+    const changedThings = await warEventManager.callWarEventAsInnerWar(warEventId, nodeAndActionsIndex);
     return (extraChangedThings, operationId) => WarOperations_Executors_Utils_Common.postProcessInnerWarOperation({
         war                                  : war,
         allTileAppearanceInfosBeforeAction   : allTileAppearanceInfosBeforeAction,

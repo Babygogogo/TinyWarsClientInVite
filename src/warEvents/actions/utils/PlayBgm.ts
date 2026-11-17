@@ -1,17 +1,18 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
-    Sounds_Utils,
-    Lang_Utils,
     Helpers_Misc,
-    Users_Model,
-    Sounds_SoundPlayer,
     Lang_Constants,
+    Lang_Utils,
+    Sounds_SoundPlayer,
+    Sounds_Utils,
+    Users_Model,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaPlayBgm } from "../../../proto/schema/CommonProto/WarEvent/WeaPlayBgm.ts";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPlayBgm>, gameConfig: GameConfigs_GameConfig.GameConfig): boolean {
     if (action == null) {
         return false;
@@ -52,11 +53,11 @@ export function getErrorTip(data: WeaPlayBgm): string | null {
         : null;
 }
 
-export async function applyWithExtraData(action: WeaPlayBgm, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-    return applyAsInnerWar(action, isFast, war);
+export async function executeAsOuterWar(action: WeaPlayBgm, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    return executeAsLocalWar(action, war, isFastExecute);
 }
-export async function applyAsInnerWar(action: WeaPlayBgm, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-    if (isFast) {
+export async function executeAsLocalWar(action: WeaPlayBgm, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    if (isFastExecute) {
         return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     }
 

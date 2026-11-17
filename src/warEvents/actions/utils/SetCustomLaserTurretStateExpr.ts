@@ -602,10 +602,10 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretState
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetCustomLaserTurretStateExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetCustomLaserTurretStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetCustomLaserTurretStateExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomLaserTurretData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customLaserTurretData = tile.getFinalLaserTurretData();
@@ -620,7 +620,7 @@ export async function applyAsInnerWar(action: WeaSetCustomLaserTurretStateExpr, 
         newTileDataDict.set(tile, createNewTileCustomLaserTurretData(action, tile, customLaserTurretData));
     }
 
-    applyNewTileDataDict(newTileDataDict, war, isFast);
+    applyNewTileDataDict(newTileDataDict, war, isFastExecute);
     return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newTileDataDict.keys()] });
 }
 function createNewTileCustomLaserTurretData(action: WeaSetCustomLaserTurretStateExpr, tile: Tiles_Tile.Tile, customLaserTurretData: TileCustomLaserTurretData): TileCustomLaserTurretData {

@@ -23,11 +23,10 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     type Players_Player,
 } from "../../internal.ts";
-
 import type { DataForUseCoSkill } from "../../proto/schema/CommonProto/Structure/DataForUseCoSkill.ts";
 import type { GridIndex as ProtoGridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 
-export function executeInstantSkillWithExtraData({ player, skillId, skillData, targetGridIndexes, isFastExecute }: {
+export function executeInstantSkillAsOuterWar({ player, skillId, skillData, targetGridIndexes, isFastExecute }: {
     player              : Players_Player.Player;
     skillId             : number;
     skillData           : DataForUseCoSkill;
@@ -37,39 +36,70 @@ export function executeInstantSkillWithExtraData({ player, skillId, skillData, t
     const war       = player.getWar();
     const skillCfg  = Helpers_Misc.getExisted(war.getGcData().getCoSkillCfg(skillId));
 
-    CoSkills_Utils_InstantManual_SelfFund.exeSelfFundWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_EnemyEnergy.exeEnemyEnergyWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_SelfAddUnit.exeSelfAddUnitWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_SelfHpGain.exeSelfHpGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_EnemyHpGain.exeEnemyHpGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_SelfFuelGain.exeSelfFuelGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_EnemyFuelGain.exeEnemyFuelGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_SelfMaterialGain.exeSelfMaterialGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_EnemyMaterialGain.exeEnemyMaterialGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_SelfPrimaryAmmoGain.exeSelfPrimaryAmmoGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_EnemyPrimaryAmmoGain.exeEnemyPrimaryAmmoGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_SelfUnitBuffGain.exeSelfUnitBuffGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_EnemyUnitBuffGain.exeEnemyUnitBuffGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_FixedAreaDamage.exeFixedAreaDamageWithExtraData({
+    CoSkills_Utils_InstantManual_SelfFund.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_EnemyEnergy.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_SelfAddUnit.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_SelfHpGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_EnemyHpGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_SelfFuelGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_EnemyFuelGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_SelfMaterialGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_EnemyMaterialGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_SelfPrimaryAmmoGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_EnemyPrimaryAmmoGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_SelfUnitBuffGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_EnemyUnitBuffGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_FixedAreaDamage.executeAsOuterWar({
         skillCfg          : skillCfg,
         player            : player,
         skillData         : skillData,
         targetGridIndexes : targetGridIndexes,
         isFastExecute     : isFastExecute,
     });
-    CoSkills_Utils_InstantManual_SelfPromotionGain.exeSelfPromotionGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_SelfUnitActionState.exeSelfUnitActionStateWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_SelfFlareAmmoGain.exeSelfFlareAmmoGainWithExtraData({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_ChangeWeather.exeChangeWeatherWithExtraData({
+    CoSkills_Utils_InstantManual_SelfPromotionGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_SelfUnitActionState.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_SelfFlareAmmoGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_ChangeWeather.executeAsOuterWar({
         skillCfg      : skillCfg,
         player        : player,
         skillData     : skillData,
         isFastExecute : isFastExecute,
     });
-    CoSkills_Utils_InstantManual_SelfCoOnboard.exeSelfCoOnboardWithExtraData({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_SelfCoOnboard.executeAsOuterWar({ isFastExecute : isFastExecute });
 }
 
-export function executeInstantSkillWithoutExtraData({ player, skillId, dataForUseCoSkill, targetGridIndexes, isFastExecute }: {
+export function executeInstantSkillAsInnerWar({ player, skillId, dataForUseCoSkill, targetGridIndexes }: {
+    player              : Players_Player.Player;
+    skillId             : number;
+    dataForUseCoSkill   : DataForUseCoSkill;
+    targetGridIndexes   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ProtoGridIndex[]>;
+}): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return executeInstantSkillAsLocalWar({
+        player            : player,
+        skillId           : skillId,
+        dataForUseCoSkill : dataForUseCoSkill,
+        targetGridIndexes : targetGridIndexes,
+        isFastExecute     : true,
+    });
+}
+
+export function executeInstantSkillAsUnifiedWar({ player, skillId, dataForUseCoSkill, targetGridIndexes, isFastExecute }: {
+    player              : Players_Player.Player;
+    skillId             : number;
+    dataForUseCoSkill   : DataForUseCoSkill;
+    targetGridIndexes   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ProtoGridIndex[]>;
+    isFastExecute       : boolean;
+}): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+    return executeInstantSkillAsLocalWar({
+        player            : player,
+        skillId           : skillId,
+        dataForUseCoSkill : dataForUseCoSkill,
+        targetGridIndexes : targetGridIndexes,
+        isFastExecute     : isFastExecute,
+    });
+}
+
+export function executeInstantSkillAsLocalWar({ player, skillId, dataForUseCoSkill, targetGridIndexes, isFastExecute }: {
     player              : Players_Player.Player;
     skillId             : number;
     dataForUseCoSkill   : DataForUseCoSkill;
@@ -81,114 +111,114 @@ export function executeInstantSkillWithoutExtraData({ player, skillId, dataForUs
     const coGridIndexList   = player.getCoGridIndexListOnMap();
     const changedThings     = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     changedThings
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfFund.exeSelfFundWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfFund.executeAsLocalWar({
             skillCfg      : skillCfg,
             player        : player,
             isFastExecute : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_EnemyEnergy.exeEnemyEnergyWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_EnemyEnergy.executeAsLocalWar({
             skillCfg      : skillCfg,
             player        : player,
             isFastExecute : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfAddUnit.exeSelfAddUnitWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfAddUnit.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfHpGain.exeSelfHpGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfHpGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_EnemyHpGain.exeEnemyHpGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_EnemyHpGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfFuelGain.exeSelfFuelGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfFuelGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_EnemyFuelGain.exeEnemyFuelGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_EnemyFuelGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfMaterialGain.exeSelfMaterialGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfMaterialGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_EnemyMaterialGain.exeEnemyMaterialGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_EnemyMaterialGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfPrimaryAmmoGain.exeSelfPrimaryAmmoGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfPrimaryAmmoGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_EnemyPrimaryAmmoGain.exeEnemyPrimaryAmmoGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_EnemyPrimaryAmmoGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfUnitBuffGain.exeSelfUnitBuffGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfUnitBuffGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_EnemyUnitBuffGain.exeEnemyUnitBuffGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_EnemyUnitBuffGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_FixedAreaDamage.exeFixedAreaDamageWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_FixedAreaDamage.executeAsLocalWar({
             skillCfg          : skillCfg,
             player            : player,
             skillData         : dataForUseCoSkill,
             targetGridIndexes : targetGridIndexes,
             isFastExecute     : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfPromotionGain.exeSelfPromotionGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfPromotionGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfUnitActionState.exeSelfUnitActionStateWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfUnitActionState.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfFlareAmmoGain.exeSelfFlareAmmoGainWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfFlareAmmoGain.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,
             isFastExecute   : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_ChangeWeather.exeChangeWeatherWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_ChangeWeather.executeAsLocalWar({
             skillCfg      : skillCfg,
             player        : player,
             skillData     : dataForUseCoSkill,
             isFastExecute : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfCoOnboard.exeSelfCoOnboardWithoutExtraData({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfCoOnboard.executeAsLocalWar({
             skillCfg        : skillCfg,
             player          : player,
             coGridIndexList : coGridIndexList,

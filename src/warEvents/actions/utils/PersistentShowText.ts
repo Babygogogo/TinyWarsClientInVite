@@ -54,10 +54,10 @@ export function getErrorTip(data: WeaPersistentShowText): string | null {
     return null;
 }
 
-export function applyWithExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): void {
+export function executeAsOuterWar(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyAsInnerWar(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+export function executeAsLocalWar(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Model_War.War): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 
     return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();

@@ -196,10 +196,10 @@ export function getErrorTip(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaAddTileBuffSimple): Promise<void> {
+export async function executeAsOuterWar(_action: WeaAddTileBuffSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaAddTileBuffSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(data: WeaAddTileBuffSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newBuff = generateNewBuff(data, war);
     if (newBuff == null) {
         return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();

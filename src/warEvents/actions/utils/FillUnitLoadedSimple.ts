@@ -1,19 +1,19 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
-    Units_Unit,
-    type BaseWar_Model_War,
-    type GameConfigs_GameConfig,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
+    Helpers_Misc,
+    Helpers_Team,
+    Lang_Constants,
+    Lang_Utils,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
+    Units_Unit,
     Units_Utils_Filter,
-    Helpers_Team,
     Units_Utils_Serialization,
-    Helpers_Misc,
-    Lang_Utils,
     Visibilities_Utils,
-    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
+    type BaseWar_Model_War,
+    type GameConfigs_GameConfig,
     type Players_Player,
     type Tiles_Tile,
 } from "../../../internal.ts";
@@ -136,10 +136,10 @@ export function getErrorTip(data: WeaFillUnitLoadedSimple, mapSize: AuxiliaryTyp
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaFillUnitLoadedSimple): Promise<void> {
+export async function executeAsOuterWar(_action: WeaFillUnitLoadedSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(data: WeaFillUnitLoadedSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(data: WeaFillUnitLoadedSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     const conUnitFilter     = data.getConUnitFilter();
@@ -206,7 +206,9 @@ export async function applyAsInnerWar(data: WeaFillUnitLoadedSimple, isFastExecu
             unitMap.setNextUnitId(unitId + 1);
             unitMap.setUnitLoaded(unit);
             changedThings.addUnit(unit);
-            (!isFastExecute) && (unit.flushDataToView());
+            if (!isFastExecute) {
+                unit.flushDataToView();
+            }
 
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({

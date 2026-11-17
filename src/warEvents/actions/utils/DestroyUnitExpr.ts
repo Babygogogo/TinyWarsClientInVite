@@ -123,10 +123,10 @@ function evalActPlayerAliveState(action: WeaDestroyUnitExpr, player: Players_Pla
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaDestroyUnitExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaDestroyUnitExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaDestroyUnitExpr, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaDestroyUnitExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap                   = war.getUnitMap();
     const allLoadedUnits            = [...unitMap.getRawAllUnitsLoaded().values()].sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
     const targetLoadedUnitIdList    : number[] = [];

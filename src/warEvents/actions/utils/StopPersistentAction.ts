@@ -49,11 +49,12 @@ export function getErrorTip(data: WeaStopPersistentAction, fullData: WarEventFul
 }
 
 
-export async function applyWithExtraData(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
+export async function executeAsOuterWar(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<void> {
     war.getWarEventManager().updateOpaIdArrayOnDeleteAction(action.getActionIdArray());
 }
 
-export async function applyAsInnerWar(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function executeAsLocalWar(action: WeaStopPersistentAction, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     war.getWarEventManager().updateOpaIdArrayOnDeleteAction(action.getActionIdArray());
 
     return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();

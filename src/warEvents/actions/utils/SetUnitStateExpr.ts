@@ -1,27 +1,27 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
-    Units_Utils_Common,
-    Units_Utils_CustomName,
-    Units_Utils_Serialization,
-    Locations_Utils,
-    Helpers_Team,
-    WarEvents_Actions_Constants_SetUnitStateExpr,
-    Lang_Utils,
-    Visibilities_Utils,
-    Numbers_Utils,
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_GridIndexAndWeight,
-    Locations_Constants,
+    ExpressionParsers_Contexts_Unit,
+    ExpressionParsers_Parser,
     ExpressionParsers_Results_NullableUnit,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_NumArray,
-    ExpressionParsers_Parser,
-    Units_Constants,
+    Helpers_Team,
     Lang_Constants,
-    ExpressionParsers_Contexts_Unit,
+    Lang_Utils,
+    Locations_Constants,
+    Locations_Utils,
+    Numbers_Utils,
+    Units_Constants,
+    Units_Utils_Common,
+    Units_Utils_CustomName,
+    Units_Utils_Serialization,
+    Visibilities_Utils,
+    WarEvents_Actions_Constants_SetUnitStateExpr,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type Units_Unit,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetUnitStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitStateExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
@@ -885,10 +885,10 @@ function evalActAiWeightedDestination(action: WeaSetUnitStateExpr, unit: Units_U
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetUnitStateExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetUnitStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetUnitStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetUnitStateExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newUnitDataDict = new Map<Units_Unit.Unit, SerialUnit>();
     for (const unit of war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId())) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -903,7 +903,7 @@ export async function applyAsInnerWar(action: WeaSetUnitStateExpr, isFast: boole
         newUnitDataDict.set(unit, newUnitData);
     }
 
-    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataDict(newUnitDataDict, war, isFast) });
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataDict(newUnitDataDict, war, isFastExecute) });
 }
 function createNewUnitData(action: WeaSetUnitStateExpr, unit: Units_Unit.Unit): SerialUnit {
     // 为防止随机数导致结果不稳定，此处eval系列函数的顺序一旦写下就不能更改，后续新属性只能添加在最后
@@ -977,7 +977,9 @@ function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, SerialUnit>, war: BaseW
         unit.startRunning(war);
         affectedUnits.push(unit);
         // unit.startRunningView();
-        (!isFast) && (unit.flushDataToView());
+        if (!isFast) {
+            unit.flushDataToView();
+        }
 
         const offsetHp = unit.getNormalizedCurrentHp() - normalizedHp;
         if ((offsetHp !== 0)                                            &&

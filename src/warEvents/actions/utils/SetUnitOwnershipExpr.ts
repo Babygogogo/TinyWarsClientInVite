@@ -1,19 +1,19 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
-    Helpers_Team,
-    WarEvents_Actions_Constants_SetUnitOwnershipExpr,
-    Lang_Utils,
-    Visibilities_Utils,
+    ExpressionParsers_Contexts_Unit,
+    ExpressionParsers_Parser,
     ExpressionParsers_Results_NullableUnit,
     ExpressionParsers_Results_Num,
-    ExpressionParsers_Parser,
-    Players_Constants,
+    Helpers_Team,
     Lang_Constants,
-    ExpressionParsers_Contexts_Unit,
+    Lang_Utils,
+    Players_Constants,
+    Visibilities_Utils,
+    WarEvents_Actions_Constants_SetUnitOwnershipExpr,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_BwWarStatisticsManager,
     type BaseWar_Model_War,
     type Units_Unit,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { WeaSetUnitOwnershipExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitOwnershipExpr.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
@@ -123,10 +123,10 @@ function evalActPlayerIndex(action: WeaSetUnitOwnershipExpr, unit: Units_Unit.Un
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(action: WeaSetUnitOwnershipExpr): Promise<void> {
+export async function executeAsOuterWar(action: WeaSetUnitOwnershipExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetUnitOwnershipExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetUnitOwnershipExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newPlayerIndexDict = new Map<Units_Unit.Unit, number>();
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
@@ -139,7 +139,7 @@ export async function applyAsInnerWar(action: WeaSetUnitOwnershipExpr, isFast: b
         }
     }
 
-    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataDict(newPlayerIndexDict, war, isFast) });
+    return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : applyNewUnitDataDict(newPlayerIndexDict, war, isFastExecute) });
 }
 function applyNewUnitDataDict(dict: Map<Units_Unit.Unit, number>, war: BaseWar_Model_War.War, isFast: boolean): Units_Unit.Unit[] {
     const unitMap                   = war.getUnitMap();

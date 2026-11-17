@@ -557,10 +557,10 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateExpr
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(_action: WeaSetCustomCrystalStateExpr): Promise<void> {
+export async function executeAsOuterWar(_action: WeaSetCustomCrystalStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaSetCustomCrystalStateExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetCustomCrystalStateExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const newTileDataDict = new Map<Tiles_Tile.Tile, TileCustomCrystalData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customCrystalData = tile.getFinalCrystalData();
@@ -575,7 +575,7 @@ export async function applyAsInnerWar(action: WeaSetCustomCrystalStateExpr, isFa
         newTileDataDict.set(tile, createNewTileCustomCrystalData(action, tile, customCrystalData));
     }
 
-    applyNewTileDataDict(newTileDataDict, war, isFast);
+    applyNewTileDataDict(newTileDataDict, war, isFastExecute);
     return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ tiles : [...newTileDataDict.keys()] });
 }
 function createNewTileCustomCrystalData(action: WeaSetCustomCrystalStateExpr, tile: Tiles_Tile.Tile, customCrystalData: TileCustomCrystalData): TileCustomCrystalData {

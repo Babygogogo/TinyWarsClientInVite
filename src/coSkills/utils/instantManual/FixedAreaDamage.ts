@@ -4,7 +4,7 @@ import type { DataForUseCoSkill } from "../../../proto/schema/CommonProto/Struct
 import type { GridIndex as ProtoGridIndex } from "../../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics";
 
-export function exeFixedAreaDamageWithExtraData({ skillCfg, player, skillData, targetGridIndexes, isFastExecute }: {
+export function executeAsOuterWar({ skillCfg, player, skillData, targetGridIndexes, isFastExecute }: {
     skillCfg            : CoSkillCfg;
     player              : Players_Player.Player;
     skillData           : DataForUseCoSkill;
@@ -41,7 +41,7 @@ export function exeFixedAreaDamageWithExtraData({ skillCfg, player, skillData, t
     }
 }
 
-export function exeFixedAreaDamageWithoutExtraData({ skillCfg, player, skillData, targetGridIndexes, isFastExecute }: {
+export function executeAsLocalWar({ skillCfg, player, skillData, targetGridIndexes, isFastExecute }: {
     skillCfg            : CoSkillCfg;
     player              : Players_Player.Player;
     skillData           : DataForUseCoSkill;

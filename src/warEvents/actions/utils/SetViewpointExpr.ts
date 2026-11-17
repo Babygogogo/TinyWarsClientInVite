@@ -141,17 +141,17 @@ export function getErrorTip(data: WeaSetViewpointExpr, customCounterNameSet: Set
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
-    return applyAsInnerWar(action, isFast, war);
+export async function executeAsOuterWar(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+    return executeAsLocalWar(action, war, isFast);
 }
-export async function applyAsInnerWar(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetViewpointExpr, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     await doApply({
         gridIndexArray    : getTargetGridIndexArray(action.getTargets() ?? ``, war),
         isNeedFocusEffect : getIsNeedFocusEffect(action.getNeedFocusEffect(), war),
         isOneByOne        : getIsOneByOne(action.getIsOneByOne(), war),
         interval          : getInterval(action.getInterval(), war),
         war               : war,
-        isFastExecute     : isFast,
+        isFastExecute     : isFastExecute,
     });
 
     return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();

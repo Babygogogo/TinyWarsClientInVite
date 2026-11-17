@@ -82,7 +82,7 @@ export class PlayerDataForWeaSetPlayerState {
             if (skillType != null) {
                 const skillIdArray = player.getCoSkills(skillType);
                 for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                    changedThings.mergeFrom(CoSkills_Utils_Executor.executeInstantSkillWithoutExtraData({
+                    changedThings.mergeFrom(CoSkills_Utils_Executor.executeInstantSkillAsLocalWar({
                         player            : player,
                         skillId           : skillIdArray[skillIndex],
                         dataForUseCoSkill : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({

@@ -7,13 +7,13 @@ import {
 import type { CoSkillCfg } from "../../../proto/schema/CommonProto/Config/CoSkillCfg";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function exeSelfUnitBuffGainWithExtraData({ isFastExecute }: {
+export function executeAsOuterWar({ isFastExecute }: {
     isFastExecute   : boolean;
 }): void {
     // nothing to do
 }
 
-export function exeSelfUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
+export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_Player.Player;
     coGridIndexList : AuxiliaryTypes_GridIndex.GridIndex[];

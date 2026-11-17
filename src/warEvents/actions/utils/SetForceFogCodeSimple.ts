@@ -49,7 +49,7 @@ export function getErrorTip(data: WeaSetForceFogCodeSimple): string | null {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<void> {
     const fogMap = war.getFogMap();
     fogMap.setForceFogCode(action.getForceFogCode());
 
@@ -63,7 +63,7 @@ export async function applyWithExtraData(action: WeaSetForceFogCodeSimple, war: 
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyAsInnerWar(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaSetForceFogCodeSimple, war: BaseWar_Model_War.War, isFast: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const fogMap          = war.getFogMap();
     const forceFog        = new ForceFog();
     const forceFogCode    = action.getForceFogCode();

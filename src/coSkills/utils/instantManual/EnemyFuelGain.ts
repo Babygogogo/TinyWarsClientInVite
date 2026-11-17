@@ -2,13 +2,13 @@ import { AuxiliaryTypes_ChangedThingsForWarOperation, type AuxiliaryTypes_GridIn
 import type { CoSkillCfg } from "../../../proto/schema/CommonProto/Config/CoSkillCfg";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function exeEnemyFuelGainWithExtraData({ isFastExecute }: {
+export function executeAsOuterWar({ isFastExecute }: {
     isFastExecute   : boolean;
 }): void {
     // nothing to do
 }
 
-export function exeEnemyFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
+export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_Player.Player;
     coGridIndexList : AuxiliaryTypes_GridIndex.GridIndex[];

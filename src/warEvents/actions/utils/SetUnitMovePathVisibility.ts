@@ -121,10 +121,10 @@ function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: BaseW
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function applyWithExtraData(_action: WeaSetUnitMovePathVisibility): void {
+export function executeAsOuterWar(_action: WeaSetUnitMovePathVisibility): void {
     // nothing to do
 }
-export function applyAsInnerWar(action: WeaSetUnitMovePathVisibility, war: BaseWar_Model_War.War): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+export function executeAsLocalWar(action: WeaSetUnitMovePathVisibility, war: BaseWar_Model_War.War): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const fogMap            = war.getFogMap();
     const { width, height } = fogMap.getMapSize().getWH();
     const newVisibilityDict = new Map<AuxiliaryTypes_GridIndex.GridIndex, number[]>();

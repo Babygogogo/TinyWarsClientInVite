@@ -8,7 +8,7 @@ import {
 import type { CoSkillCfg } from "../../../proto/schema/CommonProto/Config/CoSkillCfg";
 import type { DataForUseCoSkill } from "../../../proto/schema/CommonProto/Structure/DataForUseCoSkill";
 
-export function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isFastExecute }: {
+export function executeAsOuterWar({ skillCfg, player, skillData, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_Player.Player;
     skillData       : DataForUseCoSkill;
@@ -38,7 +38,7 @@ export function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isF
     }
 }
 
-export function exeChangeWeatherWithoutExtraData({ skillCfg, player, skillData, isFastExecute }: {
+export function executeAsLocalWar({ skillCfg, player, skillData, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_Player.Player;
     skillData       : DataForUseCoSkill;

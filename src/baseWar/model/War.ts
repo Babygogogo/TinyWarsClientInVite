@@ -109,7 +109,6 @@ export abstract class War {
     public abstract getWarEventManager(): WarEvents_Manager.Manager;
     public abstract getBootRestTime(playerIndex: number): number | null;
     public abstract getSettingsBootTimerParams(): number[];
-    public abstract getIsExecuteActionsWithExtraData(): boolean;
     public abstract updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void;
 
     protected _baseInit(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig, warType: WarTypes_Constants.WarTypeId): void {

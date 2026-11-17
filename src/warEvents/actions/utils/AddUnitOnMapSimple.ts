@@ -1,21 +1,21 @@
 import {
+    AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
+    Helpers_Misc,
+    Helpers_Team,
+    Lang_Constants,
+    Lang_Utils,
+    Players_Constants,
     Units_Unit,
+    Units_Utils_Serialization,
+    Visibilities_Utils,
+    WarEvents_Actions_Constants_AddUnitOnMapSimple,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    Players_Constants,
-    WarEvents_Actions_Constants_AddUnitOnMapSimple,
-    Helpers_Team,
-    Units_Utils_Serialization,
-    Helpers_Misc,
-    Lang_Utils,
-    Visibilities_Utils,
-    Lang_Constants,
     type Tiles_TileMap,
     type Units_UnitMap,
-    AuxiliaryTypes_ChangedThingsForWarOperation,
 } from "../../../internal.ts";
 
 import type { WeaAddUnitOnMapSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple.ts";
@@ -115,10 +115,10 @@ export function getErrorTip(data: WeaAddUnitOnMapSimple, war: BaseWar_Model_War.
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithExtraData(action: WeaAddUnitOnMapSimple): Promise<void> {
+export async function executeAsOuterWar(action: WeaAddUnitOnMapSimple): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaAddUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function executeAsLocalWar(action: WeaAddUnitOnMapSimple, war: BaseWar_Model_War.War, isFastExecute: boolean): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitArray = action.getUnitArray();
     if ((unitArray == null) || (!unitArray.length)) {
         throw Helpers_Misc.newError(`Empty unitArray.`);
@@ -178,7 +178,9 @@ export async function applyAsInnerWar(action: WeaAddUnitOnMapSimple, isFastExecu
         unit.flushDataToView();
         unitMap.setNextUnitId(unitId + 1);
         unitMap.setUnitOnMap(unit);
-        (!isFastExecute) && (unit.flushDataToView());
+        if (!isFastExecute) {
+            unit.flushDataToView();
+        }
 
         {
             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
