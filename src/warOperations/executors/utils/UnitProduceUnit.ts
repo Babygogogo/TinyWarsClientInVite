@@ -98,7 +98,7 @@ function fastExeUnitProduceUnit(war: BaseWar_Model_War.War, action: WoUnitProduc
             producedUnit.startRunning(war);
 
             const player = war.getPlayerInTurn();
-            player.setFund(player.getFund() - focusUnit.getProduceUnitCost());
+            player.setFund(player.getFund() - focusUnit.getProduceUnitCost(), false);
             unitMap.setNextUnitId(producedUnitId + 1);
             unitMap.setUnitLoaded(producedUnit);
             focusUnit.addAndValidateCurrentProduceMaterial(-1);
@@ -218,7 +218,7 @@ async function normalExeUnitProduceUnit(war: BaseWar_Model_War.War, action: WoUn
             producedUnit.flushDataToView();
 
             const player = war.getPlayerInTurn();
-            player.setFund(player.getFund() - focusUnit.getProduceUnitCost());
+            player.setFund(player.getFund() - focusUnit.getProduceUnitCost(), true);
             unitMap.setNextUnitId(producedUnitId + 1);
             unitMap.setUnitLoaded(producedUnit);
             focusUnit.addAndValidateCurrentProduceMaterial(-1);
@@ -335,7 +335,7 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
         producedUnit.startRunning(war);
         changedThings.addUnit(producedUnit);
 
-        playerInTurn.setFund(playerInTurn.getFund() - cost);
+        playerInTurn.setFund(playerInTurn.getFund() - cost, false);
         unitMap.setNextUnitId(producedUnitId + 1);
         unitMap.setUnitLoaded(producedUnit);
         focusUnit.addAndValidateCurrentProduceMaterial(-1);

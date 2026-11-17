@@ -1,18 +1,18 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
+    Destructions_Utils,
+    Lang_Constants,
+    Lang_Utils,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
     Units_Utils_Filter,
-    Destructions_Utils,
-    Lang_Utils,
-    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type Players_Player,
     type Tiles_Tile,
     type Units_Unit,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
@@ -133,7 +133,7 @@ export async function applyAsInnerWar(data: WeaDestroyUnitSimple, isFastExecute:
         } else {
             const unitId = unit.getUnitId();
             if (unitMap.getUnitLoadedById(unitId) === unit) {
-                changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId));
+                changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId, !isFastExecute));
             }
         }
     }

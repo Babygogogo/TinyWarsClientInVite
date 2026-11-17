@@ -12,7 +12,6 @@ export function exeSelfFundWithExtraData({ isFastExecute }: {
     // nothing to do
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function exeSelfFundWithoutExtraData({ skillCfg, player, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_Player.Player;
@@ -28,9 +27,7 @@ export function exeSelfFundWithoutExtraData({ skillCfg, player, isFastExecute }:
         ? 0
         : player.getWar().getTileMap().getTotalIncomeForPlayer(player.getPlayerIndex()) * (cfg.getIncomeConversionPct()) / 100;
 
-    player.setFund(Players_Utils_Common.getValidFund(
-        player.getFund() * (cfg.getMultiplierPct()) / 100 + (cfg.getOffset()) + offsetByIncome),
-    );
+    player.setFund(Players_Utils_Common.getValidFund(player.getFund() * (cfg.getMultiplierPct()) / 100 + (cfg.getOffset()) + offsetByIncome), !isFastExecute);
 
     changedThings.addPlayer(player);
     return changedThings;

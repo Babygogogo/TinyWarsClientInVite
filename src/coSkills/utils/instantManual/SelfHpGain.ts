@@ -102,7 +102,7 @@ export function exeSelfHpGainWithoutExtraData({ skillCfg, player, coGridIndexLis
         }
 
         if (totalCost !== 0) {
-            player.setFund(Players_Utils_Common.getValidFund(player.getFund() - totalCost));
+            player.setFund(Players_Utils_Common.getValidFund(player.getFund() - totalCost), !isFastExecute);
             changedThings.addPlayer(player);
         }
     }

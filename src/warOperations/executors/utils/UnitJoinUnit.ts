@@ -94,7 +94,7 @@ function fastExeUnitJoinUnit(war: BaseWar_Model_War.War, action: WoUnitJoinUnit)
 
             const joinIncome = focusUnit.getJoinIncome(targetUnit);
             if (joinIncome !== 0) {
-                player.setFund(player.getFund() + joinIncome);
+                player.setFund(player.getFund() + joinIncome, false);
             }
 
             focusUnit.setCurrentHp(Math.min(
@@ -234,7 +234,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Model_War.War, action: WoUnitJ
 
             const joinIncome = focusUnit.getJoinIncome(targetUnit);
             if (joinIncome !== 0) {
-                player.setFund(player.getFund() + joinIncome);
+                player.setFund(player.getFund() + joinIncome, true);
             }
 
             focusUnit.setCurrentHp(Math.min(
@@ -284,7 +284,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Model_War.War, action: WoUnitJ
 
             {
                 for (const buff of targetUnit.getBuffList()) {
-                    focusUnit.addBuff(buff.clone(), false, true);
+                    focusUnit.addBuff(buff.clone(), true);
                 }
             }
 
@@ -385,7 +385,7 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
 
         const joinIncome = focusUnit.getJoinIncome(targetUnit);
         if (joinIncome !== 0) {
-            player.setFund(player.getFund() + joinIncome);
+            player.setFund(player.getFund() + joinIncome, false);
             changedThings.addPlayer(player);
         }
 
@@ -412,7 +412,7 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
         focusUnit.setGroupedTagId(focusUnit.getGroupedTagId() | targetUnit.getGroupedTagId());
 
         for (const buff of targetUnit.getBuffList()) {
-            focusUnit.addBuff(buff.clone(), false, false);
+            focusUnit.addBuff(buff.clone(), false);
         }
 
         changedThings.mergeFrom(WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true));

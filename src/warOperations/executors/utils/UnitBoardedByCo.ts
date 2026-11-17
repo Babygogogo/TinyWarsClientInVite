@@ -60,8 +60,8 @@ function fastExeUnitBoardedByCo(war: BaseWar_Model_War.War, action: WoUnitBoarde
 
             const player        = war.getPlayer(playerIndex);
             const coMaxEnergy   = player.getCoMaxEnergy();
-            player.setFund(player.getFund() - focusUnit.getCoBoardCost());
-            player.addAndValidateCoCurrentEnergy(coMaxEnergy * energyAddPctOnCoBoard / 100);
+            player.setFund(player.getFund() - focusUnit.getCoBoardCost(), false);
+            player.addAndValidateCoCurrentEnergy(coMaxEnergy * energyAddPctOnCoBoard / 100, false);
         }
 
         WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
@@ -111,8 +111,8 @@ async function normalExeUnitBoardedByCo(war: BaseWar_Model_War.War, action: WoUn
 
             const player        = war.getPlayer(playerIndex);
             const coMaxEnergy   = player.getCoMaxEnergy();
-            player.setFund(player.getFund() - focusUnit.getCoBoardCost());
-            player.addAndValidateCoCurrentEnergy(coMaxEnergy * energyAddPctOnCoBoard / 100);
+            player.setFund(player.getFund() - focusUnit.getCoBoardCost(), true);
+            player.addAndValidateCoCurrentEnergy(coMaxEnergy * energyAddPctOnCoBoard / 100, true);
         }
 
         await focusUnit.moveViewAlongPath({
@@ -155,8 +155,8 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
 
         const player                = focusUnit.getPlayer();
         const energyAddPctOnCoBoard = war.getCommonSettingManager().getPlayerRule(player.getPlayerIndex()).getEnergyAddPctOnCoBoard();
-        player.setFund(player.getFund() - focusUnit.getCoBoardCost());
-        player.addAndValidateCoCurrentEnergy(player.getCoMaxEnergy() * energyAddPctOnCoBoard / 100);
+        player.setFund(player.getFund() - focusUnit.getCoBoardCost(), false);
+        player.addAndValidateCoCurrentEnergy(player.getCoMaxEnergy() * energyAddPctOnCoBoard / 100, false);
         changedThings.addPlayer(player);
     }
     changedThings.mergeFrom(WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true));

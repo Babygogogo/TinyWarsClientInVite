@@ -2181,7 +2181,7 @@ export class Unit {
         this._buffArray = buffArray;
     }
 
-    public updateBuffArrayOnPlayerTurnSwitched(updateView: boolean): boolean {
+    public updateBuffArrayOnPlayerTurnSwitched(needUpdateView: boolean): boolean {
         const buffArray = this.getBuffList();
         if (!buffArray?.length) {
             return false;
@@ -2198,10 +2198,8 @@ export class Unit {
             }
         }
 
-        if (isUpdated) {
-            if (updateView) {
-                this.flushDataToView();
-            }
+        if ((isUpdated) && (needUpdateView)) {
+            this.flushDataToView();
             Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
                 unit : this,
             });
@@ -2209,7 +2207,7 @@ export class Unit {
 
         return isUpdated;
     }
-    public addBuff(buff: UnitBuff, updateView: boolean, needNotify: boolean): void {
+    public addBuff(buff: UnitBuff, needUpdateView: boolean): void {
         const buffList = this.getBuffList();
         if (buffList) {
             buffList.push(buff);
@@ -2217,16 +2215,14 @@ export class Unit {
             this.setBuffList([buff]);
         }
 
-        if (updateView) {
+        if (needUpdateView) {
             this.flushDataToView();
-        }
-        if (needNotify) {
             Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
                 unit : this,
             });
         }
     }
-    public deleteBuff(buff: UnitBuff, updateView: boolean): boolean {
+    public deleteBuff(buff: UnitBuff, needUpdateView: boolean): boolean {
         const buffArray = this.getBuffList();
         if (buffArray == null) {
             return false;
@@ -2236,12 +2232,12 @@ export class Unit {
             return false;
         }
 
-        if (updateView) {
+        if (needUpdateView) {
             this.flushDataToView();
+            Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
+                unit : this,
+            });
         }
-        Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
-            unit : this,
-        });
 
         return true;
     }

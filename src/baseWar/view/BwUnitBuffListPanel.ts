@@ -121,7 +121,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             expiringTurnIndex   : turnIndex,
                             expiringPlayerIndex : playerIndex,
                             extraParams         : null,
-                        }), true, true);
+                        }), true);
                     },
                 });
             },

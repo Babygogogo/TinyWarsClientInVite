@@ -51,20 +51,16 @@ export function exeSelfUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIn
                     expiringTurnIndex   : turnIndex + turns,
                     expiringPlayerIndex : playerIndex,
                     extraParams         : null,
-                }), false, true);
+                }), !isFastExecute);
             } else {
                 unit.addBuff(UnitBuffs_Utils_Common.create({
                     buffTypeId          : unitBuffTypeId,
                     expiringTurnIndex   : null,
                     expiringPlayerIndex : null,
                     extraParams         : null,
-                }), false, true);
+                }), !isFastExecute);
             }
             changedThings.addUnit(unit);
-
-            if (!isFastExecute) {
-                unit.flushDataToView();
-            }
         }
     }
     return changedThings;

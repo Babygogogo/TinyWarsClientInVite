@@ -126,7 +126,7 @@ function evalActPlayerAliveState(action: WeaDestroyUnitExpr, player: Players_Pla
 export async function applyWithExtraData(_action: WeaDestroyUnitExpr): Promise<void> {
     // nothing to do
 }
-export async function applyAsInnerWar(action: WeaDestroyUnitExpr, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
+export async function applyAsInnerWar(action: WeaDestroyUnitExpr, isFastExecute: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {
     const unitMap                   = war.getUnitMap();
     const allLoadedUnits            = [...unitMap.getRawAllUnitsLoaded().values()].sort((v1, v2) => v1.getUnitId() - v2.getUnitId());
     const targetLoadedUnitIdList    : number[] = [];
@@ -138,11 +138,11 @@ export async function applyAsInnerWar(action: WeaDestroyUnitExpr, isFast: boolea
 
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     for (const unit of unitMap.getAllUnitsOnMap(v => checkIsMeetConditionForUnit(action, v))) {
-        changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFast));
+        changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute));
     }
     for (const unitId of targetLoadedUnitIdList) {
         if (unitMap.getUnitLoadedById(unitId) != null) {
-            changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId));
+            changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId, !isFastExecute));
         }
     }
 

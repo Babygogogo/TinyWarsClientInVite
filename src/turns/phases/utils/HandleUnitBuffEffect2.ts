@@ -36,7 +36,7 @@ export function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute:
                     changedThings.addUnit(unit);
                 } else {
                     if (unit.getLoaderUnitId() != null) {
-                        changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId));
+                        changedThings.mergeFrom(Destructions_Utils.destroyUnitLoaded(war, unitId, !isFastExecute));
                     } else {
                         changedThings.mergeFrom(Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute));
                     }

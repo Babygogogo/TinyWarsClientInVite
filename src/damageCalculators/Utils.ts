@@ -672,7 +672,7 @@ function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, atta
             maxValue : Players_Constants.Fund.MaxFund,
             minValue : Players_Constants.Fund.MinFund,
             rawValue : attackerPlayer.getFund() + addFund,
-        }));
+        }), !isEstimated);
     }
 }
 function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlayer, targetPlayer, targetLostNormalizedHp, targetCfgEnergyValue, isAttackerInAttackerCoZone, isTargetInTargetCoZone }: {
@@ -708,7 +708,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
             const energyParameters1 = gameConfig.getTrilogyEnergyGainRateForAttacker();
             const multiplier1       = commonSettingManager.getPlayerRule(playerIndex1).getEnergyGrowthMultiplier()
                 + warEventManager.getOpaEnergyGrowthMultiplierModifier(playerIndex1);
-            attackerPlayer.addAndValidateCoCurrentEnergy(targetLostNormalizedHp * targetCfgEnergyValue * multiplier1 * energyParameters1 / 100 / 100);
+            attackerPlayer.addAndValidateCoCurrentEnergy(targetLostNormalizedHp * targetCfgEnergyValue * multiplier1 * energyParameters1 / 100 / 100, !isEstimated);
 
         } else if (coEnergyType1 == Cos_Constants.EnergyTypeId.Dor) {
             if (isAttackerInAttackerCoZone) {
@@ -722,7 +722,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
 
                 const multiplier1 = commonSettingManager.getPlayerRule(playerIndex1).getEnergyGrowthMultiplier()
                     + warEventManager.getOpaEnergyGrowthMultiplierModifier(playerIndex1);
-                attackerPlayer.addAndValidateCoCurrentEnergy(targetLostNormalizedHp * multiplier1 * gameConfig.getDorEnergyGainRateForAttacker() / 100);
+                attackerPlayer.addAndValidateCoCurrentEnergy(targetLostNormalizedHp * multiplier1 * gameConfig.getDorEnergyGainRateForAttacker() / 100, !isEstimated);
             }
 
         } else {
@@ -745,7 +745,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
             const energyParameters2 = gameConfig.getTrilogyEnergyGainRateForDefender();
             const multiplier2       = commonSettingManager.getPlayerRule(playerIndex2).getEnergyGrowthMultiplier()
                 + warEventManager.getOpaEnergyGrowthMultiplierModifier(playerIndex2);
-            targetPlayer.addAndValidateCoCurrentEnergy(targetLostNormalizedHp * targetCfgEnergyValue * multiplier2 * energyParameters2 / 100 / 100);
+            targetPlayer.addAndValidateCoCurrentEnergy(targetLostNormalizedHp * targetCfgEnergyValue * multiplier2 * energyParameters2 / 100 / 100, !isEstimated);
 
         } else if (coEnergyType2 == Cos_Constants.EnergyTypeId.Dor) {
             if (isTargetInTargetCoZone) {
@@ -759,7 +759,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
 
                 const multiplier2 = commonSettingManager.getPlayerRule(playerIndex2).getEnergyGrowthMultiplier()
                     + warEventManager.getOpaEnergyGrowthMultiplierModifier(playerIndex2);
-                targetPlayer.addAndValidateCoCurrentEnergy(targetLostNormalizedHp * multiplier2 * gameConfig.getDorEnergyGainRateForDefender() / 100);
+                targetPlayer.addAndValidateCoCurrentEnergy(targetLostNormalizedHp * multiplier2 * gameConfig.getDorEnergyGainRateForDefender() / 100, !isEstimated);
             }
 
         } else {

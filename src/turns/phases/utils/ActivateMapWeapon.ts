@@ -274,15 +274,15 @@ async function handleMapWeaponTileCrystalForLocalWar(war: BaseWar_Model_War.War,
                     ((canAffectEnemy) && (teamIndex !== teamIndexInTurn))
                 ) {
                     if (deltaFund) {
-                        player.setFund(Math.max(0, player.getFund() + deltaFund));
+                        player.setFund(Math.max(0, player.getFund() + deltaFund), !isFastExecute);
                         changedThings.addPlayer(player);
                     }
 
                     if (deltaEnergyPercentage) {
                         if (deltaEnergyPercentage < 0) {
-                            player.addAndValidateCoCurrentEnergy(player.getCoCurrentEnergy() * deltaEnergyPercentage / 100);
+                            player.addAndValidateCoCurrentEnergy(player.getCoCurrentEnergy() * deltaEnergyPercentage / 100, !isFastExecute);
                         } else {
-                            player.addAndValidateCoCurrentEnergy(player.getCoMaxEnergy() * deltaEnergyPercentage / 100);
+                            player.addAndValidateCoCurrentEnergy(player.getCoMaxEnergy() * deltaEnergyPercentage / 100, !isFastExecute);
                         }
                         changedThings.addPlayer(player);
                     }

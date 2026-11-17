@@ -55,7 +55,7 @@ function fastExePlayerUseCoSkill(war: BaseWar_Model_War.War, action: WoPlayerUse
         const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
         const skillType         = Helpers_Misc.getExisted(action.getSkillType(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_04);
         const skillIdArray      = playerInTurn.getCoSkills(skillType);
-        playerInTurn.updateOnUseCoSkill(skillType);
+        playerInTurn.updateOnUseCoSkill(skillType, false);
 
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
             CoSkills_Utils_Executor.executeInstantSkillWithoutExtraData({
@@ -138,7 +138,7 @@ function normalExePlayerUseCoSkill(war: BaseWar_Model_War.War, action: WoPlayerU
         const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
         const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
         const skillType         = Helpers_Misc.getExisted(action.getSkillType(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_04);
-        playerInTurn.updateOnUseCoSkill(skillType);
+        playerInTurn.updateOnUseCoSkill(skillType, true);
 
         const skillIdArray = playerInTurn.getCoSkills(skillType);
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
@@ -203,7 +203,7 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoP
     const skillType                             = Helpers_Misc.getExisted(operation.getSkillType());
     const targetGridIndexes                     = operation.getTargetGridIndexArray();
     const changedThings                         = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
-    playerInTurn.updateOnUseCoSkill(skillType);
+    playerInTurn.updateOnUseCoSkill(skillType, false);
     changedThings.addPlayer(playerInTurn);
 
     const skillDataArray : DataForUseCoSkill[] = [];

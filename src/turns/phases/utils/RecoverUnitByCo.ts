@@ -97,7 +97,7 @@ export function runAsLocalWar(turnManager: Turns_Manager.Manager, timing: number
                         unit.addCurrentHp(repairAmount);
 
                         const offsetFund = - Math.floor(normalizedRepairHp * revisedProductionCost / normalizedMaxHp);
-                        player.setFund(Players_Utils_Common.getValidFund(currentFund + offsetFund));
+                        player.setFund(Players_Utils_Common.getValidFund(currentFund + offsetFund), !isFastExecute);
 
                         {
                             const offsetNormalizedHp = unit.getNormalizedCurrentHp() - normalizedCurrentHp;

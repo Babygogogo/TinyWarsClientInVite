@@ -685,7 +685,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             isBan              : false,
             callbackOnConfirm  : newCoId => {
                 if (newCoId !== currentCoId) {
-                    player.setCoId(newCoId);
+                    player.setCoId(newCoId, true);
 
                     war.getTileMap().getView()?.updateCoZone();
                     this._updateView();
@@ -724,7 +724,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             minValue     : Cos_Constants.EnergyHardLimit.Min,
             maxValue     : Cos_Constants.EnergyHardLimit.Max,
             callback     : value => {
-                player.setAndValidateCoCurrentEnergy(value);
+                player.setAndValidateCoCurrentEnergy(value, true);
                 this._updateView();
             },
         });
@@ -743,10 +743,10 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             getTitle     : () => `P${player.getPlayerIndex()} ${Lang_Utils.getText(Lang_Constants.TextType.Fund)}`,
             currentValue : currValue,
-            minValue,
-            maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
             callback     : value => {
-                player.setFund(value);
+                player.setFund(value, true);
                 this._updateView();
             },
         });

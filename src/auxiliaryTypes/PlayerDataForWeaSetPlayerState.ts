@@ -43,7 +43,7 @@ export class PlayerDataForWeaSetPlayerState {
         const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
         {
             if (this._fund != null) {
-                player.setFund(this._fund);
+                player.setFund(this._fund, !isFastExecute);
                 changedThings.addPlayer(player);
             }
         }
@@ -55,13 +55,13 @@ export class PlayerDataForWeaSetPlayerState {
         }
         {
             if (this._coId != null) {
-                player.setCoId(this._coId);
+                player.setCoId(this._coId, !isFastExecute);
                 changedThings.addPlayer(player);
             }
         }
         {
             if (this._coEnergy != null) {
-                player.setAndValidateCoCurrentEnergy(this._coEnergy);
+                player.setAndValidateCoCurrentEnergy(this._coEnergy, !isFastExecute);
                 changedThings.addPlayer(player);
             }
         }
@@ -73,7 +73,7 @@ export class PlayerDataForWeaSetPlayerState {
         }
         {
             if (this._coUsingSkillType != null) {
-                player.setCoUsingSkillType(this._coUsingSkillType);
+                player.setCoUsingSkillType(this._coUsingSkillType, !isFastExecute);
                 changedThings.addPlayer(player);
             }
         }

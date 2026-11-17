@@ -516,7 +516,7 @@ export function handlePostOperationPlunder(focusUnit: Units_Unit.Unit, isFastExe
             continue;
         }
 
-        focusPlayer.setFund(Players_Utils_Common.getValidFund(focusPlayer.getFund() + tile.getIncomeForPlayer(tilePlayerIndex) * multiple));
+        focusPlayer.setFund(Players_Utils_Common.getValidFund(focusPlayer.getFund() + tile.getIncomeForPlayer(tilePlayerIndex) * multiple), !isFastExecute);
         tile.addUnfixedBuff(TileBuff.fromJson({
             buffTypeId          : TileBuffs_Constants.BuffTypeId.NoIncome,
             expiringTurnIndex   : turnIndex + multiple,

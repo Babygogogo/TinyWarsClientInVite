@@ -14,7 +14,7 @@ export function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute:
     const war       = Helpers_Misc.getExisted(turnManager.getWar());
     const player    = war.getPlayerInTurn();
     player.setCoIsDestroyedInTurn(false);
-    player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
+    player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive, !isFastExecute);
 
     if (!isFastExecute) {
         war.getTileMap().getView()?.updateCoZone();

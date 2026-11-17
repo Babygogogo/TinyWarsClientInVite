@@ -26,15 +26,15 @@ import { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/Seria
 
 export class Player implements Players_Player.Player {
     private _playerIndex?                       : number;
-    private _fund?                              : number;
+    private _fund                               = 0;
     private _hasVotedForDraw?                   : boolean;
     private _aliveState?                        : Players_Constants.AliveStateId;
     private _restTimeToBoot?                    : number;
     private _userId?                            : number | null;
     private _unitAndTileSkinId?                 : number;
-    private _coId?                              : number;
+    private _coId                               = 0;
     private _coCurrentEnergy                    = 0;
-    private _coUsingSkillType?                  : CoSkills_Constants.SkillTypeId;
+    private _coUsingSkillType                   = CoSkills_Constants.SkillTypeId.Passive;
     private _coIsDestroyedInTurn?               : boolean;
     private _coPowerActivatedCount?             : number;
     private _watchOngoingSrcUserIds?            : Set<number>;
@@ -102,17 +102,17 @@ export class Player implements Players_Player.Player {
         //     throw Helpers.newError(`The neutral player is not alive.`, ClientErrorCode.BwPlayer_Init_11);
         // }
 
-        this.setFund(fund);
+        this.setFund(fund, false);
         this.setHasVotedForDraw(hasVotedForDraw);
         this.setAliveState(aliveState);
         this._setPlayerIndex(playerIndex);
         this.setRestTimeToBoot(restTimeToBoot);
-        this.setCoUsingSkillType(coUsingSkillType);
+        this.setCoUsingSkillType(coUsingSkillType, false);
         this.setCoIsDestroyedInTurn(coIsDestroyedInTurn);
         this.setUserId(data.getUserId() ?? null);
         this._setUnitAndTileSkinId(unitAndTileSkinId);
-        this.setCoId(coId);
-        this._setCoCurrentEnergy(coCurrentEnergy);
+        this.setCoId(coId, false);
+        this._setCoCurrentEnergy(coCurrentEnergy, false);
         this._setCoPowerActivatedCount(data.getCoPowerActivatedCount());
         this.setWatchOngoingSrcUserIds(data.getWatchOngoingSrcUserIdArray() || []);
         this.setWatchRequestSrcUserIds(data.getWatchRequestSrcUserIdArray() || []);
@@ -232,17 +232,17 @@ export class Player implements Players_Player.Player {
         this._war = war;
     }
 
-    public setFund(fund: number): void {
-        if (this._fund !== fund) {
+    public setFund(fund: number, needUpdateView: boolean): void {
+        if (this.getFund() !== fund) {
             this._fund = fund;
 
-            if (this.getWar2()?.getView()) {
+            if ((needUpdateView) && (this.getWar2()?.getView())) {
                 Notifications_Dispatcher.dispatch("BwPlayerFundChanged", { player : this });
             }
         }
     }
     public getFund(): number {
-        return Helpers_Misc.getExisted(this._fund);
+        return this._fund;
     }
 
     public setHasVotedForDraw(voted: boolean): void {
@@ -416,37 +416,40 @@ export class Player implements Players_Player.Player {
             : await Users_Model.getUserNickname(userId) || `??`;
     }
 
-    public setCoId(coId: number): void {
-        if (this._coId !== coId) {
+    public getCoId(): number {
+        return this._coId;
+    }
+    public setCoId(coId: number, needUpdateView: boolean): void {
+        if (this.getCoId() !== coId) {
             this._coId = coId;
 
-            if (this.getWar2()?.getView()) {
+            if ((needUpdateView) && (this.getWar2()?.getView())) {
                 Notifications_Dispatcher.dispatch("BwCoIdChanged", { player : this });
             }
         }
-    }
-    public getCoId(): number {
-        return Helpers_Misc.getExisted(this._coId);
     }
     public getCoCategoryId(): number {
         return Helpers_Misc.getExisted(this.getWar().getGcData().getCoBasicCfg(this.getCoId())?.getCoCategoryId());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private _setCoCurrentEnergy(energy: number): void {
+    private _setCoCurrentEnergy(energy: number, needUpdateView: boolean): void {
         if (!Cos_Utils.checkIsValidEnergy(energy)) {
             throw Helpers_Misc.newError(`Invalid energy: ${energy}`);
         }
-        this._coCurrentEnergy = energy;
 
-        if (this.getWar2()?.getView()) {
-            Notifications_Dispatcher.dispatch("BwCoEnergyChanged");
+        if (this.getCoCurrentEnergy() !== energy) {
+            this._coCurrentEnergy = energy;
+
+            if ((needUpdateView) && (this.getWar2()?.getView())) {
+                Notifications_Dispatcher.dispatch("BwCoEnergyChanged");
+            }
         }
     }
-    public setAndValidateCoCurrentEnergy(energy: number): void {
-        this._setCoCurrentEnergy(Cos_Utils.getValidEnergy(energy));
+    public setAndValidateCoCurrentEnergy(energy: number, needUpdateView: boolean): void {
+        this._setCoCurrentEnergy(Cos_Utils.getValidEnergy(energy), needUpdateView);
     }
-    public addAndValidateCoCurrentEnergy(offset: number): void {
+    public addAndValidateCoCurrentEnergy(offset: number, needUpdateView: boolean): void {
         if (offset === 0) {
             return;
         }
@@ -461,7 +464,7 @@ export class Player implements Players_Player.Player {
                 minValue : minEnergy,
                 maxValue : maxEnergy,
                 rawValue : currentEnergy + offset,
-            }));
+            }), needUpdateView);
         }
     }
 
@@ -536,13 +539,13 @@ export class Player implements Players_Player.Player {
     }
 
     public getCoUsingSkillType(): CoSkills_Constants.SkillTypeId {
-        return Helpers_Misc.getExisted(this._coUsingSkillType);
+        return this._coUsingSkillType;
     }
-    public setCoUsingSkillType(skillType: CoSkills_Constants.SkillTypeId): void {
-        if (this._coUsingSkillType !== skillType) {
+    public setCoUsingSkillType(skillType: CoSkills_Constants.SkillTypeId, needUpdateView: boolean): void {
+        if (this.getCoUsingSkillType() !== skillType) {
             this._coUsingSkillType = skillType;
 
-            if (this.getWar2()?.getView()) {
+            if ((needUpdateView) && (this.getWar2()?.getView())) {
                 Notifications_Dispatcher.dispatch("BwCoUsingSkillTypeChanged");
             }
         }
@@ -621,19 +624,19 @@ export class Player implements Players_Player.Player {
             || (!this.checkCoIsUsingActiveSkill());
     }
 
-    public updateOnUseCoSkill(skillType: CoSkills_Constants.SkillTypeId): void {
+    public updateOnUseCoSkill(skillType: CoSkills_Constants.SkillTypeId, needUpdateView: boolean): void {
         if (skillType === CoSkills_Constants.SkillTypeId.Power) {
-            this.addAndValidateCoCurrentEnergy(-Helpers_Misc.getExisted(this.getCoPowerEnergy()));
+            this.addAndValidateCoCurrentEnergy(-Helpers_Misc.getExisted(this.getCoPowerEnergy()), needUpdateView);
 
         } else if (skillType === CoSkills_Constants.SkillTypeId.SuperPower) {
-            this.addAndValidateCoCurrentEnergy(-Helpers_Misc.getExisted(this.getCoSuperPowerEnergy()));
+            this.addAndValidateCoCurrentEnergy(-Helpers_Misc.getExisted(this.getCoSuperPowerEnergy()), needUpdateView);
 
         } else {
             throw Helpers_Misc.newError(`Invalid skillType: ${skillType}`, Utils_ClientErrorCode.ClientErrorCode.BwPlayer_UpdateOnUseCoSkill_02);
         }
 
         this._setCoPowerActivatedCount(this.getCoPowerActivatedCount() + 1);
-        this.setCoUsingSkillType(skillType);
+        this.setCoUsingSkillType(skillType, needUpdateView);
     }
 
     public getCoIsDestroyedInTurn(): boolean {

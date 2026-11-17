@@ -50,7 +50,7 @@ export function destroyUnitOnMap(war: BaseWar_Model_War.War, gridIndex: Auxiliar
     }
 
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
-    changedThings.addPlayers(updatePlayersOnUnitDestroyed(destroyedUnits, war));
+    changedThings.addPlayers(updatePlayersOnUnitDestroyed(destroyedUnits, war, showExplosionEffect));
     changedThings.addTile(tile);
     changedThings.addUnits(destroyedUnits);
 
@@ -128,7 +128,7 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
         battleInfo.destroyedUnits.set(u.getUnitId(), u);
     }
 }
-export function destroyUnitLoaded(war: BaseWar_Model_War.War, unitId: number): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
+export function destroyUnitLoaded(war: BaseWar_Model_War.War, unitId: number, needUpdateView: boolean): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const unitMap           = war.getUnitMap();
     const targetUnit        = Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId));
     const destroyedUnits    = [targetUnit];
@@ -159,12 +159,12 @@ export function destroyUnitLoaded(war: BaseWar_Model_War.War, unitId: number): A
     }
 
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
-    changedThings.addPlayers(updatePlayersOnUnitDestroyed(destroyedUnits, war));
+    changedThings.addPlayers(updatePlayersOnUnitDestroyed(destroyedUnits, war, needUpdateView));
     changedThings.addUnits(destroyedUnits);
     return changedThings;
 }
 /** @param destroyedUnits 必须属于同一个玩家 */
-function updatePlayersOnUnitDestroyed(destroyedUnits: Units_Unit.Unit[], war: BaseWar_Model_War.War): Set<Players_Player.Player> {
+function updatePlayersOnUnitDestroyed(destroyedUnits: Units_Unit.Unit[], war: BaseWar_Model_War.War, needUpdateView: boolean): Set<Players_Player.Player> {
     const changedPlayers        = new Set<Players_Player.Player>();
     const destroyedCoUnitsCount = destroyedUnits.filter(u => u.getIsCoOnboard()).length;
     if (destroyedCoUnitsCount > 0) {
@@ -179,9 +179,10 @@ function updatePlayersOnUnitDestroyed(destroyedUnits: Units_Unit.Unit[], war: Ba
             / (restCoUnitsCount + destroyedCoUnitsCount)
             * war.getCommonSettingManager().getPlayerRule(playerIndex).getEnergyLossPctOnCoDie()
             / 100,
+            needUpdateView,
         );
         if ((restCoUnitsCount <= 0) && (player.getCoEnergyType() === Cos_Constants.EnergyTypeId.Dor)) {
-            player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
+            player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive, needUpdateView);
         }
 
         changedPlayers.add(player);
@@ -212,9 +213,10 @@ function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: Auxiliar
             / (restCoUnitsCount + destroyedCoUnitsCount)
             * war.getCommonSettingManager().getPlayerRule(playerIndex).getEnergyLossPctOnCoDie()
             / 100,
+            !isEstimated,
         );
         if ((restCoUnitsCount <= 0) && (player.getCoEnergyType() === Cos_Constants.EnergyTypeId.Dor)) {
-            player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
+            player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive, !isEstimated);
         }
     }
 }
@@ -305,8 +307,8 @@ export function destroyPlayerForce(war: BaseWar_Model_War.War, playerIndex: numb
         const player = war.getPlayer(playerIndex);
         player.setAliveState(Players_Constants.AliveStateId.Dead);
         player.setCoIsDestroyedInTurn(true);
-        player.setAndValidateCoCurrentEnergy(0);
-        player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
+        player.setAndValidateCoCurrentEnergy(0, showExplosionEffect);
+        player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive, showExplosionEffect);
         changedThings.addPlayer(player);
     }
 

@@ -12,7 +12,6 @@ export function exeEnemyEnergyWithExtraData({ isFastExecute }: {
     // nothing to do
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function exeEnemyEnergyWithoutExtraData({ skillCfg, player, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_Player.Player;
@@ -33,7 +32,7 @@ export function exeEnemyEnergyWithoutExtraData({ skillCfg, player, isFastExecute
             continue;
         }
 
-        p.addAndValidateCoCurrentEnergy(p.getCoCurrentEnergy() * modifier / 100);
+        p.addAndValidateCoCurrentEnergy(p.getCoCurrentEnergy() * modifier / 100, !isFastExecute);
         changedThings.addPlayer(p);
     }
 

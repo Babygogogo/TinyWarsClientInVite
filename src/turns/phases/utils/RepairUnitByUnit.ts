@@ -51,7 +51,7 @@ export function runAsLocalWar(turnManager: Turns_Manager.Manager, isFastExecute:
             unit.addFlareCurrentAmmo(offsetFlareAmmo);
 
             const offsetFund = -repairData.cost;
-            player.setFund(player.getFund() + offsetFund);
+            player.setFund(player.getFund() + offsetFund, !isFastExecute);
 
             {
                 const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;

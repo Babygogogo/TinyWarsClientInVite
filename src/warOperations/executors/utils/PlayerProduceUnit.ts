@@ -161,7 +161,7 @@ function handlePlayerProduceUnit(war: BaseWar_Model_War.War, action: WoPlayerPro
         unit.flushDataToView();
         unitMap.setUnitOnMap(unit);
         unitMap.setNextUnitId(unitId + 1);
-        playerInTurn.setFund(playerInTurn.getFund() - cost);
+        playerInTurn.setFund(playerInTurn.getFund() - cost, !isFastExecute);
 
         {
             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : unit.getGridIndex() });
@@ -392,7 +392,7 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoP
     unit.startRunning(war);
     unitMap.setNextUnitId(unitData.getUnitId() + 1);
     unitMap.setUnitOnMap(unit);
-    playerInTurn.setFund(playerInTurn.getFund() - finalCost);
+    playerInTurn.setFund(playerInTurn.getFund() - finalCost, false);
 
     {
         const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({

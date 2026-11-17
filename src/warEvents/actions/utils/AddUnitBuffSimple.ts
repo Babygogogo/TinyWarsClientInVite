@@ -229,7 +229,7 @@ export async function applyAsInnerWar(data: WeaAddUnitBuffSimple, isFastExecute:
     {
         const needUpdateView = !isFastExecute;
         for (const unit of targetUnitList) {
-            unit.addBuff(newBuff.clone(), needUpdateView, true);
+            unit.addBuff(newBuff.clone(), needUpdateView);
         }
     }
     return new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation({ units : targetUnitList });

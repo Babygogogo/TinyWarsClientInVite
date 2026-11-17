@@ -61,7 +61,7 @@ function fastExeUnitRepairUnit(war: BaseWar_Model_War.War, action: WoUnitRepairU
                 const player      = focusUnit.getPlayer();
                 const fund        = player.getFund();
                 if (fund >= repairCost) {
-                    player.setFund(fund - repairCost);
+                    player.setFund(fund - repairCost, false);
                     targetUnit.setCurrentHp((normalizedCurrentHp + 1) * Units_Constants.Hp.Normalizer);
                 }
             }
@@ -135,7 +135,7 @@ async function normalExeUnitRepairUnit(war: BaseWar_Model_War.War, action: WoUni
                 const player      = focusUnit.getPlayer();
                 const fund        = player.getFund();
                 if (fund >= repairCost) {
-                    player.setFund(fund - repairCost);
+                    player.setFund(fund - repairCost, true);
                     targetUnit.setCurrentHp((normalizedCurrentHp + 1) * Units_Constants.Hp.Normalizer);
 
                     {
@@ -201,7 +201,7 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
             const player     = focusUnit.getPlayer();
             const fund       = player.getFund();
             if (fund >= repairCost) {
-                player.setFund(fund - repairCost);
+                player.setFund(fund - repairCost, false);
                 targetUnit.setCurrentHp((normalizedCurrentHp + 1) * Units_Constants.Hp.Normalizer);
 
                 const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : targetGridIndex });

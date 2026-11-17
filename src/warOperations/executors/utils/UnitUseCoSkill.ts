@@ -80,7 +80,7 @@ function fastExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUnitUseCoSk
 
         if (!path.getIsBlocked()) {
             const skillType = Helpers_Misc.getExisted(action.getSkillType());
-            playerInTurn.updateOnUseCoSkill(skillType);
+            playerInTurn.updateOnUseCoSkill(skillType, false);
 
             const skillIdArray = playerInTurn.getCoCurrentSkills();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
@@ -200,7 +200,7 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUni
             const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
             const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
             const skillType         = Helpers_Misc.getExisted(action.getSkillType());
-            playerInTurn.updateOnUseCoSkill(skillType);
+            playerInTurn.updateOnUseCoSkill(skillType, true);
 
             const skillIdArray = playerInTurn.getCoCurrentSkills();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
@@ -309,7 +309,7 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
-        player.updateOnUseCoSkill(skillType);
+        player.updateOnUseCoSkill(skillType, false);
         changedThings.addPlayer(player);
 
         const skillDataArray: DataForUseCoSkill[] = [];

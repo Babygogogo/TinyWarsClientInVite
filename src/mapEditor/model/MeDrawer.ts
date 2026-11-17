@@ -299,7 +299,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
             }
         }
 
@@ -323,7 +323,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
             }
         }
 
@@ -347,7 +347,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
             }
         }
 
@@ -373,7 +373,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
             }
         }
 
@@ -399,7 +399,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
             }
         }
 
@@ -422,7 +422,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
             }
         }
 
@@ -445,7 +445,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
             }
         }
 
@@ -468,7 +468,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+                Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
             }
         }
 
@@ -577,7 +577,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             tile.startRunning(war);
             tile.flushDataToView();
 
-            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
 
             if (isRealTileAdjust) {
                 for (const g of gridIndex.getGridsWithinDistance({
@@ -661,7 +661,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             tile.startRunning(war);
             tile.flushDataToView();
 
-            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
 
             if (isRealTileAdjust) {
                 for (const g of gridIndex.getGridsWithinDistance({
@@ -749,7 +749,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             tile.startRunning(war);
             tile.flushDataToView();
 
-            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
 
             if (isRealTileAdjust) {
                 for (const g of gridIndex.getGridsWithinDistance({
@@ -847,7 +847,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         unitMap.setUnitOnMap(unit);
         unitMap.setNextUnitId(unitId + 1);
 
-        Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex });
+        Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex : gridIndex });
     }
     private _handleDeleteTileDecoration(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         const tileMap   = this._getWar().getTileMap();
@@ -855,7 +855,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         tile.deleteTileDecoration();
         tile.flushDataToView();
 
-        Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+        Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
 
         const symmetryType = this.getSymmetricalDrawType();
         const symGridIndex = MapEditor_Model_MeHelpers.getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
@@ -878,7 +878,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             this.startRunning(war);
             tile.flushDataToView();
 
-            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
         }
 
         {
@@ -903,14 +903,14 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
                 war.getTileMap().getView()?.updateCoZone();
             }
 
-            Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex });
+            Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex : gridIndex });
         }
     }
     private _handleAddTileToLocation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
-        this._getWar().getTileMap().getTile(gridIndex).setHasLocationIdWithLocationIdArray(this.getDataForAddTileToLocation()?.locationIdArray ?? [], true);
+        this._getWar().getTileMap().getTile(gridIndex).setHasLocationIdWithLocationIdArray(this.getDataForAddTileToLocation()?.locationIdArray ?? [], true, true);
     }
     private _handleDeleteTileFromLocation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
-        this._getWar().getTileMap().getTile(gridIndex).setHasLocationIdWithLocationIdArray(this.getDataForDeleteTileFromLocation()?.locationIdArray ?? [], false);
+        this._getWar().getTileMap().getTile(gridIndex).setHasLocationIdWithLocationIdArray(this.getDataForDeleteTileFromLocation()?.locationIdArray ?? [], false, true);
     }
     private _handlePasteTile(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         const war               = this._getWar();
@@ -932,7 +932,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             tile.startRunning(war);
             tile.flushDataToView();
 
-            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
 
             if (isRealTileAdjust) {
                 for (const g of gridIndex.getGridsWithinDistance({
@@ -1036,7 +1036,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
 
         unitMap.setNextUnitId(nextUnitId);
 
-        Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex });
+        Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex : gridIndex });
     }
 
     private _adjustTile(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
@@ -1086,7 +1086,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             tile.startRunning(war);
             tile.flushDataToView();
 
-            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex });
+            Notifications_Dispatcher.dispatch("BwTileChanged", { gridIndex : gridIndex });
         }
     }
 

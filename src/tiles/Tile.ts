@@ -31,7 +31,6 @@ import {
     Visibilities_Utils,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
-    type Notifications_Mapping,
     type Players_Player,
     type Units_Unit,
 } from "../internal.ts";
@@ -214,7 +213,7 @@ export class Tile {
         this.setCurrentBuildPoint(data.getCurrentBuildPoint());
         this.setCurrentCapturePoint(data.getCurrentCapturePoint());
         this.setGroupedLocationIdArray(data.getGroupedLocationIdArray());
-        this.setIsHighlighted(data.getIsHighlighted());
+        this.setIsHighlighted(data.getIsHighlighted(), false);
         this.setUnfixedBuffList(unfixedBuffArray.map(v => v.clone()));
         this.setCustomNameId(data.getCustomNameId(), false);
 
@@ -488,7 +487,7 @@ export class Tile {
         const groupedLocationId = idArray[Math.floor((locationId - 1) / Locations_Constants.GroupSize)];
         return !!((groupedLocationId >>> ((locationId - 1) % Locations_Constants.GroupSize)) & 1);
     }
-    public setHasLocationId(locationId: number, hasId: boolean): void {
+    public setHasLocationId(locationId: number, hasId: boolean, needUpdateView: boolean): void {
         const groupedLocationIdArray  = this._groupedLocationIdArray ??= new Array<number>(Locations_Constants.GroupCount).fill(0);
         const index                   = Math.floor((locationId - 1) / Locations_Constants.GroupSize);
         if (hasId) {
@@ -497,9 +496,11 @@ export class Tile {
             groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % Locations_Constants.GroupSize));
         }
 
-        Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile : this } satisfies Notifications_Mapping.Mapping["BwTileHasLocationIdSet"]);
+        if (needUpdateView) {
+            Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile : this });
+        }
     }
-    public setHasLocationIdWithLocationIdArray(locationIdArray: number[], hasId: boolean): void {
+    public setHasLocationIdWithLocationIdArray(locationIdArray: number[], hasId: boolean, needUpdateView: boolean): void {
         const groupedLocationIdArray = this._groupedLocationIdArray ??= new Array<number>(Locations_Constants.GroupCount).fill(0);
         for (const locationId of locationIdArray) {
             const index = Math.floor((locationId - 1) / Locations_Constants.GroupSize);
@@ -510,7 +511,9 @@ export class Tile {
             }
         }
 
-        Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile : this } satisfies Notifications_Mapping.Mapping["BwTileHasLocationIdSet"]);
+        if (needUpdateView) {
+            Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile : this });
+        }
     }
     public getLocationIdList(hasId: boolean): number[] {
         const locationIdArray: number[] = [];
@@ -528,10 +531,11 @@ export class Tile {
     public getIsHighlighted(): boolean {
         return this._isHighlighted;
     }
-    public setIsHighlighted(isHighlighted: boolean, needNotify = false): void {
-        if (this._isHighlighted !== isHighlighted) {
+    public setIsHighlighted(isHighlighted: boolean, needUpdateView: boolean): void {
+        if (this.getIsHighlighted() !== isHighlighted) {
             this._isHighlighted = isHighlighted;
-            if (needNotify) {
+
+            if (needUpdateView) {
                 Notifications_Dispatcher.dispatch("BwTileIsHighlightedChanged", { tile : this });
             }
         }
@@ -551,7 +555,7 @@ export class Tile {
         this._unfixedBuffList = buffArray.concat();
     }
 
-    public updateUnfixedBuffArrayOnPlayerTurnSwitched(updateView: boolean): boolean {
+    public updateUnfixedBuffArrayOnPlayerTurnSwitched(needUpdateView: boolean): boolean {
         const buffArray = this.getUnfixedBuffList();
         if (!buffArray?.length) {
             return false;
@@ -568,10 +572,8 @@ export class Tile {
             }
         }
 
-        if (isUpdated) {
-            if (updateView) {
-                this.flushDataToView();
-            }
+        if ((isUpdated) && (needUpdateView)) {
+            this.flushDataToView();
             Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
                 tile : this,
             });
@@ -579,7 +581,7 @@ export class Tile {
 
         return isUpdated;
     }
-    public addUnfixedBuff(buff: TileBuff, updateView: boolean): void {
+    public addUnfixedBuff(buff: TileBuff, needUpdateView: boolean): void {
         const buffArray = this.getUnfixedBuffList();
         if (buffArray) {
             buffArray.push(buff);
@@ -587,14 +589,14 @@ export class Tile {
             this.setUnfixedBuffList([buff]);
         }
 
-        if (updateView) {
+        if (needUpdateView) {
             this.flushDataToView();
+            Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
+                tile : this,
+            });
         }
-        Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
-            tile : this,
-        });
     }
-    public deleteUnfixedBuff(buff: TileBuff, updateView: boolean): boolean {
+    public deleteUnfixedBuff(buff: TileBuff, needUpdateView: boolean): boolean {
         const buffArray = this.getUnfixedBuffList();
         if (buffArray == null) {
             return false;
@@ -604,12 +606,12 @@ export class Tile {
             return false;
         }
 
-        if (updateView) {
+        if (needUpdateView) {
             this.flushDataToView();
+            Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
+                tile : this,
+            });
         }
-        Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
-            tile : this,
-        });
 
         return true;
     }
@@ -1131,7 +1133,7 @@ export class Tile {
     public getCustomNameId(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
         return this._customNameId;
     }
-    public setCustomNameId(nameId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>, needNotify: boolean): void {
+    public setCustomNameId(nameId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>, needUpdateView: boolean): void {
         if ((nameId != null)                                        &&
             ((!Tiles_Utils_Common.checkIsValidCustomNameId(nameId)))
         ) {
@@ -1141,7 +1143,7 @@ export class Tile {
         if (this.getCustomNameId() !== nameId) {
             this._customNameId = nameId;
 
-            if (needNotify) {
+            if (needUpdateView) {
                 Notifications_Dispatcher.dispatch("BwTileCustomNameIdChanged");
             }
         }
