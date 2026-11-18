@@ -27,260 +27,53 @@ import type { WoUnitProduceUnit } from "../../../proto/schema/CommonProto/WarOpe
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoUnitProduceUnit, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitProduceUnit, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExeUnitProduceUnit(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExeUnitProduceUnit(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-function fastExeUnitProduceUnit(war: BaseWar_Model_War.War, action: WoUnitProduceUnit): void {
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitProduceUnit_00),
-            isFastExecute   : true,
-        });
-    } else {
-        const path          = Helpers_Misc.getExisted(action.getPath());
-        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-        const unitMap       = war.getUnitMap();
-        const launchUnitId  = action.getLaunchUnitId();
-        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({
-            pathNodes       : pathNodes,
-            launchUnitId    : launchUnitId,
-            fuelConsumption : path.getFuelConsumption(),
-        });
-        unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitProduceUnit): void {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitProduceUnit_00),
+        isFastExecute   : true,
+    });
 
-        if (path.getIsBlocked()) {
-            // nothing to do.
-        } else {
-            const gridIndex         = focusUnit.getGridIndex();
-            const producedUnitId    = unitMap.getNextUnitId();
-            const producedUnit      = new Units_Unit.Unit(true);
-            const playerIndex       = focusUnit.getPlayerIndex();
-            const gameConfig        = war.getGcData();
-            const unitType          = Helpers_Misc.getExisted(focusUnit.getProduceUnitTypeId(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitProduceUnit_01);
-            const unitTemplateCfg   = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType));
-            producedUnit.init(Units_Utils_Serialization.create({
-                unitType    : unitType,
-                unitId      : producedUnitId,
-                playerIndex : playerIndex,
-                gridIndex   : gridIndex.toProto().toJson(),
-
-                actionState  : Units_Constants.ActionStateId.Acted,
-                currentHp    : unitTemplateCfg.getMaxHp(),
-                aiMode       : null,
-                groupedTagId : null,
-                customNameId : null,
-
-                currentPromotion     : getPromotionForUnitProduceUnit(war, focusUnit, unitType),
-                isDiving             : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
-                isCoOnboard          : null,
-                currentBuildMaterial : unitTemplateCfg.getMaxBuildMaterial() ?? null,
-
-                aiWeightedDestination           : null,
-                forbiddenGroupedLocationIdArray : [],
-                buffArray                       : [],
-
-                primaryWeaponCurrentAmmo : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? null,
-                flareCurrentAmmo         : unitTemplateCfg.getFlareMaxAmmo() ?? null,
-                currentProduceMaterial   : unitTemplateCfg.getMaxProduceMaterial() ?? null,
-                currentFuel              : unitTemplateCfg.getMaxFuel(),
-                loaderUnitId             : focusUnit.getUnitId(),
-            }), gameConfig);
-            producedUnit.startRunning(war);
-
-            const player = war.getPlayerInTurn();
-            player.setFund(player.getFund() - focusUnit.getProduceUnitCost(), false);
-            unitMap.setNextUnitId(producedUnitId + 1);
-            unitMap.setUnitLoaded(producedUnit);
-            focusUnit.addAndValidateCurrentProduceMaterial(-1);
-
-            {
-                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
-                if (observerTeamIndexes != null) {
-                    war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                   : unitType,
-                        dstPlayerIndex             : playerIndex,
-                        normalizedHpGain           : producedUnit.getNormalizedCurrentHp(),
-                        normalizedHpLoss           : 0,
-                        unitGain                   : 1,
-                        unitLoss                   : 0,
-                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
-                    }));
-                }
-            }
-        }
-
-        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
-    }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitProduceUnit(war: BaseWar_Model_War.War, action: WoUnitProduceUnit): Promise<void> {
-    // const desc = await war.getDescForExeUnitProduceUnit(action);
-    // (desc) && (FloatText.show(desc));
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitProduceUnit): Promise<void> {
+    const actionExtraData   = Helpers_Misc.getExisted(action.getExtraData());
+    const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitProduceUnit_00);
+    const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
+    await war.showTempUnitMoveAnimation({
+        movingUnitAndPath : movingUnitAndPath,
+        aiming            : null,
+        callback          : undefined,
+    });
 
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitProduceUnit_00);
-        const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-        await war.showTempUnitMoveAnimation({
-            movingUnitAndPath : movingUnitAndPath,
-            aiming            : null,
-            callback          : undefined,
-        });
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : commonExtraData,
+        isFastExecute   : false,
+    });
 
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : commonExtraData,
-            isFastExecute   : false,
-        });
-
-        if (movingUnitAndPath) {
-            const path = movingUnitAndPath.getPath();
-            if (path) {
-                const length    = path.length;
-                const node      = length ? path[length - 1] : null;
-                if ((node?.getIsVisible()) && (!node.getIsBlocked())) {
-                    Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.UnitProduction);
-                }
-            }
-        }
-
-    } else {
-        const path          = Helpers_Misc.getExisted(action.getPath());
-        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-        const unitMap       = war.getUnitMap();
-        const launchUnitId  = action.getLaunchUnitId();
-        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({
-            pathNodes       : pathNodes,
-            launchUnitId    : launchUnitId,
-            fuelConsumption : path.getFuelConsumption(),
-        });
-        unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-
-        if (path.getIsBlocked()) {
-            await focusUnit.moveViewAlongPath({
-                pathNodes           : pathNodes,
-                isDiving            : focusUnit.getIsDiving(),
-                isBlocked           : path.getIsBlocked(),
-                aiming              : null,
-                updateViewAfterMove : true,
-            });
-
-        } else {
-            const gridIndex         = focusUnit.getGridIndex();
-            const producedUnitId    = unitMap.getNextUnitId();
-            const producedUnit      = new Units_Unit.Unit(true);
-            const unitType          = Helpers_Misc.getExisted(focusUnit.getProduceUnitTypeId(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitProduceUnit_01);
-            const playerIndex       = focusUnit.getPlayerIndex();
-            const gameConfig        = war.getGcData();
-            const unitTemplateCfg   = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType));
-
-            producedUnit.init(Units_Utils_Serialization.create({
-                unitType    : unitType,
-                unitId      : producedUnitId,
-                playerIndex : playerIndex,
-                gridIndex   : gridIndex.toProto().toJson(),
-
-                actionState  : Units_Constants.ActionStateId.Acted,
-                currentHp    : unitTemplateCfg.getMaxHp(),
-                aiMode       : null,
-                groupedTagId : null,
-                customNameId : null,
-
-                currentPromotion     : getPromotionForUnitProduceUnit(war, focusUnit, unitType),
-                isDiving             : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
-                isCoOnboard          : null,
-                currentBuildMaterial : unitTemplateCfg.getMaxBuildMaterial() ?? null,
-
-                aiWeightedDestination           : null,
-                forbiddenGroupedLocationIdArray : [],
-                buffArray                       : [],
-
-                primaryWeaponCurrentAmmo : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? null,
-                flareCurrentAmmo         : unitTemplateCfg.getFlareMaxAmmo() ?? null,
-                currentProduceMaterial   : unitTemplateCfg.getMaxProduceMaterial() ?? null,
-                currentFuel              : unitTemplateCfg.getMaxFuel(),
-                loaderUnitId             : focusUnit.getUnitId(),
-            }), gameConfig);
-            producedUnit.startRunning(war);
-            producedUnit.flushDataToView();
-
-            const player = war.getPlayerInTurn();
-            player.setFund(player.getFund() - focusUnit.getProduceUnitCost(), true);
-            unitMap.setNextUnitId(producedUnitId + 1);
-            unitMap.setUnitLoaded(producedUnit);
-            focusUnit.addAndValidateCurrentProduceMaterial(-1);
-
-            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
-            {
-                if (observerTeamIndexes != null) {
-                    war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                   : unitType,
-                        dstPlayerIndex             : playerIndex,
-                        normalizedHpGain           : producedUnit.getNormalizedCurrentHp(),
-                        normalizedHpLoss           : 0,
-                        unitGain                   : 1,
-                        unitLoss                   : 0,
-                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
-                    }));
-                }
-            }
-
-            await focusUnit.moveViewAlongPath({
-                pathNodes           : pathNodes,
-                isDiving            : focusUnit.getIsDiving(),
-                isBlocked           : path.getIsBlocked(),
-                aiming              : null,
-                updateViewAfterMove : true,
-            });
-
-            if ((observerTeamIndexes?.length) &&
-                (war.getPlayerManager().getAllPlayers(false).some(v => (v.getUserId() != null) && (observerTeamIndexes.indexOf(v.getTeamIndex()) >= 0)))
-            ) {
+    if (movingUnitAndPath) {
+        const path = movingUnitAndPath.getPath();
+        if (path) {
+            const length    = path.length;
+            const node      = length ? path[length - 1] : null;
+            if ((node?.getIsVisible()) && (!node.getIsBlocked())) {
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.UnitProduction);
             }
         }
-
-        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
-}
-
-function getPromotionForUnitProduceUnit(war: BaseWar_Model_War.War, producerUnit: Units_Unit.Unit, targetUnitType: number): number {
-    const player                    = producerUnit.getPlayer();
-    const coZoneRadius              = player.getCoZoneRadius();
-    const gridIndex                 = producerUnit.getGridIndex();
-    const gameConfig                = war.getGcData();
-    const isCoOnboard               = producerUnit.getIsCoOnboard();
-    const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
-    let promotion                   = 0;
-    for (const skillId of war.getPlayerInTurn().getCoCurrentSkills()) {
-        const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfPromotionBonusByProduce();
-        if ((cfg)                                                                           &&
-            (gameConfig.checkIsUnitTypeInCategory(targetUnitType, cfg.getUnitCategoryId())) &&
-            ((isCoOnboard) || (gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                coZoneRadius             : coZoneRadius,
-            })))
-        ) {
-            promotion += cfg.getBonus();
-        }
-    }
-
-    return promotion;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -498,4 +291,30 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoUnitProduceUnit): P
     } else {
         return null;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+function getPromotionForUnitProduceUnit(war: BaseWar_Model_War.War, producerUnit: Units_Unit.Unit, targetUnitType: number): number {
+    const player                    = producerUnit.getPlayer();
+    const coZoneRadius              = player.getCoZoneRadius();
+    const gridIndex                 = producerUnit.getGridIndex();
+    const gameConfig                = war.getGcData();
+    const isCoOnboard               = producerUnit.getIsCoOnboard();
+    const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+    let promotion                   = 0;
+    for (const skillId of war.getPlayerInTurn().getCoCurrentSkills()) {
+        const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfPromotionBonusByProduce();
+        if ((cfg)                                                                           &&
+            (gameConfig.checkIsUnitTypeInCategory(targetUnitType, cfg.getUnitCategoryId())) &&
+            ((isCoOnboard) || (gridIndex.checkIsInsideCoSkillArea({
+                coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                coZoneRadius             : coZoneRadius,
+            })))
+        ) {
+            promotion += cfg.getBonus();
+        }
+    }
+
+    return promotion;
 }

@@ -76,7 +76,7 @@ test('the entire application initializes as native ESM without factory registrat
   assert.throws(() => scroller.initViewport(new UiContainer()), /Viewport initialized/)
   const layoutScroller = new internal.Ui_Components_UiScroller.UiScroller()
   layoutScroller.initViewport(new internal.Ui_Components_UiLayout.UiLayout())
-  assert.ok(internal.SingleFreeWar_Model_SfwWar.SfwWar.prototype instanceof internal.SinglePlayerWar_Model_SpwWar.SpwWar)
+  assert.ok(internal.SingleFreeWars_War.War.prototype instanceof internal.SinglePlayerWars_War.War)
   assert.ok(internal.ReplayWar_Model_RwWar.RwWar.prototype instanceof internal.ReplayWar_Model_RwWarBase.RwWarBase)
   assert.equal(internal.Helpers_GameFlow, await module(path.join(sourceDirectory, 'helpers', 'GameFlow.ts')))
 })

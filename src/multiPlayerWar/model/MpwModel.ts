@@ -1402,7 +1402,7 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Model_MpwWar
         return;
     }
 
-    await WarOperations_Executors_Executor.checkAndExecute(war, container, false);
+    await WarOperations_Executors_Executor.checkAndExecuteAsOuterWar(war, container, false);
 
     if (!war.getIsEnded()) {
         if (war.getIsRunning()) {

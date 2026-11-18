@@ -20,186 +20,75 @@ import {
     type BaseWar_Model_War,
     type WarOperations_Executors_Types,
 } from "../../../internal.ts";
-
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitBuildTile } from "../../../proto/schema/CommonProto/WarOperation/WoUnitBuildTile.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoUnitBuildTile, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitBuildTile, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExeUnitBuildTile(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExeUnitBuildTile(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-function fastExeUnitBuildTile(war: BaseWar_Model_War.War, action: WoUnitBuildTile): void {
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBuildTile_00),
-            isFastExecute   : true,
-        });
-    } else {
-        const path          = Helpers_Misc.getExisted(action.getPath());
-        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-        const launchUnitId  = action.getLaunchUnitId();
-        const unitMap       = war.getUnitMap();
-        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({
-            pathNodes       : pathNodes,
-            launchUnitId    : launchUnitId,
-            fuelConsumption : path.getFuelConsumption(),
-        });
-        unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitBuildTile): void {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBuildTile_00),
+        isFastExecute   : true,
+    });
 
-        if (!path.getIsBlocked()) {
-            const destination   = focusUnit.getGridIndex();
-            const tile          = war.getTileMap().getTile(destination);
-            const buildAmount   = Helpers_Misc.getExisted(focusUnit.getBuildAmount());
-            const maxBuildPoint = Helpers_Misc.getExisted(tile.getMaxBuildPoint());
-            const newBuildPoint = tile.getCurrentBuildPoint() + buildAmount;
-
-            if (newBuildPoint < maxBuildPoint) {
-                tile.setCurrentBuildPoint(newBuildPoint);
-            } else {
-                focusUnit.setCurrentBuildMaterial(focusUnit.getCurrentBuildMaterial() - 1);
-
-                const targetTileCfg = Helpers_Misc.getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseTypeId(), tile.getObjectTypeId()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBuildTile_01);
-                tile.resetByTypeAndPlayerIndex({
-                    baseType    : targetTileCfg.getDstTileBaseTypeId(),
-                    objectType  : targetTileCfg.getDstTileObjectTypeId(),
-                    playerIndex : targetTileCfg.getIsDstNeutral() ? Players_Constants.PlayerIndex.Neutral : focusUnit.getPlayerIndex(),
-                });
-                tile.setCurrentBuildPoint(0);
-            }
-        }
-
-        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
-    }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitBuildTile(war: BaseWar_Model_War.War, action: WoUnitBuildTile): Promise<void> {
-    // const desc = await war.getDescForExeUnitBuildTile(action);
-    // (desc) && (FloatText.show(desc));
-
-    const unitMap           = war.getUnitMap();
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitBuildTile): Promise<void> {
     const isSelfInTurn      = war.getPlayerInTurn().getUserId() === Users_Model.getSelfUserId();
     const tileMap           = war.getTileMap();
-    const actionExtraData   = action.getExtraData();
-    if (actionExtraData) {
-        const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_00);
-        const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-        await war.showTempUnitMoveAnimation({
-            movingUnitAndPath : movingUnitAndPath,
-            aiming            : null,
-            callback          : async () => {
-                const movingPath    = movingUnitAndPath?.getPath();
-                const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
-                if ((isSelfInTurn) && (lastNode) && (!lastNode.getIsBlocked())) {
-                    const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()));
-                    const tile                  = tileMap.getTile(gridIndex);
-                    const maxBuildPoint         = Helpers_Misc.getExisted(tile.getMaxBuildPoint());
-                    const currentBuildPoint     = tile.getCurrentBuildPoint();
-                    const tileDataAfterAction   = Helpers_Misc.getExisted(
-                        commonExtraData
-                            .getTileArrayAfterAction()
-                            .find(v =>
-                                gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
-                            ),
-                        Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01,
-                    );
-                    const rawNewBuildPoint = tileDataAfterAction.getCurrentBuildPoint();
+    const actionExtraData   = Helpers_Misc.getExisted(action.getExtraData());
+    const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_00);
+    const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
+    await war.showTempUnitMoveAnimation({
+        movingUnitAndPath : movingUnitAndPath,
+        aiming            : null,
+        callback          : async () => {
+            const movingPath    = movingUnitAndPath?.getPath();
+            const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
+            if ((isSelfInTurn) && (lastNode) && (!lastNode.getIsBlocked())) {
+                const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()));
+                const tile                  = tileMap.getTile(gridIndex);
+                const maxBuildPoint         = Helpers_Misc.getExisted(tile.getMaxBuildPoint());
+                const currentBuildPoint     = tile.getCurrentBuildPoint();
+                const tileDataAfterAction   = Helpers_Misc.getExisted(
+                    commonExtraData
+                        .getTileArrayAfterAction()
+                        .find(v =>
+                            gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
+                        ),
+                    Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01,
+                );
+                const rawNewBuildPoint = tileDataAfterAction.getCurrentBuildPoint();
 
-                    await new Promise<void>(resolve => {
-                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
-                            maxValue     : maxBuildPoint,
-                            currentValue : currentBuildPoint,
-                            newValue     : rawNewBuildPoint > currentBuildPoint
-                                ? rawNewBuildPoint
-                                : Math.max(rawNewBuildPoint, maxBuildPoint),
-                            callbackOnFinish : () => resolve(),
-                        });
-                    });
-                }
-            },
-        });
-
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : commonExtraData,
-            isFastExecute   : false,
-        });
-
-    } else {
-        const path          = Helpers_Misc.getExisted(action.getPath());
-        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-        const launchUnitId  = action.getLaunchUnitId();
-        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({
-            pathNodes       : pathNodes,
-            launchUnitId    : launchUnitId,
-            fuelConsumption : path.getFuelConsumption(),
-        });
-        unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-
-        if (path.getIsBlocked()) {
-            await focusUnit.moveViewAlongPath({
-                pathNodes           : pathNodes,
-                isDiving            : focusUnit.getIsDiving(),
-                isBlocked           : true,
-                aiming              : null,
-                updateViewAfterMove : true,
-            });
-
-        } else {
-            const destination       = focusUnit.getGridIndex();
-            const tile              = war.getTileMap().getTile(destination);
-            const buildAmount       = Helpers_Misc.getExisted(focusUnit.getBuildAmount());
-            const maxBuildPoint     = Helpers_Misc.getExisted(tile.getMaxBuildPoint());
-            const currentBuildPoint = tile.getCurrentBuildPoint();
-            const newBuildPoint     = currentBuildPoint + buildAmount;
-
-            if (newBuildPoint < maxBuildPoint) {
-                tile.setCurrentBuildPoint(newBuildPoint);
-            } else {
-                focusUnit.setCurrentBuildMaterial(focusUnit.getCurrentBuildMaterial() - 1);
-
-                const targetTileCfg = Helpers_Misc.getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseTypeId(), tile.getObjectTypeId()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01);
-                tile.resetByTypeAndPlayerIndex({
-                    baseType    : targetTileCfg.getDstTileBaseTypeId(),
-                    objectType  : targetTileCfg.getDstTileObjectTypeId(),
-                    playerIndex : targetTileCfg.getIsDstNeutral() ? Players_Constants.PlayerIndex.Neutral : focusUnit.getPlayerIndex(),
-                });
-                tile.setCurrentBuildPoint(0);
-            }
-
-            await focusUnit.moveViewAlongPath({
-                pathNodes           : pathNodes,
-                isDiving            : focusUnit.getIsDiving(),
-                isBlocked           : false,
-                aiming              : null,
-                updateViewAfterMove : false,
-            });
-            if (isSelfInTurn) {
                 await new Promise<void>(resolve => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
-                        maxValue         : maxBuildPoint,
-                        newValue         : newBuildPoint,
-                        currentValue     : currentBuildPoint,
+                        maxValue     : maxBuildPoint,
+                        currentValue : currentBuildPoint,
+                        newValue     : rawNewBuildPoint > currentBuildPoint
+                            ? rawNewBuildPoint
+                            : Math.max(rawNewBuildPoint, maxBuildPoint),
                         callbackOnFinish : () => resolve(),
                     });
                 });
             }
-            focusUnit.flushDataToView();
-        }
+        },
+    });
 
-        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
-    }
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : commonExtraData,
+        isFastExecute   : false,
+    });
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }

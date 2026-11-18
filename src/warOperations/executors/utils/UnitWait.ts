@@ -19,90 +19,43 @@ import {
     type BaseWar_Model_War,
     type WarOperations_Executors_Types,
 } from "../../../internal.ts";
-
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitWait } from "../../../proto/schema/CommonProto/WarOperation/WoUnitWait.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoUnitWait, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitWait, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExeUnitWait(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExeUnitWait(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-function fastExeUnitWait(war: BaseWar_Model_War.War, action: WoUnitWait): void {
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitWait_00),
-            isFastExecute   : true,
-        });
-    } else {
-        const unitMap       = war.getUnitMap();
-        const path          = Helpers_Misc.getExisted(action.getPath());
-        const launchUnitId  = action.getLaunchUnitId();
-        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({
-            pathNodes       : pathNodes,
-            launchUnitId    : launchUnitId,
-            fuelConsumption : path.getFuelConsumption(),
-        });
-        unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-        handleSelfUnitHpAfterWait(focusUnit, true);
-        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
-    }
+function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitWait): void {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitWait_00),
+        isFastExecute   : true,
+    });
+
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitWait(war: BaseWar_Model_War.War, action: WoUnitWait): Promise<void> {
-    // const desc = await war.getDescForExeUnitWait(action);
-    // (desc) && (FloatText.show(desc));
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitWait): Promise<void> {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitWait_00);
+    await war.showTempUnitMoveAnimation({
+        movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+        aiming            : null,
+        callback          : undefined,
+    });
 
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitWait_00);
-        await war.showTempUnitMoveAnimation({
-            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
-            aiming            : null,
-            callback          : undefined,
-        });
-
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : commonExtraData,
-            isFastExecute   : false,
-        });
-
-    } else {
-        const unitMap       = war.getUnitMap();
-        const path          = Helpers_Misc.getExisted(action.getPath());
-        const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-        const launchUnitId  = action.getLaunchUnitId();
-        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitWait_01);
-        war.moveUnit({
-            pathNodes       : pathNodes,
-            launchUnitId    : launchUnitId,
-            fuelConsumption : path.getFuelConsumption(),
-        });
-        unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : path.getIsBlocked(),
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
-
-        handleSelfUnitHpAfterWait(focusUnit, false);
-        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
-    }
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : commonExtraData,
+        isFastExecute   : false,
+    });
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }

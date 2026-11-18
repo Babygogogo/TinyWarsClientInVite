@@ -19,51 +19,42 @@ import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoCo
 import type { WoSystemHandleBootPlayer } from "../../../proto/schema/CommonProto/WarOperation/WoSystemHandleBootPlayer.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExeSystemHandleBootPlayer(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExeSystemHandleBootPlayer(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-function fastExeSystemHandleBootPlayer(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): void {
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeSystemHandleBootPlayer_00),
-            isFastExecute   : true,
-        });
-    } else {
-        war.getPlayerInTurn().setAliveState(Players_Constants.AliveStateId.Dying);
-    }
+function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): void {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeSystemHandleBootPlayer_00),
+        isFastExecute   : true,
+    });
 }
 
-async function normalExeSystemHandleBootPlayer(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): Promise<void> {
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): Promise<void> {
     const desc = await getDesc(war, action);
     if (desc) {
         FloatText.show(desc);
     }
 
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeSystemHandleBootPlayer_00);
-        await war.showTempUnitMoveAnimation({
-            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
-            aiming            : null,
-            callback          : undefined,
-        });
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeSystemHandleBootPlayer_00);
+    await war.showTempUnitMoveAnimation({
+        movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+        aiming            : null,
+        callback          : undefined,
+    });
 
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : commonExtraData,
-            isFastExecute   : false,
-        });
-
-    } else {
-        war.getPlayerInTurn().setAliveState(Players_Constants.AliveStateId.Dying);
-    }
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : commonExtraData,
+        isFastExecute   : false,
+    });
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

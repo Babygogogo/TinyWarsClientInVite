@@ -20,25 +20,21 @@ import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoCo
 import type { WoSystemBeginTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoSystemBeginTurn, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExeSystemBeginTurn(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExeSystemBeginTurn(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-async function fastExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
+async function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
     const turnManager = war.getTurnManager();
-    if (action.getExtraData()) {
-        await Turns_Phases_Handler.endPhaseStandbyAsOuterWar(turnManager, action, true);
-    } else {
-        await Turns_Phases_Handler.endPhaseStandbyAsInnerWar(turnManager);
-    }
+    await Turns_Phases_Handler.endPhaseStandbyAsOuterWar(turnManager, action, true);
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
     // const desc = await war.getDescForExeSystemBeginTurn(action);
     // (desc) && (FloatText.show(desc));
 
@@ -68,11 +64,7 @@ async function normalExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSy
     }
 
     const turnManager = war.getTurnManager();
-    if (action.getExtraData()) {
-        await Turns_Phases_Handler.endPhaseStandbyAsOuterWar(turnManager, action, false);
-    } else {
-        await Turns_Phases_Handler.endPhaseStandbyAsInnerWar(turnManager);
-    }
+    await Turns_Phases_Handler.endPhaseStandbyAsOuterWar(turnManager, action, false);
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 

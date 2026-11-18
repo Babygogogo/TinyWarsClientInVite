@@ -11,27 +11,23 @@ import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoCo
 import type { WoSystemCallWarEvent } from "../../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExeSystemCallWarEvent(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExeSystemCallWarEvent(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-async function fastExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<void> {
+async function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<void> {
     const warEventManager = war.getWarEventManager();
     warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
-    if (action.getExtraData()) {
-        await warEventManager.callWarEventAsOuterWar(action, true);
-    } else {
-        await warEventManager.callWarEventAsUnifiedWar(action.getWarEventId(), action.getNodeAndActionsIndex(), true);
-    }
+    await warEventManager.callWarEventAsOuterWar(action, true);
 
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<void> {
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<void> {
     const desc = await getDesc(war, action);
     if (desc) {
         FloatText.show(desc);
@@ -39,11 +35,7 @@ async function normalExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: W
 
     const warEventManager = war.getWarEventManager();
     warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
-    if (action.getExtraData()) {
-        await warEventManager.callWarEventAsOuterWar(action, false);
-    } else {
-        await warEventManager.callWarEventAsUnifiedWar(action.getWarEventId(), action.getNodeAndActionsIndex(), false);
-    }
+    await warEventManager.callWarEventAsOuterWar(action, false);
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
     war.getView()?.updatePersistentText();

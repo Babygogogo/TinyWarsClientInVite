@@ -46,7 +46,7 @@ import {
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function checkAndExecute(war: BaseWar_Model_War.War, action: WoContainer, isFast: boolean): Promise<void> {
+export async function checkAndExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoContainer, isFast: boolean): Promise<void> {
     if (!war.getIsRunning()) {
         throw Helpers_Misc.newError(`!war.getIsRunning().`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_CheckAndExecute_00);
     }
@@ -67,7 +67,7 @@ export async function checkAndExecute(war: BaseWar_Model_War.War, action: WoCont
         ActionPlanners_States_ExecutingAction.ExecutingAction.getInstance().apply(actionPlanner);
     }
 
-    await executeAction(war, action, isFast);
+    await executeActionAsOuterWar(war, action, isFast);
 
     {
         const executedOperationManager = war.getExecutedOperationManager();
@@ -95,165 +95,165 @@ export async function checkAndExecute(war: BaseWar_Model_War.War, action: WoCont
     }
 }
 
-async function executeAction(war: BaseWar_Model_War.War, action: WoContainer, isFast: boolean): Promise<void> {
+async function executeActionAsOuterWar(war: BaseWar_Model_War.War, action: WoContainer, isFast: boolean): Promise<void> {
     const woPlayerDeleteUnit = action.getWoPlayerDeleteUnit();
     if (woPlayerDeleteUnit) {
-        return await WarOperations_Executors_Utils_PlayerDeleteUnit.execute(war, woPlayerDeleteUnit, isFast);
+        return await WarOperations_Executors_Utils_PlayerDeleteUnit.executeAsOuterWar(war, woPlayerDeleteUnit, isFast);
     }
 
     const woPlayerEndTurn = action.getWoPlayerEndTurn();
     if (woPlayerEndTurn) {
-        return await WarOperations_Executors_Utils_PlayerEndTurn.execute(war, woPlayerEndTurn, isFast);
+        return await WarOperations_Executors_Utils_PlayerEndTurn.executeAsOuterWar(war, woPlayerEndTurn, isFast);
     }
 
     const woPlayerProduceUnit = action.getWoPlayerProduceUnit();
     if (woPlayerProduceUnit) {
-        return await WarOperations_Executors_Utils_PlayerProduceUnit.execute(war, woPlayerProduceUnit, isFast);
+        return await WarOperations_Executors_Utils_PlayerProduceUnit.executeAsOuterWar(war, woPlayerProduceUnit, isFast);
     }
 
     const woPlayerSurrender = action.getWoPlayerSurrender();
     if (woPlayerSurrender) {
-        return await WarOperations_Executors_Utils_PlayerSurrender.execute(war, woPlayerSurrender, isFast);
+        return await WarOperations_Executors_Utils_PlayerSurrender.executeAsOuterWar(war, woPlayerSurrender, isFast);
     }
 
     const woPlayerUseCoSkill = action.getWoPlayerUseCoSkill();
     if (woPlayerUseCoSkill) {
-        return await WarOperations_Executors_Utils_PlayerUseCoSkill.execute(war, woPlayerUseCoSkill, isFast);
+        return await WarOperations_Executors_Utils_PlayerUseCoSkill.executeAsOuterWar(war, woPlayerUseCoSkill, isFast);
     }
 
     const woPlayerVoteForDraw = action.getWoPlayerVoteForDraw();
     if (woPlayerVoteForDraw) {
-        return await WarOperations_Executors_Utils_PlayerVoteForDraw.execute(war, woPlayerVoteForDraw, isFast);
+        return await WarOperations_Executors_Utils_PlayerVoteForDraw.executeAsOuterWar(war, woPlayerVoteForDraw, isFast);
     }
 
     const woSystemBeginTurn = action.getWoSystemBeginTurn();
     if (woSystemBeginTurn) {
-        return await WarOperations_Executors_Utils_SystemBeginTurn.execute(war, woSystemBeginTurn, isFast);
+        return await WarOperations_Executors_Utils_SystemBeginTurn.executeAsOuterWar(war, woSystemBeginTurn, isFast);
     }
 
     const woSystemCallWarEvent = action.getWoSystemCallWarEvent();
     if (woSystemCallWarEvent) {
-        return await WarOperations_Executors_Utils_SystemCallWarEvent.execute(war, woSystemCallWarEvent, isFast);
+        return await WarOperations_Executors_Utils_SystemCallWarEvent.executeAsOuterWar(war, woSystemCallWarEvent, isFast);
     }
 
     const woSystemDestroyPlayerForce = action.getWoSystemDestroyPlayerForce();
     if (woSystemDestroyPlayerForce) {
-        return await WarOperations_Executors_Utils_SystemDestroyPlayerForce.execute(war, woSystemDestroyPlayerForce, isFast);
+        return await WarOperations_Executors_Utils_SystemDestroyPlayerForce.executeAsOuterWar(war, woSystemDestroyPlayerForce, isFast);
     }
 
     const woSystemEndTurn = action.getWoSystemEndTurn();
     if (woSystemEndTurn) {
-        return await WarOperations_Executors_Utils_SystemEndTurn.execute(war, woSystemEndTurn, isFast);
+        return await WarOperations_Executors_Utils_SystemEndTurn.executeAsOuterWar(war, woSystemEndTurn, isFast);
     }
 
     const woSystemEndWar = action.getWoSystemEndWar();
     if (woSystemEndWar) {
-        return await WarOperations_Executors_Utils_SystemEndWar.execute(war, woSystemEndWar, isFast);
+        return await WarOperations_Executors_Utils_SystemEndWar.executeAsOuterWar(war, woSystemEndWar, isFast);
     }
 
     const woSystemHandleBootPlayer = action.getWoSystemHandleBootPlayer();
     if (woSystemHandleBootPlayer) {
-        return await WarOperations_Executors_Utils_SystemHandleBootPlayer.execute(war, woSystemHandleBootPlayer, isFast);
+        return await WarOperations_Executors_Utils_SystemHandleBootPlayer.executeAsOuterWar(war, woSystemHandleBootPlayer, isFast);
     }
 
     const woSystemVoteForDraw = action.getWoSystemVoteForDraw();
     if (woSystemVoteForDraw) {
-        return await WarOperations_Executors_Utils_SystemVoteForDraw.execute(war, woSystemVoteForDraw, isFast);
+        return await WarOperations_Executors_Utils_SystemVoteForDraw.executeAsOuterWar(war, woSystemVoteForDraw, isFast);
     }
 
     const woUnitAttackTile = action.getWoUnitAttackTile();
     if (woUnitAttackTile) {
-        return await WarOperations_Executors_Utils_UnitAttackTile.execute(war, woUnitAttackTile, isFast);
+        return await WarOperations_Executors_Utils_UnitAttackTile.executeAsOuterWar(war, woUnitAttackTile, isFast);
     }
 
     const woUnitAttackUnit = action.getWoUnitAttackUnit();
     if (woUnitAttackUnit) {
-        return await WarOperations_Executors_Utils_UnitAttackUnit.execute(war, woUnitAttackUnit, isFast);
+        return await WarOperations_Executors_Utils_UnitAttackUnit.executeAsOuterWar(war, woUnitAttackUnit, isFast);
     }
 
     const woUnitBeLoaded = action.getWoUnitBeLoaded();
     if (woUnitBeLoaded) {
-        return await WarOperations_Executors_Utils_UnitBeLoaded.execute(war, woUnitBeLoaded, isFast);
+        return await WarOperations_Executors_Utils_UnitBeLoaded.executeAsOuterWar(war, woUnitBeLoaded, isFast);
     }
 
     const woUnitBoardedByCo = action.getWoUnitBoardedByCo();
     if (woUnitBoardedByCo) {
-        return await WarOperations_Executors_Utils_UnitBoardedByCo.execute(war, woUnitBoardedByCo, isFast);
+        return await WarOperations_Executors_Utils_UnitBoardedByCo.executeAsOuterWar(war, woUnitBoardedByCo, isFast);
     }
 
     const woUnitBuildTile = action.getWoUnitBuildTile();
     if (woUnitBuildTile) {
-        return await WarOperations_Executors_Utils_UnitBuildTile.execute(war, woUnitBuildTile, isFast);
+        return await WarOperations_Executors_Utils_UnitBuildTile.executeAsOuterWar(war, woUnitBuildTile, isFast);
     }
 
     const woUnitCaptureTile = action.getWoUnitCaptureTile();
     if (woUnitCaptureTile) {
-        return await WarOperations_Executors_Utils_UnitCaptureTile.execute(war, woUnitCaptureTile, isFast);
+        return await WarOperations_Executors_Utils_UnitCaptureTile.executeAsOuterWar(war, woUnitCaptureTile, isFast);
     }
 
     const woUnitCrushUnit = action.getWoUnitCrushUnit();
     if (woUnitCrushUnit) {
-        return await WarOperations_Executors_Utils_UnitCrushUnit.execute(war, woUnitCrushUnit, isFast);
+        return await WarOperations_Executors_Utils_UnitCrushUnit.executeAsOuterWar(war, woUnitCrushUnit, isFast);
     }
 
     const woUnitDive = action.getWoUnitDive();
     if (woUnitDive) {
-        return await WarOperations_Executors_Utils_UnitDive.execute(war, woUnitDive, isFast);
+        return await WarOperations_Executors_Utils_UnitDive.executeAsOuterWar(war, woUnitDive, isFast);
     }
 
     const woUnitDropUnit = action.getWoUnitDropUnit();
     if (woUnitDropUnit) {
-        return await WarOperations_Executors_Utils_UnitDropUnit.execute(war, woUnitDropUnit, isFast);
+        return await WarOperations_Executors_Utils_UnitDropUnit.executeAsOuterWar(war, woUnitDropUnit, isFast);
     }
 
     const woUnitJoinUnit = action.getWoUnitJoinUnit();
     if (woUnitJoinUnit) {
-        return await WarOperations_Executors_Utils_UnitJoinUnit.execute(war, woUnitJoinUnit, isFast);
+        return await WarOperations_Executors_Utils_UnitJoinUnit.executeAsOuterWar(war, woUnitJoinUnit, isFast);
     }
 
     const woUnitLaunchFlare = action.getWoUnitLaunchFlare();
     if (woUnitLaunchFlare) {
-        return await WarOperations_Executors_Utils_UnitLaunchFlare.execute(war, woUnitLaunchFlare, isFast);
+        return await WarOperations_Executors_Utils_UnitLaunchFlare.executeAsOuterWar(war, woUnitLaunchFlare, isFast);
     }
 
     const woUnitLaunchSilo = action.getWoUnitLaunchSilo();
     if (woUnitLaunchSilo) {
-        return await WarOperations_Executors_Utils_UnitLaunchSilo.execute(war, woUnitLaunchSilo, isFast);
+        return await WarOperations_Executors_Utils_UnitLaunchSilo.executeAsOuterWar(war, woUnitLaunchSilo, isFast);
     }
 
     const woUnitProduceUnit = action.getWoUnitProduceUnit();
     if (woUnitProduceUnit) {
-        return await WarOperations_Executors_Utils_UnitProduceUnit.execute(war, woUnitProduceUnit, isFast);
+        return await WarOperations_Executors_Utils_UnitProduceUnit.executeAsOuterWar(war, woUnitProduceUnit, isFast);
     }
 
     const woUnitRepairUnit = action.getWoUnitRepairUnit();
     if (woUnitRepairUnit) {
-        return await WarOperations_Executors_Utils_UnitRepairUnit.execute(war, woUnitRepairUnit, isFast);
+        return await WarOperations_Executors_Utils_UnitRepairUnit.executeAsOuterWar(war, woUnitRepairUnit, isFast);
     }
 
     const woUnitSelfDetonate = action.getWoUnitSelfDetonate();
     if (woUnitSelfDetonate) {
-        return await WarOperations_Executors_Utils_UnitSelfDetonate.execute(war, woUnitSelfDetonate, isFast);
+        return await WarOperations_Executors_Utils_UnitSelfDetonate.executeAsOuterWar(war, woUnitSelfDetonate, isFast);
     }
 
     const woUnitSupplyUnit = action.getWoUnitSupplyUnit();
     if (woUnitSupplyUnit) {
-        return await WarOperations_Executors_Utils_UnitSupplyUnit.execute(war, woUnitSupplyUnit, isFast);
+        return await WarOperations_Executors_Utils_UnitSupplyUnit.executeAsOuterWar(war, woUnitSupplyUnit, isFast);
     }
 
     const woUnitSurface = action.getWoUnitSurface();
     if (woUnitSurface) {
-        return await WarOperations_Executors_Utils_UnitSurface.execute(war, woUnitSurface, isFast);
+        return await WarOperations_Executors_Utils_UnitSurface.executeAsOuterWar(war, woUnitSurface, isFast);
     }
 
     const woUnitUseCoSkill = action.getWoUnitUseCoSkill();
     if (woUnitUseCoSkill) {
-        return await WarOperations_Executors_Utils_UnitUseCoSkill.execute(war, woUnitUseCoSkill, isFast);
+        return await WarOperations_Executors_Utils_UnitUseCoSkill.executeAsOuterWar(war, woUnitUseCoSkill, isFast);
     }
 
     const woUnitWait = action.getWoUnitWait();
     if (woUnitWait) {
-        return await WarOperations_Executors_Utils_UnitWait.execute(war, woUnitWait, isFast);
+        return await WarOperations_Executors_Utils_UnitWait.executeAsOuterWar(war, woUnitWait, isFast);
     }
 
     return await WarOperations_Executors_Utils_Unknown.fastExeUnknownAction();

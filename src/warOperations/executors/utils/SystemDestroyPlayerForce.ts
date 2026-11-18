@@ -18,52 +18,41 @@ import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoCo
 import type { WoSystemDestroyPlayerForce } from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExeSystemDestroyPlayerForce(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExeSystemDestroyPlayerForce(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-function fastExeSystemDestroyPlayerForce(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): void {
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeSystemDestroyPlayerForce_00),
-            isFastExecute   : true,
-        });
-        war.getDrawVoteManager().handlePlayerForceDestruction();
-    } else {
-        Destructions_Utils.destroyPlayerForce(war, Helpers_Misc.getExisted(action.getTargetPlayerIndex()), false);
-    }
+function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): void {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeSystemDestroyPlayerForce_00),
+        isFastExecute   : true,
+    });
+    war.getDrawVoteManager().handlePlayerForceDestruction();
+
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeSystemDestroyPlayerForce(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): Promise<void> {
-    // const desc = await war.getDescForExeSystemDestroyPlayerForce(action);
-    // (desc) && (FloatText.show(desc));
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): Promise<void> {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeSystemDestroyPlayerForce_00);
+    await war.showTempUnitMoveAnimation({
+        movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+        aiming            : null,
+        callback          : undefined,
+    });
 
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeSystemDestroyPlayerForce_00);
-        await war.showTempUnitMoveAnimation({
-            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
-            aiming            : null,
-            callback          : undefined,
-        });
-
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : commonExtraData,
-            isFastExecute   : false,
-        });
-        war.getDrawVoteManager().handlePlayerForceDestruction();
-
-    } else {
-        Destructions_Utils.destroyPlayerForce(war, Helpers_Misc.getExisted(action.getTargetPlayerIndex()), true);
-    }
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : commonExtraData,
+        isFastExecute   : false,
+    });
+    war.getDrawVoteManager().handlePlayerForceDestruction();
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }

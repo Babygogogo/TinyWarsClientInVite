@@ -1,93 +1,56 @@
 import {
-    Destructions_Utils,
     AuxiliaryTypes_GridIndex,
+    Destructions_Utils,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Utils_ClientErrorCode,
-    Helpers_Misc,
-    Lang_Utils,
-    WarOperations_Executors_Utils_Common,
-    Lang_Constants,
-    type BaseWar_Model_War,
     WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoPlayerDeleteUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerDeleteUnit.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExePlayerDeleteUnit(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExePlayerDeleteUnit(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-function fastExePlayerDeleteUnit(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): void {
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerDeleteUnit_00),
-            isFastExecute   : true,
-        });
-    } else {
-        const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getGridIndex()));
-        const focusUnit = war.getUnitMap().getUnitOnMap(gridIndex);
-        if (focusUnit) {
-            if (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
-                war.getFogMap().updateMapFromPathsByUnitAndPath({
-                    unit           : focusUnit,
-                    unitVisionInfo : focusUnit.getVisionInfo(),
-                    path           : [gridIndex],
-                });
-            }
-
-            Destructions_Utils.destroyUnitOnMap(war, gridIndex, false);
-        }
-    }
+function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): void {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerDeleteUnit_00),
+        isFastExecute   : true,
+    });
 
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExePlayerDeleteUnit(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): Promise<void> {
-    // const desc = await war.getDescForExePlayerDeleteUnit(action);
-    // (desc) && (FloatText.show(desc));
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): Promise<void> {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerDeleteUnit_00);
+    await war.showTempUnitMoveAnimation({
+        movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+        aiming            : null,
+        callback          : undefined,
+    });
 
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerDeleteUnit_00);
-        await war.showTempUnitMoveAnimation({
-            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
-            aiming            : null,
-            callback          : undefined,
-        });
-
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : commonExtraData,
-            isFastExecute   : false,
-        });
-
-    } else {
-        const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getGridIndex()));
-        const focusUnit = war.getUnitMap().getUnitOnMap(gridIndex);
-        if (focusUnit) {
-            if (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
-                war.getFogMap().updateMapFromPathsByUnitAndPath({
-                    unit           : focusUnit,
-                    unitVisionInfo : focusUnit.getVisionInfo(),
-                    path           : [gridIndex],
-                });
-            }
-
-            Destructions_Utils.destroyUnitOnMap(war, gridIndex, true);
-        }
-    }
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : commonExtraData,
+        isFastExecute   : false,
+    });
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }

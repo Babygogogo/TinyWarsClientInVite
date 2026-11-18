@@ -14,27 +14,24 @@ import {
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoPlayerVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExePlayerVoteForDraw(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExePlayerVoteForDraw(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-function fastExePlayerVoteForDraw(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): void {
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerVoteForDraw_00),
-            isFastExecute   : true,
-        });
-    }
+function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): void {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerVoteForDraw_00),
+        isFastExecute   : true,
+    });
 
     war.getDrawVoteManager().handleVote(
         (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
@@ -42,27 +39,25 @@ function fastExePlayerVoteForDraw(war: BaseWar_Model_War.War, action: WoPlayerVo
     );
 }
 
-async function normalExePlayerVoteForDraw(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): Promise<void> {
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): Promise<void> {
     const desc = await getDesc(war, action);
     if (desc) {
         FloatText.show(desc);
     }
 
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerVoteForDraw_00);
-        await war.showTempUnitMoveAnimation({
-            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
-            aiming            : null,
-            callback          : undefined,
-        });
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerVoteForDraw_00);
+    await war.showTempUnitMoveAnimation({
+        movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+        aiming            : null,
+        callback          : undefined,
+    });
 
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : commonExtraData,
-            isFastExecute   : false,
-        });
-    }
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : commonExtraData,
+        isFastExecute   : false,
+    });
 
     war.getDrawVoteManager().handleVote(
         (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),

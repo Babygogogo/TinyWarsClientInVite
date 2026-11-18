@@ -19,7 +19,7 @@ test('engine namespaces initialize through the internal entry without registrati
   }
 })
 
-test('engine has no bootstrap, runtime registration, core facades, or deferred getter wrappers', async () => {
+test('engine has no bootstrap, runtime registration, core facades, or obsolete direct state exports', async () => {
   for (const name of ['Bootstrap', 'Runtime', 'EgretCore', 'SysCore', 'WebCore', 'ResCore', 'ProcessorCore']) {
     assert.equal(existsSync(path.join(vendorDirectory, `${name}.ts`)), false)
   }
@@ -33,8 +33,8 @@ test('engine has no bootstrap, runtime registration, core facades, or deferred g
     assert.equal(name in egret, false)
   }
   const res = await module('Res')
-  for (const name of ['getHost', 'getConfig', 'getQueue', 'ResHelper']) assert.equal(name in res, false)
-  assert.equal('getMap' in await module('Processor'), false)
+  for (const name of ['host', 'config', 'queue']) assert.equal(name in res, false)
+  assert.equal('_map' in await module('Processor'), false)
 })
 
 test('platform constructors and shared engine state are wired', async () => {
@@ -60,20 +60,36 @@ test('resource processors use the same registry as the resource host', async () 
   const module = await loadModules()
   const res = await module('Res')
   const processor = await module('Processor')
-  assert.equal(res.host.resourceConfig, res.config)
-  assert.ok(res.queue instanceof res.ResourceLoader)
-  assert.equal(processor._map.image, processor.ResProcessorHelper.ImageProcessor)
-  assert.equal(processor._map.json, processor.ResProcessorHelper.JsonProcessor)
+  const host = res.getHost()
+  const config = res.getConfig()
+  const queue = res.getQueue()
+  const registry = processor.getMap()
+  assert.equal(res.getHost(), host)
+  assert.equal(res.getConfig(), config)
+  assert.equal(res.getQueue(), queue)
+  assert.equal(processor.getMap(), registry)
+  assert.equal(host.resourceConfig, config)
+  assert.ok(config instanceof res.ResourceConfig)
+  assert.ok(queue instanceof res.ResourceLoader)
+  assert.equal(registry.image, processor.ResProcessorHelper.getImageProcessor())
+  assert.equal(registry.json, processor.ResProcessorHelper.getJsonProcessor())
   const resource = { name: 'example', root: '', url: 'example', type: 'test' }
+  const loaded = []
   const custom = {
-    async onLoadStart() { return 'loaded' },
+    async onLoadStart(resourceHost, resourceInfo) {
+      assert.equal(resourceHost, host)
+      loaded.push(resourceInfo)
+      return 'loaded'
+    },
     onRemoveStart() {},
   }
   processor.map('test', custom)
   assert.equal(processor.isSupport(resource), custom)
-  assert.equal(processor._map.test, custom)
-  assert.equal(await res.host.load(resource), 'loaded')
-  assert.equal(await res.host.load({ ...resource, name: 'named' }, 'test'), 'loaded')
+  assert.equal(registry.test, custom)
+  assert.equal(await host.load(resource), 'loaded')
+  const namedResource = { ...resource, name: 'named', type: 'unregistered' }
+  assert.equal(await host.load(namedResource, 'test'), 'loaded')
+  assert.deepEqual(loaded, [resource, namedResource])
 })
 
 test('display-object ancestry cursors preserve parent traversal', async () => {

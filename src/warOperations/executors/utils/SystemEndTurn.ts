@@ -15,31 +15,23 @@ import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoCo
 import type { WoSystemEndTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemEndTurn.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoSystemEndTurn, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemEndTurn, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExeSystemEndTurn(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExeSystemEndTurn(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-function fastExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
+function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
     const turnManager = war.getTurnManager();
-    if (action.getExtraData()) {
-        Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, true);
-    } else {
-        Turns_Phases_Handler.endPhaseMainAsInnerWar(turnManager);
-    }
+    Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, true);
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-function normalExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
+function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
     const turnManager = war.getTurnManager();
-    if (action.getExtraData()) {
-        Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, false);
-    } else {
-        Turns_Phases_Handler.endPhaseMainAsInnerWar(turnManager);
-    }
+    Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, false);
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 

@@ -16,55 +16,45 @@ import {
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoPlayerSurrender } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerSurrender.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoPlayerSurrender, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerSurrender, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExePlayerSurrender(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExePlayerSurrender(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
-function fastExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPlayerSurrender): void {
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerSurrender_00),
-            isFastExecute   : true,
-        });
-    } else {
-        war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).setAliveState(Players_Constants.AliveStateId.Dying);
-    }
+function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerSurrender): void {
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerSurrender_00),
+        isFastExecute   : true,
+    });
 }
 
-async function normalExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPlayerSurrender): Promise<void> {
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerSurrender): Promise<void> {
     const desc = await getDesc(war, action);
     if (desc) {
         FloatText.show(desc);
     }
 
-    const actionExtraData = action.getExtraData();
-    if (actionExtraData) {
-        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerSurrender_00);
-        await war.showTempUnitMoveAnimation({
-            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
-            aiming            : null,
-            callback          : undefined,
-        });
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerSurrender_00);
+    await war.showTempUnitMoveAnimation({
+        movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+        aiming            : null,
+        callback          : undefined,
+    });
 
-        WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war             : war,
-            commonExtraData : commonExtraData,
-            isFastExecute   : false,
-        });
-
-    } else {
-        war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).setAliveState(Players_Constants.AliveStateId.Dying);
-    }
+    WarOperations_Executors_Utils_Common.handleCommonExtraData({
+        war             : war,
+        commonExtraData : commonExtraData,
+        isFastExecute   : false,
+    });
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

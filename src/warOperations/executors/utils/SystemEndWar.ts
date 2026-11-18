@@ -12,24 +12,23 @@ import {
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoSystemEndWar } from "../../../proto/schema/CommonProto/WarOperation/WoSystemEndWar.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: BaseWar_Model_War.War, action: WoSystemEndWar, isFast: boolean): Promise<void> {
+export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemEndWar, isFast: boolean): Promise<void> {
     if (isFast) {
-        await fastExeSystemEndWar(war, action);
+        await fastExecuteAsOuterWar(war, action);
     } else {
-        await normalExeSystemEndWar(war, action);
+        await normalExecuteAsOuterWar(war, action);
     }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function fastExeSystemEndWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): void {
+function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): void {
     war.setIsEnded(true);
 }
 
-async function normalExeSystemEndWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): Promise<void> {
+async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): Promise<void> {
     const desc = await getDesc(war, action);
     if (desc) {
         FloatText.show(desc);
