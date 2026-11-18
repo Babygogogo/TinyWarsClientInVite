@@ -274,14 +274,6 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUn
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitSelfDetonate, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExecuteAsUnifiedWar(war, action);
-    }
-}
-
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitSelfDetonate): void {
     const path          = Helpers_Misc.getExisted(action.getPath());
     const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     const launchUnitId  = action.getLaunchUnitId();
@@ -297,75 +289,15 @@ function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitSelfD
 
     const isBlocked = path.getIsBlocked();
     if (isBlocked) {
-        // nothing to do.
-    } else {
-        const warStatisticsManager  = war.getWarStatisticsManager();
-        const selfDetonateCfg       = Helpers_Misc.getExisted(focusUnit.getTemplateCfg().getSelfDetonateCfg());
-        const destination           = pathNodes[pathNodes.length - 1];
-        for (const targetGridIndex of destination.getGridsWithinDistance({
-            minDistance : 1,
-            maxDistance : selfDetonateCfg.getRadius(),
-            mapSize     : unitMap.getMapSize(),
-        })) {
-            const targetUnit = unitMap.getUnitOnMap(targetGridIndex);
-            if ((targetUnit != null) && (targetUnit != focusUnit)) {
-                const currentHp   = targetUnit.getCurrentHp();
-                const newHp       = Math.max(1, currentHp - (selfDetonateCfg.getDamage()) * Units_Constants.Hp.Normalizer);
-                if (currentHp != newHp) {
-                    targetUnit.setCurrentHp(newHp);
-
-                    {
-                        const unitLostNormalizedHp2 = Units_Utils_Common.getNormalizedHp(currentHp) - targetUnit.getNormalizedCurrentHp();
-                        if (unitLostNormalizedHp2 != 0) {
-                            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : targetGridIndex });
-                            if (observerTeamIndexes) {
-                                warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                    unitType                   : targetUnit.getUnitTypeId(),
-                                    dstPlayerIndex             : targetUnit.getPlayerIndex(),
-                                    normalizedHpGain           : 0,
-                                    normalizedHpLoss           : unitLostNormalizedHp2,
-                                    unitGain                   : 0,
-                                    unitLoss                   : 0,
-                                    groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
-                                }));
-                            }
-                        }
-                    }
-                }
-            }
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : isBlocked,
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
         }
-
-        Destructions_Utils.destroyUnitOnMap(war, destination, false);
-    }
-
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitSelfDetonate): Promise<void> {
-    const path          = Helpers_Misc.getExisted(action.getPath());
-    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-    const launchUnitId  = action.getLaunchUnitId();
-    const unitMap       = war.getUnitMap();
-    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-    war.moveUnit({
-        pathNodes       : pathNodes,
-        launchUnitId    : launchUnitId,
-        fuelConsumption : path.getFuelConsumption(),
-    });
-    unitMap.setUnitOnMap(focusUnit);
-    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-
-    const isBlocked = path.getIsBlocked();
-    if (isBlocked) {
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : isBlocked,
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
 
     } else {
         const warStatisticsManager  = war.getWarStatisticsManager();
@@ -379,7 +311,9 @@ async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoU
         })) {
             const targetUnit = unitMap.getUnitOnMap(targetGridIndex);
             if ((targetUnit != null) && (targetUnit != focusUnit)) {
-                targetUnits.push(targetUnit);
+                if (!isFast) {
+                    targetUnits.push(targetUnit);
+                }
 
                 const currentHp   = targetUnit.getCurrentHp();
                 const newHp       = Math.max(1, currentHp - (selfDetonateCfg.getDamage()) * Units_Constants.Hp.Normalizer);
@@ -410,24 +344,28 @@ async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoU
             }
         }
 
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : isBlocked,
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : isBlocked,
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
+        }
 
-        Destructions_Utils.destroyUnitOnMap(war, destination, true);
+        Destructions_Utils.destroyUnitOnMap(war, destination, !isFast);
 
-        const gridVisionEffect = war.getGridVisualEffect();
-        for (const unit of targetUnits) {
-            unit.flushDataToView();
-            gridVisionEffect?.showEffectDamage(unit.getGridIndex());
+        if (!isFast) {
+            const gridVisionEffect = war.getGridVisualEffect();
+            for (const unit of targetUnits) {
+                unit.flushDataToView();
+                gridVisionEffect?.showEffectDamage(unit.getGridIndex());
+            }
         }
     }
 
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, isFast);
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }

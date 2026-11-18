@@ -184,14 +184,6 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUn
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitBoardedByCo, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExecuteAsUnifiedWar(war, action);
-    }
-}
-
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitBoardedByCo): void {
     const path          = Helpers_Misc.getExisted(action.getPath());
     const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     const launchUnitId  = action.getLaunchUnitId();
@@ -214,53 +206,23 @@ function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitBoard
 
         const player        = war.getPlayer(playerIndex);
         const coMaxEnergy   = player.getCoMaxEnergy();
-        player.setFund(player.getFund() - focusUnit.getCoBoardCost(), false);
-        player.addAndValidateCoCurrentEnergy(coMaxEnergy * energyAddPctOnCoBoard / 100, false);
+        player.setFund(player.getFund() - focusUnit.getCoBoardCost(), !isFast);
+        player.addAndValidateCoCurrentEnergy(coMaxEnergy * energyAddPctOnCoBoard / 100, !isFast);
     }
 
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitBoardedByCo): Promise<void> {
-    const path          = Helpers_Misc.getExisted(action.getPath());
-    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-    const launchUnitId  = action.getLaunchUnitId();
-    const unitMap       = war.getUnitMap();
-    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-    war.moveUnit({
-        pathNodes       : pathNodes,
-        launchUnitId    : launchUnitId,
-        fuelConsumption : path.getFuelConsumption(),
-    });
-    unitMap.setUnitOnMap(focusUnit);
-
-    if (path.getIsBlocked()) {
-        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-    } else {
-        const playerIndex           = focusUnit.getPlayerIndex();
-        const energyAddPctOnCoBoard = war.getCommonSettingManager().getPlayerRule(playerIndex).getEnergyAddPctOnCoBoard();
-        focusUnit.setCurrentPromotion(focusUnit.getMaxPromotion());
-        focusUnit.setIsCoOnboard(true);
-
-        const player        = war.getPlayer(playerIndex);
-        const coMaxEnergy   = player.getCoMaxEnergy();
-        player.setFund(player.getFund() - focusUnit.getCoBoardCost(), true);
-        player.addAndValidateCoCurrentEnergy(coMaxEnergy * energyAddPctOnCoBoard / 100, true);
+    if (!isFast) {
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : path.getIsBlocked(),
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
     }
 
-    await focusUnit.moveViewAlongPath({
-        pathNodes           : pathNodes,
-        isDiving            : focusUnit.getIsDiving(),
-        isBlocked           : path.getIsBlocked(),
-        aiming              : null,
-        updateViewAfterMove : true,
-    });
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, isFast);
 
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
-
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -186,40 +186,6 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUn
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitBeLoaded, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExeuteAsUnifiedWar(war, action);
-    }
-}
-
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitBeLoaded): void {
-    const path          = Helpers_Misc.getExisted(action.getPath());
-    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-    const launchUnitId  = action.getLaunchUnitId();
-    const unitMap       = war.getUnitMap();
-    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-    war.moveUnit({
-        pathNodes       : pathNodes,
-        launchUnitId    : launchUnitId,
-        fuelConsumption : path.getFuelConsumption(),
-    });
-    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-
-    if (path.getIsBlocked()) {
-        unitMap.setUnitOnMap(focusUnit);
-    } else {
-        const loaderUnit = Helpers_Misc.getExisted(unitMap.getUnitOnMap(pathNodes[pathNodes.length - 1]));
-        unitMap.setUnitLoaded(focusUnit);
-        focusUnit.setLoaderUnitId(loaderUnit.getUnitId());
-    }
-
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExeuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitBeLoaded): Promise<void> {
     const unitMap       = war.getUnitMap();
     const path          = Helpers_Misc.getExisted(action.getPath());
     const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
@@ -235,33 +201,39 @@ async function normalExeuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUn
     if (path.getIsBlocked()) {
         unitMap.setUnitOnMap(focusUnit);
 
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : path.getIsBlocked(),
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : path.getIsBlocked(),
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
+        }
 
     } else {
         const loaderUnit = Helpers_Misc.getExisted(unitMap.getUnitOnMap(pathNodes[pathNodes.length - 1]));
         unitMap.setUnitLoaded(focusUnit);
         focusUnit.setLoaderUnitId(loaderUnit.getUnitId());
 
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : path.getIsBlocked(),
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
-        focusUnit.setViewVisible(false);
-        loaderUnit.flushDataToView();
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : path.getIsBlocked(),
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
+        }
+        if (!isFast) {
+            focusUnit.setViewVisible(false);
+            loaderUnit.flushDataToView();
+        }
     }
 
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, isFast);
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

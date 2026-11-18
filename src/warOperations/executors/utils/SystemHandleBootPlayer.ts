@@ -95,22 +95,11 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoSy
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExecuteAsUnifiedWar(war, action);
-    }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): void {
-    war.getPlayerInTurn().setAliveState(Players_Constants.AliveStateId.Dying);
-}
-
-async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemHandleBootPlayer): Promise<void> {
-    const desc = await getDesc(war, action);
-    if (desc) {
-        FloatText.show(desc);
+    if (!isFast) {
+        const desc = await getDesc(war, action);
+        if (desc) {
+            FloatText.show(desc);
+        }
     }
 
     war.getPlayerInTurn().setAliveState(Players_Constants.AliveStateId.Dying);

@@ -262,14 +262,6 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUn
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitAttackTile, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExecuteAsUnifiedWar(war, action);
-    }
-}
-
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitAttackTile): void {
     const path          = Helpers_Misc.getExisted(action.getPath());
     const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     const launchUnitId  = action.getLaunchUnitId();
@@ -284,65 +276,15 @@ function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitAttac
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
-    } else {
-        const maxAttackRange1       = focusUnit.getFinalMaxAttackRange();
-        const canAttackAfterMoving1 = focusUnit.getFinalCanAttackAfterMoving();
-        war.moveUnit({
-            pathNodes       : pathNodes,
-            launchUnitId    : launchUnitId,
-            fuelConsumption : path.getFuelConsumption(),
-        });
-        unitMap.setUnitOnMap(focusUnit);
-
-        const battleInfo = DamageCalculators_Utils.runBattleForAttackTile({
-            war                   : war,
-            movePath1             : pathNodes,
-            launchUnitId1         : launchUnitId,
-            maxAttackRange1       : maxAttackRange1,
-            canAttackAfterMoving1 : canAttackAfterMoving1,
-            gridIndex2            : Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex())),
-            maxAttackRange2       : null,
-            canAttackAfterMoving2 : false,
-        });
-        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-
-        const unitMapView = unitMap.getView();
-        for (const [, unit] of battleInfo.destroyedUnits) {
-            const view = unit.getView();
-            if (view) {
-                unitMapView?.deleteUnitView(view);
-            }
-            unit.dispose();
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : true,
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
         }
-    }
-
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitAttackTile): Promise<void> {
-    const path          = Helpers_Misc.getExisted(action.getPath());
-    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-    const launchUnitId  = action.getLaunchUnitId();
-    const unitMap       = war.getUnitMap();
-    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-    if (path.getIsBlocked()) {
-        war.moveUnit({
-            pathNodes       : pathNodes,
-            launchUnitId    : launchUnitId,
-            fuelConsumption : path.getFuelConsumption(),
-        });
-        unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : true,
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
 
     } else {
         const maxAttackRange1       = focusUnit.getFinalMaxAttackRange();
@@ -354,15 +296,17 @@ async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoU
         });
         unitMap.setUnitOnMap(focusUnit);
 
-        const gridIndex2        = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackTile_01);
-        const allVisibleUnits   = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : false,
-            aiming              : gridIndex2,
-            updateViewAfterMove : false,
-        });
+        const gridIndex2        = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()), isFast ? undefined : Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackTile_01);
+        const allVisibleUnits   = isFast ? null : Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : false,
+                aiming              : gridIndex2,
+                updateViewAfterMove : false,
+            });
+        }
 
         const battleInfo = DamageCalculators_Utils.runBattleForAttackTile({
             war                   : war,
@@ -376,13 +320,23 @@ async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoU
         });
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
-        WarOperations_Executors_Utils_Common.handleViewForBattle(battleInfo, war, allVisibleUnits);
+        if (allVisibleUnits != null) {
+            WarOperations_Executors_Utils_Common.handleViewForBattle(battleInfo, war, allVisibleUnits);
+        } else {
+            const unitMapView = unitMap.getView();
+            for (const [, unit] of battleInfo.destroyedUnits) {
+                const view = unit.getView();
+                if (view) {
+                    unitMapView?.deleteUnitView(view);
+                }
+                unit.dispose();
+            }
+        }
     }
 
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, isFast);
 
-
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

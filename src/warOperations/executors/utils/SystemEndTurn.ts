@@ -69,25 +69,9 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoSy
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemEndTurn, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExeAsUnifiedWar(war, action);
-    }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
     const turnManager = war.getTurnManager();
     Turns_Phases_Handler.endPhaseMainAsInnerWar(turnManager);
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function normalExeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
-    const turnManager = war.getTurnManager();
-    Turns_Phases_Handler.endPhaseMainAsInnerWar(turnManager);
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

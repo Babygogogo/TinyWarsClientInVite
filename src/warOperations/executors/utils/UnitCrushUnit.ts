@@ -208,14 +208,6 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUn
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCrushUnit, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExecuteAsUnifiedWar(war, action);
-    }
-}
-
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCrushUnit): void {
     const path          = Helpers_Misc.getExisted(action.getPath());
     const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     const launchUnitId  = action.getLaunchUnitId();
@@ -230,12 +222,31 @@ function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCrush
     focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
     if (path.getIsBlocked()) {
-        // nothing to do.
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : true,
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
+        }
+
     } else {
         const targetGridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
         const targetPlayer    = Helpers_Misc.getExisted(unitMap.getUnitOnMap(targetGridIndex)?.getPlayer());
 
-        Destructions_Utils.destroyUnitOnMap(war, targetGridIndex, false);
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : [...pathNodes, targetGridIndex],
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : false,
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
+        }
+
+        Destructions_Utils.destroyUnitOnMap(war, targetGridIndex, !isFast);
         war.moveUnit({
             pathNodes       : [pathNodes[pathNodes.length - 1], targetGridIndex],
             launchUnitId    : launchUnitId,
@@ -251,63 +262,7 @@ function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCrush
         }
     }
 
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, isFast);
 
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCrushUnit): Promise<void> {
-    const path          = Helpers_Misc.getExisted(action.getPath());
-    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-    const launchUnitId  = action.getLaunchUnitId();
-    const unitMap       = war.getUnitMap();
-    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-    war.moveUnit({
-        pathNodes       : pathNodes,
-        launchUnitId    : launchUnitId,
-        fuelConsumption : path.getFuelConsumption(),
-    });
-    unitMap.setUnitOnMap(focusUnit);
-    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-
-    if (path.getIsBlocked()) {
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : true,
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
-
-    } else {
-        const targetGridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
-        const targetPlayer    = Helpers_Misc.getExisted(unitMap.getUnitOnMap(targetGridIndex)?.getPlayer());
-
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : [...pathNodes, targetGridIndex],
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : false,
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
-
-        Destructions_Utils.destroyUnitOnMap(war, targetGridIndex, true);
-        war.moveUnit({
-            pathNodes       : [pathNodes[pathNodes.length - 1], targetGridIndex],
-            launchUnitId    : launchUnitId,
-            fuelConsumption : 0,
-        });
-        unitMap.setUnitOnMap(focusUnit);
-
-        if ((!targetPlayer.checkIsNeutral())                                        &&
-            (targetPlayer.getAliveState() != Players_Constants.AliveStateId.Dead) &&
-            (!unitMap.checkHasUnitForPlayer(targetPlayer.getPlayerIndex()))
-        ) {
-            targetPlayer.setAliveState(Players_Constants.AliveStateId.Dying);
-        }
-    }
-
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
-
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }

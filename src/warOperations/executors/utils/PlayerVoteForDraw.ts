@@ -101,31 +101,16 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoPl
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExecuteAsUnifiedWar(war, action);
-    }
-}
-
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): void {
-    const actionExtraData = action.getExtraData();
-    war.getDrawVoteManager().handleVote(
-        (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
-        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
-    );
-}
-
-async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): Promise<void> {
-    const desc = await getDesc(war, action);
-    if (desc) {
-        FloatText.show(desc);
+    if (!isFast) {
+        const desc = await getDesc(war, action);
+        if (desc) {
+            FloatText.show(desc);
+        }
     }
 
-    const actionExtraData = action.getExtraData();
     war.getDrawVoteManager().handleVote(
-        (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
-        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
+        action.getPlayerIndex() ?? war.getPlayerIndexInTurn(),
+        !!action.getIsAgree(),
     );
 }
 

@@ -217,14 +217,6 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUn
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitSupplyUnit, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExecuteAsUnifiedWar(war, action);
-    }
-}
-
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitSupplyUnit): void {
     const path          = Helpers_Misc.getExisted(action.getPath());
     const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     const launchUnitId  = action.getLaunchUnitId();
@@ -240,47 +232,15 @@ function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitSuppl
 
     const isBlocked = path.getIsBlocked();
     if (isBlocked) {
-        // nothing to do.
-    } else {
-        const playerIndex = focusUnit.getPlayerIndex();
-        for (const gridIndex of pathNodes[pathNodes.length - 1].getAdjacentGrids(unitMap.getMapSize())) {
-            const unit = unitMap.getUnitOnMap(gridIndex);
-            if ((unit) && (unit !== focusUnit) && (unit.getPlayerIndex() === playerIndex) && (unit.checkCanBeSupplied())) {
-                unit.addCurrentFuel(unit.getUsedFuel());
-                unit.addAndValidatePrimaryWeaponCurrentAmmo(unit.getPrimaryWeaponUsedAmmo() ?? 0);
-                unit.addFlareCurrentAmmo(unit.getFlareUsedAmmo() ?? 0);
-            }
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : isBlocked,
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
         }
-    }
-
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitSupplyUnit): Promise<void> {
-    const path          = Helpers_Misc.getExisted(action.getPath());
-    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-    const launchUnitId  = action.getLaunchUnitId();
-    const unitMap       = war.getUnitMap();
-    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-    war.moveUnit({
-        pathNodes       : pathNodes,
-        launchUnitId    : launchUnitId,
-        fuelConsumption : path.getFuelConsumption(),
-    });
-    unitMap.setUnitOnMap(focusUnit);
-    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-
-    const isBlocked = path.getIsBlocked();
-    if (isBlocked) {
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : isBlocked,
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
 
     } else {
         const suppliedUnits : Units_Unit.Unit[] = [];
@@ -295,30 +255,34 @@ async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoU
                 unit.addAndValidatePrimaryWeaponCurrentAmmo(offsetPrimaryWeaponAmmo);
                 unit.addFlareCurrentAmmo(offsetFlareAmmo);
 
-                if ((offsetFuel !== 0) || (offsetPrimaryWeaponAmmo !== 0) || (offsetFlareAmmo !== 0)) {
+                if ((!isFast) && ((offsetFuel !== 0) || (offsetPrimaryWeaponAmmo !== 0) || (offsetFlareAmmo !== 0))) {
                     suppliedUnits.push(unit);
                 }
             }
         }
 
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : isBlocked,
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : isBlocked,
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
+        }
 
-        const gridVisionEffect = war.getGridVisualEffect();
-        for (const unit of suppliedUnits) {
-            unit.flushDataToView();
-            gridVisionEffect?.showEffectSupply(unit.getGridIndex());
+        if (!isFast) {
+            const gridVisionEffect = war.getGridVisualEffect();
+            for (const unit of suppliedUnits) {
+                unit.flushDataToView();
+                gridVisionEffect?.showEffectSupply(unit.getGridIndex());
+            }
         }
     }
 
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, isFast);
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

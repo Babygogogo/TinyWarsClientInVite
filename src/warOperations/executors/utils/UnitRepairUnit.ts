@@ -249,14 +249,6 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUn
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitRepairUnit, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExecuteAsUnifiedWar(war, action);
-    }
-}
-
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitRepairUnit): void {
     const path          = Helpers_Misc.getExisted(action.getPath());
     const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     const launchUnitId  = action.getLaunchUnitId();
@@ -271,63 +263,27 @@ function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitRepai
     focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
     if (path.getIsBlocked()) {
-        // nothing to do.
-    } else {
-        const targetGridIndex   = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
-        const targetUnit        = Helpers_Misc.getExisted(unitMap.getUnitOnMap(targetGridIndex));
-        targetUnit.setCurrentFuel(targetUnit.getMaxFuel());
-        targetUnit.addAndValidatePrimaryWeaponCurrentAmmo(targetUnit.getPrimaryWeaponUsedAmmo() ?? 0);
-        targetUnit.setCurrentHp(targetUnit.getNormalizedCurrentHp() * Units_Constants.Hp.Normalizer);
-
-        const normalizedCurrentHp = targetUnit.getNormalizedCurrentHp();
-        if (normalizedCurrentHp < targetUnit.getNormalizedMaxHp()) {
-            const repairCost  = Math.floor(targetUnit.getProductionFinalCost() / 10);
-            const player      = focusUnit.getPlayer();
-            const fund        = player.getFund();
-            if (fund >= repairCost) {
-                player.setFund(fund - repairCost, false);
-                targetUnit.setCurrentHp((normalizedCurrentHp + 1) * Units_Constants.Hp.Normalizer);
-            }
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : true,
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
         }
-    }
-
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitRepairUnit): Promise<void> {
-    const path          = Helpers_Misc.getExisted(action.getPath());
-    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
-    const launchUnitId  = action.getLaunchUnitId();
-    const unitMap       = war.getUnitMap();
-    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-    war.moveUnit({
-        pathNodes       : pathNodes,
-        launchUnitId    : launchUnitId,
-        fuelConsumption : path.getFuelConsumption(),
-    });
-    unitMap.setUnitOnMap(focusUnit);
-    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
-
-    if (path.getIsBlocked()) {
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : true,
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
 
     } else {
         const targetGridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
-        await focusUnit.moveViewAlongPath({
-            pathNodes           : pathNodes,
-            isDiving            : focusUnit.getIsDiving(),
-            isBlocked           : false,
-            aiming              : null,
-            updateViewAfterMove : true,
-        });
+        if (!isFast) {
+            await focusUnit.moveViewAlongPath({
+                pathNodes           : pathNodes,
+                isDiving            : focusUnit.getIsDiving(),
+                isBlocked           : false,
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
+        }
 
         const targetUnit = Helpers_Misc.getExisted(unitMap.getUnitOnMap(targetGridIndex));
         targetUnit.setCurrentFuel(targetUnit.getMaxFuel());
@@ -340,10 +296,10 @@ async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoU
             const player      = focusUnit.getPlayer();
             const fund        = player.getFund();
             if (fund >= repairCost) {
-                player.setFund(fund - repairCost, true);
+                player.setFund(fund - repairCost, !isFast);
                 targetUnit.setCurrentHp((normalizedCurrentHp + 1) * Units_Constants.Hp.Normalizer);
 
-                {
+                if (!isFast) {
                     const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
                         war       : war,
                         gridIndex : targetGridIndex,
@@ -363,11 +319,13 @@ async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoU
             }
         }
 
-        targetUnit.flushDataToView();
-        war.getGridVisualEffect()?.showEffectRepair(targetGridIndex);
+        if (!isFast) {
+            targetUnit.flushDataToView();
+            war.getGridVisualEffect()?.showEffectRepair(targetGridIndex);
+        }
     }
 
-    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, isFast);
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }

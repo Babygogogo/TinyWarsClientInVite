@@ -58,31 +58,6 @@ async function normalExeSystemVoteForDraw(war: BaseWar_Model_War.War, action: Wo
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemVoteForDraw, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsUnifiedWar(war, action);
-    } else {
-        await normalExecuteAsUnifiedWar(war, action);
-    }
-}
-
-function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemVoteForDraw): void {
-    const actionExtraData = action.getExtraData();
-    war.getDrawVoteManager().handleVote(
-        (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
-        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
-    );
-}
-
-async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemVoteForDraw): Promise<void> {
-    const actionExtraData = action.getExtraData();
-    war.getDrawVoteManager().handleVote(
-        (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
-        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
-    );
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemVoteForDraw): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const allTileAppearanceInfosBeforeAction    = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction  = war.getVisibleThingsForEachTeam();
@@ -110,4 +85,13 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoSy
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemVoteForDraw, isFast: boolean): Promise<void> {
+    war.getDrawVoteManager().handleVote(
+        action.getPlayerIndex() ?? war.getPlayerIndexInTurn(),
+        !!action.getIsAgree(),
+    );
 }
