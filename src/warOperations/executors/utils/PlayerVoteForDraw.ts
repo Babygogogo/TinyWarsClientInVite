@@ -1,17 +1,17 @@
 import {
+    FloatText,
+    Helpers_Misc,
+    Lang_Constants,
+    Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
-    FloatText,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
     Utils_ClientErrorCode,
-    Helpers_Misc,
-    Lang_Utils,
-    WarOperations_Executors_Utils_Common,
-    Lang_Constants,
-    type BaseWar_Model_War,
     WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
+    type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
@@ -71,7 +71,7 @@ async function normalExePlayerVoteForDraw(war: BaseWar_Model_War.War, action: Wo
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerVoteForDraw): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerVoteForDraw): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
     const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
@@ -97,6 +97,36 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoP
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): void {
+    const actionExtraData = action.getExtraData();
+    war.getDrawVoteManager().handleVote(
+        (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
+        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
+    );
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw): Promise<void> {
+    const desc = await getDesc(war, action);
+    if (desc) {
+        FloatText.show(desc);
+    }
+
+    const actionExtraData = action.getExtraData();
+    war.getDrawVoteManager().handleVote(
+        (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
+        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
+    );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

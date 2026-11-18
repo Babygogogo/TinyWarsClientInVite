@@ -192,7 +192,7 @@ function normalExePlayerUseCoSkill(war: BaseWar_Model_War.War, action: WoPlayerU
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerUseCoSkill): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerUseCoSkill): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const unitMap                               = war.getUnitMap();
     const playerManager                         = war.getPlayerManager();
     const playerIndexArray                      = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(false) + 1, 1);
@@ -271,4 +271,122 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoP
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerUseCoSkill, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerUseCoSkill): void {
+    const playerInTurn      = war.getPlayerInTurn();
+    const unitMap           = war.getUnitMap();
+    const playerManager     = war.getPlayerManager();
+    const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
+    const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
+    const skillType         = Helpers_Misc.getExisted(action.getSkillType(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_04);
+    const skillIdArray      = playerInTurn.getCoSkills(skillType);
+    playerInTurn.updateOnUseCoSkill(skillType, false);
+
+    for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
+        CoSkills_Utils_Executor.executeInstantSkillAsUnifiedWar({
+            player            : playerInTurn,
+            skillId           : skillIdArray[skillIndex],
+            dataForUseCoSkill : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
+                war        : war,
+                player     : playerInTurn,
+                skillType  : skillType,
+                skillIndex : skillIndex,
+            }),
+            targetGridIndexes : action.getTargetGridIndexArray(),
+            isFastExecute     : true,
+        });
+    }
+
+    if (playerInTurn.getUserId() == null) {
+        const playerIndex = playerInTurn.getPlayerIndex();
+        for (const unit of war.getUnitMap().getAllUnits()) {
+            if (unit.getPlayerIndex() === playerIndex) {
+                unit.checkAndUpdateAiMode();
+            }
+        }
+    }
+
+    for (const playerIndex of playerIndexArray) {
+        if (!oldHasUnitFlags[playerIndex - 1]) {
+            continue;
+        }
+
+        const player = playerManager.getPlayer(playerIndex);
+        if ((player.getAliveState() != Players_Constants.AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(playerIndex))) {
+            player.setAliveState(Players_Constants.AliveStateId.Dying);
+        }
+    }
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerUseCoSkill): void {
+    const gridVisualEffect  = war.getGridVisualEffect();
+    const unitMap           = war.getUnitMap();
+    const playerInTurn      = war.getPlayerInTurn();
+    const playerIndex       = playerInTurn.getPlayerIndex();
+    const playerManager     = war.getPlayerManager();
+    const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
+    const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
+    const skillType         = Helpers_Misc.getExisted(action.getSkillType(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_04);
+    playerInTurn.updateOnUseCoSkill(skillType, true);
+
+    const skillIdArray = playerInTurn.getCoSkills(skillType);
+    for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
+        CoSkills_Utils_Executor.executeInstantSkillAsUnifiedWar({
+            player            : playerInTurn,
+            skillId           : skillIdArray[skillIndex],
+            dataForUseCoSkill : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
+                war        : war,
+                player     : playerInTurn,
+                skillType  : skillType,
+                skillIndex : skillIndex,
+            }),
+            targetGridIndexes : action.getTargetGridIndexArray(),
+            isFastExecute     : false,
+        });
+    }
+
+    if (playerInTurn.getUserId() == null) {
+        for (const unit of war.getUnitMap().getAllUnits()) {
+            if (unit.getPlayerIndex() === playerIndex) {
+                unit.checkAndUpdateAiMode();
+            }
+        }
+    }
+
+    for (const i of playerIndexArray) {
+        if (!oldHasUnitFlags[i - 1]) {
+            continue;
+        }
+
+        const player = playerManager.getPlayer(i);
+        if ((player.getAliveState() != Players_Constants.AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(i))) {
+            player.setAliveState(Players_Constants.AliveStateId.Dying);
+        }
+    }
+
+    for (const unit of unitMap.getAllUnitsOnMap()) {
+        if (unit.getPlayerIndex() === playerIndex) {
+            unit.flushDataToView();
+
+            if (skillType === CoSkills_Constants.SkillTypeId.Power) {
+                gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
+            } else {
+                gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
+            }
+        }
+    }
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }

@@ -5,11 +5,11 @@ import {
     Helpers_Misc,
     Players_Constants,
     Units_Constants,
-    WarOperations_Executors_Utils_Common,
     WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_MovePath,
-    type SinglePlayerWars_War,
     type BaseWar_Model_War,
+    type SinglePlayerWars_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitCrushUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitCrushUnit.ts";
@@ -151,7 +151,7 @@ async function normalExeUnitCrushUnit(war: BaseWar_Model_War.War, action: WoUnit
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitCrushUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitCrushUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const unitMap                              = war.getUnitMap();
     const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
     const launchUnitId                         = revisedPath.getLaunchUnitId();
@@ -204,4 +204,110 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCrushUnit, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCrushUnit): void {
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const unitMap       = war.getUnitMap();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (path.getIsBlocked()) {
+        // nothing to do.
+    } else {
+        const targetGridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
+        const targetPlayer    = Helpers_Misc.getExisted(unitMap.getUnitOnMap(targetGridIndex)?.getPlayer());
+
+        Destructions_Utils.destroyUnitOnMap(war, targetGridIndex, false);
+        war.moveUnit({
+            pathNodes       : [pathNodes[pathNodes.length - 1], targetGridIndex],
+            launchUnitId    : launchUnitId,
+            fuelConsumption : 0,
+        });
+        unitMap.setUnitOnMap(focusUnit);
+
+        if ((!targetPlayer.checkIsNeutral())                                        &&
+            (targetPlayer.getAliveState() != Players_Constants.AliveStateId.Dead) &&
+            (!unitMap.checkHasUnitForPlayer(targetPlayer.getPlayerIndex()))
+        ) {
+            targetPlayer.setAliveState(Players_Constants.AliveStateId.Dying);
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCrushUnit): Promise<void> {
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const unitMap       = war.getUnitMap();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (path.getIsBlocked()) {
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : true,
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
+
+    } else {
+        const targetGridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
+        const targetPlayer    = Helpers_Misc.getExisted(unitMap.getUnitOnMap(targetGridIndex)?.getPlayer());
+
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : [...pathNodes, targetGridIndex],
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : false,
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
+
+        Destructions_Utils.destroyUnitOnMap(war, targetGridIndex, true);
+        war.moveUnit({
+            pathNodes       : [pathNodes[pathNodes.length - 1], targetGridIndex],
+            launchUnitId    : launchUnitId,
+            fuelConsumption : 0,
+        });
+        unitMap.setUnitOnMap(focusUnit);
+
+        if ((!targetPlayer.checkIsNeutral())                                        &&
+            (targetPlayer.getAliveState() != Players_Constants.AliveStateId.Dead) &&
+            (!unitMap.checkHasUnitForPlayer(targetPlayer.getPlayerIndex()))
+        ) {
+            targetPlayer.setAliveState(Players_Constants.AliveStateId.Dying);
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }

@@ -15,13 +15,12 @@ import {
     Units_Constants,
     Utils_ClientErrorCode,
     Visibilities_Utils,
-    WarOperations_Executors_Utils_Common,
     WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_MovePath,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoUnitAttackUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitAttackUnit.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -205,7 +204,7 @@ async function normalExeUnitAttackUnit(war: BaseWar_Model_War.War, action: WoUni
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitAttackUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitAttackUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const unitMap                              = war.getUnitMap();
     const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
     const launchUnitId                         = revisedPath.getLaunchUnitId();
@@ -290,6 +289,138 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
             },
         });
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitAttackUnit, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitAttackUnit): void {
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const unitMap       = war.getUnitMap();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    if (path.getIsBlocked()) {
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
+        unitMap.setUnitOnMap(focusUnit);
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    } else {
+        const maxAttackRange1       = focusUnit.getFinalMaxAttackRange();
+        const canAttackAfterMoving1 = focusUnit.getFinalCanAttackAfterMoving();
+        const gridIndex2            = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
+        const unit2                 = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex2));
+        const maxAttackRange2       = unit2.getFinalMaxAttackRange() ?? null;
+        const canAttackAfterMoving2 = unit2.getFinalCanAttackAfterMoving();
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
+        unitMap.setUnitOnMap(focusUnit);
+
+        const battleInfo = DamageCalculators_Utils.runBattleForAttackUnit({
+            war                   : war,
+            movePath1             : pathNodes,
+            launchUnitId1         : launchUnitId,
+            maxAttackRange1       : maxAttackRange1,
+            canAttackAfterMoving1 : canAttackAfterMoving1,
+            gridIndex2            : gridIndex2,
+            maxAttackRange2       : maxAttackRange2,
+            canAttackAfterMoving2 : canAttackAfterMoving2,
+        });
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+        const unitMapView = unitMap.getView();
+        for (const [, unit] of battleInfo.destroyedUnits) {
+            const view = unit.getView();
+            if (view) {
+                unitMapView?.deleteUnitView(view);
+            }
+            unit.dispose();
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitAttackUnit): Promise<void> {
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const unitMap       = war.getUnitMap();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    if (path.getIsBlocked()) {
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
+        unitMap.setUnitOnMap(focusUnit);
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : true,
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
+
+    } else {
+        const maxAttackRange1       = focusUnit.getFinalMaxAttackRange();
+        const gridIndex2            = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackUnit_02);
+        const canAttackAfterMoving1 = focusUnit.getFinalCanAttackAfterMoving();
+        const unit2                 = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex2), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackUnit_03);
+        const maxAttackRange2       = unit2.getFinalMaxAttackRange();
+        const canAttackAfterMoving2 = unit2.getFinalCanAttackAfterMoving();
+
+        war.moveUnit({
+            pathNodes       : pathNodes,
+            launchUnitId    : launchUnitId,
+            fuelConsumption : path.getFuelConsumption(),
+        });
+        unitMap.setUnitOnMap(focusUnit);
+
+        const allVisibleUnits = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : false,
+            aiming              : allVisibleUnits.has(unit2) ? gridIndex2 : null,
+            updateViewAfterMove : false,
+        });
+
+        const battleInfo = DamageCalculators_Utils.runBattleForAttackUnit({
+            war                   : war,
+            movePath1             : pathNodes,
+            launchUnitId1         : launchUnitId,
+            maxAttackRange1       : maxAttackRange1,
+            canAttackAfterMoving1 : canAttackAfterMoving1,
+            gridIndex2            : gridIndex2,
+            maxAttackRange2       : maxAttackRange2,
+            canAttackAfterMoving2 : canAttackAfterMoving2,
+        });
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+        WarOperations_Executors_Utils_Common.handleViewForBattle(battleInfo, war, allVisibleUnits);
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

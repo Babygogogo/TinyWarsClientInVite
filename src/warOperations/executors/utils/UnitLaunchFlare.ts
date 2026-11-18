@@ -11,13 +11,12 @@ import {
     TestWar_Model_TwWar,
     Units_Constants,
     Utils_ClientErrorCode,
-    WarOperations_Executors_Utils_Common,
     WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_MovePath,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoUnitLaunchFlare } from "../../../proto/schema/CommonProto/WarOperation/WoUnitLaunchFlare.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,7 +146,7 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Model_War.War, action: WoUn
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitLaunchFlare, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitLaunchFlare, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const unitMap                              = war.getUnitMap();
     const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
     const launchUnitId                         = revisedPath.getLaunchUnitId();
@@ -191,6 +190,96 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitLaunchFlare, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitLaunchFlare): void {
+    const fogMap        = war.getFogMap();
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const unitMap       = war.getUnitMap();
+    const launchUnitId  = action.getLaunchUnitId();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (!path.getIsBlocked()) {
+        focusUnit.setFlareCurrentAmmo(focusUnit.getFlareCurrentAmmo() - 1);
+        fogMap.updateMapFromPathsByFlare(
+            focusUnit.getPlayerIndex(),
+            Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex())),
+            Helpers_Misc.getExisted(focusUnit.getFlareRadius(pathNodes[pathNodes.length - 1])),
+        );
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitLaunchFlare): Promise<void> {
+    const gridVisualEffect  = war.getGridVisualEffect();
+    const mapSize           = war.getTileMap().getMapSize();
+    const fogMap            = war.getFogMap();
+    const playerIndexInTurn = war.getPlayerIndexInTurn();
+    const path              = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes         = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const unitMap           = war.getUnitMap();
+    const launchUnitId      = action.getLaunchUnitId();
+    const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    const isFlareSucceeded  = !path.getIsBlocked();
+    const flareRadius       = Helpers_Misc.getExisted(focusUnit.getFlareRadius(pathNodes[pathNodes.length - 1]));
+    const targetGridIndex   = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex());
+    if (isFlareSucceeded) {
+        if (targetGridIndex == null) {
+            throw Helpers_Misc.newError(`Empty targetGridIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchFlare_02);
+        }
+
+        focusUnit.setFlareCurrentAmmo(focusUnit.getFlareCurrentAmmo() - 1);
+        fogMap.updateMapFromPathsByFlare(playerIndexInTurn, targetGridIndex, flareRadius);
+    }
+
+    await focusUnit.moveViewAlongPath({
+        pathNodes           : pathNodes,
+        isDiving            : focusUnit.getIsDiving(),
+        isBlocked           : path.getIsBlocked(),
+        aiming              : null,
+        updateViewAfterMove : true,
+    });
+    if ((isFlareSucceeded) && (war.getPlayerManager().getWatcherTeamIndexesForSelf().has(focusUnit.getTeamIndex()))) {
+        if (targetGridIndex == null) {
+            throw Helpers_Misc.newError(`Empty targetGridIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchFlare_03);
+        }
+
+        for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize : mapSize })) {
+            gridVisualEffect?.showEffectFlare(grid);
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

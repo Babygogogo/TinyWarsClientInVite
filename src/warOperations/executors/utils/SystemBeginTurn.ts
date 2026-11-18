@@ -78,7 +78,7 @@ async function normalExeSystemBeginTurn(war: BaseWar_Model_War.War, action: WoSy
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemBeginTurn): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
+export async function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemBeginTurn): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
     const changedThings                        = await Turns_Phases_Handler.endPhaseStandbyAsInnerWar(war.getTurnManager());
@@ -98,6 +98,57 @@ export async function executeForInnerWar(war: SinglePlayerWars_War.War, operatio
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
+    const turnManager = war.getTurnManager();
+    await Turns_Phases_Handler.endPhaseStandbyAsInnerWar(turnManager);
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
+    // const desc = await war.getDescForExeSystemBeginTurn(action);
+    // (desc) && (FloatText.show(desc));
+
+    // return war.getTurnManager().endPhaseWaitBeginTurn(action);
+
+    const playerInTurn  = war.getPlayerInTurn();
+    const playerIndex   = playerInTurn.getPlayerIndex();
+    if ((playerIndex !== Players_Constants.PlayerIndex.Neutral)         &&
+        (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Dead)
+    ) {
+        const nickname = await playerInTurn.getNickname();
+        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (!LocalData_Storage.getIsShowReplayTurnStartPopup())) {
+            FloatText.show(`[P${playerIndex} ${nickname}] ${Lang_Utils.getText(Lang_Constants.TextType.B0679)}`);
+        } else {
+            await new Promise<void>(resolve => {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBeginTurnPanel, {
+                    gameConfig        : war.getGcData(),
+                    playerIndex       : playerIndex,
+                    teamIndex         : playerInTurn.getTeamIndex(),
+                    nickname          : nickname,
+                    coId              : playerInTurn.getCoId(),
+                    unitAndTileSkinId : playerInTurn.getUnitAndTileSkinId(),
+                    callbackOnFinish  : () => resolve(),
+                });
+            });
+        }
+    }
+
+    const turnManager = war.getTurnManager();
+    await Turns_Phases_Handler.endPhaseStandbyAsInnerWar(turnManager);
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

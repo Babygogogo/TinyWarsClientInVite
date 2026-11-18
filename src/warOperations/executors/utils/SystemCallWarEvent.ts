@@ -50,7 +50,7 @@ async function normalExeSystemCallWarEvent(war: BaseWar_Model_War.War, action: W
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemCallWarEvent): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
+export async function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemCallWarEvent): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
     const warEventManager                      = war.getWarEventManager();
@@ -80,6 +80,37 @@ export async function executeForInnerWar(war: SinglePlayerWars_War.War, operatio
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+async function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<void> {
+    const warEventManager = war.getWarEventManager();
+    warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
+    await warEventManager.callWarEventAsUnifiedWar(action.getWarEventId(), action.getNodeAndActionsIndex(), true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<void> {
+    const desc = await getDesc(war, action);
+    if (desc) {
+        FloatText.show(desc);
+    }
+
+    const warEventManager = war.getWarEventManager();
+    warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
+    await warEventManager.callWarEventAsUnifiedWar(action.getWarEventId(), action.getNodeAndActionsIndex(), false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.getView()?.updatePersistentText();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

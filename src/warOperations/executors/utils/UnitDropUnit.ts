@@ -15,15 +15,14 @@ import {
     TestWar_Model_TwWar,
     Units_Constants,
     Utils_ClientErrorCode,
-    WarOperations_Executors_Utils_Common,
     WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_MovePath,
     type AuxiliaryTypes_UnitVisionInfo,
     type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoUnitDropUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitDropUnit.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -245,7 +244,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Model_War.War, action: WoUnitD
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitDropUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitDropUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const unitMap                              = war.getUnitMap();
     const fogMap                               = war.getFogMap();
     const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
@@ -335,6 +334,151 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
     });
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitDropUnit, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitDropUnit): void {
+    const fogMap            = war.getFogMap();
+    const unitMap           = war.getUnitMap();
+    const path                              = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes                         = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId                      = action.getLaunchUnitId();
+    const endingGridIndex                   = pathNodes[pathNodes.length - 1];
+    const focusUnit                         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    const shouldUpdateFogMap                = (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) && (war.getPlayerManager().getWatcherTeamIndexesForSelf().has(focusUnit.getTeamIndex()));
+    const canDroppedUnitGetVisionOnStart    = false;
+    const visionInfoDictForDroppedUnits     = new Map<number, AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo>();
+    if ((shouldUpdateFogMap) && (canDroppedUnitGetVisionOnStart)) {
+        for (const data of action.getDropDestinations()) {
+            const unitId = data.getUnitId() ?? 0;
+            visionInfoDictForDroppedUnits.set(unitId, Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId)?.getVisionInfo()));
+        }
+    }
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    const unitsForDrop: Units_Unit.Unit[] = [];
+    for (const data of action.getDropDestinations()) {
+        const unitId        = data.getUnitId() ?? 0;
+        const gridIndex     = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(data.getGridIndex()));
+        const unitForDrop   = Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId));
+        if ((shouldUpdateFogMap) && (canDroppedUnitGetVisionOnStart)) {
+            fogMap.updateMapFromPathsByUnitAndPath({
+                unit           : unitForDrop,
+                unitVisionInfo : Helpers_Misc.getExisted(visionInfoDictForDroppedUnits.get(unitId)),
+                path           : [endingGridIndex, gridIndex],
+            });
+        }
+
+        unitMap.setUnitUnloaded(unitId, gridIndex);
+        for (const unit of unitMap.getUnitsLoadedByLoader(unitForDrop, true)) {
+            unit.setGridIndex(gridIndex);
+        }
+
+        unitForDrop.setLoaderUnitId(null);
+        unitForDrop.setGridIndex(gridIndex);
+        unitForDrop.setActionState(Units_Constants.ActionStateId.Acted);
+        unitsForDrop.push(unitForDrop);
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitDropUnit): Promise<void> {
+    const gridVisualEffect                  = war.getGridVisualEffect();
+    const unitMap                           = war.getUnitMap();
+    const path                              = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes                         = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId                      = action.getLaunchUnitId();
+    const endingGridIndex                   = pathNodes[pathNodes.length - 1];
+    const focusUnit                         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    const shouldUpdateFogMap                = (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) && (war.getPlayerManager().getWatcherTeamIndexesForSelf().has(focusUnit.getTeamIndex()));
+    const canDroppedUnitGetVisionOnStart    = false;
+    const visionInfoDictForDroppedUnits     = new Map<number, AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo>();
+    if ((shouldUpdateFogMap) && (canDroppedUnitGetVisionOnStart)) {
+        for (const data of action.getDropDestinations()) {
+            const unitId = data.getUnitId() ?? 0;
+            visionInfoDictForDroppedUnits.set(unitId, Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId)?.getVisionInfo()));
+        }
+    }
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    const fogMap        = war.getFogMap();
+    const unitsForDrop  : Units_Unit.Unit[] = [];
+    for (const data of action.getDropDestinations()) {
+        const unitId        = data.getUnitId() ?? 0;
+        const gridIndex     = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(data.getGridIndex()));
+        const unitForDrop   = Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId));
+        if ((shouldUpdateFogMap) && (canDroppedUnitGetVisionOnStart)) {
+            fogMap.updateMapFromPathsByUnitAndPath({
+                unit           : unitForDrop,
+                unitVisionInfo : Helpers_Misc.getExisted(visionInfoDictForDroppedUnits.get(unitId)),
+                path           : [endingGridIndex, gridIndex],
+            });
+        }
+
+        unitMap.setUnitUnloaded(unitId, gridIndex);
+        for (const unit of unitMap.getUnitsLoadedByLoader(unitForDrop, true)) {
+            unit.setGridIndex(gridIndex);
+        }
+
+        unitForDrop.setLoaderUnitId(null);
+        unitForDrop.setGridIndex(gridIndex);
+        unitForDrop.setActionState(Units_Constants.ActionStateId.Acted);
+        unitsForDrop.push(unitForDrop);
+    }
+
+    await focusUnit.moveViewAlongPath({
+        pathNodes           : pathNodes,
+        isDiving            : focusUnit.getIsDiving(),
+        isBlocked           : path.getIsBlocked(),
+        aiming              : null,
+        updateViewAfterMove : true,
+    });
+    if (action.getIsDropBlocked()) {
+        gridVisualEffect?.showEffectBlock(endingGridIndex);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
+    }
+
+    const promises: Promise<void>[] = [];
+    for (const unitForDrop of unitsForDrop) {
+        promises.push((async () => {
+            await unitForDrop.moveViewAlongPath({
+                pathNodes           : [endingGridIndex, unitForDrop.getGridIndex()],
+                isDiving            : unitForDrop.getIsDiving(),
+                isBlocked           : false,
+                aiming              : null,
+                updateViewAfterMove : true,
+            });
+        })());
+    }
+    await Promise.all(promises);
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoUnitDropUnit): Promise<string | null> {
     if (war instanceof MapEditor_Model_MeWar.MeWar) {

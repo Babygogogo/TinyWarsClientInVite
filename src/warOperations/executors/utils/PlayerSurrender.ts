@@ -68,7 +68,7 @@ async function normalExePlayerSurrender(war: BaseWar_Model_War.War, action: WoPl
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerSurrender): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerSurrender): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const playerIndex                           = Helpers_Misc.getExisted(operation.getPlayerIndex());
     const allTileAppearanceInfosBeforeAction    = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction  = war.getVisibleThingsForEachTeam();
@@ -95,6 +95,28 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoP
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerSurrender, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerSurrender): void {
+    war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).setAliveState(Players_Constants.AliveStateId.Dying);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerSurrender): Promise<void> {
+    const desc = await getDesc(war, action);
+    if (desc) {
+        FloatText.show(desc);
+    }
+
+    war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).setAliveState(Players_Constants.AliveStateId.Dying);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

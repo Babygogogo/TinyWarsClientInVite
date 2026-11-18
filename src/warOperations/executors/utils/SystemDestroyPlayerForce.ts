@@ -15,7 +15,6 @@ import {
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoSystemDestroyPlayerForce } from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +69,7 @@ async function normalExeSystemDestroyPlayerForce(war: BaseWar_Model_War.War, act
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemDestroyPlayerForce): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemDestroyPlayerForce): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
     const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
@@ -96,6 +95,25 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoS
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): void {
+    Destructions_Utils.destroyPlayerForce(war, Helpers_Misc.getExisted(action.getTargetPlayerIndex()), false);
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): Promise<void> {
+    Destructions_Utils.destroyPlayerForce(war, Helpers_Misc.getExisted(action.getTargetPlayerIndex()), true);
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

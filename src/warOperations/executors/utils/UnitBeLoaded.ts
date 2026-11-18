@@ -16,7 +16,6 @@ import {
     type BaseWar_Model_War,
     type WarOperations_Executors_Types,
 } from "../../../internal.ts";
-
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitBeLoaded } from "../../../proto/schema/CommonProto/WarOperation/WoUnitBeLoaded.ts";
 
@@ -62,6 +61,7 @@ function fastExeUnitBeLoaded(war: BaseWar_Model_War.War, action: WoUnitBeLoaded)
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
+
 async function normalExeUnitBeLoaded(war: BaseWar_Model_War.War, action: WoUnitBeLoaded): Promise<void> {
     // const desc = await war.getDescForExeUnitBeLoaded(action);
     // (desc) && (FloatText.show(desc));
@@ -138,7 +138,7 @@ async function normalExeUnitBeLoaded(war: BaseWar_Model_War.War, action: WoUnitB
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitBeLoaded, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitBeLoaded, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const unitMap                               = war.getUnitMap();
     const pathNodes                             = revisedPath.getNodes().map(v => v.gridIndex);
     const launchUnitId                          = revisedPath.getLaunchUnitId();
@@ -182,6 +182,86 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitBeLoaded, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExeuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitBeLoaded): void {
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const unitMap       = war.getUnitMap();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (path.getIsBlocked()) {
+        unitMap.setUnitOnMap(focusUnit);
+    } else {
+        const loaderUnit = Helpers_Misc.getExisted(unitMap.getUnitOnMap(pathNodes[pathNodes.length - 1]));
+        unitMap.setUnitLoaded(focusUnit);
+        focusUnit.setLoaderUnitId(loaderUnit.getUnitId());
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExeuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitBeLoaded): Promise<void> {
+    const unitMap       = war.getUnitMap();
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (path.getIsBlocked()) {
+        unitMap.setUnitOnMap(focusUnit);
+
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : path.getIsBlocked(),
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
+
+    } else {
+        const loaderUnit = Helpers_Misc.getExisted(unitMap.getUnitOnMap(pathNodes[pathNodes.length - 1]));
+        unitMap.setUnitLoaded(focusUnit);
+        focusUnit.setLoaderUnitId(loaderUnit.getUnitId());
+
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : path.getIsBlocked(),
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
+        focusUnit.setViewVisible(false);
+        loaderUnit.flushDataToView();
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -45,7 +45,7 @@ function normalExeSystemEndTurn(war: BaseWar_Model_War.War, action: WoSystemEndT
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemEndTurn): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemEndTurn): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
     const changedThings                        = Turns_Phases_Handler.endPhaseMainAsInnerWar(war.getTurnManager());
@@ -65,6 +65,29 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoS
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemEndTurn, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExeAsUnifiedWar(war, action);
+    }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
+    const turnManager = war.getTurnManager();
+    Turns_Phases_Handler.endPhaseMainAsInnerWar(turnManager);
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function normalExeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemEndTurn): void {
+    const turnManager = war.getTurnManager();
+    Turns_Phases_Handler.endPhaseMainAsInnerWar(turnManager);
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

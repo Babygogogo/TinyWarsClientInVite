@@ -29,7 +29,7 @@ export async function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastEx
         const crystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.Crystal)
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of crystalArray) {
-            await handleMapWeaponTileCrystalForOuterWar(war, tile, isFastExecute);
+            await handleMapWeaponTileCrystalAsOuterWar(war, tile, isFastExecute);
         }
     }
     {
@@ -44,14 +44,14 @@ export async function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastEx
                 }
             });
         for (const tile of customCrystalArray) {
-            await handleMapWeaponTileCrystalForOuterWar(war, tile, isFastExecute);
+            await handleMapWeaponTileCrystalAsOuterWar(war, tile, isFastExecute);
         }
     }
     {
         const cannonArray = allTileArray.filter(v => v.checkIsNormalCannon())
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of cannonArray) {
-            await handleMapWeaponTileCannonForOuterWar(war, tile, isFastExecute);
+            await handleMapWeaponTileCannonAsOuterWar(war, tile, isFastExecute);
         }
     }
     {
@@ -66,14 +66,14 @@ export async function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastEx
                 }
             });
         for (const tile of customCannonArray) {
-            await handleMapWeaponTileCannonForOuterWar(war, tile, isFastExecute);
+            await handleMapWeaponTileCannonAsOuterWar(war, tile, isFastExecute);
         }
     }
     {
         const laserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.LaserTurret)
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of laserTurretArray) {
-            await handleMapWeaponTileLaserTurretForOuterWar(war, tile, isFastExecute);
+            await handleMapWeaponTileLaserTurretAsOuterWar(war, tile, isFastExecute);
         }
     }
     {
@@ -88,12 +88,12 @@ export async function runAsOuterWar(turnManager: Turns_Manager.Manager, isFastEx
                 }
             });
         for (const tile of customLaserTurretArray) {
-            await handleMapWeaponTileLaserTurretForOuterWar(war, tile, isFastExecute);
+            await handleMapWeaponTileLaserTurretAsOuterWar(war, tile, isFastExecute);
         }
     }
 }
 
-async function handleMapWeaponTileCrystalForOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCrystalAsOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -124,7 +124,7 @@ async function handleMapWeaponTileCrystalForOuterWar(war: BaseWar_Model_War.War,
     }
 }
 
-async function handleMapWeaponTileCannonForOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCannonAsOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -134,7 +134,7 @@ async function handleMapWeaponTileCannonForOuterWar(war: BaseWar_Model_War.War, 
     }
 }
 
-async function handleMapWeaponTileLaserTurretForOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileLaserTurretAsOuterWar(war: BaseWar_Model_War.War, tile: Tiles_Tile.Tile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {

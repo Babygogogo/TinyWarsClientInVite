@@ -16,14 +16,13 @@ import {
     Units_Constants,
     Utils_ClientErrorCode,
     Visibilities_Utils,
-    WarOperations_Executors_Utils_Common,
     WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_MovePath,
     type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoUnitLaunchSilo } from "../../../proto/schema/CommonProto/WarOperation/WoUnitLaunchSilo.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
@@ -226,7 +225,7 @@ async function normalExeUnitLaunchSilo(war: BaseWar_Model_War.War, action: WoUni
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitLaunchSilo, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitLaunchSilo, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const unitMap                              = war.getUnitMap();
     const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
     const launchUnitId                         = revisedPath.getLaunchUnitId();
@@ -296,6 +295,165 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitLaunchSilo, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitLaunchSilo): void {
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const unitMap       = war.getUnitMap();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (path.getIsBlocked()) {
+        // nothing to do.
+    } else {
+        const warStatisticsManager  = war.getWarStatisticsManager();
+        const targetGridIndex       = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
+        const tile                  = war.getTileMap().getTile(pathNodes[pathNodes.length - 1]);
+        const launchSiloParams      = tile.getTemplateCfg().getLaunchSiloParams();
+        tile.resetByTypeAndPlayerIndex({
+            baseType    : tile.getBaseTypeId(),
+            objectType  : Helpers_Misc.getExisted(launchSiloParams[1]),
+            playerIndex : Players_Constants.PlayerIndex.Neutral,
+        });
+
+        const targetGrids   = targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize : unitMap.getMapSize() });
+        const targetUnits   : Units_Unit.Unit[] = [];
+        for (const grid of targetGrids) {
+            const unit = unitMap.getUnitOnMap(grid);
+            if (unit) {
+                const oldNormalizedHp = unit.getNormalizedCurrentHp();
+                targetUnits.push(unit);
+                unit.setCurrentHp(Math.max(1, unit.getCurrentHp() - launchSiloParams[3]));
+
+                {
+                    const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
+                    if (offsetNormalizedHp != 0) {
+                        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : grid });
+                        if (observerTeamIndexes != null) {
+                            warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
+                                unitType                   : unit.getUnitTypeId(),
+                                dstPlayerIndex             : unit.getPlayerIndex(),
+                                unitGain                   : 0,
+                                unitLoss                   : 0,
+                                normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                                normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                            }));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitLaunchSilo): Promise<void> {
+    const gridVisualEffect  = war.getGridVisualEffect();
+    const unitMap           = war.getUnitMap();
+    const mapSize           = unitMap.getMapSize();
+    const path              = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes         = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId      = action.getLaunchUnitId();
+    const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (path.getIsBlocked()) {
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : path.getIsBlocked(),
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
+
+    } else {
+        const tile              = war.getTileMap().getTile(pathNodes[pathNodes.length - 1]);
+        const launchSiloParams  = tile.getTemplateCfg().getLaunchSiloParams();
+        tile.resetByTypeAndPlayerIndex({
+            baseType    : tile.getBaseTypeId(),
+            objectType  : Helpers_Misc.getExisted(launchSiloParams[1]),
+            playerIndex : Players_Constants.PlayerIndex.Neutral,
+        });
+
+        const warStatisticsManager  = war.getWarStatisticsManager();
+        const targetGridIndex       = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()));
+        const targetGrids           = targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize : mapSize });
+        const targetUnits           : Units_Unit.Unit[] = [];
+        for (const grid of targetGrids) {
+            const unit = unitMap.getUnitOnMap(grid);
+            if (unit) {
+                const oldNormalizedHp = unit.getNormalizedCurrentHp();
+                targetUnits.push(unit);
+                unit.setCurrentHp(Math.max(1, unit.getCurrentHp() - launchSiloParams[3]));
+
+                {
+                    const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
+                    if (offsetNormalizedHp != 0) {
+                        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : grid });
+                        if (observerTeamIndexes != null) {
+                            warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
+                                unitType                   : unit.getUnitTypeId(),
+                                dstPlayerIndex             : unit.getPlayerIndex(),
+                                unitGain                   : 0,
+                                unitLoss                   : 0,
+                                normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                                normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                            }));
+                        }
+                    }
+                }
+            }
+        }
+
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : path.getIsBlocked(),
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
+        for (const grid of targetGrids) {
+            gridVisualEffect?.showEffectSiloExplosion(grid);
+        }
+        for (const unit of targetUnits) {
+            unit.flushDataToView();
+        }
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
+
+        tile.flushDataToView();
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

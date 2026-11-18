@@ -16,15 +16,14 @@ import {
     TestWar_Model_TwWar,
     Units_Constants,
     Utils_ClientErrorCode,
-    WarOperations_Executors_Utils_Common,
     WarOperations_Executors_Types,
-    type AuxiliaryTypes_MovePath,
+    WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MovePath,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import type { DataForUseCoSkill } from "../../../proto/schema/CommonProto/Structure/DataForUseCoSkill.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoUnitUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoUnitUseCoSkill.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -257,7 +256,7 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Model_War.War, action: WoUni
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitUseCoSkill, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitUseCoSkill, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const unitMap                              = war.getUnitMap();
     const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
     const launchUnitId                         = revisedPath.getLaunchUnitId();
@@ -376,6 +375,165 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
             },
         });
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitUseCoSkill, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitUseCoSkill): void {
+    const playerInTurn      = war.getPlayerInTurn();
+    const unitMap           = war.getUnitMap();
+    const playerManager     = war.getPlayerManager();
+    const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
+    const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
+    const path              = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes         = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId      = action.getLaunchUnitId();
+    const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_03);
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (!path.getIsBlocked()) {
+        const skillType = Helpers_Misc.getExisted(action.getSkillType());
+        playerInTurn.updateOnUseCoSkill(skillType, false);
+
+        const skillIdArray = playerInTurn.getCoCurrentSkills();
+        for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
+            const dataForUseCoSkill = CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
+                war        : war,
+                player     : playerInTurn,
+                skillType  : skillType,
+                skillIndex : skillIndex,
+            });
+            CoSkills_Utils_Executor.executeInstantSkillAsUnifiedWar({
+                player            : playerInTurn,
+                skillId           : skillIdArray[skillIndex],
+                dataForUseCoSkill : dataForUseCoSkill,
+                targetGridIndexes : action.getTargetGridIndexArray(),
+                isFastExecute     : true,
+            });
+        }
+
+        if (playerInTurn.getUserId() == null) {
+            const playerIndex = playerInTurn.getPlayerIndex();
+            for (const unit of war.getUnitMap().getAllUnits()) {
+                if (unit.getPlayerIndex() === playerIndex) {
+                    unit.checkAndUpdateAiMode();
+                }
+            }
+        }
+
+        for (const playerIndex of playerIndexArray) {
+            if (!oldHasUnitFlags[playerIndex - 1]) {
+                continue;
+            }
+
+            const player = playerManager.getPlayer(playerIndex);
+            if ((player.getAliveState() != Players_Constants.AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(playerIndex))) {
+                player.setAliveState(Players_Constants.AliveStateId.Dying);
+            }
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitUseCoSkill): Promise<void> {
+    const unitMap           = war.getUnitMap();
+    const gridVisualEffect  = war.getGridVisualEffect();
+    const playerInTurn      = war.getPlayerInTurn();
+    const playerIndex       = playerInTurn.getPlayerIndex();
+    const path              = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes         = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId      = action.getLaunchUnitId();
+    const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_03);
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    await focusUnit.moveViewAlongPath({
+        pathNodes           : pathNodes,
+        isDiving            : focusUnit.getIsDiving(),
+        isBlocked           : path.getIsBlocked(),
+        aiming              : null,
+        updateViewAfterMove : true,
+    });
+
+    if (!path.getIsBlocked()) {
+        const playerManager     = war.getPlayerManager();
+        const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
+        const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
+        const skillType         = Helpers_Misc.getExisted(action.getSkillType());
+        playerInTurn.updateOnUseCoSkill(skillType, true);
+
+        const skillIdArray = playerInTurn.getCoCurrentSkills();
+        for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
+            CoSkills_Utils_Executor.executeInstantSkillAsUnifiedWar({
+                player            : playerInTurn,
+                skillId           : skillIdArray[skillIndex],
+                dataForUseCoSkill : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
+                    war        : war,
+                    player     : playerInTurn,
+                    skillType  : skillType,
+                    skillIndex : skillIndex,
+                }),
+                targetGridIndexes : action.getTargetGridIndexArray(),
+                isFastExecute     : false,
+            });
+        }
+
+        if (playerInTurn.getUserId() == null) {
+            for (const unit of war.getUnitMap().getAllUnits()) {
+                if (unit.getPlayerIndex() === playerIndex) {
+                    unit.checkAndUpdateAiMode();
+                }
+            }
+        }
+
+        for (const i of playerIndexArray) {
+            if (!oldHasUnitFlags[i - 1]) {
+                continue;
+            }
+
+            const player = playerManager.getPlayer(i);
+            if ((player.getAliveState() != Players_Constants.AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(i))) {
+                player.setAliveState(Players_Constants.AliveStateId.Dying);
+            }
+        }
+
+        for (const unit of unitMap.getAllUnitsOnMap()) {
+            if (unit.getPlayerIndex() === playerIndex) {
+                unit.flushDataToView();
+
+                if (skillType === CoSkills_Constants.SkillTypeId.Power) {
+                    gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
+                } else {
+                    gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                }
+            }
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

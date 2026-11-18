@@ -17,13 +17,12 @@ import {
     Units_Utils_Serialization,
     Utils_ClientErrorCode,
     Visibilities_Utils,
-    WarOperations_Executors_Utils_Common,
     WarOperations_Executors_Types,
+    WarOperations_Executors_Utils_Common,
     type AuxiliaryTypes_MovePath,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
 import type { WoUnitProduceUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitProduceUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
@@ -285,7 +284,7 @@ function getPromotionForUnitProduceUnit(war: BaseWar_Model_War.War, producerUnit
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitProduceUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitProduceUnit, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const playerInTurn                         = war.getPlayerInTurn();
     const unitMap                              = war.getUnitMap();
     const pathNodes                            = revisedPath.getNodes().map(v => v.gridIndex);
@@ -371,6 +370,198 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitProduceUnit, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitProduceUnit): void {
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const unitMap       = war.getUnitMap();
+    const launchUnitId  = action.getLaunchUnitId();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (path.getIsBlocked()) {
+        // nothing to do.
+    } else {
+        const gridIndex         = focusUnit.getGridIndex();
+        const producedUnitId    = unitMap.getNextUnitId();
+        const producedUnit      = new Units_Unit.Unit(true);
+        const playerIndex       = focusUnit.getPlayerIndex();
+        const gameConfig        = war.getGcData();
+        const unitType          = Helpers_Misc.getExisted(focusUnit.getProduceUnitTypeId(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitProduceUnit_01);
+        const unitTemplateCfg   = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType));
+        producedUnit.init(Units_Utils_Serialization.create({
+            unitType    : unitType,
+            unitId      : producedUnitId,
+            playerIndex : playerIndex,
+            gridIndex   : gridIndex.toProto().toJson(),
+
+            actionState  : Units_Constants.ActionStateId.Acted,
+            currentHp    : unitTemplateCfg.getMaxHp(),
+            aiMode       : null,
+            groupedTagId : null,
+            customNameId : null,
+
+            currentPromotion     : getPromotionForUnitProduceUnit(war, focusUnit, unitType),
+            isDiving             : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
+            isCoOnboard          : null,
+            currentBuildMaterial : unitTemplateCfg.getMaxBuildMaterial() ?? null,
+
+            aiWeightedDestination           : null,
+            forbiddenGroupedLocationIdArray : [],
+            buffArray                       : [],
+
+            primaryWeaponCurrentAmmo : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? null,
+            flareCurrentAmmo         : unitTemplateCfg.getFlareMaxAmmo() ?? null,
+            currentProduceMaterial   : unitTemplateCfg.getMaxProduceMaterial() ?? null,
+            currentFuel              : unitTemplateCfg.getMaxFuel(),
+            loaderUnitId             : focusUnit.getUnitId(),
+        }), gameConfig);
+        producedUnit.startRunning(war);
+
+        const player = war.getPlayerInTurn();
+        player.setFund(player.getFund() - focusUnit.getProduceUnitCost(), false);
+        unitMap.setNextUnitId(producedUnitId + 1);
+        unitMap.setUnitLoaded(producedUnit);
+        focusUnit.addAndValidateCurrentProduceMaterial(-1);
+
+        {
+            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
+            if (observerTeamIndexes != null) {
+                war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
+                    unitType                   : unitType,
+                    dstPlayerIndex             : playerIndex,
+                    normalizedHpGain           : producedUnit.getNormalizedCurrentHp(),
+                    normalizedHpLoss           : 0,
+                    unitGain                   : 1,
+                    unitLoss                   : 0,
+                    groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                }));
+            }
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitProduceUnit): Promise<void> {
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const unitMap       = war.getUnitMap();
+    const launchUnitId  = action.getLaunchUnitId();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (path.getIsBlocked()) {
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : path.getIsBlocked(),
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
+
+    } else {
+        const gridIndex         = focusUnit.getGridIndex();
+        const producedUnitId    = unitMap.getNextUnitId();
+        const producedUnit      = new Units_Unit.Unit(true);
+        const unitType          = Helpers_Misc.getExisted(focusUnit.getProduceUnitTypeId(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitProduceUnit_01);
+        const playerIndex       = focusUnit.getPlayerIndex();
+        const gameConfig        = war.getGcData();
+        const unitTemplateCfg   = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType));
+
+        producedUnit.init(Units_Utils_Serialization.create({
+            unitType    : unitType,
+            unitId      : producedUnitId,
+            playerIndex : playerIndex,
+            gridIndex   : gridIndex.toProto().toJson(),
+
+            actionState  : Units_Constants.ActionStateId.Acted,
+            currentHp    : unitTemplateCfg.getMaxHp(),
+            aiMode       : null,
+            groupedTagId : null,
+            customNameId : null,
+
+            currentPromotion     : getPromotionForUnitProduceUnit(war, focusUnit, unitType),
+            isDiving             : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
+            isCoOnboard          : null,
+            currentBuildMaterial : unitTemplateCfg.getMaxBuildMaterial() ?? null,
+
+            aiWeightedDestination           : null,
+            forbiddenGroupedLocationIdArray : [],
+            buffArray                       : [],
+
+            primaryWeaponCurrentAmmo : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? null,
+            flareCurrentAmmo         : unitTemplateCfg.getFlareMaxAmmo() ?? null,
+            currentProduceMaterial   : unitTemplateCfg.getMaxProduceMaterial() ?? null,
+            currentFuel              : unitTemplateCfg.getMaxFuel(),
+            loaderUnitId             : focusUnit.getUnitId(),
+        }), gameConfig);
+        producedUnit.startRunning(war);
+        producedUnit.flushDataToView();
+
+        const player = war.getPlayerInTurn();
+        player.setFund(player.getFund() - focusUnit.getProduceUnitCost(), true);
+        unitMap.setNextUnitId(producedUnitId + 1);
+        unitMap.setUnitLoaded(producedUnit);
+        focusUnit.addAndValidateCurrentProduceMaterial(-1);
+
+        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war : war, gridIndex : gridIndex });
+        {
+            if (observerTeamIndexes != null) {
+                war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
+                    unitType                   : unitType,
+                    dstPlayerIndex             : playerIndex,
+                    normalizedHpGain           : producedUnit.getNormalizedCurrentHp(),
+                    normalizedHpLoss           : 0,
+                    unitGain                   : 1,
+                    unitLoss                   : 0,
+                    groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                }));
+            }
+        }
+
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : path.getIsBlocked(),
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
+
+        if ((observerTeamIndexes?.length) &&
+            (war.getPlayerManager().getAllPlayers(false).some(v => (v.getUserId() != null) && (observerTeamIndexes.indexOf(v.getTeamIndex()) >= 0)))
+        ) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.UnitProduction);
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,10 +1,10 @@
 import {
-    Utils_ClientErrorCode,
     Helpers_Misc,
-    WarOperations_Executors_Utils_Common,
+    Utils_ClientErrorCode,
     WarOperations_Executors_Types,
-    type SinglePlayerWars_War,
+    WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
+    type SinglePlayerWars_War,
 } from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoSystemVoteForDraw.ts";
@@ -58,7 +58,32 @@ async function normalExeSystemVoteForDraw(war: BaseWar_Model_War.War, action: Wo
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemVoteForDraw): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemVoteForDraw, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemVoteForDraw): void {
+    const actionExtraData = action.getExtraData();
+    war.getDrawVoteManager().handleVote(
+        (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
+        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
+    );
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemVoteForDraw): Promise<void> {
+    const actionExtraData = action.getExtraData();
+    war.getDrawVoteManager().handleVote(
+        (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
+        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
+    );
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemVoteForDraw): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const allTileAppearanceInfosBeforeAction    = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction  = war.getVisibleThingsForEachTeam();
     const visibilityArrayFromPathsBeforeAction  = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());

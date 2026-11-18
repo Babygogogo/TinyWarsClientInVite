@@ -17,7 +17,6 @@ import {
     type BaseWar_Model_War,
     type WarOperations_Executors_Types,
 } from "../../../internal.ts";
-
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitDive } from "../../../proto/schema/CommonProto/WarOperation/WoUnitDive.ts";
 
@@ -135,7 +134,7 @@ async function normalExeUnitDive(war: BaseWar_Model_War.War, action: WoUnitDive)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitDive, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitDive, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const unitMap                               = war.getUnitMap();
     const pathNodes                             = revisedPath.getNodes().map(v => v.gridIndex);
     const launchUnitId                          = revisedPath.getLaunchUnitId();
@@ -177,6 +176,84 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitDive, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitDive): void {
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const unitMap       = war.getUnitMap();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    const isSuccessful  = !path.getIsBlocked();
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+    if (isSuccessful) {
+        focusUnit.setIsDiving(true);
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitDive): Promise<void> {
+    const gridVisualEffect  = war.getGridVisualEffect();
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const unitMap       = war.getUnitMap();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    const isSuccessful  = !path.getIsBlocked();
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+    if (isSuccessful) {
+        focusUnit.setIsDiving(true);
+    }
+
+    await focusUnit.moveViewAlongPath({
+        pathNodes           : pathNodes,
+        isDiving            : false,
+        isBlocked           : path.getIsBlocked(),
+        aiming              : null,
+        updateViewAfterMove : true,
+    });
+    if (isSuccessful) {
+        const endingGridIndex = pathNodes[pathNodes.length - 1];
+        if (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
+            war                 : war,
+            unitType            : focusUnit.getUnitTypeId(),
+            unitPlayerIndex     : focusUnit.getPlayerIndex(),
+            gridIndex           : endingGridIndex,
+            observerTeamIndexes : war.getPlayerManager().getWatcherTeamIndexesForSelf(),
+            isDiving            : false,
+            isInvisible         : focusUnit.checkIsInvisible(endingGridIndex),
+        })) {
+            gridVisualEffect?.showEffectDive(endingGridIndex);
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

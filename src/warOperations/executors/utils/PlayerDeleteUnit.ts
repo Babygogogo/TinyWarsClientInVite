@@ -93,7 +93,7 @@ async function normalExePlayerDeleteUnit(war: BaseWar_Model_War.War, action: WoP
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerDeleteUnit): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerDeleteUnit): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const gridIndex                             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(operation.getGridIndex()));
     const allTileAppearanceInfosBeforeAction    = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction  = war.getVisibleThingsForEachTeam();
@@ -123,6 +123,51 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoP
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): void {
+    const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getGridIndex()));
+    const focusUnit = war.getUnitMap().getUnitOnMap(gridIndex);
+    if (focusUnit) {
+        if (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
+            war.getFogMap().updateMapFromPathsByUnitAndPath({
+                unit           : focusUnit,
+                unitVisionInfo : focusUnit.getVisionInfo(),
+                path           : [gridIndex],
+            });
+        }
+
+        Destructions_Utils.destroyUnitOnMap(war, gridIndex, false);
+    }
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerDeleteUnit): Promise<void> {
+    const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getGridIndex()));
+    const focusUnit = war.getUnitMap().getUnitOnMap(gridIndex);
+    if (focusUnit) {
+        if (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
+            war.getFogMap().updateMapFromPathsByUnitAndPath({
+                unit           : focusUnit,
+                unitVisionInfo : focusUnit.getVisionInfo(),
+                path           : [gridIndex],
+            });
+        }
+
+        Destructions_Utils.destroyUnitOnMap(war, gridIndex, true);
+    }
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

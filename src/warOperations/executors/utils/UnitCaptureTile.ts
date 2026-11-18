@@ -20,7 +20,6 @@ import {
     type BaseWar_Model_War,
     type WarOperations_Executors_Types,
 } from "../../../internal.ts";
-
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitCaptureTile } from "../../../proto/schema/CommonProto/WarOperation/WoUnitCaptureTile.ts";
 
@@ -211,7 +210,7 @@ async function normalExeUnitCaptureTile(war: BaseWar_Model_War.War, action: WoUn
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitCaptureTile, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUnitCaptureTile, revisedPath: AuxiliaryTypes_MovePath.MovePath): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const unitMap                               = war.getUnitMap();
     const pathNodes                             = revisedPath.getNodes().map(v => v.gridIndex);
     const launchUnitId                          = revisedPath.getLaunchUnitId();
@@ -273,6 +272,133 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoU
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCaptureTile, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCaptureTile): void {
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const unitMap       = war.getUnitMap();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (path.getIsBlocked()) {
+        // nothing to do.
+    } else {
+        const destination       = focusUnit.getGridIndex();
+        const tile              = war.getTileMap().getTile(destination);
+        const captureAmount     = Helpers_Misc.getExisted(focusUnit.getFinalCaptureAmount(destination));
+        const maxCapturePoint   = Helpers_Misc.getExisted(tile.getMaxCapturePoint());
+        const newCapturePoint   = (tile.getCurrentCapturePoint()) + captureAmount;
+
+        if (newCapturePoint < maxCapturePoint) {
+            tile.setCurrentCapturePoint(newCapturePoint);
+        } else {
+            if (tile.getIsDefeatedOnCapture()) {
+                tile.getPlayer().setAliveState(Players_Constants.AliveStateId.Dying);
+            }
+
+            tile.resetByTypeAndPlayerIndex({
+                baseType    : tile.getBaseTypeId(),
+                objectType  : tile.getTemplateCfg().getTileObjectTypeIdAfterOwnerChanged() ?? tile.getObjectTypeId(),
+                playerIndex : focusUnit.getPlayerIndex(),
+            });
+            tile.setCurrentCapturePoint(0);
+        }
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoUnitCaptureTile): Promise<void> {
+    const unitMap       = war.getUnitMap();
+    const playerInTurn  = war.getPlayerInTurn();
+    const isSelfInTurn  = playerInTurn.getUserId() === Users_Model.getSelfUserId();
+    const path          = Helpers_Misc.getExisted(action.getPath());
+    const pathNodes     = path.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const launchUnitId  = action.getLaunchUnitId();
+    const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+    war.moveUnit({
+        pathNodes       : pathNodes,
+        launchUnitId    : launchUnitId,
+        fuelConsumption : path.getFuelConsumption(),
+    });
+    unitMap.setUnitOnMap(focusUnit);
+    focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
+
+    if (path.getIsBlocked()) {
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : true,
+            aiming              : null,
+            updateViewAfterMove : true,
+        });
+
+    } else {
+        const destination           = focusUnit.getGridIndex();
+        const tile                  = war.getTileMap().getTile(destination);
+        const captureAmount         = Helpers_Misc.getExisted(focusUnit.getFinalCaptureAmount(destination));
+        const maxCapturePoint       = Helpers_Misc.getExisted(tile.getMaxCapturePoint());
+        const currentCapturePoint   = tile.getCurrentCapturePoint();
+        const newCapturePoint       = currentCapturePoint + captureAmount;
+
+        if (newCapturePoint < maxCapturePoint) {
+            tile.setCurrentCapturePoint(newCapturePoint);
+        } else {
+            if (tile.getIsDefeatedOnCapture()) {
+                tile.getPlayer().setAliveState(Players_Constants.AliveStateId.Dying);
+            }
+
+            tile.resetByTypeAndPlayerIndex({
+                baseType    : tile.getBaseTypeId(),
+                objectType  : tile.getTemplateCfg().getTileObjectTypeIdAfterOwnerChanged() ?? tile.getObjectTypeId(),
+                playerIndex : focusUnit.getPlayerIndex(),
+            });
+            tile.setCurrentCapturePoint(0);
+        }
+
+        await focusUnit.moveViewAlongPath({
+            pathNodes           : pathNodes,
+            isDiving            : focusUnit.getIsDiving(),
+            isBlocked           : false,
+            aiming              : null,
+            updateViewAfterMove : false,
+        });
+        if (isSelfInTurn) {
+            await new Promise<void>(resolve => {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
+                    maxValue         : maxCapturePoint,
+                    newValue         : newCapturePoint,
+                    currentValue     : currentCapturePoint,
+                    callbackOnFinish : () => resolve(),
+                });
+            });
+        }
+        focusUnit.flushDataToView();
+        tile.flushDataToView();
+    }
+
+    WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
+
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

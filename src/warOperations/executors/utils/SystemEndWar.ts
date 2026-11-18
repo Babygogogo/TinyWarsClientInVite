@@ -1,12 +1,12 @@
 import {
+    FloatText,
+    Lang_Constants,
+    Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
     ReplayWar_Model_RwWarBase,
-    FloatText,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
-    Lang_Utils,
-    Lang_Constants,
     WarOperations_Executors_Types,
     WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
@@ -40,7 +40,7 @@ async function normalExeSystemEndWar(war: BaseWar_Model_War.War, action: WoSyste
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemEndWar): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoSystemEndWar): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
     const visibilityArrayFromPathsBeforeAction = war.getFogMap().getVisibilityArrayFromPaths(war.getPlayerIndexInTurn());
@@ -61,6 +61,29 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoS
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemEndWar, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): void {
+    war.setIsEnded(true);
+}
+
+async function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): Promise<void> {
+    const desc = await getDesc(war, action);
+    if (desc) {
+        FloatText.show(desc);
+    }
+
+    war.setIsEnded(true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

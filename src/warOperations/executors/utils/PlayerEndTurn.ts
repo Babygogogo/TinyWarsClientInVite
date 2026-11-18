@@ -46,7 +46,7 @@ function normalExePlayerEndTurn(war: BaseWar_Model_War.War, action: WoPlayerEndT
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerEndTurn): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
+export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoPlayerEndTurn): WarOperations_Executors_Types.ExecutionResultForInnerWarOperation {
     const allTileAppearanceInfosBeforeAction   = war.getTileMap().generateAllTileAppearanceInfos();
     const visibleThingsForEachTeamBeforeAction = war.getVisibleThingsForEachTeam();
     const changedThings                        = Turns_Phases_Handler.endPhaseMainAsInnerWar(war.getTurnManager());
@@ -66,6 +66,29 @@ export function executeForInnerWar(war: SinglePlayerWars_War.War, operation: WoP
             return woContainer;
         },
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerEndTurn, isFast: boolean): Promise<void> {
+    if (isFast) {
+        await fastExecuteAsUnifiedWar(war, action);
+    } else {
+        await normalExecuteAsUnifiedWar(war, action);
+    }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function fastExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerEndTurn): void {
+    const turnManager = war.getTurnManager();
+    Turns_Phases_Handler.endPhaseMainAsUnifiedWar(turnManager, true);
+    war.updateTilesAndUnitsOnVisibilityChanged(true);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function normalExecuteAsUnifiedWar(war: BaseWar_Model_War.War, action: WoPlayerEndTurn): void {
+    const turnManager = war.getTurnManager();
+    Turns_Phases_Handler.endPhaseMainAsUnifiedWar(turnManager, false);
+    war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
