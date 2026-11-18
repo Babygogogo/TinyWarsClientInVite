@@ -56,7 +56,7 @@ import {
     ResManager,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
-    SinglePlayerWars_AutoWarOpManager,
+    WarOperations_AutoWarOpManager,
     SinglePlayerWars_Provider,
     SingleRankedWars_Provider,
     Sounds_SoundPlayer,
@@ -378,7 +378,7 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
         coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 
-    await SinglePlayerWars_AutoWarOpManager.generateAndRunAutoOps(war);
+    await WarOperations_AutoWarOpManager.generateAndRunAutoOps(war);
 }
 export async function gotoMapEditorWar({ mapRawData, slotIndex, isReview, srcNormalMapIdForAddEvent, gridMarkData }: {
     mapRawData                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapRawData>;

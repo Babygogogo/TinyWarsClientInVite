@@ -496,7 +496,7 @@ export class Tile {
             groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % Locations_Constants.GroupSize));
         }
 
-        if (needUpdateView) {
+        if ((needUpdateView) && (this.getView())) {
             Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile : this });
         }
     }
@@ -511,7 +511,7 @@ export class Tile {
             }
         }
 
-        if (needUpdateView) {
+        if ((needUpdateView) && (this.getView())) {
             Notifications_Dispatcher.dispatch("BwTileHasLocationIdSet", { tile : this });
         }
     }
@@ -535,7 +535,7 @@ export class Tile {
         if (this.getIsHighlighted() !== isHighlighted) {
             this._isHighlighted = isHighlighted;
 
-            if (needUpdateView) {
+            if ((needUpdateView) && (this.getView())) {
                 Notifications_Dispatcher.dispatch("BwTileIsHighlightedChanged", { tile : this });
             }
         }
@@ -572,7 +572,7 @@ export class Tile {
             }
         }
 
-        if ((isUpdated) && (needUpdateView)) {
+        if ((isUpdated) && (needUpdateView) && (this.getView())) {
             this.flushDataToView();
             Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
                 tile : this,
@@ -589,7 +589,7 @@ export class Tile {
             this.setUnfixedBuffList([buff]);
         }
 
-        if (needUpdateView) {
+        if ((needUpdateView) && (this.getView())) {
             this.flushDataToView();
             Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
                 tile : this,
@@ -606,7 +606,7 @@ export class Tile {
             return false;
         }
 
-        if (needUpdateView) {
+        if ((needUpdateView) && (this.getView())) {
             this.flushDataToView();
             Notifications_Dispatcher.dispatch("BwTileBuffChanged", {
                 tile : this,
@@ -1143,7 +1143,7 @@ export class Tile {
         if (this.getCustomNameId() !== nameId) {
             this._customNameId = nameId;
 
-            if (needUpdateView) {
+            if ((needUpdateView) && (this.getView())) {
                 Notifications_Dispatcher.dispatch("BwTileCustomNameIdChanged");
             }
         }

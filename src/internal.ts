@@ -671,7 +671,7 @@ export * as SinglePlayerMode_View_SpmRankPage from "./singlePlayerMode/view/SpmR
 export * as SinglePlayerMode_View_SpmWarListPanel from "./singlePlayerMode/view/SpmWarListPanel.ts";
 export * as SinglePlayerWars_LocalGateway from "./singlePlayerWars/LocalGateway.ts";
 export * as SinglePlayerWars_Provider from "./singlePlayerWars/Provider.ts";
-export * as SinglePlayerWars_AutoWarOpManager from "./singlePlayerWars/AutoWarOpManager.ts";
+export * as WarOperations_AutoWarOpManager from "./warOperations/AutoWarOpManager.ts";
 export * as Retracts_RetractManager from "./retracts/RetractManager.ts";
 export * as SinglePlayerWar_View_SpwSidePanel from "./singlePlayerWar/view/SpwSidePanel.ts";
 export * as SinglePlayerWar_View_SpwTopPanel from "./singlePlayerWar/view/SpwTopPanel.ts";
@@ -686,7 +686,6 @@ export * as SingleRankRoom_View_SrrCreateSettingsPanel from "./singleRankRoom/vi
 export * as SingleRankedWars_War from "./singleRankedWars/War.ts";
 export * as SingleRankedWars_Constants from "./singleRankedWars/Constants.ts";
 export * as SingleRankedWars_Provider from "./singleRankedWars/Provider.ts";
-export * as SingleRankedWars_AutoWarOpManager from "./singleRankedWars/AutoWarOpManager.ts";
 export * as Sounds_Constants from "./sounds/Constants.ts";
 export * as Sounds_SoundPlayer from "./sounds/SoundPlayer.ts";
 export * as Sounds_Types from "./sounds/Types.ts";

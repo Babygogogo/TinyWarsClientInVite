@@ -15,7 +15,6 @@ import {
     SinglePlayerMode_Model_SpmProxy,
     SinglePlayerWars_Constants,
     SinglePlayerWars_War,
-    SingleRankedWars_AutoWarOpManager,
     SingleRankedWars_War,
     Turns_Constants,
     Users_Model,
@@ -49,7 +48,7 @@ export async function handlePlayerOpAndAutoOps(war: SinglePlayerWars_War.War, ac
         throw Helpers_Misc.newError(`Revised operation is null.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_03);
     }
 
-    await WarOperations_Executors_Executor.checkAndExecute(war, revisedOperation, false);
+    await WarOperations_Executors_Executor.checkAndExecuteAsUnifiedWar(war, revisedOperation, false);
 
     await generateAndRunAutoOps(war);
 }
@@ -87,7 +86,7 @@ export async function generateAndRunAutoOps(war: SinglePlayerWars_War.War): Prom
             break;
         }
 
-        await WarOperations_Executors_Executor.checkAndExecute(
+        await WarOperations_Executors_Executor.checkAndExecuteAsUnifiedWar(
             war,
             Helpers_Misc.getExisted(WarOperations_Revisers_Reviser.revise(war, data.warOperation, data.userId).operation),
             false,

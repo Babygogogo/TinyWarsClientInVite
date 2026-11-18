@@ -20,7 +20,7 @@ import {
     SingleFreeWars_War,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
-    SinglePlayerWars_AutoWarOpManager,
+    WarOperations_AutoWarOpManager,
     SinglePlayerWars_War,
     SingleRankedWars_War,
     Sounds_Constants,
@@ -433,7 +433,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateGroupPauseAi();
 
         if (!isPaused) {
-            SinglePlayerWars_AutoWarOpManager.generateAndRunAutoOps(war);
+            WarOperations_AutoWarOpManager.generateAndRunAutoOps(war);
         }
     }
 

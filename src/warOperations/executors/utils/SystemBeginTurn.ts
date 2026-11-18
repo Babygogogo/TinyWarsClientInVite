@@ -101,8 +101,8 @@ export async function executeAsInnerWar(war: SinglePlayerWars_War.War, operation
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn, isFast: boolean): Promise<void> {
-    if (!isFast) {
+export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
+    if (!isFastExecute) {
         const playerInTurn  = war.getPlayerInTurn();
         const playerIndex   = playerInTurn.getPlayerIndex();
         if ((playerIndex !== Players_Constants.PlayerIndex.Neutral)         &&
@@ -128,8 +128,8 @@ export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: Wo
     }
 
     const turnManager = war.getTurnManager();
-    await Turns_Phases_Handler.endPhaseStandbyAsInnerWar(turnManager);
-    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
+    await Turns_Phases_Handler.endPhaseStandbyAsUnifiedWar(turnManager, isFastExecute);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFastExecute);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

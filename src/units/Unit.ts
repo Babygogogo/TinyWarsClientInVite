@@ -2198,7 +2198,7 @@ export class Unit {
             }
         }
 
-        if ((isUpdated) && (needUpdateView)) {
+        if ((isUpdated) && (needUpdateView) && (this.getView())) {
             this.flushDataToView();
             Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
                 unit : this,
@@ -2215,7 +2215,7 @@ export class Unit {
             this.setBuffList([buff]);
         }
 
-        if (needUpdateView) {
+        if ((needUpdateView) && (this.getView())) {
             this.flushDataToView();
             Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
                 unit : this,
@@ -2232,7 +2232,7 @@ export class Unit {
             return false;
         }
 
-        if (needUpdateView) {
+        if ((needUpdateView) && (this.getView())) {
             this.flushDataToView();
             Notifications_Dispatcher.dispatch("BwUnitBuffChanged", {
                 unit : this,
@@ -2259,7 +2259,7 @@ export class Unit {
             throw Helpers_Misc.newError(`Invalid nameId: ${nameId}`);
         }
 
-        if (this.getCustomNameId() != nameId) {
+        if ((this.getCustomNameId() != nameId) && (this.getView())) {
             this._customNameId = nameId;
             Notifications_Dispatcher.dispatch("BwUnitCustomNameIdChanged");
         }

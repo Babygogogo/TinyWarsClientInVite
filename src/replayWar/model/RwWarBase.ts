@@ -495,7 +495,7 @@ export abstract class RwWarBase extends BaseWar_Model_War.War implements ReplayW
     }
     private async _doExecuteAction(action: WoContainer, isFastExecute: boolean): Promise<void> {
         this.setNextOperationId(this.getNextOperationId() + 1);
-        await WarOperations_Executors_Executor.checkAndExecute(this, action, isFastExecute);
+        await WarOperations_Executors_Executor.checkAndExecuteAsUnifiedWar(this, action, isFastExecute);
 
         const isInEnd = this.checkIsInEnd();
         if (isInEnd) {

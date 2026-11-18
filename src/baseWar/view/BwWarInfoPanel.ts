@@ -19,7 +19,7 @@ import {
     ReplayWar_Model_RwWarBase,
     SingleCustomWars_War,
     SingleFreeWars_War,
-    SinglePlayerWars_AutoWarOpManager,
+    WarOperations_AutoWarOpManager,
     SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
@@ -205,7 +205,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         war?.setIsViewingWarInfo(false);
 
         if (war instanceof SinglePlayerWars_War.War) {
-            SinglePlayerWars_AutoWarOpManager.generateAndRunAutoOps(war);
+            WarOperations_AutoWarOpManager.generateAndRunAutoOps(war);
         }
 
         await Promise.all([
