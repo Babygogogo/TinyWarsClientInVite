@@ -16,42 +16,25 @@ import type { WoUnitCrushUnit } from "../../../proto/schema/CommonProto/WarOpera
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitCrushUnit, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitCrushUnit): void {
-    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
-    WarOperations_Executors_Utils_Common.handleCommonExtraData({
-        war             : war,
-        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData()),
-        isFastExecute   : true,
-    });
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitCrushUnit): Promise<void> {
     const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
     const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData());
-    await war.showTempUnitMoveAnimation({
-        movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
-        aiming            : null,
-        callback          : undefined,
-    });
+    if (!isFast) {
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
+        });
 
-    // TODO 焦点部队移动到目标格子的动画
+        // TODO 焦点部队移动到目标格子的动画
+    }
 
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
         war             : war,
         commonExtraData : commonExtraData,
-        isFastExecute   : false,
+        isFastExecute   : isFast,
     });
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

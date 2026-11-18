@@ -22,48 +22,33 @@ import type { WoUnitSurface } from "../../../proto/schema/CommonProto/WarOperati
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitSurface, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitSurface): void {
     const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
-    WarOperations_Executors_Utils_Common.handleCommonExtraData({
-        war             : war,
-        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitSurface_00),
-        isFastExecute   : true,
-    });
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), isFast
+        ? Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitSurface_00
+        : Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitSurface_00);
+    if (!isFast) {
+        const gridVisualEffect  = war.getGridVisualEffect();
+        const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : undefined,
+        });
 
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitSurface): Promise<void> {
-    const gridVisualEffect  = war.getGridVisualEffect();
-    const actionExtraData   = Helpers_Misc.getExisted(action.getExtraData());
-    const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitSurface_00);
-    const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-    await war.showTempUnitMoveAnimation({
-        movingUnitAndPath : movingUnitAndPath,
-        aiming            : null,
-        callback          : undefined,
-    });
-
-    const movingPath    = movingUnitAndPath?.getPath();
-    const lastNode      = movingPath ? movingPath[movingPath?.length - 1] : null;
-    if ((lastNode?.getIsVisible()) && (!lastNode.getIsBlocked())) {
-        gridVisualEffect?.showEffectSurface(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitSurface_01));
+        const movingPath    = movingUnitAndPath?.getPath();
+        const lastNode      = movingPath ? movingPath[movingPath?.length - 1] : null;
+        if ((lastNode?.getIsVisible()) && (!lastNode.getIsBlocked())) {
+            gridVisualEffect?.showEffectSurface(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitSurface_01));
+        }
     }
 
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
         war             : war,
         commonExtraData : commonExtraData,
-        isFastExecute   : false,
+        isFastExecute   : isFast,
     });
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -25,72 +25,57 @@ import type { WoUnitBuildTile } from "../../../proto/schema/CommonProto/WarOpera
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitBuildTile, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitBuildTile): void {
     const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
-    WarOperations_Executors_Utils_Common.handleCommonExtraData({
-        war             : war,
-        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBuildTile_00),
-        isFastExecute   : true,
-    });
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), isFast
+        ? Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBuildTile_00
+        : Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_00);
+    if (!isFast) {
+        const isSelfInTurn      = war.getPlayerInTurn().getUserId() === Users_Model.getSelfUserId();
+        const tileMap           = war.getTileMap();
+        const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : async () => {
+                const movingPath    = movingUnitAndPath?.getPath();
+                const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
+                if ((isSelfInTurn) && (lastNode) && (!lastNode.getIsBlocked())) {
+                    const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()));
+                    const tile                  = tileMap.getTile(gridIndex);
+                    const maxBuildPoint         = Helpers_Misc.getExisted(tile.getMaxBuildPoint());
+                    const currentBuildPoint     = tile.getCurrentBuildPoint();
+                    const tileDataAfterAction   = Helpers_Misc.getExisted(
+                        commonExtraData
+                            .getTileArrayAfterAction()
+                            .find(v =>
+                                gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
+                            ),
+                        Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01,
+                    );
+                    const rawNewBuildPoint = tileDataAfterAction.getCurrentBuildPoint();
 
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitBuildTile): Promise<void> {
-    const isSelfInTurn      = war.getPlayerInTurn().getUserId() === Users_Model.getSelfUserId();
-    const tileMap           = war.getTileMap();
-    const actionExtraData   = Helpers_Misc.getExisted(action.getExtraData());
-    const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_00);
-    const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-    await war.showTempUnitMoveAnimation({
-        movingUnitAndPath : movingUnitAndPath,
-        aiming            : null,
-        callback          : async () => {
-            const movingPath    = movingUnitAndPath?.getPath();
-            const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
-            if ((isSelfInTurn) && (lastNode) && (!lastNode.getIsBlocked())) {
-                const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()));
-                const tile                  = tileMap.getTile(gridIndex);
-                const maxBuildPoint         = Helpers_Misc.getExisted(tile.getMaxBuildPoint());
-                const currentBuildPoint     = tile.getCurrentBuildPoint();
-                const tileDataAfterAction   = Helpers_Misc.getExisted(
-                    commonExtraData
-                        .getTileArrayAfterAction()
-                        .find(v =>
-                            gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
-                        ),
-                    Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01,
-                );
-                const rawNewBuildPoint = tileDataAfterAction.getCurrentBuildPoint();
-
-                await new Promise<void>(resolve => {
-                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
-                        maxValue     : maxBuildPoint,
-                        currentValue : currentBuildPoint,
-                        newValue     : rawNewBuildPoint > currentBuildPoint
-                            ? rawNewBuildPoint
-                            : Math.max(rawNewBuildPoint, maxBuildPoint),
-                        callbackOnFinish : () => resolve(),
+                    await new Promise<void>(resolve => {
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
+                            maxValue     : maxBuildPoint,
+                            currentValue : currentBuildPoint,
+                            newValue     : rawNewBuildPoint > currentBuildPoint
+                                ? rawNewBuildPoint
+                                : Math.max(rawNewBuildPoint, maxBuildPoint),
+                            callbackOnFinish : () => resolve(),
+                        });
                     });
-                });
-            }
-        },
-    });
+                }
+            },
+        });
+    }
 
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
         war             : war,
         commonExtraData : commonExtraData,
-        isFastExecute   : false,
+        isFastExecute   : isFast,
     });
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

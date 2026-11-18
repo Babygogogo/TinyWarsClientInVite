@@ -28,54 +28,39 @@ import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerializa
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitLaunchSilo, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitLaunchSilo): void {
     const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
-    WarOperations_Executors_Utils_Common.handleCommonExtraData({
-        war             : war,
-        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitLaunchFlare_00),
-        isFastExecute   : true,
-    });
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), isFast
+        ? Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitLaunchFlare_00
+        : Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchSilo_00);
+    if (!isFast) {
+        const gridVisualEffect  = war.getGridVisualEffect();
+        const unitMap           = war.getUnitMap();
+        const mapSize           = unitMap.getMapSize();
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
+        });
 
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitLaunchSilo): Promise<void> {
-    const gridVisualEffect  = war.getGridVisualEffect();
-    const unitMap           = war.getUnitMap();
-    const mapSize           = unitMap.getMapSize();
-    const actionExtraData   = Helpers_Misc.getExisted(action.getExtraData());
-    const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchSilo_00);
-    await war.showTempUnitMoveAnimation({
-        movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
-        aiming            : null,
-        callback          : undefined,
-    });
-
-    // TODO: 后端没有告诉前端是哪个silo被发射了，所以不知道具体发射参数，只能在配置里瞎找；如果配置里存在多个不同的发射参数，会导致回放播放视觉效果不准确；不过由于部队和地形信息会另外发送，所以不会导致回放数据出错
-    // 修改方法是让后端把发射参数直接告诉前端，这样可以避免信息泄露
-    const launchSiloParams  = Helpers_Misc.getExisted([...war.getGcData().getTileTemplateCfgDict().values()].find(v => v.getLaunchSiloParams() != null)?.getLaunchSiloParams());
-    const targetGridIndex   = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(actionExtraData.getTargetGridIndex());
-    if (targetGridIndex) {
-        for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize : mapSize })) {
-            gridVisualEffect?.showEffectSiloExplosion(grid);
+        // TODO: 后端没有告诉前端是哪个silo被发射了，所以不知道具体发射参数，只能在配置里瞎找；如果配置里存在多个不同的发射参数，会导致回放播放视觉效果不准确；不过由于部队和地形信息会另外发送，所以不会导致回放数据出错
+        // 修改方法是让后端把发射参数直接告诉前端，这样可以避免信息泄露
+        const launchSiloParams  = Helpers_Misc.getExisted([...war.getGcData().getTileTemplateCfgDict().values()].find(v => v.getLaunchSiloParams() != null)?.getLaunchSiloParams());
+        const targetGridIndex   = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(actionExtraData.getTargetGridIndex());
+        if (targetGridIndex) {
+            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : launchSiloParams[2], mapSize : mapSize })) {
+                gridVisualEffect?.showEffectSiloExplosion(grid);
+            }
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
         }
-        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Explode);
     }
 
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
         war             : war,
         commonExtraData : commonExtraData,
-        isFastExecute   : false,
+        isFastExecute   : isFast,
     });
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

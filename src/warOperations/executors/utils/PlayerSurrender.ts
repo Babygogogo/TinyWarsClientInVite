@@ -10,7 +10,6 @@ import {
     ReplayWar_Model_RwWarBase,
     SinglePlayerWars_War,
     TestWar_Model_TwWar,
-    Utils_ClientErrorCode,
     WarOperations_Executors_Types,
     WarOperations_Executors_Utils_Common,
     type BaseWar_Model_War,
@@ -20,40 +19,27 @@ import type { WoPlayerSurrender } from "../../../proto/schema/CommonProto/WarOpe
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerSurrender, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerSurrender): void {
-    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
-    WarOperations_Executors_Utils_Common.handleCommonExtraData({
-        war             : war,
-        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerSurrender_00),
-        isFastExecute   : true,
-    });
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerSurrender): Promise<void> {
-    const desc = await getDesc(war, action);
-    if (desc) {
-        FloatText.show(desc);
+    if (!isFast) {
+        const desc = await getDesc(war, action);
+        if (desc) {
+            FloatText.show(desc);
+        }
     }
 
     const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
-    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerSurrender_00);
-    await war.showTempUnitMoveAnimation({
-        movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
-        aiming            : null,
-        callback          : undefined,
-    });
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData());
+    if (!isFast) {
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : commonExtraData.getMovingUnitAndPath(),
+            aiming            : null,
+            callback          : undefined,
+        });
+    }
 
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
         war             : war,
         commonExtraData : commonExtraData,
-        isFastExecute   : false,
+        isFastExecute   : isFast,
     });
 }
 

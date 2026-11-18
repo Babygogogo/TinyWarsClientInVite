@@ -25,73 +25,58 @@ import type { WoUnitCaptureTile } from "../../../proto/schema/CommonProto/WarOpe
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitCaptureTile, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitCaptureTile): void {
     const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
-    WarOperations_Executors_Utils_Common.handleCommonExtraData({
-        war             : war,
-        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitCaptureTile_00),
-        isFastExecute   : true,
-    });
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), isFast
+        ? Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitCaptureTile_00
+        : Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_00);
+    if (!isFast) {
+        const tileMap           = war.getTileMap();
+        const playerInTurn      = war.getPlayerInTurn();
+        const isSelfInTurn      = playerInTurn.getUserId() === Users_Model.getSelfUserId();
+        const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : async () => {
+                const movingPath    = movingUnitAndPath?.getPath();
+                const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
+                if ((isSelfInTurn) && (lastNode) && (!lastNode.getIsBlocked())) {
+                    const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_01);
+                    const tile                  = tileMap.getTile(gridIndex);
+                    const maxCapturePoint       = Helpers_Misc.getExisted(tile.getMaxCapturePoint(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_02);
+                    const currentCapturePoint   = tile.getCurrentCapturePoint();
+                    const tileDataAfterAction   = Helpers_Misc.getExisted(
+                        commonExtraData
+                            .getTileArrayAfterAction()
+                            .find(v =>
+                                gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
+                            ),
+                        Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_04,
+                    );
+                    const rawNewCapturePoint   = tileDataAfterAction.getCurrentCapturePoint();
 
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitCaptureTile): Promise<void> {
-    const actionExtraData   = Helpers_Misc.getExisted(action.getExtraData());
-    const tileMap           = war.getTileMap();
-    const playerInTurn      = war.getPlayerInTurn();
-    const isSelfInTurn      = playerInTurn.getUserId() === Users_Model.getSelfUserId();
-    const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_00);
-    const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-    await war.showTempUnitMoveAnimation({
-        movingUnitAndPath : movingUnitAndPath,
-        aiming            : null,
-        callback          : async () => {
-            const movingPath    = movingUnitAndPath?.getPath();
-            const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
-            if ((isSelfInTurn) && (lastNode) && (!lastNode.getIsBlocked())) {
-                const gridIndex             = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_01);
-                const tile                  = tileMap.getTile(gridIndex);
-                const maxCapturePoint       = Helpers_Misc.getExisted(tile.getMaxCapturePoint(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_02);
-                const currentCapturePoint   = tile.getCurrentCapturePoint();
-                const tileDataAfterAction   = Helpers_Misc.getExisted(
-                    commonExtraData
-                        .getTileArrayAfterAction()
-                        .find(v =>
-                            gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
-                        ),
-                    Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_04,
-                );
-                const rawNewCapturePoint   = tileDataAfterAction.getCurrentCapturePoint();
-
-                await new Promise<void>(resolve => {
-                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
-                        maxValue     : maxCapturePoint,
-                        currentValue : currentCapturePoint,
-                        newValue     : rawNewCapturePoint > currentCapturePoint
-                            ? rawNewCapturePoint
-                            : Math.max(rawNewCapturePoint, maxCapturePoint),
-                        callbackOnFinish : () => resolve(),
+                    await new Promise<void>(resolve => {
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
+                            maxValue     : maxCapturePoint,
+                            currentValue : currentCapturePoint,
+                            newValue     : rawNewCapturePoint > currentCapturePoint
+                                ? rawNewCapturePoint
+                                : Math.max(rawNewCapturePoint, maxCapturePoint),
+                            callbackOnFinish : () => resolve(),
+                        });
                     });
-                });
-            }
-        },
-    });
+                }
+            },
+        });
+    }
 
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
         war             : war,
         commonExtraData : commonExtraData,
-        isFastExecute   : false,
+        isFastExecute   : isFast,
     });
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

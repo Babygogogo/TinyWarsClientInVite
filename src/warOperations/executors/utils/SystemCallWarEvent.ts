@@ -12,33 +12,21 @@ import type { WoSystemCallWarEvent } from "../../../proto/schema/CommonProto/War
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-async function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<void> {
-    const warEventManager = war.getWarEventManager();
-    warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
-    await warEventManager.callWarEventAsOuterWar(action, true);
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent): Promise<void> {
-    const desc = await getDesc(war, action);
-    if (desc) {
-        FloatText.show(desc);
+    if (!isFast) {
+        const desc = await getDesc(war, action);
+        if (desc) {
+            FloatText.show(desc);
+        }
     }
 
     const warEventManager = war.getWarEventManager();
     warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
-    await warEventManager.callWarEventAsOuterWar(action, false);
+    await warEventManager.callWarEventAsOuterWar(action, isFast);
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
-    war.getView()?.updatePersistentText();
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
+    if (!isFast) {
+        war.getView()?.updatePersistentText();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

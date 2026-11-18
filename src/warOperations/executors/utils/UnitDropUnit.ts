@@ -27,70 +27,45 @@ import type { WoUnitDropUnit } from "../../../proto/schema/CommonProto/WarOperat
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitDropUnit, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitDropUnit): void {
-    const actionExtraData   = Helpers_Misc.getExisted(action.getExtraData());
-    const unitMap           = war.getUnitMap();
-    WarOperations_Executors_Utils_Common.handleCommonExtraData({
-        war             : war,
-        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitDropUnit_00),
-        isFastExecute   : true,
-    });
-
-    {
-        for (const data of actionExtraData.getDroppingUnitAndPathArray()) {
-            const unitId = data.getUnit()?.getUnitId() ?? 0;
-            if (unitMap.getUnitLoadedById(unitId) != null) {
-                unitMap.deleteUnitLoaded(unitId).dispose();
-            }
-        }
-    }
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitDropUnit): Promise<void> {
-    const actionExtraData           = Helpers_Misc.getExisted(action.getExtraData());
-    const gridVisualEffect          = war.getGridVisualEffect();
-    const unitMap                   = war.getUnitMap();
-    const commonExtraData           = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDropUnit_00);
-    const movingUnitAndPath         = commonExtraData.getMovingUnitAndPath();
-    const droppingUnitAndPathArray  = actionExtraData.getDroppingUnitAndPathArray();
-    await war.showTempUnitMoveAnimation({
-        movingUnitAndPath : movingUnitAndPath,
-        aiming            : null,
-        callback          : async extraUnitView => {
-            const movingPath    = movingUnitAndPath?.getPath();
-            const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
-            if (lastNode) {
-                if (!lastNode.getIsVisible()) {
-                    extraUnitView?.setIsVisible(false);
-                } else {
-                    if (actionExtraData.getIsDropBlocked()) {
-                        gridVisualEffect?.showEffectBlock(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDropUnit_01));
-                        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
+    const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), isFast
+        ? Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitDropUnit_00
+        : Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDropUnit_00);
+    const unitMap = war.getUnitMap();
+    const droppingUnitAndPathArray = actionExtraData.getDroppingUnitAndPathArray();
+    if (!isFast) {
+        const gridVisualEffect          = war.getGridVisualEffect();
+        const movingUnitAndPath         = commonExtraData.getMovingUnitAndPath();
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : async extraUnitView => {
+                const movingPath    = movingUnitAndPath?.getPath();
+                const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
+                if (lastNode) {
+                    if (!lastNode.getIsVisible()) {
+                        extraUnitView?.setIsVisible(false);
+                    } else {
+                        if (actionExtraData.getIsDropBlocked()) {
+                            gridVisualEffect?.showEffectBlock(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitDropUnit_01));
+                            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
+                        }
                     }
                 }
-            }
 
-            await Promise.all((droppingUnitAndPathArray).map(v => war.showTempUnitMoveAnimation({
-                movingUnitAndPath : v,
-                aiming            : null,
-                callback          : undefined,
-            })));
-        },
-    });
+                await Promise.all((droppingUnitAndPathArray).map(v => war.showTempUnitMoveAnimation({
+                    movingUnitAndPath : v,
+                    aiming            : null,
+                    callback          : undefined,
+                })));
+            },
+        });
+    }
 
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
         war             : war,
         commonExtraData : commonExtraData,
-        isFastExecute   : false,
+        isFastExecute   : isFast,
     });
 
     {
@@ -100,7 +75,9 @@ async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUni
             const loadedUnit    = unitMap.getUnitLoadedById(unitId);
             if (loadedUnit != null) {
                 unitMap.deleteUnitLoaded(unitId).dispose();
-                affectedLoaderUnits.add(unitMap.getUnitById(Helpers_Misc.getExisted(loadedUnit.getLoaderUnitId())));
+                if (!isFast) {
+                    affectedLoaderUnits.add(unitMap.getUnitById(Helpers_Misc.getExisted(loadedUnit.getLoaderUnitId())));
+                }
             }
         }
         for (const unit of affectedLoaderUnits) {
@@ -108,7 +85,7 @@ async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUni
         }
     }
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

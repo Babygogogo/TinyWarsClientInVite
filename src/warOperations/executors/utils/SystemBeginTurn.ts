@@ -21,51 +21,34 @@ import type { WoSystemBeginTurn } from "../../../proto/schema/CommonProto/WarOpe
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-async function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
-    const turnManager = war.getTurnManager();
-    await Turns_Phases_Handler.endPhaseStandbyAsOuterWar(turnManager, action, true);
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): Promise<void> {
-    // const desc = await war.getDescForExeSystemBeginTurn(action);
-    // (desc) && (FloatText.show(desc));
-
-    // return war.getTurnManager().endPhaseWaitBeginTurn(action);
-
-    const playerInTurn  = war.getPlayerInTurn();
-    const playerIndex   = playerInTurn.getPlayerIndex();
-    if ((playerIndex !== Players_Constants.PlayerIndex.Neutral)         &&
-        (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Dead)
-    ) {
-        const nickname = await playerInTurn.getNickname();
-        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (!LocalData_Storage.getIsShowReplayTurnStartPopup())) {
-            FloatText.show(`[P${playerIndex} ${nickname}] ${Lang_Utils.getText(Lang_Constants.TextType.B0679)}`);
-        } else {
-            await new Promise<void>(resolve => {
-                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBeginTurnPanel, {
-                    gameConfig        : war.getGcData(),
-                    playerIndex       : playerIndex,
-                    teamIndex         : playerInTurn.getTeamIndex(),
-                    nickname          : nickname,
-                    coId              : playerInTurn.getCoId(),
-                    unitAndTileSkinId : playerInTurn.getUnitAndTileSkinId(),
-                    callbackOnFinish  : () => resolve(),
+    if (!isFast) {
+        const playerInTurn  = war.getPlayerInTurn();
+        const playerIndex   = playerInTurn.getPlayerIndex();
+        if ((playerIndex !== Players_Constants.PlayerIndex.Neutral)         &&
+            (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Dead)
+        ) {
+            const nickname = await playerInTurn.getNickname();
+            if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (!LocalData_Storage.getIsShowReplayTurnStartPopup())) {
+                FloatText.show(`[P${playerIndex} ${nickname}] ${Lang_Utils.getText(Lang_Constants.TextType.B0679)}`);
+            } else {
+                await new Promise<void>(resolve => {
+                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBeginTurnPanel, {
+                        gameConfig        : war.getGcData(),
+                        playerIndex       : playerIndex,
+                        teamIndex         : playerInTurn.getTeamIndex(),
+                        nickname          : nickname,
+                        coId              : playerInTurn.getCoId(),
+                        unitAndTileSkinId : playerInTurn.getUnitAndTileSkinId(),
+                        callbackOnFinish  : () => resolve(),
+                    });
                 });
-            });
+            }
         }
     }
 
     const turnManager = war.getTurnManager();
-    await Turns_Phases_Handler.endPhaseStandbyAsOuterWar(turnManager, action, false);
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    await Turns_Phases_Handler.endPhaseStandbyAsOuterWar(turnManager, action, isFast);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -21,42 +21,27 @@ import type { WoUnitBeLoaded } from "../../../proto/schema/CommonProto/WarOperat
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitBeLoaded, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitBeLoaded): void {
     const actionExtraData = Helpers_Misc.getExisted(action.getExtraData());
-    WarOperations_Executors_Utils_Common.handleCommonExtraData({
-        war             : war,
-        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBeLoaded_00),
-        isFastExecute   : true,
-    });
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUnitBeLoaded): Promise<void> {
-    const unitMap           = war.getUnitMap();
-    const actionExtraData   = Helpers_Misc.getExisted(action.getExtraData());
-    const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBeLoaded_00);
-    const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
-    await war.showTempUnitMoveAnimation({
-        movingUnitAndPath : movingUnitAndPath,
-        aiming            : null,
-        callback          : undefined,
-    });
+    const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), isFast
+        ? Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBeLoaded_00
+        : Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBeLoaded_00);
+    const movingUnitAndPath = isFast ? null : commonExtraData.getMovingUnitAndPath();
+    if (!isFast) {
+        await war.showTempUnitMoveAnimation({
+            movingUnitAndPath : movingUnitAndPath,
+            aiming            : null,
+            callback          : undefined,
+        });
+    }
 
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
         war             : war,
         commonExtraData : commonExtraData,
-        isFastExecute   : false,
+        isFastExecute   : isFast,
     });
 
-    {
+    if (!isFast) {
+        const unitMap       = war.getUnitMap();
         const movingPath    = movingUnitAndPath?.getPath();
         const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
         if ((lastNode) && (lastNode.getIsVisible()) && (!lastNode.getIsBlocked())) {
@@ -65,7 +50,7 @@ async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoUni
         }
     }
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

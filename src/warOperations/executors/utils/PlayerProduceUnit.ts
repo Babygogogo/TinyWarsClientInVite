@@ -36,21 +36,8 @@ import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerializa
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit): void {
-    handlePlayerProduceUnit(war, action, true);
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit): void {
-    handlePlayerProduceUnit(war, action, false);
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    handlePlayerProduceUnit(war, action, isFast);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

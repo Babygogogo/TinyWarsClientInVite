@@ -16,23 +16,9 @@ import type { WoPlayerEndTurn } from "../../../proto/schema/CommonProto/WarOpera
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerEndTurn, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerEndTurn): void {
     const turnManager = war.getTurnManager();
-    Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, true);
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerEndTurn): void {
-    const turnManager = war.getTurnManager();
-    Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, false);
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    Turns_Phases_Handler.endPhaseMainAsOuterWar(turnManager, action, isFast);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

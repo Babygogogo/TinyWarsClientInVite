@@ -18,76 +18,45 @@ import type { WoPlayerUseCoSkill } from "../../../proto/schema/CommonProto/WarOp
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerUseCoSkill, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerUseCoSkill): void {
     const playerInTurn      = war.getPlayerInTurn();
     const actionExtraData   = Helpers_Misc.getExisted(action.getExtraData());
-    const skillType         = Helpers_Misc.getExisted(actionExtraData.getSkillType(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_00);
-    const skillIdArray      = playerInTurn.getCoSkills(skillType);
-    const skillDataArray    = actionExtraData.getSkillDataArray();
-    for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-        CoSkills_Utils_Executor.executeInstantSkillAsOuterWar({
-            player            : playerInTurn,
-            skillId           : skillIdArray[skillIndex],
-            skillData         : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_02),
-            targetGridIndexes : action.getTargetGridIndexArray(),
-            isFastExecute     : true,
-        });
-    }
-
-    WarOperations_Executors_Utils_Common.handleCommonExtraData({
-        war             : war,
-        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_03),
-        isFastExecute   : true,
-    });
-
-    war.updateTilesAndUnitsOnVisibilityChanged(true);
-}
-
-function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoPlayerUseCoSkill): void {
-    const gridVisualEffect  = war.getGridVisualEffect();
-    const unitMap           = war.getUnitMap();
-    const playerInTurn      = war.getPlayerInTurn();
-    const actionExtraData   = Helpers_Misc.getExisted(action.getExtraData());
-    const playerIndex       = playerInTurn.getPlayerIndex();
-    const skillType         = Helpers_Misc.getExisted(actionExtraData.getSkillType(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_00);
+    const skillType         = Helpers_Misc.getExisted(actionExtraData.getSkillType());
     const skillDataArray    = actionExtraData.getSkillDataArray();
     const skillIdArray      = playerInTurn.getCoSkills(skillType);
     for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
         CoSkills_Utils_Executor.executeInstantSkillAsOuterWar({
             player            : playerInTurn,
             skillId           : skillIdArray[skillIndex],
-            skillData         : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_02),
+            skillData         : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex)),
             targetGridIndexes : action.getTargetGridIndexArray(),
-            isFastExecute     : false,
+            isFastExecute     : isFast,
         });
     }
 
     WarOperations_Executors_Utils_Common.handleCommonExtraData({
         war             : war,
-        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_03),
-        isFastExecute   : false,
+        commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData()),
+        isFastExecute   : isFast,
     });
 
-    for (const unit of unitMap.getAllUnitsOnMap()) {
-        if (unit.getPlayerIndex() === playerIndex) {
-            unit.flushDataToView();
+    if (!isFast) {
+        const gridVisualEffect = war.getGridVisualEffect();
+        const unitMap          = war.getUnitMap();
+        const playerIndex      = playerInTurn.getPlayerIndex();
+        for (const unit of unitMap.getAllUnitsOnMap()) {
+            if (unit.getPlayerIndex() === playerIndex) {
+                unit.flushDataToView();
 
-            if (skillType === CoSkills_Constants.SkillTypeId.Power) {
-                gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
-            } else {
-                gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                if (skillType === CoSkills_Constants.SkillTypeId.Power) {
+                    gridVisualEffect?.showEffectCoPowerActivation(unit.getGridIndex());
+                } else {
+                    gridVisualEffect?.showEffectCoSuperPowerActivation(unit.getGridIndex());
+                }
             }
         }
     }
 
-    war.updateTilesAndUnitsOnVisibilityChanged(false);
+    war.updateTilesAndUnitsOnVisibilityChanged(isFast);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

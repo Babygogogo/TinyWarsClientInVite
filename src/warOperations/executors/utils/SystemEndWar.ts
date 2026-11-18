@@ -16,22 +16,11 @@ import type { WoSystemEndWar } from "../../../proto/schema/CommonProto/WarOperat
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemEndWar, isFast: boolean): Promise<void> {
-    if (isFast) {
-        await fastExecuteAsOuterWar(war, action);
-    } else {
-        await normalExecuteAsOuterWar(war, action);
-    }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function fastExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): void {
-    war.setIsEnded(true);
-}
-
-async function normalExecuteAsOuterWar(war: BaseWar_Model_War.War, action: WoSystemEndWar): Promise<void> {
-    const desc = await getDesc(war, action);
-    if (desc) {
-        FloatText.show(desc);
+    if (!isFast) {
+        const desc = await getDesc(war, action);
+        if (desc) {
+            FloatText.show(desc);
+        }
     }
 
     war.setIsEnded(true);
