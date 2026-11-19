@@ -1,13 +1,12 @@
 import {
     BaseWar_Model_War,
-    Destructions_Utils,
     Helpers_Collection,
     Players_Constants,
-    Players_Player,
     Teams_Constants,
     Timer_TimerModel,
     Visibilities_Utils,
     WarEvents_Manager,
+    type Players_Player,
 } from "../../internal.ts";
 
 export abstract class MpwWar extends BaseWar_Model_War.War {
@@ -20,39 +19,8 @@ export abstract class MpwWar extends BaseWar_Model_War.War {
     }
 
     public updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void {
-        const watcherTeamIndexes    = this.getPlayerManager().getWatcherTeamIndexesForSelf();
-        const visibleUnitsOnMap     = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(this, watcherTeamIndexes);
-        for (const unit of this.getUnitMap().getAllUnitsOnMap()) {
-            if (visibleUnitsOnMap.has(unit)) {
-                if (!isFastExecute) {
-                    unit.setViewVisible(true);
-                }
-            } else {
-                Destructions_Utils.removeUnitOnMap(this, unit.getGridIndex());
-            }
-        }
-
-        const visibleTiles  = Visibilities_Utils.getAllTilesVisibleToTeams(this, watcherTeamIndexes);
-        const tileMap       = this.getTileMap();
-        for (const tile of tileMap.getAllTiles()) {
-            if (visibleTiles.has(tile)) {
-                tile.setHasFog(false);
-            } else {
-                if (!tile.getHasFog()) {
-                    tile.resetTileDataAsHasFog();
-                }
-            }
-
-            if (!isFastExecute) {
-                tile.flushDataToView();
-            }
-        }
-
-        if (!isFastExecute) {
-            tileMap.getView()?.updateCoZone();
-        }
-
-        this._handleVisionTeamIndex(watcherTeamIndexes, isFastExecute);
+        Visibilities_Utils.updateTilesAndUnitsAsOuterWar(this, isFastExecute);
+        this._handleVisionTeamIndex(this.getPlayerManager().getWatcherTeamIndexesForSelf(), isFastExecute);
     }
     private _handleVisionTeamIndex(watcherTeamIndexes: Set<number>, isFastExecute: boolean): void {
         const visionTeamIndex = this.getVisionTeamIndex();

@@ -77,12 +77,6 @@ export async function checkAndExecuteAsOuterWar(war: BaseWar_Model_War.War, acti
         if (checkIsPlayerManualOperation(action)) {
             war.getWarStatisticsManager().tickPlayerManualOperationsCount(turnIndex, playerIndex);
         }
-
-        if ((war instanceof SinglePlayerWars_War.War) ||
-            (war instanceof ReplayWar_Model_RwWar.RwWar)
-        ) {
-            war.getTaskObjectiveManager().autoUpdateAllCurrentProgresses();
-        }
     }
 
     if (actionPlanner) {
@@ -260,8 +254,7 @@ async function executeActionAsOuterWar(war: BaseWar_Model_War.War, action: WoCon
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function executeAsInnerWar(war: SinglePlayerWars_War.War, revisedResult: WarOperations_Revisers_Result.Result, requesterUserId: number): Promise<Map<number, WoContainer>> {
+export async function executeAsInnerWar(war: SinglePlayerWars_War.War, revisedResult: WarOperations_Revisers_Result.Result): Promise<Map<number, WoContainer>> {
     {
         const errorCode = revisedResult.errorCode;
         if (errorCode !== Utils_ClientErrorCode.ClientErrorCode.NoError) {
@@ -278,6 +271,7 @@ export async function executeAsInnerWar(war: SinglePlayerWars_War.War, revisedRe
     const turnManager   = war.getTurnManager();
     const turnIndex     = turnManager.getTurnIndex();
     const playerIndex   = turnManager.getPlayerIndexInTurn();
+    const hadFog        = war.getFogMap().checkHasFogCurrently();
 
     let outerWarOpCreator: WarOperations_Executors_Types.ExecutionResultForInnerWarOperation | undefined;
     {
@@ -489,10 +483,12 @@ export async function executeAsInnerWar(war: SinglePlayerWars_War.War, revisedRe
         war.getWarStatisticsManager().tickPlayerManualOperationsCount(turnIndex, playerIndex);
     }
 
-    return outerWarOpCreator(
-        war.getTaskObjectiveManager().autoUpdateAllCurrentProgresses(),
-        operationId,
-    );
+    const extraChangedThings = war.getTaskObjectiveManager().autoUpdateAllCurrentProgresses();
+    if (hadFog !== war.getFogMap().checkHasFogCurrently()) {
+        extraChangedThings.addPlayers(war.getPlayerManager().getAllPlayers(true));
+    }
+
+    return outerWarOpCreator(extraChangedThings, operationId);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

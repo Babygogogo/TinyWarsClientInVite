@@ -74,7 +74,6 @@ export abstract class War {
     private readonly _commonSettingManager  = new BaseWar_Model_BwCommonSettingManager.BwCommonSettingManager();
     private readonly _playerManager         = new Players_PlayerManager.PlayerManager();
 
-    private readonly _isNeedView    : boolean;
     private _view                   : BaseWar_View_WarView.WarView | undefined;
 
     private _gameConfig             : GameConfigs_GameConfig.GameConfig | null = null;
@@ -87,7 +86,6 @@ export abstract class War {
     private _overridingBgmCode      : number | null = null;
 
     protected constructor(isNeedView: boolean) {
-        this._isNeedView        = isNeedView;
         this._weatherManager    = new Weathers_Manager.Manager(isNeedView);
         this._field             = new Fields_Field.Field(isNeedView);
 
@@ -220,10 +218,6 @@ export abstract class War {
     }
     protected _fastInitView(): void {
         this.getView()?.fastInit(this);
-    }
-
-    public getIsNeedView(): boolean {
-        return this._isNeedView;
     }
 
     public getView(): BaseWar_View_WarView.WarView | undefined {

@@ -23,6 +23,12 @@ export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSy
         }
     }
 
+    const commonExtraData = action.getExtraData()?.getCommonExtraData();
+    if (commonExtraData) {
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({ war : war, commonExtraData : commonExtraData, isFastExecute : isFast });
+        war.updateTilesAndUnitsOnVisibilityChanged(isFast);
+    }
+
     war.setIsEnded(true);
 }
 
@@ -66,7 +72,6 @@ export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: Wo
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoSystemEndWar): Promise<string | null> {
-
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {

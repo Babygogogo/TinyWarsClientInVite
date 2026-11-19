@@ -1,13 +1,14 @@
 import {
-    Helpers_Collection,
     AuxiliaryTypes_GridIndex,
+    Destructions_Utils,
+    Helpers_Collection,
     Visibilities_Constants,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_UnitVisionInfo,
     type BaseWar_Model_War,
     type Tiles_Tile,
     type Units_Unit,
     type Units_UnitMap,
-    type AuxiliaryTypes_MapSize,
-    type AuxiliaryTypes_UnitVisionInfo,
 } from "../internal.ts";
 
 export function checkIsUnitOnMapVisibleToTeam({ war, gridIndex, unitType, isDiving, isInvisible, unitPlayerIndex, observerTeamIndex }: {
@@ -20,12 +21,12 @@ export function checkIsUnitOnMapVisibleToTeam({ war, gridIndex, unitType, isDivi
     observerTeamIndex   : number;
 }): boolean {
     return checkIsUnitOnMapVisibleToTeams({
-        war,
-        gridIndex,
-        unitType,
-        isDiving,
-        isInvisible,
-        unitPlayerIndex,
+        war                 : war,
+        gridIndex           : gridIndex,
+        unitType            : unitType,
+        isDiving            : isDiving,
+        isInvisible         : isInvisible,
+        unitPlayerIndex     : unitPlayerIndex,
         observerTeamIndexes : new Set<number>([observerTeamIndex]),
     });
 }
@@ -310,10 +311,10 @@ function _createVisibilityMapFromPath(war: BaseWar_Model_War.War, path: Auxiliar
             continue;
         }
 
-        for (const grid of node.getGridsWithinDistance({ minDistance : 0, maxDistance : 1, mapSize })) {
+        for (const grid of node.getGridsWithinDistance({ minDistance : 0, maxDistance : 1, mapSize : mapSize })) {
             visibilityMap[grid.getX()][grid.getY()] = Visibilities_Constants.VisibilityTypeId.Penetrating;
         }
-        for (const grid of node.getGridsWithinDistance({ minDistance : 2, maxDistance : visionRange, mapSize })) {
+        for (const grid of node.getGridsWithinDistance({ minDistance : 2, maxDistance : visionRange, mapSize : mapSize })) {
             if (isPenetrating) {
                 visibilityMap[grid.getX()][grid.getY()] = Visibilities_Constants.VisibilityTypeId.Penetrating;
             } else {
@@ -363,4 +364,36 @@ export function getAllTilesVisibleToTeams(war: BaseWar_Model_War.War, teamIndexe
         }
     }
     return tiles;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+export function updateTilesAndUnitsAsOuterWar(war: BaseWar_Model_War.War, isFastExecute: boolean): void {
+    const teamIndexes  = war.getPlayerManager().getWatcherTeamIndexesForSelf();
+    const visibleUnits = getAllUnitsOnMapVisibleToTeams(war, teamIndexes);
+    for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
+        if (visibleUnits.has(unit)) {
+            if (!isFastExecute) {
+                unit.setViewVisible(true);
+            }
+        } else {
+            Destructions_Utils.removeUnitOnMap(war, unit.getGridIndex());
+        }
+    }
+
+    const visibleTiles = getAllTilesVisibleToTeams(war, teamIndexes);
+    const tileMap = war.getTileMap();
+    for (const tile of tileMap.getAllTiles()) {
+        if (visibleTiles.has(tile)) {
+            tile.setHasFog(false);
+        } else if (!tile.getHasFog()) {
+            tile.resetTileDataAsHasFog();
+        }
+        if (!isFastExecute) {
+            tile.flushDataToView();
+        }
+    }
+
+    if (!isFastExecute) {
+        tileMap.getView()?.updateCoZone();
+    }
 }
