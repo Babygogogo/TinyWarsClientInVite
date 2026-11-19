@@ -3,10 +3,10 @@ import {
     Egret_Sys,
 } from "../internal.ts";
 
-window.isNaN = (value: unknown): boolean => {
-    const numericValue: number = +(value as number);
-    return numericValue !== numericValue;
-};
+// window.isNaN = (value: unknown): boolean => {
+//     const numericValue: number = +(value as number);
+//     return numericValue !== numericValue;
+// };
 
 export type FilterUniforms = Record<string, unknown>;
 export type NativeFilterId = number;

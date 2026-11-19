@@ -13,8 +13,8 @@ const LogLevel = {
     Off   : 0xFFFFFFFF,
 } as const;
 
-const CONSOLE           = window.console;
-const LOG_LEVEL: number = window.CLIENT_VERSION === "DEVELOP" ? LogLevel.All : LogLevel.Off;
+const CONSOLE           = typeof window === "undefined" ? globalThis.console : window.console;
+const LOG_LEVEL: number = typeof window === "undefined" || window.CLIENT_VERSION === "DEVELOP" ? LogLevel.All : LogLevel.Off;
 const IS_ASSERT_ENABLED = true;
 
 export function trace(...rest: unknown[]): void {

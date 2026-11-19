@@ -5,7 +5,7 @@ import {
     Helpers_Misc,
     Lang_Constants,
     Lang_Utils,
-    LocalData_Constants,
+    LocalData_Utils,
     LocalData_IndexedDbAccessor,
     Logger,
     Stages_Constants,
@@ -25,31 +25,30 @@ import { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlaye
 import { SpmWarSaveSlotFullData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotFullData.ts";
 import { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-const KEY_PREFIX                                = LocalData_Constants.KeyPrefix;
-const KEY_ACCOUNT                               = KEY_PREFIX + "Account";
-const KEY_PASSWORD                              = KEY_PREFIX + "Password";
-const KEY_REMEMBER_PASSWORD                     = KEY_PREFIX + "RememberPassword";
-const KEY_LANGUAGE                              = KEY_PREFIX + "Language";
-const KEY_SCREEN_ORIENTATION                    = KEY_PREFIX + "ScreenOrientation";
-const KEY_SHOW_TILE_ANIMATION                   = KEY_PREFIX + "ShowTileAnimation";
-const KEY_SHOW_UNIT_ANIMATION                   = KEY_PREFIX + "ShowUnitAnimation";
-const KEY_SHOW_WEATHER_ANIMATION                = KEY_PREFIX + "ShowWeatherAnimation";
-const KEY_SHOW_MAP_EDITOR_AUTO_ADJUST_TOGGLE    = KEY_PREFIX + "ShowMapEditorAutoAdjustToggle";
-const KEY_SHOW_EXPORT_MAP_CACHE_POPUP           = KEY_PREFIX + "ShowExportMapCachePopup";
-// const KEY_MAP_RAW_DATA_PREFIX                   = KEY_PREFIX + "MapRawData_";
-const KEY_SOUND_MAIN_MUTE                       = KEY_PREFIX + "SoundMainMute";
-const KEY_SOUND_MAIN_VOLUME                     = KEY_PREFIX + "SoundMainVolume";
-const KEY_SOUND_BGM_MUTE                        = KEY_PREFIX + "SoundBgmMute";
-const KEY_SOUND_BGM_VOLUME                      = KEY_PREFIX + "SoundBgmVolume";
-const KEY_SOUND_EFFECT_MUTE                     = KEY_PREFIX + "SoundEffectMute";
-const KEY_SOUND_EFFECT_VOLUME                   = KEY_PREFIX + "SoundEffectVolume";
-const KEY_STAGE_SCALE                           = KEY_PREFIX + "StageScale";
-// const KEY_STAGE_CAN_ROTATE                      = KEY_PREFIX + "StageCanRotate";
-const KEY_AUTO_TOURNEY_NOTIFICATION             = KEY_PREFIX + "AutoTourneyNotification";
-const KEY_REPLAY_PAUSE_TIME                     = KEY_PREFIX + "ReplayPauseTime";
-const KEY_SHOW_REPLAY_TURN_START_POPUP          = KEY_PREFIX + "ShowReplayTurnStartPopup";
-const KEY_MPW_OVERRIDING_SKIN_ID_ARRAY          = KEY_PREFIX + "MpwOverridingSkinIdArray";
-const KEY_RW_OVERRIDING_SKIN_ID_ARRAY           = KEY_PREFIX + "RwOverridingSkinIdArray";
+const KEY_ACCOUNT                               = "Account";
+const KEY_PASSWORD                              = "Password";
+const KEY_REMEMBER_PASSWORD                     = "RememberPassword";
+const KEY_LANGUAGE                              = "Language";
+const KEY_SCREEN_ORIENTATION                    = "ScreenOrientation";
+const KEY_SHOW_TILE_ANIMATION                   = "ShowTileAnimation";
+const KEY_SHOW_UNIT_ANIMATION                   = "ShowUnitAnimation";
+const KEY_SHOW_WEATHER_ANIMATION                = "ShowWeatherAnimation";
+const KEY_SHOW_MAP_EDITOR_AUTO_ADJUST_TOGGLE    = "ShowMapEditorAutoAdjustToggle";
+const KEY_SHOW_EXPORT_MAP_CACHE_POPUP           = "ShowExportMapCachePopup";
+// const KEY_MAP_RAW_DATA_PREFIX                   = "MapRawData_";
+const KEY_SOUND_MAIN_MUTE                       = "SoundMainMute";
+const KEY_SOUND_MAIN_VOLUME                     = "SoundMainVolume";
+const KEY_SOUND_BGM_MUTE                        = "SoundBgmMute";
+const KEY_SOUND_BGM_VOLUME                      = "SoundBgmVolume";
+const KEY_SOUND_EFFECT_MUTE                     = "SoundEffectMute";
+const KEY_SOUND_EFFECT_VOLUME                   = "SoundEffectVolume";
+const KEY_STAGE_SCALE                           = "StageScale";
+// const KEY_STAGE_CAN_ROTATE                      = "StageCanRotate";
+const KEY_AUTO_TOURNEY_NOTIFICATION             = "AutoTourneyNotification";
+const KEY_REPLAY_PAUSE_TIME                     = "ReplayPauseTime";
+const KEY_SHOW_REPLAY_TURN_START_POPUP          = "ShowReplayTurnStartPopup";
+const KEY_MPW_OVERRIDING_SKIN_ID_ARRAY          = "MpwOverridingSkinIdArray";
+const KEY_RW_OVERRIDING_SKIN_ID_ARRAY           = "RwOverridingSkinIdArray";
 
 const VALUE_TRUE                    = "1";
 const VALUE_FALSE                   = "0";
@@ -376,6 +375,7 @@ export const StoreMpwUnitStatistics = new LocalData_IndexedDbAccessor.Store2<Mpw
 });
 
 function setValue(key: string, value: string): void {
+    key = LocalData_Utils.getKeyPrefix() + key;
     try {
         Egret_LocalStorage.setItem(key, value);
     } catch {
@@ -383,6 +383,7 @@ function setValue(key: string, value: string): void {
     }
 }
 function getInt(key: string): number | null {
+    key = LocalData_Utils.getKeyPrefix() + key;
     try {
         const value = Egret_LocalStorage.getItem(key);
         const i = value == null ? NaN : parseInt(value);
@@ -392,6 +393,7 @@ function getInt(key: string): number | null {
     }
 }
 function getFloat(key: string): number | null {
+    key = LocalData_Utils.getKeyPrefix() + key;
     try {
         const value = Egret_LocalStorage.getItem(key);
         const f = value == null ? NaN : parseFloat(value);
@@ -401,6 +403,7 @@ function getFloat(key: string): number | null {
     }
 }
 function getString(key: string): string | null {
+    key = LocalData_Utils.getKeyPrefix() + key;
     try {
         return Egret_LocalStorage.getItem(key);
     } catch {

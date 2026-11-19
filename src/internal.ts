@@ -507,7 +507,7 @@ export * as Lobby_View_LobbyPanel from "./lobby/view/LobbyPanel.ts";
 export * as Lobby_View_LobbyStartPanel from "./lobby/view/LobbyStartPanel.ts";
 export * as Lobby_View_LobbyTopPanel from "./lobby/view/LobbyTopPanel.ts";
 export * as Lobby_View_LobbyTopRightPanel from "./lobby/view/LobbyTopRightPanel.ts";
-export * as LocalData_Constants from "./localData/Constants.ts";
+export * as LocalData_Utils from "./localData/Utils.ts";
 export * as LocalData_DeprecatedIndexedDbAccessor from "./localData/DeprecatedIndexedDbAccessor.ts";
 export * as LocalData_DeprecatedStorage from "./localData/DeprecatedStorage.ts";
 export * as LocalData_IndexedDbAccessor from "./localData/IndexedDbAccessor.ts";

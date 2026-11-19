@@ -1,10 +1,9 @@
 import {
-    LocalData_Constants,
+    LocalData_Utils,
     Logger,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 
-const DatabaseName      = LocalData_Constants.OldDatabaseName;
 const DatabaseVersion   = 5;
 const MaxInitAttempts   = 3;
 
@@ -33,7 +32,7 @@ async function initDatabaseWithRetries(onUpgradeNeeded: (database: IDBDatabase) 
 
 function initDatabaseOnce(onUpgradeNeeded: (database: IDBDatabase) => void): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-        const request       = window.indexedDB.open(DatabaseName, DatabaseVersion);
+        const request       = window.indexedDB.open(LocalData_Utils.getOldDatabaseName(), DatabaseVersion);
         request.onsuccess   = () => {
             Logger.warn(`Deprecated IndexedDB init successfully.`);
 

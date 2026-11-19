@@ -72,11 +72,12 @@ class NoSleepClass {
     }
 }
 
-const noSleepObject = new NoSleepClass();
+let noSleepObject: NoSleepClass | undefined;
 export function enable(): void {
+    noSleepObject ??= new NoSleepClass();
     noSleepObject.enable();
 }
 
 export function disable(): void {
-    noSleepObject.disable();
+    noSleepObject?.disable();
 }

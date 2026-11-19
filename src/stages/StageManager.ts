@@ -14,9 +14,8 @@ import {
 // Expand either dimension to fit the viewport while preserving the minimum design size.
 const RATIO_FOR_MIN_HEIGHT = Stages_Constants.Dimension.DesignWidth / Stages_Constants.Dimension.DesignMinHeight;
 
-const _canvasBoundsInfo = {
+const _canvasBoundsInfo: { isUpdated: boolean; rect?: DOMRect } = {
     isUpdated : false,
-    rect      : new DOMRect(),
 };
 
 let   _stage        : Egret_Egret.Stage;
@@ -56,7 +55,7 @@ export function getCanvasBoundingClientRect(): DOMRect {
         _canvasBoundsInfo.isUpdated = true;
         _canvasBoundsInfo.rect      = Helpers_Misc.getExisted(Helpers_Compatibility.getWebPlayer()?.canvas.getBoundingClientRect());
     }
-    return _canvasBoundsInfo.rect;
+    return Helpers_Misc.getExisted(_canvasBoundsInfo.rect);
 }
 
 export function getLayer(layer: Graphics_Constants.DisplayLayerId): Ui_Interfaces_IUiLayer.IUiLayer {

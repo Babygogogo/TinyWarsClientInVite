@@ -501,9 +501,15 @@ function doResize(): void {
 }
 
 export class WebMiscHelper {
-    public static readonly browserWindow: LegacyWindow = window as unknown as LegacyWindow;
-    public static readonly browserNavigator: LegacyNavigator = navigator;
-    public static readonly winURL: typeof URL = window.URL || WebMiscHelper.browserWindow.webkitURL!;
+    public static get browserWindow(): LegacyWindow {
+        return window as unknown as LegacyWindow;
+    }
+    public static get browserNavigator(): LegacyNavigator {
+        return navigator;
+    }
+    public static get winURL(): typeof URL {
+        return window.URL || WebMiscHelper.browserWindow.webkitURL!;
+    }
 
     public static readonly stageToTextLayerMap: Record<number, HTMLInput | undefined> = {};
     public static readonly stageToCanvasMap: Record<number, InputCanvas | undefined> = {};
@@ -2276,7 +2282,11 @@ export class XMLText extends XMLNode {
 Egret_Egret.__reflect(XMLText.prototype, "egret.web.XMLText");
 
 export class DomParserHelper {
-    public static readonly parser = new DOMParser();
+    private static _parser: DOMParser | undefined;
+
+    public static get parser(): DOMParser {
+        return DomParserHelper._parser ??= new DOMParser();
+    }
 }
 
 export class WebGLDrawCmdManager {
@@ -3174,10 +3184,10 @@ export class WebGLRenderContext {
             return;
         }
         buffer.$stencilList.push({
-            x,
-            y,
-            width,
-            height,
+            x      : x,
+            y      : y,
+            width  : width,
+            height : height,
         });
         if (this.vao.reachMaxSize()) {
             this.$drawWebGL();

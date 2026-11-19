@@ -33,6 +33,7 @@ import { WeatherCategoryCfg } from "../proto/schema/CommonProto/Config/WeatherCa
 import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
 
 export class GameConfig {
+    private readonly _rawConfig                     : FullConfig;
     private readonly _version                       : string;
     private readonly _systemCfg                     : SystemCfg;
     private readonly _unitMaxPromotion              : number;
@@ -68,6 +69,7 @@ export class GameConfig {
         const unitPromotionCfg              = _destructUnitPromotionCfg(rawConfig.getUnitPromotion());
         const damageChartCfg                = _destructDamageChartCfg(rawConfig.getDamageChart());
 
+        this._rawConfig                     = rawConfig;
         this._version                       = version;
         this._systemCfg                     = _destructSystemCfg(rawConfig.getSystem());
         this._tileCategoryCfgDict           = _destructTileCategoryCfg(rawConfig.getTileCategory(), rawConfig.getTileTemplate());
@@ -94,6 +96,10 @@ export class GameConfig {
 
     public getVersion(): string {
         return this._version;
+    }
+
+    public getRawConfig(): FullConfig {
+        return this._rawConfig;
     }
 
     public getSystemCfg(): SystemCfg {

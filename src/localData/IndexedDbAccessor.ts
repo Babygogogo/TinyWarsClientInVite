@@ -1,11 +1,9 @@
 import {
-    LocalData_Constants,
+    LocalData_Utils,
     Logger,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 
-const DatabaseName      = LocalData_Constants.NewDatabaseName;
-const DatabaseVersion   = LocalData_Constants.NewDatabaseVersion;
 const MaxInitAttempts   = 3;
 
 let currentDatabase         : IDBDatabase | null = null;
@@ -33,7 +31,7 @@ async function initDatabaseWithRetries(onUpgradeNeeded: (database: IDBDatabase) 
 
 function initDatabaseOnce(onUpgradeNeeded: (database: IDBDatabase) => void): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-        const request       = window.indexedDB.open(DatabaseName, DatabaseVersion);
+        const request       = window.indexedDB.open(LocalData_Utils.getNewDatabaseName(), LocalData_Utils.getNewDatabaseVersion());
         request.onsuccess   = () => {
             Logger.warn(`IndexedDB init successfully.`);
 
