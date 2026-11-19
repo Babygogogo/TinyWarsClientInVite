@@ -357,11 +357,13 @@ export abstract class War {
                 const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeam(this, this.getPlayerInTurn().getTeamIndex());
                 for (const tile of this.getTileMap().getAllTiles()) {
                     tile.setHasFog(!visibleTiles.has(tile));
+                    tile.flushDataToView();
                 }
 
             } else if (this instanceof MapEditor_Model_MeWar.MeWar) {
                 for (const tile of this.getTileMap().getAllTiles()) {
                     tile.setHasFog(false);
+                    tile.flushDataToView();
                 }
 
             } else if (this instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
@@ -374,12 +376,14 @@ export abstract class War {
                             tile.resetTileDataAsHasFog();
                         }
                     }
+                    tile.flushDataToView();
                 }
 
             } else if (this instanceof ReplayWar_Model_RwWar.RwWar) {
                 const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeam(this, this.getPlayerInTurn().getTeamIndex());
                 for (const tile of this.getTileMap().getAllTiles()) {
                     tile.setHasFog(!visibleTiles.has(tile));
+                    tile.flushDataToView();
                 }
 
             } else if (this instanceof Campaigns_Wars_War.War) {

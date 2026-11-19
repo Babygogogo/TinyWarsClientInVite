@@ -28,49 +28,56 @@ import {
 } from "../internal";
 import { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer";
 
-const _warsWithRobotRunning = new Set<SinglePlayerWars_War.War>();
+const _warsWithOperationsRunning = new Set<SinglePlayerWars_War.War>();
 
 export async function handlePlayerOpAndAutoOps(war: SinglePlayerWars_War.War, action: WoContainer): Promise<void> {
     if (war.getIsEnded()) {
         throw Helpers_Misc.newError(`war.getIsEnded() is true.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_00);
     }
-    if (war.getIsExecutingAction()) {
+    if ((war.getIsExecutingAction()) || (_warsWithOperationsRunning.has(war))) {
         throw Helpers_Misc.newError(`war.getIsExecutingAction() is true.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_01);
     }
     if (!war.getIsRunning()) {
         throw Helpers_Misc.newError(`war.getIsRunning() is false.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_02);
     }
 
-    await reviseAndExecute(war, action, Users_Model.getSelfUserId());
+    _warsWithOperationsRunning.add(war);
+    try {
+        await reviseAndExecute(war, action, Users_Model.getSelfUserId());
+    } finally {
+        _warsWithOperationsRunning.delete(war);
+    }
 
     await generateAndRunAutoOps(war);
 }
 
 export async function generateAndRunAutoOps(war: SinglePlayerWars_War.War): Promise<void> {
-    if (_warsWithRobotRunning.has(war)) {
+    if ((_warsWithOperationsRunning.has(war)) ||
+        (war.getIsExecutingAction())
+    ) {
         return;
     }
-    _warsWithRobotRunning.add(war);
+    _warsWithOperationsRunning.add(war);
 
     try {
         while (true) {
-            if ((checkAndEndWar(war))       ||
-                (!war.getIsRunning())       ||
-                (war.getIsAiPaused())       ||
+            if ((!war.getIsRunning())           ||
+                (war.getIsExecutingAction())    ||
+                (checkAndEndWar(war))           ||
+                (war.getIsAiPaused())           ||
                 (war.getIsViewingWarInfo())
             ) {
-                _warsWithRobotRunning.delete(war);
                 return;
             }
 
             const innerWar  = SinglePlayerWars_ProviderForDualWars.getInnerWarForOuterWar(war);
             const data      = await generateNextAutoOp(innerWar ?? war);
-            if ((checkAndEndWar(war))       ||
-                (!war.getIsRunning())       ||
-                (war.getIsAiPaused())       ||
+            if ((!war.getIsRunning())           ||
+                (war.getIsExecutingAction())    ||
+                (checkAndEndWar(war))           ||
+                (war.getIsAiPaused())           ||
                 (war.getIsViewingWarInfo())
             ) {
-                _warsWithRobotRunning.delete(war);
                 return;
             }
             if (!data) {
@@ -88,7 +95,7 @@ export async function generateAndRunAutoOps(war: SinglePlayerWars_War.War): Prom
         }
 
     } finally {
-        _warsWithRobotRunning.delete(war);
+        _warsWithOperationsRunning.delete(war);
     }
 }
 
@@ -98,6 +105,11 @@ async function reviseAndExecute(war: SinglePlayerWars_War.War, action: WoContain
 
     if (innerWar) {
         const outerWarOp = await WarOperations_Executors_Executor.checkAndExecuteAsInnerWar(innerWar, revisedResult);
+        if ((!war.getIsRunning())                                                           ||
+            (SinglePlayerWars_ProviderForDualWars.getInnerWarForOuterWar(war) !== innerWar)
+        ) {
+            return;
+        }
         await WarOperations_Executors_Executor.checkAndExecuteAsOuterWar(war, outerWarOp, false);
 
     } else {

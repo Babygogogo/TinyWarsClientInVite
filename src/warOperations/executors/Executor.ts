@@ -279,27 +279,30 @@ export async function checkAndExecuteAsInnerWar(war: SinglePlayerWars_War.War, r
     const hadFog        = war.getFogMap().checkHasFogCurrently();
     war.setIsExecutingAction(true);
 
-    const outerWarOpCreator = await executeActionAsInnerWar(war, revisedResult);
+    try {
+        const outerWarOpCreator = await executeActionAsInnerWar(war, revisedResult);
 
-    const operationContainer        = Helpers_Misc.getExisted(revisedResult.operation);
-    const executedOperationManager  = war.getExecutedOperationManager();
-    const operationId               = executedOperationManager.tickExecutedOperationsCount();
-    executedOperationManager.addExecutedOperation(operationContainer);
+        const operationContainer        = Helpers_Misc.getExisted(revisedResult.operation);
+        const executedOperationManager  = war.getExecutedOperationManager();
+        const operationId               = executedOperationManager.tickExecutedOperationsCount();
+        executedOperationManager.addExecutedOperation(operationContainer);
 
-    if (checkIsPlayerManualOperation(operationContainer)) {
-        war.getWarStatisticsManager().tickPlayerManualOperationsCount(turnIndex, playerIndex);
+        if (checkIsPlayerManualOperation(operationContainer)) {
+            war.getWarStatisticsManager().tickPlayerManualOperationsCount(turnIndex, playerIndex);
+        }
+
+        const extraChangedThings = war.getTaskObjectiveManager().autoUpdateAllCurrentProgresses();
+        const playerManager      = war.getPlayerManager();
+        if (hadFog !== war.getFogMap().checkHasFogCurrently()) {
+            extraChangedThings.addPlayers(playerManager.getAllPlayers(true));
+        }
+
+        const teamIndex = [...playerManager.getWatcherTeamIndexesForSelf()][0];
+        return Helpers_Misc.getExisted(outerWarOpCreator(extraChangedThings, operationId).get(teamIndex));
+
+    } finally {
+        war.setIsExecutingAction(false);
     }
-
-    const extraChangedThings = war.getTaskObjectiveManager().autoUpdateAllCurrentProgresses();
-    war.setIsExecutingAction(false);
-
-    const playerManager = war.getPlayerManager();
-    if (hadFog !== war.getFogMap().checkHasFogCurrently()) {
-        extraChangedThings.addPlayers(playerManager.getAllPlayers(true));
-    }
-
-    const teamIndex = [...playerManager.getWatcherTeamIndexesForSelf()][0];
-    return Helpers_Misc.getExisted(outerWarOpCreator(extraChangedThings, operationId).get(teamIndex));
 }
 
 async function executeActionAsInnerWar(war: SinglePlayerWars_War.War, revisedResult: WarOperations_Revisers_Result.Result): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
