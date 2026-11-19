@@ -1,25 +1,24 @@
 import {
-    BaseWar_Model_War,
-    WarEvents_Manager,
-    FloatText,
-    BootTimers_Constants,
-    type GameConfigs_GameConfig,
     type AuxiliaryTypes_AuxiliaryTypes,
-    Timer_TimerModel,
-    WarOperations_Executors_Executor,
-    Utils_ClientErrorCode,
-    Notifications_Dispatcher,
-    Helpers_Misc,
-    LocalData_Storage,
-    Users_Model,
-    Lang_Utils,
-    Helpers_ProtoSchema_WarSerialization_SerialWar,
-    Sounds_SoundPlayer,
+    BaseWar_Model_War,
+    BootTimers_Constants,
     Egret_Egret,
+    FloatText,
+    type GameConfigs_GameConfig,
+    HalfwayReplayWar_Model_HrwWar,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
     Lang_Constants,
-    type ReplayWar_Interface_IRwWarBase,
+    Lang_Utils,
+    LocalData_Storage,
+    Notifications_Dispatcher,
+    Sounds_SoundPlayer,
+    Timer_TimerModel,
+    Users_Model,
+    Utils_ClientErrorCode,
+    WarEvents_Manager,
+    WarOperations_Executors_Executor,
 } from "../../internal.ts";
-
 import { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { SerialExecutedOperationManager } from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
@@ -39,7 +38,7 @@ type TurnIndexAndPlayerIndex = {
     playerIndex : number;
 };
 
-export abstract class RwWarBase extends BaseWar_Model_War.War implements ReplayWar_Interface_IRwWarBase.IRwWarBase {
+export abstract class RwWarBase extends BaseWar_Model_War.War {
     private readonly _warEventManager               = new WarEvents_Manager.Manager();
     private _srcExecutedOperationArray              : WoContainer[] | null = null;
 
@@ -101,9 +100,6 @@ export abstract class RwWarBase extends BaseWar_Model_War.War implements ReplayW
 
     public getCanCheat(): boolean {
         return false;
-    }
-    public getIsNeedExecutedOperations(): boolean {
-        return true;
     }
     public getBootRestTime(): number | null {
         return null;
@@ -495,7 +491,11 @@ export abstract class RwWarBase extends BaseWar_Model_War.War implements ReplayW
     }
     private async _doExecuteAction(action: WoContainer, isFastExecute: boolean): Promise<void> {
         this.setNextOperationId(this.getNextOperationId() + 1);
-        await WarOperations_Executors_Executor.checkAndExecuteAsUnifiedWar(this, action, isFastExecute);
+        if (this instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
+            await WarOperations_Executors_Executor.checkAndExecuteAsOuterWar(this, action, isFastExecute);
+        } else {
+            await WarOperations_Executors_Executor.checkAndExecuteAsUnifiedWar(this, action, isFastExecute);
+        }
 
         const isInEnd = this.checkIsInEnd();
         if (isInEnd) {

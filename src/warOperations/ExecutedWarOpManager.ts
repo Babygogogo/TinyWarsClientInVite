@@ -6,16 +6,10 @@ import type { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoCon
 import { SerialExecutedOperationManager } from "../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
 
 export class ExecutedWarOpManager {
-    private _isNeedExecutedOperations?  : boolean;
-    private _executedOperationArray?    : WoContainer[];
-    private _executedOperationsCount    = 0;
+    private readonly _executedOperationArray    : WoContainer[] = [];
+    private _executedOperationsCount            = 0;
 
-    public init({ isNeedExecutedOperations, data }: {
-        isNeedExecutedOperations    : boolean;
-        data                        : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialExecutedOperationManager>;
-    }): void {
-        this._setIsNeedExecutedOperations(isNeedExecutedOperations);
-
+    public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialExecutedOperationManager>): void {
         const executedOperationArray = data?.getExecutedOperationArray() ?? [];
         this._setAllExecutedOperationArray(executedOperationArray);
         this.setExecutedOperationsCount(data?.getExecutedOperationsCount() ?? executedOperationArray.length);
@@ -63,13 +57,6 @@ export class ExecutedWarOpManager {
         });
     }
 
-    private _setIsNeedExecutedOperations(isNeedReplay: boolean): void {
-        this._isNeedExecutedOperations = isNeedReplay;
-    }
-    private _getIsNeedExecutedOperations(): boolean {
-        return Helpers_Misc.getExisted(this._isNeedExecutedOperations);
-    }
-
     public setExecutedOperationsCount(count: number): void {
         this._executedOperationsCount = count;
     }
@@ -80,11 +67,15 @@ export class ExecutedWarOpManager {
         return this._executedOperationsCount++;
     }
 
-    private _setAllExecutedOperationArray(operations: WoContainer[]): void {
-        this._executedOperationArray = operations;
-    }
     public getAllExecutedOperationArray(): WoContainer[] {
-        return Helpers_Misc.getExisted(this._executedOperationArray);
+        return this._executedOperationArray;
+    }
+    private _setAllExecutedOperationArray(newArray: WoContainer[]): void {
+        const oldArray = this.getAllExecutedOperationArray();
+        if (newArray !== oldArray) {
+            oldArray.length = 0;
+            oldArray.push(...newArray);
+        }
     }
 
     public getExecutedOperation(operationId: number): WoContainer | null {
@@ -123,8 +114,6 @@ export class ExecutedWarOpManager {
             throw Helpers_Misc.newError(`Invalid operationId: ${operationId}, expected: ${executedOperationsCount}`);
         }
 
-        if (this._getIsNeedExecutedOperations()) {
-            this.getAllExecutedOperationArray().push(rawOperation.clone());
-        }
+        this.getAllExecutedOperationArray().push(rawOperation.clone());
     }
 }

@@ -219,9 +219,6 @@ export class MeWar extends BaseWar_Model_War.War implements MapEditor_Model_MeWa
         return true;
     }
 
-    public getIsNeedExecutedOperations(): boolean {
-        return false;
-    }
     public getNormalMapId(): number | null {
         return null;
     }

@@ -101,7 +101,6 @@ export abstract class War {
 
     public abstract init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void;
     public abstract getNormalMapId(): number | null;
-    public abstract getIsNeedExecutedOperations(): boolean;
     public abstract getCanCheat(): boolean;
     public abstract getShouldSerializeFullInfoForFreeModeGames(): boolean;
     public abstract getWarEventManager(): WarEvents_Manager.Manager;
@@ -144,10 +143,7 @@ export abstract class War {
             initialState : data.getSeedRandomInitialState(),
             currentState : data.getSeedRandomCurrentState(),
         });
-        this.getExecutedOperationManager().init({
-            isNeedExecutedOperations : this.getIsNeedExecutedOperations(),
-            data                     : data.getExecutedOperationManager(),
-        });
+        this.getExecutedOperationManager().init(data.getExecutedOperationManager());
 
         const playerManager = this.getPlayerManager();
         playerManager.init(data.getPlayerManager(), gameConfig);

@@ -1,11 +1,11 @@
 import {
     GamePanels_Dict,
-    LocalData_Storage,
-    Lang_Utils,
     GamePanels_Manager,
     Lang_Constants,
+    Lang_Utils,
+    LocalData_Storage,
     Ui_Components_UiPanel,
-    type ReplayWar_Interface_IRwWarBase,
+    type ReplayWar_Model_RwWarBase,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -13,7 +13,7 @@ import {
 } from "../../internal.ts";
 
 export interface OpenData {
-    war     : ReplayWar_Interface_IRwWarBase.IRwWarBase;
+    war     : ReplayWar_Model_RwWarBase.RwWarBase;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;

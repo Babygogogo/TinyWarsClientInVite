@@ -136,10 +136,6 @@ export class TwWar extends BaseWar_Model_War.War {
         return null;
     }
 
-    public getIsNeedExecutedOperations(): boolean {
-        return false;
-    }
-
     public getBootRestTime(): number | null {
         return null;
     }

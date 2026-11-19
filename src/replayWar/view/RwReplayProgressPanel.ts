@@ -1,24 +1,24 @@
 import {
-    Utils_ClientErrorCode,
-    GamePanels_Manager,
     GamePanels_Dict,
+    GamePanels_Manager,
     Helpers_Misc,
-    Lang_Utils,
     Helpers_PointerInput,
     Lang_Constants,
+    Lang_Utils,
     Ui_Components_UiPanel,
+    Utils_ClientErrorCode,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
-    type ReplayWar_Interface_IRwWarBase,
+    type ReplayWar_Model_RwWarBase,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiLayout,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 
 export interface OpenData {
-    war: ReplayWar_Interface_IRwWarBase.IRwWarBase;
+    war: ReplayWar_Model_RwWarBase.RwWarBase;
 }
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;

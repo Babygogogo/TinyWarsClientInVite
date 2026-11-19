@@ -57,8 +57,8 @@ import {
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
     WarOperations_AutoWarOpManager,
-    SinglePlayerWars_Provider,
-    SingleRankedWars_Provider,
+    SinglePlayerWars_ProviderForUnifiedWar,
+    SinglePlayerWars_ProviderForDualWars,
     Sounds_SoundPlayer,
     Stages_StageManager,
     TestWar_Model_TwWar,
@@ -191,8 +191,8 @@ async function doStartGame(stage: Egret_Egret.Stage): Promise<void> {
     HalfwayReplayWar_Model_HrwModel.init();
     SinglePlayerMode_Model_SpmProxy.init();
     SinglePlayerMode_Model_SpmModel.init();
-    SinglePlayerWars_Provider.init();
-    SingleRankedWars_Provider.init();
+    SinglePlayerWars_ProviderForUnifiedWar.init();
+    SinglePlayerWars_ProviderForDualWars.init();
     MapEditor_Model_MeProxy.init();
     MapEditor_Model_MeModel.init();
     Chat_Proxy.init();
@@ -221,8 +221,8 @@ export function gotoLogin(): void {
     MultiPlayerWar_Model_MpwModel.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
-    SinglePlayerWars_Provider.unloadWar();
-    SingleRankedWars_Provider.unloadWar();
+    SinglePlayerWars_ProviderForUnifiedWar.unloadWar();
+    SinglePlayerWars_ProviderForDualWars.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -242,8 +242,8 @@ export function gotoLobby(): void {
     MultiPlayerWar_Model_MpwModel.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
-    SinglePlayerWars_Provider.unloadWar();
-    SingleRankedWars_Provider.unloadWar();
+    SinglePlayerWars_ProviderForUnifiedWar.unloadWar();
+    SinglePlayerWars_ProviderForDualWars.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
     GamePanels_Manager.closeAllPanelsExcept([
         GamePanels_Dict.getDict().BroadcastPanel,
@@ -267,8 +267,8 @@ export async function gotoMultiPlayerWar(data: SerialWar): Promise<void> {
     const war = await MultiPlayerWar_Model_MpwModel.loadWar(data);
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
-    SinglePlayerWars_Provider.unloadWar();
-    SingleRankedWars_Provider.unloadWar();
+    SinglePlayerWars_ProviderForUnifiedWar.unloadWar();
+    SinglePlayerWars_ProviderForDualWars.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -294,8 +294,8 @@ export async function gotoReplayWar(warData: SerialWar, replayId: number): Promi
     const war = await ReplayWar_Model_RwModel.loadWar(warData, replayId);
     HalfwayReplayWar_Model_HrwModel.unloadWar();
     MultiPlayerWar_Model_MpwModel.unloadWar();
-    SinglePlayerWars_Provider.unloadWar();
-    SingleRankedWars_Provider.unloadWar();
+    SinglePlayerWars_ProviderForUnifiedWar.unloadWar();
+    SinglePlayerWars_ProviderForDualWars.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -320,8 +320,8 @@ export async function gotoHalfwayReplayWar(warData: SerialWar): Promise<void> {
     const war = await HalfwayReplayWar_Model_HrwModel.loadWar(warData);
     ReplayWar_Model_RwModel.unloadWar();
     MultiPlayerWar_Model_MpwModel.unloadWar();
-    SinglePlayerWars_Provider.unloadWar();
-    SingleRankedWars_Provider.unloadWar();
+    SinglePlayerWars_ProviderForUnifiedWar.unloadWar();
+    SinglePlayerWars_ProviderForDualWars.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -351,7 +351,7 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
     // const war = warData.getSettingsForSrw()
     //     ? await SingleRankedWars_Provider.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData })
     //     : await SinglePlayerWars_Provider.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData });
-    const war = await SinglePlayerWars_Provider.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData });
+    const war = await SinglePlayerWars_ProviderForUnifiedWar.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData });
     war.setOverridingBgmCode(overridingBgmCode ?? null);
 
     MultiPlayerWar_Model_MpwModel.unloadWar();
@@ -395,8 +395,8 @@ export async function gotoMapEditorWar({ mapRawData, slotIndex, isReview, srcNor
         gridMarkData              : gridMarkData,
     });
     MultiPlayerWar_Model_MpwModel.unloadWar();
-    SinglePlayerWars_Provider.unloadWar();
-    SingleRankedWars_Provider.unloadWar();
+    SinglePlayerWars_ProviderForUnifiedWar.unloadWar();
+    SinglePlayerWars_ProviderForDualWars.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
 
@@ -530,8 +530,8 @@ export async function gotoMfrCreateSettingsPanel(warData: SerialWar): Promise<vo
     MultiPlayerWar_Model_MpwModel.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
-    SinglePlayerWars_Provider.unloadWar();
-    SingleRankedWars_Provider.unloadWar();
+    SinglePlayerWars_ProviderForUnifiedWar.unloadWar();
+    SinglePlayerWars_ProviderForDualWars.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -654,8 +654,8 @@ export function unloadAllWarsAndOpenCommonPanels(): void {
     MultiPlayerWar_Model_MpwModel.unloadWar();
     ReplayWar_Model_RwModel.unloadWar();
     HalfwayReplayWar_Model_HrwModel.unloadWar();
-    SinglePlayerWars_Provider.unloadWar();
-    SingleRankedWars_Provider.unloadWar();
+    SinglePlayerWars_ProviderForUnifiedWar.unloadWar();
+    SinglePlayerWars_ProviderForDualWars.unloadWar();
     MapEditor_Model_MeModel.unloadWar();
 
     GamePanels_Manager.closeAllPanelsExcept([
@@ -683,8 +683,8 @@ export function getOngoingWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseW
     return (MultiPlayerWar_Model_MpwModel.getWar())
         ?? (ReplayWar_Model_RwModel.getWar())
         ?? (HalfwayReplayWar_Model_HrwModel.getWar())
-        ?? (SinglePlayerWars_Provider.getWar())
-        ?? (SingleRankedWars_Provider.getOuterWar())
+        ?? (SinglePlayerWars_ProviderForUnifiedWar.getWar())
+        ?? (SinglePlayerWars_ProviderForDualWars.getOuterWar())
         ?? (MapEditor_Model_MeModel.getWar());
 }
 

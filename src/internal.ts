@@ -645,7 +645,6 @@ export * as Players_Player from "./players/Player.ts";
 export * as Players_PlayerManager from "./players/PlayerManager.ts";
 export * as Players_Utils_Common from "./players/utils/Common.ts";
 export * as Players_Utils_Filter from "./players/utils/Filter.ts";
-export * as ReplayWar_Interface_IRwWarBase from "./replayWar/interface/IRwWarBase.ts";
 export * as ReplayWar_Model_RwModel from "./replayWar/model/RwModel.ts";
 export * as ReplayWar_Model_RwProxy from "./replayWar/model/RwProxy.ts";
 export * as ReplayWar_Model_RwWar from "./replayWar/model/RwWar.ts";
@@ -670,7 +669,7 @@ export * as SinglePlayerMode_View_SpmMyWarRoomRecordPanel from "./singlePlayerMo
 export * as SinglePlayerMode_View_SpmRankPage from "./singlePlayerMode/view/SpmRankPage.ts";
 export * as SinglePlayerMode_View_SpmWarListPanel from "./singlePlayerMode/view/SpmWarListPanel.ts";
 export * as SinglePlayerWars_LocalGateway from "./singlePlayerWars/LocalGateway.ts";
-export * as SinglePlayerWars_Provider from "./singlePlayerWars/Provider.ts";
+export * as SinglePlayerWars_ProviderForUnifiedWar from "./singlePlayerWars/ProviderForUnifiedWar.ts";
 export * as WarOperations_AutoWarOpManager from "./warOperations/AutoWarOpManager.ts";
 export * as Retracts_RetractManager from "./retracts/RetractManager.ts";
 export * as SinglePlayerWar_View_SpwSidePanel from "./singlePlayerWar/view/SpwSidePanel.ts";
@@ -685,7 +684,7 @@ export * as SingleRankRoom_View_SrrCreateQuickSettingsPanel from "./singleRankRo
 export * as SingleRankRoom_View_SrrCreateSettingsPanel from "./singleRankRoom/view/SrrCreateSettingsPanel.ts";
 export * as SingleRankedWars_War from "./singleRankedWars/War.ts";
 export * as SingleRankedWars_Constants from "./singleRankedWars/Constants.ts";
-export * as SingleRankedWars_Provider from "./singleRankedWars/Provider.ts";
+export * as SinglePlayerWars_ProviderForDualWars from "./singlePlayerWars/ProviderForDualWars.ts";
 export * as Sounds_Constants from "./sounds/Constants.ts";
 export * as Sounds_SoundPlayer from "./sounds/SoundPlayer.ts";
 export * as Sounds_Types from "./sounds/Types.ts";
