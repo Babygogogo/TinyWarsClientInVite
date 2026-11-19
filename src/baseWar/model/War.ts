@@ -8,21 +8,29 @@ import {
     BaseWar_Model_BwWarStatisticsManager,
     BaseWar_View_WarView,
     BootTimers_Constants,
+    Campaigns_Wars_War,
     Fields_Field,
     FogMaps_FogMap,
+    HalfwayReplayWar_Model_HrwWar,
     Helpers_Misc,
     Lang_Constants,
     Lang_Utils,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
     NormalMap_Model_NormalMapModel,
     Players_Constants,
     Players_Player,
     Players_PlayerManager,
     Players_Utils_Common,
     RandomNumbers_Manager,
+    ReplayWar_Model_RwWar,
     SingleCustomWars_War,
     SingleFreeWars_War,
+    SinglePlayerWars_War,
+    SingleRankedWars_War,
     Sounds_SoundPlayer,
     TaskObjectives_Manager,
+    TestWar_Model_TwWar,
     Timer_TimerModel,
     Turns_Manager,
     Units_Constants,
@@ -33,6 +41,7 @@ import {
     Users_Utils,
     Utils_ClientErrorCode,
     Visibilities_Constants,
+    Visibilities_Utils,
     WarOperations_ExecutedWarOpManager,
     WarTypes_Constants,
     Weathers_Manager,
@@ -342,6 +351,65 @@ export abstract class War {
         this.getView()?.startRunningView();
         this.getField().startRunningView();
         this.getWeatherManager().startRunningView();
+
+        if (this.getView()) {
+            if (this instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
+                const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeam(this, this.getPlayerInTurn().getTeamIndex());
+                for (const tile of this.getTileMap().getAllTiles()) {
+                    tile.setHasFog(!visibleTiles.has(tile));
+                }
+
+            } else if (this instanceof MapEditor_Model_MeWar.MeWar) {
+                for (const tile of this.getTileMap().getAllTiles()) {
+                    tile.setHasFog(false);
+                }
+
+            } else if (this instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
+                const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeams(this, this.getPlayerManager().getWatcherTeamIndexesForSelf());
+                for (const tile of this.getTileMap().getAllTiles()) {
+                    if (visibleTiles.has(tile)) {
+                        tile.setHasFog(false);
+                    } else {
+                        if (!tile.getHasFog()) {
+                            tile.resetTileDataAsHasFog();
+                        }
+                    }
+                }
+
+            } else if (this instanceof ReplayWar_Model_RwWar.RwWar) {
+                const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeam(this, this.getPlayerInTurn().getTeamIndex());
+                for (const tile of this.getTileMap().getAllTiles()) {
+                    tile.setHasFog(!visibleTiles.has(tile));
+                }
+
+            } else if (this instanceof Campaigns_Wars_War.War) {
+                this.updateTilesAndUnitsOnVisibilityChanged(false);
+
+            } else if (this instanceof SingleRankedWars_War.War) {
+                this.updateTilesAndUnitsOnVisibilityChanged(false);
+
+            } else if (this instanceof SinglePlayerWars_War.War) {
+                if (this.getView() != null) {
+                    const teamIndexes   = this.getPlayerManager().getWatcherTeamIndexesForSelf();
+                    const visibleUnits  = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(this, teamIndexes);
+                    for (const unit of this.getUnitMap().getAllUnitsOnMap()) {
+                        unit.setViewVisible(visibleUnits.has(unit));
+                    }
+
+                    const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeams(this, teamIndexes);
+                    for (const tile of this.getTileMap().getAllTiles()) {
+                        tile.setHasFog(!visibleTiles.has(tile));
+                        tile.flushDataToView();
+                    }
+                }
+
+            } else if (this instanceof TestWar_Model_TwWar.TwWar) {
+                // nothing to do
+
+            } else {
+                throw Helpers_Misc.newError(`Invalid war.`);
+            }
+        }
 
         return this;
     }

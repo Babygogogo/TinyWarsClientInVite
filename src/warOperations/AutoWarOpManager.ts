@@ -14,6 +14,7 @@ import {
     SingleFreeWars_War,
     SinglePlayerMode_Model_SpmProxy,
     SinglePlayerWars_Constants,
+    SinglePlayerWars_ProviderForDualWars,
     SinglePlayerWars_War,
     SingleRankedWars_War,
     Turns_Constants,
@@ -23,16 +24,13 @@ import {
     WarOperations_Executors_Executor,
     WarOperations_Revisers_Reviser,
     WarOperations_Types,
+    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal";
 import { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer";
 
 const _warsWithRobotRunning = new Set<SinglePlayerWars_War.War>();
 
 export async function handlePlayerOpAndAutoOps(war: SinglePlayerWars_War.War, action: WoContainer): Promise<void> {
-    // if (war instanceof SingleRankedWars_War.War) {
-    //     return SingleRankedWars_AutoWarOpManager.handlePlayerOpAndAutoOps(war, action);
-    // }
-
     if (war.getIsEnded()) {
         throw Helpers_Misc.newError(`war.getIsEnded() is true.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_00);
     }
@@ -43,67 +41,76 @@ export async function handlePlayerOpAndAutoOps(war: SinglePlayerWars_War.War, ac
         throw Helpers_Misc.newError(`war.getIsRunning() is false.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_02);
     }
 
-    const revisedOperation = WarOperations_Revisers_Reviser.revise(war, action, Users_Model.getSelfUserId()).operation;
-    if (!revisedOperation) {
-        throw Helpers_Misc.newError(`Revised operation is null.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_03);
-    }
-
-    await WarOperations_Executors_Executor.checkAndExecuteAsUnifiedWar(war, revisedOperation, false);
+    await reviseAndExecute(war, action, Users_Model.getSelfUserId());
 
     await generateAndRunAutoOps(war);
 }
 
 export async function generateAndRunAutoOps(war: SinglePlayerWars_War.War): Promise<void> {
-    // if (war instanceof SingleRankedWars_War.War) {
-    //     return SingleRankedWars_AutoWarOpManager.generateAndRunAutoOps(war);
-    // }
-
     if (_warsWithRobotRunning.has(war)) {
         return;
     }
     _warsWithRobotRunning.add(war);
 
-    while (true) {
-        if ((checkAndEndWar(war))       ||
-            (!war.getIsRunning())       ||
-            (war.getIsAiPaused())       ||
-            (war.getIsViewingWarInfo())
-        ) {
-            _warsWithRobotRunning.delete(war);
-            return;
+    try {
+        while (true) {
+            if ((checkAndEndWar(war))       ||
+                (!war.getIsRunning())       ||
+                (war.getIsAiPaused())       ||
+                (war.getIsViewingWarInfo())
+            ) {
+                _warsWithRobotRunning.delete(war);
+                return;
+            }
+
+            const innerWar  = SinglePlayerWars_ProviderForDualWars.getInnerWarForOuterWar(war);
+            const data      = await generateNextAutoOp(innerWar ?? war);
+            if ((checkAndEndWar(war))       ||
+                (!war.getIsRunning())       ||
+                (war.getIsAiPaused())       ||
+                (war.getIsViewingWarInfo())
+            ) {
+                _warsWithRobotRunning.delete(war);
+                return;
+            }
+            if (!data) {
+                break;
+            }
+
+            await reviseAndExecute(war, data.warOperation, data.userId);
         }
 
-        const data = await generateNextAutoOp(war);
-        if ((checkAndEndWar(war))       ||
-            (!war.getIsRunning())       ||
-            (war.getIsAiPaused())       ||
-            (war.getIsViewingWarInfo())
-        ) {
-            _warsWithRobotRunning.delete(war);
-            return;
-        }
-        if (!data) {
-            break;
+        if (war.checkIsHumanInTurn()) {
+            const retractManager = war.getRetractManager();
+            if (retractManager.getCanRetract()) {
+                retractManager.addRetractState(war.serialize().encode());
+            }
         }
 
+    } finally {
+        _warsWithRobotRunning.delete(war);
+    }
+}
+
+async function reviseAndExecute(war: SinglePlayerWars_War.War, action: WoContainer, userId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Promise<void> {
+    const innerWar      = SinglePlayerWars_ProviderForDualWars.getInnerWarForOuterWar(war);
+    const revisedResult = WarOperations_Revisers_Reviser.revise(innerWar ?? war, action, userId);
+
+    if (innerWar) {
+        const outerWarOp = await WarOperations_Executors_Executor.checkAndExecuteAsInnerWar(innerWar, revisedResult);
+        await WarOperations_Executors_Executor.checkAndExecuteAsOuterWar(war, outerWarOp, false);
+
+    } else {
         await WarOperations_Executors_Executor.checkAndExecuteAsUnifiedWar(
             war,
-            Helpers_Misc.getExisted(WarOperations_Revisers_Reviser.revise(war, data.warOperation, data.userId).operation),
+            Helpers_Misc.getExisted(revisedResult.operation),
             false,
         );
     }
-
-    if (war.checkIsHumanInTurn()) {
-        const retractManager = war.getRetractManager();
-        if (retractManager.getCanRetract()) {
-            retractManager.addRetractState(war.serialize().encode());
-        }
-    }
-
-    _warsWithRobotRunning.delete(war);
 }
 
 function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
+    war = SinglePlayerWars_ProviderForDualWars.getInnerWarForOuterWar(war) ?? war;
     if (!war.getIsEnded()) {
         return false;
     }

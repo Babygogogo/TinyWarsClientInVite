@@ -254,7 +254,17 @@ async function executeActionAsOuterWar(war: BaseWar_Model_War.War, action: WoCon
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function executeAsInnerWar(war: SinglePlayerWars_War.War, revisedResult: WarOperations_Revisers_Result.Result): Promise<Map<number, WoContainer>> {
+export async function checkAndExecuteAsInnerWar(war: SinglePlayerWars_War.War, revisedResult: WarOperations_Revisers_Result.Result): Promise<WoContainer> {
+    if (!war.getIsRunning()) {
+        throw Helpers_Misc.newError(`!war.getIsRunning().`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_CheckAndExecute_00);
+    }
+    if (war.getIsExecutingAction()) {
+        throw Helpers_Misc.newError(`war.getIsExecutingAction().`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_CheckAndExecute_01);
+    }
+    if (war.getIsEnded()) {
+        throw Helpers_Misc.newError(`war.getIsEnded().`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_CheckAndExecute_02);
+    }
+
     {
         const errorCode = revisedResult.errorCode;
         if (errorCode !== Utils_ClientErrorCode.ClientErrorCode.NoError) {
@@ -262,219 +272,16 @@ export async function executeAsInnerWar(war: SinglePlayerWars_War.War, revisedRe
         }
     }
 
-    const operationContainer = revisedResult.operation;
-    if (operationContainer == null) {
-        throw Helpers_Misc.newError(`Operation container is null`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_ExecuteForInnerWar_00);
-    }
-
     // 结束回合会改写turnIndex和playerIndex，所以要提前保存
     const turnManager   = war.getTurnManager();
     const turnIndex     = turnManager.getTurnIndex();
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const hadFog        = war.getFogMap().checkHasFogCurrently();
+    war.setIsExecutingAction(true);
 
-    let outerWarOpCreator: WarOperations_Executors_Types.ExecutionResultForInnerWarOperation | undefined;
-    {
-        const operation = operationContainer.getWoPlayerDeleteUnit();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_PlayerDeleteUnit.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoPlayerEndTurn();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_PlayerEndTurn.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoPlayerProduceUnit();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_PlayerProduceUnit.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoPlayerSurrender();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_PlayerSurrender.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoPlayerVoteForDraw();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_PlayerVoteForDraw.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoPlayerUseCoSkill();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_PlayerUseCoSkill.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoSystemBeginTurn();
-        if (operation) {
-            outerWarOpCreator = await WarOperations_Executors_Utils_SystemBeginTurn.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoSystemCallWarEvent();
-        if (operation) {
-            outerWarOpCreator = await WarOperations_Executors_Utils_SystemCallWarEvent.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoSystemDestroyPlayerForce();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_SystemDestroyPlayerForce.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoSystemEndTurn();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_SystemEndTurn.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoSystemEndWar();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_SystemEndWar.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoSystemHandleBootPlayer();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_SystemHandleBootPlayer.executeAsInnerWar(war, operation);
-        }
-    }
-    {
-        const operation = operationContainer.getWoSystemVoteForDraw();
-        if (operation) {
-            outerWarOpCreator = WarOperations_Executors_Utils_SystemVoteForDraw.executeAsInnerWar(war, operation);
-        }
-    }
+    const outerWarOpCreator = await executeActionAsInnerWar(war, revisedResult);
 
-    if (outerWarOpCreator == null) {
-        const movePath = Helpers_Misc.getExisted(revisedResult.movePath, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_ExecuteForInnerWar_01);
-        {
-            const operation = operationContainer.getWoUnitAttackTile();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitAttackTile.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitAttackUnit();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitAttackUnit.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitBeLoaded();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitBeLoaded.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitBoardedByCo();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitBoardedByCo.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitBuildTile();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitBuildTile.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitCaptureTile();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitCaptureTile.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitCrushUnit();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitCrushUnit.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitDive();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitDive.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitDropUnit();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitDropUnit.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitJoinUnit();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitJoinUnit.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitLaunchFlare();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitLaunchFlare.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitLaunchSilo();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitLaunchSilo.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitProduceUnit();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitProduceUnit.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitRepairUnit();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitRepairUnit.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitSelfDetonate();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitSelfDetonate.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitSupplyUnit();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitSupplyUnit.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitSurface();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitSurface.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitUseCoSkill();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitUseCoSkill.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-        {
-            const operation = operationContainer.getWoUnitWait();
-            if (operation) {
-                outerWarOpCreator = WarOperations_Executors_Utils_UnitWait.executeAsInnerWar(war, operation, movePath);
-            }
-        }
-    }
-
-    if (outerWarOpCreator == null) {
-        throw Helpers_Misc.newError(`Operation container is null`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_ExecuteForInnerWar_02);
-    }
-
+    const operationContainer        = Helpers_Misc.getExisted(revisedResult.operation);
     const executedOperationManager  = war.getExecutedOperationManager();
     const operationId               = executedOperationManager.tickExecutedOperationsCount();
     executedOperationManager.addExecutedOperation(operationContainer);
@@ -484,11 +291,215 @@ export async function executeAsInnerWar(war: SinglePlayerWars_War.War, revisedRe
     }
 
     const extraChangedThings = war.getTaskObjectiveManager().autoUpdateAllCurrentProgresses();
+    war.setIsExecutingAction(false);
+
+    const playerManager = war.getPlayerManager();
     if (hadFog !== war.getFogMap().checkHasFogCurrently()) {
-        extraChangedThings.addPlayers(war.getPlayerManager().getAllPlayers(true));
+        extraChangedThings.addPlayers(playerManager.getAllPlayers(true));
     }
 
-    return outerWarOpCreator(extraChangedThings, operationId);
+    const teamIndex = [...playerManager.getWatcherTeamIndexesForSelf()][0];
+    return Helpers_Misc.getExisted(outerWarOpCreator(extraChangedThings, operationId).get(teamIndex));
+}
+
+async function executeActionAsInnerWar(war: SinglePlayerWars_War.War, revisedResult: WarOperations_Revisers_Result.Result): Promise<WarOperations_Executors_Types.ExecutionResultForInnerWarOperation> {
+    const operationContainer = Helpers_Misc.getExisted(revisedResult.operation);
+    {
+        const operation = operationContainer.getWoPlayerDeleteUnit();
+        if (operation) {
+            return WarOperations_Executors_Utils_PlayerDeleteUnit.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoPlayerEndTurn();
+        if (operation) {
+            return WarOperations_Executors_Utils_PlayerEndTurn.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoPlayerProduceUnit();
+        if (operation) {
+            return WarOperations_Executors_Utils_PlayerProduceUnit.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoPlayerSurrender();
+        if (operation) {
+            return WarOperations_Executors_Utils_PlayerSurrender.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoPlayerVoteForDraw();
+        if (operation) {
+            return WarOperations_Executors_Utils_PlayerVoteForDraw.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoPlayerUseCoSkill();
+        if (operation) {
+            return WarOperations_Executors_Utils_PlayerUseCoSkill.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoSystemBeginTurn();
+        if (operation) {
+            return await WarOperations_Executors_Utils_SystemBeginTurn.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoSystemCallWarEvent();
+        if (operation) {
+            return await WarOperations_Executors_Utils_SystemCallWarEvent.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoSystemDestroyPlayerForce();
+        if (operation) {
+            return WarOperations_Executors_Utils_SystemDestroyPlayerForce.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoSystemEndTurn();
+        if (operation) {
+            return WarOperations_Executors_Utils_SystemEndTurn.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoSystemEndWar();
+        if (operation) {
+            return WarOperations_Executors_Utils_SystemEndWar.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoSystemHandleBootPlayer();
+        if (operation) {
+            return WarOperations_Executors_Utils_SystemHandleBootPlayer.executeAsInnerWar(war, operation);
+        }
+    }
+    {
+        const operation = operationContainer.getWoSystemVoteForDraw();
+        if (operation) {
+            return WarOperations_Executors_Utils_SystemVoteForDraw.executeAsInnerWar(war, operation);
+        }
+    }
+
+    const movePath = Helpers_Misc.getExisted(revisedResult.movePath, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_ExecuteForInnerWar_01);
+    {
+        const operation = operationContainer.getWoUnitAttackTile();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitAttackTile.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitAttackUnit();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitAttackUnit.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitBeLoaded();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitBeLoaded.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitBoardedByCo();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitBoardedByCo.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitBuildTile();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitBuildTile.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitCaptureTile();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitCaptureTile.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitCrushUnit();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitCrushUnit.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitDive();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitDive.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitDropUnit();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitDropUnit.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitJoinUnit();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitJoinUnit.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitLaunchFlare();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitLaunchFlare.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitLaunchSilo();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitLaunchSilo.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitProduceUnit();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitProduceUnit.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitRepairUnit();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitRepairUnit.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitSelfDetonate();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitSelfDetonate.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitSupplyUnit();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitSupplyUnit.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitSurface();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitSurface.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitUseCoSkill();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitUseCoSkill.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+    {
+        const operation = operationContainer.getWoUnitWait();
+        if (operation) {
+            return WarOperations_Executors_Utils_UnitWait.executeAsInnerWar(war, operation, movePath);
+        }
+    }
+
+    throw Helpers_Misc.newError(`Unknown operation.`);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

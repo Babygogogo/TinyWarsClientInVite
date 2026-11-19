@@ -7,6 +7,7 @@ import {
     Networks_MessageCodes,
     Notifications_Dispatcher,
     SinglePlayerMode_Model_SpmModel,
+    SinglePlayerWars_ProviderForDualWars,
     SinglePlayerWars_War,
     Users_Model,
     type Egret_Egret,
@@ -61,12 +62,13 @@ async function _onMsgCampaignCreateWar(e: Egret_Egret.Event<Networks_Manager.Res
 }
 
 export function reqCampaignSaveWar(war: SinglePlayerWars_War.War): void {
+    const innerWar = SinglePlayerWars_ProviderForDualWars.getInnerWarForOuterWar(war);
     Networks_Manager.send({
         MsgCampaignSaveWar : {
             c : {
                 slotIndex         : war.getSaveSlotIndex(),
                 slotExtraData     : war.getSaveSlotExtraData()?.toJson(),
-                compressedWarData : Helpers_Gzip.compress(war.serialize().encode()),
+                compressedWarData : Helpers_Gzip.compress((innerWar ?? war).serialize().encode()),
             },
         },
     });

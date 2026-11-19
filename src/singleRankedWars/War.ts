@@ -1,10 +1,11 @@
 import {
-    Utils_ClientErrorCode,
+    BootTimers_Constants,
+    type GameConfigs_GameConfig,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
     SinglePlayerWars_War,
-    BootTimers_Constants,
-    type GameConfigs_GameConfig,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
 } from "../internal.ts";
 import { SerialDrawVoteManager } from "../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
@@ -116,5 +117,9 @@ export class War extends SinglePlayerWars_War.War {
     }
     private _getSettingsForSrw(): SettingsForSrw {
         return Helpers_Misc.getExisted(this._settingsForSrw);
+    }
+
+    public override updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void {
+        Visibilities_Utils.updateTilesAndUnitsAsOuterWar(this, isFastExecute);
     }
 }

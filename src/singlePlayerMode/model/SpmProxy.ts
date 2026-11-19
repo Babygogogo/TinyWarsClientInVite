@@ -5,6 +5,7 @@ import {
     Networks_MessageCodes,
     Notifications_Dispatcher,
     SinglePlayerMode_Model_SpmModel,
+    SinglePlayerWars_ProviderForDualWars,
     SinglePlayerWars_War,
     SingleRankedWars_War,
     type Egret_Egret,
@@ -71,7 +72,7 @@ export function reqSpmGetWarSaveSlotFullData(slotIndex: number): void {
     Networks_Manager.send({
         MsgSpmGetWarSaveSlotFullData : {
             c : {
-                slotIndex,
+                slotIndex : slotIndex,
             },
         },
     });
@@ -174,12 +175,13 @@ async function _onMsgSpmSaveSfw(e: Egret_Egret.Event<Networks_Manager.ResponseMa
 }
 
 export function reqSpmSaveSrw(war: SinglePlayerWars_War.War): void {
+    const innerWar = SinglePlayerWars_ProviderForDualWars.getInnerWarForOuterWar(war);
     Networks_Manager.send({
         MsgSpmSaveSrw : {
             c : {
                 slotIndex         : war.getSaveSlotIndex(),
                 slotExtraData     : war.getSaveSlotExtraData()?.toJson(),
-                compressedWarData : Helpers_Gzip.compress(war.serialize().encode()),
+                compressedWarData : Helpers_Gzip.compress((innerWar ?? war).serialize().encode()),
             },
         },
     });
@@ -196,7 +198,7 @@ export function reqSpmDeleteWarSaveSlot(slotIndex: number): void {
     Networks_Manager.send({
         MsgSpmDeleteWarSaveSlot : {
             c : {
-                slotIndex,
+                slotIndex : slotIndex,
             },
         },
     });
@@ -213,7 +215,7 @@ export function reqSpmGetRankList(normalMapId: number): void {
     Networks_Manager.send({
         MsgSpmGetRankList : {
             c : {
-                normalMapId,
+                normalMapId : normalMapId,
             },
         },
     });
@@ -246,7 +248,7 @@ export function reqSpmGetReplayData(rankId: number): void {
     Networks_Manager.send({
         MsgSpmGetReplayData : {
             c : {
-                rankId,
+                rankId : rankId,
             },
         },
     });

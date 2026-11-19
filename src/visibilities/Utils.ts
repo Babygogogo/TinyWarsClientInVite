@@ -368,6 +368,10 @@ export function getAllTilesVisibleToTeams(war: BaseWar_Model_War.War, teamIndexe
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function updateTilesAndUnitsAsOuterWar(war: BaseWar_Model_War.War, isFastExecute: boolean): void {
+    if (!war.getView()) {
+        return;
+    }
+
     const teamIndexes  = war.getPlayerManager().getWatcherTeamIndexesForSelf();
     const visibleUnits = getAllUnitsOnMapVisibleToTeams(war, teamIndexes);
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
@@ -380,8 +384,8 @@ export function updateTilesAndUnitsAsOuterWar(war: BaseWar_Model_War.War, isFast
         }
     }
 
-    const visibleTiles = getAllTilesVisibleToTeams(war, teamIndexes);
-    const tileMap = war.getTileMap();
+    const visibleTiles  = getAllTilesVisibleToTeams(war, teamIndexes);
+    const tileMap       = war.getTileMap();
     for (const tile of tileMap.getAllTiles()) {
         if (visibleTiles.has(tile)) {
             tile.setHasFog(false);

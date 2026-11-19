@@ -56,9 +56,8 @@ import {
     ResManager,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
-    WarOperations_AutoWarOpManager,
-    SinglePlayerWars_ProviderForUnifiedWar,
     SinglePlayerWars_ProviderForDualWars,
+    SinglePlayerWars_ProviderForUnifiedWar,
     Sounds_SoundPlayer,
     Stages_StageManager,
     TestWar_Model_TwWar,
@@ -69,6 +68,7 @@ import {
     Users_Model,
     Users_Proxy,
     Utils_ClientErrorCode,
+    WarOperations_AutoWarOpManager,
     Wars_Constants,
     WarTypes_Constants,
     WatchWar_Model_WwProxy,
@@ -348,10 +348,11 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
     warData             : SerialWar;
     overridingBgmCode?  : number | null;
 }): Promise<void> {
-    // const war = warData.getSettingsForSrw()
-    //     ? await SingleRankedWars_Provider.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData })
-    //     : await SinglePlayerWars_Provider.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData });
-    const war = await SinglePlayerWars_ProviderForUnifiedWar.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData });
+    SinglePlayerWars_ProviderForDualWars.unloadWar();
+    SinglePlayerWars_ProviderForUnifiedWar.unloadWar();
+    const war = (warData.getSettingsForSrw() || warData.getSettingsForCaw())
+        ? await SinglePlayerWars_ProviderForDualWars.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData })
+        : await SinglePlayerWars_ProviderForUnifiedWar.loadWar({ warData : warData, slotIndex : slotIndex, slotExtraData : slotExtraData });
     war.setOverridingBgmCode(overridingBgmCode ?? null);
 
     MultiPlayerWar_Model_MpwModel.unloadWar();

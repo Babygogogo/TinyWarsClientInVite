@@ -1,11 +1,11 @@
 import {
+    Campaigns_Wars_War,
     GameConfigs_Provider,
     Helpers_Misc,
     SinglePlayerWars_War,
     SingleRankedWars_War,
     Utils_ClientErrorCode,
 } from "../internal.ts";
-
 import type { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
@@ -26,27 +26,40 @@ export async function loadWar({ warData, slotIndex, slotExtraData }: {
 }): Promise<SinglePlayerWars_War.War> {
     unloadWar();
 
-    const innerData = warData.clone();
-    const innerWar  = createWarByWarData(innerData, false);
-    innerWar.setSaveSlotIndex(slotIndex);
-    innerWar.setSaveSlotExtraData(slotExtraData?.clone());
-    innerWar.init(innerData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(innerData.getSettingsForCommon()?.getConfigVersion())));
-    innerWar.startRunning().startRunningView();
+    const innerData  = warData.clone();
+    const innerWar   = createWarByWarData(innerData, false);
+    const gameConfig = await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(innerData.getSettingsForCommon()?.getConfigVersion()));
+    let outerWar     : SinglePlayerWars_War.War | undefined;
+    let isLoaded     = false;
 
-    const teamIndexes = new Set<number>(innerWar.getHumanPlayers().map(v => v.getTeamIndex()));
-    if (teamIndexes.size !== 1) {
-        throw Helpers_Misc.newError(`Invalid teamIndexes: ${teamIndexes.size}`);
+    try {
+        innerWar.setSaveSlotIndex(slotIndex);
+        innerWar.setSaveSlotExtraData(slotExtraData?.clone());
+        innerWar.init(innerData, gameConfig);
+        innerWar.startRunning();
+
+        const teamIndexes = innerWar.getPlayerManager().getWatcherTeamIndexesForSelf();
+        if (teamIndexes.size !== 1) {
+            throw Helpers_Misc.newError(`Invalid human teamIndexes: ${teamIndexes.size}`);
+        }
+
+        const outerData = innerWar.serializeForTeamIndexes(teamIndexes);
+        outerWar        = createWarByWarData(outerData, true);
+        outerWar.setSaveSlotIndex(slotIndex);
+        outerWar.setSaveSlotExtraData(slotExtraData?.clone());
+        outerWar.init(outerData, gameConfig);
+        outerWar.startRunning().startRunningView();
+
+        setWars(outerWar, innerWar);
+        isLoaded = true;
+        return outerWar;
+
+    } finally {
+        if (!isLoaded) {
+            outerWar?.dispose();
+            innerWar.dispose();
+        }
     }
-
-    const outerData = innerWar.serializeForTeamIndexes(teamIndexes);
-    const outerWar  = createWarByWarData(outerData, true);
-    outerWar.setSaveSlotIndex(slotIndex);
-    outerWar.setSaveSlotExtraData(slotExtraData?.clone());
-    outerWar.init(outerData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(outerData.getSettingsForCommon()?.getConfigVersion())));
-    outerWar.startRunning().startRunningView();
-
-    setWars(outerWar, innerWar);
-    return outerWar;
 }
 
 export function unloadWar(): void {
@@ -61,6 +74,9 @@ export function getOuterWar(): SinglePlayerWars_War.War | undefined {
 export function getInnerWar(): SinglePlayerWars_War.War | undefined {
     return _innerWar;
 }
+export function getInnerWarForOuterWar(war: SinglePlayerWars_War.War): SinglePlayerWars_War.War | undefined {
+    return war === _outerWar ? _innerWar : undefined;
+}
 function setWars(outerWar: SinglePlayerWars_War.War | undefined, innerWar: SinglePlayerWars_War.War | undefined): void {
     _outerWar = outerWar;
     _innerWar = innerWar;
@@ -72,6 +88,8 @@ function setWars(outerWar: SinglePlayerWars_War.War | undefined, innerWar: Singl
 function createWarByWarData(warData: SerialWar, isNeedView: boolean): SinglePlayerWars_War.War {
     if (warData.getSettingsForSrw()) {
         return new SingleRankedWars_War.War(isNeedView);
+    } else if (warData.getSettingsForCaw()) {
+        return new Campaigns_Wars_War.War(isNeedView);
     } else {
         throw Helpers_Misc.newError(`Invalid warData.`, Utils_ClientErrorCode.ClientErrorCode.SpwModel_CreateWarByWarData_00);
     }

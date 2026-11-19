@@ -1,15 +1,10 @@
 import {
     AuxiliaryTypes_GridIndex,
     FogMaps_Constants,
-    HalfwayReplayWar_Model_HrwWar,
     Helpers_Collection,
     Helpers_Misc,
     MapEditor_Model_MeWar,
-    MultiPlayerWar_Model_MpwWar,
     Players_Constants,
-    ReplayWar_Model_RwWar,
-    SinglePlayerWars_War,
-    TestWar_Model_TwWar,
     Utils_ClientErrorCode,
     Visibilities_Constants,
     Visibilities_Utils,
@@ -100,57 +95,6 @@ export class FogMap {
 
     public startRunning(war: BaseWar_Model_War.War): void {
         this._setWar(war);
-
-        if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
-            const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeam(war, war.getPlayerInTurn().getTeamIndex());
-            for (const tile of war.getTileMap().getAllTiles()) {
-                tile.setHasFog(!visibleTiles.has(tile));
-            }
-
-        } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
-            for (const tile of war.getTileMap().getAllTiles()) {
-                tile.setHasFog(false);
-            }
-
-        } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
-            const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
-            for (const tile of war.getTileMap().getAllTiles()) {
-                if (visibleTiles.has(tile)) {
-                    tile.setHasFog(false);
-                } else {
-                    if (!tile.getHasFog()) {
-                        tile.resetTileDataAsHasFog();
-                    }
-                }
-            }
-
-        } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
-            const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeam(war, war.getPlayerInTurn().getTeamIndex());
-            for (const tile of war.getTileMap().getAllTiles()) {
-                tile.setHasFog(!visibleTiles.has(tile));
-            }
-
-        } else if (war instanceof SinglePlayerWars_War.War) {
-            if (war.getView() != null) {
-                const teamIndexes   = war.getPlayerManager().getWatcherTeamIndexesForSelf();
-                const visibleUnits  = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, teamIndexes);
-                for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
-                    unit.setViewVisible(visibleUnits.has(unit));
-                }
-
-                const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeams(war, teamIndexes);
-                for (const tile of war.getTileMap().getAllTiles()) {
-                    tile.setHasFog(!visibleTiles.has(tile));
-                    tile.flushDataToView();
-                }
-            }
-
-        } else if (war instanceof TestWar_Model_TwWar.TwWar) {
-            // nothing to do
-
-        } else {
-            throw Helpers_Misc.newError(`Invalid war.`);
-        }
     }
 
     public serialize(): SerialFogMap {

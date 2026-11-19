@@ -6,6 +6,7 @@ import {
     SinglePlayerWars_Constants,
     SinglePlayerWars_War,
     Utils_ClientErrorCode,
+    Visibilities_Utils,
     type GameConfigs_GameConfig,
 } from "../../internal.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
@@ -130,5 +131,9 @@ export class War extends SinglePlayerWars_War.War {
                 + this.getTaskObjectiveManager().getScore(),
             ),
         });
+    }
+
+    public override updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void {
+        Visibilities_Utils.updateTilesAndUnitsAsOuterWar(this, isFastExecute);
     }
 }
