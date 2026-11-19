@@ -50,7 +50,7 @@ export async function getScoreAndActionUnitUseCoSkill(commonParams: Bots_CommonP
                     },
                     launchUnitId         : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
                     skillType            : CoSkills_Constants.SkillTypeId.SuperPower,
-                    targetGridIndexArray : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.SuperPower)?.map(v => v.toProto().toJson()) ?? [],
+                    targetGridIndexArray : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.SuperPower).map(v => v.toProto().toJson()),
                 },
             }),
         };
@@ -87,7 +87,7 @@ export async function getScoreAndActionUnitUseCoSkill(commonParams: Bots_CommonP
                     },
                     launchUnitId         : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
                     skillType            : CoSkills_Constants.SkillTypeId.Power,
-                    targetGridIndexArray : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.Power)?.map(v => v.toProto().toJson()) ?? [],
+                    targetGridIndexArray : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.Power).map(v => v.toProto().toJson()),
                 },
             }),
         };

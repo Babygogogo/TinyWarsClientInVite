@@ -113,7 +113,7 @@ async function getBestActionPlayerProduceUnit(commonParams: Bots_CommonParams.Co
         }
 
         const movableArea   = Helpers_Misc.getExisted(movableAreaDict.get(attackerUnit), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetBestActionPlayerProduceUnit_00).getArea();
-        const minDistance   = Helpers_Collection.getNonNullElements(targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : maxAttackRange, mapSize }).map(g => {
+        const minDistance   = Helpers_Collection.getNonNullElements(targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : maxAttackRange, mapSize : mapSize }).map(g => {
             const column = movableArea[g.getX()];
             return (column ? column[g.getY()] : null)?.totalMoveCost;
         })).sort((d1, d2) => d1 - d2)[0];
@@ -148,16 +148,16 @@ async function getBestActionPlayerProduceUnit(commonParams: Bots_CommonParams.Co
         return minTurnsCountDict.get(attackerUnit)?.get(gridId) ?? null;
     };
 
-    const promiseArray: Promise<Bots_Types.ScoreAndAction | null>[] = [];
+    const scoreAndActionArray: (Bots_Types.ScoreAndAction | null)[] = [];
     for (const produceUnitInfo of produceUnitInfoArray) {
-        promiseArray.push(getBestScoreAndActionPlayerProduceUnitWithGridIndex({
+        scoreAndActionArray.push(await getBestScoreAndActionPlayerProduceUnitWithGridIndex({
             commonParams              : commonParams,
             produceUnitInfo           : produceUnitInfo,
             getMinTurnsCountForAttack : getMinTurnsCountForAttack,
         }));
     }
 
-    return Bots_Utils.getBestScoreAndAction(await Promise.all(promiseArray), commonParams)?.action ?? null;
+    return Bots_Utils.getBestScoreAndAction(scoreAndActionArray, commonParams)?.action ?? null;
 }
 
 async function getBestScoreAndActionPlayerProduceUnitWithGridIndex({ commonParams, produceUnitInfo, getMinTurnsCountForAttack }: {
@@ -184,8 +184,8 @@ async function getBestScoreAndActionPlayerProduceUnitWithGridIndex({ commonParam
 
         if (bestScoreAndUnitType == null) {
             bestScoreAndUnitType = {
-                score,
-                unitType,
+                score    : score,
+                unitType : unitType,
             };
         } else if (score > bestScoreAndUnitType.score) {
             bestScoreAndUnitType.score       = score;
@@ -325,7 +325,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
             const baseDamage = producingUnit.getBaseDamage(unit.getArmorType());
             if (baseDamage != null) {
                 const movableArea = getProducingUnitMovableArea().getArea();
-                const minDistance = Helpers_Collection.getNonNullElements(unitGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : producingUnitMaxAttackRange, mapSize }).map(g => {
+                const minDistance = Helpers_Collection.getNonNullElements(unitGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : producingUnitMaxAttackRange, mapSize : mapSize }).map(g => {
                     const column = movableArea[g.getX()];
                     return (column ? column[g.getY()] : null)?.totalMoveCost;
                 })).sort((d1, d2) => d1 - d2)[0];

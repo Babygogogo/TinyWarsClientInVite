@@ -14,9 +14,11 @@ export async function getNextOperation(war: BaseWar_Model_War.War): Promise<WoCo
     }
 
     _calculatingWars.add(war);
-    const action = await Bots_Utils.doGetNextOperation(war);
-    action.setOperationId(war.getExecutedOperationManager().getExecutedOperationsCount());
-    _calculatingWars.delete(war);
-
-    return action;
+    try {
+        const action = await Bots_Utils.doGetNextOperation(war);
+        action.setOperationId(war.getExecutedOperationManager().getExecutedOperationsCount());
+        return action;
+    } finally {
+        _calculatingWars.delete(war);
+    }
 }
