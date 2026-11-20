@@ -10,7 +10,7 @@ import {
     CoSkills_Constants,
     CoSkills_Utils_Common,
     CoSkills_Utils_Persistent_SelfCanCoBoard,
-    CoSkills_Utils_Persistent_SelfUnitAttackRange,
+    CoSkills_Utils_Persistent_AttackRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCaptureAmount,
     CoSkills_Utils_Persistent_SelfUnitDefense,
     CoSkills_Utils_Persistent_SelfUnitFuelConsumption,
@@ -807,8 +807,8 @@ export class Unit {
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills() || []) {
-            modifier += CoSkills_Utils_Persistent_SelfUnitAttackRange.getTotalUpperOffset({
-                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitAttackRange(),
+            modifier += CoSkills_Utils_Persistent_AttackRangeOffsets.getTotalUpperOffset({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId               : selfUnitTypeId,
                 tileTypeId               : selfTileTypeId,

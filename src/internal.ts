@@ -239,7 +239,7 @@ export * as CoSkills_Utils_InstantMisc_SelfUnitPromotionAfterBattle from "./coSk
 export * as CoSkills_Utils_Persistent_SelfCanCoBoard from "./coSkills/utils/persistent/SelfCanCoBoard.ts";
 export * as CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction from "./coSkills/utils/persistent/SelfTileEnabledForUnitProduction.ts";
 export * as CoSkills_Utils_Persistent_SelfTileIncome from "./coSkills/utils/persistent/SelfTileIncome.ts";
-export * as CoSkills_Utils_Persistent_SelfUnitAttackRange from "./coSkills/utils/persistent/SelfUnitAttackRange.ts";
+export * as CoSkills_Utils_Persistent_AttackRangeOffsets from "./coSkills/utils/persistent/AttackRangeOffsets.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCaptureAmount from "./coSkills/utils/persistent/SelfUnitCaptureAmount.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCost from "./coSkills/utils/persistent/SelfUnitCost.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitDefense from "./coSkills/utils/persistent/SelfUnitDefense.ts";

@@ -11,7 +11,6 @@ import { SelfPromotionBonusByProduce as $Message$CommonProto$Config$CoSkillCfg$P
 import { SelfRepairAmountBonus as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus, type SelfRepairAmountBonusJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus } from "./Persistent/SelfRepairAmountBonus.js";
 import { SelfTileEnabledForUnitProduction as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction, type SelfTileEnabledForUnitProductionJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction } from "./Persistent/SelfTileEnabledForUnitProduction.js";
 import { SelfTileIncome as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome, type SelfTileIncomeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome } from "./Persistent/SelfTileIncome.js";
-import { SelfUnitAttackRange as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange, type SelfUnitAttackRangeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange } from "./Persistent/SelfUnitAttackRange.js";
 import { SelfUnitCaptureAmount as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount, type SelfUnitCaptureAmountJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount } from "./Persistent/SelfUnitCaptureAmount.js";
 import { SelfUnitCommonAttributes as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes, type SelfUnitCommonAttributesJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes } from "./Persistent/SelfUnitCommonAttributes.js";
 import { SelfUnitCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost, type SelfUnitCostJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost } from "./Persistent/SelfUnitCost.js";
@@ -23,7 +22,6 @@ import { SelfUnitVision as $Message$CommonProto$Config$CoSkillCfg$Persistent$Sel
 
 export interface PersistentJson extends $ProtoSchemaJsonBase {
     selfUnitCommonAttributes?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
-    selfUnitAttackRange?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange | null | undefined;
     selfUnitVision?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision | null | undefined;
     selfUnitFuelConsumption?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitFuelConsumption | null | undefined;
     selfUnitLuckRange?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange | null | undefined;
@@ -46,7 +44,6 @@ export interface PersistentJson extends $ProtoSchemaJsonBase {
 
 export class Persistent extends $ProtoSchemaBase {
     private _selfUnitCommonAttributes?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
-    private _selfUnitAttackRange?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange | null | undefined;
     private _selfUnitVision?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision | null | undefined;
     private _selfUnitFuelConsumption?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitFuelConsumption | null | undefined;
     private _selfUnitLuckRange?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange | null | undefined;
@@ -71,7 +68,6 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public override loadJson(obj: PersistentJson): this {
         this.setSelfUnitCommonAttributes(obj.selfUnitCommonAttributes != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes.fromJson(obj.selfUnitCommonAttributes) : null);
-        this.setSelfUnitAttackRange(obj.selfUnitAttackRange != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange.fromJson(obj.selfUnitAttackRange) : null);
         this.setSelfUnitVision(obj.selfUnitVision != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision.fromJson(obj.selfUnitVision) : null);
         this.setSelfUnitFuelConsumption(obj.selfUnitFuelConsumption != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitFuelConsumption.fromJson(obj.selfUnitFuelConsumption) : null);
         this.setSelfUnitLuckRange(obj.selfUnitLuckRange != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange.fromJson(obj.selfUnitLuckRange) : null);
@@ -98,11 +94,6 @@ export class Persistent extends $ProtoSchemaBase {
         {
             const value = this.getSelfUnitCommonAttributes();
             (value != null) && (obj.selfUnitCommonAttributes = value.toJson());
-        }
-
-        {
-            const value = this.getSelfUnitAttackRange();
-            (value != null) && (obj.selfUnitAttackRange = value.toJson());
         }
 
         {
@@ -202,13 +193,6 @@ export class Persistent extends $ProtoSchemaBase {
             const value = this.getSelfUnitCommonAttributes();
             if (value != null) {
                 value.toWriter(writer.uint32(10).fork()).ldelim();
-            }
-        }
-
-        {
-            const value = this.getSelfUnitAttackRange();
-            if (value != null) {
-                value.toWriter(writer.uint32(26).fork()).ldelim();
             }
         }
 
@@ -355,10 +339,6 @@ export class Persistent extends $ProtoSchemaBase {
                     msg.setSelfUnitCommonAttributes($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes.decode(reader, reader.uint32()));
                     break;
 
-                case 3:
-                    msg.setSelfUnitAttackRange($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange.decode(reader, reader.uint32()));
-                    break;
-
                 case 4:
                     msg.setSelfUnitVision($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision.decode(reader, reader.uint32()));
                     break;
@@ -459,19 +439,6 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public createIfNotExistsSelfUnitCommonAttributes(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes {
         return this._selfUnitCommonAttributes ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes();
-    }
-
-    public checkHasSelfUnitAttackRange(): boolean {
-        return this._selfUnitAttackRange != null;
-    }
-    public getSelfUnitAttackRange(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange | null | undefined {
-        return this._selfUnitAttackRange;
-    }
-    public setSelfUnitAttackRange(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange | null | undefined): void {
-        this._selfUnitAttackRange = value;
-    }
-    public createIfNotExistsSelfUnitAttackRange(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange {
-        return this._selfUnitAttackRange ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange();
     }
 
     public checkHasSelfUnitVision(): boolean {
