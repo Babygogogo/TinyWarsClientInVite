@@ -16,7 +16,7 @@ import {
     ExpressionParsers_Results_PositionArray,
     ExpressionParsers_Results_Lambda,
     ExpressionParsers_Results_PlayerArray,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Results_Tile,
     ExpressionParsers_Results_TileArray,
     ExpressionParsers_Results_TileBuff,
@@ -43,7 +43,7 @@ export class PlayerArray extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = PlayerArray.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(PlayerArray.VnLength,    { desc : Lang_Constants.TextType.A0480, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
+        variables.set(PlayerArray.VnLength,    { desc : Lang_TextType.TextType.A0480, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
 
         return variables;
     }
@@ -52,7 +52,7 @@ export class PlayerArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             PlayerArray.FnGet,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0487,
+                Lang_TextType.TextType.A0487,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -78,7 +78,7 @@ export class PlayerArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             PlayerArray.FnWhere,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0488,
+                Lang_TextType.TextType.A0488,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -118,7 +118,7 @@ export class PlayerArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             PlayerArray.FnSelect,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0489,
+                Lang_TextType.TextType.A0489,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -176,7 +176,7 @@ export class PlayerArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             PlayerArray.FnAll,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0509,
+                Lang_TextType.TextType.A0509,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -216,7 +216,7 @@ export class PlayerArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             PlayerArray.FnAny,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0510,
+                Lang_TextType.TextType.A0510,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(

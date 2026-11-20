@@ -6,7 +6,7 @@ import {
     Helpers_PointerInput,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiContainer,
     Ui_Components_UiImage,
     Ui_Components_UiLayout,
@@ -104,7 +104,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
         const getTitleText = this.getOpenData()?.getTitleText;
-        this._labelTitle.setText(getTitleText ? getTitleText() : Lang_Utils.getText(Lang_Constants.TextType.B0140));
+        this._labelTitle.setText(getTitleText ? getTitleText() : Lang_Utils.getText(Lang_TextType.TextType.B0140));
 
         this._updateComponentsForPreviewCoId();
     }

@@ -9,7 +9,7 @@ import {
     Users_Proxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -70,7 +70,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgUserSetRelation(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserSetRelation"]>): void {
         const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getTargetUserId() === this.getOpenData()?.userId) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0377));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0377));
             this.closePanel();
         }
     }
@@ -83,8 +83,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedGroupHelpFollow(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0999),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0375),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0999),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0375),
         });
     }
     private _onTouchedGroupBlock(): void {
@@ -95,8 +95,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedGroupHelpBlock(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1000),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0376),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1000),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0376),
         });
     }
     private _onTouchedBtnConfirm(): void {
@@ -123,11 +123,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1001);
-        this._labelFollow.setLangText(Lang_Constants.TextType.B0999);
-        this._labelBlock.setLangText(Lang_Constants.TextType.B1000);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1001);
+        this._labelFollow.setLangText(Lang_TextType.TextType.B0999);
+        this._labelBlock.setLangText(Lang_TextType.TextType.B1000);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0154);
     }
 }
 

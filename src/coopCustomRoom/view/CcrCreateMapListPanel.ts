@@ -6,7 +6,7 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Maps_Constants,
     NormalMap_Model_NormalMapModel,
@@ -202,7 +202,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnSwitch(): Promise<void> {
-        FloatText.showLang(Lang_Constants.TextType.A0937);
+        FloatText.showLang(Lang_TextType.TextType.A0937);
 
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrCreateMapListPanel, {
@@ -268,17 +268,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelCreateRoom.setLangText(Lang_Constants.TextType.B0000);
-        this._labelMultiPlayer.setLangText(Lang_Constants.TextType.B0646);
-        this._labelChooseMap.setLangText(Lang_Constants.TextType.B0227);
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0150);
-        this._labelNoMap.setLangText(Lang_Constants.TextType.A0010);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
-        this._btnSort.setLangText(Lang_Constants.TextType.B1049);
-        this._btnNextStep.setLangText(Lang_Constants.TextType.B1383);
-        this._btnPrevPage.setLangText(Lang_Constants.TextType.B1384);
-        this._btnNextPage.setLangText(Lang_Constants.TextType.B1385);
+        this._labelCreateRoom.setLangText(Lang_TextType.TextType.B0000);
+        this._labelMultiPlayer.setLangText(Lang_TextType.TextType.B0646);
+        this._labelChooseMap.setLangText(Lang_TextType.TextType.B0227);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0150);
+        this._labelNoMap.setLangText(Lang_TextType.TextType.A0010);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._btnSearch.setLangText(Lang_TextType.TextType.B0228);
+        this._btnSort.setLangText(Lang_TextType.TextType.B1049);
+        this._btnNextStep.setLangText(Lang_TextType.TextType.B1383);
+        this._btnPrevPage.setLangText(Lang_TextType.TextType.B1384);
+        this._btnNextPage.setLangText(Lang_TextType.TextType.B1385);
         this._updateLabelPageTitle();
 
         this._layoutPage.arrangeItems();
@@ -302,10 +302,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapFilter = this._mapFilter;
         if ((mapFilter == null) || (mapFilter.checkIsEmpty())) {
             label.setTextColor(0xCCCCCC);
-            label.setLangText(Lang_Constants.TextType.B1386);
+            label.setLangText(Lang_TextType.TextType.B1386);
         } else {
             label.setTextColor(0xFFFF00);
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1386)}(${Lang_Utils.getText(Lang_Constants.TextType.B1387)})`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1386)}(${Lang_Utils.getText(Lang_TextType.TextType.B1387)})`);
         }
         this._layoutPage.arrangeItems();
     }

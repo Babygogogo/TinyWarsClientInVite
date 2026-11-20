@@ -1,6 +1,6 @@
 import {
     Helpers_ImageSource,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -94,8 +94,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0913);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0913);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
     }
     private async _updateListSkin(selectedSkinId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Promise<void> {
         const openData = this.getOpenData();

@@ -7,7 +7,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -81,13 +81,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1071),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1071),
             minValue     : 0,
             maxValue     : mapSize.getWidth() - 1,
             currentValue : 0,
             callback     : x => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1072),
+                    getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1072),
                     minValue     : 0,
                     maxValue     : mapSize.getHeight() - 1,
                     currentValue : 0,
@@ -96,13 +96,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         const gridIndexArray    = Helpers_Collection.getNonNullElements(list.getBoundDataArray()?.map(v => v?.gridIndex) ?? []);
                         const gridIndex         = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
                         if (gridIndexArray.some(v => v.checkIsEqual(gridIndex))) {
-                            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0268));
+                            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0268));
                             return;
                         }
 
                         gridIndexArray.push(gridIndex);
                         await list.bindData(gridIndexArray.sort(gridIndexSorter).map(v => {
-                            return { gridIndex : v, panel : this }; 
+                            return { gridIndex : v, panel : this };
                         }));
                     },
                 });
@@ -111,15 +111,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnDeleteAll(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0851),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0851),
             callback   : () => this._listLocation.removeAllItems(),
         });
     }
     private _onTouchedBtnClose(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0418),
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0418),
+            getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.Yes),
+            getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.No),
             callback          : () => {
                 this.getOpenData()?.callbackOnConfirm(Helpers_Collection.getNonNullElements(this._listLocation.getBoundDataArray()?.map(v => v?.gridIndex) ?? []).sort(gridIndexSorter));
                 this.closePanel();
@@ -134,9 +134,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0531)));
-        this._btnAdd.setLangText(Lang_Constants.TextType.B0320);
-        this._btnDeleteAll.setLangText(Lang_Constants.TextType.B0762);
+        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.B0531)));
+        this._btnAdd.setLangText(Lang_TextType.TextType.B0320);
+        this._btnDeleteAll.setLangText(Lang_TextType.TextType.B0762);
         this._layoutTitle.arrangeItems();
 
         this._updateLabelMapSize();
@@ -156,7 +156,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateLabelMapSize(): void {
         const mapSize = this.getOpenData()?.mapSize;
-        this._labelMapSize.setText(`(${Lang_Utils.getText(Lang_Constants.TextType.B0300)}: ${mapSize?.getWidth()} x ${mapSize?.getHeight()})`);
+        this._labelMapSize.setText(`(${Lang_Utils.getText(Lang_TextType.TextType.B0300)}: ${mapSize?.getWidth()} x ${mapSize?.getHeight()})`);
         this._layoutTitle.arrangeItems();
     }
 }
@@ -187,7 +187,7 @@ class GridIndexRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 openData.panel.updateOnDeleteGridIndex(openData.gridIndex);
             },
@@ -203,7 +203,7 @@ class GridIndexRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDelete.setLangText(Lang_Constants.TextType.B0220);
+        this._btnDelete.setLangText(Lang_TextType.TextType.B0220);
     }
 }
 

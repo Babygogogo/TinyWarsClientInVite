@@ -10,7 +10,7 @@ import {
     AuxiliaryTypes_MapSize,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -77,7 +77,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0023, Maps_Constants.Common.MaxGridsCount),
+            getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0023, Maps_Constants.Common.MaxGridsCount),
         });
     }
 
@@ -121,7 +121,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const newWidth          = width + deltaLeft + deltaRight;
         const newHeight         = height + deltaTop + deltaBottom;
         if ((newWidth <= 0) || (newHeight <= 0) || (newWidth * newHeight > Maps_Constants.Common.MaxGridsCount)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0265));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0265));
             return;
         }
 
@@ -171,7 +171,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaTop;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle : () => Lang_Utils.getText(Lang_Constants.TextType.B0857),
+            getTitle : () => Lang_Utils.getText(Lang_TextType.TextType.B0857),
             currentValue,
             minValue,
             maxValue,
@@ -188,7 +188,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaBottom;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle : () => Lang_Utils.getText(Lang_Constants.TextType.B0858),
+            getTitle : () => Lang_Utils.getText(Lang_TextType.TextType.B0858),
             currentValue,
             minValue,
             maxValue,
@@ -205,7 +205,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaLeft;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle : () => Lang_Utils.getText(Lang_Constants.TextType.B0859),
+            getTitle : () => Lang_Utils.getText(Lang_TextType.TextType.B0859),
             currentValue,
             minValue,
             maxValue,
@@ -222,7 +222,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaRight;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle : () => Lang_Utils.getText(Lang_Constants.TextType.B0860),
+            getTitle : () => Lang_Utils.getText(Lang_TextType.TextType.B0860),
             currentValue,
             minValue,
             maxValue,
@@ -245,11 +245,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0290);
-        this._labelCurrSizeTitle.setLangText(Lang_Constants.TextType.B0855);
-        this._labelNewSizeTitle.setLangText(Lang_Constants.TextType.B0856);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0290);
+        this._labelCurrSizeTitle.setLangText(Lang_TextType.TextType.B0855);
+        this._labelNewSizeTitle.setLangText(Lang_TextType.TextType.B0856);
 
         this._updateBtnDeltaTop();
         this._updateBtnDeltaBottom();
@@ -290,11 +290,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const btn   = this._btnDeltaTop;
         const value = this._deltaTop;
         if (value === 0) {
-            btn.setLangText(Lang_Constants.TextType.B0857);
+            btn.setLangText(Lang_TextType.TextType.B0857);
         } else {
             btn.setText(value > 0
-                ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0086, value)
-                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0087, -value),
+                ? Lang_Utils.getFormattedText(Lang_TextType.TextType.F0086, value)
+                : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0087, -value),
             );
         }
     }
@@ -302,11 +302,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const btn   = this._btnDeltaBottom;
         const value = this._deltaBottom;
         if (value === 0) {
-            btn.setLangText(Lang_Constants.TextType.B0858);
+            btn.setLangText(Lang_TextType.TextType.B0858);
         } else {
             btn.setText(value > 0
-                ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0086, value)
-                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0087, -value),
+                ? Lang_Utils.getFormattedText(Lang_TextType.TextType.F0086, value)
+                : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0087, -value),
             );
         }
     }
@@ -314,11 +314,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const btn   = this._btnDeltaLeft;
         const value = this._deltaLeft;
         if (value === 0) {
-            btn.setLangText(Lang_Constants.TextType.B0859);
+            btn.setLangText(Lang_TextType.TextType.B0859);
         } else {
             btn.setText(value > 0
-                ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0089, value)
-                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0116, -value),
+                ? Lang_Utils.getFormattedText(Lang_TextType.TextType.F0089, value)
+                : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0116, -value),
             );
         }
 
@@ -327,11 +327,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const btn   = this._btnDeltaRight;
         const value = this._deltaRight;
         if (value === 0) {
-            btn.setLangText(Lang_Constants.TextType.B0860);
+            btn.setLangText(Lang_TextType.TextType.B0860);
         } else {
             btn.setText(value > 0
-                ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0089, value)
-                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0116, -value),
+                ? Lang_Utils.getFormattedText(Lang_TextType.TextType.F0089, value)
+                : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0116, -value),
             );
         }
     }

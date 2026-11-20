@@ -9,7 +9,7 @@ import {
     Ui_Components_UiImage,
     Ui_Components_UiOpenableComponent,
     Ui_Types_UiVerticalAlign,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiLabel,
     type Ui_Interfaces_IUiScroller,

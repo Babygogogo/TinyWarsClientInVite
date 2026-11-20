@@ -6,7 +6,7 @@ import {
     Helpers_Text,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
@@ -82,7 +82,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const warEventFullData  = war.getWarEventManager().getWarEventFullData();
         if ((war.getIsReviewingMap()) || (warEventFullData == null)) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             const templateWarRule           = openData.templateWarRule;
             const allWarEventIdSet          = new Set(warEventFullData.getEventArray().map(v => v.getEventId()));
@@ -94,7 +94,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 availableNumberArray : [...allWarEventIdSet],
                 currentNumberArray   : [],
                 showNumber           : true,
-                getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0461)),
+                getTitleText         : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.B0461)),
                 getNumberMainText    : warEventId => Helpers_Text.getTruncatedText(
                     Lang_Utils.getLanguageText({
                         textArray : warEventFullData.getEventArray().find(v => v.getEventId() === warEventId)?.getEventNameArray(),
@@ -123,10 +123,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (openData.war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0801),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0801),
                 callback   : () => {
                     openData.templateWarRule.setWarEventIdArray([]);
                     Notifications_Dispatcher.dispatch("MeWarRuleWarEventIdArrayChanged");
@@ -153,8 +153,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0461)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoEvent.setLangText(Lang_Constants.TextType.B0278);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0461)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
+        this._labelNoEvent.setLangText(Lang_TextType.TextType.B0278);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();
@@ -216,7 +216,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         }
 
         if (openData.war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             const warEventIdArray = openData.templateWarRule.getWarEventIdArray();
             if (warEventIdArray) {
@@ -232,7 +232,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         }
 
         if (openData.war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             const warEventIdArray = openData.templateWarRule.getWarEventIdArray();
             if (warEventIdArray) {
@@ -248,7 +248,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         }
 
         if (openData.war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             const warEventIdArray = openData.templateWarRule.getWarEventIdArray();
             if (warEventIdArray) {

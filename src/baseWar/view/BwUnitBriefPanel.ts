@@ -7,7 +7,7 @@ import {
     Helpers_Misc,
     Helpers_PointerInput,
     Helpers_Text,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,

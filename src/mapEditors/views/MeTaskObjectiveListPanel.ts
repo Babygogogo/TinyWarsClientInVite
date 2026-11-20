@@ -8,7 +8,7 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
@@ -74,14 +74,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
         if (war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const fullData              = war.getTaskObjectiveFullData() ?? new TaskObjectiveFullData();
         const taskObjectiveArray    = fullData.getTaskObjectiveArray();
         if (taskObjectiveArray.length >= TaskObjectives_Constants.Common.MaxObjectivesCount) {
-            FloatText.showLang(Lang_Constants.TextType.A0712);
+            FloatText.showLang(Lang_TextType.TextType.A0712);
             return;
         }
 
@@ -102,7 +102,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0713),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0713),
         });
     }
 
@@ -113,8 +113,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1214);
-        this._labelNoTaskObjective.setLangText(Lang_Constants.TextType.B0278);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1214);
+        this._labelNoTaskObjective.setLangText(Lang_TextType.TextType.B0278);
     }
     private async _updateComponentsForTaskObjective(): Promise<void> {
         const war = this.getOpenData()?.war;
@@ -179,12 +179,12 @@ class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
             getContent : () => [
-                `${Lang_Utils.getText(Lang_Constants.TextType.B1215)}:`,
+                `${Lang_Utils.getText(Lang_TextType.TextType.B1215)}:`,
                 Lang_Utils.getJoinedShortLanguageText(taskObjective.getDesc()),
                 ``,
-                `${Lang_Utils.getText(Lang_Constants.TextType.B1226)}:`,
+                `${Lang_Utils.getText(Lang_TextType.TextType.B1226)}:`,
                 taskObjective.getUpdaterForCurrentProgress() ?? `----`,
             ].join(`\n`),
         });
@@ -197,14 +197,14 @@ class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
         }
 
         if (openData.war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
                 callback   : () => {
                     const fullData = openData.fullData;
                     Helpers_Collection.deleteElementFromList(fullData.getTaskObjectiveArray(), openData.taskObjective);
-                    FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                    FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
                     Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
                 },
@@ -219,7 +219,7 @@ class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
 
         const war = openData.war;
         if (war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTaskObjectivePanel, {
                 taskObjective    : openData.taskObjective,
@@ -234,17 +234,17 @@ class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDesc.setLangText(Lang_Constants.TextType.B1258);
-        this._btnDelete.setLangText(Lang_Constants.TextType.B0220);
-        this._btnEdit.setLangText(Lang_Constants.TextType.B0465);
+        this._btnDesc.setLangText(Lang_TextType.TextType.B1258);
+        this._btnDelete.setLangText(Lang_TextType.TextType.B0220);
+        this._btnEdit.setLangText(Lang_TextType.TextType.B0465);
         this._labelDescTitle.setText([
-            Lang_Utils.getText(Lang_Constants.TextType.B1215),
+            Lang_Utils.getText(Lang_TextType.TextType.B1215),
             ``,
-            Lang_Utils.getText(Lang_Constants.TextType.B1217),
-            Lang_Utils.getText(Lang_Constants.TextType.B1216),
-            Lang_Utils.getText(Lang_Constants.TextType.B1218),
-            Lang_Utils.getText(Lang_Constants.TextType.B1219),
-            Lang_Utils.getText(Lang_Constants.TextType.B1226),
+            Lang_Utils.getText(Lang_TextType.TextType.B1217),
+            Lang_Utils.getText(Lang_TextType.TextType.B1216),
+            Lang_Utils.getText(Lang_TextType.TextType.B1218),
+            Lang_Utils.getText(Lang_TextType.TextType.B1219),
+            Lang_Utils.getText(Lang_TextType.TextType.B1226),
         ].join(`\n`));
 
         this._updateLabelErrorAndDesc();
@@ -259,7 +259,7 @@ class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
         const labelError        = this._labelError;
         const taskObjective     = openData.taskObjective;
         const errorText         = TaskObjectives_Utils.getErrorText(taskObjective, openData.customCounterNameSet);
-        labelError.setText(`#${taskObjective.getObjectiveId()} ${errorText ?? Lang_Utils.getText(Lang_Constants.TextType.B0493)}`);
+        labelError.setText(`#${taskObjective.getObjectiveId()} ${errorText ?? Lang_Utils.getText(Lang_TextType.TextType.B0493)}`);
         labelError.setTextColor(errorText ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
 
         const updaterForCurrentProgress = taskObjective.getUpdaterForCurrentProgress() ?? `----`;

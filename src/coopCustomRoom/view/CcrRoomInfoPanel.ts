@@ -35,7 +35,7 @@ import {
     CoopCustomRoom_Model_CcrProxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
     Timer_TimerModel,
@@ -156,7 +156,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const selfPlayerData    = roomPlayerInfo.getPlayerDataList().find(v => v.getUserId() === selfUserId);
         if (selfPlayerData != null) {
             if (selfPlayerData.getIsReady()) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0128));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0128));
             } else {
                 const playerIndex       = selfPlayerData.getPlayerIndex();
                 const currentCoId       = selfPlayerData.getCoId();
@@ -221,7 +221,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (selfPlayerData.getIsReady()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0128));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0128));
             return;
         }
 
@@ -231,7 +231,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentNumber        : selfPlayerIndex,
             availableNumberArray : Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, WarRules_Utils_CommonData.getPlayersCountUnneutral(warRuleCommonData) + 1, 1)
                 .filter(playerIndex => (playerIndex === selfPlayerIndex) || (!playerDataList.some(v => v.getPlayerIndex() === playerIndex))),
-            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B0168),
+            getTitleText      : () => Lang_Utils.getText(Lang_TextType.TextType.B0168),
             getNumberMainText : playerIndex => `P${playerIndex}, ${Lang_Utils.getPlayerTeamName(WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) ?? Lang_Constants.UndefinedError}`,
             callbackOnConfirm : newPlayerIndex => {
                 if (newPlayerIndex !== selfPlayerIndex) {
@@ -271,7 +271,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
         if (selfPlayerData.getIsReady()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0128));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0128));
             return;
         }
 
@@ -318,7 +318,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const roomId = this.getOpenData()?.roomId;
         if (roomId != null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0149),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0149),
                 callback   : () => {
                     CoopCustomRoom_Model_CcrProxy.reqCcrDeleteRoom(roomId);
                 },
@@ -351,14 +351,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (joinedPlayersCount >= playersCountUnneutral) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0145));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0145));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchMultiUserPanel, {
             maxChooseCount    : CoopCustomWars_Constants.Common.MaxInviteCount,
             minChooseCount    : 1,
-            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B1003),
+            getTitleText      : () => Lang_Utils.getText(Lang_TextType.TextType.B1003),
             callbackOnConfirm : userIdArray => {
                 CoopCustomRoom_Model_CcrProxy.reqCcrInvite(roomId, userIdArray);
             },
@@ -396,7 +396,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (data.getRoomStaticInfo() == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0019));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0019));
             this.closePanel();
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwMyRoomListPanel, void 0);
         } else {
@@ -412,9 +412,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (roomId === this.getOpenData()?.roomId) {
             const exitRoomType = data.getExitType();
             if (exitRoomType === MultiPlayerRooms_Constants.ExitRoomType.DeletedByRoomOwner) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0127));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0127));
             } else if (exitRoomType === MultiPlayerRooms_Constants.ExitRoomType.SelfExit) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0016));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0016));
             }
 
             this.closePanel();
@@ -423,7 +423,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCcrInvite(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0378));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0378));
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -482,16 +482,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelMultiPlayer.setLangText(Lang_Constants.TextType.B0646);
-        this._labelMyRoom.setLangText(Lang_Constants.TextType.B0410);
-        this._labelRoomInfo.setLangText(Lang_Constants.TextType.B0398);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._btnChooseCo.setLangText(Lang_Constants.TextType.B0425);
-        this._btnChoosePlayerIndex.setLangText(Lang_Constants.TextType.B0168);
-        this._btnChooseSkinId.setLangText(Lang_Constants.TextType.B0397);
-        this._btnChooseReady.setLangText(Lang_Constants.TextType.B0402);
-        this._btnStartGame.setLangText(Lang_Constants.TextType.B0401);
-        this._btnDeleteRoom.setLangText(Lang_Constants.TextType.B0400);
+        this._labelMultiPlayer.setLangText(Lang_TextType.TextType.B0646);
+        this._labelMyRoom.setLangText(Lang_TextType.TextType.B0410);
+        this._labelRoomInfo.setLangText(Lang_TextType.TextType.B0398);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._btnChooseCo.setLangText(Lang_TextType.TextType.B0425);
+        this._btnChoosePlayerIndex.setLangText(Lang_TextType.TextType.B0168);
+        this._btnChooseSkinId.setLangText(Lang_TextType.TextType.B0397);
+        this._btnChooseReady.setLangText(Lang_TextType.TextType.B0402);
+        this._btnStartGame.setLangText(Lang_TextType.TextType.B0401);
+        this._btnDeleteRoom.setLangText(Lang_TextType.TextType.B0400);
 
         this._groupNavigator.arrangeItems();
         this._updateLabelPlayerIndex();
@@ -501,22 +501,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },

@@ -1,7 +1,7 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -28,7 +28,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0130, data.getActionIdArray()?.map(v => `A${v}`).join(`/`) || `--`);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0130, data.getActionIdArray()?.map(v => `A${v}`).join(`/`) || `--`);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaStopPersistentAction>): string | null {
     return getBriefDesc(data);
@@ -38,11 +38,11 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
 export function getErrorTip(data: WeaStopPersistentAction, fullData: WarEventFullData): string | null {
     const actionIdArray = data.getActionIdArray();
     if ((actionIdArray == null) || (actionIdArray.length === 0)) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0305);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0305);
     }
 
     if (actionIdArray.length !== new Set(actionIdArray).size) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0306);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0306);
     }
 
     return null;

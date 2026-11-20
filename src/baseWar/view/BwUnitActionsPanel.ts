@@ -5,7 +5,7 @@ import {
     Graphics_Utils,
     Helpers_Misc,
     Keyboard_KbTypes,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Sounds_Constants,
     Sounds_SoundPlayer,
@@ -288,7 +288,7 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
                 labelCost.setText(``);
             } else {
                 const cost = openData.costForProduceUnit;
-                labelCost.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0079)}: ${cost != null ? cost : Lang_Constants.UndefinedError}`);
+                labelCost.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0079)}: ${cost != null ? cost : Lang_Constants.UndefinedError}`);
             }
         }
 

@@ -9,7 +9,7 @@ import {
     Ui_Components_UiImage,
     Ui_Components_UiLayout,
     Ui_Components_UiPanel,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiCoInfo,

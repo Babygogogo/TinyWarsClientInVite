@@ -6,7 +6,7 @@ import {
     GamePanels_Dict,
     Helpers_Misc,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
@@ -69,9 +69,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0615)} A${this.getOpenData()?.oldActionId}`);
-        this._labelNoAction.setLangText(Lang_Constants.TextType.B0278);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0615)} A${this.getOpenData()?.oldActionId}`);
+        this._labelNoAction.setLangText(Lang_TextType.TextType.B0278);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
     }
     private async _updateComponentsForAction(): Promise<void> {
         const openData = this.getOpenData();
@@ -185,8 +185,8 @@ class ActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCopy.setLangText(Lang_Constants.TextType.B0487);
-        this._btnSelect.setLangText(Lang_Constants.TextType.B0492);
+        this._btnCopy.setLangText(Lang_TextType.TextType.B0487);
+        this._btnSelect.setLangText(Lang_TextType.TextType.B0492);
 
         this._updateLabelActionId();
         this._updateLabelAction();
@@ -200,7 +200,7 @@ class ActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         const actionId          = openData.candidateActionId;
         const eventNameArray    = openData.fullData.getEventArray().filter(event => event.getRootNodeAndActionsArray()?.some(v => v.getActionIdArray().includes(actionId))).map(v => `E${v.getEventId()}`);
-        this._labelActionId.setText(`A${actionId} (${Lang_Utils.getText(Lang_Constants.TextType.B0749)}: ${eventNameArray?.length ? eventNameArray.join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.None)})`);
+        this._labelActionId.setText(`A${actionId} (${Lang_Utils.getText(Lang_TextType.TextType.B0749)}: ${eventNameArray?.length ? eventNameArray.join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.None)})`);
     }
     private _updateLabelAction(): void {
         const openData = this.getOpenData();
@@ -211,7 +211,7 @@ class ActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const action    = openData.fullData.getActionArray().find(v => v.getWeaCommonData()?.getActionId() === openData.candidateActionId);
         const label     = this._labelAction;
         if (action == null) {
-            label.setLangText(Lang_Constants.TextType.A0168);
+            label.setLangText(Lang_TextType.TextType.A0168);
         } else {
             label.setText(WarEvents_Actions_Utils_Common.getBriefDescForAction(action, openData.war.getGcData()) || Lang_Constants.UndefinedError);
         }

@@ -2,7 +2,7 @@ import {
     ForceSkins_Utils,
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Numbers_Utils,
     Players_Constants,
@@ -109,8 +109,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0525);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0525);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
     }
 
     private async _resetList(): Promise<void> {

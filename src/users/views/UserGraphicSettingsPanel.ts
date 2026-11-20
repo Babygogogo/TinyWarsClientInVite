@@ -10,7 +10,7 @@ import {
     Users_Proxy,
     FloatText,
     Common_Model_CommonModel,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Graphics_Constants,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -78,7 +78,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this._uiSwitchNewTexture.setCallbackOnTouch(() => {
             if (GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId === Graphics_Constants.TextureResolutionId.Trilogy) {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             } else {
                 Users_Proxy.reqUserSetSettings({
                     unitAndTileTextureVersion : Users_Model.getSelfSettingsTextureVersion() === Graphics_Constants.TextureVersionId.V1 ? Graphics_Constants.TextureVersionId.V0 : Graphics_Constants.TextureVersionId.V1,
@@ -165,27 +165,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const inject = window.TW_APK_INJECT;
         if (inject == null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getContent : () => Lang_Utils.getText(Helpers_Compatibility.isPc ? Lang_Constants.TextType.A0416 : Lang_Constants.TextType.A0417),
+                getContent : () => Lang_Utils.getText(Helpers_Compatibility.isPc ? Lang_TextType.TextType.A0416 : Lang_TextType.TextType.A0417),
             });
         } else {
             let currentRotation: number | null = null;
             try {
                 currentRotation = inject.getScreenOrientation();
             } catch {
-                FloatText.showLang(Lang_Constants.TextType.A0840);
+                FloatText.showLang(Lang_TextType.TextType.A0840);
                 return;
             }
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0159),
+                getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B0159),
                 currentNumber        : currentRotation,
                 availableNumberArray : [0, 1, 2, 3],
                 getNumberMainText    : num => {
                     switch (num) {
-                        case 0  : return Lang_Utils.getText(Lang_Constants.TextType.B0377);
-                        case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0419);
-                        case 2  : return Lang_Utils.getText(Lang_Constants.TextType.B0591);
-                        case 3  : return Lang_Utils.getText(Lang_Constants.TextType.B0597);
+                        case 0  : return Lang_Utils.getText(Lang_TextType.TextType.B0377);
+                        case 1  : return Lang_Utils.getText(Lang_TextType.TextType.B0419);
+                        case 2  : return Lang_Utils.getText(Lang_TextType.TextType.B0591);
+                        case 3  : return Lang_Utils.getText(Lang_TextType.TextType.B0597);
                         default : return Lang_Constants.UndefinedError;
                     }
                 },
@@ -194,7 +194,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         LocalData_Storage.setScreenRotation(num);
                         inject.setScreenOrientation(num);
                     } catch {
-                        FloatText.showLang(Lang_Constants.TextType.A0841);
+                        FloatText.showLang(Lang_TextType.TextType.A0841);
                     }
                 },
             });
@@ -218,18 +218,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0984);
-        this._labelNewTexture.setLangText(Lang_Constants.TextType.B1280);
-        this._labelShowGridBorder.setLangText(Lang_Constants.TextType.B0584);
-        this._labelUnitFlickering.setLangText(Lang_Constants.TextType.B1165);
-        this._labelUnitMoveFaster.setLangText(Lang_Constants.TextType.B1368);
-        this._labelUnitAnimation.setLangText(Lang_Constants.TextType.B0629);
-        this._labelTileAnimation.setLangText(Lang_Constants.TextType.B0630);
-        this._labelWeatherAnimation.setLangText(Lang_Constants.TextType.B0985);
-        this._labelScreenVibration.setLangText(Lang_Constants.TextType.B1397);
-        this._btnSetOpacity.setLangText(Lang_Constants.TextType.B0827);
-        this._btnSetOrientation.setLangText(Lang_Constants.TextType.B0159);
-        this._btnSetStageScaler.setLangText(Lang_Constants.TextType.B0558);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0984);
+        this._labelNewTexture.setLangText(Lang_TextType.TextType.B1280);
+        this._labelShowGridBorder.setLangText(Lang_TextType.TextType.B0584);
+        this._labelUnitFlickering.setLangText(Lang_TextType.TextType.B1165);
+        this._labelUnitMoveFaster.setLangText(Lang_TextType.TextType.B1368);
+        this._labelUnitAnimation.setLangText(Lang_TextType.TextType.B0629);
+        this._labelTileAnimation.setLangText(Lang_TextType.TextType.B0630);
+        this._labelWeatherAnimation.setLangText(Lang_TextType.TextType.B0985);
+        this._labelScreenVibration.setLangText(Lang_TextType.TextType.B1397);
+        this._btnSetOpacity.setLangText(Lang_TextType.TextType.B0827);
+        this._btnSetOrientation.setLangText(Lang_TextType.TextType.B0159);
+        this._btnSetStageScaler.setLangText(Lang_TextType.TextType.B0558);
     }
     private _updateUiSwitchNewTexture(isTween: boolean): void {
         this._uiSwitchNewTexture.setIsSwitchOn(Users_Model.getSelfSettingsTextureVersion() === Graphics_Constants.TextureVersionId.V1, isTween);

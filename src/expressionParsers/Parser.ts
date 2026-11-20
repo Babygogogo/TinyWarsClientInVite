@@ -28,7 +28,7 @@ import {
     ExpressionParsers_Nodes_OperatorTernary,
     ExpressionParsers_Nodes_OperatorUnequal,
     ExpressionParsers_TextReader,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Tokenizer,
     ExpressionParsers_Nodes_Variable,
     type ExpressionParsers_Nodes_Base,
@@ -79,7 +79,7 @@ export class Parser {
 
             if (this._tokenizer.getToken() !== ExpressionParsers_Enums.Token.Colon) {
                 throw Helpers_Misc.newError(
-                    Lang_Utils.getFormattedText(Lang_Constants.TextType.F0039, this._tokenizer.getToken()),
+                    Lang_Utils.getFormattedText(Lang_TextType.TextType.F0039, this._tokenizer.getToken()),
                     Utils_ClientErrorCode.ClientErrorCode.ExpressionParser_Parser_ParseTernary_01,
                 );
             }
@@ -426,7 +426,7 @@ export class Parser {
 
         // Don't Understand
         throw Helpers_Misc.newError(
-            Lang_Utils.getFormattedText(Lang_Constants.TextType.F0040, token),
+            Lang_Utils.getFormattedText(Lang_TextType.TextType.F0040, token),
             Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseLeaf_06,
         );
     }
@@ -438,7 +438,7 @@ export class Parser {
                 const token = this._tokenizer.getToken();
                 if (token !== ExpressionParsers_Enums.Token.Identifier) {
                     throw Helpers_Misc.newError(
-                        Lang_Utils.getFormattedText(Lang_Constants.TextType.F0041, token),
+                        Lang_Utils.getFormattedText(Lang_TextType.TextType.F0041, token),
                         Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseMember_00,
                     );
                 }
@@ -767,7 +767,7 @@ export class Parser {
                 return {
                     errorCode : errorCode,
                     errorText : error.message
-                        ? `${Lang_Utils.getText(Lang_Constants.TextType.B0452)} ${errorCode}: ${error.message}`
+                        ? `${Lang_Utils.getText(Lang_TextType.TextType.B0452)} ${errorCode}: ${error.message}`
                         : Lang_Utils.getErrorText(errorCode),
                 };
             }
@@ -787,8 +787,8 @@ export class Parser {
                 const errorCode = Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_04;
                 return {
                     errorCode : errorCode,
-                    errorText : `${Lang_Utils.getText(Lang_Constants.TextType.B0452)} ${errorCode}: ${Lang_Utils.getFormattedText(
-                        Lang_Constants.TextType.F0016,
+                    errorText : `${Lang_Utils.getText(Lang_TextType.TextType.B0452)} ${errorCode}: ${Lang_Utils.getFormattedText(
+                        Lang_TextType.TextType.F0016,
                         resultTypes.map(v => Lang_Utils.getExpressionParserResultTypeName(v)).join(` / `),
                         Lang_Utils.getExpressionParserResultTypeName(actualResultType),
                     )}`,
@@ -805,7 +805,7 @@ export class Parser {
                 return {
                     errorCode : errorCode,
                     errorText : error.message
-                        ? `${Lang_Utils.getText(Lang_Constants.TextType.B0452)} ${errorCode}: ${error.message}`
+                        ? `${Lang_Utils.getText(Lang_TextType.TextType.B0452)} ${errorCode}: ${error.message}`
                         : Lang_Utils.getErrorText(errorCode),
                 };
             }
@@ -834,7 +834,7 @@ export class Parser {
         customCounterNameSet    : Set<string>;
     }): boolean {
         return Parser.getErrorDataForString({
-            str, contextType, resultTypes, customCounterNameSet, 
+            str, contextType, resultTypes, customCounterNameSet,
         }).errorCode === Utils_ClientErrorCode.ClientErrorCode.NoError;
     }
     public static checkIsValidString2({ str, expressionInfo, customCounterNameSet }: {

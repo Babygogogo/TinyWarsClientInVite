@@ -19,7 +19,7 @@ import {
     Helpers_PointerInput,
     Keyboard_KbManager,
     Keyboard_KbTypes,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Notifications_Dispatcher,
     Numbers_Utils,
@@ -231,10 +231,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelNoUnit.setLangText(Lang_Constants.TextType.B0896);
-        this._labelFundTitle.setText(`${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0138, Lang_Utils.getText(Lang_Constants.TextType.Fund))}`);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0954);
-        this._btnDetail.setLangText(Lang_Constants.TextType.B0267);
+        this._labelNoUnit.setLangText(Lang_TextType.TextType.B0896);
+        this._labelFundTitle.setText(`${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0138, Lang_Utils.getText(Lang_TextType.TextType.Fund))}`);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0954);
+        this._btnDetail.setLangText(Lang_TextType.TextType.B0267);
 
         this._layoutFund.arrangeItems();
     }
@@ -421,7 +421,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         labelName.setText(Lang_Utils.getUnitName(unitType, unit.getGcData()) ?? Lang_Constants.UndefinedError);
         labelName.setTextColor(isFundEnough ? 0xFFFFFF : 0x667A85);
         labelProduce.setTextColor(isFundEnough ? 0x000000 : 0xFFFFFF);
-        labelProduce.setLangText(Lang_Constants.TextType.B0691);
+        labelProduce.setLangText(Lang_TextType.TextType.B0691);
         this._imgProduce.loadSource(isFundEnough ? `uncompressedColorYellow0001` : `uncompressedColorGrey0002`);
         this._imgBottom.loadSource(isFundEnough ? `uncompressedColorYellow0001` : `uncompressedColorGrey0002`);
         this._layoutName.arrangeItems();
@@ -444,7 +444,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
 function handleProduce(data: DataForUnitRenderer): void {
     if (data.currentFund < data.minCost) {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0053));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.B0053));
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
         return;
     }
@@ -471,7 +471,7 @@ function handleProduce(data: DataForUnitRenderer): void {
             .find(v => v.getPlayerIndex() === playerIndex)
             ?.getMaxUnitsCount();
         if ((maxUnitsCount != null) && (currentUnitsCount >= maxUnitsCount)) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0266, currentUnitsCount, maxUnitsCount));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0266, currentUnitsCount, maxUnitsCount));
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             return;
         }
@@ -496,7 +496,7 @@ function handleProduce(data: DataForUnitRenderer): void {
                 Math.floor(data.currentFund * Units_Constants.Hp.MaxHp / (data.cfgCost * data.costModifier * (skillCfg.getCostMultiplierPct()) / 100) / normalizer) * normalizer,
             );
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
+                getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Hp),
                 currentValue : maxHp,
                 maxValue     : maxHp,
                 minValue     : minHp,

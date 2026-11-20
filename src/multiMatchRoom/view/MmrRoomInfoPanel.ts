@@ -32,7 +32,7 @@ import {
     MultiMatchRoom_Model_MmrProxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
     WarTypes_Constants,
@@ -175,13 +175,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             forceUnchosenCoCategoryIdArray : null,
             maxChooseCount                 : gcData.getSystemCfg().getMaxBanCoNumber(),
             isBan                          : true,
-            getTitleText                   : () => Lang_Utils.getText(Lang_Constants.TextType.B0590),
+            getTitleText                   : () => Lang_Utils.getText(Lang_TextType.TextType.B0590),
             callbackOnConfirm              : bannedCoCategoryIdArray => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                     getContent : () => bannedCoCategoryIdArray.length <= 0
-                        ? Lang_Utils.getText(Lang_Constants.TextType.A0139)
+                        ? Lang_Utils.getText(Lang_TextType.TextType.A0139)
                         : Lang_Utils.getFormattedText(
-                            Lang_Constants.TextType.F0185,
+                            Lang_TextType.TextType.F0185,
                             bannedCoCategoryIdArray.map(v => gcData.getCoIdByCategoryId(v)).map(v => gcData.getCoNameAndTierText(v) ?? Lang_Constants.UndefinedError).join(`, `),
                         ),
                     callback : () => MultiMatchRoom_Model_MmrProxy.reqMmrSetBannedCoIdArray(
@@ -209,7 +209,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const selfPlayerData    = roomInfo ? roomInfo.getPlayerDataList().find(v => v.getUserId() === selfUserId) : null;
         if (selfPlayerData != null) {
             if (selfPlayerData.getIsReady()) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0207));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0207));
             } else {
                 const currentCoId = roomSelfSettings.getCoId();
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
@@ -228,7 +228,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnChoosePlayerIndex(): void {
-        FloatText.showLang(Lang_Constants.TextType.A0209);
+        FloatText.showLang(Lang_TextType.TextType.A0209);
     }
 
     private async _onTouchedBtnChooseSkinId(): Promise<void> {
@@ -254,7 +254,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
         if (selfPlayerData.getIsReady()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0128));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0128));
             return;
         }
 
@@ -288,7 +288,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
         if (selfPlayerData.getIsReady()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0205));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0205));
             return;
         }
 
@@ -300,7 +300,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const callback  = () => {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0206),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0206),
                 callback   : () => {
                     MultiMatchRoom_Model_MmrProxy.reqMmrSetSelfSettings(roomId, coId, skinId);
                 },
@@ -310,7 +310,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             ((roomSelfSettings.getAvailableCoIdArray() || []).some(v => v !== Cos_Constants.CoId.Empty))
         ) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0208),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0208),
                 callback,
             });
         } else {
@@ -362,7 +362,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgMmrDeleteRoomByServer(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMmrDeleteRoomByServer"]>): void {
         const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getRoomId() === this.getOpenData()?.roomId) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0019));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0019));
             this.closePanel();
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwMyRoomListPanel, void 0);
         }
@@ -375,22 +375,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -455,16 +455,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelRankMatch.setLangText(Lang_Constants.TextType.B1012);
-        this._labelMyRoom.setLangText(Lang_Constants.TextType.B0410);
-        this._labelRoomInfo.setLangText(Lang_Constants.TextType.B0398);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._btnBanCo.setLangText(Lang_Constants.TextType.B0590);
-        this._btnBannedCo.setLangText(Lang_Constants.TextType.B0403);
-        this._btnChooseCo.setLangText(Lang_Constants.TextType.B0425);
-        this._btnChoosePlayerIndex.setLangText(Lang_Constants.TextType.B0168);
-        this._btnChooseSkinId.setLangText(Lang_Constants.TextType.B0397);
-        this._btnChooseReady.setLangText(Lang_Constants.TextType.B0402);
+        this._labelRankMatch.setLangText(Lang_TextType.TextType.B1012);
+        this._labelMyRoom.setLangText(Lang_TextType.TextType.B0410);
+        this._labelRoomInfo.setLangText(Lang_TextType.TextType.B0398);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._btnBanCo.setLangText(Lang_TextType.TextType.B0590);
+        this._btnBannedCo.setLangText(Lang_TextType.TextType.B0403);
+        this._btnChooseCo.setLangText(Lang_TextType.TextType.B0425);
+        this._btnChoosePlayerIndex.setLangText(Lang_TextType.TextType.B0168);
+        this._btnChooseSkinId.setLangText(Lang_TextType.TextType.B0397);
+        this._btnChooseReady.setLangText(Lang_TextType.TextType.B0402);
 
         this._groupNavigator.arrangeItems();
         this._updateLabelPlayerIndex();
@@ -501,7 +501,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 btnBannedCo.setIsVisible(true);
                 labelBanCo.setText(bannedCoIdArray.length
                     ? bannedCoIdArray.map(v => gameConfig.getCoBasicCfg(v)?.getName()).join(`\n`)
-                    : Lang_Utils.getText(Lang_Constants.TextType.None),
+                    : Lang_Utils.getText(Lang_TextType.TextType.None),
                 );
             }
         }
@@ -564,10 +564,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const timeForStartSetSelfSettings   = roomInfo.getTimeForStartSetSelfSettings();
         const currentTime                   = Timer_TimerModel.getServerTimestamp();
         if (timeForStartSetSelfSettings != null) {
-            labelCountdownTitle.setLangText(Lang_Constants.TextType.B0593);
+            labelCountdownTitle.setLangText(Lang_TextType.TextType.B0593);
             labelCountdown.setText(Lang_Utils.getTimeDurationText2(Math.max(0, timeForStartSetSelfSettings + MultiRankedWars_Constants.Common.RoomPhaseTime - currentTime)));
         } else {
-            labelCountdownTitle.setLangText(Lang_Constants.TextType.B0592);
+            labelCountdownTitle.setLangText(Lang_TextType.TextType.B0592);
             labelCountdown.setText(Lang_Utils.getTimeDurationText2(Math.max(0, roomInfo.getTimeForCreateRoom() + MultiRankedWars_Constants.Common.RoomPhaseTime - currentTime)));
         }
         this._layoutCountdown.arrangeItems();
@@ -592,9 +592,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const playerData    = Helpers_Misc.getExisted(roomInfo.getPlayerDataList().find(v => v.getUserId() === userId));
         const playerIndex   = playerData.getPlayerIndex();
         if (roomInfo.getTimeForStartSetSelfSettings() == null) {
-            labelState.setLangText(roomInfo.getSettingsForMmw()?.getDataArrayForBanCo()?.some(v => v.getSrcPlayerIndex() === playerIndex) ? Lang_Constants.TextType.A0133 : Lang_Constants.TextType.A0210);
+            labelState.setLangText(roomInfo.getSettingsForMmw()?.getDataArrayForBanCo()?.some(v => v.getSrcPlayerIndex() === playerIndex) ? Lang_TextType.TextType.A0133 : Lang_TextType.TextType.A0210);
         } else {
-            labelState.setLangText(playerData.getIsReady() ? Lang_Constants.TextType.A0134 : Lang_Constants.TextType.A0211);
+            labelState.setLangText(playerData.getIsReady() ? Lang_TextType.TextType.A0134 : Lang_TextType.TextType.A0211);
         }
         groupState.arrangeItems();
     }

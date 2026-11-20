@@ -2,7 +2,7 @@ import {
     ValueAndComparators_Utils,
     WarEvents_Actions_Utils_Common,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -14,7 +14,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0135,
+        Lang_TextType.TextType.F0135,
         Lang_Utils.getComparatorName(data.getOngoingActionsCountComparator()),
         data.getOngoingActionsCount(),
     );
@@ -29,19 +29,19 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         const actionIdArray = data.getOngoingActionIdArray();
         if (actionIdArray?.length) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
-                Lang_Constants.TextType.F0226,
-                actionIdArray.join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `),
+                Lang_TextType.TextType.F0226,
+                actionIdArray.join(` ${Lang_Utils.getText(Lang_TextType.TextType.Or)} `),
             )}`);
         }
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0944));
+        subTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.A0944));
     }
 
     return [
         Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0225,
+            Lang_TextType.TextType.F0225,
             Lang_Utils.getComparatorName(data.getOngoingActionsCountComparator()),
             data.getOngoingActionsCount(),
         ),
@@ -50,20 +50,20 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
 }
 export function getErrorTip(data: WecOngoingPersistentActionPresence): string | null {
     if (data.getOngoingActionsCount() == null) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0902));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0902));
     }
 
     {
         const comparator = data.getOngoingActionsCountComparator();
         if ((comparator == null) || (!ValueAndComparators_Utils.checkIsValidValueComparatorId(comparator))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
         }
     }
 
     {
         const actionIdArray = data.getOngoingActionIdArray();
         if ((actionIdArray) && (!WarEvents_Actions_Utils_Common.checkIsValidWarEventActionIdSubset(actionIdArray))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0889));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0889));
         }
     }
 

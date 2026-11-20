@@ -4,7 +4,7 @@ import {
     NormalMap_Model_NormalMapModel,
     Helpers_Collection,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -75,8 +75,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0445);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0445);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
     }
 
     private async _updateComponentsForList(): Promise<void> {

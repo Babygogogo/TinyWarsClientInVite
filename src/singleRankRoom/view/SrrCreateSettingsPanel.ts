@@ -27,7 +27,7 @@ import {
     Sounds_SoundPlayer,
     SinglePlayerMode_Model_SpmProxy,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
     Timer_TimerModel,
@@ -127,7 +127,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback();
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0070),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0070),
                 callback,
             });
         }
@@ -170,13 +170,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Functions for the view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelSinglePlayer.setLangText(Lang_Constants.TextType.B0614);
-        this._labelWarRoomMode.setLangText(Lang_Constants.TextType.B1372);
-        this._labelChooseMap.setLangText(Lang_Constants.TextType.B0227);
-        this._labelGameSettings.setLangText(Lang_Constants.TextType.B0604);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnQuickSettings.setLangText(Lang_Constants.TextType.B0908);
+        this._labelSinglePlayer.setLangText(Lang_TextType.TextType.B0614);
+        this._labelWarRoomMode.setLangText(Lang_TextType.TextType.B1372);
+        this._labelChooseMap.setLangText(Lang_TextType.TextType.B0227);
+        this._labelGameSettings.setLangText(Lang_TextType.TextType.B0604);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnQuickSettings.setLangText(Lang_TextType.TextType.B0908);
 
         this._groupNavigator.arrangeItems();
     }
@@ -185,27 +185,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0224) },
                 pageClass   : SingleRankRoom_View_SrrCreatePlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0436) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0436) },
                 pageClass   : SinglePlayerMode_View_SpmRankPage.Page,
                 pageData    : null,
             },

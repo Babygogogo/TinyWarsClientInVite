@@ -10,7 +10,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     Timer_TimerModel,
     type BaseWar_Model_War,
@@ -75,7 +75,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnSkip(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0226),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0226),
             callback   : () => this.closePanel(),
         });
     }
@@ -93,7 +93,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSkip.setLangText(Lang_Constants.TextType.B0665);
+        this._btnSkip.setLangText(Lang_TextType.TextType.B0665);
 
         this._updateComponentsForDialogue();
     }

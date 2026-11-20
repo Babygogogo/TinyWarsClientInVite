@@ -9,7 +9,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -176,9 +176,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnIdentifier.setLangText(Lang_Constants.TextType.B0131);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnIdentifier.setLangText(Lang_TextType.TextType.B0131);
         this._btnConUnitFilter.setText(WarEvents_Actions_Constants_SetUnitOwnershipExpr.ExpressionInfoDict.ConUnitFilter.getTitleText());
         this._btnActPlayerIndex.setText(WarEvents_Actions_Constants_SetUnitOwnershipExpr.ExpressionInfoDict.ActPlayerIndex.getTitleText());
 
@@ -195,7 +195,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Actions_Utils_Common.getBriefDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();

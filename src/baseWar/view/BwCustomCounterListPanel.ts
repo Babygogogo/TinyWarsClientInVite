@@ -7,7 +7,7 @@ import {
     GamePanels_Dict,
     Lang_Utils,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
@@ -71,8 +71,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1143);
-        this._labelTips.setLangText(Lang_Constants.TextType.A0785);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1143);
+        this._labelTips.setLangText(Lang_TextType.TextType.A0785);
     }
     private async _updateListName(): Promise<void> {
         const war = this.getOpenData()?.war;
@@ -146,7 +146,7 @@ class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
             const id                = openData.id;
             const warEventManager   = war.getWarEventManager();
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1143),
+                getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1143),
                 minValue     : Number.MIN_SAFE_INTEGER,
                 maxValue     : Number.MAX_SAFE_INTEGER,
                 currentValue : warEventManager.getCustomCounter(id),

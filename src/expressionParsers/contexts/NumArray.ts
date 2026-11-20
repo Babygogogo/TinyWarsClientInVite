@@ -16,7 +16,7 @@ import {
     ExpressionParsers_Results_PositionArray,
     ExpressionParsers_Results_Lambda,
     ExpressionParsers_Results_NumArray,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Results_Tile,
     ExpressionParsers_Results_TileArray,
     ExpressionParsers_Results_TileBuff,
@@ -50,7 +50,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = NumArray.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(NumArray.VnLength,    { desc : Lang_Constants.TextType.A0480, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
+        variables.set(NumArray.VnLength,    { desc : Lang_TextType.TextType.A0480, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
 
         return variables;
     }
@@ -59,7 +59,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnGet,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0490,
+                Lang_TextType.TextType.A0490,
 
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
@@ -86,7 +86,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnWhere,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0491,
+                Lang_TextType.TextType.A0491,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -126,7 +126,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnSelect,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0492,
+                Lang_TextType.TextType.A0492,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -184,7 +184,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnMax,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0499,
+                Lang_TextType.TextType.A0499,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length > 1) {
                         throw Helpers_Misc.newError(
@@ -213,7 +213,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnMin,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0500,
+                Lang_TextType.TextType.A0500,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length > 1) {
                         throw Helpers_Misc.newError(
@@ -242,7 +242,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnMean,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0501,
+                Lang_TextType.TextType.A0501,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length > 1) {
                         throw Helpers_Misc.newError(
@@ -271,7 +271,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnSum,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0502,
+                Lang_TextType.TextType.A0502,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length > 1) {
                         throw Helpers_Misc.newError(
@@ -300,7 +300,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnAll,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0503,
+                Lang_TextType.TextType.A0503,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -340,7 +340,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnAny,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0504,
+                Lang_TextType.TextType.A0504,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -380,7 +380,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnAdd,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0669,
+                Lang_TextType.TextType.A0669,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length <= 0) {
                         throw Helpers_Misc.newError(
@@ -408,7 +408,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnHas,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0746,
+                Lang_TextType.TextType.A0746,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -434,7 +434,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             NumArray.FnSet,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0878,
+                Lang_TextType.TextType.A0878,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(

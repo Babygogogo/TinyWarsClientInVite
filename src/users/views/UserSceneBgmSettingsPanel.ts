@@ -5,7 +5,7 @@ import {
     GamePanels_Manager,
     Users_Proxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
@@ -60,7 +60,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgUserSetSceneBgmSettings(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         this._updateBtnLobby();
         this._updateBtnMapEditor();
     }
@@ -77,7 +77,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentBgmCode    : currentBgmCode,
             callbackOnConfirm : newBgmCode => {
                 if (newBgmCode === currentBgmCode) {
-                    FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                    FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
                 } else {
                     Users_Proxy.reqUserSetSceneBgmSettings({
                         lobbyBgmCode : newBgmCode,
@@ -99,7 +99,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentBgmCode    : currentBgmCode,
             callbackOnConfirm : newBgmCode => {
                 if (newBgmCode === currentBgmCode) {
-                    FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                    FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
                 } else {
                     Users_Proxy.reqUserSetSceneBgmSettings({
                         mapEditorBgmCode : newBgmCode,
@@ -117,9 +117,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1286);
-        this._labelLobby.setLangText(Lang_Constants.TextType.B1288);
-        this._labelMapEditor.setLangText(Lang_Constants.TextType.B0271);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1286);
+        this._labelLobby.setLangText(Lang_TextType.TextType.B1288);
+        this._labelMapEditor.setLangText(Lang_TextType.TextType.B0271);
 
         this._layoutLobby.arrangeItems();
         this._layoutMapEditor.arrangeItems();

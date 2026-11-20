@@ -1,7 +1,7 @@
 import {
     type ExpressionParsers_Enums,
     type ExpressionParsers_FunctionInfo,
-    type Lang_Constants,
+    type Lang_TextType,
 } from "../internal.ts";
 
 export interface EpExpressionInfo {
@@ -13,7 +13,7 @@ export interface EpExpressionInfo {
 }
 
 export interface EpVariableInfo {
-    desc            : Lang_Constants.TextType;
+    desc            : Lang_TextType.TextType;
     resultType      : ExpressionParsers_Enums.ResultType;
     isExtension     : boolean;
     isHidden?       : boolean;

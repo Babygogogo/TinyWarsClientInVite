@@ -1,6 +1,6 @@
 import {
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     SinglePlayerWars_War,
     WarOperations_Executors_Types,
@@ -97,5 +97,5 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoSystemCallWarEvent)
     //     return null;
     // }
 
-    return `${Lang_Utils.getText(Lang_Constants.TextType.B0451)} (E${action.getWarEventId()})`;
+    return `${Lang_Utils.getText(Lang_TextType.TextType.B0451)} (E${action.getWarEventId()})`;
 }

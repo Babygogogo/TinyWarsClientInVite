@@ -24,7 +24,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     BootTimers_Constants,
     Turns_Constants,
     Ui_Components_UiListItemRenderer,
@@ -122,7 +122,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const info          = await AutoTourneys_Mains_Provider.getAtPhaseInfo();
         const tourneyIdSet  = new Set(info?.infoArray.map(v => v.getTourneyId()));
         if (tourneyIdSet.size <= 1) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
 
@@ -137,7 +137,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             minValue     : minTourneyId,
             maxValue     : maxTourneyId,
             currentValue : currentTourneyId,
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1026),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1026),
             callback     : tourneyId => {
                 if (tourneyId != currentTourneyId) {
                     this.closePanel();
@@ -156,17 +156,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -182,13 +182,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
-        this._labelRankMatch.setLangText(Lang_Constants.TextType.B1022);
-        this._labelPreviewMap.setLangText(Lang_Constants.TextType.B0594);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0040);
+        this._labelRankMatch.setLangText(Lang_TextType.TextType.B1022);
+        this._labelPreviewMap.setLangText(Lang_TextType.TextType.B0594);
         this._labelMapType.setText(`#${this.getOpenData()?.tourneyId}`);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._labelNoMap.setLangText(Lang_Constants.TextType.B0582);
-        this._btnSwitch.setLangText(Lang_Constants.TextType.B0520);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._labelNoMap.setLangText(Lang_TextType.TextType.B0582);
+        this._btnSwitch.setLangText(Lang_TextType.TextType.B0520);
 
         this._layoutNavName.arrangeItems();
         this._groupNavigator.arrangeItems();

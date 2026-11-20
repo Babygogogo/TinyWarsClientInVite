@@ -8,7 +8,7 @@ import {
     GamePanels_Manager,
     Users_Proxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type GameConfigs_GameConfig,
@@ -86,7 +86,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgUserSetCoBgmSettings(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserSetCoBgmSettings"]>): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
         const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getCoCategoryId() === this._coCategoryId) {
@@ -118,7 +118,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 Users_Proxy.reqUserSetCoBgmSettings(coCategoryId, null);
             },
@@ -192,12 +192,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0992);
-        this._btnCo.setLangText(Lang_Constants.TextType.B0425);
-        this._btnReset.setLangText(Lang_Constants.TextType.B0567);
-        this._btnPassive.setLangText(Lang_Constants.TextType.B0576);
-        this._btnPower.setLangText(Lang_Constants.TextType.B0577);
-        this._btnSuperPower.setLangText(Lang_Constants.TextType.B0578);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0992);
+        this._btnCo.setLangText(Lang_TextType.TextType.B0425);
+        this._btnReset.setLangText(Lang_TextType.TextType.B0567);
+        this._btnPassive.setLangText(Lang_TextType.TextType.B0576);
+        this._btnPower.setLangText(Lang_TextType.TextType.B0577);
+        this._btnSuperPower.setLangText(Lang_TextType.TextType.B0578);
     }
 
     private _updateComponentsForCoAndBgm(): void {

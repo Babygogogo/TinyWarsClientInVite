@@ -7,7 +7,7 @@ import {
     Lang_Utils,
     Users_Model,
     Helpers_GameFlow,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     AuxiliaryTypes_AuxiliaryTypes,
@@ -121,15 +121,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0201);
-        this._labelMapName.setLangText(Lang_Constants.TextType.B0225);
-        this._labelTimestamp.setLangText(Lang_Constants.TextType.EndTime);
-        this._labelRankScore.setLangText(Lang_Constants.TextType.B0060);
-        this._labelWarType.setLangText(Lang_Constants.TextType.B0599);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._btnRankFow.setLangText(Lang_Constants.TextType.B0416);
-        this._btnRankStd.setLangText(Lang_Constants.TextType.B0415);
-        this._btnUnranked.setLangText(Lang_Constants.TextType.B0912);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0201);
+        this._labelMapName.setLangText(Lang_TextType.TextType.B0225);
+        this._labelTimestamp.setLangText(Lang_TextType.TextType.EndTime);
+        this._labelRankScore.setLangText(Lang_TextType.TextType.B0060);
+        this._labelWarType.setLangText(Lang_TextType.TextType.B0599);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._btnRankFow.setLangText(Lang_TextType.TextType.B0416);
+        this._btnRankStd.setLangText(Lang_TextType.TextType.B0415);
+        this._btnUnranked.setLangText(Lang_TextType.TextType.B0912);
     }
 
     private async _updateComponentsForHistory(): Promise<void> {
@@ -288,8 +288,8 @@ class UnrankedRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const replayId = this.getOpenData()?.replayId;
         if (replayId != null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+                title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
             });
 
             const data = await ReplayWar_Model_RwModel.getReplayData(replayId);
@@ -351,8 +351,8 @@ class RankedRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const replayId = this.getOpenData()?.replayId;
         if (replayId != null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+                title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
             });
 
             const data = await ReplayWar_Model_RwModel.getReplayData(replayId);

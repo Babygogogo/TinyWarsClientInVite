@@ -1,7 +1,7 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Sounds_SoundPlayer,
     Sounds_Utils,
@@ -32,10 +32,10 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     }
 
     if (data.getUseCoBgm()) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0262);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0262);
     } else {
         const bgmCode = data.getBgmCode();
-        return `${Lang_Utils.getText(Lang_Constants.TextType.B0750)}: ${(bgmCode == null ? null : Lang_Utils.getBgmSfxName(bgmCode, gameConfig)) ?? Lang_Constants.UndefinedError}`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.B0750)}: ${(bgmCode == null ? null : Lang_Utils.getBgmSfxName(bgmCode, gameConfig)) ?? Lang_Constants.UndefinedError}`;
     }
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPlayBgm>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
@@ -49,7 +49,7 @@ export function getErrorTip(data: WeaPlayBgm): string | null {
 
     const bgmCode = data.getBgmCode();
     return ((bgmCode == null) || (!Sounds_Utils.checkIsBgm(bgmCode)))
-        ? Lang_Utils.getText(Lang_Constants.TextType.A0263)
+        ? Lang_Utils.getText(Lang_TextType.TextType.A0263)
         : null;
 }
 

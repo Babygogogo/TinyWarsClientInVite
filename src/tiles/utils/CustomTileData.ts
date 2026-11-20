@@ -1,7 +1,7 @@
 import {
     Tiles_Utils_CustomLimits,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type GameConfigs_GameConfig,
 } from "../../internal.ts";
 import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
@@ -18,21 +18,21 @@ export namespace Building {
         {
             // defenseAmount
             if (!Tiles_Utils_CustomLimits.Building.DefenseAmount.checkIsValid(data.getDefenseAmount())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0352));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0352));
             }
         }
 
         {
             // defenseUnitTypeArray
             if (!config.checkIsValidUnitTypeSubset(data.getDefenseUnitTypeArray())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.DefensibleUnits));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.DefensibleUnits));
             }
         }
 
         {
             // maxCapturePoint
             if (!Tiles_Utils_CustomLimits.Building.MaxCapturePoint.checkIsValid(data.getMaxCapturePoint())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.MaxCapturePoint));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.MaxCapturePoint));
             }
         }
 
@@ -43,28 +43,28 @@ export namespace Building {
         {
             // repairAmount
             if (!Tiles_Utils_CustomLimits.Building.RepairNormalizedHp.checkIsValid(data.getRepairNormalizedHp())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RepairHpAmount));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RepairHpAmount));
             }
         }
 
         {
             // repairUnitTypeArray
             if (!config.checkIsValidUnitTypeSubset(data.getRepairUnitTypeArray())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RepairableUnits));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RepairableUnits));
             }
         }
 
         {
             // incomePerTurn
             if (!Tiles_Utils_CustomLimits.Building.IncomePerTurn.checkIsValid(data.getIncomePerTurn())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0157));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0157));
             }
         }
 
         {
             // visionRange
             if (!Tiles_Utils_CustomLimits.Building.VisionRange.checkIsValid(data.getVisionRange())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.VisionRange));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.VisionRange));
             }
         }
 
@@ -75,42 +75,42 @@ export namespace Building {
         {
             // hideUnitTypeArray
             if (!config.checkIsValidUnitTypeSubset(data.getHideUnitTypeArray())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.HidableUnits));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.HidableUnits));
             }
         }
 
         {
             // produceUnitTypeArray
             if (!config.checkIsValidUnitTypeSubset(data.getProduceUnitTypeArray())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.ProducibleUnits));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.ProducibleUnits));
             }
         }
 
         {
             // globalAttackBonus
             if (!Tiles_Utils_CustomLimits.Building.GlobalAttackBonus.checkIsValid(data.getGlobalAttackBonus())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.GlobalAtkBonus));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.GlobalAtkBonus));
             }
         }
 
         {
             // globalDefenseBonus
             if (!Tiles_Utils_CustomLimits.Building.GlobalDefenseBonus.checkIsValid(data.getGlobalDefenseBonus())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.GlobalDefBonus));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.GlobalDefBonus));
             }
         }
 
         {
             // unitTypeArrayForCoBoard
             if (!config.checkIsValidUnitTypeSubset(data.getUnitTypeArrayForCoBoard())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.CoBoardableUnit));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.CoBoardableUnit));
             }
         }
 
         {
             // blockEnemyUnitTypeArray
             if (!config.checkIsValidUnitTypeSubset(data.getBlockEnemyUnitTypeArray())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.BlockableEnemyUnits));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.BlockableEnemyUnits));
             }
         }
 
@@ -125,31 +125,31 @@ export namespace Cannon {
     }
     export function getErrorTip(data: TileCustomCannonData): string | null {
         if (!Tiles_Utils_CustomLimits.Cannon.Priority.checkIsValid(data.getPriority())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Priority));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Priority));
         }
 
         if (!Tiles_Utils_CustomLimits.Cannon.MaxTargetCount.checkIsValid(data.getMaxTargetCount())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.MaxTargets));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.MaxTargets));
         }
 
         if (!Tiles_Utils_CustomLimits.Cannon.RangeForUp.checkIsValid(data.getRangeForUp())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeUp));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RangeUp));
         }
 
         if (!Tiles_Utils_CustomLimits.Cannon.RangeForDown.checkIsValid(data.getRangeForDown())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeDown));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RangeDown));
         }
 
         if (!Tiles_Utils_CustomLimits.Cannon.RangeForLeft.checkIsValid(data.getRangeForLeft())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeLeft));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RangeLeft));
         }
 
         if (!Tiles_Utils_CustomLimits.Cannon.RangeForRight.checkIsValid(data.getRangeForRight())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeRight));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RangeRight));
         }
 
         if (!Tiles_Utils_CustomLimits.Cannon.OffsetHp.checkIsValid(data.getOffsetHp())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitsHpOffset));
         }
 
         {
@@ -158,11 +158,11 @@ export namespace Cannon {
         }
 
         if (!Tiles_Utils_CustomLimits.Cannon.OffsetFuelPercentage.checkIsValid(data.getOffsetFuelPercentage())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitsFuelOffset$));
         }
 
         if (!Tiles_Utils_CustomLimits.Cannon.OffsetPrimaryAmmoPercentage.checkIsValid(data.getOffsetPrimaryAmmoPercentage())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitsPriAmmoOffset$));
         }
 
         return null;
@@ -192,23 +192,23 @@ export namespace Crystal {
     }
     export function getErrorTip(data: TileCustomCrystalData): string | null {
         if (!Tiles_Utils_CustomLimits.Crystal.Priority.checkIsValid(data.getPriority())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Priority));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Priority));
         }
 
         if (!Tiles_Utils_CustomLimits.Crystal.Radius.checkIsValid(data.getRadius())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EffectiveRadius));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EffectiveRadius));
         }
 
         if (!Tiles_Utils_CustomLimits.Crystal.OffsetFund.checkIsValid(data.getOffsetFund())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.FundOffset));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.FundOffset));
         }
 
         if (!Tiles_Utils_CustomLimits.Crystal.OffsetEnergyPercentage.checkIsValid(data.getOffsetEnergyPercentage())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.CoEnergyOffset$));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.CoEnergyOffset$));
         }
 
         if (!Tiles_Utils_CustomLimits.Crystal.OffsetHp.checkIsValid(data.getOffsetHp())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitsHpOffset));
         }
 
         {
@@ -217,11 +217,11 @@ export namespace Crystal {
         }
 
         if (!Tiles_Utils_CustomLimits.Crystal.OffsetFuelPercentage.checkIsValid(data.getOffsetFuelPercentage())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitsFuelOffset$));
         }
 
         if (!Tiles_Utils_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.checkIsValid(data.getOffsetPrimaryAmmoPercentage())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitsPriAmmoOffset$));
         }
 
         return null;
@@ -249,35 +249,35 @@ export namespace LaserTurret {
     }
     export function getErrorTip(data: TileCustomLaserTurretData): string | null {
         if (!Tiles_Utils_CustomLimits.LaserTurret.Priority.checkIsValid(data.getPriority())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Priority));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Priority));
         }
 
         if (!Tiles_Utils_CustomLimits.LaserTurret.RangeForDown.checkIsValid(data.getRangeForDown())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeDown));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RangeDown));
         }
 
         if (!Tiles_Utils_CustomLimits.LaserTurret.RangeForUp.checkIsValid(data.getRangeForUp())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeUp));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RangeUp));
         }
 
         if (!Tiles_Utils_CustomLimits.LaserTurret.RangeForLeft.checkIsValid(data.getRangeForLeft())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeLeft));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RangeLeft));
         }
 
         if (!Tiles_Utils_CustomLimits.LaserTurret.RangeForRight.checkIsValid(data.getRangeForRight())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeRight));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RangeRight));
         }
 
         if (!Tiles_Utils_CustomLimits.LaserTurret.OffsetHp.checkIsValid(data.getOffsetHp())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitsHpOffset));
         }
 
         if (!Tiles_Utils_CustomLimits.LaserTurret.OffsetFuelPercentage.checkIsValid(data.getOffsetFuelPercentage())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitsFuelOffset$));
         }
 
         if (!Tiles_Utils_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.checkIsValid(data.getOffsetPrimaryAmmoPercentage())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitsPriAmmoOffset$));
         }
 
         {

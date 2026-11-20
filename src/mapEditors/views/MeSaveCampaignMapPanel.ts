@@ -4,7 +4,7 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Graphics_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeHelpers,
     MapEditor_Model_MeModel,
@@ -71,7 +71,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnSave(): Promise<void> {
         const mapRawData = this._mapRawData;
         if (mapRawData == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -85,7 +85,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const reviewingSlotIndex        = await MapEditor_Model_MeModel.getReviewingMapSlotIndex();
         if (reviewingSlotIndex === slotIndex) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0245),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0245),
                 callback   : () => {
                     MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
                         slotIndex                 : slotIndex,
@@ -111,27 +111,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelpSave(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0104),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0104),
         });
     }
 
     private _onTouchedBtnSubmit(): void {
         if (!this._canSubmit) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0053));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0053));
             return;
         }
 
         const mapRawData = this._mapRawData;
         if (mapRawData == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0108),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0108),
             callback   : () => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
                     callback   : () => {
                         Campaigns_Managements_Gateway.reqCmSetCampaignMapRawData(mapRawData);
                         this.closePanel();
@@ -142,7 +142,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelpSubmit(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0108),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0108),
         });
     }
 
@@ -151,14 +151,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSave.setLangText(Lang_Constants.TextType.B0844);
-        this._btnSubmit.setLangText(Lang_Constants.TextType.B1139);
+        this._btnSave.setLangText(Lang_TextType.TextType.B0844);
+        this._btnSubmit.setLangText(Lang_TextType.TextType.B1139);
         this._updateLabelTitle();
     }
 
     private _updateLabelTitle(): void {
         const campaignMapData = this._mapRawData?.getCampaignMapData() ?? this.getOpenData()?.war.getCampaignMapData();
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1135)} ${campaignMapData?.getCampaignId()}-${campaignMapData?.getCampaignMapId()}`);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1135)} ${campaignMapData?.getCampaignId()}-${campaignMapData?.getCampaignMapId()}`);
     }
 
     private async _initDataAndUpdateGroupCommand(): Promise<void> {
@@ -179,7 +179,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this._canSubmit                 = false;
             this._mapErrorCode              = criticalErrorCode;
             this._mapRawData                = null;
-            labelReviewDescTitle.setLangText(Lang_Constants.TextType.A0433);
+            labelReviewDescTitle.setLangText(Lang_TextType.TextType.A0433);
             labelReviewDescTitle.setTextColor(Graphics_Constants.ColorValue.Yellow);
             labelReviewDesc.setText(Lang_Utils.getErrorText(criticalErrorCode));
             return;
@@ -195,12 +195,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         if (errorCode) {
             this._canSubmit                 = false;
-            labelReviewDescTitle.setLangText(Lang_Constants.TextType.A0083);
+            labelReviewDescTitle.setLangText(Lang_TextType.TextType.A0083);
             labelReviewDescTitle.setTextColor(Graphics_Constants.ColorValue.Yellow);
             labelReviewDesc.setText(Lang_Utils.getErrorText(errorCode));
         } else {
             this._canSubmit                 = true;
-            labelReviewDescTitle.setLangText(Lang_Constants.TextType.A0786);
+            labelReviewDescTitle.setLangText(Lang_TextType.TextType.A0786);
             labelReviewDescTitle.setTextColor(Graphics_Constants.ColorValue.Green);
             labelReviewDesc.setText(``);
         }

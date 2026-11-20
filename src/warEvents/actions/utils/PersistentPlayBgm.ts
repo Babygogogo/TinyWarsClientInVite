@@ -4,7 +4,7 @@ import {
     Lang_Utils,
     Helpers_Misc,
     Sounds_SoundPlayer,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -26,7 +26,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     }
 
     const bgmCode = data.getBgmCode();
-    return `${Lang_Utils.getText(Lang_Constants.TextType.B1083)}: ${(bgmCode == null ? null : Lang_Utils.getBgmSfxName(bgmCode, gameConfig) ?? Lang_Constants.UndefinedError)}`;
+    return `${Lang_Utils.getText(Lang_TextType.TextType.B1083)}: ${(bgmCode == null ? null : Lang_Utils.getBgmSfxName(bgmCode, gameConfig) ?? Lang_Constants.UndefinedError)}`;
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentPlayBgm>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
@@ -35,7 +35,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
 export function getErrorTip(data: WeaPersistentPlayBgm): string | null {
     const bgmCode = data.getBgmCode();
     return ((bgmCode == null) || (!Sounds_Utils.checkIsBgm(bgmCode)))
-        ? Lang_Utils.getText(Lang_Constants.TextType.A0263)
+        ? Lang_Utils.getText(Lang_TextType.TextType.A0263)
         : null;
 }
 

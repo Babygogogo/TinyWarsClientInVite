@@ -5,7 +5,7 @@ import {
     ReplayWar_Model_RwModel,
     Lang_Utils,
     Ui_Utils_UiSkinHelpers,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiOpenableComponent,
     Ui_Types_UiVerticalAlign,
@@ -92,12 +92,12 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelMapNameTitle.setLangText(Lang_Constants.TextType.B0225);
-        this._labelWarTypeTitle.setLangText(Lang_Constants.TextType.B0599);
-        this._labelGlobalRatingTitle.setLangText(Lang_Constants.TextType.B0364);
-        this._labelMyRatingTitle.setLangText(Lang_Constants.TextType.B0363);
-        this._labelTurnIndexTitle.setLangText(Lang_Constants.TextType.B0600);
-        this._labelEndTimeTitle.setLangText(Lang_Constants.TextType.EndTime);
+        this._labelMapNameTitle.setLangText(Lang_TextType.TextType.B0225);
+        this._labelWarTypeTitle.setLangText(Lang_TextType.TextType.B0599);
+        this._labelGlobalRatingTitle.setLangText(Lang_TextType.TextType.B0364);
+        this._labelMyRatingTitle.setLangText(Lang_TextType.TextType.B0363);
+        this._labelTurnIndexTitle.setLangText(Lang_TextType.TextType.B0600);
+        this._labelEndTimeTitle.setLangText(Lang_TextType.TextType.EndTime);
     }
 
     private _updateComponentsForReplayBriefInfo(): void {
@@ -116,13 +116,13 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
     private async _updateLabelGlobalRating(): Promise<void> {
         const replayBriefInfo   = await this._getReplayInfo();
         const raters            = replayBriefInfo ? replayBriefInfo.getTotalRaters() : null;
-        this._labelGlobalRating.setText(raters ? (Helpers_Misc.getExisted(replayBriefInfo?.getTotalRating()) / raters).toFixed(2) : Lang_Utils.getText(Lang_Constants.TextType.None));
+        this._labelGlobalRating.setText(raters ? (Helpers_Misc.getExisted(replayBriefInfo?.getTotalRating()) / raters).toFixed(2) : Lang_Utils.getText(Lang_TextType.TextType.None));
     }
 
     private async _updateLabelMyRating(): Promise<void> {
         const replayId  = this.getOpenData()?.replayId;
         const rating    = replayId == null ? null : await ReplayWar_Model_RwModel.getReplaySelfRating(replayId);
-        this._labelMyRating.setText(rating == null ? Lang_Utils.getText(Lang_Constants.TextType.None) : `${rating}`);
+        this._labelMyRating.setText(rating == null ? Lang_Utils.getText(Lang_TextType.TextType.None) : `${rating}`);
     }
 
     private async _updateLabelMapName(): Promise<void> {

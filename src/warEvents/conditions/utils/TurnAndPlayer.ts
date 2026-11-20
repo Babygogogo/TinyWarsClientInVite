@@ -3,7 +3,7 @@ import {
     Turns_Utils,
     Lang_Utils,
     Players_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -14,7 +14,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
         return null;
     }
 
-    return Lang_Utils.getText(Lang_Constants.TextType.A0943);
+    return Lang_Utils.getText(Lang_TextType.TextType.A0943);
 }
 export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecTurnAndPlayer>): string | null {
     if (data == null) {
@@ -26,7 +26,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         const turnIndex     = data.getTurnIndex();
         const comparator    = data.getTurnIndexComparator();
         if ((turnIndex != null) && (comparator != null)) {
-            subTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.B0504)} ${Lang_Utils.getComparatorName(comparator)} ${turnIndex}`);
+            subTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.B0504)} ${Lang_Utils.getComparatorName(comparator)} ${turnIndex}`);
         }
     }
     {
@@ -34,28 +34,28 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         const remainder     = data.getTurnIndexRemainder();
         const comparator    = data.getTurnIndexRemainderComparator();
         if ((divider != null) && (remainder != null) && (comparator != null)) {
-            subTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.B0504)} % ${divider} ${Lang_Utils.getComparatorName(comparator)} ${remainder}`);
+            subTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.B0504)} % ${divider} ${Lang_Utils.getComparatorName(comparator)} ${remainder}`);
         }
     }
     {
         const playerIndexArray = data.getPlayerIndexArray();
         if (playerIndexArray?.length) {
-            subTextArray.push(`- ${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0216, playerIndexArray.map(v => `P${v}`).join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `))}`);
+            subTextArray.push(`- ${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0216, playerIndexArray.map(v => `P${v}`).join(` ${Lang_Utils.getText(Lang_TextType.TextType.Or)} `))}`);
         }
     }
     {
         const turnPhase = data.getTurnPhase();
         if (turnPhase != null) {
-            subTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.B0782)} == ${Lang_Utils.getTurnPhaseName(turnPhase)}`);
+            subTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.B0782)} == ${Lang_Utils.getTurnPhaseName(turnPhase)}`);
         }
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0944));
+        subTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.A0944));
     }
 
     return [
-        Lang_Utils.getText(Lang_Constants.TextType.A0942),
+        Lang_Utils.getText(Lang_TextType.TextType.A0942),
         ...subTextArray,
     ].join(`\n`);
 }
@@ -63,7 +63,7 @@ export function getErrorTip(data: WecTurnAndPlayer, war: BaseWar_Model_War.War):
     {
         const comparator = data.getTurnIndexComparator();
         if ((comparator == null) || (!ValueAndComparators_Utils.checkIsValidValueComparatorId(comparator))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
         }
     }
 
@@ -72,31 +72,31 @@ export function getErrorTip(data: WecTurnAndPlayer, war: BaseWar_Model_War.War):
         const remainder = data.getTurnIndexRemainder();
         if (divider == null) {
             if (remainder != null) {
-                return Lang_Utils.getText(Lang_Constants.TextType.A0265);
+                return Lang_Utils.getText(Lang_TextType.TextType.A0265);
             }
         } else {
             if ((divider <= 1) || (remainder == null)) {
-                return Lang_Utils.getText(Lang_Constants.TextType.A0265);
+                return Lang_Utils.getText(Lang_TextType.TextType.A0265);
             }
         }
 
         const comparator = data.getTurnIndexRemainderComparator();
         if ((comparator == null) || (!ValueAndComparators_Utils.checkIsValidValueComparatorId(comparator))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
         }
     }
 
     {
         const turnPhase = data.getTurnPhase();
         if ((turnPhase != null) && (!Turns_Utils.checkIsValidTurnPhaseCode(turnPhase))) {
-            return Lang_Utils.getText(Lang_Constants.TextType.A0265);
+            return Lang_Utils.getText(Lang_TextType.TextType.A0265);
         }
     }
 
     {
         const playersCountUnneutral = war.getPlayersCountUnneutral();
         if (data.getPlayerIndexArray()?.some(v => (v < Players_Constants.PlayerIndex.Neutral) || (v > playersCountUnneutral))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerIndex));
         }
     }
 

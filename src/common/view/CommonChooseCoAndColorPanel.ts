@@ -4,7 +4,7 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     ForceSkins_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
@@ -121,10 +121,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0560);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0560);
         this._btnCo.setText(`CO`);
-        this._btnColor.setLangText(Lang_Constants.TextType.B0397);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnColor.setLangText(Lang_TextType.TextType.B0397);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
     }
 
     private _updateLayoutCo(): void {

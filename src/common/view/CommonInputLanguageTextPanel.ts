@@ -2,7 +2,7 @@ import {
     Lang_Utils,
     Helpers_Misc,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -81,7 +81,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const text1 = this._input1.trimInputText() ?? ``;
         const text2 = this._input2.trimInputText() ?? ``;
         if ((!text1) && (!text2)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0156));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0156));
             return;
         }
 
@@ -100,9 +100,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const maxLength = openData.maxLength;
         if (textArray.every(v => Helpers_Misc.getExisted(v.getText()).length <= 0)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0155));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0155));
         } else if (textArray.some(v => Helpers_Misc.getExisted(v.getText()).length > maxLength)) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0034, maxLength));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0034, maxLength));
         } else {
             openData.callback(textArray);
             this.closePanel();
@@ -118,8 +118,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0154);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
         this._label1.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getCurrentLanguageType()) ?? Lang_Constants.UndefinedError);
         this._label2.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getSecondaryLanguageType()) ?? Lang_Constants.UndefinedError);
         this._labelTitle.setText(this.getOpenData()?.getTitle() ?? Lang_Constants.UndefinedError);

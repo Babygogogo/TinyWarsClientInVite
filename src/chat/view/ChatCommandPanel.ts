@@ -7,7 +7,7 @@ import {
     GamePanels_Manager,
     Chat_Proxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -74,7 +74,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, {
             toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({
                 toUserId : userId,
-            }), 
+            }),
         });
         this.closePanel();
     }
@@ -85,7 +85,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0286),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0286),
             callback   : () => {
                 Chat_Proxy.reqChatDeleteMessage(messageId);
                 this.closePanel();
@@ -99,7 +99,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (navigator?.clipboard?.writeText == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0275);
+            FloatText.showLang(Lang_TextType.TextType.A0275);
             return;
         }
 
@@ -107,9 +107,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const text = Chat_Model.getMessage(messageId)?.getContent();
             await navigator.clipboard.writeText(text ?? ``);
 
-            FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+            FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         } catch {
-            FloatText.showLang(Lang_Constants.TextType.A0275);
+            FloatText.showLang(Lang_TextType.TextType.A0275);
         }
     }
 
@@ -148,10 +148,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0155);
-        this._btnUserInfo.setLangText(Lang_Constants.TextType.B0224);
-        this._btnPrivateChat.setLangText(Lang_Constants.TextType.B0383);
-        this._btnDeleteMessage.setLangText(Lang_Constants.TextType.B0838);
-        this._btnCopyMessage.setLangText(Lang_Constants.TextType.B1147);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0155);
+        this._btnUserInfo.setLangText(Lang_TextType.TextType.B0224);
+        this._btnPrivateChat.setLangText(Lang_TextType.TextType.B0383);
+        this._btnDeleteMessage.setLangText(Lang_TextType.TextType.B0838);
+        this._btnCopyMessage.setLangText(Lang_TextType.TextType.B1147);
     }
 }

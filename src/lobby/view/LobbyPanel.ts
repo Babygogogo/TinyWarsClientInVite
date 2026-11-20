@@ -10,7 +10,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Graphics_Constants,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -81,7 +81,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedGroupDiscord(): void {
         if ((window) && (window.open)) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0065, `Discord`),
+                getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0065, `Discord`),
                 callback   : () => {
                     window.open(Urls_Constants.Constants.DiscordUrl);
                 },
@@ -93,7 +93,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedGroupGithub(): void {
         if ((window) && (window.open)) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0065, `GitHub`),
+                getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0065, `GitHub`),
                 callback   : () => {
                     window.open(Urls_Constants.Constants.GithubUrl);
                 },
@@ -255,24 +255,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private async _updateComponentsForLanguage(): Promise<void> {
-        this._labelTips0.setLangText(Lang_Constants.TextType.A0195);
-        this._labelTips1.setLangText(Lang_Constants.TextType.A0833);
-        this._labelTips2.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0537)}:`);
+        this._labelTips0.setLangText(Lang_TextType.TextType.A0195);
+        this._labelTips1.setLangText(Lang_TextType.TextType.A0833);
+        this._labelTips2.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0537)}:`);
         this._labelTips3.setText(`368142455`);
-        this._labelTips4.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0538)}:`);
+        this._labelTips4.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0538)}:`);
         // this._labelTips5.textFlow   = [{
         //     text    : GameConfig.DiscordUrl,
         //     style   : { underline: true },
         // }];
         this._labelTips5.setText(Urls_Constants.Constants.DiscordUrl);
-        this._labelTips6.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0539)}:`);
+        this._labelTips6.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0539)}:`);
         // this._labelTips7.textFlow   = [{
         //     text    : GameConfig.GithubUrl,
         //     style   : { underline: true },
         // }];
         this._labelTips7.setText(Urls_Constants.Constants.GithubUrl);
 
-        this._btnSwitchVersion.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1277)}: ${Lang_Utils.getGameVersionName(window.GAME_VERSION)}`);
+        this._btnSwitchVersion.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1277)}: ${Lang_Utils.getGameVersionName(window.GAME_VERSION)}`);
 
         this._groupWelcome.arrangeItems();
         this._groupQq.arrangeItems();

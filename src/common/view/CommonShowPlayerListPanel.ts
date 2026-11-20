@@ -11,7 +11,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -88,7 +88,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0229);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0229);
     }
 
     private _generateDataForListPlayer(): DataForPlayerRenderer[] {
@@ -177,7 +177,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         this._btnChat.setIsVisible((userId != null) && ((openData.warId != null) || (userId !== selfUserId)));
         this._btnRelation.setIsVisible((userId != null) && (userId !== selfUserId));
         this._labelUserId.setText(`#${userId ?? `----`}`);
-        this._labelName.setText(userId == null ? Lang_Utils.getText(Lang_Constants.TextType.B0607) : await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError);
+        this._labelName.setText(userId == null ? Lang_Utils.getText(Lang_TextType.TextType.B0607) : await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
 

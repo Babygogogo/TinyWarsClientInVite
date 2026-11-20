@@ -7,7 +7,7 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -193,7 +193,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActBuffType();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId),
             availableNumberArray : UnitBuffs_Constants.AllBuffTypeIdArray,
             currentNumber        : act,
             getNumberMainText    : typeId => Lang_Utils.getUnitBuffName(typeId) || Lang_Constants.UndefinedError,
@@ -212,7 +212,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         // TODO
-        FloatText.showLang(Lang_Constants.TextType.B1456);
+        FloatText.showLang(Lang_TextType.TextType.B1456);
     }
 
     private _onTouchedBtnActEndTurnIndex(): void {
@@ -223,7 +223,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldValue = action.getActEndTurnIndex();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.EndTurnIndex),
             minValue     : UnitBuffs_Constants.EndTimeModification.MinEndTurnIndex,
             maxValue     : UnitBuffs_Constants.EndTimeModification.MaxEndTurnIndex,
             currentValue : oldValue,
@@ -252,7 +252,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldValue = action.getActEndPlayerIndex();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.EndPlayerIndex),
             minValue     : UnitBuffs_Constants.EndTimeModification.MinEndPlayerIndex,
             maxValue     : UnitBuffs_Constants.EndTimeModification.MaxEndPlayerIndex,
             currentValue : oldValue,
@@ -307,19 +307,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
 
-        this._btnConPlayerFilter.setLangText(Lang_Constants.TextType.PlayerFilter);
-        this._btnConUnitFilter.setLangText(Lang_Constants.TextType.UnitFilter);
-        this._btnConTileFilter.setLangText(Lang_Constants.TextType.TileFilter);
+        this._btnConPlayerFilter.setLangText(Lang_TextType.TextType.PlayerFilter);
+        this._btnConUnitFilter.setLangText(Lang_TextType.TextType.UnitFilter);
+        this._btnConTileFilter.setLangText(Lang_TextType.TextType.TileFilter);
 
-        this._btnActBuffType.setLangText(Lang_Constants.TextType.AbnormalStateTypeId);
-        this._btnActExtraParams.setLangText(Lang_Constants.TextType.B1229);
-        this._btnActEndTurnIndex.setLangText(Lang_Constants.TextType.EndTurnIndex);
-        this._btnActEndPlayerIndex.setLangText(Lang_Constants.TextType.EndPlayerIndex);
-        this._btnActIsRelativeEndTurnIndex.setLangText(Lang_Constants.TextType.B1017);
-        this._btnActIsRelativeEndPlayerIndex.setLangText(Lang_Constants.TextType.B1017);
+        this._btnActBuffType.setLangText(Lang_TextType.TextType.AbnormalStateTypeId);
+        this._btnActExtraParams.setLangText(Lang_TextType.TextType.B1229);
+        this._btnActEndTurnIndex.setLangText(Lang_TextType.TextType.EndTurnIndex);
+        this._btnActEndPlayerIndex.setLangText(Lang_TextType.TextType.EndPlayerIndex);
+        this._btnActIsRelativeEndTurnIndex.setLangText(Lang_TextType.TextType.B1017);
+        this._btnActIsRelativeEndPlayerIndex.setLangText(Lang_TextType.TextType.B1017);
 
         this._updateLabelDescAndLabelError();
 
@@ -345,7 +345,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Actions_Utils_Common.getDetailDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
@@ -357,7 +357,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._labelConPlayerFilter.setText(action.getConPlayerFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
+        this._labelConPlayerFilter.setText(action.getConPlayerFilter() == null ? `` : Lang_Utils.getText(Lang_TextType.TextType.B1408));
     }
 
     private _updateLabelConUnitFilter(): void {
@@ -366,7 +366,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._labelConUnitFilter.setText(action.getConUnitFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
+        this._labelConUnitFilter.setText(action.getConUnitFilter() == null ? `` : Lang_Utils.getText(Lang_TextType.TextType.B1408));
     }
 
     private _updateLabelConTileFilter(): void {
@@ -375,7 +375,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._labelConTileFilter.setText(action.getConTileFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
+        this._labelConTileFilter.setText(action.getConTileFilter() == null ? `` : Lang_Utils.getText(Lang_TextType.TextType.B1408));
     }
 
     private _updateLabelActBuffType(): void {

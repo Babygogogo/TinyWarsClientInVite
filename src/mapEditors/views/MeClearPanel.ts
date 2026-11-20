@@ -6,7 +6,7 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -77,7 +77,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.A0117)}\n\n${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0023, Maps_Constants.Common.MaxGridsCount)}`,
+            getContent : () => `${Lang_Utils.getText(Lang_TextType.TextType.A0117)}\n\n${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0023, Maps_Constants.Common.MaxGridsCount)}`,
         });
     }
 
@@ -86,7 +86,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const height        = this._newHeight;
         const gridsCount    = width * height;
         if ((!gridsCount) || (gridsCount <= 0) || (width <= 0) || (height <= 0) || (gridsCount > Maps_Constants.Common.MaxGridsCount)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0087));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0087));
             return;
         }
 
@@ -119,7 +119,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnWidth(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0034),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0034),
             minValue     : 1,
             maxValue     : Math.floor(Maps_Constants.Common.MaxGridsCount / (this._newHeight || 1)),
             currentValue : this._newWidth,
@@ -133,7 +133,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHeight(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0035),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0035),
             minValue     : 1,
             maxValue     : Math.floor(Maps_Constants.Common.MaxGridsCount / (this._newWidth || 1)),
             currentValue : this._newHeight,
@@ -150,11 +150,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0391);
-        this._labelCurrSizeTitle.setLangText(Lang_Constants.TextType.B0855);
-        this._labelNewSizeTitle.setLangText(Lang_Constants.TextType.B0856);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0391);
+        this._labelCurrSizeTitle.setLangText(Lang_TextType.TextType.B0855);
+        this._labelNewSizeTitle.setLangText(Lang_TextType.TextType.B0856);
     }
 
     private _updateBtnWidth(): void {

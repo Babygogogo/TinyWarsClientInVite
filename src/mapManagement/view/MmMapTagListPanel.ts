@@ -7,7 +7,7 @@ import {
     GamePanels_Manager,
     NormalMap_Model_NormalMapProxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -71,7 +71,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgMmSetMapTagSingleData(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
     private async _onNotifyMsgMapGetMapTag(): Promise<void> {
         await this._updateListMapTag();
@@ -81,7 +81,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnRename(): Promise<void> {
         const mapTagId = this._listMapTag.getFirstSelectedData()?.mapTagId;
         if (mapTagId == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0856);
+            FloatText.showLang(Lang_TextType.TextType.A0856);
             return;
         }
 
@@ -89,7 +89,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
             currentTextArray : mapTagData?.getNameArray() ?? [],
             maxTextLength    : MapTags_Constants.Constants.MaxNameLength,
-            getHelpText      : () => Lang_Utils.getText(Lang_Constants.TextType.A0313),
+            getHelpText      : () => Lang_Utils.getText(Lang_TextType.TextType.A0313),
             callback         : textArray => NormalMap_Model_NormalMapProxy.reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
                 mapTagId  : mapTagId,
                 isEnabled : !!mapTagData?.getIsEnabled(),
@@ -100,24 +100,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnEnable(): Promise<void> {
         const mapTagId = this._listMapTag.getFirstSelectedData()?.mapTagId;
         if (mapTagId == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0856);
+            FloatText.showLang(Lang_TextType.TextType.A0856);
             return;
         }
 
         const mapTagData = (await NormalMap_Model_NormalMapModel.getMapTag())?.getMapTagDataArray().find(v => v.getMapTagId() === mapTagId);
         if ((mapTagData == null) || (mapTagData.getIsEnabled())) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const nameArray = mapTagData.getNameArray();
         if (Lang_Utils.getLanguageText({ textArray : nameArray }) == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0311);
+            FloatText.showLang(Lang_TextType.TextType.A0311);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => NormalMap_Model_NormalMapProxy.reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
                 mapTagId  : mapTagId,
                 isEnabled : !mapTagData.getIsEnabled(),
@@ -128,24 +128,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnDisable(): Promise<void> {
         const mapTagId = this._listMapTag.getFirstSelectedData()?.mapTagId;
         if (mapTagId == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0856);
+            FloatText.showLang(Lang_TextType.TextType.A0856);
             return;
         }
 
         const mapTagData = (await NormalMap_Model_NormalMapModel.getMapTag())?.getMapTagDataArray().find(v => v.getMapTagId() === mapTagId);
         if ((mapTagData == null) || (!mapTagData.getIsEnabled())) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const nameArray = mapTagData.getNameArray();
         if (Lang_Utils.getLanguageText({ textArray : nameArray }) == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0311);
+            FloatText.showLang(Lang_TextType.TextType.A0311);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => NormalMap_Model_NormalMapProxy.reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
                 mapTagId  : mapTagId,
                 isEnabled : !mapTagData.getIsEnabled(),
@@ -161,10 +161,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateBtnEnable();
     }
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0445);
-        this._btnEnable.setLangText(Lang_Constants.TextType.B0433);
-        this._btnDisable.setLangText(Lang_Constants.TextType.B0434);
-        this._btnRename.setLangText(Lang_Constants.TextType.B0495);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0445);
+        this._btnEnable.setLangText(Lang_TextType.TextType.B0433);
+        this._btnDisable.setLangText(Lang_TextType.TextType.B0434);
+        this._btnRename.setLangText(Lang_TextType.TextType.B0495);
     }
 
     private async _updateListMapTag(): Promise<void> {
@@ -253,7 +253,7 @@ class MapTagRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         const isEnabled         = !!mapTagData?.getIsEnabled();
         const labelIsEnabled    = this._labelIsEnabled;
-        labelIsEnabled.setLangText(isEnabled ? Lang_Constants.TextType.B0431 : Lang_Constants.TextType.B0432);
+        labelIsEnabled.setLangText(isEnabled ? Lang_TextType.TextType.B0431 : Lang_TextType.TextType.B0432);
         labelIsEnabled.setTextColor(isEnabled ? 0x00FF00 : 0xC9D3DF);
         this._labelMapTagName.setText(Lang_Utils.getLanguageText({ textArray : mapTagData?.getNameArray() }) ?? '--');
         this._layoutName.arrangeItems();

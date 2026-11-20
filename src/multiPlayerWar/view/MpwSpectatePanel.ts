@@ -4,7 +4,7 @@ import {
     GamePanels_Manager,
     Graphics_Constants,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MultiPlayerWar_Model_MpwModel,
     MultiPlayerWar_Model_MpwWar,
@@ -106,7 +106,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
         }
 
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0299));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0299));
     }
 
     private async _onTouchedBtnHandleRequest(): Promise<void> {
@@ -119,21 +119,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const watchIncomingInfo     = await WatchWar_Model_WwModel.getWatchIncomingInfo(warId);
         const warPlayerInfoArray    = (await MultiPlayerWar_Model_MpwModel.getWarSettings(warId))?.getPlayerInfoArray();
         if ((watchIncomingInfo == null) || (warPlayerInfoArray == null)) {
-            FloatText.showLang(Lang_Constants.TextType.A0300);
+            FloatText.showLang(Lang_TextType.TextType.A0300);
             return;
         }
 
         const requestSrcUserIdArray = watchIncomingInfo.getRequestSrcUserIdArray();
         if (!requestSrcUserIdArray.length) {
-            FloatText.showLang(Lang_Constants.TextType.A0300);
+            FloatText.showLang(Lang_TextType.TextType.A0300);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
                 currentNumberArray     : [],
                 availableNumberArray   : requestSrcUserIdArray,
                 showNumber             : true,
                 columnsCount           : 3,
-                getTitleText           : () => Lang_Utils.getText(Lang_Constants.TextType.B0208),
-                getHelpText            : () => Lang_Utils.getText(Lang_Constants.TextType.A0859),
+                getTitleText           : () => Lang_Utils.getText(Lang_TextType.TextType.B0208),
+                getHelpText            : () => Lang_Utils.getText(Lang_TextType.TextType.A0859),
                 getNumberMainText      : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
                 getNumberMainTextColor : userId => {
                     if (warPlayerInfoArray.some(v => (v.getUserId() ?? 0) === userId)) {
@@ -150,7 +150,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     const acceptUserIdSet       = new Set(acceptUserIdArray);
                     const declineUserIdArray    = requestSrcUserIdArray.filter(v => !acceptUserIdSet.has(v));
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0082, acceptUserIdArray.length, declineUserIdArray.length),
+                        getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0082, acceptUserIdArray.length, declineUserIdArray.length),
                         callback   : () => WatchWar_Model_WwProxy.reqWatchHandleRequest(warId, acceptUserIdArray, declineUserIdArray),
                     });
                 },
@@ -168,13 +168,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const watchIncomingInfo     = await WatchWar_Model_WwModel.getWatchIncomingInfo(warId);
         const warPlayerInfoArray    = (await MultiPlayerWar_Model_MpwModel.getWarSettings(warId))?.getPlayerInfoArray();
         if ((watchIncomingInfo == null) || (warPlayerInfoArray == null)) {
-            FloatText.showLang(Lang_Constants.TextType.A0301);
+            FloatText.showLang(Lang_TextType.TextType.A0301);
             return;
         }
 
         const ongoingUserIdArray = watchIncomingInfo.getOngoingSrcUserIdArray();
         if (!ongoingUserIdArray.length) {
-            FloatText.showLang(Lang_Constants.TextType.A0301);
+            FloatText.showLang(Lang_TextType.TextType.A0301);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
                 currentNumberArray     : [],
@@ -182,8 +182,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 showNumber             : true,
                 minChooseCount         : 1,
                 columnsCount           : 3,
-                getTitleText           : () => Lang_Utils.getText(Lang_Constants.TextType.B0219),
-                getHelpText            : () => Lang_Utils.getText(Lang_Constants.TextType.A0858),
+                getTitleText           : () => Lang_Utils.getText(Lang_TextType.TextType.B0219),
+                getHelpText            : () => Lang_Utils.getText(Lang_TextType.TextType.A0858),
                 getNumberMainText      : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
                 getNumberMainTextColor : userId => {
                     if (warPlayerInfoArray.some(v => (v.getUserId() ?? 0) === userId)) {
@@ -214,13 +214,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0872);
-        this._labelGameSpectatorTitle.setLangText(Lang_Constants.TextType.B0873);
-        this._labelOwnSpectatorTitle.setLangText(Lang_Constants.TextType.B0874);
-        this._labelIncomingRequestTitle.setLangText(Lang_Constants.TextType.B0875);
-        this._btnDeleteWatcher.setLangText(Lang_Constants.TextType.B0219);
-        this._btnHandleRequest.setLangText(Lang_Constants.TextType.B0208);
-        this._btnMakeRequest.setLangText(Lang_Constants.TextType.B0207);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0872);
+        this._labelGameSpectatorTitle.setLangText(Lang_TextType.TextType.B0873);
+        this._labelOwnSpectatorTitle.setLangText(Lang_TextType.TextType.B0874);
+        this._labelIncomingRequestTitle.setLangText(Lang_TextType.TextType.B0875);
+        this._btnDeleteWatcher.setLangText(Lang_TextType.TextType.B0219);
+        this._btnHandleRequest.setLangText(Lang_TextType.TextType.B0208);
+        this._btnMakeRequest.setLangText(Lang_TextType.TextType.B0207);
     }
 
     private async _updateBtnHandleRequest(): Promise<void> {

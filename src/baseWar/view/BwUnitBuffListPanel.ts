@@ -8,7 +8,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -81,7 +81,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0742),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0742),
         });
     }
 
@@ -93,7 +93,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const buffArray = unit.getBuffList();
         if ((buffArray?.length) >= 10) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -101,15 +101,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentNumber        : null,
             availableNumberArray : UnitBuffs_Constants.AllBuffTypeIdArray,
             showNumber           : true,
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.AbnormalStates),
             getNumberMainText    : buffTypeId => Lang_Utils.getUnitBuffName(buffTypeId) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm    : buffTypeId => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-                    title        : Lang_Utils.getText(Lang_Constants.TextType.EndTime),
+                    title        : Lang_Utils.getText(Lang_TextType.TextType.EndTime),
                     charRestrict : `0-9 `,
                     currentValue : ``,
                     maxChars     : 10,
-                    tips         : Lang_Utils.getText(Lang_Constants.TextType.A0743),
+                    tips         : Lang_Utils.getText(Lang_TextType.TextType.A0743),
                     canBeEmpty   : true,
                     callback     : panel => {
                         const numberArray   = panel.getInputText().split(` `).map(v => parseInt(v)).filter(v => isFinite(v));
@@ -132,7 +132,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0738),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0738),
         });
     }
 
@@ -140,7 +140,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0739),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0739),
         });
     }
 
@@ -154,11 +154,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.AbnormalStates);
-        this._labelBuffType.setLangText(Lang_Constants.TextType.B0805);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._labelExpire.setText(`${Lang_Utils.getText(Lang_Constants.TextType.EndTime)} ?`);
-        this._labelExtraParams.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1229)} ?`);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AbnormalStates);
+        this._labelBuffType.setLangText(Lang_TextType.TextType.B0805);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._labelExpire.setText(`${Lang_Utils.getText(Lang_TextType.TextType.EndTime)} ?`);
+        this._labelExtraParams.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1229)} ?`);
     }
 
     private async _updateComponentsForBuff(): Promise<void> {
@@ -239,7 +239,7 @@ class BuffRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => `${Lang_Utils.getUnitBuffDesc(buffTypeId) ?? Lang_Constants.UndefinedError}\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0741)}`,
+                getContent : () => `${Lang_Utils.getUnitBuffDesc(buffTypeId) ?? Lang_Constants.UndefinedError}\n\n${Lang_Utils.getText(Lang_TextType.TextType.A0741)}`,
                 callback   : () => {
                     openData.unit.deleteBuff(buff, true);
                 },
@@ -258,11 +258,11 @@ class BuffRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.EndTime),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.EndTime),
             charRestrict : `0-9 `,
             currentValue : ``,
             maxChars     : 10,
-            tips         : Lang_Utils.getText(Lang_Constants.TextType.A0743),
+            tips         : Lang_Utils.getText(Lang_TextType.TextType.A0743),
             callback     : panel => {
                 const numberArray   = panel.getInputText().split(` `).map(v => parseInt(v)).filter(v => isFinite(v));
                 const isEmpty       = !numberArray.length;
@@ -311,7 +311,7 @@ class BuffRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const expiringPlayerIndex   = buff.getExpiringPlayerIndex();
         this._labelExpire.setText(((expiringTurnIndex == null) || (expiringPlayerIndex == null))
             ? `--`
-            : `${Lang_Utils.getText(Lang_Constants.TextType.B0191)}${expiringTurnIndex}, P${expiringPlayerIndex}`,
+            : `${Lang_Utils.getText(Lang_TextType.TextType.B0191)}${expiringTurnIndex}, P${expiringPlayerIndex}`,
         );
 
         const extraParamArray = buff.getExtraParamArray();

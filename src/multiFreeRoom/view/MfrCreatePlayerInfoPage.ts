@@ -15,7 +15,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -265,9 +265,9 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnChangeCo.setLangText(Lang_Constants.TextType.B0230);
-        this._btnChangeSkinId.setLangText(Lang_Constants.TextType.B0609);
-        this._btnChangeController.setLangText(Lang_Constants.TextType.B0424);
+        this._btnChangeCo.setLangText(Lang_TextType.TextType.B0230);
+        this._btnChangeSkinId.setLangText(Lang_TextType.TextType.B0609);
+        this._btnChangeController.setLangText(Lang_TextType.TextType.B0424);
     }
 
     private _updateComponentsForSettings(): void {
@@ -300,7 +300,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             ? roomCreator.getSelfUnitAndTileSkinId()
             : (isHumanPlayer ? null : (playerData.getUnitAndTileSkinId())),
         ));
-        this._labelPlayerType.setLangText(isSelfPlayer ? Lang_Constants.TextType.B0647 : isHumanPlayer ? Lang_Constants.TextType.B0648 : Lang_Constants.TextType.B0607);
+        this._labelPlayerType.setLangText(isSelfPlayer ? Lang_TextType.TextType.B0647 : isHumanPlayer ? Lang_TextType.TextType.B0648 : Lang_TextType.TextType.B0607);
 
         const gameConfig                = openData.gameConfig;
         const coId                      = isSelfPlayer

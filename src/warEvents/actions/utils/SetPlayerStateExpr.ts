@@ -11,7 +11,7 @@ import {
     ExpressionParsers_Parser,
     ExpressionParsers_Contexts_Player,
     AuxiliaryTypes_PlayerDataForWeaSetPlayerState,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type Players_Player,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -111,7 +111,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0045, data.getConPlayerFilter() ?? Lang_Constants.UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0045, data.getConPlayerFilter() ?? Lang_Constants.UndefinedError);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetPlayerStateExpr>): string | null {
     if (data == null) {
@@ -128,7 +128,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         data.getActActivateCoSkillType()    ? `${WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActActivateCoSkillType.getTitleText()}: ${data.getActActivateCoSkillType()}`    : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0045, data.getConPlayerFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0045, data.getConPlayerFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 
 export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: Set<string>): string | null {
@@ -140,7 +140,7 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -152,7 +152,7 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -164,7 +164,7 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -176,7 +176,7 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -188,7 +188,7 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -200,7 +200,7 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -212,7 +212,7 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -224,7 +224,7 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

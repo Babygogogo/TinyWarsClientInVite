@@ -7,7 +7,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
@@ -155,14 +155,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0301);
-        this._labelTileAndUnit.setLangText(Lang_Constants.TextType.B1244);
-        this._labelTileBase.setLangText(Lang_Constants.TextType.TileBase);
-        this._labelTileDecoration.setLangText(Lang_Constants.TextType.TileDecoration);
-        this._labelTileObject.setLangText(Lang_Constants.TextType.TileObject);
-        this._labelUnit.setLangText(Lang_Constants.TextType.Units);
-        this._labelLocation.setLangText(Lang_Constants.TextType.Location);
-        this._labelShowAllLocation.setLangText(Lang_Constants.TextType.B0761);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0301);
+        this._labelTileAndUnit.setLangText(Lang_TextType.TextType.B1244);
+        this._labelTileBase.setLangText(Lang_TextType.TextType.TileBase);
+        this._labelTileDecoration.setLangText(Lang_TextType.TextType.TileDecoration);
+        this._labelTileObject.setLangText(Lang_TextType.TextType.TileObject);
+        this._labelUnit.setLangText(Lang_TextType.TextType.Units);
+        this._labelLocation.setLangText(Lang_TextType.TextType.Location);
+        this._labelShowAllLocation.setLangText(Lang_TextType.TextType.B0761);
         // this._btnShowAllLocations.label = Lang.getText(LangTextType.B0757);
         // this._btnHideAllLocations.label = Lang.getText(LangTextType.B0758);
 
@@ -240,7 +240,7 @@ class LocationRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         if (((drawer.getMode() === MapEditors_Constants.DrawerMode.AddTileToLocation) && (drawer.getDataForAddTileToLocation()?.locationIdArray.some(v => v === locationId)))             ||
             ((drawer.getMode() === MapEditors_Constants.DrawerMode.DeleteTileFromLocation) && (drawer.getDataForDeleteTileFromLocation()?.locationIdArray.some(v => v === locationId)))
         ) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0267));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0267));
             return;
         }
 

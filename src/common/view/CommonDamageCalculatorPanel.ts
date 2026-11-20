@@ -16,7 +16,7 @@ import {
     Helpers_ImageSource,
     Helpers_Misc,
     Helpers_Text,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     PlayerRules_Constants,
     Players_Constants,
@@ -330,8 +330,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1111),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0033),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1111),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0033),
         });
     }
 
@@ -600,7 +600,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue      = 1;
         const maxValue      = Units_Constants.Hp.MaxHp;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Hp),
             currentValue : currValue,
             minValue     : minValue,
             maxValue     : maxValue,
@@ -681,7 +681,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue      = 0;
         const maxValue      = 999;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0833),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0833),
             currentValue : currValue,
             minValue     : minValue,
             maxValue     : maxValue,
@@ -711,7 +711,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue      = -10000;
         const maxValue      = 10000;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0183),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0183),
             currentValue : currValue,
             minValue     : minValue,
             maxValue     : maxValue,
@@ -741,7 +741,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue      = PlayerRules_Constants.DefenseModifier.MinLimit;
         const maxValue      = PlayerRules_Constants.DefenseModifier.MaxLimit;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.DefBonus$),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.DefBonus$),
             currentValue : currValue,
             minValue     : minValue,
             maxValue     : maxValue,
@@ -768,7 +768,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _handleTouchedBtnLuck(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0189),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0189),
             currentValue : playerData.lowerLuck,
             minValue     : -10000,
             maxValue     : playerData.upperLuck,
@@ -777,7 +777,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 this._updateView();
 
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0190),
+                    getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0190),
                     currentValue : playerData.upperLuck,
                     minValue     : playerData.lowerLuck,
                     maxValue     : 10000,
@@ -828,7 +828,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue      = -10000000;
         const maxValue      = 10000000;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Fund),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Fund),
             currentValue : currValue,
             minValue     : minValue,
             maxValue     : maxValue,
@@ -858,7 +858,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue      = 0;
         const maxValue      = 999;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0834),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0834),
             currentValue : currValue,
             minValue     : minValue,
             maxValue     : maxValue,
@@ -886,12 +886,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         _savedData = cloneCalculatorData(data);
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0288));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0288));
     }
     private _onTouchedBtnLoadState(): void {
         const savedData = _savedData;
         if (savedData == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0289));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0289));
         } else {
             this._setCalculatorData(cloneCalculatorData(savedData));
             this._updateView();
@@ -946,8 +946,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelLuck2.setText(`${defenderData.lowerLuck}\n${defenderData.upperLuck}`);
         this._labelFund1.setText(`${attackerData.fund}`);
         this._labelFund2.setText(`${defenderData.fund}`);
-        this._labelCoOnboard1.setLangText(attackerData.coOnboard ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
-        this._labelCoOnboard2.setLangText(defenderData.coOnboard ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelCoOnboard1.setLangText(attackerData.coOnboard ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
+        this._labelCoOnboard2.setLangText(defenderData.coOnboard ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._labelCity1.setText(`${attackerData.citiesCount}`);
         this._labelCity2.setText(`${defenderData.citiesCount}`);
         this._labelWeapon1.setText(getWeaponTypeName(attackerData.unitWeaponType));
@@ -957,8 +957,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         {
             const coSkillType1  = attackerData.coSkillType;
             const coSkillType2  = defenderData.coSkillType;
-            this._btnSkill1.setText(coSkillType1 == null ? Lang_Utils.getText(Lang_Constants.TextType.B0829) : (Lang_Utils.getCoSkillTypeName(coSkillType1) ?? Lang_Constants.UndefinedError));
-            this._btnSkill2.setText(coSkillType2 == null ? Lang_Utils.getText(Lang_Constants.TextType.B0829) : (Lang_Utils.getCoSkillTypeName(coSkillType2) ?? Lang_Constants.UndefinedError));
+            this._btnSkill1.setText(coSkillType1 == null ? Lang_Utils.getText(Lang_TextType.TextType.B0829) : (Lang_Utils.getCoSkillTypeName(coSkillType1) ?? Lang_Constants.UndefinedError));
+            this._btnSkill2.setText(coSkillType2 == null ? Lang_Utils.getText(Lang_TextType.TextType.B0829) : (Lang_Utils.getCoSkillTypeName(coSkillType2) ?? Lang_Constants.UndefinedError));
         }
 
         this._updateUnitView1();
@@ -1045,37 +1045,37 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0828);
-        this._labelPlayer1.setLangText(Lang_Constants.TextType.B0831);
-        this._labelPlayer2.setLangText(Lang_Constants.TextType.B0832);
-        this._btnSelect1.setLangText(Lang_Constants.TextType.B0258);
-        this._btnSelect2.setLangText(Lang_Constants.TextType.B0258);
-        this._btnHp1.setLangText(Lang_Constants.TextType.Hp);
-        this._btnHp2.setLangText(Lang_Constants.TextType.Hp);
-        this._btnWeapon1.setLangText(Lang_Constants.TextType.B0830);
-        this._btnWeapon2.setLangText(Lang_Constants.TextType.B0830);
-        this._btnPromotion1.setLangText(Lang_Constants.TextType.Promotion);
-        this._btnPromotion2.setLangText(Lang_Constants.TextType.Promotion);
-        this._btnTower1.setLangText(Lang_Constants.TextType.B0833);
-        this._btnTower2.setLangText(Lang_Constants.TextType.B0833);
-        this._btnOffenseBonus1.setLangText(Lang_Constants.TextType.B0183);
-        this._btnOffenseBonus2.setLangText(Lang_Constants.TextType.B0183);
-        this._btnDefenseBonus1.setLangText(Lang_Constants.TextType.DefBonus$);
-        this._btnDefenseBonus2.setLangText(Lang_Constants.TextType.DefBonus$);
-        this._btnLuck1.setLangText(Lang_Constants.TextType.B1352);
-        this._btnLuck2.setLangText(Lang_Constants.TextType.B1352);
-        this._btnCoOnboard1.setLangText(Lang_Constants.TextType.CoOnboard);
-        this._btnCoOnboard2.setLangText(Lang_Constants.TextType.CoOnboard);
-        this._btnFund1.setLangText(Lang_Constants.TextType.Fund);
-        this._btnFund2.setLangText(Lang_Constants.TextType.Fund);
-        this._btnCity1.setLangText(Lang_Constants.TextType.B0834);
-        this._btnCity2.setLangText(Lang_Constants.TextType.B0834);
-        this._btnSwitchPlayer.setLangText(Lang_Constants.TextType.B0835);
-        this._btnSaveState.setLangText(Lang_Constants.TextType.B0844);
-        this._btnLoadState.setLangText(Lang_Constants.TextType.B0845);
-        this._btnWeather.setLangText(Lang_Constants.TextType.Weather);
-        this._labelAttackTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0039)}:`);
-        this._labelDefendTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0837)}:`);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0828);
+        this._labelPlayer1.setLangText(Lang_TextType.TextType.B0831);
+        this._labelPlayer2.setLangText(Lang_TextType.TextType.B0832);
+        this._btnSelect1.setLangText(Lang_TextType.TextType.B0258);
+        this._btnSelect2.setLangText(Lang_TextType.TextType.B0258);
+        this._btnHp1.setLangText(Lang_TextType.TextType.Hp);
+        this._btnHp2.setLangText(Lang_TextType.TextType.Hp);
+        this._btnWeapon1.setLangText(Lang_TextType.TextType.B0830);
+        this._btnWeapon2.setLangText(Lang_TextType.TextType.B0830);
+        this._btnPromotion1.setLangText(Lang_TextType.TextType.Promotion);
+        this._btnPromotion2.setLangText(Lang_TextType.TextType.Promotion);
+        this._btnTower1.setLangText(Lang_TextType.TextType.B0833);
+        this._btnTower2.setLangText(Lang_TextType.TextType.B0833);
+        this._btnOffenseBonus1.setLangText(Lang_TextType.TextType.B0183);
+        this._btnOffenseBonus2.setLangText(Lang_TextType.TextType.B0183);
+        this._btnDefenseBonus1.setLangText(Lang_TextType.TextType.DefBonus$);
+        this._btnDefenseBonus2.setLangText(Lang_TextType.TextType.DefBonus$);
+        this._btnLuck1.setLangText(Lang_TextType.TextType.B1352);
+        this._btnLuck2.setLangText(Lang_TextType.TextType.B1352);
+        this._btnCoOnboard1.setLangText(Lang_TextType.TextType.CoOnboard);
+        this._btnCoOnboard2.setLangText(Lang_TextType.TextType.CoOnboard);
+        this._btnFund1.setLangText(Lang_TextType.TextType.Fund);
+        this._btnFund2.setLangText(Lang_TextType.TextType.Fund);
+        this._btnCity1.setLangText(Lang_TextType.TextType.B0834);
+        this._btnCity2.setLangText(Lang_TextType.TextType.B0834);
+        this._btnSwitchPlayer.setLangText(Lang_TextType.TextType.B0835);
+        this._btnSaveState.setLangText(Lang_TextType.TextType.B0844);
+        this._btnLoadState.setLangText(Lang_TextType.TextType.B0845);
+        this._btnWeather.setLangText(Lang_TextType.TextType.Weather);
+        this._labelAttackTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0039)}:`);
+        this._labelDefendTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0837)}:`);
     }
 
     private _updateComponentsForDamage(): void {
@@ -1087,7 +1087,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const attackDamageInfoArray = getAttackDamageInfoArray(calculatorData, false);
         const labelAttackDamage     = this._labelAttackDamage;
         if (!attackDamageInfoArray.length) {
-            labelAttackDamage.setLangText(Lang_Constants.TextType.B0836);
+            labelAttackDamage.setLangText(Lang_TextType.TextType.B0836);
         } else {
             labelAttackDamage.setText(`${attackDamageInfoArray[0].damage} ~ ${attackDamageInfoArray[attackDamageInfoArray.length - 1].damage}`);
         }
@@ -1121,7 +1121,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const range                 = info.range;
             const textForPossibility    = `(${Helpers_Text.format(`%.2f`, info.possibility * 100)}%)`;
             if (range == null) {
-                textArray.push(`@${normalizedHp}HP${textForPossibility}: ${Lang_Utils.getText(Lang_Constants.TextType.B0836)}`);
+                textArray.push(`@${normalizedHp}HP${textForPossibility}: ${Lang_Utils.getText(Lang_TextType.TextType.B0836)}`);
             } else {
                 textArray.push(`@${normalizedHp}HP${textForPossibility}: ${range.minDamage} ~ ${range.maxDamage}`);
             }
@@ -1229,9 +1229,9 @@ function createTileViewData(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseW
 
 function getWeaponTypeName(weaponType: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Units_Constants.WeaponTypeId>): string {
     if (weaponType == null) {
-        return Lang_Utils.getText(Lang_Constants.TextType.None);
+        return Lang_Utils.getText(Lang_TextType.TextType.None);
     } else {
-        return Lang_Utils.getText(weaponType === Units_Constants.WeaponTypeId.Primary ? Lang_Constants.TextType.B0692 : Lang_Constants.TextType.B0693);
+        return Lang_Utils.getText(weaponType === Units_Constants.WeaponTypeId.Primary ? Lang_TextType.TextType.B0692 : Lang_TextType.TextType.B0693);
     }
 }
 

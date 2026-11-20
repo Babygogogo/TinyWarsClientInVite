@@ -7,7 +7,7 @@ import {
     Numbers_Constants,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Parser,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_War,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
@@ -48,7 +48,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0047, data.getForceFogCode() ?? Lang_Constants.UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0047, data.getForceFogCode() ?? Lang_Constants.UndefinedError);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetForceFogCodeExpr>): string | null {
     if (data == null) {
@@ -59,7 +59,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         data.getTurnsCount() ? `${WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.TurnsCount.getTitleText()}: ${data.getTurnsCount()}` : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0047, data.getForceFogCode() ?? Lang_Constants.UndefinedError)}\n${textArray}`;
+    return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0047, data.getForceFogCode() ?? Lang_Constants.UndefinedError)}\n${textArray}`;
 }
 
 export function getErrorTip(data: WeaSetForceFogCodeExpr, customCounterNameSet: Set<string>): string | null {
@@ -71,7 +71,7 @@ export function getErrorTip(data: WeaSetForceFogCodeExpr, customCounterNameSet: 
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -83,7 +83,7 @@ export function getErrorTip(data: WeaSetForceFogCodeExpr, customCounterNameSet: 
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

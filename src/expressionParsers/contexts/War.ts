@@ -23,7 +23,7 @@ import {
     ExpressionParsers_Results_PositionArray,
     ExpressionParsers_Results_Lambda,
     ExpressionParsers_Results_TaskObjective,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Results_Tile,
     ExpressionParsers_Results_TileArray,
     ExpressionParsers_Results_TileBuff,
@@ -98,9 +98,9 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = War.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = new Map<string, ExpressionParsers_Types.EpVariableInfo>();
-        variables.set(War.VnTurn,        { desc : Lang_Constants.TextType.A0447, resultType : ExpressionParsers_Enums.ResultType.Turn,    isExtension : false } );
-        variables.set(War.VnWeather,     { desc : Lang_Constants.TextType.A0461, resultType : ExpressionParsers_Enums.ResultType.Weather, isExtension : false } );
-        variables.set(War.VnFog,         { desc : Lang_Constants.TextType.A0458, resultType : ExpressionParsers_Enums.ResultType.Fog,     isExtension : false } );
+        variables.set(War.VnTurn,        { desc : Lang_TextType.TextType.A0447, resultType : ExpressionParsers_Enums.ResultType.Turn,    isExtension : false } );
+        variables.set(War.VnWeather,     { desc : Lang_TextType.TextType.A0461, resultType : ExpressionParsers_Enums.ResultType.Weather, isExtension : false } );
+        variables.set(War.VnFog,         { desc : Lang_TextType.TextType.A0458, resultType : ExpressionParsers_Enums.ResultType.Fog,     isExtension : false } );
 
         return variables;
     }
@@ -109,7 +109,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnAbs,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0455,
+                Lang_TextType.TextType.A0455,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -135,7 +135,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnFloor,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0119,
+                Lang_TextType.TextType.A0119,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -161,7 +161,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnCeil,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0474,
+                Lang_TextType.TextType.A0474,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -187,7 +187,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnMin,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0468,
+                Lang_TextType.TextType.A0468,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length < 2) {
                         throw Helpers_Misc.newError(
@@ -215,7 +215,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnMax,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0469,
+                Lang_TextType.TextType.A0469,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length < 2) {
                         throw Helpers_Misc.newError(
@@ -243,7 +243,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnIsAmong,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0130,
+                Lang_TextType.TextType.A0130,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length < 2) {
                         throw Helpers_Misc.newError(
@@ -281,7 +281,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnRandom,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0120,
+                Lang_TextType.TextType.A0120,
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 (argArray, contextType, lambdaArgumentInfoDict) => {
                     if (argArray.length !== 0) {
@@ -298,7 +298,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnRandomInt,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0525,
+                Lang_TextType.TextType.A0525,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
@@ -326,7 +326,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnRandomPick,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0661,
+                Lang_TextType.TextType.A0661,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 3) {
                         throw Helpers_Misc.newError(
@@ -373,7 +373,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnCustomCounter,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0121,
+                Lang_TextType.TextType.A0121,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -399,7 +399,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnPlayer,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0385,
+                Lang_TextType.TextType.A0385,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -425,7 +425,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnHasUnit,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0122,
+                Lang_TextType.TextType.A0122,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
@@ -453,7 +453,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnUnit,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0467,
+                Lang_TextType.TextType.A0467,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
@@ -481,7 +481,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnTeamIndex,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0142,
+                Lang_TextType.TextType.A0142,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -507,7 +507,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnTile,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0413,
+                Lang_TextType.TextType.A0413,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
@@ -535,7 +535,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnWarEventTriggeredTimes,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0702,
+                Lang_TextType.TextType.A0702,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
@@ -563,7 +563,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnWarOperation,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0706,
+                Lang_TextType.TextType.A0706,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -591,7 +591,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnTaskObjective,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0726,
+                Lang_TextType.TextType.A0726,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -619,7 +619,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnAllUnits,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0479,
+                Lang_TextType.TextType.A0479,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -659,7 +659,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnAllTiles,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0493,
+                Lang_TextType.TextType.A0493,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -699,7 +699,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnAllPlayers,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0494,
+                Lang_TextType.TextType.A0494,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -739,7 +739,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnAllUnitStatistics,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0512,
+                Lang_TextType.TextType.A0512,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -779,7 +779,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnAllCustomCounterIds,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0529,
+                Lang_TextType.TextType.A0529,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -819,7 +819,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnAllUnitTypes,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0700,
+                Lang_TextType.TextType.A0700,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -859,7 +859,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnAllTileTypes,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0701,
+                Lang_TextType.TextType.A0701,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -899,7 +899,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnAllPositions,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0578,
+                Lang_TextType.TextType.A0578,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -939,7 +939,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnAllPersistentActionIds,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0703,
+                Lang_TextType.TextType.A0703,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -965,7 +965,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnArray,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0498,
+                Lang_TextType.TextType.A0498,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length < 1) {
                         throw Helpers_Misc.newError(
@@ -1048,7 +1048,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnMakePos,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0579,
+                Lang_TextType.TextType.A0579,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
@@ -1076,7 +1076,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnPow,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0855,
+                Lang_TextType.TextType.A0855,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
@@ -1104,7 +1104,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             War.FnMoveCost,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0928,
+                Lang_TextType.TextType.A0928,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
@@ -1148,7 +1148,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
             case War.VnWeather     : return new ExpressionParsers_Results_WeatherManager.WeatherManager(war.getWeatherManager());
             case War.VnFog         : return new ExpressionParsers_Results_FogMap.FogMap(war.getFogMap());
             default                         : throw Helpers_Misc.newError(
-                Lang_Utils.getFormattedText(Lang_Constants.TextType.F0021, identifierName),
+                Lang_Utils.getFormattedText(Lang_TextType.TextType.F0021, identifierName),
                 Utils_ClientErrorCode.ClientErrorCode.EpContextWar_ResolveVariable_00,
             );
         }
@@ -1188,7 +1188,7 @@ export class War extends ExpressionParsers_Contexts_Base.Base {
             case War.FnPow                     : return this.callPow(argumentArray);
             case War.FnMoveCost                : return this.callMoveCost(argumentArray);
             default                                     : throw Helpers_Misc.newError(
-                Lang_Utils.getFormattedText(Lang_Constants.TextType.F0024, identifierName),
+                Lang_Utils.getFormattedText(Lang_TextType.TextType.F0024, identifierName),
                 Utils_ClientErrorCode.ClientErrorCode.EpContextWar_CallFunction_00,
             );
         }

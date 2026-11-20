@@ -5,7 +5,7 @@ import {
     Helpers_Collection,
     Helpers_Misc,
     Helpers_Text,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Constants,
     Sounds_Constants,
@@ -159,17 +159,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0899);
-        this._labelMoveCostTitle1.setLangText(Lang_Constants.TextType.B0351);
-        this._labelMoveCostTitle2.setLangText(Lang_Constants.TextType.B0351);
-        this._labelMoveCost1.setLangText(Lang_Constants.TextType.B1282);
-        this._labelMoveCost2.setLangText(Lang_Constants.TextType.B1282);
-        this._labelDefense1.setLangText(Lang_Constants.TextType.B0695);
-        this._labelMain1.setLangText(Lang_Constants.TextType.B0692);
-        this._labelSub1.setLangText(Lang_Constants.TextType.B0693);
-        this._labelDefense2.setLangText(Lang_Constants.TextType.B0695);
-        this._labelMain2.setLangText(Lang_Constants.TextType.B0692);
-        this._labelSub2.setLangText(Lang_Constants.TextType.B0693);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0899);
+        this._labelMoveCostTitle1.setLangText(Lang_TextType.TextType.B0351);
+        this._labelMoveCostTitle2.setLangText(Lang_TextType.TextType.B0351);
+        this._labelMoveCost1.setLangText(Lang_TextType.TextType.B1282);
+        this._labelMoveCost2.setLangText(Lang_TextType.TextType.B1282);
+        this._labelDefense1.setLangText(Lang_TextType.TextType.B0695);
+        this._labelMain1.setLangText(Lang_TextType.TextType.B0692);
+        this._labelSub1.setLangText(Lang_TextType.TextType.B0693);
+        this._labelDefense2.setLangText(Lang_TextType.TextType.B0695);
+        this._labelMain2.setLangText(Lang_TextType.TextType.B0692);
+        this._labelSub2.setLangText(Lang_TextType.TextType.B0693);
         this._updateLabelName();
 
         this._layoutMoveCost1.arrangeItems();
@@ -724,7 +724,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const tileTemplateCfg = openData.tileTemplateCfg;
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0352);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0352);
         this._labelValue.setText(Lang_Utils.getUnitCategoryName(
             tileTemplateCfg.getDefenseUnitCategoryId(),
             openData.gameConfig,
@@ -739,7 +739,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const tileTemplateCfg = openData.tileTemplateCfg;
-        this._labelTitle.setLangText(Lang_Constants.TextType.Income);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Income);
         this._labelValue.setText(`${tileTemplateCfg.getIncomePerTurn()}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -749,7 +749,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        this._labelTitle.setLangText(Lang_Constants.TextType.VisionRange);
+        this._labelTitle.setLangText(Lang_TextType.TextType.VisionRange);
         this._labelValue.setText(`${tileTemplateCfg.getVisionRange()}`);
 
         const groupExtra = this._groupExtra;
@@ -757,7 +757,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             groupExtra.setIsVisible(false);
         } else {
             groupExtra.setIsVisible(true);
-            this._labelExtraInfo.setLangText(Lang_Constants.TextType.B1130);
+            this._labelExtraInfo.setLangText(Lang_TextType.TextType.B1130);
         }
     }
     private _updateViewAsHideUnitCategory(): void {
@@ -767,7 +767,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const unitCategory = openData.tileTemplateCfg.getHideUnitCategoryId();
-        this._labelTitle.setLangText(Lang_Constants.TextType.HidableUnits);
+        this._labelTitle.setLangText(Lang_TextType.TextType.HidableUnits);
         this._labelValue.setText(unitCategory == null
             ? `--`
             : (Lang_Utils.getUnitCategoryName(unitCategory, openData.gameConfig) ?? Lang_Constants.UndefinedError),
@@ -780,8 +780,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        this._labelTitle.setLangText(Lang_Constants.TextType.DefeatIfCaptured);
-        this._labelValue.setLangText(openData.tileTemplateCfg.getIsDefeatedOnCapture() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.DefeatIfCaptured);
+        this._labelValue.setLangText(openData.tileTemplateCfg.getIsDefeatedOnCapture() ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsProduceUnitCategory(): void {
@@ -791,7 +791,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const unitCategory = openData.tileTemplateCfg.getProduceUnitCategoryId();
-        this._labelTitle.setLangText(Lang_Constants.TextType.ProducibleUnits);
+        this._labelTitle.setLangText(Lang_TextType.TextType.ProducibleUnits);
         this._labelValue.setText(unitCategory == null
             ? `--`
             : (Lang_Utils.getUnitCategoryName(unitCategory, openData.gameConfig) ?? Lang_Constants.UndefinedError),
@@ -806,7 +806,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const offenseBonus  = tileTemplateCfg.getGlobalAttackBonus();
         const defenseBonus  = tileTemplateCfg.getGlobalDefenseBonus();
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0359);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0359);
         this._labelValue.setText(`${offenseBonus} / ${defenseBonus}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -819,13 +819,13 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const tileTemplateCfg       = openData.tileTemplateCfg;
         const unitCategory          = tileTemplateCfg.getRepairUnitCategoryId();
         const repairNormalizedHp    = tileTemplateCfg.getRepairAmount();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RepairableUnits);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RepairableUnits);
         this._labelValue.setText(unitCategory == null
             ? `--`
             : (Lang_Utils.getUnitCategoryName(unitCategory, openData.gameConfig) ?? Lang_Constants.UndefinedError),
         );
         this._groupExtra.setIsVisible(true);
-        this._labelExtraInfo.setText(repairNormalizedHp == null ? Lang_Utils.getText(Lang_Constants.TextType.B0044) : `${Helpers_Text.getSignedNumText(repairNormalizedHp * 10)}`);
+        this._labelExtraInfo.setText(repairNormalizedHp == null ? Lang_Utils.getText(Lang_TextType.TextType.B0044) : `${Helpers_Text.getSignedNumText(repairNormalizedHp * 10)}`);
     }
     private _updateViewAsHp(): void {
         const tileTemplateCfg = this.getOpenData()?.tileTemplateCfg;
@@ -834,7 +834,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const maxHp = tileTemplateCfg.getMaxHp();
-        this._labelTitle.setLangText(Lang_Constants.TextType.Hp);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Hp);
         this._labelValue.setText(`${maxHp} / ${maxHp}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -845,7 +845,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const maxCapturePoint = tileTemplateCfg.getMaxCapturePoint();
-        this._labelTitle.setLangText(Lang_Constants.TextType.CapturePoint);
+        this._labelTitle.setLangText(Lang_TextType.TextType.CapturePoint);
         this._labelValue.setText(`${maxCapturePoint} / ${maxCapturePoint}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -856,18 +856,18 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const maxBuildPoint = tileTemplateCfg.getMaxBuildPoint();
-        this._labelTitle.setLangText(Lang_Constants.TextType.BuildPoint);
+        this._labelTitle.setLangText(Lang_TextType.TextType.BuildPoint);
         this._labelValue.setText(`${maxBuildPoint} / ${maxBuildPoint}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsIsHighlighted(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0847);
-        this._labelValue.setLangText(Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0847);
+        this._labelValue.setLangText(Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsBuff(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.AbnormalStates);
-        this._labelValue.setLangText(Lang_Constants.TextType.None);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AbnormalStates);
+        this._labelValue.setLangText(Lang_TextType.TextType.None);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsBlockEnemyUnit(): void {
@@ -876,7 +876,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        this._labelTitle.setLangText(Lang_Constants.TextType.BlockableEnemyUnits);
+        this._labelTitle.setLangText(Lang_TextType.TextType.BlockableEnemyUnits);
         this._labelValue.setText(Lang_Utils.getUnitCategoryName(
             openData.tileTemplateCfg.getBlockEnemyUnitCategoryId() ?? 0,
             openData.gameConfig,
@@ -889,7 +889,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        this._labelTitle.setLangText(Lang_Constants.TextType.CoBoardableUnit);
+        this._labelTitle.setLangText(Lang_TextType.TextType.CoBoardableUnit);
         this._labelValue.setText(Lang_Utils.getUnitCategoryName(
             openData.tileTemplateCfg.getCoBoardUnitCategoryId() ?? 0,
             openData.gameConfig,
@@ -898,43 +898,43 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     }
     private _updateViewAsCrystalRadius(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getRadius();
-        this._labelTitle.setLangText(Lang_Constants.TextType.EffectiveRadius);
+        this._labelTitle.setLangText(Lang_TextType.TextType.EffectiveRadius);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalPriority(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getPriority();
-        this._labelTitle.setLangText(Lang_Constants.TextType.Priority);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Priority);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalCanAffectSelf(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getCanAffectSelf();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectOwner);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectOwner);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalCanAffectAlly(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getCanAffectAlly();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectAlly);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectAlly);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalCanAffectEnemy(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getCanAffectEnemy();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectEnemy);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectEnemy);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalDeltaFund(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getOffsetFund();
-        this._labelTitle.setLangText(Lang_Constants.TextType.FundOffset);
+        this._labelTitle.setLangText(Lang_TextType.TextType.FundOffset);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalDeltaEnergyPercentage(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getOffsetEnergyPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.CoEnergyOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.CoEnergyOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -942,270 +942,270 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const data          = Tiles_Constants_DefaultCustomTileData.Crystal;
         const offsetHp      = data.getOffsetHp();
         const canBeFatal    = data.getCanBeFatal();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsHpOffset);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsHpOffset);
         this._labelValue.setText(`${offsetHp}`);
         this._groupExtra.setIsVisible(canBeFatal);
-        this._labelExtraInfo.setLangText(Lang_Constants.TextType.CanBeFatal);
+        this._labelExtraInfo.setLangText(Lang_TextType.TextType.CanBeFatal);
     }
     private _updateViewAsCrystalDeltaFuelPercentage(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getOffsetFuelPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsFuelOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsFuelOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalDeltaPrimaryAmmoPercentage(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getOffsetPrimaryAmmoPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsPriAmmoOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsPriAmmoOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonRangeForUp(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CannonUp.getRangeForUp();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeUp);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeUp);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonRangeForRight(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CannonRight.getRangeForRight();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeRight);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeRight);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonRangeForDown(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CannonDown.getRangeForDown();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeDown);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeDown);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonRangeForLeft(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CannonLeft.getRangeForLeft();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeLeft);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeLeft);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonPriority(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getPriority();
-        this._labelTitle.setLangText(Lang_Constants.TextType.Priority);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Priority);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonMaxTargetCount(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getMaxTargetCount();
-        this._labelTitle.setLangText(Lang_Constants.TextType.MaxTargets);
+        this._labelTitle.setLangText(Lang_TextType.TextType.MaxTargets);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonCanAffectSelf(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getCanAffectSelf();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectOwner);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectOwner);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonCanAffectAlly(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getCanAffectAlly();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectAlly);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectAlly);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonCanAffectEnemy(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getCanAffectEnemy();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectEnemy);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectEnemy);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonDeltaHp(): void {
         const data          = Tiles_Constants_DefaultCustomTileData.CustomCannon;
         const offsetHp      = data.getOffsetHp();
         const canBeFatal    = data.getCanBeFatal();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsHpOffset);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsHpOffset);
         this._labelValue.setText(`${offsetHp}`);
         this._groupExtra.setIsVisible(canBeFatal);
-        this._labelExtraInfo.setLangText(Lang_Constants.TextType.CanBeFatal);
+        this._labelExtraInfo.setLangText(Lang_TextType.TextType.CanBeFatal);
     }
     private _updateViewAsCannonDeltaFuelPercentage(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getOffsetFuelPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsFuelOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsFuelOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonDeltaPrimaryAmmoPercentage(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getOffsetPrimaryAmmoPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsPriAmmoOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsPriAmmoOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretRangeForUp(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getRangeForUp();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeUp);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeUp);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretRangeForRight(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getRangeForRight();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeRight);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeRight);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretRangeForDown(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getRangeForDown();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeDown);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeDown);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretRangeForLeft(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getRangeForLeft();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeLeft);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeLeft);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretPriority(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getPriority();
-        this._labelTitle.setLangText(Lang_Constants.TextType.Priority);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Priority);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretCanAffectSelf(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getCanAffectSelf();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectOwner);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectOwner);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretCanAffectAlly(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getCanAffectAlly();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectAlly);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectAlly);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretCanAffectEnemy(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getCanAffectEnemy();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectEnemy);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectEnemy);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretOffsetHp(): void {
         const data          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret;
         const offsetHp      = data.getOffsetHp();
         const canBeFatal    = data.getCanBeFatal();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsHpOffset);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsHpOffset);
         this._labelValue.setText(`${offsetHp}`);
         this._groupExtra.setIsVisible(canBeFatal);
-        this._labelExtraInfo.setLangText(Lang_Constants.TextType.CanBeFatal);
+        this._labelExtraInfo.setLangText(Lang_TextType.TextType.CanBeFatal);
     }
     private _updateViewAsLaserTurretDeltaFuelPercentage(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getOffsetFuelPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsFuelOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsFuelOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretDeltaPrimaryAmmoPercentage(): void {
         const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getOffsetPrimaryAmmoPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsPriAmmoOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsPriAmmoOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
 
     private _showHelpAsDefenseBonus(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0352),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0088),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0352),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0088),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsIncome(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Income),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0086),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.Income),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0086),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsVision(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.VisionRange),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0082),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.VisionRange),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0082),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsHideUnitCategory(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.HidableUnits),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0079),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.HidableUnits),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0079),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsIsDefeatedOnCapture(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.DefeatIfCaptured),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0077),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.DefeatIfCaptured),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0077),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsProduceUnitCategory(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.ProducibleUnits),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0074),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.ProducibleUnits),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0074),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsGlobalBonus(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0359),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0068),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0359),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0068),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsRepairUnitCategory(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.RepairableUnits),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0065),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.RepairableUnits),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0065),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsBlockEnemyUnit(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.BlockableEnemyUnits),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0012),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.BlockableEnemyUnits),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0012),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsCoBoardUnit(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.CoBoardableUnit),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0011),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.CoBoardableUnit),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0011),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsHp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0059),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.Hp),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0059),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsCapturePoint(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0052),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.CapturePoint),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0052),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsBuildPoint(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0051),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.BuildPoint),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0051),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsIsHighlighted(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0847),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0050),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0847),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0050),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsBuff(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0737),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.AbnormalStates),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0737),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }

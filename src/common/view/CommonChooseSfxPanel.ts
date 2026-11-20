@@ -3,7 +3,7 @@ import {
     Lang_Utils,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -71,7 +71,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0542);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0542);
     }
 
     private _createDataForListSfx(): DataForSfxRenderer[] {
@@ -154,7 +154,7 @@ class SfxRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSelect.setLangText(Lang_Constants.TextType.B0258);
+        this._labelSelect.setLangText(Lang_TextType.TextType.B0258);
         this._updateLabelName();
     }
 

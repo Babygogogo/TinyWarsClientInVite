@@ -4,7 +4,7 @@ import {
     Lang_Utils,
     Numbers_Utils,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
@@ -75,10 +75,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData>{
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1098);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._labelRepeatableDialogue.setLangText(Lang_Constants.TextType.B1098);
-        this._labelWarEventDialogue.setLangText(Lang_Constants.TextType.B0469);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1098);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._labelRepeatableDialogue.setLangText(Lang_TextType.TextType.B1098);
+        this._labelWarEventDialogue.setLangText(Lang_TextType.TextType.B0469);
     }
     private async _updateComponentsForDialogue(): Promise<void> {
         const war = this.getOpenData()?.war;

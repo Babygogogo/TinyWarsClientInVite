@@ -12,7 +12,7 @@ import {
     AutoTourneys_Mains_Gateway,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -191,7 +191,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgAtSetMapPool(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         this.closePanel();
     }
 
@@ -225,9 +225,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1045);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1045);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
     }
 }
 
@@ -312,7 +312,7 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
             availableNormalMapIdArray : normalMapIdArray,
-            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
+            getTitleText              : () => Lang_Utils.getText(Lang_TextType.TextType.B0227),
             callback                  : normalMapId => {
                 if ((normalMapId != null) && (normalMapId !== openData.normalMapId)) {
                     openData.panel.updateOnSetMap(openData.mapIndex, normalMapId);
@@ -346,11 +346,11 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         const index = openData.mapIndex;
         this._imgBg.setIsVisible(index % 2 < 1);
         this._labelIndex.setText(`#${index}`);
-        this._btnAdd.setLangText(Lang_Constants.TextType.B0320);
-        this._btnDelete.setLangText(Lang_Constants.TextType.B0220);
-        this._btnUp.setLangText(Lang_Constants.TextType.B0463);
-        this._btnMap.setLangText(Lang_Constants.TextType.B1047);
-        this._btnRule.setLangText(Lang_Constants.TextType.B0318);
+        this._btnAdd.setLangText(Lang_TextType.TextType.B0320);
+        this._btnDelete.setLangText(Lang_TextType.TextType.B0220);
+        this._btnUp.setLangText(Lang_TextType.TextType.B0463);
+        this._btnMap.setLangText(Lang_TextType.TextType.B1047);
+        this._btnRule.setLangText(Lang_TextType.TextType.B0318);
 
         this._updateLabelMapName();
         this._updateLabelRuleName();
@@ -371,7 +371,7 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
             return;
         }
 
-        const textForMode = Lang_Utils.getText(rule.getWarRuleCommonData()?.getHasFogByDefault() ? Lang_Constants.TextType.B0549 : Lang_Constants.TextType.B0548);
+        const textForMode = Lang_Utils.getText(rule.getWarRuleCommonData()?.getHasFogByDefault() ? Lang_TextType.TextType.B0549 : Lang_TextType.TextType.B0548);
         this._labelRuleName.setText(`#${rule.getTemplateWarRuleId() ?? 0} (${textForMode}) ${(Lang_Utils.getLanguageText({ textArray : rule.getRuleNameArray() }) ?? Lang_Constants.UndefinedError)}`);
         this._layoutName.arrangeItems();
     }

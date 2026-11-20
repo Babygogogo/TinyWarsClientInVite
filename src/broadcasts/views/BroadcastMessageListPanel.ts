@@ -4,7 +4,7 @@ import {
     GamePanels_Dict,
     Users_Model,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     GamePanels_Manager,
     Broadcasts_Gateway,
     Ui_Components_UiListItemRenderer,
@@ -75,8 +75,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._updateListMessageAndLabelNoMessage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0881);
-        this._labelNoMessage.setLangText(Lang_Constants.TextType.B0278);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0881);
+        this._labelNoMessage.setLangText(Lang_TextType.TextType.B0278);
     }
     private async _updateListMessageAndLabelNoMessage(): Promise<void> {
         const dataArray: DataForMessageRenderer[] = [];
@@ -131,8 +131,8 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         const textArray     = messageData.getTextList();
         const labelContent  = this._labelContent;
         labelContent.setText([
-            `${Lang_Utils.getText(Lang_Constants.TextType.B0455)}: ${Lang_Utils.getLanguageText({ textArray, languageType : Lang_Constants.LanguageType.Chinese, useAlternate : false }) ?? `----`}`,
-            `${Lang_Utils.getText(Lang_Constants.TextType.B0456)}: ${Lang_Utils.getLanguageText({ textArray, languageType : Lang_Constants.LanguageType.English, useAlternate : false }) ?? `----`}`,
+            `${Lang_Utils.getText(Lang_TextType.TextType.B0455)}: ${Lang_Utils.getLanguageText({ textArray, languageType : Lang_Constants.LanguageType.Chinese, useAlternate : false }) ?? `----`}`,
+            `${Lang_Utils.getText(Lang_TextType.TextType.B0456)}: ${Lang_Utils.getLanguageText({ textArray, languageType : Lang_Constants.LanguageType.English, useAlternate : false }) ?? `----`}`,
         ].join(`\n\n`));
 
         this.setUnscaledManualHeight(labelContent.getScaledHeight() + 28);
@@ -147,8 +147,8 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0220),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0220),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 Broadcasts_Gateway.reqBroadcastDeleteMessage(messageId);
             },
@@ -160,6 +160,6 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDelete.setLangText(Lang_Constants.TextType.B0220);
+        this._btnDelete.setLangText(Lang_TextType.TextType.B0220);
     }
 }

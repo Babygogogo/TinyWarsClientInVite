@@ -13,7 +13,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -177,7 +177,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const playerRule    = Helpers_Misc.getExisted(playerRuleArray.find(v => v.getPlayerIndex() === playerIndex));
         if (playerIndex === roomCreator.getSelfPlayerIndex()) {
             if (humanPlayerIndexSet.size < 2) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0222));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0222));
             } else {
                 const callback = () => {
                     for (const p of humanPlayerIndexSet) {
@@ -195,7 +195,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
                     callback();
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0129),
                         callback   : () => {
                             instanceWarRule.setTemplateWarRuleId(null);
                             callback();
@@ -219,7 +219,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
                     callback();
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0129),
                         callback   : () => {
                             instanceWarRule.setTemplateWarRuleId(null);
                             callback();
@@ -298,7 +298,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
                     callback();
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0129),
                         callback   : () => {
                             instanceWarRule.setTemplateWarRuleId(null);
                             callback();
@@ -318,9 +318,9 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnChangeCo.setLangText(Lang_Constants.TextType.B0230);
-        this._btnChangeController.setLangText(Lang_Constants.TextType.B0608);
-        this._btnChangeSkinId.setLangText(Lang_Constants.TextType.B0609);
+        this._btnChangeCo.setLangText(Lang_TextType.TextType.B0230);
+        this._btnChangeController.setLangText(Lang_TextType.TextType.B0608);
+        this._btnChangeSkinId.setLangText(Lang_TextType.TextType.B0609);
     }
 
     private async _updateComponentsForSettings(): Promise<void> {
@@ -346,7 +346,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
                 : (isHumanPlayer ? null : roomCreator.getAiSkinId(playerIndex)),
         ));
 
-        this._labelPlayerType.setLangText(isSelfPlayer ? Lang_Constants.TextType.B0647 : isHumanPlayer ? Lang_Constants.TextType.B0648 : Lang_Constants.TextType.B0607);
+        this._labelPlayerType.setLangText(isSelfPlayer ? Lang_TextType.TextType.B0647 : isHumanPlayer ? Lang_TextType.TextType.B0648 : Lang_TextType.TextType.B0607);
 
         const coId          = isSelfPlayer ? roomCreator.getSelfCoId() : (playerRule.getCcwAiCoId() ?? null);
         const gameConfig    = await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion()));

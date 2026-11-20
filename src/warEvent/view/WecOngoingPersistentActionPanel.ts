@@ -10,7 +10,7 @@ import {
     ValueAndComparators_Utils,
     WarEvents_Actions_Constants_Common,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
@@ -100,7 +100,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             availableNumberArray : warEventFullData.getActionArray().filter(v => WarEvents_Actions_Utils_Common.checkIsPersistentAction(v)).map(v => Helpers_Misc.getExisted(v.getWeaCommonData()?.getActionId())),
             showNumber           : true,
             getNumberMainText    : actionId => WarEvents_Actions_Utils_Common.getBriefDescForAction(Helpers_Misc.getExisted(WarEvents_FullDatas_Utils.getAction(warEventFullData, actionId)), gameConfig) ?? Lang_Constants.UndefinedError,
-            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0889)),
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.B0889)),
             callbackOnConfirm    : actionIdArray => {
                 condition.setOngoingActionIdArray(actionIdArray);
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -110,7 +110,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnActionCount(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0902),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0902),
             minValue     : 0,
             maxValue     : WarEvents_Actions_Constants_Common.MaxCounts.PerMap,
             currentValue : condition.getOngoingActionsCount(),
@@ -136,12 +136,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnActionId.setLangText(Lang_Constants.TextType.B0889);
-        this._btnActionCount.setLangText(Lang_Constants.TextType.B0902);
-        this._btnActionCountComparator.setLangText(Lang_Constants.TextType.Comparator);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnActionId.setLangText(Lang_TextType.TextType.B0889);
+        this._btnActionCount.setLangText(Lang_TextType.TextType.B0902);
+        this._btnActionCountComparator.setLangText(Lang_TextType.TextType.Comparator);
 
         this._updateLabelDescAndLabelError();
     }
@@ -156,14 +156,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war           = openData.war;
         const errorTip      = WarEvents_Conditions_Utils_Common.getErrorTipForCondition(openData.fullData, condition, war);
         const labelError    = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Conditions_Utils_Common.getDetailedDescForCondition(condition, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
     }
     private _updateLabelActionId(): void {
         const actionIdArray         = this._getCondition().getOngoingActionIdArray();
-        this._labelActionId.setText(actionIdArray?.length ? actionIdArray.join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.B0776));
+        this._labelActionId.setText(actionIdArray?.length ? actionIdArray.join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.B0776));
     }
     private _updateInputActionCount(): void {
         const value                     = this._getCondition().getOngoingActionsCount();

@@ -13,7 +13,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -231,8 +231,8 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnChangeCo.setLangText(Lang_Constants.TextType.B0230);
-        this._btnChangeSkinId.setLangText(Lang_Constants.TextType.B0609);
+        this._btnChangeCo.setLangText(Lang_TextType.TextType.B0230);
+        this._btnChangeSkinId.setLangText(Lang_TextType.TextType.B0609);
     }
 
     private async _updateComponentsForSettings(): Promise<void> {
@@ -250,7 +250,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         const playerData = warCreator.getPlayerInfo(playerIndex);
         this._imgSkin.loadSource(Helpers_ImageSource.getCoHeadFrame(playerData.getUnitAndTileSkinId()));
-        this._labelPlayerType.setLangText(playerData.getUserId() == null ? Lang_Constants.TextType.B0607 : Lang_Constants.TextType.B0031);
+        this._labelPlayerType.setLangText(playerData.getUserId() == null ? Lang_TextType.TextType.B0607 : Lang_TextType.TextType.B0031);
 
         const coId                  = playerData.getCoId();
         const gameConfig            = await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion()));

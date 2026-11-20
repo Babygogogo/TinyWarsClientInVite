@@ -7,7 +7,7 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     Gm_Model_GmProxy,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -65,8 +65,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnDeleteAllSpmRank(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0879),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0879),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => Gm_Model_GmProxy.reqGmDeleteSpmAllScoreAndReplay(),
         });
     }
@@ -93,13 +93,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0878);
-        this._btnDeleteAllSpmRank.setLangText(Lang_Constants.TextType.B0879);
-        this._btnSetPrivilege.setLangText(Lang_Constants.TextType.B0460);
-        this._btnMapManagement.setLangText(Lang_Constants.TextType.B0192);
-        this._btnManageBroadcast.setLangText(Lang_Constants.TextType.B0880);
-        this._btnAutoTourneyManagement.setLangText(Lang_Constants.TextType.B1036);
-        this._btnCampaignManagement.setLangText(Lang_Constants.TextType.B1133);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0878);
+        this._btnDeleteAllSpmRank.setLangText(Lang_TextType.TextType.B0879);
+        this._btnSetPrivilege.setLangText(Lang_TextType.TextType.B0460);
+        this._btnMapManagement.setLangText(Lang_TextType.TextType.B0192);
+        this._btnManageBroadcast.setLangText(Lang_TextType.TextType.B0880);
+        this._btnAutoTourneyManagement.setLangText(Lang_TextType.TextType.B1036);
+        this._btnCampaignManagement.setLangText(Lang_TextType.TextType.B1133);
     }
 
     private async _updateGroupButtons(): Promise<void> {

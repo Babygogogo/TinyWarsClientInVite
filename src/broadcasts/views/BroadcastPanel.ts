@@ -4,7 +4,7 @@ import {
     Broadcasts_Provider,
     Stages_StageManager,
     Ui_Components_UiPanel,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiLabel,
 } from "../../internal.ts";

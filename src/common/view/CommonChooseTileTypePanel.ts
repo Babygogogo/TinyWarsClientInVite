@@ -3,7 +3,7 @@ import {
     GamePanels_Manager,
     Helpers_Collection,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Numbers_Utils,
     Players_Constants,
@@ -144,11 +144,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0718)));
-        this._labelSelectAll.setLangText(Lang_Constants.TextType.B0761);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._labelSelectedTitle.setLangText(Lang_Constants.TextType.B1274);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.B0718)));
+        this._labelSelectAll.setLangText(Lang_TextType.TextType.B0761);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._labelSelectedTitle.setLangText(Lang_TextType.TextType.B1274);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
 
         this._groupSelected.arrangeItems();
         this._groupSelectAll.arrangeItems();

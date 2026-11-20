@@ -12,7 +12,7 @@ import {
     GamePanels_Manager,
     FloatText,
     SinglePlayerWars_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Turns_Constants,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
@@ -164,23 +164,23 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 ? (await NormalMap_Model_NormalMapModel.getRawData(normalMapId))?.getMapExtraText()?.getMapDescription()
                 : (null);
             if (mapDesc == null) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0894));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.B0894));
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                    getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0893),
+                    getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0893),
                     getContent : () => Lang_Utils.getLanguageText({ textArray : mapDesc }) ?? Lang_Constants.UndefinedError,
                 });
             }
 
         } else if (settingsType === Wars_Constants.BasicSettingsTypeId.HasFog) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0020),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0002),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0020),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0002),
             });
 
         } else if (settingsType === Wars_Constants.BasicSettingsTypeId.Weather) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.Weather),
                 getContent : () => Lang_Utils.getWeatherFullDesc(openData.gameConfig),
             });
 
@@ -197,24 +197,24 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
         } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0987),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0012),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0987),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0012),
             });
 
         } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerType) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0574),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0003),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0574),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0003),
             });
         } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerRegularParam) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0988),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0013),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0988),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0013),
             });
         } else if (settingsType === Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0989),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0014),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0989),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0014),
             });
         }
     }
@@ -299,7 +299,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const labelValue        = this._labelValue;
         const templateWarRuleId = instanceWarRule?.getTemplateWarRuleId();
         if (templateWarRuleId == null) {
-            labelValue.setLangText(Lang_Constants.TextType.B0321);
+            labelValue.setLangText(Lang_TextType.TextType.B0321);
             labelValue.setTextColor(0xFFFF00);
         } else {
             labelValue.setText(`(#${templateWarRuleId}) ${Lang_Utils.getLanguageText({ textArray : instanceWarRule?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError}`);
@@ -311,7 +311,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const openData          = this.getOpenData();
         const hasFog            = openData?.instanceWarRule.getWarRuleCommonData()?.getHasFogByDefault();
         const labelValue        = this._labelValue;
-        labelValue.setLangText(hasFog ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        labelValue.setLangText(hasFog ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         labelValue.setTextColor(hasFog ? 0xFFFF00 : 0xFFFFFF);
         this._btnHelp.setIsVisible(true);
     }
@@ -384,7 +384,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const callback      = Helpers_Misc.getExisted(openData.callbackOnModify);
         const currentValue  = openData.currentValue;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0185),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0185),
             currentValue : `${currentValue || ``}`,
             maxChars     : Wars_Constants.Misc.MaxNameLength,
             charRestrict : null,
@@ -406,11 +406,11 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const callback      = Helpers_Misc.getExisted(openData.callbackOnModify);
         const currentValue  = openData.currentValue;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0186),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0186),
             currentValue : `${currentValue || ``}`,
             maxChars     : Wars_Constants.Misc.MaxPasswordLength,
             charRestrict : `0-9`,
-            tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
+            tips         : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
             callback     : panel => {
                 const newValue = panel.getInputText() || null;
                 if (newValue != currentValue) {
@@ -428,7 +428,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const callback      = Helpers_Misc.getExisted(openData.callbackOnModify);
         const currentValue  = openData.currentValue;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0187),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0187),
             currentValue : `${currentValue || ``}`,
             maxChars     : Wars_Constants.Misc.MaxCommentLength,
             charRestrict : null,
@@ -461,7 +461,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             callback(null);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0129),
                 callback   : () => callback(null),
             });
         }
@@ -477,7 +477,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             callback(null);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0129),
                 callback   : () => callback(null),
             });
         }
@@ -497,8 +497,8 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
                 availableNumberArray : [-1].concat(Helpers_Collection.getNonNullElements(Tiles_Constants_Common.AllThemeTypeIdArray)),
                 currentNumber        : openData.instanceWarRule.getWarRuleCommonData()?.getFixedTileTheme() ?? -1,
-                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1113),
-                getNumberMainText    : tileTheme => tileTheme === -1 ? Lang_Utils.getText(Lang_Constants.TextType.B0890) : (Lang_Utils.getTileThemeName(tileTheme) ?? Lang_Constants.UndefinedError),
+                getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B1113),
+                getNumberMainText    : tileTheme => tileTheme === -1 ? Lang_Utils.getText(Lang_TextType.TextType.B0890) : (Lang_Utils.getTileThemeName(tileTheme) ?? Lang_Constants.UndefinedError),
                 callbackOnConfirm    : tileTheme => {
                     callbackOnModify(tileTheme === -1 ? null : tileTheme);
                 },
@@ -509,7 +509,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             callback();
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0129),
                 callback   : callback,
             });
         }
@@ -529,7 +529,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const currentValue              = openData.currentValue as string;
         const textArray                 = currentValue.split(`,`);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0842),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0842),
             currentValue : parseInt(textArray[0]),
             minValue     : minValueForTurnsLimit,
             maxValue     : maxValueForTurnsLimit,
@@ -537,7 +537,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                 const minValueForWarOperationsLimit = WarOperations_Constants.Common.MinLimit;
                 const maxValueForWarOperationsLimit = WarOperations_Constants.Common.MaxLimit;
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0986),
+                    getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0986),
                     currentValue : parseInt(textArray[1]),
                     minValue     : minValueForWarOperationsLimit,
                     maxValue     : maxValueForWarOperationsLimit,
@@ -581,29 +581,29 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const currentValue              = openData.currentValue as string;
         const timeParamArray            = currentValue.split(`,`).map(v => parseInt(v));
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0389),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0389),
             currentValue : timeParamArray[0],
             minValue     : minValueForInitialTime,
             maxValue     : maxValueForInitialTime,
-            tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${minValueForInitialTime}, ${maxValueForInitialTime}] (${Lang_Utils.getText(Lang_Constants.TextType.B0017)})`,
+            tips         : `${Lang_Utils.getText(Lang_TextType.TextType.B0319)}: [${minValueForInitialTime}, ${maxValueForInitialTime}] (${Lang_Utils.getText(Lang_TextType.TextType.B0017)})`,
             callback     : newInitialTime => {
                 const minValueForIncrementalTimePerUnit = 0;
                 const maxValueForIncrementalTimePerUnit = BootTimers_Constants.Incremental.MaxLimitForIncrementPerUnit;
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-                    title        : Lang_Utils.getText(Lang_Constants.TextType.B0390),
+                    title        : Lang_Utils.getText(Lang_TextType.TextType.B0390),
                     currentValue : timeParamArray[1],
                     minValue     : minValueForIncrementalTimePerUnit,
                     maxValue     : maxValueForIncrementalTimePerUnit,
-                    tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${minValueForIncrementalTimePerUnit}, ${maxValueForIncrementalTimePerUnit}] (${Lang_Utils.getText(Lang_Constants.TextType.B0017)})`,
+                    tips         : `${Lang_Utils.getText(Lang_TextType.TextType.B0319)}: [${minValueForIncrementalTimePerUnit}, ${maxValueForIncrementalTimePerUnit}] (${Lang_Utils.getText(Lang_TextType.TextType.B0017)})`,
                     callback     : newIncrementalTimePerUnit => {
                         const minValueForIncrementalTimePerTurn = 0;
                         const maxValueForIncrementalTimePerTurn = BootTimers_Constants.Incremental.MaxLimitForIncrementPerTurn;
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-                            title        : Lang_Utils.getText(Lang_Constants.TextType.B0991),
+                            title        : Lang_Utils.getText(Lang_TextType.TextType.B0991),
                             currentValue : timeParamArray[2],
                             minValue     : minValueForIncrementalTimePerTurn,
                             maxValue     : maxValueForIncrementalTimePerTurn,
-                            tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${minValueForIncrementalTimePerTurn}, ${maxValueForIncrementalTimePerTurn}] (${Lang_Utils.getText(Lang_Constants.TextType.B0017)})`,
+                            tips         : `${Lang_Utils.getText(Lang_TextType.TextType.B0319)}: [${minValueForIncrementalTimePerTurn}, ${maxValueForIncrementalTimePerTurn}] (${Lang_Utils.getText(Lang_TextType.TextType.B0017)})`,
                             callback     : newIncrementalTimePerTurn => {
                                 const newValue = `${newInitialTime}, ${newIncrementalTimePerUnit}, ${newIncrementalTimePerTurn}`;
                                 if (newValue !== currentValue) {
@@ -634,7 +634,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const callback      = Helpers_Misc.getExisted(openData.callbackOnModify);
         const currentValue  = openData.currentValue;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0605),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0605),
             currentValue : `${currentValue || ``}`,
             maxChars     : SinglePlayerWars_Constants.Common.MaxSaveSlotCommentLength,
             charRestrict : null,

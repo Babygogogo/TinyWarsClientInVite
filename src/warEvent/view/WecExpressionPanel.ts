@@ -9,7 +9,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type ExpressionParsers_Types,
     type MapEditor_Model_MeWar,
@@ -28,8 +28,8 @@ const ExpressionInfo: ExpressionParsers_Types.EpExpressionInfo = {
     contextType  : ExpressionParsers_Enums.ContextType.War,
     resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
     isRequired   : true,
-    getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B0129),
-    getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0941),
+    getTitleText : () => Lang_Utils.getText(Lang_TextType.TextType.B0129),
+    getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0941),
 };
 
 export interface OpenData {
@@ -106,7 +106,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnConExpression(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0941),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0941),
         });
     }
     private _onTouchedGroupModifyConExpression(): void {
@@ -140,11 +140,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnIdentifier.setLangText(Lang_Constants.TextType.B0131);
-        this._btnConExpression.setLangText(Lang_Constants.TextType.B0129);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnIdentifier.setLangText(Lang_TextType.TextType.B0131);
+        this._btnConExpression.setLangText(Lang_TextType.TextType.B0129);
 
         this._updateLabelDescAndLabelError();
     }
@@ -159,7 +159,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Conditions_Utils_Common.getErrorTipForCondition(openData.fullData, condition, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Conditions_Utils_Common.getBriefDescForCondition(condition, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();

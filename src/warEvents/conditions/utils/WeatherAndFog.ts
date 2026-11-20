@@ -1,5 +1,5 @@
 import {
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
@@ -12,7 +12,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
         return null;
     }
 
-    return Lang_Utils.getText(Lang_Constants.TextType.A0947);
+    return Lang_Utils.getText(Lang_TextType.TextType.A0947);
 }
 export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecWeatherAndFog>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     if (data == null) {
@@ -24,24 +24,24 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         const weatherTypeArray = data.getWeatherTypeArray();
         if (weatherTypeArray?.length) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
-                Lang_Constants.TextType.F0224,
-                weatherTypeArray.map(v => Lang_Utils.getWeatherName(v, gameConfig)).join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `),
+                Lang_TextType.TextType.F0224,
+                weatherTypeArray.map(v => Lang_Utils.getWeatherName(v, gameConfig)).join(` ${Lang_Utils.getText(Lang_TextType.TextType.Or)} `),
             )}`);
         }
     }
     {
         const hasFogCurrently = data.getHasFogCurrently();
         if (hasFogCurrently != null) {
-            subTextArray.push(`- ${Lang_Utils.getText(hasFogCurrently ? Lang_Constants.TextType.A0949 : Lang_Constants.TextType.A0950)}`);
+            subTextArray.push(`- ${Lang_Utils.getText(hasFogCurrently ? Lang_TextType.TextType.A0949 : Lang_TextType.TextType.A0950)}`);
         }
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0944));
+        subTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.A0944));
     }
 
     return [
-        Lang_Utils.getText(Lang_Constants.TextType.A0948),
+        Lang_Utils.getText(Lang_TextType.TextType.A0948),
         ...subTextArray,
     ].join(`\n`);
 }
@@ -50,7 +50,7 @@ export function getErrorTip(data: WecWeatherAndFog, war: BaseWar_Model_War.War):
     {
         const weatherTypeArray = data.getWeatherTypeArray();
         if ((weatherTypeArray?.length) && (weatherTypeArray.some(v => !gameConfig.checkIsValidWeatherType(v)))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Weather));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Weather));
         }
     }
 

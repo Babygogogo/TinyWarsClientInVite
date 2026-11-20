@@ -11,7 +11,7 @@ import {
     GamePanels_Manager,
     FloatText,
     Geometries_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -93,8 +93,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0864),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0864),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
@@ -116,8 +116,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0865),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0865),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
@@ -139,8 +139,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0866),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0866),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
@@ -162,8 +162,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0867),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0867),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
@@ -188,13 +188,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0295));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0295));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0868),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0868),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = mapHeight - x; y < mapHeight; ++y) {
@@ -216,13 +216,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0295));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0295));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0869),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0869),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = 0; y < mapWidth - x - 1; ++y) {
@@ -244,13 +244,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0295));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0295));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0870),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0870),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = x + 1; y < mapHeight; ++y) {
@@ -272,13 +272,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0295));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0295));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0871),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0871),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = 0; y < x; ++y) {
@@ -298,8 +298,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0864),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0864),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
@@ -321,8 +321,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0865),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0865),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
@@ -344,8 +344,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0866),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0866),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
@@ -367,8 +367,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0867),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0867),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
@@ -393,13 +393,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0295));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0295));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0868),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0868),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = mapHeight - x; y < mapHeight; ++y) {
@@ -421,13 +421,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0295));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0295));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0869),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0869),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = 0; y < mapWidth - x - 1; ++y) {
@@ -449,13 +449,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0295));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0295));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0870),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0870),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = x + 1; y < mapHeight; ++y) {
@@ -477,13 +477,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0295));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0295));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0871),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0871),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = 0; y < x; ++y) {
@@ -501,25 +501,25 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1245);
-        this._labelFill1.setLangText(Lang_Constants.TextType.B0862);
-        this._labelFill2.setLangText(Lang_Constants.TextType.B0310);
-        this._btnUpDown1.setLangText(Lang_Constants.TextType.B0864);
-        this._btnDownUp1.setLangText(Lang_Constants.TextType.B0865);
-        this._btnLeftRight1.setLangText(Lang_Constants.TextType.B0866);
-        this._btnRightLeft1.setLangText(Lang_Constants.TextType.B0867);
-        this._btnUpLeftDownRight1.setLangText(Lang_Constants.TextType.B0868);
-        this._btnDownRightUpLeft1.setLangText(Lang_Constants.TextType.B0869);
-        this._btnUpRightDownLeft1.setLangText(Lang_Constants.TextType.B0870);
-        this._btnDownLeftUpRight1.setLangText(Lang_Constants.TextType.B0871);
-        this._btnUpDown2.setLangText(Lang_Constants.TextType.B0864);
-        this._btnDownUp2.setLangText(Lang_Constants.TextType.B0865);
-        this._btnLeftRight2.setLangText(Lang_Constants.TextType.B0866);
-        this._btnRightLeft2.setLangText(Lang_Constants.TextType.B0867);
-        this._btnUpLeftDownRight2.setLangText(Lang_Constants.TextType.B0868);
-        this._btnDownRightUpLeft2.setLangText(Lang_Constants.TextType.B0869);
-        this._btnUpRightDownLeft2.setLangText(Lang_Constants.TextType.B0870);
-        this._btnDownLeftUpRight2.setLangText(Lang_Constants.TextType.B0871);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1245);
+        this._labelFill1.setLangText(Lang_TextType.TextType.B0862);
+        this._labelFill2.setLangText(Lang_TextType.TextType.B0310);
+        this._btnUpDown1.setLangText(Lang_TextType.TextType.B0864);
+        this._btnDownUp1.setLangText(Lang_TextType.TextType.B0865);
+        this._btnLeftRight1.setLangText(Lang_TextType.TextType.B0866);
+        this._btnRightLeft1.setLangText(Lang_TextType.TextType.B0867);
+        this._btnUpLeftDownRight1.setLangText(Lang_TextType.TextType.B0868);
+        this._btnDownRightUpLeft1.setLangText(Lang_TextType.TextType.B0869);
+        this._btnUpRightDownLeft1.setLangText(Lang_TextType.TextType.B0870);
+        this._btnDownLeftUpRight1.setLangText(Lang_TextType.TextType.B0871);
+        this._btnUpDown2.setLangText(Lang_TextType.TextType.B0864);
+        this._btnDownUp2.setLangText(Lang_TextType.TextType.B0865);
+        this._btnLeftRight2.setLangText(Lang_TextType.TextType.B0866);
+        this._btnRightLeft2.setLangText(Lang_TextType.TextType.B0867);
+        this._btnUpLeftDownRight2.setLangText(Lang_TextType.TextType.B0868);
+        this._btnDownRightUpLeft2.setLangText(Lang_TextType.TextType.B0869);
+        this._btnUpRightDownLeft2.setLangText(Lang_TextType.TextType.B0870);
+        this._btnDownLeftUpRight2.setLangText(Lang_TextType.TextType.B0871);
 
         this._layoutContent.arrangeItems();
     }

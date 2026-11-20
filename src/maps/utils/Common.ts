@@ -5,7 +5,7 @@ import {
     WarRules_Utils_Template,
     Users_Model,
     Timer_TimerModel,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Players_Constants,
     type GameConfigs_GameConfig,
 } from "../../internal.ts";

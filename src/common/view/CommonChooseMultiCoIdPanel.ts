@@ -7,7 +7,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiContainer,
     Ui_Components_UiImage,
     Ui_Components_UiLayout,
@@ -114,14 +114,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         {
             const maxCount = openData.maxChooseCount;
             if ((maxCount != null) && (chosenCoIdSet.size > maxCount)) {
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0145, maxCount));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0145, maxCount));
                 return;
             }
         }
         {
             const minCount = openData.minChooseCount;
             if ((minCount != null) && (chosenCoIdSet.size < minCount)) {
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0150, minCount));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0150, minCount));
                 return;
             }
         }
@@ -162,7 +162,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const minCount = openData.minChooseCount;
             if ((minCount != null) && (chosenCoIdSet.size <= minCount)) {
                 if (minCount !== 1) {
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0150, minCount));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0150, minCount));
                 }
                 return;
             }
@@ -176,7 +176,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 if (maxCount == 1) {
                     chosenCoIdSet.clear();
                 } else {
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0145, maxCount));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0145, maxCount));
                     return;
                 }
             }
@@ -190,10 +190,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelAvailableCoTitle.setLangText(this.getOpenData()?.maxChooseCount === 1 ? Lang_Constants.TextType.B0145 : Lang_Constants.TextType.B0898);
-        this._labelSelectedTitle.setLangText(Lang_Constants.TextType.B1274);
-        this._labelSelectAll.setLangText(Lang_Constants.TextType.B0761);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._labelAvailableCoTitle.setLangText(this.getOpenData()?.maxChooseCount === 1 ? Lang_TextType.TextType.B0145 : Lang_TextType.TextType.B0898);
+        this._labelSelectedTitle.setLangText(Lang_TextType.TextType.B1274);
+        this._labelSelectAll.setLangText(Lang_TextType.TextType.B0761);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
 
         this._groupSelectAll.arrangeItems();
         this._groupSelected.arrangeItems();

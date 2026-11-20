@@ -7,7 +7,7 @@ import {
     AutoTourneys_Constants,
     AutoTourneys_Mains_Gateway,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -117,7 +117,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgAtRegister(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     private _onNotifyMsgAtGetRegistrationInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgAtGetRegistrationInfo"]>): void {
@@ -143,7 +143,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             labelRegistered.setText(`----`);
             labelRegisteredPlayers.setText(`----`);
         } else {
-            labelRegistered.setLangText(registrationInfo.isRegistered ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+            labelRegistered.setLangText(registrationInfo.isRegistered ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
             labelRegistered.setTextColor(registrationInfo.isRegistered ? 0x00ff00 : 0xffffff);
             labelRegisteredPlayers.setText(`${registrationInfo.playersCount}`);
         }
@@ -154,13 +154,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1025);
-        this._labelTourneyIdTitle.setLangText(Lang_Constants.TextType.B1026);
-        this._labelRegisteredPlayersTitle.setLangText(Lang_Constants.TextType.B1027);
-        this._labelRegisteredTitle.setLangText(Lang_Constants.TextType.B1028);
-        this._labelRestTimeTitle.setLangText(Lang_Constants.TextType.B1032);
-        this._btnRegister.setLangText(Lang_Constants.TextType.B0174);
-        this._btnUnregister.setLangText(Lang_Constants.TextType.B1031);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1025);
+        this._labelTourneyIdTitle.setLangText(Lang_TextType.TextType.B1026);
+        this._labelRegisteredPlayersTitle.setLangText(Lang_TextType.TextType.B1027);
+        this._labelRegisteredTitle.setLangText(Lang_TextType.TextType.B1028);
+        this._labelRestTimeTitle.setLangText(Lang_TextType.TextType.B1032);
+        this._btnRegister.setLangText(Lang_TextType.TextType.B0174);
+        this._btnUnregister.setLangText(Lang_TextType.TextType.B1031);
 
         this._updateLabelTourneyId();
     }

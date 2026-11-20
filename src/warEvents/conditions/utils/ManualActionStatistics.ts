@@ -3,7 +3,7 @@ import {
     Players_Utils_Common,
     Lang_Utils,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -17,7 +17,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
     const totalActions  = data.getTotalActions();
     const comparator    = totalActions == null ? null : (totalActions.getComparator());
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0143,
+        Lang_TextType.TextType.F0143,
         comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
         totalActions == null ? Lang_Constants.UndefinedError : (totalActions.getValue()),
     );
@@ -32,36 +32,36 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         const playerIndexArray = data.getPlayerIndexArray();
         if (playerIndexArray?.length) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
-                Lang_Constants.TextType.F0217,
-                playerIndexArray.map(v => `P${v}`).join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `),
+                Lang_TextType.TextType.F0217,
+                playerIndexArray.map(v => `P${v}`).join(` ${Lang_Utils.getText(Lang_TextType.TextType.Or)} `),
             )}`);
         }
     }
     {
         const isPlayerInTurn = data.getIsPlayerInTurn();
         if (isPlayerInTurn != null) {
-            subTextArray.push(`- ${Lang_Utils.getText(isPlayerInTurn ? Lang_Constants.TextType.A0831 : Lang_Constants.TextType.A0832)}`);
+            subTextArray.push(`- ${Lang_Utils.getText(isPlayerInTurn ? Lang_TextType.TextType.A0831 : Lang_TextType.TextType.A0832)}`);
         }
     }
     {
         const recentTurnsCount = data.getRecentTurnsCount();
         if (recentTurnsCount != null) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
-                Lang_Constants.TextType.F0144,
+                Lang_TextType.TextType.F0144,
                 recentTurnsCount,
             )}`);
         }
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0944));
+        subTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.A0944));
     }
 
     const totalActions  = data.getTotalActions();
     const comparator    = totalActions == null ? null : totalActions.getComparator();
     return [
         Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0227,
+            Lang_TextType.TextType.F0227,
             comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
             totalActions == null ? Lang_Constants.UndefinedError : (totalActions.getValue()),
         ),
@@ -72,14 +72,14 @@ export function getErrorTip(data: WecManualActionStatistics, war: BaseWar_Model_
     {
         const playerIndexArray = data.getPlayerIndexArray();
         if ((playerIndexArray) && (!Players_Utils_Common.checkIsValidPlayerIndexSubset(playerIndexArray, war.getPlayersCountUnneutral()))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerIndex));
         }
     }
 
     {
         const totalActions = data.getTotalActions();
         if ((totalActions == null) || (!ValueAndComparators_Utils.checkIsValid(totalActions))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0902));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0902));
         }
     }
 

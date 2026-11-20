@@ -4,7 +4,7 @@ import {
     FloatText,
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MultiPlayerWar_Model_MpwModel,
     MultiPlayerWar_Model_MpwWar,
@@ -185,7 +185,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (warId != null) {
             const info = await MultiPlayerWar_Model_MpwModel.getUnitStatistics(warId);
             if (info == null) {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitStatisticsPanel, {
                     war       : war,
@@ -195,19 +195,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+        FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelPlayerName.setLangText(Lang_Constants.TextType.B0031);
-        this._labelCountName.setLangText(Lang_Constants.TextType.B0160);
-        this._labelValueName.setLangText(Lang_Constants.TextType.B0161);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0152);
-        this._btnUnitStatistics.setLangText(Lang_Constants.TextType.B0876);
-        this._labelNoUnit.setLangText(Lang_Constants.TextType.B1289);
+        this._labelPlayerName.setLangText(Lang_TextType.TextType.B0031);
+        this._labelCountName.setLangText(Lang_TextType.TextType.B0160);
+        this._labelValueName.setLangText(Lang_TextType.TextType.B0161);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0152);
+        this._btnUnitStatistics.setLangText(Lang_TextType.TextType.B0876);
+        this._labelNoUnit.setLangText(Lang_TextType.TextType.B1289);
 
         this._groupPlayer.arrangeItems();
         this._groupCount.arrangeItems();

@@ -8,7 +8,7 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     WarEvents_Actions_Constants_PersistentModifyUnitAttribute,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type Units_Unit,
 } from "../../../internal.ts";
@@ -148,7 +148,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0044, data.getConUnitFilter() ?? Lang_Constants.UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0044, data.getConUnitFilter() ?? Lang_Constants.UndefinedError);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentModifyUnitAttribute>): string | null {
     if (data == null) {
@@ -156,7 +156,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     }
 
     const additionalText = [
-        `${Lang_Utils.getText(Lang_Constants.TextType.B1170)}: ${Lang_Utils.getTextForYesOrNo(data.getIsEffectiveInMpw())}`,
+        `${Lang_Utils.getText(Lang_TextType.TextType.B1170)}: ${Lang_Utils.getTextForYesOrNo(data.getIsEffectiveInMpw())}`,
         data.getActAttackPowerModifier()     ? `${WarEvents_Actions_Constants_PersistentModifyUnitAttribute.ExpressionInfoDict.ActAttackPowerModifier.getTitleText()}: ${data.getActAttackPowerModifier()}`         : null,
         data.getActDefenseModifier()         ? `${WarEvents_Actions_Constants_PersistentModifyUnitAttribute.ExpressionInfoDict.ActDefenseModifier.getTitleText()}: ${data.getActDefenseModifier()}`                 : null,
         data.getActMaxAttackRangeModifier()  ? `${WarEvents_Actions_Constants_PersistentModifyUnitAttribute.ExpressionInfoDict.ActMaxAttackRangeModifier.getTitleText()}: ${data.getActMaxAttackRangeModifier()}`   : null,
@@ -170,7 +170,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         data.getActFlareRadiusModifier()     ? `${WarEvents_Actions_Constants_PersistentModifyUnitAttribute.ExpressionInfoDict.ActFlareRadiusModifier.getTitleText()}: ${data.getActFlareRadiusModifier()}`         : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0044, data.getConUnitFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0044, data.getConUnitFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 
 export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounterNameSet: Set<string>): string | null {
@@ -182,7 +182,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -194,7 +194,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -206,7 +206,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -218,7 +218,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -230,7 +230,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -242,7 +242,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -254,7 +254,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -266,7 +266,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -278,7 +278,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -290,7 +290,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -302,7 +302,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -314,7 +314,7 @@ export function getErrorTip(data: WeaPersistentModifyUnitAttribute, customCounte
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

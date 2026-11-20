@@ -8,7 +8,7 @@ import {
     ExpressionParsers_Results_NumArray,
     Helpers_Misc,
     Helpers_Team,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Locations_Constants,
     Locations_Utils,
@@ -232,7 +232,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0048, data.getConTileFilter() ?? Lang_Constants.UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0048, data.getConTileFilter() ?? Lang_Constants.UndefinedError);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaFillUnitOnMapExpr>): string | null {
     if (data == null) {
@@ -260,7 +260,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         data.getActAiWeightedDestination()           ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiWeightedDestination.getTitleText()}: ${data.getActAiWeightedDestination()}`                     : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0048, data.getConTileFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0048, data.getConTileFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Set<string>): string | null {
     {
@@ -271,7 +271,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -283,7 +283,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -295,7 +295,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -307,7 +307,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -319,7 +319,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -331,7 +331,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -343,7 +343,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -355,7 +355,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -367,7 +367,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -379,7 +379,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -391,7 +391,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -403,7 +403,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -415,7 +415,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -427,7 +427,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -439,7 +439,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -451,7 +451,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -463,7 +463,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -475,7 +475,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -487,7 +487,7 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

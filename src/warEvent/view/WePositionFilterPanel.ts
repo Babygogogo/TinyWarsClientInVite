@@ -12,7 +12,7 @@ import {
     Sounds_SoundPlayer,
     AuxiliaryTypes_PositionFilter,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ValueAndComparators_Utils,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -116,9 +116,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this.closePanel();
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0418),
-                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
-                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0418),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.Yes),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.No),
                 callback          : () => {
                     const filter = this._getPositionFilter();
                     callback(DeprecatedPositionFilter_Utils.checkIsEmpty(filter) ? null : filter);
@@ -131,7 +131,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnClear(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 this._positionFilter = new AuxiliaryTypes_PositionFilter.PositionFilter();
                 this._updateView();
@@ -164,7 +164,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiIntegerPanel, {
             availableIntegerArray : Locations_Constants.AllLocationIdArray,
             currentIntegerArray   : filter.getConLocationIdArray(),
-            getTitleText          : () => Lang_Utils.getText(Lang_Constants.TextType.Location),
+            getTitleText          : () => Lang_Utils.getText(Lang_TextType.TextType.Location),
             callbackOnConfirm     : locationIdArray => {
                 filter.setConLocationIdArray(locationIdArray);
                 this._updateView();
@@ -182,7 +182,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiIntegerPanel, {
             currentIntegerArray   : filter.getConGridXArray(),
             availableIntegerArray : mapSize.getValidGridXArray(),
-            getTitleText          : () => Lang_Utils.getText(Lang_Constants.TextType.B1071),
+            getTitleText          : () => Lang_Utils.getText(Lang_TextType.TextType.B1071),
             callbackOnConfirm     : gridXArray => {
                 filter.setConGridXArray(gridXArray);
                 this._updateView();
@@ -199,7 +199,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiIntegerPanel, {
             currentIntegerArray   : filter.getConGridYArray(),
             availableIntegerArray : mapSize.getValidGridYArray(),
-            getTitleText          : () => Lang_Utils.getText(Lang_Constants.TextType.B1072),
+            getTitleText          : () => Lang_Utils.getText(Lang_TextType.TextType.B1072),
             callbackOnConfirm     : gridYArray => {
                 filter.setConGridYArray(gridYArray);
                 this._updateView();
@@ -226,7 +226,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const oldCon = filter.getConLocationMinDistance();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1062),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1062),
             minValue     : 0,
             maxValue     : Maps_Constants.Common.MaxGridsCount,
             currentValue : oldCon == null ? null : oldCon.getValue(),
@@ -267,7 +267,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const oldCon = filter.getConGridIndexMinDistance();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1063),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1063),
             minValue     : 0,
             maxValue     : Maps_Constants.Common.MaxGridsCount,
             currentValue : oldCon?.getValue(),
@@ -304,17 +304,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1073);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0204);
-        this._btnClear.setLangText(Lang_Constants.TextType.B0391);
-        this._btnGridIndex.setLangText(Lang_Constants.TextType.B0531);
-        this._btnLocation.setLangText(Lang_Constants.TextType.Location);
-        this._btnConLocationMinDistanceComparator.setLangText(Lang_Constants.TextType.Comparator);
-        this._btnConLocationMinDistance.setLangText(Lang_Constants.TextType.B1062);
-        this._btnConGridIndexMinDistanceComparator.setLangText(Lang_Constants.TextType.Comparator);
-        this._btnConGridIndexMinDistance.setLangText(Lang_Constants.TextType.B1063);
-        this._btnGridX.setLangText(Lang_Constants.TextType.B1071);
-        this._btnGridY.setLangText(Lang_Constants.TextType.B1072);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1073);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0204);
+        this._btnClear.setLangText(Lang_TextType.TextType.B0391);
+        this._btnGridIndex.setLangText(Lang_TextType.TextType.B0531);
+        this._btnLocation.setLangText(Lang_TextType.TextType.Location);
+        this._btnConLocationMinDistanceComparator.setLangText(Lang_TextType.TextType.Comparator);
+        this._btnConLocationMinDistance.setLangText(Lang_TextType.TextType.B1062);
+        this._btnConGridIndexMinDistanceComparator.setLangText(Lang_TextType.TextType.Comparator);
+        this._btnConGridIndexMinDistance.setLangText(Lang_TextType.TextType.B1063);
+        this._btnGridX.setLangText(Lang_TextType.TextType.B1071);
+        this._btnGridY.setLangText(Lang_TextType.TextType.B1072);
         // this._labelGridIndex.text   = Lang.getText(LangTextType.B0531);
 
         this._updateLabelDescAndLabelError();
@@ -329,27 +329,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const positionFilter    = this._getPositionFilter();
         const errorTip          = DeprecatedPositionFilter_Utils.getErrorTip(positionFilter, openData.mapSize);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(DeprecatedPositionFilter_Utils.getDesc(positionFilter));
         this._groupDesc.arrangeItems();
     }
     private _updateLabelGridIndex(): void {
         const gridIndexArray        = this._getPositionFilter().getConGridIndexArray();
-        this._labelGridIndex.setText(gridIndexArray?.length ? gridIndexArray.map(v => `(${v.getX()},${v.getY()})`).join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.B0776));
+        this._labelGridIndex.setText(gridIndexArray?.length ? gridIndexArray.map(v => `(${v.getX()},${v.getY()})`).join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.B0776));
     }
     private _updateLabelLocation(): void {
         const locationIdArray       = this._getPositionFilter().getConLocationIdArray();
-        this._labelLocation.setText(locationIdArray?.length ? locationIdArray.join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.B0776));
+        this._labelLocation.setText(locationIdArray?.length ? locationIdArray.join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.B0776));
     }
 
     private _updateLabelGridX(): void {
         const gridXArray        = this._getPositionFilter().getConGridXArray();
-        this._labelGridX.setText(gridXArray?.length ? gridXArray.join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.B0776));
+        this._labelGridX.setText(gridXArray?.length ? gridXArray.join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.B0776));
     }
     private _updateLabelGridY(): void {
         const gridYArray        = this._getPositionFilter().getConGridYArray();
-        this._labelGridY.setText(gridYArray?.length ? gridYArray.join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.B0776));
+        this._labelGridY.setText(gridYArray?.length ? gridYArray.join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.B0776));
     }
 
     private _updateLabelConLocationMinDistanceComparator(): void {

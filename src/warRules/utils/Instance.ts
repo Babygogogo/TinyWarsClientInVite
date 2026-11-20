@@ -8,7 +8,7 @@ import {
     WarEvents_FullDatas_Utils,
     Helpers_Misc,
     Dialogues_Utils_MapSmallDialogue,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     WarTypes_Constants,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_MapSize,
@@ -43,8 +43,8 @@ export function createDefault(playersCount: number, gcData: GameConfigs_GameConf
     return InstanceWarRule.fromJson({
         templateWarRuleId : null,
         ruleNameArray     : [
-            { languageType : languageType1, text : Lang_Utils.getText(Lang_Constants.TextType.None, languageType1) },
-            { languageType : languageType2, text : Lang_Utils.getText(Lang_Constants.TextType.None, languageType2) },
+            { languageType : languageType1, text : Lang_Utils.getText(Lang_TextType.TextType.None, languageType1) },
+            { languageType : languageType2, text : Lang_Utils.getText(Lang_TextType.TextType.None, languageType2) },
         ],
         warRuleCommonData : {
             hasFogByDefault    : false,

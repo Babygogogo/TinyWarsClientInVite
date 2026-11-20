@@ -2,7 +2,7 @@ import {
     GameConfigs_GameConfig,
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     TileObjects_Utils,
     Tiles_TileView,
     Tiles_TileViewPool,
@@ -211,17 +211,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0516);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0516);
 
-        this._btnTileBase.setLangText(Lang_Constants.TextType.TileBase);
+        this._btnTileBase.setLangText(Lang_TextType.TextType.TileBase);
 
-        this._btnTileDecorator.setLangText(Lang_Constants.TextType.TileDecoration);
-        this._btnDeleteTileDecorator.setLangText(Lang_Constants.TextType.B0220);
+        this._btnTileDecorator.setLangText(Lang_TextType.TextType.TileDecoration);
+        this._btnDeleteTileDecorator.setLangText(Lang_TextType.TextType.B0220);
 
-        this._btnTileObject.setLangText(Lang_Constants.TextType.TileObject);
-        this._btnDeleteTileObject.setLangText(Lang_Constants.TextType.B0220);
+        this._btnTileObject.setLangText(Lang_TextType.TextType.TileObject);
+        this._btnDeleteTileObject.setLangText(Lang_TextType.TextType.B0220);
 
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
     }
 
     private _updateTileView(): void {

@@ -2,7 +2,7 @@ import {
     Destructions_Utils,
     HalfwayReplayWar_Model_HrwWar,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
@@ -81,18 +81,18 @@ export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: Wo
 async function getDesc(war: BaseWar_Model_War.War, action: WoSystemDestroyPlayerForce): Promise<string | null> {
     if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
         const playerIndex = Helpers_Misc.getExisted(action.getExtraData()?.getTargetPlayerIndex());
-        return `P${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0450)} ${war.getWarOperationDescSuffix()}`;
+        return `P${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_TextType.TextType.B0450)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         const playerIndex = Helpers_Misc.getExisted(action.getExtraData()?.getTargetPlayerIndex());
-        return `p${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0450)}`;
+        return `p${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_TextType.TextType.B0450)}`;
     } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
         const playerIndex = Helpers_Misc.getExisted(action.getTargetPlayerIndex());
-        return `P${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0450)} ${war.getWarOperationDescSuffix()}`;
+        return `P${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_TextType.TextType.B0450)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof SinglePlayerWars_War.War) {
         const playerIndex = Helpers_Misc.getExisted(action.getTargetPlayerIndex());
-        return `p${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0450)}`;
+        return `p${playerIndex} ${await war.getPlayer(playerIndex).getNickname()} ${Lang_Utils.getText(Lang_TextType.TextType.B0450)}`;
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {

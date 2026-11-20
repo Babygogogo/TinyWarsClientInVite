@@ -11,7 +11,7 @@ import {
     AuxiliaryTypes_ReplayFilter,
     Sounds_Constants,
     CoSkills_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiCoInfoType,
     Ui_Components_UiLayout,
     Ui_Components_UiListItemRenderer,
@@ -148,28 +148,28 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0817),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0817),
         });
     }
     private _onTouchedGroupDorBoardCost(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0813),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0813),
         });
     }
     private _onTouchedGroupDorZoneRadius(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0814),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0814),
         });
     }
     private _onTouchedGroupDorZoneExpansion(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0815),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0815),
         });
     }
     private _onTouchedGroupDorMaxEnergy(): void {
@@ -184,12 +184,12 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         const multiplier2 = gameConfig.getDorEnergyGainRateForDefender();
         if ((multiplier1 === 1) && (multiplier2 === 0)) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0816),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0816),
             });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => Lang_Utils.getFormattedText(
-                    Lang_Constants.TextType.F0117,
+                    Lang_TextType.TextType.F0117,
                     multiplier1 === 1 ? `` : ` * ${multiplier1}`,
                     multiplier2 === 1 ? `` : ` * ${multiplier2}`,
                 ),
@@ -200,7 +200,7 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0874),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0874),
         });
     }
     private _onTouchedBtnDorReplay(): void {
@@ -215,7 +215,7 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0953),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0953),
             callback   : () => Helpers_GameFlow.gotoRwReplayListPanel({
                 usePreviousFilter    : false,
                 usePreviousPageIndex : false,
@@ -229,14 +229,14 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0817),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0817),
         });
     }
     private _onTouchedGroupTriEnergyBar(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0818),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0818),
         });
     }
     private _onTouchedGroupTriMaxEnergy(): void {
@@ -252,7 +252,7 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         const param2        = gameConfig.getTrilogyEnergyGainRateForDefender();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
             getContent : () => Lang_Utils.getFormattedText(
-                Lang_Constants.TextType.F0134,
+                Lang_TextType.TextType.F0134,
                 param1 === 100 ? `` : ` * ${param1}%`,
                 param2 === 100 ? `` : ` * ${param2}%`,
             ),
@@ -270,7 +270,7 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0953),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0953),
             callback   : () => Helpers_GameFlow.gotoRwReplayListPanel({
                 usePreviousFilter    : false,
                 usePreviousPageIndex : false,
@@ -284,7 +284,7 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0819),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0819),
         });
     }
     private _onTouchedLayoutSkillDescTitle(): void {
@@ -310,7 +310,7 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => extraDesc.map(v => `- ${v}`).join(`\n`),
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1215),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1215),
             });
         }
     }
@@ -363,25 +363,25 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
     }
 
     private _updateComponentsForLanguage(): void {
-        setTextAndArrange(this._labelDorArtDesignerTitle, Lang_Constants.TextType.B0839);
-        setTextAndArrange(this._labelDorDataDesignerTitle, Lang_Constants.TextType.B0840);
-        setTextAndArrange(this._labelDorCoTypeTitle, Lang_Constants.TextType.B1268);
-        setTextAndArrange(this._labelDorBoardCostTitle, Lang_Constants.TextType.B0164);
-        setTextAndArrange(this._labelDorZoneRadiusTitle, Lang_Constants.TextType.B0165);
-        setTextAndArrange(this._labelDorZoneExpansionTitle, Lang_Constants.TextType.B0166);
-        setTextAndArrange(this._labelDorMaxEnergyTitle, Lang_Constants.TextType.B1272);
-        setTextAndArrange(this._labelDorEnergyBarTitle, Lang_Constants.TextType.B1267);
-        setTextAndArrange(this._labelTriArtDesignerTitle, Lang_Constants.TextType.B0839);
-        setTextAndArrange(this._labelTriDataDesignerTitle, Lang_Constants.TextType.B0840);
-        setTextAndArrange(this._labelTriCoTypeTitle, Lang_Constants.TextType.B1268);
-        setTextAndArrange(this._labelTriEnergyBarTitle, Lang_Constants.TextType.B1271);
-        setTextAndArrange(this._labelTriMaxEnergyTitle, Lang_Constants.TextType.B1272);
-        setTextAndArrange(this._labelEnergyCostTitle, Lang_Constants.TextType.B0167);
-        setTextAndArrange(this._labelSkillDescTitle, Lang_Constants.TextType.B1215);
-        setTextAndArrange(this._labelSkillTypeTitle, Lang_Constants.TextType.B1273);
+        setTextAndArrange(this._labelDorArtDesignerTitle, Lang_TextType.TextType.B0839);
+        setTextAndArrange(this._labelDorDataDesignerTitle, Lang_TextType.TextType.B0840);
+        setTextAndArrange(this._labelDorCoTypeTitle, Lang_TextType.TextType.B1268);
+        setTextAndArrange(this._labelDorBoardCostTitle, Lang_TextType.TextType.B0164);
+        setTextAndArrange(this._labelDorZoneRadiusTitle, Lang_TextType.TextType.B0165);
+        setTextAndArrange(this._labelDorZoneExpansionTitle, Lang_TextType.TextType.B0166);
+        setTextAndArrange(this._labelDorMaxEnergyTitle, Lang_TextType.TextType.B1272);
+        setTextAndArrange(this._labelDorEnergyBarTitle, Lang_TextType.TextType.B1267);
+        setTextAndArrange(this._labelTriArtDesignerTitle, Lang_TextType.TextType.B0839);
+        setTextAndArrange(this._labelTriDataDesignerTitle, Lang_TextType.TextType.B0840);
+        setTextAndArrange(this._labelTriCoTypeTitle, Lang_TextType.TextType.B1268);
+        setTextAndArrange(this._labelTriEnergyBarTitle, Lang_TextType.TextType.B1271);
+        setTextAndArrange(this._labelTriMaxEnergyTitle, Lang_TextType.TextType.B1272);
+        setTextAndArrange(this._labelEnergyCostTitle, Lang_TextType.TextType.B0167);
+        setTextAndArrange(this._labelSkillDescTitle, Lang_TextType.TextType.B1215);
+        setTextAndArrange(this._labelSkillTypeTitle, Lang_TextType.TextType.B1273);
 
-        this._btnDorReplay.setLangText(Lang_Constants.TextType.B0710);
-        this._btnTriReplay.setLangText(Lang_Constants.TextType.B0710);
+        this._btnDorReplay.setLangText(Lang_TextType.TextType.B0710);
+        this._btnTriReplay.setLangText(Lang_TextType.TextType.B0710);
         this._layoutDorBasicInfo.arrangeItems();
         this._layoutTriBasicInfo.arrangeItems();
     }
@@ -663,14 +663,14 @@ class SkillDescRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 function getInfoTypeName(infoType: Ui_Types_UiCoInfoType.UiCoInfoType): string | null {
     switch (infoType) {
         case Ui_Types_UiCoInfoType.UiCoInfoType.Basic         : return `INFO`;
-        case Ui_Types_UiCoInfoType.UiCoInfoType.Passive       : return Lang_Utils.getText(Lang_Constants.TextType.B0576);
-        case Ui_Types_UiCoInfoType.UiCoInfoType.Power         : return Lang_Utils.getText(Lang_Constants.TextType.B0577);
-        case Ui_Types_UiCoInfoType.UiCoInfoType.SuperPower    : return Lang_Utils.getText(Lang_Constants.TextType.B0578);
+        case Ui_Types_UiCoInfoType.UiCoInfoType.Passive       : return Lang_Utils.getText(Lang_TextType.TextType.B0576);
+        case Ui_Types_UiCoInfoType.UiCoInfoType.Power         : return Lang_Utils.getText(Lang_TextType.TextType.B0577);
+        case Ui_Types_UiCoInfoType.UiCoInfoType.SuperPower    : return Lang_Utils.getText(Lang_TextType.TextType.B0578);
         default                                 : return null;
     }
 }
 
-function setTextAndArrange(label: Ui_Interfaces_IUiLabel.IUiLabel, langTextType: Lang_Constants.TextType): void {
+function setTextAndArrange(label: Ui_Interfaces_IUiLabel.IUiLabel, langTextType: Lang_TextType.TextType): void {
     label.setLangText(langTextType);
 
     const parent        = label.getParent();

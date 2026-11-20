@@ -8,7 +8,7 @@ import {
     Timer_TimerModel,
     Users_Proxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiInputEventType,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -83,7 +83,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgUserRequestPasswordVerificationCode(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserRequestPasswordVerificationCode"]>): void {
-        FloatText.showLang(Lang_Constants.TextType.A0863);
+        FloatText.showLang(Lang_TextType.TextType.A0863);
 
         _lastRequestTimestamp = (((Helpers_Misc.getExisted(e.data)).msg).getEndTimestamp() ?? 0) - Emails_Constants.Common.VerificationCodeExpiration;
     }
@@ -92,7 +92,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgUserResetPasswordWithEmail(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -106,16 +106,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnRequest(): void {
         const account = this._inputAccount.getInputText()?.trim() ?? ``;
         if (!Users_Utils.checkIsAccountValid(account)) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0170)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0170)));
             return;
         }
 
         const cd = Emails_Constants.Common.VerificationCodeRefreshInterval - (Timer_TimerModel.getServerTimestamp() - _lastRequestTimestamp);
         if (cd >= 0) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0204, cd));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0204, cd));
         } else {
             Users_Proxy.reqUserRequestPasswordVerificationCode(account);
-            FloatText.showLang(Lang_Constants.TextType.A0867);
+            FloatText.showLang(Lang_TextType.TextType.A0867);
         }
     }
 
@@ -134,19 +134,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnReset(): void {
         const verificationCode = this._inputVerificationCode.getInputText()?.trim() ?? ``;
         if (verificationCode.length !== Emails_Constants.Common.VerificationCodeLength) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1334)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1334)));
             return;
         }
 
         const account = this._inputAccount.getInputText()?.trim() ?? ``;
         if (!Users_Utils.checkIsAccountValid(account)) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0170)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0170)));
             return;
         }
 
         const password = this._inputPassword0.getInputText()?.trim() ?? ``;
         if (password !== this._inputPassword1.getInputText()?.trim()) {
-            FloatText.showLang(Lang_Constants.TextType.A0147);
+            FloatText.showLang(Lang_TextType.TextType.A0147);
             return;
         }
 
@@ -154,15 +154,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1336);
-        this._labelAccount.setLangText(Lang_Constants.TextType.B0170);
-        this._labelVerificationCode.setLangText(Lang_Constants.TextType.B1334);
-        this._labelPassword0.setLangText(Lang_Constants.TextType.B0171);
-        this._labelPassword1.setLangText(Lang_Constants.TextType.B0429);
-        this._btnRequest.setLangText(Lang_Constants.TextType.B0382);
-        this._btnReset.setLangText(Lang_Constants.TextType.B0567);
-        this._labelStep1.setLangText(Lang_Constants.TextType.A0868);
-        this._labelStep2.setLangText(Lang_Constants.TextType.A0869);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1336);
+        this._labelAccount.setLangText(Lang_TextType.TextType.B0170);
+        this._labelVerificationCode.setLangText(Lang_TextType.TextType.B1334);
+        this._labelPassword0.setLangText(Lang_TextType.TextType.B0171);
+        this._labelPassword1.setLangText(Lang_TextType.TextType.B0429);
+        this._btnRequest.setLangText(Lang_TextType.TextType.B0382);
+        this._btnReset.setLangText(Lang_TextType.TextType.B0567);
+        this._labelStep1.setLangText(Lang_TextType.TextType.A0868);
+        this._labelStep2.setLangText(Lang_TextType.TextType.A0869);
 
         this._layoutStep1.arrangeItems();
         this._layoutStep2.arrangeItems();

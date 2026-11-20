@@ -17,7 +17,7 @@ import {
     GamePanels_Manager,
     Campaigns_Managements_Gateway,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -173,14 +173,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue                          = 1;
         const currentValue                      = eventData.getMaxCallCountInPlayerTurn();
         const canBeTriggeredRightAfterAnyEvent  = eventData.getCanBeTriggeredRightAfterAnyEvent();
-        const textForCurrentOption              = ` (${Lang_Utils.getText(Lang_Constants.TextType.B1379)})`;
+        const textForCurrentOption              = ` (${Lang_Utils.getText(Lang_TextType.TextType.B1379)})`;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle          : () => Lang_Utils.getText(Lang_Constants.TextType.B1400),
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0954),
-            getTextForConfirm : () => `${Lang_Utils.getText(Lang_Constants.TextType.Yes)}${canBeTriggeredRightAfterAnyEvent ? textForCurrentOption : ``}`,
-            getTextForCancel  : () => `${Lang_Utils.getText(Lang_Constants.TextType.No)}${!canBeTriggeredRightAfterAnyEvent ? textForCurrentOption : ``}`,
+            getTitle          : () => Lang_Utils.getText(Lang_TextType.TextType.B1400),
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0954),
+            getTextForConfirm : () => `${Lang_Utils.getText(Lang_TextType.TextType.Yes)}${canBeTriggeredRightAfterAnyEvent ? textForCurrentOption : ``}`,
+            getTextForCancel  : () => `${Lang_Utils.getText(Lang_TextType.TextType.No)}${!canBeTriggeredRightAfterAnyEvent ? textForCurrentOption : ``}`,
             callback          : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0476),
+                getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0476),
                 currentValue : currentValue,
                 minValue     : minValue,
                 maxValue     : WarEvents_Constants.Event.MaxCallCountInPlayerTurn,
@@ -191,7 +191,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 },
             }),
             callbackOnCancel : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0476),
+                getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0476),
                 currentValue : currentValue,
                 minValue     : minValue,
                 maxValue     : WarEvents_Constants.Event.MaxCallCountTotal,
@@ -210,7 +210,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const maxValue  = WarEvents_Constants.Event.MaxCallCountTotal;
             const eventData = Helpers_Misc.getExisted(data.war.getWarEventManager().getWarEventFullData()?.getEventArray().find(v => v.getEventId() === data.eventId));
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0477),
+                getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0477),
                 currentValue : eventData.getMaxCallCountTotal(),
                 minValue,
                 maxValue,
@@ -230,10 +230,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const eventId   = openData.eventId;
         const fullData  = Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0993),
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0993),
             showButtonClose   : true,
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B1477),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0258),
+            getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B1477),
+            getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0258),
             callback          : () => {
                 const newNodeId = WarEvents_ConditionNodes_Utils.createAndAddRootNodeInEvent({
                     fullData    : fullData,
@@ -242,9 +242,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     isNeedFalse : null,
                 });
                 if (newNodeId == null) {
-                    FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                    FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 } else {
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `N${newNodeId}`));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `N${newNodeId}`));
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
@@ -266,21 +266,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const eventId = openData.eventId;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle          : () => `${Lang_Utils.getText(Lang_Constants.TextType.B1478)} E${eventId}`,
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0990),
+            getTitle          : () => `${Lang_Utils.getText(Lang_TextType.TextType.B1478)} E${eventId}`,
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0990),
             showButtonClose   : true,
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0487),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0748),
+            getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B0487),
+            getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0748),
             callback          : () => {
                 const newEventId = WarEvents_Events_Utils.cloneEvent(Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData()), eventId, true);
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `E${newEventId}`));
 
                 this.closePanel();
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
             callbackOnCancel : () => {
                 const newEventId = WarEvents_Events_Utils.cloneEvent(Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData()), eventId, false);
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `E${newEventId}`));
 
                 this.closePanel();
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -295,11 +295,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const eventId = openData.eventId;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0748)} E${eventId}`,
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0748)} E${eventId}`,
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const newEventId = WarEvents_Events_Utils.cloneEvent(Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData()), eventId, false);
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `E${newEventId}`));
 
                 this.closePanel();
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -314,8 +314,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const eventId = openData.eventId;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0479)} E${eventId}`,
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0935),
+            getTitle   : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0479)} E${eventId}`,
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0935),
             callback   : () => {
                 const war           = openData.war;
                 const eventArray    = Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData()?.getEventArray());
@@ -344,13 +344,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 if (parentNodeId != null) {
                     const subNodeIdAndFlags = fullData.getConditionNodeArray().find(v => v.getNodeId() === parentNodeId)?.getSubNodeIdAndFlagsArray()?.find(v => v.getNodeId() === nodeId);
                     if (subNodeIdAndFlags == null) {
-                        FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                        FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0991),
+                            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0991),
                             callback   : () => {
                                 subNodeIdAndFlags.setIsNegated(!subNodeIdAndFlags.getIsNegated());
-                                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
                                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                             },
                         });
@@ -358,13 +358,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 } else {
                     const nodeIdAndFlags = fullData.getEventArray().find(v => v.getEventId() === openData.eventId)?.getRootNodeAndActionsArray().find(v => v.getNodeIdAndFlags()?.getNodeId() === nodeId)?.getNodeIdAndFlags();
                     if (nodeIdAndFlags == null) {
-                        FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                        FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0991),
+                            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0991),
                             callback   : () => {
                                 nodeIdAndFlags.setIsNegated(!nodeIdAndFlags.getIsNegated());
-                                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
                                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                             },
                         });
@@ -377,17 +377,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const conditionId = openData.conditionId;
             if (conditionId != null) {
                 if (parentNodeId == null) {
-                    FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                    FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 } else {
                     const conditionIdAndFlags = fullData.getConditionNodeArray().find(v => v.getNodeId() === parentNodeId)?.getConditionIdAndFlagsArray()?.find(v => v.getConditionId() === conditionId);
                     if (conditionIdAndFlags == null) {
-                        FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                        FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0991),
+                            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0991),
                             callback   : () => {
                                 conditionIdAndFlags.setIsNegated(!conditionIdAndFlags.getIsNegated());
-                                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
                                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                             },
                         });
@@ -397,7 +397,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
         }
 
-        FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+        FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
     }
 
     private _onTouchedBtnRenameNode(): void {
@@ -460,10 +460,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const parentNodeId  = Helpers_Misc.getExisted(openData.nodeId);
         const fullData      = Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0989),
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0989),
             showButtonClose   : true,
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B1477),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0258),
+            getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B1477),
+            getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0258),
             callback          : () => {
                 const subNodeId = createSubNodeInParentNode({
                     fullData     : fullData,
@@ -472,10 +472,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     isNeedFalse  : null,
                 });
                 if (subNodeId == null) {
-                    FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                    FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 } else {
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0206, subNodeId));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0206, subNodeId));
                 }
             },
             callbackOnCancel : () => {
@@ -498,13 +498,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const fullData  = Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData());
         const nodeId    = Helpers_Misc.getExisted(openData.nodeId);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0992),
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0992),
             showButtonClose   : true,
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B1477),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0258),
+            getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B1477),
+            getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0258),
             callback          : () => {
                 const newConditionId = WarEvents_Conditions_Utils_Common.addDefaultCondition(fullData, nodeId);
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `C${newConditionId}`));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `C${newConditionId}`));
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
             callbackOnCancel : () => {
@@ -539,18 +539,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         : srcActionIdArray.map(v => WarEvents_Actions_Utils_Common.cloneAction(fullData, v)),
                 }));
             }
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `N${newNodeId}`));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `N${newNodeId}`));
 
             this.closePanel();
             Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         };
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle          : () => `${Lang_Utils.getText(Lang_Constants.TextType.B1478)} N${nodeId}`,
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0990),
+            getTitle          : () => `${Lang_Utils.getText(Lang_TextType.TextType.B1478)} N${nodeId}`,
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0990),
             showButtonClose   : true,
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0487),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0748),
+            getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B0487),
+            getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0748),
             callback          : () => callback(true),
             callbackOnCancel  : () => callback(false),
         });
@@ -563,8 +563,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const nodeId = Helpers_Misc.getExisted(openData.nodeId);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0748)} N${nodeId}`,
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0748)} N${nodeId}`,
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const fullData      = Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData());
                 const newNodeId     = WarEvents_ConditionNodes_Utils.cloneNode(fullData, nodeId, false);
@@ -577,7 +577,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         actionIdArray  : [],
                     }));
                 }
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `N${newNodeId}`));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `N${newNodeId}`));
 
                 this.closePanel();
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -594,37 +594,37 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const nodeId        = openData.nodeId;
         const fullData      = openData.war.getWarEventManager().getWarEventFullData();
         if ((nodeId == null) || (fullData == null)) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         if (parentNodeId != null) {
             const nodeIdAndFlagsArray = fullData.getConditionNodeArray().find(v => (v.getNodeId()) === parentNodeId)?.getSubNodeIdAndFlagsArray();
             if (nodeIdAndFlagsArray == null) {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 return;
             }
 
             if (Helpers_Collection.moveElementInList2(nodeIdAndFlagsArray, v => v.getNodeId() === nodeId, -1)) {
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
             } else {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             }
 
         } else {
             const eventId                   = openData.eventId;
             const rootNodeAndActionsArray   = fullData.getEventArray().find(v => v.getEventId() === eventId)?.getRootNodeAndActionsArray();
             if (rootNodeAndActionsArray == null) {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 return;
             }
 
             if (Helpers_Collection.moveElementInList2(rootNodeAndActionsArray, v => v.getNodeIdAndFlags()?.getNodeId() === nodeId, -1)) {
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
             } else {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             }
         }
     }
@@ -636,8 +636,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const nodeId = openData.nodeId;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0481)} N${nodeId}`,
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0934),
+            getTitle   : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0481)} N${nodeId}`,
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0934),
             callback   : () => {
                 const fullData      = Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData());
                 const parentNodeId  = openData.parentNodeId;
@@ -713,15 +713,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const conditionId = Helpers_Misc.getExisted(openData.conditionId);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0748)} C${conditionId}`,
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0748)} C${conditionId}`,
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const fullData                  = Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData());
                 const conditionIdAndFlagsArray  = Helpers_Misc.getExisted(fullData.getConditionNodeArray().find(v => v.getNodeId() === openData.parentNodeId)?.getConditionIdAndFlagsArray());
                 const newConditionId            = WarEvents_Conditions_Utils_Common.cloneCondition(fullData, conditionId);
                 conditionIdAndFlagsArray.push(ConditionIdAndFlags.fromJson({ conditionId : newConditionId }));
                 conditionIdAndFlagsArray.sort((v1, v2) => v1.getConditionId() - v2.getConditionId());
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `C${newConditionId}`));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `C${newConditionId}`));
 
                 this.closePanel();
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -738,21 +738,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const conditionId   = openData.conditionId;
         const fullData      = openData.war.getWarEventManager().getWarEventFullData();
         if ((parentNodeId == null) || (conditionId == null) || (fullData == null)) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const conditionIdAndFlagsArray = fullData.getConditionNodeArray().find(v => v.getNodeId() === parentNodeId)?.getConditionIdAndFlagsArray();
         if (conditionIdAndFlagsArray == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         if (Helpers_Collection.moveElementInList2(conditionIdAndFlagsArray, v => v.getConditionId() === conditionId, -1)) {
             Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
-            FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+            FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         } else {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         }
     }
     private _onTouchedBtnDeleteCondition(): void {           // DONE
@@ -763,8 +763,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const conditionId = openData.conditionId;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0485)} C${conditionId}`,
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0934),
+            getTitle   : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0485)} C${conditionId}`,
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0934),
             callback   : () => {
                 const fullData = Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData());
                 Helpers_Collection.deleteElementFromList2(
@@ -815,7 +815,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const nodeId = openData.actionBoundNodeId;
         if (nodeId == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -837,17 +837,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const nodeId = openData.nodeId;
         if (nodeId == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const war       = openData.war;
         const fullData  = Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0994),
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0994),
             showButtonClose   : true,
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B1477),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0258),
+            getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B1477),
+            getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0258),
             callback          : () => {
                 const actionIndex = openData.actionIndex;
                 const newActionId = WarEvents_Actions_Utils_Common.addDefaultAction({
@@ -857,9 +857,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     actionIndex : actionIndex == null ? null : actionIndex + 1,
                 });
                 if (newActionId == null) {
-                    FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                    FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 } else {
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `A${newActionId}`));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `A${newActionId}`));
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
             },
@@ -883,12 +883,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const actionId = Helpers_Misc.getExisted(openData.actionId);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0748)} A${actionId}`,
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0748)} A${actionId}`,
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const actionBoundNodeId = openData.actionBoundNodeId;
                 if (actionBoundNodeId == null) {
-                    FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                    FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 } else {
                     const fullData      = Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData());
                     const newActionId   = WarEvents_Actions_Utils_Common.cloneAction(fullData, actionId);
@@ -897,7 +897,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         .find(v => v.getNodeIdAndFlags()?.getNodeId() === actionBoundNodeId)
                         ?.getActionIdArray()
                         .splice(Helpers_Misc.getExisted(openData.actionIndex) + 1, 0, newActionId);
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `A${newActionId}`));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `A${newActionId}`));
 
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 }
@@ -912,7 +912,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const actionBoundNodeId = openData.actionBoundNodeId;
         if (actionBoundNodeId == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             const actionId = Helpers_Misc.getExisted(openData.actionId);
             WarEvents_FullDatas_Utils.getEvent(Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData()), openData.eventId)
@@ -921,7 +921,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 ?.getActionIdArray()
                 .splice(Helpers_Misc.getExisted(openData.actionIndex) + 1, 0, actionId);
 
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `A${actionId}`));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `A${actionId}`));
             Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         }
     }
@@ -938,22 +938,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             (actionBoundNodeId == null) ||
             (fullData == null)
         ) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const eventId       = openData.eventId;
         const actionIdArray = fullData.getEventArray().find(v => (v.getEventId()) === eventId)?.getRootNodeAndActionsArray().find(v => v.getNodeIdAndFlags()?.getNodeId() === actionBoundNodeId)?.getActionIdArray();
         if (actionIdArray == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         if (Helpers_Collection.moveElementInList(actionIdArray, actionId, -1)) {
             Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
-            FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+            FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         } else {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         }
     }
     private _onTouchedBtnDeleteAction(): void {              // DONE
@@ -964,13 +964,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const actionBoundNodeId = openData.actionBoundNodeId;
         if (actionBoundNodeId == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0486)} A${openData.actionId}`,
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0934),
+            getTitle   : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0486)} A${openData.actionId}`,
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0934),
             callback   : () => {
                 const eventId = openData.eventId;
                 openData.war.getWarEventManager().getWarEventFullData()?.getEventArray().find(v => v.getEventId() === eventId)
@@ -997,7 +997,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 const campaignId    = campaignMapData.getCampaignId();
                 const campaignMapId = campaignMapData.getCampaignMapId();
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0005, actionId, campaignId, campaignMapId),
+                    getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0005, actionId, campaignId, campaignMapId),
                     callback   : () => Campaigns_Managements_Gateway.reqCmSetCampaignMapWarEventAction(campaignId, campaignMapId, action),
                 });
             }
@@ -1011,48 +1011,48 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateLabelDescAndButtons();
     }
     private _onNotifyMsgCmSetCampaignMapWarEventAction(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     private _updateComponentsForLanguage(): void {                              // DONE
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
 
-        this._btnShallowCloneEvent.setLangText(Lang_Constants.TextType.B1478);
-        this._btnDeepCloneEvent.setLangText(Lang_Constants.TextType.B0748);
-        this._btnDeleteEvent.setLangText(Lang_Constants.TextType.B0479);
-        this._btnModifyEventName.setLangText(Lang_Constants.TextType.B0495);
-        this._btnModifyMaxCallCountPerTurn.setLangText(Lang_Constants.TextType.B0317);
-        this._btnModifyMaxCallCountTotal.setLangText(Lang_Constants.TextType.B0317);
-        this._btnInitSubNodeToEvent.setLangText(Lang_Constants.TextType.B0494);
-        this._btnNegateRootNode.setLangText(Lang_Constants.TextType.B1476);
+        this._btnShallowCloneEvent.setLangText(Lang_TextType.TextType.B1478);
+        this._btnDeepCloneEvent.setLangText(Lang_TextType.TextType.B0748);
+        this._btnDeleteEvent.setLangText(Lang_TextType.TextType.B0479);
+        this._btnModifyEventName.setLangText(Lang_TextType.TextType.B0495);
+        this._btnModifyMaxCallCountPerTurn.setLangText(Lang_TextType.TextType.B0317);
+        this._btnModifyMaxCallCountTotal.setLangText(Lang_TextType.TextType.B0317);
+        this._btnInitSubNodeToEvent.setLangText(Lang_TextType.TextType.B0494);
+        this._btnNegateRootNode.setLangText(Lang_TextType.TextType.B1476);
 
-        this._btnRenameNode.setLangText(Lang_Constants.TextType.B0495);
-        this._btnSwitchNodeAndOr.setLangText(Lang_Constants.TextType.B0482);
-        this._btnSwitchNodeTrueFalse.setLangText(Lang_Constants.TextType.B1107);
-        this._btnReplaceNode.setLangText(Lang_Constants.TextType.B0480);
-        this._btnAddSubCondition.setLangText(Lang_Constants.TextType.B0483);
-        this._btnAddSubNodeToNode.setLangText(Lang_Constants.TextType.B0484);
-        this._btnShallowCloneNode.setLangText(Lang_Constants.TextType.B1478);
-        this._btnDeepCloneNode.setLangText(Lang_Constants.TextType.B0748);
-        this._btnMoveUpNode.setLangText(Lang_Constants.TextType.B0463);
-        this._btnDeleteNode.setLangText(Lang_Constants.TextType.B0499);
+        this._btnRenameNode.setLangText(Lang_TextType.TextType.B0495);
+        this._btnSwitchNodeAndOr.setLangText(Lang_TextType.TextType.B0482);
+        this._btnSwitchNodeTrueFalse.setLangText(Lang_TextType.TextType.B1107);
+        this._btnReplaceNode.setLangText(Lang_TextType.TextType.B0480);
+        this._btnAddSubCondition.setLangText(Lang_TextType.TextType.B0483);
+        this._btnAddSubNodeToNode.setLangText(Lang_TextType.TextType.B0484);
+        this._btnShallowCloneNode.setLangText(Lang_TextType.TextType.B1478);
+        this._btnDeepCloneNode.setLangText(Lang_TextType.TextType.B0748);
+        this._btnMoveUpNode.setLangText(Lang_TextType.TextType.B0463);
+        this._btnDeleteNode.setLangText(Lang_TextType.TextType.B0499);
 
-        this._btnRenameCondition.setLangText(Lang_Constants.TextType.B0495);
-        this._btnModifyCondition.setLangText(Lang_Constants.TextType.B0501);
-        this._btnReplaceCondition.setLangText(Lang_Constants.TextType.B0500);
-        this._btnDeepCloneCondition.setLangText(Lang_Constants.TextType.B0748);
-        this._btnMoveUpCondition.setLangText(Lang_Constants.TextType.B0463);
-        this._btnDeleteCondition.setLangText(Lang_Constants.TextType.B0485);
+        this._btnRenameCondition.setLangText(Lang_TextType.TextType.B0495);
+        this._btnModifyCondition.setLangText(Lang_TextType.TextType.B0501);
+        this._btnReplaceCondition.setLangText(Lang_TextType.TextType.B0500);
+        this._btnDeepCloneCondition.setLangText(Lang_TextType.TextType.B0748);
+        this._btnMoveUpCondition.setLangText(Lang_TextType.TextType.B0463);
+        this._btnDeleteCondition.setLangText(Lang_TextType.TextType.B0485);
 
-        this._btnRenameAction.setLangText(Lang_Constants.TextType.B0495);
-        this._btnModifyAction.setLangText(Lang_Constants.TextType.B0317);
-        this._btnReplaceAction.setLangText(Lang_Constants.TextType.B0480);
-        this._btnAddAction.setLangText(Lang_Constants.TextType.B0496);
-        this._btnDeepCloneAction.setLangText(Lang_Constants.TextType.B0748);
-        this._btnShallowCloneAction.setLangText(Lang_Constants.TextType.B0487);
-        this._btnMoveUpAction.setLangText(Lang_Constants.TextType.B0463);
-        this._btnDeleteAction.setLangText(Lang_Constants.TextType.B0220);
-        this._btnUpdateCampaignAction.setLangText(Lang_Constants.TextType.B0125);
+        this._btnRenameAction.setLangText(Lang_TextType.TextType.B0495);
+        this._btnModifyAction.setLangText(Lang_TextType.TextType.B0317);
+        this._btnReplaceAction.setLangText(Lang_TextType.TextType.B0480);
+        this._btnAddAction.setLangText(Lang_TextType.TextType.B0496);
+        this._btnDeepCloneAction.setLangText(Lang_TextType.TextType.B0748);
+        this._btnShallowCloneAction.setLangText(Lang_TextType.TextType.B0487);
+        this._btnMoveUpAction.setLangText(Lang_TextType.TextType.B0463);
+        this._btnDeleteAction.setLangText(Lang_TextType.TextType.B0220);
+        this._btnUpdateCampaignAction.setLangText(Lang_TextType.TextType.B0125);
 
         this._updateLabelTitle();
         this._updateLabelDescAndButtons();
@@ -1067,17 +1067,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const descType  = openData.descType;
         const label     = this._labelTitle;
         if (descType === WarEvents_Constants.DescType.Action) {
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0317)} A${openData.actionId || `???`}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0317)} A${openData.actionId || `???`}`);
         } else if (descType === WarEvents_Constants.DescType.Condition) {
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0317)} C${openData.conditionId || `???`}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0317)} C${openData.conditionId || `???`}`);
         } else if (descType === WarEvents_Constants.DescType.ConditionNode) {
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0317)} N${openData.nodeId || `???`}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0317)} N${openData.nodeId || `???`}`);
         } else if (descType === WarEvents_Constants.DescType.EventName) {
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0317)} E${openData.eventId || `???`}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0317)} E${openData.eventId || `???`}`);
         } else if (descType === WarEvents_Constants.DescType.EventMaxCallCountInPlayerTurn) {
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0317)} E${openData.eventId || `???`}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0317)} E${openData.eventId || `???`}`);
         } else if (descType === WarEvents_Constants.DescType.EventMaxCallCountTotal) {
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0317)} E${openData.eventId || `???`}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0317)} E${openData.eventId || `???`}`);
         } else {
             throw Helpers_Misc.newError(`Invalid descType: ${descType}`, Utils_ClientErrorCode.ClientErrorCode.WeCommandPanel_UpdateLabelTitle_00);
         }
@@ -1112,7 +1112,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const event         = Helpers_Misc.getExisted(fullData.getEventArray().find(v => v.getEventId() === eventId));
         const errorTip      = WarEvents_Events_Utils.getErrorTipForEvent(fullData, event);
         const labelError    = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(`[E${eventId}] ${Lang_Utils.getLanguageText({ textArray : event.getEventNameArray() })}`);
         this._layoutError.arrangeItems();
@@ -1131,10 +1131,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const eventId               = data.eventId;
         const event                 = Helpers_Misc.getExisted(fullData.getEventArray().find(v => v.getEventId() === eventId));
         const errorTip              = WarEvents_Events_Utils.getErrorTipForEventCallCountInPlayerTurn(event);
-        const textForMaxCallCount   = `${Lang_Utils.getText(Lang_Constants.TextType.B0476)}: ${event.getMaxCallCountInPlayerTurn()}`;
-        const textForTrigger        = `${Lang_Utils.getText(Lang_Constants.TextType.B1400)}: ${Lang_Utils.getTextForYesOrNo(event.getCanBeTriggeredRightAfterAnyEvent())}`;
+        const textForMaxCallCount   = `${Lang_Utils.getText(Lang_TextType.TextType.B0476)}: ${event.getMaxCallCountInPlayerTurn()}`;
+        const textForTrigger        = `${Lang_Utils.getText(Lang_TextType.TextType.B1400)}: ${Lang_Utils.getTextForYesOrNo(event.getCanBeTriggeredRightAfterAnyEvent())}`;
         const labelError            = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(`[E${eventId}] ${textForMaxCallCount}, ${textForTrigger}`);
         this._layoutError.arrangeItems();
@@ -1150,9 +1150,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const event         = Helpers_Misc.getExisted(fullData.getEventArray().find(v => v.getEventId() === eventId));
         const errorTip      = WarEvents_Events_Utils.getErrorTipForEventCallCountTotal(event);
         const labelError    = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
-        this._labelDesc.setText(`[E${eventId}] ${Lang_Utils.getText(Lang_Constants.TextType.B0477)}: ${event.getMaxCallCountTotal()}`);
+        this._labelDesc.setText(`[E${eventId}] ${Lang_Utils.getText(Lang_TextType.TextType.B0477)}: ${event.getMaxCallCountTotal()}`);
         this._layoutError.arrangeItems();
 
         const group = this._groupBtn;
@@ -1166,10 +1166,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const node          = Helpers_Misc.getExisted(fullData.getConditionNodeArray()?.find(v => v.getNodeId() === nodeId));
         const errorTip      = WarEvents_ConditionNodes_Utils.getErrorTipForConditionNode(fullData, node);
         const labelError    = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
 
-        const textForName   = Lang_Utils.getLanguageText({ textArray : node.getNodeNameArray() }) ?? `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`;
+        const textForName   = Lang_Utils.getLanguageText({ textArray : node.getNodeNameArray() }) ?? `(${Lang_Utils.getText(Lang_TextType.TextType.B0277)})`;
         const textForDesc   = Lang_Utils.getWarEventConditionNodeDesc(node.getIsNeedAnd(), node.getIsNeedFalse());
         this._labelDesc.setText(`[N${nodeId}] ${textForName}\n${textForDesc}`);
         this._layoutError.arrangeItems();
@@ -1201,10 +1201,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const condition     = Helpers_Misc.getExisted(fullData.getConditionArray().find(v => v.getWecCommonData()?.getConditionId() === conditionId));
         const errorTip      = WarEvents_Conditions_Utils_Common.getErrorTipForCondition(fullData, condition, war);
         const labelError    = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
 
-        const textForName   = Lang_Utils.getLanguageText({ textArray : condition.getWecCommonData()?.getConditionNameArray() }) ?? `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`;
+        const textForName   = Lang_Utils.getLanguageText({ textArray : condition.getWecCommonData()?.getConditionNameArray() }) ?? `(${Lang_Utils.getText(Lang_TextType.TextType.B0277)})`;
         const textForDesc   = WarEvents_Conditions_Utils_Common.getDetailedDescForCondition(condition, war.getGcData());
         this._labelDesc.setText(`[C${conditionId}] ${textForName}\n${textForDesc}`);
         this._layoutError.arrangeItems();
@@ -1229,10 +1229,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const action        = Helpers_Misc.getExisted(fullData.getActionArray().find(v => v.getWeaCommonData()?.getActionId() === actionId));
         const errorTip      = WarEvents_Actions_Utils_Common.getErrorTipForAction(fullData, action, war);
         const labelError    = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
 
-        const textForName   = Lang_Utils.getLanguageText({ textArray : action.getWeaCommonData()?.getActionNameArray() }) ?? `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`;
+        const textForName   = Lang_Utils.getLanguageText({ textArray : action.getWeaCommonData()?.getActionNameArray() }) ?? `(${Lang_Utils.getText(Lang_TextType.TextType.B0277)})`;
         const textForDesc   = WarEvents_Actions_Utils_Common.getDetailDescForAction(action, war.getGcData());
         this._labelDesc.setText(`[A${actionId}] ${textForName}\n${textForDesc}`);
         this._layoutError.arrangeItems();

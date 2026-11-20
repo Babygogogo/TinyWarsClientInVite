@@ -27,7 +27,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Turns_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -141,17 +141,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -167,14 +167,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
-        this._labelRankMatch.setLangText(Lang_Constants.TextType.B1012);
-        this._labelPreviewMap.setLangText(Lang_Constants.TextType.B0594);
-        this._labelMapType.setLangText(this.getOpenData()?.hasFog ? Lang_Constants.TextType.B0596 : Lang_Constants.TextType.B0595);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._labelNoMap.setLangText(Lang_Constants.TextType.B0582);
-        this._btnBanMap.setLangText(Lang_Constants.TextType.B0084);
-        this._btnSwitch.setLangText(Lang_Constants.TextType.B0520);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0040);
+        this._labelRankMatch.setLangText(Lang_TextType.TextType.B1012);
+        this._labelPreviewMap.setLangText(Lang_TextType.TextType.B0594);
+        this._labelMapType.setLangText(this.getOpenData()?.hasFog ? Lang_TextType.TextType.B0596 : Lang_TextType.TextType.B0595);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._labelNoMap.setLangText(Lang_TextType.TextType.B0582);
+        this._btnBanMap.setLangText(Lang_TextType.TextType.B0084);
+        this._btnSwitch.setLangText(Lang_TextType.TextType.B0520);
 
         this._layoutNavName.arrangeItems();
         this._groupNavigator.arrangeItems();

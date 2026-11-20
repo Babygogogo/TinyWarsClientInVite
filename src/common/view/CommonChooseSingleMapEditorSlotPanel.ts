@@ -6,7 +6,7 @@ import {
     Helpers_GameFlow,
     Helpers_Misc,
     Helpers_PointerInput,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeModel,
     Maps_Constants,
@@ -112,7 +112,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const isEmptySlot = (await MapEditor_Model_MeModel.getMapEditorData(slotIndex))?.mapRawData == null;
         if ((openData.needNonEmptySlot) && (isEmptySlot)) {
-            FloatText.showLang(Lang_Constants.TextType.A0442);
+            FloatText.showLang(Lang_TextType.TextType.A0442);
             return;
         }
 
@@ -124,7 +124,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback();
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0070),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0070),
                 callback   : callback,
             });
         }
@@ -183,9 +183,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(this.getOpenData()?.getTitleText?.() ?? Lang_Utils.getText(Lang_Constants.TextType.B1256));
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
+        this._labelTitle.setText(this.getOpenData()?.getTitleText?.() ?? Lang_Utils.getText(Lang_TextType.TextType.B1256));
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._labelTips.setLangText(Lang_TextType.TextType.B1249);
     }
 
     private async _createDataForList(): Promise<DataForSlotRenderer[]> {
@@ -267,11 +267,11 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
             availableNumberArray : [1, 2],
             currentNumber        : 1,
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0401),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B0401),
             getNumberMainText    : num => {
                 switch (num) {
-                    case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0325);
-                    case 2  : return Lang_Utils.getText(Lang_Constants.TextType.B0557);
+                    case 1  : return Lang_Utils.getText(Lang_TextType.TextType.B0325);
+                    case 2  : return Lang_Utils.getText(Lang_TextType.TextType.B0557);
                     default : throw Helpers_Misc.newError(`Invalid num: ${num}`);
                 }
             },
@@ -325,17 +325,17 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const status            = mapEditorData?.reviewStatus ?? 0;
         const labelSlotIndex    = this._labelSlotIndex;
         labelSlotIndex.setTextColor(getReviewStatusTextColor(status));
-        this._labelMapName.setText(Lang_Utils.getLanguageText({ textArray : mapRawData ? mapRawData.getMapNameArray() : [] }) || `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`);
+        this._labelMapName.setText(Lang_Utils.getLanguageText({ textArray : mapRawData ? mapRawData.getMapNameArray() : [] }) || `(${Lang_Utils.getText(Lang_TextType.TextType.B0277)})`);
 
         const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent;
         if (srcNormalMapIdForAddEvent != null) {
-            labelSlotIndex.setText(`#${slotIndex} ${Lang_Utils.getText(Lang_Constants.TextType.B1006)} #${srcNormalMapIdForAddEvent}`);
+            labelSlotIndex.setText(`#${slotIndex} ${Lang_Utils.getText(Lang_TextType.TextType.B1006)} #${srcNormalMapIdForAddEvent}`);
         } else {
             const campaignMapData = mapRawData?.getCampaignMapData();
             if (campaignMapData == null) {
                 labelSlotIndex.setText(`#${slotIndex} ${Lang_Utils.getMapReviewStatusText(status) ?? Lang_Constants.UndefinedError}`);
             } else {
-                labelSlotIndex.setText(`#${slotIndex} ${Lang_Utils.getText(Lang_Constants.TextType.B1135)} ${campaignMapData.getCampaignId()}-${campaignMapData.getCampaignMapId()}`);
+                labelSlotIndex.setText(`#${slotIndex} ${Lang_Utils.getText(Lang_TextType.TextType.B1135)} ${campaignMapData.getCampaignId()}-${campaignMapData.getCampaignMapId()}`);
             }
         }
         this._layoutName.arrangeItems();

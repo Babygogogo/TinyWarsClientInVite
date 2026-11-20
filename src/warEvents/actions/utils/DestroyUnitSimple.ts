@@ -1,7 +1,7 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     Destructions_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Utils_Filter,
     Tiles_Utils_Filter,
@@ -27,7 +27,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getText(Lang_Constants.TextType.A0955);
+    return Lang_Utils.getText(Lang_TextType.TextType.A0955);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaDestroyUnitSimple>): string | null {
     if (!data) {
@@ -44,22 +44,22 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            subTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
+            subTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            subTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
+            subTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
+        subTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.A0944)}`);
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0248,
+        Lang_TextType.TextType.F0248,
         subTextArray.join(`\n`),
     );
 }
@@ -70,7 +70,7 @@ export function getErrorTip(data: WeaDestroyUnitSimple, mapSize: AuxiliaryTypes_
         if ((filter != null)                                                                    &&
             (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerFilter));
         }
     }
 
@@ -79,7 +79,7 @@ export function getErrorTip(data: WeaDestroyUnitSimple, mapSize: AuxiliaryTypes_
         if ((filter != null)                                                                            &&
             (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitFilter));
         }
     }
 
@@ -88,7 +88,7 @@ export function getErrorTip(data: WeaDestroyUnitSimple, mapSize: AuxiliaryTypes_
         if ((filter != null)                                                                            &&
             (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileFilter));
         }
     }
 

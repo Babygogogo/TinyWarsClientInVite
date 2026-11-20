@@ -5,7 +5,7 @@ import {
     Lang_Utils,
     Helpers_Misc,
     ExpressionParsers_Results_Lambda,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type ExpressionParsers_Contexts_Base,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
@@ -51,7 +51,7 @@ export class Lambda extends ExpressionParsers_Nodes_Base.Base {
         const argumentNameArray = this._argumentNameArray;
         if (directLambdaArgumentInfoArray?.length !== argumentNameArray.length) {
             throw Helpers_Misc.newError(
-                Lang_Utils.getFormattedText(Lang_Constants.TextType.F0031, argumentNameArray.length, directLambdaArgumentInfoArray?.length),
+                Lang_Utils.getFormattedText(Lang_TextType.TextType.F0031, argumentNameArray.length, directLambdaArgumentInfoArray?.length),
                 Utils_ClientErrorCode.ClientErrorCode.EpNodeLambda_GetLambdaResultType_00,
             );
         }
@@ -64,7 +64,7 @@ export class Lambda extends ExpressionParsers_Nodes_Base.Base {
             const name = argumentNameArray[i];
             if (dict.has(name)) {
                 throw Helpers_Misc.newError(
-                    Lang_Utils.getFormattedText(Lang_Constants.TextType.F0032, name),
+                    Lang_Utils.getFormattedText(Lang_TextType.TextType.F0032, name),
                     Utils_ClientErrorCode.ClientErrorCode.EpNodeLambda_GetLambdaResultType_01,
                 );
             }

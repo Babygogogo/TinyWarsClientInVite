@@ -5,7 +5,7 @@ import {
     Helpers_PointerInput,
     Users_Proxy,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -212,14 +212,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0827);
-        this._labelUnitTitle.setLangText(Lang_Constants.TextType.Units);
-        this._labelTileBaseTitle.setLangText(Lang_Constants.TextType.TileBase);
-        this._labelTileObjectTitle.setLangText(Lang_Constants.TextType.TileObject);
-        this._labelTileDecoratorTitle.setLangText(Lang_Constants.TextType.TileDecoration);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnDefault.setLangText(Lang_Constants.TextType.B0543);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0827);
+        this._labelUnitTitle.setLangText(Lang_TextType.TextType.Units);
+        this._labelTileBaseTitle.setLangText(Lang_TextType.TextType.TileBase);
+        this._labelTileObjectTitle.setLangText(Lang_TextType.TextType.TileObject);
+        this._labelTileDecoratorTitle.setLangText(Lang_TextType.TextType.TileDecoration);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnDefault.setLangText(Lang_TextType.TextType.B0543);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0154);
 
         this._layoutUnit.arrangeItems();
         this._layoutTileBase.arrangeItems();

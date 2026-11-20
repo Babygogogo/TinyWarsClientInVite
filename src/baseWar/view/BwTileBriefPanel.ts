@@ -4,7 +4,7 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Notifications_Dispatcher,
     Sounds_Constants,
@@ -219,7 +219,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 tile               : tile,
                 callbackForAddUnit : () => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseUnitAttrPanel, {
-                        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B0535),
+                        getTitleText : () => Lang_Utils.getText(Lang_TextType.TextType.B0535),
                         war          : war,
                         callback     : unitData => {
                             const unitMap = war.getUnitMap();

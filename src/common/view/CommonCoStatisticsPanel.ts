@@ -10,7 +10,7 @@ import {
     GameConfigs_Provider,
     Lang_Utils,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     WarTypes_Constants,
@@ -107,7 +107,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0903),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0903),
         });
     }
 
@@ -134,7 +134,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private async _updateComponentsForLanguage(): Promise<void> {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1076);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1076);
 
         const gameDataArray     = (await Common_Model_CommonModel.getCoStatistics())?.getGameDataArray();
         let rankedReplaysCount  = 0;
@@ -149,7 +149,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
             ++allReplaysCount;
         }
-        this._labelReplaysCount.setText(`(${Lang_Utils.getText(Lang_Constants.TextType.B0610)}: ${rankedReplaysCount}, ${Lang_Utils.getText(Lang_Constants.TextType.B0877)}: ${allReplaysCount})`);
+        this._labelReplaysCount.setText(`(${Lang_Utils.getText(Lang_TextType.TextType.B0610)}: ${rankedReplaysCount}, ${Lang_Utils.getText(Lang_TextType.TextType.B0877)}: ${allReplaysCount})`);
         this._layoutTitle.arrangeItems();
     }
 
@@ -385,9 +385,9 @@ class CoRenderer
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelCountTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1074)}\n${Lang_Utils.getText(Lang_Constants.TextType.B0606)}\n${Lang_Utils.getText(Lang_Constants.TextType.B0550)}\n${Lang_Utils.getText(Lang_Constants.TextType.B0551)}\n${Lang_Utils.getText(Lang_Constants.TextType.B0552)}`);
-        this._labelRankedTitle.setLangText(Lang_Constants.TextType.B1075);
-        this._labelAllTitle.setLangText(Lang_Constants.TextType.B0120);
+        this._labelCountTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1074)}\n${Lang_Utils.getText(Lang_TextType.TextType.B0606)}\n${Lang_Utils.getText(Lang_TextType.TextType.B0550)}\n${Lang_Utils.getText(Lang_TextType.TextType.B0551)}\n${Lang_Utils.getText(Lang_TextType.TextType.B0552)}`);
+        this._labelRankedTitle.setLangText(Lang_TextType.TextType.B1075);
+        this._labelAllTitle.setLangText(Lang_TextType.TextType.B0120);
     }
 }
 

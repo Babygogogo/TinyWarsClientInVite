@@ -7,7 +7,7 @@ import {
     GamePanels_Manager,
     Helpers_PointerInput,
     MultiMatchRoom_Model_MmrProxy,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -163,7 +163,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0400),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0400),
         });
     }
 
@@ -178,11 +178,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0413);
-        this._labelStdTitle.setLangText(Lang_Constants.TextType.B0548);
-        this._labelFogTitle.setLangText(Lang_Constants.TextType.B0549);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0413);
+        this._labelStdTitle.setLangText(Lang_TextType.TextType.B0548);
+        this._labelFogTitle.setLangText(Lang_TextType.TextType.B0549);
 
         this._layoutStdCount.arrangeItems();
         this._layoutStd.arrangeItems();

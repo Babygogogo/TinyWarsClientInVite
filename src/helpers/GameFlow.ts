@@ -26,6 +26,7 @@ import {
     Keyboard_KbManager,
     Lang_CommonText,
     Lang_Constants,
+    Lang_TextType,
     Lang_Utils,
     Leaderboard_Model_LeaderboardProxy,
     LocalData_DeprecatedStorage,
@@ -93,60 +94,13 @@ const _NOTIFY_EVENTS: Notifications_Types.Listener[] = [
 let _hasOnceWentToLobby = false;
 
 export function startGame(stage: Egret_Egret.Stage): void {
-    bootUpTest();
     Networks_Manager.checkAndOverrideGameVersion();
 
     doStartGame(stage);
 }
-function bootUpTest(): void {
-    if (window.CLIENT_VERSION !== "DEVELOP") {
-        return;
-    }
-    console.warn("Boot Up Test begin.");
-
-    const rawDict       = Lang_CommonText.CommonText;
-    const dict          = new Map<string, Map<string, string>>();   // text1, text2, key
-    const emptyIdSet    = new Set<string>();
-    for (const key in rawDict) {
-        const textArray = rawDict[key];
-        const text1     = textArray[0];
-        const text2     = textArray[1];
-        const text3     = textArray[2];
-        {
-            if ((text1 == null) ||
-                (text2 == null) ||
-                (text3 == null) ||
-                (!text1.length) ||
-                (!text2.length) ||
-                (!text3.length)
-            ) {
-                emptyIdSet.add(key);
-            }
-        }
-        {
-            if (!dict.has(text1)) {
-                dict.set(text1, new Map());
-            }
-
-            const dict1 = Helpers_Misc.getExisted(dict.get(text1));
-            if (!dict1.has(text2)) {
-                dict1.set(text2, key);
-            } else {
-                console.warn(`duplicated text: ${dict1.get(text2)}, ${key}`);
-            }
-        }
-    }
-
-    {
-        if (emptyIdSet.size) {
-            console.log(`Empty text: `, [...emptyIdSet].join(`, `));
-        }
-    }
-
-    console.warn("Boot Up Test end.");
-}
 
 async function doStartGame(stage: Egret_Egret.Stage): Promise<void> {
+    await initLangCommonText();
     initListenerForWindowOnError();
 
     Keyboard_KbManager.init();
@@ -445,8 +399,8 @@ export function gotoMyWarListPanel(warType: WarTypes_Constants.WarTypeId): void 
                 const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent ?? null;
                 if (reviewStatus === Maps_Constants.ReviewStatus.Rejected) {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                        getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0305),
-                        getContent : () => mapEditorData?.reviewComment || Lang_Utils.getText(Lang_Constants.TextType.None),
+                        getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0305),
+                        getContent : () => mapEditorData?.reviewComment || Lang_Utils.getText(Lang_TextType.TextType.None),
                         callback   : () => {
                             gotoMapEditorWar({
                                 mapRawData                : Helpers_Misc.getExisted(mapEditorData?.mapRawData),
@@ -459,8 +413,8 @@ export function gotoMyWarListPanel(warType: WarTypes_Constants.WarTypeId): void 
                     });
                 } else if (reviewStatus === Maps_Constants.ReviewStatus.Accepted) {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                        getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0326),
-                        getContent : () => mapEditorData?.reviewComment || Lang_Utils.getText(Lang_Constants.TextType.None),
+                        getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0326),
+                        getContent : () => mapEditorData?.reviewComment || Lang_Utils.getText(Lang_TextType.TextType.None),
                         callback   : () => {
                             gotoMapEditorWar({
                                 mapRawData                : Helpers_Misc.getExisted(mapEditorData?.mapRawData),
@@ -482,7 +436,7 @@ export function gotoMyWarListPanel(warType: WarTypes_Constants.WarTypeId): void 
                         });
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0015),
+                            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0015),
                             callback   : () => {
                                 gotoMapEditorWar({
                                     mapRawData                : mapEditorData?.mapRawData,
@@ -601,8 +555,8 @@ function _onMsgCommonServerDisconnect(): void {
     // gotoLogin();
 
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-        getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0025),
-        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0020),
+        getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0025),
+        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0020),
     });
 }
 
@@ -689,6 +643,22 @@ export function getOngoingWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseW
         ?? (MapEditor_Model_MeModel.getWar());
 }
 
+async function initLangCommonText(): Promise<void> {
+    try {
+        await Lang_CommonText.init();
+    } catch (error) {
+        console.error("Failed to load CommonText.", error);
+        const loadingText = document.getElementById("loadingTxt");
+        if (!loadingText) {
+            throw error;
+        }
+
+        const retryButton = document.createElement("button");
+        retryButton.textContent = "Retry";
+        retryButton.onclick = () => window.location.reload();
+        loadingText.replaceChildren("Failed to load language resources. Please retry. ", retryButton);
+    }
+}
 function initListenerForWindowOnError(): void {
     window.onerror = (message, filename, row, col, err) => {
         if (err) {
@@ -738,7 +708,7 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
             FloatText.show(Lang_Utils.getErrorText(errorCode));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0931),
                 callback   : () => {
                     warData.createIfNotExistsSettingsForSfw();
                     gotoSinglePlayerWar({
@@ -764,7 +734,7 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
             currentNumber        : null,
             availableNumberArray : templateWarRuleArray.map(v => v.getRuleId()),
             showNumber           : true,
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1242),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B1242),
             getNumberMainText    : ruleId => Lang_Utils.getLanguageText({ textArray : templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm    : ruleId => {
                 const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
@@ -797,7 +767,7 @@ export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promis
             FloatText.show(Lang_Utils.getErrorText(errorCode));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
+                getContent : () => `${Lang_Utils.getText(Lang_TextType.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_TextType.TextType.A0201)}`,
                 callback   : () => gotoMfrCreateSettingsPanel(warData),
             });
         }
@@ -812,7 +782,7 @@ export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promis
             currentNumber        : null,
             availableNumberArray : templateWarRuleArray.map(v => v.getRuleId()),
             showNumber           : true,
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1242),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B1242),
             getNumberMainText    : ruleId => Lang_Utils.getLanguageText({ textArray : templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm    : ruleId => {
                 const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);

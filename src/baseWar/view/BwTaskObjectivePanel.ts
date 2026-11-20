@@ -1,6 +1,6 @@
 import {
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiContainer,
     Ui_Components_UiImage,
     Ui_Components_UiLabel,
@@ -56,7 +56,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1214);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1214);
 
         this._updateGroupTaskObjective();
     }
@@ -73,7 +73,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const allTaskObjectiveArray = war.getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray() ?? [];
         const stateArray            = war.getTaskObjectiveManager().getStateArray();
         {
-            group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_Constants.TextType.B1217)), false);
+            group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_TextType.TextType.B1217)), false);
 
             const dataArray = getDataArrayForTaskObjectiveRenderer(war, allTaskObjectiveArray, stateArray, true);
             for (const data of dataArray) {
@@ -87,7 +87,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         group.addItem(createSeparator(), false);
 
         {
-            group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_Constants.TextType.B1220)), false);
+            group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_TextType.TextType.B1220)), false);
 
             const dataArray = getDataArrayForTaskObjectiveRenderer(war, allTaskObjectiveArray, stateArray, false);
             for (const data of dataArray) {

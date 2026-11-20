@@ -1,13 +1,13 @@
 import {
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 import type { ValueArrayAndPredicate } from "../proto/schema/CommonProto/Structure/ValueArrayAndPredicate.ts";
 
 export function getDesc(data: ValueArrayAndPredicate, valueName: string, getValueText: (v: number) => AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): string {
     return Lang_Utils.getFormattedText(
-        data.getIsOneOf() ? Lang_Constants.TextType.F0228 : Lang_Constants.TextType.F0229,
+        data.getIsOneOf() ? Lang_TextType.TextType.F0228 : Lang_TextType.TextType.F0229,
         valueName,
         data.getValueArray()?.map(v => getValueText(v)).join(`, `),
     );

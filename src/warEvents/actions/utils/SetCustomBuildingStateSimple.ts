@@ -11,7 +11,7 @@ import {
     Lang_Utils,
     Tiles_Utils_Common,
     Numbers_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type Players_Player,
@@ -36,103 +36,103 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     {
         const act = data.getActDefenseAmount();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.DefBonus$));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.DefBonus$));
         }
     }
     {
         const act = data.getActDefenseUnitTypeArray();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.DefensibleUnits));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.DefensibleUnits));
         }
     }
     {
         const act1 = data.getActMaxCapturePoint();
         const act2 = data.getActDeleteMaxCapturePoint();
         if ((act1 != null) || (act2)) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.MaxCapturePoint));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.MaxCapturePoint));
         }
     }
     {
         const act = data.getActIsDefeatedOnCapture();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.DefeatIfCaptured));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.DefeatIfCaptured));
         }
     }
     {
         const act1 = data.getActRepairNormalizedHp();
         const act2 = data.getActDeleteRepairNormalizedHp();
         if ((act1 != null) || (act2)) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RepairHpAmount));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.RepairHpAmount));
         }
     }
     {
         const act = data.getActRepairUnitTypeArray();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RepairableUnits));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.RepairableUnits));
         }
     }
     {
         const act = data.getActIncomePerTurn();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.Income));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.Income));
         }
     }
     {
         const act = data.getActVisionRange();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.VisionRange));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.VisionRange));
         }
     }
     {
         const act = data.getActIsVisionEnabledForAllPlayers();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.SharedVision));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.SharedVision));
         }
     }
     {
         const act = data.getActHideUnitTypeArray();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.HidableUnits));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.HidableUnits));
         }
     }
     {
         const act = data.getActProduceUnitTypeArray();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.ProducibleUnits));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.ProducibleUnits));
         }
     }
     {
         const act = data.getActGlobalAttackBonus();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.GlobalAtkBonus));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.GlobalAtkBonus));
         }
     }
     {
         const act = data.getActGlobalDefenseBonus();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.GlobalDefBonus));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.GlobalDefBonus));
         }
     }
     {
         const act = data.getActUnitTypeArrayForCoBoard();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CoBoardableUnit));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.CoBoardableUnit));
         }
     }
     {
         const act = data.getActBlockEnemyUnitTypeArray();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.BlockableEnemyUnits));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.BlockableEnemyUnits));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
+        actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.A0957));
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0254,
-        Lang_Utils.getText(Lang_Constants.TextType.MystBuilding),
+        Lang_TextType.TextType.F0254,
+        Lang_Utils.getText(Lang_TextType.TextType.MystBuilding),
         actTextArray.join(`, `),
     );
 }
@@ -151,7 +151,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
@@ -159,118 +159,118 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_TextType.TextType.B1418 : Lang_TextType.TextType.B1419),
             )}`);
         }
     }
 
     if (!conTextArray.length) {
-        conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
+        conTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.A0944)}`);
     }
 
     const actTextArray: string[] = [];
     {
         const act = data.getActDefenseAmount();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.DefBonus$));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.DefBonus$));
         }
     }
     {
         const act = data.getActDefenseUnitTypeArray();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.DefensibleUnits));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.DefensibleUnits));
         }
     }
     {
         const act1 = data.getActMaxCapturePoint();
         const act2 = data.getActDeleteMaxCapturePoint();
         if ((act1 != null) || (act2)) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.MaxCapturePoint));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.MaxCapturePoint));
         }
     }
     {
         const act = data.getActIsDefeatedOnCapture();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.DefeatIfCaptured));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.DefeatIfCaptured));
         }
     }
     {
         const act1 = data.getActRepairNormalizedHp();
         const act2 = data.getActDeleteRepairNormalizedHp();
         if ((act1 != null) || (act2)) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RepairHpAmount));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.RepairHpAmount));
         }
     }
     {
         const act = data.getActRepairUnitTypeArray();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RepairableUnits));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.RepairableUnits));
         }
     }
     {
         const act = data.getActIncomePerTurn();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.Income));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.Income));
         }
     }
     {
         const act = data.getActVisionRange();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.VisionRange));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.VisionRange));
         }
     }
     {
         const act = data.getActIsVisionEnabledForAllPlayers();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.SharedVision));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.SharedVision));
         }
     }
     {
         const act = data.getActHideUnitTypeArray();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.HidableUnits));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.HidableUnits));
         }
     }
     {
         const act = data.getActProduceUnitTypeArray();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.ProducibleUnits));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.ProducibleUnits));
         }
     }
     {
         const act = data.getActGlobalAttackBonus();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.GlobalAtkBonus));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.GlobalAtkBonus));
         }
     }
     {
         const act = data.getActGlobalDefenseBonus();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.GlobalDefBonus));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.GlobalDefBonus));
         }
     }
     {
         const act = data.getActUnitTypeArrayForCoBoard();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CoBoardableUnit));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.CoBoardableUnit));
         }
     }
     {
         const act = data.getActBlockEnemyUnitTypeArray();
         if (act != null) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.BlockableEnemyUnits));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.BlockableEnemyUnits));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
+        actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.A0957));
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0255,
-        Lang_Utils.getText(Lang_Constants.TextType.MystBuilding),
+        Lang_TextType.TextType.F0255,
+        Lang_Utils.getText(Lang_TextType.TextType.MystBuilding),
         conTextArray.join(`\n`),
-        Lang_Utils.getText(Lang_Constants.TextType.MystBuilding),
+        Lang_Utils.getText(Lang_TextType.TextType.MystBuilding),
         actTextArray.join(`, `),
     );
 }
@@ -280,10 +280,10 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         const filter = data.getConUnitFilter();
         if (filter != null) {
             if (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
             }
         }
     }
@@ -292,7 +292,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((filter != null)                                                                    &&
             (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerFilter));
         }
     }
     {
@@ -300,7 +300,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((filter != null)                                                                            &&
             (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileFilter));
         }
     }
     {
@@ -308,7 +308,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((comparator != null)                            &&
             (!ValueAndComparators_Utils.checkIsValid(comparator))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
         }
     }
 
@@ -317,7 +317,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                       &&
             (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.DefBonus$));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.DefBonus$));
         }
     }
     {
@@ -325,7 +325,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                                                               &&
             (!ArrayModifiers_Utils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.DefensibleUnits));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.DefensibleUnits));
         }
     }
     {
@@ -333,7 +333,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                       &&
             (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.MaxCapturePoint));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.MaxCapturePoint));
         }
     }
     {
@@ -349,7 +349,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                       &&
             (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RepairHpAmount));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RepairHpAmount));
         }
     }
     {
@@ -361,7 +361,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                                                               &&
             (!ArrayModifiers_Utils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RepairableUnits));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.RepairableUnits));
         }
     }
     {
@@ -369,7 +369,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                       &&
             (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Income));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Income));
         }
     }
     {
@@ -377,7 +377,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                       &&
             (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.VisionRange));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.VisionRange));
         }
     }
     {
@@ -389,7 +389,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                                                               &&
             (!ArrayModifiers_Utils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.HidableUnits));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.HidableUnits));
         }
     }
     {
@@ -397,7 +397,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                                                               &&
             (!ArrayModifiers_Utils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.ProducibleUnits));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.ProducibleUnits));
         }
     }
     {
@@ -405,7 +405,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                       &&
             (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.GlobalAtkBonus));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.GlobalAtkBonus));
         }
     }
     {
@@ -413,7 +413,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                       &&
             (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.GlobalDefBonus));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.GlobalDefBonus));
         }
     }
     {
@@ -421,7 +421,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                                                               &&
             (!ArrayModifiers_Utils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.CoBoardableUnit));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.CoBoardableUnit));
         }
     }
     {
@@ -429,7 +429,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         if ((act != null)                                                                               &&
             (!ArrayModifiers_Utils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.BlockableEnemyUnits));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.BlockableEnemyUnits));
         }
     }
 
@@ -452,7 +452,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         (data.getActUnitTypeArrayForCoBoard() == null)       &&
         (data.getActBlockEnemyUnitTypeArray() == null)
     ) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0957);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0957);
     }
 
     return null;

@@ -8,7 +8,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Ui_Components_UiPanel,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Timer_TimerModel,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,

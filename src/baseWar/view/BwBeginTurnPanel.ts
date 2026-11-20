@@ -5,7 +5,7 @@ import {
     Lang_Utils,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     Timer_TimerModel,
     type GameConfigs_GameConfig,
@@ -59,7 +59,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this._labelPlayerIndex.setText(`${Lang_Utils.getPlayerForceName(openData.playerIndex)} (${Lang_Utils.getPlayerTeamName(openData.teamIndex)})`);
         this._labelNickname.setText(openData.nickname);
-        this._labelTurnStart.setLangText(Lang_Constants.TextType.B0679);
+        this._labelTurnStart.setLangText(Lang_TextType.TextType.B0679);
         this._imgSkin.loadSource(Helpers_ImageSource.getCoHeadFrame(openData.unitAndTileSkinId));
         this._imgCo.loadSource(Helpers_ImageSource.getCoHead(openData.gameConfig, openData.coId) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();

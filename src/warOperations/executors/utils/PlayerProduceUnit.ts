@@ -5,7 +5,7 @@ import {
     HalfwayReplayWar_Model_HrwWar,
     Helpers_Misc,
     Helpers_Team,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
@@ -181,13 +181,13 @@ export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: Wo
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerProduceUnit, gcData: GameConfigs_GameConfig.GameConfig): Promise<string | null> {
     if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.B0095)} ${war.getWarOperationDescSuffix()}`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.B0095)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         return null;
     } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.B0095)} ${Lang_Utils.getUnitName(Helpers_Misc.getExisted(action.getUnitType()), gcData)} ${war.getWarOperationDescSuffix()}`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.B0095)} ${Lang_Utils.getUnitName(Helpers_Misc.getExisted(action.getUnitType()), gcData)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof SinglePlayerWars_War.War) {
         return null;
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {

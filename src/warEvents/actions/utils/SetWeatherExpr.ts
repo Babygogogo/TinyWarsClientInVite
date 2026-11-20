@@ -4,7 +4,7 @@ import {
     ExpressionParsers_Parser,
     ExpressionParsers_Results_Num,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Numbers_Constants,
     Numbers_Utils,
@@ -49,7 +49,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0012,
+        Lang_TextType.TextType.F0012,
         data.getWeatherType() ?? Lang_Constants.UndefinedError,
         data.getWeatherTurnsCount() ?? Lang_Constants.UndefinedError,
     );
@@ -67,7 +67,7 @@ export function getErrorTip(data: WeaSetWeatherExpr, customCounterNameSet: Set<s
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -79,7 +79,7 @@ export function getErrorTip(data: WeaSetWeatherExpr, customCounterNameSet: Set<s
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

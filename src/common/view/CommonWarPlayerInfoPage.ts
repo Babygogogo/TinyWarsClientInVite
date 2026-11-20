@@ -17,7 +17,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -227,7 +227,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             const callback = openData.callbackOnExitRoom;
             if (callback) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0126),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0126),
                     callback,
                 });
             }
@@ -236,7 +236,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             const callback = openData.callbackOnDeletePlayer;
             if ((callback) && (openData.isRoomOwnedBySelf)) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDeletePlayerPanel, {
-                    content  : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0029, await Users_Model.getUserNickname(userId)),
+                    content  : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0029, await Users_Model.getUserNickname(userId)),
                     callback : (forbidReentrance: boolean) => {
                         callback(playerInfo.playerIndex, forbidReentrance);
                     },
@@ -248,13 +248,13 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     private _onTouchedBtnAddDummy(): void {
         const openData = this.getOpenData();
         if (openData == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const callback = openData.callbackOnAddDummy;
         if (callback == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -264,13 +264,13 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     private _onTouchedBtnChangeDummy(): void {
         const openData = this.getOpenData();
         if (openData == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const callback = openData.callbackOnChangeDummy;
         if (callback == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -293,11 +293,11 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelRankStdTitle.setLangText(Lang_Constants.TextType.B0546);
-        this._labelRankFogTitle.setLangText(Lang_Constants.TextType.B0547);
-        this._labelRestTimeToBootTitle.setLangText(Lang_Constants.TextType.B0188);
+        this._labelRankStdTitle.setLangText(Lang_TextType.TextType.B0546);
+        this._labelRankFogTitle.setLangText(Lang_TextType.TextType.B0547);
+        this._labelRestTimeToBootTitle.setLangText(Lang_TextType.TextType.B0188);
         this._btnAddDummy.setText(`A.I.`);
-        this._btnChangeDummy.setLangText(Lang_Constants.TextType.B0560);
+        this._btnChangeDummy.setLangText(Lang_TextType.TextType.B0560);
 
         this._layoutFog.arrangeItems();
         this._layoutStd.arrangeItems();
@@ -340,7 +340,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         if (userInfo) {
             labelNickname.setText(userInfo.getNickname() || Lang_Constants.UndefinedError);
         } else {
-            labelNickname.setText(playerInfo.isAi ? Lang_Utils.getText(Lang_Constants.TextType.B0607) : `??`);
+            labelNickname.setText(playerInfo.isAi ? Lang_Utils.getText(Lang_TextType.TextType.B0607) : `??`);
         }
 
         {
@@ -398,11 +398,11 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         const playerInfo = openData.playerInfo;
         if (playerInfo.isReady) {
-            label.setLangText(Lang_Constants.TextType.B0402);
+            label.setLangText(Lang_TextType.TextType.B0402);
         } else if (playerInfo.isInTurn) {
-            label.setLangText(Lang_Constants.TextType.B0086);
+            label.setLangText(Lang_TextType.TextType.B0086);
         } else if (playerInfo.isDefeat != null) {
-            label.setLangText(playerInfo.isDefeat ? Lang_Constants.TextType.B0472 : Lang_Constants.TextType.B0471);
+            label.setLangText(playerInfo.isDefeat ? Lang_TextType.TextType.B0472 : Lang_TextType.TextType.B0471);
         } else {
             // TODO
             label.setText(``);

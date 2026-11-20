@@ -5,7 +5,7 @@ import {
     LocalData_Storage,
     Users_Model,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -49,7 +49,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onMsgUserSetPassword(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0148));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0148));
 
         const password = this._inputNewPassword0.trimInputText() ?? ``;
         LocalData_Storage.setPassword(password);
@@ -63,20 +63,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnConfirm(): void {
         const newPassword = this._inputNewPassword0.trimInputText() ?? ``;
         if (!Users_Utils.checkIsPasswordValid(newPassword)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0003));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0003));
         } else if (newPassword !== this._inputNewPassword1.trimInputText()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0147));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0147));
         } else {
             Users_Proxy.reqUserSetPassword(this._inputOldPassword.trimInputText() ?? ``, newPassword);
         }
     }
 
     private _updateOnLanguageChanged(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0426);
-        this._labelOldPasswordTitle.setLangText(Lang_Constants.TextType.B0427);
-        this._labelNewPasswordTitle0.setLangText(Lang_Constants.TextType.B0428);
-        this._labelNewPasswordTitle1.setLangText(Lang_Constants.TextType.B0429);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0426);
+        this._labelOldPasswordTitle.setLangText(Lang_TextType.TextType.B0427);
+        this._labelNewPasswordTitle0.setLangText(Lang_TextType.TextType.B0428);
+        this._labelNewPasswordTitle1.setLangText(Lang_TextType.TextType.B0429);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0154);
     }
 }

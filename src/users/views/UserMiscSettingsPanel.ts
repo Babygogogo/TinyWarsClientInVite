@@ -3,7 +3,7 @@ import {
     Lang_Utils,
     GamePanels_Dict,
     Users_Model,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Users_Proxy,
@@ -111,7 +111,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnLanguage(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0627),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B0627),
             availableNumberArray : [
                 Lang_Constants.LanguageType.Chinese,
                 Lang_Constants.LanguageType.English,
@@ -131,28 +131,28 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0823),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0823),
         });
     }
     private _onTouchedGroupHelpIsReplayResultVisible(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0824),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0824),
         });
     }
     private _onTouchedGroupHelpSetPath(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0822),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0822),
         });
     }
     private _onTouchedGroupHelpCanAcceptNotFollowingMessages(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0888),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0888),
         });
     }
 
@@ -166,12 +166,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1278);
-        this._labelLanguage.setLangText(Lang_Constants.TextType.B0627);
-        this._labelAutoScrollMap.setLangText(Lang_Constants.TextType.B0793);
-        this._labelIsReplayResultVisible.setLangText(Lang_Constants.TextType.B1241);
-        this._labelSetPath.setLangText(Lang_Constants.TextType.B0430);
-        this._labelCanAcceptNotFollowingMessages.setLangText(Lang_Constants.TextType.B1353);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1278);
+        this._labelLanguage.setLangText(Lang_TextType.TextType.B0627);
+        this._labelAutoScrollMap.setLangText(Lang_TextType.TextType.B0793);
+        this._labelIsReplayResultVisible.setLangText(Lang_TextType.TextType.B1241);
+        this._labelSetPath.setLangText(Lang_TextType.TextType.B0430);
+        this._labelCanAcceptNotFollowingMessages.setLangText(Lang_TextType.TextType.B1353);
 
         this._btnLanguage.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getCurrentLanguageType()) ?? Lang_Constants.UndefinedError);
         this._groupHelpAutoScrollMap.arrangeItems();

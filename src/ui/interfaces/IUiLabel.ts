@@ -1,6 +1,7 @@
 import {
-    type Ui_Interfaces_IUiComponent,
     type Lang_Constants,
+    type Lang_TextType,
+    type Ui_Interfaces_IUiComponent,
     type Ui_Types_UiHorizontalAlign,
     type Ui_Types_UiVerticalAlign,
 } from "../../internal.ts";
@@ -8,7 +9,7 @@ import {
 export interface IUiLabel extends Ui_Interfaces_IUiComponent.IUiComponent {
     getText(): string;
     setText(text: string): void;
-    setLangText(langTextType: Lang_Constants.TextType, languageType?: Lang_Constants.LanguageType): void;
+    setLangText(langTextType: Lang_TextType.TextType, languageType?: Lang_Constants.LanguageType): void;
     getFontFamily(): string;
     setFontFamily(fontFamily: string): void;
     getFontSize(): number;

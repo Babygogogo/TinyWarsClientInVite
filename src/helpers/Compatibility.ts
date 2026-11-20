@@ -1,7 +1,7 @@
 import {
     Egret_Web,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Notifications_Dispatcher,
 } from "../internal.ts";
@@ -153,7 +153,7 @@ function preventBrowserBack(): void {
 
     if (window.addEventListener) {
         window.addEventListener("popstate", () => {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0194));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0194));
         }, false);
     }
 }

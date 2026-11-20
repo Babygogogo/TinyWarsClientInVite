@@ -6,7 +6,7 @@ import {
     NormalMap_Model_NormalMapModel,
     Users_Model,
     Helpers_Text,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -72,13 +72,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0906);
-        this._labelMapName.setLangText(Lang_Constants.TextType.B0225);
-        this._labelRuleName.setLangText(Lang_Constants.TextType.B0318);
-        this._labelMyScore.setLangText(Lang_Constants.TextType.B0579);
-        this._labelMyTurnIndex.setLangText(Lang_Constants.TextType.Turns);
-        this._labelMyRank.setLangText(Lang_Constants.TextType.B0904);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0906);
+        this._labelMapName.setLangText(Lang_TextType.TextType.B0225);
+        this._labelRuleName.setLangText(Lang_TextType.TextType.B0318);
+        this._labelMyScore.setLangText(Lang_TextType.TextType.B0579);
+        this._labelMyTurnIndex.setLangText(Lang_TextType.TextType.Turns);
+        this._labelMyRank.setLangText(Lang_TextType.TextType.B0904);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
     }
 
     private async _updateComponentsForHighScore(): Promise<void> {

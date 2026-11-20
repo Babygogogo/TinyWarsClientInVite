@@ -4,7 +4,7 @@ import {
     Lang_Utils,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Parser,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_War,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
@@ -16,7 +16,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
         return null;
     }
 
-    return Lang_Utils.getText(Lang_Constants.TextType.A0830);
+    return Lang_Utils.getText(Lang_TextType.TextType.A0830);
 }
 export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecExpression>): string | null {
     if (data == null) {
@@ -24,22 +24,22 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
     }
 
     return [
-        Lang_Utils.getText(Lang_Constants.TextType.A0830),
+        Lang_Utils.getText(Lang_TextType.TextType.A0830),
         `${data.getExpression() ?? Lang_Constants.UndefinedError}`,
     ].join(`\n`);
 }
 export function getErrorTip(data: WecExpression, customCounterNameSet: Set<string>): string | null {
     const expression = data.getExpression() ?? "";
     if (expression !== expression.trim()) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0495);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0495);
     }
 
     if (!expression) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0129));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0129));
     }
 
     if (expression.length > WarEvents_Constants.Event.MaxExpressionLength) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0476);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0476);
     }
 
     const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString({

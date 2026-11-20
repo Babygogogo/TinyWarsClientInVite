@@ -5,7 +5,7 @@ import {
     Helpers_Misc,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_War,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_War,
     type BaseWar_Model_War,
     type ExpressionParsers_Types,
@@ -29,15 +29,15 @@ export class TaskObjective extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = TaskObjective.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(TaskObjective.VnId,                      { desc : Lang_Constants.TextType.A0719, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(TaskObjective.VnMain,                    { desc : Lang_Constants.TextType.A0720, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(TaskObjective.VnMaxProgress,             { desc : Lang_Constants.TextType.A0721, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(TaskObjective.VnCompletionScore,         { desc : Lang_Constants.TextType.A0722, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(TaskObjective.VnProgressScore,           { desc : Lang_Constants.TextType.A0723, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(TaskObjective.VnHidden,                  { desc : Lang_Constants.TextType.A0724, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(TaskObjective.VnProgress,                { desc : Lang_Constants.TextType.A0725, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(TaskObjective.VnProgressUpdaterDisabled, { desc : Lang_Constants.TextType.A0731, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(TaskObjective.VnWar,                     { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,    isExtension : false });
+        variables.set(TaskObjective.VnId,                      { desc : Lang_TextType.TextType.A0719, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(TaskObjective.VnMain,                    { desc : Lang_TextType.TextType.A0720, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(TaskObjective.VnMaxProgress,             { desc : Lang_TextType.TextType.A0721, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(TaskObjective.VnCompletionScore,         { desc : Lang_TextType.TextType.A0722, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(TaskObjective.VnProgressScore,           { desc : Lang_TextType.TextType.A0723, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(TaskObjective.VnHidden,                  { desc : Lang_TextType.TextType.A0724, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(TaskObjective.VnProgress,                { desc : Lang_TextType.TextType.A0725, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(TaskObjective.VnProgressUpdaterDisabled, { desc : Lang_TextType.TextType.A0731, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(TaskObjective.VnWar,                     { desc : Lang_TextType.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,    isExtension : false });
 
         return variables;
     }

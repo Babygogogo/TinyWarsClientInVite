@@ -10,7 +10,7 @@ import {
     GamePanels_Manager,
     Users_Proxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiInputEventType,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -79,7 +79,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgUserRequestEmailVerificationCode(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserRequestEmailVerificationCode"]>): void {
-        FloatText.showLang(Lang_Constants.TextType.A0863);
+        FloatText.showLang(Lang_TextType.TextType.A0863);
 
         _lastRequestTimestamp = (((Helpers_Misc.getExisted(e.data)).msg).getEndTimestamp() ?? 0) - Emails_Constants.Common.VerificationCodeExpiration;
         this._updateLabelEmailState();
@@ -89,7 +89,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgUserVerifyEmail(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         this._updateLabelEmailState();
     }
 
@@ -99,7 +99,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0862),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0862),
         });
     }
 
@@ -110,16 +110,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnRequest(): void {
         const address = this._inputEmail.trimInputText() ?? ``;
         if (!validateEmail(address)) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1333)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1333)));
             return;
         }
 
         const cd = Emails_Constants.Common.VerificationCodeRefreshInterval - (Timer_TimerModel.getServerTimestamp() - _lastRequestTimestamp);
         if (cd >= 0) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0204, cd));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0204, cd));
         } else {
             Users_Proxy.reqUserRequestEmailVerificationCode(address);
-            FloatText.showLang(Lang_Constants.TextType.A0867);
+            FloatText.showLang(Lang_TextType.TextType.A0867);
         }
     }
 
@@ -129,20 +129,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnVerify(): void {
         const text = this._inputVerificationCode.trimInputText() ?? ``;
         if (text.length !== Emails_Constants.Common.VerificationCodeLength) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1334)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1334)));
         } else {
             Users_Proxy.reqUserVerifyEmail(text);
         }
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1332);
-        this._labelEmail.setLangText(Lang_Constants.TextType.B1333);
-        this._labelVerificationCode.setLangText(Lang_Constants.TextType.B1334);
-        this._btnRequest.setLangText(Lang_Constants.TextType.B0382);
-        this._btnVerify.setLangText(Lang_Constants.TextType.B1335);
-        this._labelStep1.setLangText(Lang_Constants.TextType.A0860);
-        this._labelStep2.setLangText(Lang_Constants.TextType.A0861);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1332);
+        this._labelEmail.setLangText(Lang_TextType.TextType.B1333);
+        this._labelVerificationCode.setLangText(Lang_TextType.TextType.B1334);
+        this._btnRequest.setLangText(Lang_TextType.TextType.B0382);
+        this._btnVerify.setLangText(Lang_TextType.TextType.B1335);
+        this._labelStep1.setLangText(Lang_TextType.TextType.A0860);
+        this._labelStep2.setLangText(Lang_TextType.TextType.A0861);
         this._updateLabelEmailState();
 
         this._groupStep1.arrangeItems();
@@ -174,13 +174,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const label     = this._labelEmailState;
         const selfInfo  = Users_Model.getSelfInfo();
         if ((text) && (text === selfInfo?.getEmailAddress())) {
-            label.setLangText(Lang_Constants.TextType.A0864);
+            label.setLangText(Lang_TextType.TextType.A0864);
             label.setTextColor(Graphics_Constants.ColorValue.Green);
         } else if ((text) && (text === selfInfo?.getUserComplexInfo()?.getUnverifiedEmailAddress())) {
-            label.setLangText(Lang_Constants.TextType.A0866);
+            label.setLangText(Lang_TextType.TextType.A0866);
             label.setTextColor(Graphics_Constants.ColorValue.Yellow);
         } else {
-            label.setLangText(Lang_Constants.TextType.A0865);
+            label.setLangText(Lang_TextType.TextType.A0865);
             label.setTextColor(Graphics_Constants.ColorValue.Dark);
         }
     }

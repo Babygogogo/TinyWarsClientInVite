@@ -1,7 +1,7 @@
 import {
     ValueAndComparators_Constants,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 import type { ValueAndComparator } from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";

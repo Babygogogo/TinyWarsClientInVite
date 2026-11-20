@@ -9,7 +9,7 @@ import {
     GamePanels_Manager,
     Campaigns_Managements_Gateway,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -64,8 +64,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnCreateCampaign(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1134),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1134),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => Campaigns_Managements_Gateway.reqCmCreateCampaign(),
         });
     }
@@ -75,7 +75,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCmCreateCampaign(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         this._updateComponentsForListCampaign();
     }
 
@@ -90,8 +90,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1133);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1133);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
     }
 
     private _updateTopButtons(): void {
@@ -161,7 +161,7 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnModify.setLangText(Lang_Constants.TextType.B0317);
+        this._btnModify.setLangText(Lang_TextType.TextType.B0317);
         this._updateLabelName();
     }
 
@@ -176,7 +176,7 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
         const campaignInfo = await Campaigns_Mains_Provider.getCampaignInfo(campaignId);
         if (campaignId === this.getOpenData()?.campaignId) {
-            label.setText(`#${campaignId} ${Lang_Utils.getLanguageText({ textArray : campaignInfo?.getNameArray() }) ?? Lang_Utils.getText(Lang_Constants.TextType.B0277)}`);
+            label.setText(`#${campaignId} ${Lang_Utils.getLanguageText({ textArray : campaignInfo?.getNameArray() }) ?? Lang_Utils.getText(Lang_TextType.TextType.B0277)}`);
         }
     }
 }

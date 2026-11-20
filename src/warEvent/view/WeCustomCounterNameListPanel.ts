@@ -7,7 +7,7 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -68,7 +68,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0658),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0658),
         });
     }
 
@@ -79,8 +79,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1143);
-        this._labelTips.setLangText(Lang_Constants.TextType.A0785);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1143);
+        this._labelTips.setLangText(Lang_TextType.TextType.A0785);
     }
     private async _updateListName(): Promise<void> {
         const openData = this.getOpenData();
@@ -155,18 +155,18 @@ class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
         const currentText   = nameData?.getName() ?? ``;
         if (openData.isReviewing) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B1143)} #${id}`,
-                getContent : () => currentText || `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`,
+                getTitle   : () => `${Lang_Utils.getText(Lang_TextType.TextType.B1143)} #${id}`,
+                getContent : () => currentText || `(${Lang_Utils.getText(Lang_TextType.TextType.B0277)})`,
             });
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0162),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0162),
             currentValue : currentText,
             charRestrict : `a-zA-Z0-9`,
             maxChars     : 20,
-            tips         : Lang_Utils.getText(Lang_Constants.TextType.A0659),
+            tips         : Lang_Utils.getText(Lang_TextType.TextType.A0659),
             canBeEmpty   : true,
             isMultiLine  : false,
             callback     : panel => {
@@ -181,11 +181,11 @@ class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
                 }
 
                 if (!CustomCounters_Utils.checkIsValidName(text)) {
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0162)));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0162)));
                     return;
                 }
                 if (dataArray.some(v => v.getName() === text)) {
-                    FloatText.showLang(Lang_Constants.TextType.A0660);
+                    FloatText.showLang(Lang_TextType.TextType.A0660);
                     return;
                 }
 

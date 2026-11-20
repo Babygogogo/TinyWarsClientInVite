@@ -1,6 +1,6 @@
 import {
     GameConfigs_GameConfig,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Players_Constants,
     TileObjects_Utils,
     Tiles_TileViewBox,
@@ -86,8 +86,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1296);
-        this._labelTotal.setLangText(Lang_Constants.TextType.B1295);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1296);
+        this._labelTotal.setLangText(Lang_TextType.TextType.B1295);
 
         Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this._groupTitle, false);
     }

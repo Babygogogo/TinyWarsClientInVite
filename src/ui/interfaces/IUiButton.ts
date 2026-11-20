@@ -1,7 +1,8 @@
 import {
-    type Ui_Interfaces_IUiContainer,
     type Lang_Constants,
+    type Lang_TextType,
     type Sounds_Constants,
+    type Ui_Interfaces_IUiContainer,
 } from "../../internal.ts";
 
 export interface IUiButton extends Ui_Interfaces_IUiContainer.IUiContainer {
@@ -18,10 +19,10 @@ export interface IUiButton extends Ui_Interfaces_IUiContainer.IUiContainer {
     setTextColor(color: number): void;
 
     setText(text: string): void;
-    setLangText(langTextType: Lang_Constants.TextType, languageType?: Lang_Constants.LanguageType): void;
+    setLangText(langTextType: Lang_TextType.TextType, languageType?: Lang_Constants.LanguageType): void;
 
     setExtraText(text: string): void;
-    setExtraLangText(langTextType: Lang_Constants.TextType, languageType?: Lang_Constants.LanguageType): void;
+    setExtraLangText(langTextType: Lang_TextType.TextType, languageType?: Lang_Constants.LanguageType): void;
 
     setShortSfxCode(code: Sounds_Constants.ShortSfxCode): void;
     getShortSfxCode(): Sounds_Constants.ShortSfxCode;

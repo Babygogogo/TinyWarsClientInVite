@@ -16,7 +16,7 @@ import {
     GamePanels_Dict,
     Lang_Utils,
     GameModes_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
 } from "../../internal.ts";
 
 export async function checkIsRedForStartButton(): Promise<boolean> {
@@ -110,7 +110,7 @@ export function openMultiPlayerModePanel(currentMode: GameModes_Constants.ModeId
         ],
         currentNumber     : currentMode,
         keepOrder         : true,
-        getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B1013),
+        getTitleText      : () => Lang_Utils.getText(Lang_TextType.TextType.B1013),
         getNumberMainText : mode => Lang_Utils.getGameModeName(mode) ?? Lang_Constants.UndefinedError,
         getNumberHelpText : mode => Lang_Utils.getGameModeHelpText(mode) ?? Lang_Constants.UndefinedError,
         checkIsNumberRed  : mode => {

@@ -7,7 +7,7 @@ import {
     Helpers_Misc,
     GamePanels_Manager,
     Users_Proxy,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -135,10 +135,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0236);
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
-        this._labelNameTitle1.setLangText(Lang_Constants.TextType.B0175);
-        this._labelNameTitle2.setLangText(Lang_Constants.TextType.B0175);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0236);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0040);
+        this._labelNameTitle1.setLangText(Lang_TextType.TextType.B0175);
+        this._labelNameTitle2.setLangText(Lang_TextType.TextType.B0175);
         this._layoutTitle.arrangeItems();
     }
 }

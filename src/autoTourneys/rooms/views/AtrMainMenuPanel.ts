@@ -11,7 +11,7 @@ import {
     GameModes_Constants,
     AutoTourneys_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Graphics_Constants,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -107,7 +107,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnRegister(): Promise<void> {
         const tourneyIdArray = (await AutoTourneys_Mains_Provider.getSinglePhaseInfoArrayForPhase(AutoTourneys_Constants.PhaseId.Registration))?.map(v => v.getTourneyId());
         if (tourneyIdArray.length <= 0) {
-            FloatText.showLang(Lang_Constants.TextType.A0403);
+            FloatText.showLang(Lang_TextType.TextType.A0403);
         } else {
             for (const tourneyId of tourneyIdArray) {
                 AutoTourneys_Mains_Provider.setIsNotifiedForRegistration(tourneyId, true);
@@ -132,7 +132,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnPreviewMaps(): Promise<void> {
         const tourneyIdArray = (await AutoTourneys_Mains_Provider.getAtPhaseInfo())?.infoArray.map(v => v.getTourneyId()) ?? [];
         if (tourneyIdArray.length <= 0) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
 
@@ -143,7 +143,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private async _onTouchedBtnTourneyInfo(): Promise<void> {
         if ((await AutoTourneys_Mains_Provider.getLastTourneyId()) == null) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtTourneyInfoPanel, void 0);
         }
@@ -192,18 +192,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         const languageType2 = Lang_Utils.getSecondaryLanguageType();
-        this._labelMode1.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1378)}\n${Lang_Utils.getText(Lang_Constants.TextType.B1379)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1022)}`);
-        this._labelMode2.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1378, languageType2)}\n${Lang_Utils.getText(Lang_Constants.TextType.B1379, languageType2)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1022, languageType2)}`);
-        this._labelRegister1.setLangText(Lang_Constants.TextType.B1380);
-        this._labelRegister2.setLangText(Lang_Constants.TextType.B1380, languageType2);
-        this._labelMyRoom1.setLangText(Lang_Constants.TextType.B0410);
-        this._labelMyRoom2.setLangText(Lang_Constants.TextType.B0410, languageType2);
-        this._labelContinueWar1.setLangText(Lang_Constants.TextType.B0024);
-        this._labelContinueWar2.setLangText(Lang_Constants.TextType.B0024, languageType2);
-        this._labelPreviewMaps1.setLangText(Lang_Constants.TextType.B0594);
-        this._labelPreviewMaps2.setLangText(Lang_Constants.TextType.B0594, languageType2);
-        this._labelTourneyInfo1.setLangText(Lang_Constants.TextType.B1381);
-        this._labelTourneyInfo2.setLangText(Lang_Constants.TextType.B1381, languageType2);
+        this._labelMode1.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1378)}\n${Lang_Utils.getText(Lang_TextType.TextType.B1379)}: ${Lang_Utils.getText(Lang_TextType.TextType.B1022)}`);
+        this._labelMode2.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1378, languageType2)}\n${Lang_Utils.getText(Lang_TextType.TextType.B1379, languageType2)}: ${Lang_Utils.getText(Lang_TextType.TextType.B1022, languageType2)}`);
+        this._labelRegister1.setLangText(Lang_TextType.TextType.B1380);
+        this._labelRegister2.setLangText(Lang_TextType.TextType.B1380, languageType2);
+        this._labelMyRoom1.setLangText(Lang_TextType.TextType.B0410);
+        this._labelMyRoom2.setLangText(Lang_TextType.TextType.B0410, languageType2);
+        this._labelContinueWar1.setLangText(Lang_TextType.TextType.B0024);
+        this._labelContinueWar2.setLangText(Lang_TextType.TextType.B0024, languageType2);
+        this._labelPreviewMaps1.setLangText(Lang_TextType.TextType.B0594);
+        this._labelPreviewMaps2.setLangText(Lang_TextType.TextType.B0594, languageType2);
+        this._labelTourneyInfo1.setLangText(Lang_TextType.TextType.B1381);
+        this._labelTourneyInfo2.setLangText(Lang_TextType.TextType.B1381, languageType2);
 
         this._layoutMode.arrangeItems();
         this._layoutRegister.arrangeItems();

@@ -8,7 +8,7 @@ import {
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiLabel,
     type Ui_Interfaces_IUiLayer,
-    type Lang_Constants,
+    type Lang_TextType,
 } from "./internal.ts";
 
 const StartY    = 100;
@@ -30,7 +30,7 @@ export function show(text: string): void {
     newUiText.y     = StartY;
     Container.addUiChild(newUiText);
 }
-export function showLang(langTextType: Lang_Constants.TextType): void {
+export function showLang(langTextType: Lang_TextType.TextType): void {
     show(Lang_Utils.getText(langTextType));
 }
 

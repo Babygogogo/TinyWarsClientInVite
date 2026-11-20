@@ -4,7 +4,7 @@ import {
     NormalMap_Model_NormalMapModel,
     Lang_Utils,
     Numbers_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
@@ -71,13 +71,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _updateView(): Promise<void> {
         {
-            this._labelTitle.setLangText(Lang_Constants.TextType.B0223);
-            this._labelMapNameTitle.setLangText(Lang_Constants.TextType.B0225);
-            this._labelMapDesignerTitle.setLangText(Lang_Constants.TextType.B0163);
-            this._labelTurnsTitle.setLangText(Lang_Constants.TextType.Turns);
-            this._labelOperationsTitle.setLangText(Lang_Constants.TextType.B1292);
-            this._labelScorePreviewTitle.setLangText(Lang_Constants.TextType.B1450);
-            this._labelTips.setLangText(Lang_Constants.TextType.A0379);
+            this._labelTitle.setLangText(Lang_TextType.TextType.B0223);
+            this._labelMapNameTitle.setLangText(Lang_TextType.TextType.B0225);
+            this._labelMapDesignerTitle.setLangText(Lang_TextType.TextType.B0163);
+            this._labelTurnsTitle.setLangText(Lang_TextType.TextType.Turns);
+            this._labelOperationsTitle.setLangText(Lang_TextType.TextType.B1292);
+            this._labelScorePreviewTitle.setLangText(Lang_TextType.TextType.B1450);
+            this._labelTips.setLangText(Lang_TextType.TextType.A0379);
         }
 
         const war = this.getOpenData()?.war;

@@ -343,6 +343,7 @@ export * as Common_View_CommonShowSelectedCoCategoryIdPanel from "./common/view/
 export * as Common_View_CommonShowUnitTypePanel from "./common/view/CommonShowUnitTypePanel.ts";
 export * as Common_View_CommonTileChartPanel from "./common/view/CommonTileChartPanel.ts";
 export * as Lang_Constants from "./lang/Constants.ts";
+export * as Lang_TextType from "./lang/TextType.ts";
 export * as Common_View_CommonTutorialPanel from "./common/view/CommonTutorialPanel.ts";
 export * as Common_View_CommonWarAdvancedSettingsPage from "./common/view/CommonWarAdvancedSettingsPage.ts";
 export * as Common_View_CommonWarBasicSettingsPage from "./common/view/CommonWarBasicSettingsPage.ts";

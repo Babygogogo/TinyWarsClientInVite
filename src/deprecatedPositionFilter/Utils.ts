@@ -6,7 +6,7 @@ import {
     Helpers_Misc,
     Helpers_Collection,
     AuxiliaryTypes_GridIndex,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type Tiles_Tile,
     type Tiles_TileMap,
     type AuxiliaryTypes_MapSize,
@@ -98,19 +98,19 @@ export function checkIsEmpty(data: AuxiliaryTypes_PositionFilter.PositionFilter)
 export function getDesc(data: AuxiliaryTypes_PositionFilter.PositionFilter): string {
     const conGridXArray         = data.getConGridXArray();
     const textForConGridXArray  = conGridXArray?.length
-        ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0182, conGridXArray.join(`/`))
+        ? Lang_Utils.getFormattedText(Lang_TextType.TextType.F0182, conGridXArray.join(`/`))
         : null;
 
     const conGridYArray         = data.getConGridYArray();
     const textForConGridYArray  = conGridYArray?.length
-        ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0183, conGridYArray.join(`/`))
+        ? Lang_Utils.getFormattedText(Lang_TextType.TextType.F0183, conGridYArray.join(`/`))
         : null;
 
     const conLocationIdArray        = data.getConLocationIdArray();
     const conLocationMinDistance    = data.getConLocationMinDistance() ?? ValueAndComparators_Constants.Equal0;
     const textForConLocationIdArray = conLocationIdArray?.length
         ? Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0170,
+            Lang_TextType.TextType.F0170,
             conLocationIdArray.join(`/`),
             Lang_Utils.getComparatorName(conLocationMinDistance.getComparator()),
             conLocationMinDistance.getValue(),
@@ -121,7 +121,7 @@ export function getDesc(data: AuxiliaryTypes_PositionFilter.PositionFilter): str
     const conGridIndexMinDistance   = data.getConGridIndexMinDistance() ?? ValueAndComparators_Constants.Equal0;
     const textForConGridIndexArray  = conGridIndexArray?.length
         ? Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0169,
+            Lang_TextType.TextType.F0169,
             conGridIndexArray.map(v => `(${v.getX()},${v.getY()})`).join(`/`),
             Lang_Utils.getComparatorName(conGridIndexMinDistance.getComparator()),
             conGridIndexMinDistance.getValue(),
@@ -135,28 +135,28 @@ export function getDesc(data: AuxiliaryTypes_PositionFilter.PositionFilter): str
         textForConGridIndexArray,
     ]);
     return !textArrayForSubConditions.length
-        ? Lang_Utils.getText(Lang_Constants.TextType.A0423)
+        ? Lang_Utils.getText(Lang_TextType.TextType.A0423)
         : Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0184,
-            textArrayForSubConditions.join(Lang_Utils.getText(Lang_Constants.TextType.B0783)),
+            Lang_TextType.TextType.F0184,
+            textArrayForSubConditions.join(Lang_Utils.getText(Lang_TextType.TextType.B0783)),
         );
 }
 export function getDescForEmbed(data: AuxiliaryTypes_PositionFilter.PositionFilter): string | null {
     const conGridXArray         = data.getConGridXArray();
     const textForConGridXArray  = conGridXArray?.length
-        ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0182, conGridXArray.join(`/`))
+        ? Lang_Utils.getFormattedText(Lang_TextType.TextType.F0182, conGridXArray.join(`/`))
         : null;
 
     const conGridYArray         = data.getConGridYArray();
     const textForConGridYArray  = conGridYArray?.length
-        ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0183, conGridYArray.join(`/`))
+        ? Lang_Utils.getFormattedText(Lang_TextType.TextType.F0183, conGridYArray.join(`/`))
         : null;
 
     const conLocationIdArray        = data.getConLocationIdArray();
     const conLocationMinDistance    = data.getConLocationMinDistance() ?? ValueAndComparators_Constants.Equal0;
     const textForConLocationIdArray = conLocationIdArray?.length
         ? Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0170,
+            Lang_TextType.TextType.F0170,
             conLocationIdArray.join(`/`),
             Lang_Utils.getComparatorName(conLocationMinDistance.getComparator()),
             conLocationMinDistance.getValue(),
@@ -167,7 +167,7 @@ export function getDescForEmbed(data: AuxiliaryTypes_PositionFilter.PositionFilt
     const conGridIndexMinDistance   = data.getConGridIndexMinDistance() ?? ValueAndComparators_Constants.Equal0;
     const textForConGridIndexArray  = conGridIndexArray?.length
         ? Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0169,
+            Lang_TextType.TextType.F0169,
             conGridIndexArray.map(v => `(${v.getX()},${v.getY()})`).join(`/`),
             Lang_Utils.getComparatorName(conGridIndexMinDistance.getComparator()),
             conGridIndexMinDistance.getValue(),
@@ -182,37 +182,37 @@ export function getDescForEmbed(data: AuxiliaryTypes_PositionFilter.PositionFilt
     ]);
     return !textArrayForSubConditions.length
         ? null
-        : textArrayForSubConditions.join(Lang_Utils.getText(Lang_Constants.TextType.B0783));
+        : textArrayForSubConditions.join(Lang_Utils.getText(Lang_TextType.TextType.B0783));
 }
 
 export function getErrorTip(data: AuxiliaryTypes_PositionFilter.PositionFilter, mapSize: AuxiliaryTypes_MapSize.MapSize): string | null {
     if (!mapSize.checkIsValidGridXSubset(data.getConGridXArray())) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1071));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1071));
     }
 
     if (!mapSize.checkIsValidGridXSubset(data.getConGridYArray())) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1072));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1072));
     }
 
     if (!Locations_Utils.checkIsValidLocationIdSubset(data.getConLocationIdArray())) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Location));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Location));
     }
 
     if (!mapSize.checkIsValidGridIndexSubset(data.getConGridIndexArray())) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0531));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0531));
     }
 
     {
         const conLocationMinDistance = data.getConLocationMinDistance();
         if ((conLocationMinDistance != null) && (!ValueAndComparators_Utils.checkIsValid(conLocationMinDistance))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1062));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1062));
         }
     }
 
     {
         const conGridIndexMinDistance = data.getConGridIndexMinDistance();
         if ((conGridIndexMinDistance != null) && (!ValueAndComparators_Utils.checkIsValid(conGridIndexMinDistance))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1063));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1063));
         }
     }
 

@@ -1,21 +1,22 @@
 import {
-    Stages_Constants,
-    Helpers_ImageSource,
-    GamePanels_Dict,
-    Helpers_Misc,
-    Lang_Utils,
     GameConfigs_Provider,
-    Users_Model,
-    Numbers_Utils,
-    MultiPlayerWar_Model_MpwModel,
-    WatchWar_Model_WwModel,
+    GamePanels_Dict,
     GamePanels_Manager,
-    Sounds_SoundPlayer,
-    WatchWar_Model_WwProxy,
-    Sounds_Constants,
+    Helpers_ImageSource,
+    Helpers_Misc,
     Lang_Constants,
+    Lang_TextType,
+    Lang_Utils,
+    MultiPlayerWar_Model_MpwModel,
+    Numbers_Utils,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Stages_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
+    Users_Model,
+    WatchWar_Model_WwModel,
+    WatchWar_Model_WwProxy,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -105,7 +106,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this.closePanel();
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0083, userIds.length),
+                getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0083, userIds.length),
                 callback   : () => {
                     WatchWar_Model_WwProxy.reqWatchMakeRequest(warId, userIds);
                     this.closePanel();
@@ -131,8 +132,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0207);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0207);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
     }
 
     private async _generateDataForListPlayer(): Promise<DataForPlayerRenderer[]> {
@@ -248,22 +249,22 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         if (!playerProgressInfo.getIsAlive()) {
             groupAccept.setIsVisible(false);
             labelState.setIsVisible(true);
-            labelState.setLangText(Lang_Constants.TextType.B0056);
+            labelState.setLangText(Lang_TextType.TextType.B0056);
         } else {
             if (userId === Users_Model.getSelfUserId()) {
                 groupAccept.setIsVisible(false);
                 labelState.setIsVisible(true);
-                labelState.setLangText(Lang_Constants.TextType.B0216);
+                labelState.setLangText(Lang_TextType.TextType.B0216);
             } else {
                 if (openData.isRequested) {
                     groupAccept.setIsVisible(false);
                     labelState.setIsVisible(true);
-                    labelState.setLangText(Lang_Constants.TextType.B0212);
+                    labelState.setLangText(Lang_TextType.TextType.B0212);
                 } else {
                     if (openData.isWatching) {
                         groupAccept.setIsVisible(false);
                         labelState.setIsVisible(true);
-                        labelState.setLangText(Lang_Constants.TextType.B0213);
+                        labelState.setLangText(Lang_TextType.TextType.B0213);
                     } else {
                         groupAccept.setIsVisible(true);
                         labelState.setIsVisible(false);
@@ -274,7 +275,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         }
 
         this._labelUserId.setText(`#${userId}`);
-        this._labelName.setText(userId == null ? Lang_Utils.getText(Lang_Constants.TextType.B0607) : await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError);
+        this._labelName.setText(userId == null ? Lang_Utils.getText(Lang_TextType.TextType.B0607) : await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
 

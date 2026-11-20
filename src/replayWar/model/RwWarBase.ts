@@ -8,7 +8,7 @@ import {
     HalfwayReplayWar_Model_HrwWar,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     LocalData_Storage,
     Notifications_Dispatcher,
@@ -148,7 +148,7 @@ export abstract class RwWarBase extends BaseWar_Model_War.War {
 
     public getWarOperationDescSuffix(): string {
         const lastOperationId = this._getLastOperationId();
-        return `(${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${Lang_Utils.getText(Lang_Constants.TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`;
+        return `(${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${Lang_Utils.getText(Lang_TextType.TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`;
     }
 
     public getSettingsForMcw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMcw> {
@@ -413,7 +413,7 @@ export abstract class RwWarBase extends BaseWar_Model_War.War {
 
         if (floatText) {
             const lastOperationId = this._getLastOperationId();
-            FloatText.show(`${Lang_Utils.getText(Lang_Constants.TextType.A0045)} (${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${Lang_Utils.getText(Lang_Constants.TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`);
+            FloatText.show(`${Lang_Utils.getText(Lang_TextType.TextType.A0045)} (${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${Lang_Utils.getText(Lang_TextType.TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`);
         }
     }
 
@@ -484,7 +484,7 @@ export abstract class RwWarBase extends BaseWar_Model_War.War {
             (this.checkIsInEnd())        ||
             (this.getIsExecutingAction())
         ) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0110));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.B0110));
         } else {
             await this._doExecuteAction(action, isFastExecute);
         }

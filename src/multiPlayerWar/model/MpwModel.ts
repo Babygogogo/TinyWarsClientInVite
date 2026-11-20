@@ -18,7 +18,7 @@ import {
     HalfwayReplayWar_Model_HrwModel,
     Helpers_GameFlow,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     LocalData_Storage,
     Logger,
@@ -303,19 +303,19 @@ export function updateOnMsgMpwCommonSetGridMarkList(data: MpwCommonSetGridMarkLi
 export async function updateOnMsgMpwCommonBroadcastGameStart(data: MpwCommonBroadcastGameStartResponse): Promise<void> {
     const desc = await getGameStartDesc(data);
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-        getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0392),
+        getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0392),
         getContent : () => desc,
         callback   : async () => {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+                title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
             });
 
             const warData = await getOngoingWarData(data.getWarId() ?? 0);
             if (warData) {
                 Helpers_GameFlow.gotoMultiPlayerWar(warData);
             } else {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             }
 
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
@@ -1324,8 +1324,8 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Model_MpwWar
         if (status === Wars_Constants.SyncStatusId.EndedOrNotExists) {
             war.setIsEnded(true);
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0035),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0035),
                 callback   : () => {
                     Helpers_GameFlow.gotoMyWarListPanel(war.getWarType());
                 },
@@ -1335,8 +1335,8 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Model_MpwWar
         } else if (status === Wars_Constants.SyncStatusId.NotJoined) {
             war.setIsEnded(true);
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0037),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0037),
                 callback   : () => {
                     Helpers_GameFlow.gotoMyWarListPanel(war.getWarType());
                 },
@@ -1351,7 +1351,7 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Model_MpwWar
                     throw Helpers_Misc.newError(`MpwModel.updateOnPlayerSyncWar() empty warData 1.`);
                 } else {
                     await Helpers_GameFlow.gotoMultiPlayerWar(warData);
-                    FloatText.showLang(Lang_Constants.TextType.A0038);
+                    FloatText.showLang(Lang_TextType.TextType.A0038);
                 }
                 return;
 
@@ -1362,13 +1362,13 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Model_MpwWar
                         throw Helpers_Misc.newError(`MpwModel.updateOnPlayerSyncWar() empty warData 2.`);
                     } else {
                         await Helpers_GameFlow.gotoMultiPlayerWar(warData);
-                        FloatText.showLang(Lang_Constants.TextType.A0036);
+                        FloatText.showLang(Lang_TextType.TextType.A0036);
                     }
                     return;
 
                 } else {
                     if (requestType === Wars_Constants.SyncRequestTypeId.PlayerRequest) {
-                        FloatText.showLang(Lang_Constants.TextType.A0038);
+                        FloatText.showLang(Lang_TextType.TextType.A0038);
                     } else {
                         // Nothing to do.
                     }
@@ -1379,7 +1379,7 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Model_MpwWar
         } else if (status === Wars_Constants.SyncStatusId.Synchronized) {
             const requestType = syncWarData.getRequestType() as Wars_Constants.SyncRequestTypeId;
             if (requestType === Wars_Constants.SyncRequestTypeId.PlayerRequest) {
-                FloatText.showLang(Lang_Constants.TextType.A0038);
+                FloatText.showLang(Lang_TextType.TextType.A0038);
             } else {
                 // Nothing to do.
             }
@@ -1389,8 +1389,8 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Model_MpwWar
             // Something wrong!!
             war.setIsEnded(true);
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0037),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0037),
                 callback   : () => Helpers_GameFlow.gotoLobby(),
             });
             return;
@@ -1413,11 +1413,11 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Model_MpwWar
         const callbackForReplay = () => Helpers_GameFlow.gotoRwReplayListPanel();
         if (war.getDrawVoteManager().checkIsDraw()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getTitle          : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0030),
-                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0588),
+                getTitle          : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0030),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B0588),
                 callback          : callbackForGoBack,
-                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0092),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0092),
                 callbackOnCancel  : callbackForReplay,
             });
         } else {
@@ -1425,20 +1425,20 @@ async function checkAndSyncWarOrRunCachedAction(war: MultiPlayerWar_Model_MpwWar
             const selfPlayer = war.getPlayerManager().getPlayerByUserId(selfUserId);
             if (selfPlayer == null) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getTitle          : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                    getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0035),
-                    getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0588),
+                    getTitle          : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                    getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0035),
+                    getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B0588),
                     callback          : callbackForGoBack,
-                    getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0092),
+                    getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0092),
                     callbackOnCancel  : callbackForReplay,
                 });
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getTitle          : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                    getContent        : () => selfPlayer.getAliveState() === Players_Constants.AliveStateId.Dead ? Lang_Utils.getText(Lang_Constants.TextType.A0023) : Lang_Utils.getText(Lang_Constants.TextType.A0022),
-                    getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0588),
+                    getTitle          : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                    getContent        : () => selfPlayer.getAliveState() === Players_Constants.AliveStateId.Dead ? Lang_Utils.getText(Lang_TextType.TextType.A0023) : Lang_Utils.getText(Lang_TextType.TextType.A0022),
+                    getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B0588),
                     callback          : callbackForGoBack,
-                    getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0092),
+                    getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0092),
                     callbackOnCancel  : callbackForReplay,
                 });
             }
@@ -1475,10 +1475,10 @@ async function getGameStartDesc(data: MpwCommonBroadcastGameStartResponse): Prom
 
     const normalMapId = data.getNormalMapId();
     return [
-        Lang_Utils.getFormattedText(Lang_Constants.TextType.F0027, normalMapId != null
+        Lang_Utils.getFormattedText(Lang_TextType.TextType.F0027, normalMapId != null
             ? await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId)
-            : Lang_Utils.getText(Lang_Constants.TextType.B0557)),
+            : Lang_Utils.getText(Lang_TextType.TextType.B0557)),
         ...playerArray,
-        Lang_Utils.getText(Lang_Constants.TextType.A0125),
+        Lang_Utils.getText(Lang_TextType.TextType.A0125),
     ].join("\n");
 }

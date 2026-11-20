@@ -10,7 +10,7 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
     WarEvents_Actions_Constants_PersistentModifyPlayerAttribute,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type Players_Player,
 } from "../../../internal.ts";
@@ -100,7 +100,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0043, data.getConPlayerFilter() ?? Lang_Constants.UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0043, data.getConPlayerFilter() ?? Lang_Constants.UndefinedError);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentModifyPlayerAttribute>): string | null {
     if (data == null) {
@@ -108,7 +108,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     }
 
     const additionalText = [
-        `${Lang_Utils.getText(Lang_Constants.TextType.B1170)}: ${Lang_Utils.getTextForYesOrNo(data.getIsEffectiveInMpw())}`,
+        `${Lang_Utils.getText(Lang_TextType.TextType.B1170)}: ${Lang_Utils.getTextForYesOrNo(data.getIsEffectiveInMpw())}`,
         data.getActBannedUnitTypeArray()             ? `${WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActBannedUnitTypeArray.getTitleText()}: ${data.getActBannedUnitTypeArray()}`                         : null,
         data.getActUnbannedUnitTypeArray()           ? `${WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActUnbannedUnitTypeArray.getTitleText()}: ${data.getActUnbannedUnitTypeArray()}`                     : null,
         data.getActCanActivateCoSkill()              ? `${WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCanActivateCoSkill.getTitleText()}: ${data.getActCanActivateCoSkill()}`                           : null,
@@ -117,7 +117,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         data.getActAiUnitProductionBonusScore()      ? `${WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActAiUnitProductionBonusScore.getTitleText()}: ${data.getActAiUnitProductionBonusScore()}`           : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0043, data.getConPlayerFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0043, data.getConPlayerFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 
 export function getErrorTip(data: WeaPersistentModifyPlayerAttribute, customCounterNameSet: Set<string>): string | null {
@@ -129,7 +129,7 @@ export function getErrorTip(data: WeaPersistentModifyPlayerAttribute, customCoun
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -141,7 +141,7 @@ export function getErrorTip(data: WeaPersistentModifyPlayerAttribute, customCoun
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -153,7 +153,7 @@ export function getErrorTip(data: WeaPersistentModifyPlayerAttribute, customCoun
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -165,7 +165,7 @@ export function getErrorTip(data: WeaPersistentModifyPlayerAttribute, customCoun
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -177,7 +177,7 @@ export function getErrorTip(data: WeaPersistentModifyPlayerAttribute, customCoun
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -189,7 +189,7 @@ export function getErrorTip(data: WeaPersistentModifyPlayerAttribute, customCoun
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -201,7 +201,7 @@ export function getErrorTip(data: WeaPersistentModifyPlayerAttribute, customCoun
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

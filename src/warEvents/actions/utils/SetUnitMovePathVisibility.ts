@@ -9,7 +9,7 @@ import {
     ExpressionParsers_Parser,
     ExpressionParsers_Contexts_Position,
     ExpressionParsers_Results_Position,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -48,7 +48,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0207, data.getConPositionFilter() ?? Lang_Constants.UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0207, data.getConPositionFilter() ?? Lang_Constants.UndefinedError);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetUnitMovePathVisibility>): string | null {
     if (data == null) {
@@ -59,7 +59,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         data.getActVisibilityArray() ? `${WarEvents_Actions_Constants_SetUnitMovePathVisibility.ExpressionInfoDict.ActVisibilityArray.getTitleText()}: ${data.getActVisibilityArray()}` : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0207, data.getConPositionFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0207, data.getConPositionFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 
 export function getErrorTip(data: WeaSetUnitMovePathVisibility, customCounterNameSet: Set<string>): string | null {
@@ -71,7 +71,7 @@ export function getErrorTip(data: WeaSetUnitMovePathVisibility, customCounterNam
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -83,7 +83,7 @@ export function getErrorTip(data: WeaSetUnitMovePathVisibility, customCounterNam
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

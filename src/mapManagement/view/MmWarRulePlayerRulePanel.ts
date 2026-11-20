@@ -13,7 +13,7 @@ import {
     Sounds_SoundPlayer,
     PlayerRules_Constants,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type Ui_Types_UiListItemData,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -93,12 +93,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0785),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0785),
         });
     }
     private _onTouchedBtnBatch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0940),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0940),
             callback   : () => {
                 this._setIsBatch(true);
                 this._updateBtnBatch();
@@ -119,12 +119,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0407)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0407)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
         this._updateBtnBatch();
     }
     private _updateBtnBatch(): void {
-        this._btnBatch.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1373)}: ${Lang_Utils.getTextForYesOrNo(this._isBatch)}`);
+        this._btnBatch.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1373)}: ${Lang_Utils.getTextForYesOrNo(this._isBatch)}`);
     }
     private async _updateComponentsForPlayerRule(): Promise<void> {
         const openData = this.getOpenData();

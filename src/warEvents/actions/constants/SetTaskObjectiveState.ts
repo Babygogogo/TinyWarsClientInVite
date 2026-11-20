@@ -1,7 +1,7 @@
 import {
     ExpressionParsers_Enums,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type ExpressionParsers_Types,
 } from "../../../internal.ts";
 
@@ -15,28 +15,28 @@ export const ExpressionInfoDict: {
         contextType  : ExpressionParsers_Enums.ContextType.TaskObjective,
         resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
         isRequired   : true,
-        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B1223),
-        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0727),
+        getTitleText : () => Lang_Utils.getText(Lang_TextType.TextType.B1223),
+        getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0727),
     },
     ActProgress : {
         contextType  : ExpressionParsers_Enums.ContextType.TaskObjective,
         resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
         isRequired   : false,
-        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B1221),
-        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0728),
+        getTitleText : () => Lang_Utils.getText(Lang_TextType.TextType.B1221),
+        getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0728),
     },
     ActIsHidden : {
         contextType  : ExpressionParsers_Enums.ContextType.TaskObjective,
         resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
         isRequired   : false,
-        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B1222),
-        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0729),
+        getTitleText : () => Lang_Utils.getText(Lang_TextType.TextType.B1222),
+        getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0729),
     },
     ActIsProgressUpdaterDisabled : {
         contextType  : ExpressionParsers_Enums.ContextType.TaskObjective,
         resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
         isRequired   : false,
-        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B1227),
-        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0732),
+        getTitleText : () => Lang_Utils.getText(Lang_TextType.TextType.B1227),
+        getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0732),
     },
 };

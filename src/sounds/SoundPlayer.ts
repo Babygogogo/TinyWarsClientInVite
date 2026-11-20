@@ -11,7 +11,7 @@ import {
     Lang_Utils,
     FloatText,
     CoSkills_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type Sounds_Types,
     type Notifications_Types,
@@ -118,7 +118,7 @@ export async function init(): Promise<void> {
         _shortSfxGain.connect(_mainGain);
         _longSfxMainGain.connect(_mainGain);
     } catch (e) {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0196));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0196));
     }
 
     _initMainMute();

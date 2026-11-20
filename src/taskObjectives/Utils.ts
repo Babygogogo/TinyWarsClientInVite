@@ -3,7 +3,7 @@ import {
     Utils_ClientErrorCode,
     TaskObjectives_Constants,
     ExpressionParsers_Parser,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 import type { TaskObjective } from "../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
@@ -46,7 +46,7 @@ export function getErrorCode(data: TaskObjective, customCounterNameSet: Set<stri
 }
 export function getErrorText(data: TaskObjective, customCounterNameSet: Set<string>): string | null {
     if ((data.getObjectiveId()) < 0) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0792));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0792));
     }
 
     if (!Lang_Utils.checkIsValidLanguageTextArray({
@@ -55,12 +55,12 @@ export function getErrorText(data: TaskObjective, customCounterNameSet: Set<stri
         maxTextLength : TaskObjectives_Constants.Common.MaxDescLength,
         minTextCount  : 1,
     })) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1215));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1215));
     }
 
     const maxProgress = data.getMaxProgress();
     if ((maxProgress != null) && (maxProgress <= 0)) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1216));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1216));
     }
 
     {
@@ -71,7 +71,7 @@ export function getErrorText(data: TaskObjective, customCounterNameSet: Set<stri
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -79,12 +79,12 @@ export function getErrorText(data: TaskObjective, customCounterNameSet: Set<stri
 }
 export function getFullDesc(data: TaskObjective): string {
     return [
-        `${Lang_Utils.getText(Lang_Constants.TextType.B1215)}: ${data.getDesc()?.map(v => v.getText()).join(`\n${Lang_Utils.getText(Lang_Constants.TextType.B1215)}: `)}`,
-        `${Lang_Utils.getText(Lang_Constants.TextType.B1217)}: ${Lang_Utils.getTextForYesOrNo(data.getIsMain())}`,
-        `${Lang_Utils.getText(Lang_Constants.TextType.B1216)}: ${data.getMaxProgress() ?? `--`}`,
-        `${Lang_Utils.getText(Lang_Constants.TextType.B1218)}: ${data.getScoreForCompletion()}`,
-        `${Lang_Utils.getText(Lang_Constants.TextType.B1219)}: ${data.getScoreForProgress()}`,
-        `${Lang_Utils.getText(Lang_Constants.TextType.B1226)}: ${data.getUpdaterForCurrentProgress() ?? `--`}`,
+        `${Lang_Utils.getText(Lang_TextType.TextType.B1215)}: ${data.getDesc()?.map(v => v.getText()).join(`\n${Lang_Utils.getText(Lang_TextType.TextType.B1215)}: `)}`,
+        `${Lang_Utils.getText(Lang_TextType.TextType.B1217)}: ${Lang_Utils.getTextForYesOrNo(data.getIsMain())}`,
+        `${Lang_Utils.getText(Lang_TextType.TextType.B1216)}: ${data.getMaxProgress() ?? `--`}`,
+        `${Lang_Utils.getText(Lang_TextType.TextType.B1218)}: ${data.getScoreForCompletion()}`,
+        `${Lang_Utils.getText(Lang_TextType.TextType.B1219)}: ${data.getScoreForProgress()}`,
+        `${Lang_Utils.getText(Lang_TextType.TextType.B1226)}: ${data.getUpdaterForCurrentProgress() ?? `--`}`,
     ].join(`\n`);
 }
 

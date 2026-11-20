@@ -3,7 +3,7 @@ import {
     FloatText,
     GameVersions_Utils,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Logger,
     Networks_MessageCodes,
@@ -119,7 +119,7 @@ export function send(containerJson: MessageContainerJson): void {
     } else {
         const connection = _webSocketConnection;
         if ((!connection) || (!connection.connected)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0014));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0014));
         } else {
             const messageName = getMessageName(containerJson);
             const encodedData = MessageContainer.fromJson(containerJson).encode();
@@ -194,7 +194,7 @@ function destroyConnection(): void {
 
 function _onConnectionOpened(connection: Networks_WebsocketConnection.WebsocketConnection): void {
     if (connection === _webSocketConnection) {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0007));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0007));
 
         Notifications_Dispatcher.dispatch("NetworkConnected");
     }
@@ -206,7 +206,7 @@ function _onConnectionClosed(connection: Networks_WebsocketConnection.WebsocketC
         if (!checkCanAutoReconnect()) {
             // FloatText.show(Lang.getText(Lang.Type.A0013));
         } else {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0008));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0008));
             resetConnection();
         }
     }

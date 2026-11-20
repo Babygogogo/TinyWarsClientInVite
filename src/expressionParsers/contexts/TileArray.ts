@@ -17,7 +17,7 @@ import {
     ExpressionParsers_Results_PositionArray,
     ExpressionParsers_Results_Lambda,
     ExpressionParsers_Results_TileArray,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Results_Tile,
     ExpressionParsers_Results_TileBuff,
     ExpressionParsers_Results_TileBuffArray,
@@ -43,7 +43,7 @@ export class TileArray extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = TileArray.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(TileArray.VnLength,    { desc : Lang_Constants.TextType.A0480, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
+        variables.set(TileArray.VnLength,    { desc : Lang_TextType.TextType.A0480, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
 
         return variables;
     }
@@ -52,7 +52,7 @@ export class TileArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             TileArray.FnGet,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0484,
+                Lang_TextType.TextType.A0484,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -78,7 +78,7 @@ export class TileArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             TileArray.FnWhere,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0485,
+                Lang_TextType.TextType.A0485,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -118,7 +118,7 @@ export class TileArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             TileArray.FnSelect,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0486,
+                Lang_TextType.TextType.A0486,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -176,7 +176,7 @@ export class TileArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             TileArray.FnAll,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0507,
+                Lang_TextType.TextType.A0507,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -216,7 +216,7 @@ export class TileArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             TileArray.FnAny,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0508,
+                Lang_TextType.TextType.A0508,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(

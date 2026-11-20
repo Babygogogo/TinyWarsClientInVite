@@ -15,7 +15,7 @@ import {
     Lang_Utils,
     GameModes_Constants,
     MultiPlayerRooms_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Graphics_Constants,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -329,20 +329,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         const languageType2 = Lang_Utils.getSecondaryLanguageType();
-        this._labelMode1.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1378)}\n${Lang_Utils.getText(Lang_Constants.TextType.B1379)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1011)}`);
-        this._labelMode2.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1378, languageType2)}\n${Lang_Utils.getText(Lang_Constants.TextType.B1379, languageType2)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1011, languageType2)}`);
-        this._labelCreateRoom1.setLangText(Lang_Constants.TextType.B0000);
-        this._labelCreateRoom2.setLangText(Lang_Constants.TextType.B0000, languageType2);
-        this._labelJoinRoom1.setLangText(Lang_Constants.TextType.B0580);
-        this._labelJoinRoom2.setLangText(Lang_Constants.TextType.B0580, languageType2);
-        this._labelMyRoom1.setLangText(Lang_Constants.TextType.B0410);
-        this._labelMyRoom2.setLangText(Lang_Constants.TextType.B0410, languageType2);
-        this._labelContinueWar1.setLangText(Lang_Constants.TextType.B0024);
-        this._labelContinueWar2.setLangText(Lang_Constants.TextType.B0024, languageType2);
-        this._labelWatchWar1.setLangText(Lang_Constants.TextType.B0206);
-        this._labelWatchWar2.setLangText(Lang_Constants.TextType.B0206, languageType2);
-        this._labelReplayWar1.setLangText(Lang_Constants.TextType.B0092);
-        this._labelReplayWar2.setLangText(Lang_Constants.TextType.B0092, languageType2);
+        this._labelMode1.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1378)}\n${Lang_Utils.getText(Lang_TextType.TextType.B1379)}: ${Lang_Utils.getText(Lang_TextType.TextType.B1011)}`);
+        this._labelMode2.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1378, languageType2)}\n${Lang_Utils.getText(Lang_TextType.TextType.B1379, languageType2)}: ${Lang_Utils.getText(Lang_TextType.TextType.B1011, languageType2)}`);
+        this._labelCreateRoom1.setLangText(Lang_TextType.TextType.B0000);
+        this._labelCreateRoom2.setLangText(Lang_TextType.TextType.B0000, languageType2);
+        this._labelJoinRoom1.setLangText(Lang_TextType.TextType.B0580);
+        this._labelJoinRoom2.setLangText(Lang_TextType.TextType.B0580, languageType2);
+        this._labelMyRoom1.setLangText(Lang_TextType.TextType.B0410);
+        this._labelMyRoom2.setLangText(Lang_TextType.TextType.B0410, languageType2);
+        this._labelContinueWar1.setLangText(Lang_TextType.TextType.B0024);
+        this._labelContinueWar2.setLangText(Lang_TextType.TextType.B0024, languageType2);
+        this._labelWatchWar1.setLangText(Lang_TextType.TextType.B0206);
+        this._labelWatchWar2.setLangText(Lang_TextType.TextType.B0206, languageType2);
+        this._labelReplayWar1.setLangText(Lang_TextType.TextType.B0092);
+        this._labelReplayWar2.setLangText(Lang_TextType.TextType.B0092, languageType2);
 
         this._layoutMode.arrangeItems();
         this._layoutCreateRoom.arrangeItems();

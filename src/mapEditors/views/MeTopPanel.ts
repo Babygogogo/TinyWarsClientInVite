@@ -22,7 +22,7 @@ import {
     Helpers_GameFlow,
     Helpers_Misc,
     Helpers_PointerInput,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     LocalData_Storage,
     MapEditor_Model_MeHelpers,
@@ -262,7 +262,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const mapRawData = await war.serializeForMap();
         if (await MapEditor_Model_MeHelpers.getCriticalErrorCodeForMapRawData(mapRawData)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0304));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0304));
         } else {
             MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
                 slotIndex                 : slotIndex,
@@ -370,14 +370,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
         const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (!data.getNeedReview()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0085));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0085));
         } else {
             const errorCode = data.getMapRawDataErrorCode();
             if (errorCode) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0197));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0197));
                 FloatText.show(Lang_Utils.getErrorText(errorCode as Utils_ClientErrorCode.ClientErrorCode));
             } else {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0244));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0244));
             }
         }
 
@@ -386,18 +386,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgMmReviewMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMmReviewMap"]>): void {
         const data = (Helpers_Misc.getExisted(e.data)).msg;
         if (data.getIsAccept()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0092));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0092));
         } else {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0093));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0093));
         }
         Helpers_GameFlow.gotoLobby();
     }
     private _onNotifyMsgMeDeleteSlot(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0081));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0081));
         Helpers_GameFlow.gotoMyWarListPanel(WarTypes_Constants.WarTypeId.Me);
     }
     private _onNotifyMsgCmSetCampaignMapRawData(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     private _onEnterFrame(): void {
@@ -423,12 +423,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.createGridIndexByPoint(warView.getFieldContainer().getContentsContainerGlobalToLocal({ x : x, y : y }));
         label.setIsVisible(true);
         if (!gridIndex.checkIsInsideMap(war.getTileMap().getMapSize())) {
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1112)}: --`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1112)}: --`);
         } else {
             const locationIdArray   = war.getTileMap().getTile(gridIndex).getLocationIdList(true);
             const textForGridIndex  = `x${gridIndex.getX()} y${gridIndex.getY()}`;
             const textForLocation   = locationIdArray.length ? locationIdArray.join(` `) : `--`;
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1112)}: ${textForGridIndex}, ${Lang_Utils.getText(Lang_Constants.TextType.Location)}: ${textForLocation}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1112)}: ${textForGridIndex}, ${Lang_Utils.getText(Lang_TextType.TextType.Location)}: ${textForLocation}`);
         }
     }
 
@@ -462,10 +462,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             needChangeLocationVisibility : true,
             currentGroupedLocationIds    : war.getTileMap().getVisibleGroupedLocationIdArray().concat(),
             war                          : war,
-            getTitleText                 : () => Lang_Utils.getText(Lang_Constants.TextType.B0759),
+            getTitleText                 : () => Lang_Utils.getText(Lang_TextType.TextType.B0759),
             callback                     : locationIdArray => {
                 if (!locationIdArray.length) {
-                    FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0266));
+                    FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0266));
                 } else {
                     war.getDrawer().setModeAddTileToLocation({ locationIdArray : locationIdArray });
                 }
@@ -479,10 +479,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             needChangeLocationVisibility : true,
             currentGroupedLocationIds    : war.getTileMap().getVisibleGroupedLocationIdArray().concat(),
             war                          : war,
-            getTitleText                 : () => Lang_Utils.getText(Lang_Constants.TextType.B0760),
+            getTitleText                 : () => Lang_Utils.getText(Lang_TextType.TextType.B0760),
             callback                     : locationIdArray => {
                 if (!locationIdArray.length) {
-                    FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0266));
+                    FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0266));
                 } else {
                     war.getDrawer().setModeDeleteTileFromLocation({ locationIdArray : locationIdArray });
                 }
@@ -500,14 +500,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         war.getDrawer().setDataForPasteTile(war.getTileMap().getTile(gridIndex).serialize());
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0369));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0369));
     }
     private _onTouchedGroupModePasteTile(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         const drawer    = this._getWar().getDrawer();
         const data      = drawer.getDataForPasteTile();
         if (data == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0371));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0371));
         } else {
             drawer.setModePasteTile();
         }
@@ -524,7 +524,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const unitMap   = war.getUnitMap();
         const unit      = unitMap.getUnitOnMap(gridIndex);
         if (unit == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0373));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0373));
             return;
         }
 
@@ -533,14 +533,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             dataArray.push(loadedUnit.clone(false));
         }
         war.getDrawer().setDataForPasteUnit(dataArray);
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0370));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0370));
     }
     private _onTouchedGroupModePasteUnit(): void {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         const drawer    = this._getWar().getDrawer();
         const data      = drawer.getDataForPasteUnit();
         if (data == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0372));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0372));
         } else {
             drawer.setModePasteUnit();
         }
@@ -549,7 +549,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnUndo(): void {
         const war = this._getWar();
         if (war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.A0318);
+            FloatText.showLang(Lang_TextType.TextType.A0318);
         } else {
             war.getDrawer().loadPreviousCheckpoint();
         }
@@ -557,7 +557,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnRedo(): void {
         const war = this._getWar();
         if (war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.A0319);
+            FloatText.showLang(Lang_TextType.TextType.A0319);
         } else {
             war.getDrawer().loadNextCheckpoint();
         }
@@ -578,7 +578,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnLoadMap(): void {
         const war = this._getWar();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0072),
             callback   : async () => {
                 const slotIndex     = war.getMapSlotIndex();
                 const gameConfig    = war.getGcData();
@@ -599,8 +599,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnReviewAccept(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0296),
-            tips         : Lang_Utils.getText(Lang_Constants.TextType.A0105),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0296),
+            tips         : Lang_Utils.getText(Lang_TextType.TextType.A0105),
             currentValue : ``,
             canBeEmpty   : true,
             isMultiLine  : true,
@@ -621,7 +621,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     callback();
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0296),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0296),
                         callback   : callback,
                     });
                 }
@@ -630,8 +630,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnReviewReject(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0297),
-            tips         : Lang_Utils.getText(Lang_Constants.TextType.A0094),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0297),
+            tips         : Lang_Utils.getText(Lang_TextType.TextType.A0094),
             currentValue : ``,
             canBeEmpty   : true,
             isMultiLine  : true,
@@ -732,34 +732,34 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         // this._updateLabelMode();
-        this._btnModePreview.setLangText(Lang_Constants.TextType.B0286);
-        this._btnModeDrawTileBase.setLangText(Lang_Constants.TextType.B0282);
-        this._btnModeDeleteTileDecorator.setLangText(Lang_Constants.TextType.B0661);
-        this._btnModeDrawUnit.setLangText(Lang_Constants.TextType.B0281);
-        this._btnModeDrawTileDecorator.setLangText(Lang_Constants.TextType.B0662);
-        this._btnModeDrawTileObject.setLangText(Lang_Constants.TextType.B0283);
-        this._btnModeDeleteUnit.setLangText(Lang_Constants.TextType.B0284);
-        this._btnModeDeleteTileObject.setLangText(Lang_Constants.TextType.B0285);
-        this._btnModeDrawLocation.setLangText(Lang_Constants.TextType.B0759);
-        this._btnModeDeleteLocation.setLangText(Lang_Constants.TextType.B0760);
-        this._btnCopyTile.setLangText(Lang_Constants.TextType.B0993);
-        this._btnModePasteTile.setLangText(Lang_Constants.TextType.B0994);
-        this._btnCopyUnit.setLangText(Lang_Constants.TextType.B0995);
-        this._btnModePasteUnit.setLangText(Lang_Constants.TextType.B0996);
-        this._btnSaveMap.setLangText(Lang_Constants.TextType.B0287);
-        this._btnLoadMap.setLangText(Lang_Constants.TextType.B0288);
-        this._btnReviewAccept.setLangText(Lang_Constants.TextType.B0296);
-        this._btnReviewReject.setLangText(Lang_Constants.TextType.B0297);
-        this._btnWarRule.setLangText(Lang_Constants.TextType.B0314);
-        this._btnWarEvent.setLangText(Lang_Constants.TextType.B0461);
-        this._btnMapInfo.setLangText(Lang_Constants.TextType.B0298);
-        this._btnVisibility.setLangText(Lang_Constants.TextType.B0301);
-        this._btnSymmetry.setLangText(Lang_Constants.TextType.B0306);
-        this._btnChat.setLangText(Lang_Constants.TextType.B0383);
-        this._btnMenu.setLangText(Lang_Constants.TextType.B0155);
-        this._btnAutoAdjust.setLangText(Lang_Constants.TextType.B1451);
-        this._btnAutoAdjustToggleOn.setLangText(Lang_Constants.TextType.B0890);
-        this._btnAutoAdjustToggleOff.setLangText(Lang_Constants.TextType.B0890);
+        this._btnModePreview.setLangText(Lang_TextType.TextType.B0286);
+        this._btnModeDrawTileBase.setLangText(Lang_TextType.TextType.B0282);
+        this._btnModeDeleteTileDecorator.setLangText(Lang_TextType.TextType.B0661);
+        this._btnModeDrawUnit.setLangText(Lang_TextType.TextType.B0281);
+        this._btnModeDrawTileDecorator.setLangText(Lang_TextType.TextType.B0662);
+        this._btnModeDrawTileObject.setLangText(Lang_TextType.TextType.B0283);
+        this._btnModeDeleteUnit.setLangText(Lang_TextType.TextType.B0284);
+        this._btnModeDeleteTileObject.setLangText(Lang_TextType.TextType.B0285);
+        this._btnModeDrawLocation.setLangText(Lang_TextType.TextType.B0759);
+        this._btnModeDeleteLocation.setLangText(Lang_TextType.TextType.B0760);
+        this._btnCopyTile.setLangText(Lang_TextType.TextType.B0993);
+        this._btnModePasteTile.setLangText(Lang_TextType.TextType.B0994);
+        this._btnCopyUnit.setLangText(Lang_TextType.TextType.B0995);
+        this._btnModePasteUnit.setLangText(Lang_TextType.TextType.B0996);
+        this._btnSaveMap.setLangText(Lang_TextType.TextType.B0287);
+        this._btnLoadMap.setLangText(Lang_TextType.TextType.B0288);
+        this._btnReviewAccept.setLangText(Lang_TextType.TextType.B0296);
+        this._btnReviewReject.setLangText(Lang_TextType.TextType.B0297);
+        this._btnWarRule.setLangText(Lang_TextType.TextType.B0314);
+        this._btnWarEvent.setLangText(Lang_TextType.TextType.B0461);
+        this._btnMapInfo.setLangText(Lang_TextType.TextType.B0298);
+        this._btnVisibility.setLangText(Lang_TextType.TextType.B0301);
+        this._btnSymmetry.setLangText(Lang_TextType.TextType.B0306);
+        this._btnChat.setLangText(Lang_TextType.TextType.B0383);
+        this._btnMenu.setLangText(Lang_TextType.TextType.B0155);
+        this._btnAutoAdjust.setLangText(Lang_TextType.TextType.B1451);
+        this._btnAutoAdjustToggleOn.setLangText(Lang_TextType.TextType.B0890);
+        this._btnAutoAdjustToggleOff.setLangText(Lang_TextType.TextType.B0890);
     }
 
     private _resetGroupLeftButtons(): void {
@@ -977,7 +977,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const locationIdArray   = war.getTileMap().getTile(gridIndex).getLocationIdList(true);
         const textForGridIndex  = `x${gridIndex.getX()} y${gridIndex.getY()}`;
         const textForLocation   = locationIdArray.length ? locationIdArray.join(` `) : `--`;
-        this._labelLocation.setText(`${textForGridIndex} ${Lang_Utils.getText(Lang_Constants.TextType.Location)}: ${textForLocation}`);
+        this._labelLocation.setText(`${textForGridIndex} ${Lang_Utils.getText(Lang_TextType.TextType.Location)}: ${textForLocation}`);
     }
 
     private _updateGroupAutoAdjust(): void {

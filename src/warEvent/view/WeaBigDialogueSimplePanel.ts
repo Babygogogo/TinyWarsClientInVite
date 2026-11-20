@@ -16,7 +16,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
@@ -109,7 +109,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (dialogueArray.length > Dialogues_Constants.Common.MaxCount) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0228));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0228));
         } else {
             dialogueArray.push(getDefaultCoDialogueData());
             Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -123,7 +123,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 dataArray.length = 0;
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -170,7 +170,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0118),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0118),
         });
     }
 
@@ -197,8 +197,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
     }
 
     private _updateBtnBackground(): void {
@@ -228,7 +228,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const label     = this._labelDialoguesCount;
         const maxCount  = Dialogues_Constants.Common.MaxCount;
         const currCount = dataArray.length;
-        label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0675)}: ${currCount} / ${maxCount}`);
+        label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0675)}: ${currCount} / ${maxCount}`);
         label.setTextColor(((currCount <= maxCount) && (currCount > 0)) ? Graphics_Constants.ColorValue.White : Graphics_Constants.ColorValue.Red);
     }
 
@@ -382,7 +382,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
         const dialogueArray = Helpers_Misc.getExisted(openData.action.getWeaBigDialogueSimple()?.getDataArray());
         if (dialogueArray.length > Dialogues_Constants.Common.MaxCount) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0228));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0228));
         } else {
             dialogueArray.splice(dialogueArray.indexOf(openData.dataForDialogue), 0, openData.dataForDialogue.clone());
             Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -407,7 +407,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const openData = this.getOpenData();
         if (openData) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
                 callback   : () => {
                     Helpers_Collection.deleteElementFromList(Helpers_Misc.getExisted(openData.action.getWeaBigDialogueSimple()?.getDataArray()), openData.dataForDialogue);
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -441,12 +441,12 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1442),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B1442),
             availableNumberArray : [0].concat(Helpers_Collection.createRange(1, openData.war.getPlayersCountUnneutral() + 1, 1)),
             currentNumber        : dataForCoDialogue.getPlayerIndex() ?? 0,
             getNumberMainText    : num => {
                 if (num === 0) {
-                    return Lang_Utils.getText(Lang_Constants.TextType.B0145);
+                    return Lang_Utils.getText(Lang_TextType.TextType.B0145);
                 } else {
                     return `P${num}`;
                 }
@@ -483,8 +483,8 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             currentTextArray : dataForDialogue.getNameArray(),
             allowEmpty       : true,
             maxTextLength    : Dialogues_Constants.Common.MaxNameLength,
-            getTitleText     : () => Lang_Utils.getText(Lang_Constants.TextType.B0156),
-            getHelpText      : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, Dialogues_Constants.Common.MaxNameLength),
+            getTitleText     : () => Lang_Utils.getText(Lang_TextType.TextType.B0156),
+            getHelpText      : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0020, Dialogues_Constants.Common.MaxNameLength),
             callback         : newNameArray => {
                 const revisedArray: LanguageText[] = [];
                 for (const name of newNameArray) {
@@ -511,11 +511,11 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const currentText       = textData?.getText();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0455),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0455),
             currentValue : currentText || ``,
             charRestrict : null,
             maxChars     : Dialogues_Constants.Common.MaxTextLength,
-            tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, Dialogues_Constants.Common.MaxTextLength),
+            tips         : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0020, Dialogues_Constants.Common.MaxTextLength),
             canBeEmpty   : true,
             isMultiLine  : true,
             callback     : panel => {
@@ -553,7 +553,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const textData          = textArray[index];
         if (textData?.getText() != null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
                 callback   : () => {
                     textArray.splice(index, 1);
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -574,11 +574,11 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const currentText       = textData?.getText();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0456),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0456),
             currentValue : currentText || ``,
             charRestrict : null,
             maxChars     : Dialogues_Constants.Common.MaxTextLength,
-            tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, Dialogues_Constants.Common.MaxTextLength),
+            tips         : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0020, Dialogues_Constants.Common.MaxTextLength),
             canBeEmpty   : true,
             isMultiLine  : true,
             callback     : panel => {
@@ -616,7 +616,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const textData      = textArray[index];
         if (textData?.getText() != null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
                 callback   : () => {
                     textArray.splice(index, 1);
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -792,7 +792,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             groupCoDialogue.setIsVisible(false);
         } else {
             groupCoDialogue.setIsVisible(true);
-            this._labelPosition.setLangText(dataForCoDialogue.getSide() === Dialogues_Constants.BigDialogueSideId.Left ? Lang_Constants.TextType.B1440 : Lang_Constants.TextType.B1441);
+            this._labelPosition.setLangText(dataForCoDialogue.getSide() === Dialogues_Constants.BigDialogueSideId.Left ? Lang_TextType.TextType.B1440 : Lang_TextType.TextType.B1441);
 
             const coId = dataForCoDialogue.getCoId();
             this._labelPortrait.setText(coId != null
@@ -830,16 +830,16 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         this._updateLabelError();
         this._updateLabelDialogueType();
 
-        this._btnChangeType.setLangText(Lang_Constants.TextType.B0668);
-        this._btnPosition.setLangText(Lang_Constants.TextType.B1181);
-        this._btnPortrait.setLangText(Lang_Constants.TextType.B1442);
-        this._btnCustomName.setLangText(Lang_Constants.TextType.B0156);
+        this._btnChangeType.setLangText(Lang_TextType.TextType.B0668);
+        this._btnPosition.setLangText(Lang_TextType.TextType.B1181);
+        this._btnPortrait.setLangText(Lang_TextType.TextType.B1442);
+        this._btnCustomName.setLangText(Lang_TextType.TextType.B0156);
         this._btn1.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getCurrentLanguageType()) ?? Lang_Constants.UndefinedError);
         this._btn2.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getSecondaryLanguageType()) ?? Lang_Constants.UndefinedError);
-        this._btnBgm.setLangText(Lang_Constants.TextType.B0631);
-        this._btnSfx.setLangText(Lang_Constants.TextType.B1164);
-        this._labelHideLeftPortrait.setLangText(Lang_Constants.TextType.B1162);
-        this._labelHideRightPortrait.setLangText(Lang_Constants.TextType.B1163);
+        this._btnBgm.setLangText(Lang_TextType.TextType.B0631);
+        this._btnSfx.setLangText(Lang_TextType.TextType.B1164);
+        this._labelHideLeftPortrait.setLangText(Lang_TextType.TextType.B1162);
+        this._labelHideRightPortrait.setLangText(Lang_TextType.TextType.B1163);
     }
 
     private _updateLabelError(): void {
@@ -856,7 +856,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             label.setText(errorTips);
         } else {
             label.setTextColor(Graphics_Constants.ColorValue.White);
-            label.setLangText(Lang_Constants.TextType.B0493);
+            label.setLangText(Lang_TextType.TextType.B0493);
         }
     }
 
@@ -868,11 +868,11 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
         const label = this._labelDialogueType;
         if (data.getDataForAside()) {
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0669)}: ${Lang_Utils.getText(Lang_Constants.TextType.B0670)}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0669)}: ${Lang_Utils.getText(Lang_TextType.TextType.B0670)}`);
         } else if (data.getDataForCoDialogue()) {
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0669)}: ${Lang_Utils.getText(Lang_Constants.TextType.B0671)}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0669)}: ${Lang_Utils.getText(Lang_TextType.TextType.B0671)}`);
         } else {
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0669)}: ${Lang_Utils.getText(Lang_Constants.TextType.B0672)}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0669)}: ${Lang_Utils.getText(Lang_TextType.TextType.B0672)}`);
         }
     }
 }

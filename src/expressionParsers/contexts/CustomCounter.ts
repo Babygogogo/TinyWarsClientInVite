@@ -4,7 +4,7 @@ import {
     ExpressionParsers_Utils,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_War,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_War,
     type BaseWar_Model_War,
     type ExpressionParsers_Types,
@@ -23,14 +23,14 @@ export class CustomCounter extends ExpressionParsers_Contexts_Base.Base {
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
         variables.set(CustomCounter.VnSelfId,    {
-            desc : Lang_Constants.TextType.A0123, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false, isHidden : true, 
+            desc : Lang_TextType.TextType.A0123, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false, isHidden : true,
         } );
-        variables.set(CustomCounter.VnId,        { desc : Lang_Constants.TextType.A0123, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
+        variables.set(CustomCounter.VnId,        { desc : Lang_TextType.TextType.A0123, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
         variables.set(CustomCounter.VnSelfValue, {
-            desc : Lang_Constants.TextType.A0124, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false, isHidden : true, 
+            desc : Lang_TextType.TextType.A0124, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false, isHidden : true,
         } );
-        variables.set(CustomCounter.VnValue,     { desc : Lang_Constants.TextType.A0124, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
-        variables.set(CustomCounter.VnWar,       { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,    isExtension : false } );
+        variables.set(CustomCounter.VnValue,     { desc : Lang_TextType.TextType.A0124, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
+        variables.set(CustomCounter.VnWar,       { desc : Lang_TextType.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,    isExtension : false } );
 
         return variables;
     }

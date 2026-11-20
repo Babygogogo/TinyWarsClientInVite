@@ -7,7 +7,7 @@ import {
     GameVersions_Constants,
     Helpers_Collection,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Constants,
     Sounds_Constants,
@@ -190,17 +190,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.Units);
-        this._labelOffense.setLangText(Lang_Constants.TextType.B0694);
-        this._labelDefense.setLangText(Lang_Constants.TextType.B0695);
-        this._labelMain1.setLangText(Lang_Constants.TextType.B0692);
-        this._labelSub1.setLangText(Lang_Constants.TextType.B0693);
-        this._labelMain2.setLangText(Lang_Constants.TextType.B0692);
-        this._labelSub2.setLangText(Lang_Constants.TextType.B0693);
-        this._labelMoveCostTitle1.setLangText(Lang_Constants.TextType.B0351);
-        this._labelMoveCostTitle2.setLangText(Lang_Constants.TextType.B0351);
-        this._labelMoveCost1.setLangText(Lang_Constants.TextType.B1282);
-        this._labelMoveCost2.setLangText(Lang_Constants.TextType.B1282);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Units);
+        this._labelOffense.setLangText(Lang_TextType.TextType.B0694);
+        this._labelDefense.setLangText(Lang_TextType.TextType.B0695);
+        this._labelMain1.setLangText(Lang_TextType.TextType.B0692);
+        this._labelSub1.setLangText(Lang_TextType.TextType.B0693);
+        this._labelMain2.setLangText(Lang_TextType.TextType.B0692);
+        this._labelSub2.setLangText(Lang_TextType.TextType.B0693);
+        this._labelMoveCostTitle1.setLangText(Lang_TextType.TextType.B0351);
+        this._labelMoveCostTitle2.setLangText(Lang_TextType.TextType.B0351);
+        this._labelMoveCost1.setLangText(Lang_TextType.TextType.B1282);
+        this._labelMoveCost2.setLangText(Lang_TextType.TextType.B1282);
 
         this._layoutDamage1.arrangeItems();
         this._layoutDamage2.arrangeItems();
@@ -663,7 +663,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const minRange  = unit.getMinAttackRange();
         const maxRange  = unit.getMaxAttackRange();
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0696);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0696);
         this._labelValue.setText(minRange == null ? `--` : `${minRange} - ${maxRange}`);
 
         const groupExtra = this._groupExtra;
@@ -671,7 +671,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             groupExtra.setIsVisible(false);
         } else {
             groupExtra.setIsVisible(true);
-            this._labelExtraInfo.setLangText(Lang_Constants.TextType.B0697);
+            this._labelExtraInfo.setLangText(Lang_TextType.TextType.B0697);
         }
     }
     private _updateViewAsBuildMaterial(): void {
@@ -682,7 +682,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currentValue          = unit.getMaxBuildMaterial();
         const maxValue              = unit.getMaxBuildMaterial();
-        this._labelTitle.setLangText(Lang_Constants.TextType.BuildMaterial);
+        this._labelTitle.setLangText(Lang_TextType.TextType.BuildMaterial);
         this._labelValue.setText(currentValue == null ? `--` : `${currentValue} / ${maxValue}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -694,7 +694,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currentValue          = unit.getFlareMaxAmmo();
         const maxValue              = unit.getFlareMaxAmmo();
-        this._labelTitle.setLangText(Lang_Constants.TextType.FlareAmmo);
+        this._labelTitle.setLangText(Lang_TextType.TextType.FlareAmmo);
         this._labelValue.setText(currentValue == null ? `--` : `${currentValue} / ${maxValue}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -706,7 +706,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currentValue          = unit.getMaxFuel();
         const maxValue              = unit.getMaxFuel();
-        this._labelTitle.setLangText(Lang_Constants.TextType.Fuel);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Fuel);
         this._labelValue.setText(`${currentValue} / ${maxValue}`);
 
         const fuelConsumption   = unit.getFuelConsumptionPerTurn();
@@ -726,14 +726,14 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currentValue          = unit.getMaxHp();
         const maxValue              = unit.getMaxHp();
-        this._labelTitle.setLangText(Lang_Constants.TextType.Hp);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Hp);
         this._labelValue.setText(`${currentValue} / ${maxValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsIsDiver(): void {
         const unit = this.getOpenData()?.unitTemplateCfg;
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0371);
-        this._labelValue.setLangText(unit?.getDiveCfg() != null ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0371);
+        this._labelValue.setLangText(unit?.getDiveCfg() != null ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsMovement(): void {
@@ -744,7 +744,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const unit                  = data.unitTemplateCfg;
         const currentValue          = unit.getMoveRange();
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0340);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0340);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(true);
         this._labelExtraInfo.setText(Lang_Utils.getMoveTypeName(unit.getMoveTypeId(), data.gameConfig) ?? Lang_Constants.UndefinedError);
@@ -757,10 +757,10 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currentValue  = unit.getPrimaryWeaponMaxAmmo();
         const maxValue      = unit.getPrimaryWeaponMaxAmmo();
-        this._labelTitle.setLangText(Lang_Constants.TextType.PrimaryWeaponAmmo);
+        this._labelTitle.setLangText(Lang_TextType.TextType.PrimaryWeaponAmmo);
         this._labelValue.setText(currentValue == null ? `--` : `${currentValue} / ${maxValue}`);
         this._groupExtra.setIsVisible(false);
-        this._labelExtraInfo.setLangText(Lang_Constants.TextType.B1070);
+        this._labelExtraInfo.setLangText(Lang_TextType.TextType.B1070);
     }
     private _updateViewAsProduceMaterial(): void {
         const data = this.getOpenData();
@@ -771,7 +771,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const unit                  = data.unitTemplateCfg;
         const currentValue          = unit.getMaxProduceMaterial();
         const maxValue              = unit.getMaxProduceMaterial();
-        this._labelTitle.setLangText(Lang_Constants.TextType.ProductionMaterial);
+        this._labelTitle.setLangText(Lang_TextType.TextType.ProductionMaterial);
         this._labelValue.setText(currentValue == null ? `--` : `${currentValue} / ${maxValue}`);
 
         const groupExtra = this._groupExtra;
@@ -786,7 +786,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
     }
     private _updateViewAsProductionCost(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0341);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0341);
         this._labelValue.setText(`${this.getOpenData()?.unitTemplateCfg.getProductionCost()}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -798,19 +798,19 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const energy    = openData.unitTemplateCfg.getEnergyPerNormalizedHp();
         const gcData    = openData.gameConfig;
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1474);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1474);
         this._labelValue.setText(`${energy * gcData.getTrilogyEnergyGainRateForAttacker() / 100} / ${energy * gcData.getTrilogyEnergyGainRateForDefender() / 100}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsVision(): void {
         const unit          = this.getOpenData()?.unitTemplateCfg;
         const currentValue  = unit?.getVisionRange();
-        this._labelTitle.setLangText(Lang_Constants.TextType.VisionRange);
+        this._labelTitle.setLangText(Lang_TextType.TextType.VisionRange);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLoadUnit(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0698);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0698);
 
         const data = this.getOpenData();
         if (data == null) {

@@ -5,7 +5,7 @@ import {
     WarEvents_FullDatas_Utils,
     Helpers_Misc,
     WarEvents_Actions_Constants_Common,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 import { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
@@ -89,7 +89,7 @@ export function getErrorTipForConditionNode(fullData: WarEventFullData, node: Wa
                 const minCount  = 1;
                 const maxCount  = WarEvents_Actions_Constants_Common.MaxCounts.PerEvent;
                 if ((count < minCount) || (count > maxCount)) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0268, `N${nodeId}`, `E${warEvent.getEventId()}`, minCount, maxCount, count);
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0268, `N${nodeId}`, `E${warEvent.getEventId()}`, minCount, maxCount, count);
                 }
             }
         }
@@ -97,21 +97,21 @@ export function getErrorTipForConditionNode(fullData: WarEventFullData, node: Wa
 
     const nodesCount = fullData.getConditionNodeArray().length;
     if (nodesCount > WarEvents_Constants.ConditionNode.MaxCountPerMap) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.A0183)} (${nodesCount}/${WarEvents_Constants.ConditionNode.MaxCountPerMap})`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.A0183)} (${nodesCount}/${WarEvents_Constants.ConditionNode.MaxCountPerMap})`;
     }
 
     if ((node.getSubNodeIdAndFlagsArray().length + node.getConditionIdAndFlagsArray().length) <= 0) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0161);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0161);
     }
 
     const duplicatedNodeId  = getDuplicatedSubNodeId(fullData, nodeId);
     if (duplicatedNodeId != null) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0061, `N${duplicatedNodeId}`);
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0061, `N${duplicatedNodeId}`);
     }
 
     const duplicatedConditionId = getDuplicatedConditionId(fullData, nodeId);
     if (duplicatedConditionId != null) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0062, `C${duplicatedConditionId}`);
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0062, `C${duplicatedConditionId}`);
     }
 
     return null;

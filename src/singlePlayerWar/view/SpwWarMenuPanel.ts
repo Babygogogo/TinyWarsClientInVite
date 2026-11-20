@@ -6,7 +6,7 @@ import {
     GamePanels_Manager,
     Helpers_GameFlow,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MultiPlayerWar_Model_MpwModel,
     SinglePlayerMode_Model_SpmModel,
@@ -133,7 +133,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             const dialogueArray = war.getInstanceWarRule().getMapSimpleDialogueArray();
             if (dialogueArray.length <= 0) {
-                FloatText.showLang(Lang_Constants.TextType.B0278);
+                FloatText.showLang(Lang_TextType.TextType.B0278);
 
             } else if (dialogueArray.length === 1) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwMapSimpleDialoguePanel, {
@@ -156,7 +156,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnSaveGame(): Promise<void> {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
@@ -188,7 +188,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0071),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0071),
             callback   : () => {
                 const warType = war.getWarType();
                 if ((warType === WarTypes_Constants.WarTypeId.ScwFog) || (warType === WarTypes_Constants.WarTypeId.ScwStd)) {
@@ -208,12 +208,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnLoadGame(): void {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0072),
             callback   : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel, {
                 currentSlotIndex     : this.getOpenData()?.war.getSaveSlotIndex() ?? 0,
                 needComment          : false,
@@ -247,7 +247,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnSimulation(): Promise<void> {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
@@ -257,7 +257,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0931),
             callback   : () => {
                 const warData = war.serializeForCreateSfw();
                 warData.createIfNotExistsSettingsForSfw();
@@ -278,30 +278,30 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnGotoMpWar(): void {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
         const mpwWarId = this.getOpenData()?.war.getSaveSlotExtraData()?.getMpwWarId();
         if (mpwWarId == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0439));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0439));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0711),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0711),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : async () => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                    title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                    content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+                    title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                    content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
                 });
 
                 const warData = await MultiPlayerWar_Model_MpwModel.getOngoingWarData(mpwWarId);
                 if (warData) {
                     Helpers_GameFlow.gotoMultiPlayerWar(warData);
                 } else {
-                    FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                    FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 }
 
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
@@ -311,7 +311,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnGotoWarList(): void {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
@@ -321,21 +321,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0652),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0652),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => Helpers_GameFlow.gotoMyWarListPanel(war.getWarType()),
         });
     }
 
     private _onTouchedBtnGotoLobby(): void {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0054),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0025),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0054),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0025),
             callback   : () => Helpers_GameFlow.gotoLobby(),
         });
     }
@@ -351,16 +351,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0155);
-        this._btnSaveGame.setLangText(Lang_Constants.TextType.B0260);
-        this._btnLoadGame.setLangText(Lang_Constants.TextType.B0261);
-        this._btnTaskObjective.setLangText(Lang_Constants.TextType.B1214);
-        this._btnMapSimpleDialogue.setLangText(Lang_Constants.TextType.B1098);
-        this._btnAdvanced.setLangText(Lang_Constants.TextType.B0080);
-        this._btnSimulation.setLangText(Lang_Constants.TextType.B0325);
-        this._btnGotoMpw.setLangText(Lang_Constants.TextType.B0711);
-        this._btnGotoWarList.setLangText(Lang_Constants.TextType.B0652);
-        this._btnGotoLobby.setLangText(Lang_Constants.TextType.B0054);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0155);
+        this._btnSaveGame.setLangText(Lang_TextType.TextType.B0260);
+        this._btnLoadGame.setLangText(Lang_TextType.TextType.B0261);
+        this._btnTaskObjective.setLangText(Lang_TextType.TextType.B1214);
+        this._btnMapSimpleDialogue.setLangText(Lang_TextType.TextType.B1098);
+        this._btnAdvanced.setLangText(Lang_TextType.TextType.B0080);
+        this._btnSimulation.setLangText(Lang_TextType.TextType.B0325);
+        this._btnGotoMpw.setLangText(Lang_TextType.TextType.B0711);
+        this._btnGotoWarList.setLangText(Lang_TextType.TextType.B0652);
+        this._btnGotoLobby.setLangText(Lang_TextType.TextType.B0054);
     }
 
     private _updateGroupMainButton(): void {

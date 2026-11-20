@@ -11,7 +11,7 @@ import {
     Users_Model,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -59,7 +59,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onMsgUserRegister(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserRegister"]>): void {
         const data = (Helpers_Misc.getExisted(e.data)).msg;
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0004));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0004));
 
         const account   = Helpers_Misc.getExisted(data.getAccount(), Utils_ClientErrorCode.ClientErrorCode.UserRegisterPanel_OnMsgUserRegister_00);
         const password  = this._inputPassword.getInputText() ?? ``;
@@ -75,7 +75,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0005),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0005),
         });
     }
 
@@ -84,26 +84,26 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const password = this._inputPassword.getInputText() ?? ``;
         const nickname = this._inputNickname.getInputText() ?? ``;
         if (!Users_Utils.checkIsAccountValid(account)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0001));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0001));
         } else if (account.toLocaleLowerCase().indexOf("guest_") === 0) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0367));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0367));
         } else if (!Users_Utils.checkIsPasswordValid(password)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0003));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0003));
         } else if (!Users_Utils.checkIsNicknameValid(nickname)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0002));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0002));
         } else if (nickname.toLocaleLowerCase().indexOf("guest_") === 0) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0368));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0368));
         } else {
             Users_Proxy.reqUserRegister(account, password, nickname);
         }
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnRegister.setLangText(Lang_Constants.TextType.B0174);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0174);
-        this._labelAccount.setLangText(Lang_Constants.TextType.B0170);
-        this._labelPassword.setLangText(Lang_Constants.TextType.B0171);
-        this._labelNickname.setLangText(Lang_Constants.TextType.B0175);
+        this._btnRegister.setLangText(Lang_TextType.TextType.B0174);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0174);
+        this._labelAccount.setLangText(Lang_TextType.TextType.B0170);
+        this._labelPassword.setLangText(Lang_TextType.TextType.B0171);
+        this._labelNickname.setLangText(Lang_TextType.TextType.B0175);
     }
 }

@@ -1,5 +1,6 @@
 import {
     Lang_Constants,
+    Lang_TextType,
     Lang_Utils,
     Players_Player,
     Players_Utils_Filter,
@@ -24,8 +25,8 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
     const con           = data.getConUnitComparator();
     const comparator    = con == null ? null : con.getComparator();
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0098,
-        Lang_Utils.getText(Lang_Constants.TextType.Units),
+        Lang_TextType.TextType.F0098,
+        Lang_Utils.getText(Lang_TextType.TextType.Units),
         comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
         con == null ? Lang_Constants.UndefinedError : (con.getValue()),
     );
@@ -45,25 +46,25 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            subTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
+            subTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            subTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
+            subTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
+        subTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.A0944)}`);
     }
 
     const con           = data.getConUnitComparator();
     const comparator    = con == null ? null : con.getComparator();
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0232,
-        Lang_Utils.getText(Lang_Constants.TextType.Units),
+        Lang_TextType.TextType.F0232,
+        Lang_Utils.getText(Lang_TextType.TextType.Units),
         subTextArray.join(`\n`),
         comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
         con == null ? Lang_Constants.UndefinedError : (con.getValue()),
@@ -75,7 +76,7 @@ export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number
         if ((filter != null)                                                                            &&
             (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileFilter));
         }
     }
 
@@ -84,7 +85,7 @@ export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number
         if ((filter != null)                                                                    &&
             (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerFilter));
         }
     }
 
@@ -93,7 +94,7 @@ export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number
         if ((filter != null)                                                                            &&
             (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitFilter));
         }
     }
 
@@ -101,14 +102,14 @@ export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number
         const comparator = data.getConUnitComparator();
         if (comparator == null) {
             return Lang_Utils.getFormattedText(
-                Lang_Constants.TextType.F0091,
-                Lang_Utils.getFormattedText(Lang_Constants.TextType.FormatComparatorOfNumberOf, Lang_Utils.getText(Lang_Constants.TextType.Units)),
+                Lang_TextType.TextType.F0091,
+                Lang_Utils.getFormattedText(Lang_TextType.TextType.FormatComparatorOfNumberOf, Lang_Utils.getText(Lang_TextType.TextType.Units)),
             );
         } else {
             if (!ValueAndComparators_Utils.checkIsValid(comparator)) {
                 return Lang_Utils.getFormattedText(
-                    Lang_Constants.TextType.F0091,
-                    Lang_Utils.getFormattedText(Lang_Constants.TextType.FormatComparatorOfNumberOf, Lang_Utils.getText(Lang_Constants.TextType.Units)),
+                    Lang_TextType.TextType.F0091,
+                    Lang_Utils.getFormattedText(Lang_TextType.TextType.FormatComparatorOfNumberOf, Lang_Utils.getText(Lang_TextType.TextType.Units)),
                 );
             }
         }

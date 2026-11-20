@@ -9,7 +9,7 @@ import {
     Users_Proxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiInputEventType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -118,7 +118,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     }
                     this._addSelectedUserId(userId);
                 } else {
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0147, maxChooseCount));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0147, maxChooseCount));
                 }
             }
         }
@@ -164,7 +164,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnSearchNotFollowing(): void {
         const nickname = this._inputNickname.trimInputText() ?? ``;
         if (nickname.length <= 0) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0146, Lang_Utils.getText(Lang_Constants.TextType.B0175)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0146, Lang_Utils.getText(Lang_TextType.TextType.B0175)));
         } else {
             Users_Proxy.reqUserGetUsersByNickname(nickname, false);
         }
@@ -172,7 +172,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnSearchAll(): void {
         const nickname = this._inputNickname.trimInputText() ?? ``;
         if (nickname.length <= 0) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0146, Lang_Utils.getText(Lang_Constants.TextType.B0175)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0146, Lang_Utils.getText(Lang_TextType.TextType.B0175)));
         } else {
             Users_Proxy.reqUserGetUsersByNickname(nickname, null);
         }
@@ -185,13 +185,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const currChooseCount       = selectedUserIdArray.length;
             const maxChooseCount        = this.getMaxChooseCount();
             if ((maxChooseCount != null) && (currChooseCount > maxChooseCount)) {
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0147, maxChooseCount));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0147, maxChooseCount));
                 return;
             }
 
             const minChooseCount = this.getMinChooseCount();
             if ((minChooseCount != null) && (currChooseCount < minChooseCount)) {
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0155, maxChooseCount));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0155, maxChooseCount));
                 return;
             }
 
@@ -212,12 +212,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSearchRange.setLangText(Lang_Constants.TextType.A0834);
-        this._btnSearchFollowing.setLangText(Lang_Constants.TextType.B0997);
-        this._btnSearchNotFollowing.setLangText(Lang_Constants.TextType.B0998);
-        this._btnSearchAll.setLangText(Lang_Constants.TextType.B0776);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._inputNickname.setPromptText(Lang_Utils.getText(Lang_Constants.TextType.B0175));
+        this._labelSearchRange.setLangText(Lang_TextType.TextType.A0834);
+        this._btnSearchFollowing.setLangText(Lang_TextType.TextType.B0997);
+        this._btnSearchNotFollowing.setLangText(Lang_TextType.TextType.B0998);
+        this._btnSearchAll.setLangText(Lang_TextType.TextType.B0776);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._inputNickname.setPromptText(Lang_Utils.getText(Lang_TextType.TextType.B0175));
 
         this._updateLabelTitle();
     }
@@ -229,7 +229,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateLabelTitle(): void {
         const func = this.getOpenData()?.getTitleText;
-        this._labelTitle.setText(func ? func() : Lang_Utils.getText(Lang_Constants.TextType.Players));
+        this._labelTitle.setText(func ? func() : Lang_Utils.getText(Lang_TextType.TextType.Players));
     }
 
     private async _updateListNickname(): Promise<void> {

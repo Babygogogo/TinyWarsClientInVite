@@ -15,7 +15,7 @@ import {
     GamePanels_Manager,
     Players_Constants,
     PlayerRules_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiHorizontalAlign,
     type Ui_Types_UiListItemData,
     Ui_Components_UiListItemRenderer,
@@ -91,7 +91,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
     }
     private _onTouchedBtnBatch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0940),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0940),
             callback   : () => {
                 this._setIsBatch(true);
                 this._updateBtnBatch();
@@ -198,7 +198,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
             btn.setIsVisible(false);
         } else {
             btn.setIsVisible(true);
-            btn.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1373)}: ${Lang_Utils.getTextForYesOrNo(this.getIsBatch())}`);
+            btn.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1373)}: ${Lang_Utils.getTextForYesOrNo(this.getIsBatch())}`);
         }
     }
 }

@@ -2,7 +2,7 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerWars_Constants,
@@ -168,9 +168,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0259);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0259);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._labelTips.setLangText(Lang_TextType.TextType.B1249);
     }
 
     private _createDataForList(): DataForSlotRenderer[] {
@@ -267,10 +267,10 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel);
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-                    title        : Lang_Utils.getText(Lang_Constants.TextType.B0088),
+                    title        : Lang_Utils.getText(Lang_TextType.TextType.B0088),
                     maxChars     : SinglePlayerWars_Constants.Common.MaxSaveSlotCommentLength,
                     currentValue : ``,
-                    tips         : Lang_Utils.getText(Lang_Constants.TextType.A0144),
+                    tips         : Lang_Utils.getText(Lang_TextType.TextType.A0144),
                     canBeEmpty   : true,
                     charRestrict : null,
                     callback     : panel => {
@@ -285,7 +285,7 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             callback();
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0070),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0070),
                 callback   : callback,
             });
         }

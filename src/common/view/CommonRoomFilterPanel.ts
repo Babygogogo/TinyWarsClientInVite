@@ -5,7 +5,7 @@ import {
     Users_Model,
     GamePanels_Manager,
     AuxiliaryTypes_RoomFilter,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -112,7 +112,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0063),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0063),
         });
     }
 
@@ -128,7 +128,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnModifyUserInRoom(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchSingleUserPanel, {
-            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B0023),
+            getTitleText      : () => Lang_Utils.getText(Lang_TextType.TextType.B0023),
             callbackOnConfirm : userId => {
                 this._filter.userIdInRoom = userId;
                 this._updateLabelUserInRoom();
@@ -142,7 +142,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnModifyUserNotInRoom(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchSingleUserPanel, {
-            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B0027),
+            getTitleText      : () => Lang_Utils.getText(Lang_TextType.TextType.B0027),
             callbackOnConfirm : userId => {
                 this._filter.userIdNotInRoom = userId;
                 this._updateLabelUserNotInRoom();
@@ -157,7 +157,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyRoomId(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0814),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0814),
             minValue     : 0,
             maxValue     : 99999999,
             currentValue : filter.roomId ?? 0,
@@ -175,7 +175,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMapName(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0225),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0225),
             currentValue : filter.mapName ?? ``,
             maxChars     : 20,
             canBeEmpty   : true,
@@ -226,15 +226,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0228);
-        this._labelRoomIdTitle.setLangText(Lang_Constants.TextType.B0814);
-        this._labelMapNameTitle.setLangText(Lang_Constants.TextType.B0225);
-        this._labelUserInRoomTitle.setLangText(Lang_Constants.TextType.B0023);
-        this._labelUserNotInRoomTitle.setLangText(Lang_Constants.TextType.B0027);
-        this._labelCoCategoryTitle.setLangText(Lang_Constants.TextType.B0028);
-        this._labelHasFogTitle.setLangText(Lang_Constants.TextType.B0020);
-        this._btnReset.setLangText(Lang_Constants.TextType.B0567);
-        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0228);
+        this._labelRoomIdTitle.setLangText(Lang_TextType.TextType.B0814);
+        this._labelMapNameTitle.setLangText(Lang_TextType.TextType.B0225);
+        this._labelUserInRoomTitle.setLangText(Lang_TextType.TextType.B0023);
+        this._labelUserNotInRoomTitle.setLangText(Lang_TextType.TextType.B0027);
+        this._labelCoCategoryTitle.setLangText(Lang_TextType.TextType.B0028);
+        this._labelHasFogTitle.setLangText(Lang_TextType.TextType.B0020);
+        this._btnReset.setLangText(Lang_TextType.TextType.B0567);
+        this._btnSearch.setLangText(Lang_TextType.TextType.B0228);
 
         this._updateLabelHasFog();
     }
@@ -295,9 +295,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const hasFog    = this._filter.hasFog;
         const label     = this._labelHasFog;
         if (hasFog === true) {
-            label.setLangText(Lang_Constants.TextType.Yes);
+            label.setLangText(Lang_TextType.TextType.Yes);
         } else if (hasFog === false) {
-            label.setLangText(Lang_Constants.TextType.No);
+            label.setLangText(Lang_TextType.TextType.No);
         } else {
             label.setText(``);
         }

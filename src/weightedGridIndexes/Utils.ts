@@ -3,7 +3,7 @@ import {
     Lang_Utils,
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_GridIndexAndWeight,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_MapSize,
 } from "../internal.ts";
 import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
@@ -21,7 +21,7 @@ export function getErrorTip(data: WeightedGridIndex, mapSize: AuxiliaryTypes_Map
     {
         const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(data.getGridIndex());
         if ((gridIndex == null) || (!gridIndex.checkIsInsideMap(mapSize))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0531));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0531));
         }
     }
     {
@@ -29,7 +29,7 @@ export function getErrorTip(data: WeightedGridIndex, mapSize: AuxiliaryTypes_Map
         if ((weight > Units_Constants.AiDestination.MaxWeight) ||
             (weight < Units_Constants.AiDestination.MinWeight)
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1094));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1094));
         }
     }
 

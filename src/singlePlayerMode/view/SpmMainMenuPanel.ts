@@ -6,7 +6,7 @@ import {
     Tween_Executor,
     GamePanels_Dict,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Graphics_Constants,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -158,14 +158,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         const languageType2 = Lang_Utils.getSecondaryLanguageType();
-        this._labelCampaign1.setLangText(Lang_Constants.TextType.B1135);
-        this._labelCampaign2.setLangText(Lang_Constants.TextType.B1135, languageType2);
-        this._labelCreateWarRoom1.setLangText(Lang_Constants.TextType.B0614);
-        this._labelCreateWarRoom2.setLangText(Lang_Constants.TextType.B0614, languageType2);
-        this._labelCreateCustomWar1.setLangText(Lang_Constants.TextType.B0603);
-        this._labelCreateCustomWar2.setLangText(Lang_Constants.TextType.B0603, languageType2);
-        this._labelContinueWar1.setLangText(Lang_Constants.TextType.B0024);
-        this._labelContinueWar2.setLangText(Lang_Constants.TextType.B0024, languageType2);
+        this._labelCampaign1.setLangText(Lang_TextType.TextType.B1135);
+        this._labelCampaign2.setLangText(Lang_TextType.TextType.B1135, languageType2);
+        this._labelCreateWarRoom1.setLangText(Lang_TextType.TextType.B0614);
+        this._labelCreateWarRoom2.setLangText(Lang_TextType.TextType.B0614, languageType2);
+        this._labelCreateCustomWar1.setLangText(Lang_TextType.TextType.B0603);
+        this._labelCreateCustomWar2.setLangText(Lang_TextType.TextType.B0603, languageType2);
+        this._labelContinueWar1.setLangText(Lang_TextType.TextType.B0024);
+        this._labelContinueWar2.setLangText(Lang_TextType.TextType.B0024, languageType2);
 
         this._layoutCampaign.arrangeItems();
         this._layoutCreateWarRoom.arrangeItems();

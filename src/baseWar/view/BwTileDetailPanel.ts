@@ -22,7 +22,7 @@ import {
     Helpers_ImageSource,
     Helpers_Misc,
     Helpers_Text,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwProxy,
@@ -191,7 +191,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const tileId = tile.getGridIndex().getGridId(tile.getWar().getTileMap().getMapSize());
         if (((Helpers_Misc.getExisted(e.data)).msg).getGridIdArrayForAddMark().indexOf(tileId) >= 0) {
-            FloatText.showLang(Lang_Constants.TextType.A0848);
+            FloatText.showLang(Lang_TextType.TextType.A0848);
         }
 
         this._updateBtnMarkAndUnmark();
@@ -274,14 +274,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const arr = war.getTileMap().getTileCustomNameArray();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1430),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B1430),
             availableNumberArray : Helpers_Collection.createRange(0, Tiles_Constants_Common.CustomName.MaxId + 1, 1),
             currentNumber        : tile.getCustomNameId(),
             columnsCount         : 4,
             showNumber           : true,
             getNumberMainText    : num => {
                 if (num === 0) {
-                    return `(${Lang_Utils.getText(Lang_Constants.TextType.B0391)})`;
+                    return `(${Lang_Utils.getText(Lang_TextType.TextType.B0391)})`;
                 } else {
                     return Lang_Utils.getLanguageText({ textArray : arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() ?? [] }) ?? `----`;
                 }
@@ -327,11 +327,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     gridId : gridId,
                 });
 
-                FloatText.showLang(Lang_Constants.TextType.A0848);
+                FloatText.showLang(Lang_TextType.TextType.A0848);
                 this._updateBtnMarkAndUnmark();
 
             } else {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             }
 
         } else if (war instanceof SinglePlayerWars_War.War) {
@@ -341,11 +341,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     gridId : gridId,
                 });
 
-                FloatText.showLang(Lang_Constants.TextType.A0848);
+                FloatText.showLang(Lang_TextType.TextType.A0848);
                 this._updateBtnMarkAndUnmark();
 
             } else {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             }
 
         } else {
@@ -357,7 +357,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             player.addGridMark(gridId, _selectedMarkTypeId);
             this._updateBtnMarkAndUnmark();
-            FloatText.showLang(Lang_Constants.TextType.A0848);
+            FloatText.showLang(Lang_TextType.TextType.A0848);
         }
     }
     private _onTouchedBtnUnmark(): void {
@@ -383,11 +383,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     gridId : gridId,
                 });
 
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
                 this._updateBtnMarkAndUnmark();
 
             } else {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             }
 
         } else if (war instanceof SinglePlayerWars_War.War) {
@@ -397,11 +397,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     gridId : gridId,
                 });
 
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
                 this._updateBtnMarkAndUnmark();
 
             } else {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             }
 
         } else {
@@ -466,23 +466,23 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0423);
-        this._labelMoveCostTitle1.setLangText(Lang_Constants.TextType.B0351);
-        this._labelMoveCostTitle2.setLangText(Lang_Constants.TextType.B0351);
-        this._labelMoveCost1.setLangText(Lang_Constants.TextType.B1282);
-        this._labelMoveCost2.setLangText(Lang_Constants.TextType.B1282);
-        this._labelDefense1.setLangText(Lang_Constants.TextType.B0334);
-        this._labelDefense2.setLangText(Lang_Constants.TextType.B0334);
-        this._labelMain1.setLangText(Lang_Constants.TextType.B0692);
-        this._labelSub1.setLangText(Lang_Constants.TextType.B0693);
-        this._labelMain2.setLangText(Lang_Constants.TextType.B0692);
-        this._labelSub2.setLangText(Lang_Constants.TextType.B0693);
-        this._btnBatchMark.setLangText(Lang_Constants.TextType.B1109);
-        this._btnAddUnit.setLangText(Lang_Constants.TextType.B0535);
-        this._btnTilesInfo.setLangText(Lang_Constants.TextType.B0910);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0204);
-        this._btnMark.setLangText(Lang_Constants.TextType.B0914);
-        this._btnUnmark.setLangText(Lang_Constants.TextType.B0915);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0423);
+        this._labelMoveCostTitle1.setLangText(Lang_TextType.TextType.B0351);
+        this._labelMoveCostTitle2.setLangText(Lang_TextType.TextType.B0351);
+        this._labelMoveCost1.setLangText(Lang_TextType.TextType.B1282);
+        this._labelMoveCost2.setLangText(Lang_TextType.TextType.B1282);
+        this._labelDefense1.setLangText(Lang_TextType.TextType.B0334);
+        this._labelDefense2.setLangText(Lang_TextType.TextType.B0334);
+        this._labelMain1.setLangText(Lang_TextType.TextType.B0692);
+        this._labelSub1.setLangText(Lang_TextType.TextType.B0693);
+        this._labelMain2.setLangText(Lang_TextType.TextType.B0692);
+        this._labelSub2.setLangText(Lang_TextType.TextType.B0693);
+        this._btnBatchMark.setLangText(Lang_TextType.TextType.B1109);
+        this._btnAddUnit.setLangText(Lang_TextType.TextType.B0535);
+        this._btnTilesInfo.setLangText(Lang_TextType.TextType.B0910);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0204);
+        this._btnMark.setLangText(Lang_TextType.TextType.B0914);
+        this._btnUnmark.setLangText(Lang_TextType.TextType.B0915);
 
         this._layoutMoveCost1.arrangeItems();
         this._layoutMoveCost2.arrangeItems();
@@ -1194,7 +1194,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0352);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0352);
 
         const labelValue        = this._labelValue;
         const groupTouchModify  = this._groupTouchModify;
@@ -1219,7 +1219,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.Income);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Income);
         this._labelValue.setText(`${tile.getIncomePerTurn()}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getIsCustomizableBuilding()));
@@ -1231,7 +1231,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.VisionRange);
+        this._labelTitle.setLangText(Lang_TextType.TextType.VisionRange);
         this._labelValue.setText(`${tile.getCfgVisionRange()}`);
 
         const groupExtra = this._groupExtra;
@@ -1239,7 +1239,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             groupExtra.setIsVisible(false);
         } else {
             groupExtra.setIsVisible(true);
-            this._labelExtraInfo.setLangText(Lang_Constants.TextType.B1130);
+            this._labelExtraInfo.setLangText(Lang_TextType.TextType.B1130);
         }
 
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getIsCustomizableBuilding()));
@@ -1251,7 +1251,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.HidableUnits);
+        this._labelTitle.setLangText(Lang_TextType.TextType.HidableUnits);
         this._groupExtra.setIsVisible(false);
 
         const labelValue        = this._labelValue;
@@ -1274,8 +1274,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.DefeatIfCaptured);
-        this._labelValue.setLangText(tile.getIsDefeatedOnCapture() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.DefeatIfCaptured);
+        this._labelValue.setLangText(tile.getIsDefeatedOnCapture() ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((tile.getIsCustomizableBuilding()) && (WarTypes_Utils.checkCanCheatInWar(war.getWarType())));
     }
@@ -1286,7 +1286,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.ProducibleUnits);
+        this._labelTitle.setLangText(Lang_TextType.TextType.ProducibleUnits);
         this._groupExtra.setIsVisible(false);
 
         const labelValue        = this._labelValue;
@@ -1311,7 +1311,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const { tile, war } = openData;
         const offenseBonus              = tile.getGlobalAttackBonus();
         const defenseBonus              = tile.getGlobalDefenseBonus();
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0359);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0359);
         this._labelValue.setText(`${offenseBonus} / ${defenseBonus}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getIsCustomizableBuilding()));
@@ -1323,7 +1323,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.RepairableUnits);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RepairableUnits);
 
         const labelValue        = this._labelValue;
         const groupTouchModify  = this._groupTouchModify;
@@ -1349,7 +1349,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.BlockableEnemyUnits);
+        this._labelTitle.setLangText(Lang_TextType.TextType.BlockableEnemyUnits);
         this._groupExtra.setIsVisible(false);
 
         const labelValue        = this._labelValue;
@@ -1372,7 +1372,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.CoBoardableUnit);
+        this._labelTitle.setLangText(Lang_TextType.TextType.CoBoardableUnit);
         this._groupExtra.setIsVisible(false);
 
         const labelValue        = this._labelValue;
@@ -1395,7 +1395,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.Hp);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Hp);
         this._labelValue.setText(`${tile.getCurrentHp()} / ${tile.getMaxHp() ?? `--`}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible(WarTypes_Utils.checkCanCheatInWar(war.getWarType()));
@@ -1407,7 +1407,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.CapturePoint);
+        this._labelTitle.setLangText(Lang_TextType.TextType.CapturePoint);
         this._labelValue.setText(`${tile.getCurrentCapturePoint()} / ${tile.getMaxCapturePoint() ?? `--`}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible(WarTypes_Utils.checkCanCheatInWar(war.getWarType()));
@@ -1419,7 +1419,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.BuildPoint);
+        this._labelTitle.setLangText(Lang_TextType.TextType.BuildPoint);
         this._labelValue.setText(`${tile.getCurrentBuildPoint()} / ${tile.getMaxBuildPoint() ?? `--`}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible(WarTypes_Utils.checkCanCheatInWar(war.getWarType()));
@@ -1431,8 +1431,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0847);
-        this._labelValue.setLangText(tile.getIsHighlighted() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0847);
+        this._labelValue.setLangText(tile.getIsHighlighted() ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible(WarTypes_Utils.checkCanCheatInWar(war.getWarType()));
     }
@@ -1443,7 +1443,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const { tile, war } = openData;
-        this._labelTitle.setLangText(Lang_Constants.TextType.AbnormalStates);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AbnormalStates);
         this._labelValue.setText(`${tile.getUnfixedBuffList()?.length || `--`}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible(WarTypes_Utils.checkCanCheatInWar(war.getWarType()));
@@ -1456,7 +1456,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getRadius();
-        this._labelTitle.setLangText(Lang_Constants.TextType.EffectiveRadius);
+        this._labelTitle.setLangText(Lang_TextType.TextType.EffectiveRadius);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal));
@@ -1469,7 +1469,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getPriority();
-        this._labelTitle.setLangText(Lang_Constants.TextType.Priority);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Priority);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal));
@@ -1482,8 +1482,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getCanAffectSelf();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectOwner);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectOwner);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal));
     }
@@ -1495,8 +1495,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getCanAffectAlly();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectAlly);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectAlly);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal));
     }
@@ -1508,8 +1508,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getCanAffectEnemy();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectEnemy);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectEnemy);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal));
     }
@@ -1521,7 +1521,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getOffsetFund();
-        this._labelTitle.setLangText(Lang_Constants.TextType.FundOffset);
+        this._labelTitle.setLangText(Lang_TextType.TextType.FundOffset);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal));
@@ -1534,7 +1534,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getOffsetEnergyPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.CoEnergyOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.CoEnergyOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal));
@@ -1549,10 +1549,10 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const customCrystalData = Helpers_Misc.getExisted(tile.getFinalCrystalData());
         const offsetHp          = customCrystalData.getOffsetHp();
         const canBeFatal        = customCrystalData.getCanBeFatal();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsHpOffset);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsHpOffset);
         this._labelValue.setText(`${offsetHp}`);
         this._groupExtra.setIsVisible(canBeFatal);
-        this._labelExtraInfo.setLangText(Lang_Constants.TextType.CanBeFatal);
+        this._labelExtraInfo.setLangText(Lang_TextType.TextType.CanBeFatal);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal));
     }
     private _updateViewAsCrystalDeltaFuelPercentage(): void {
@@ -1563,7 +1563,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getOffsetFuelPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsFuelOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsFuelOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal));
@@ -1576,7 +1576,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getOffsetPrimaryAmmoPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsPriAmmoOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsPriAmmoOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === Tiles_Constants_MapWeapon.TypeId.CustomCrystal));
@@ -1589,7 +1589,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getRangeForUp();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeUp);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeUp);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1602,7 +1602,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getRangeForRight();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeRight);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeRight);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1615,7 +1615,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getRangeForDown();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeDown);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeDown);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1628,7 +1628,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getRangeForLeft();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeLeft);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeLeft);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1641,7 +1641,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getPriority();
-        this._labelTitle.setLangText(Lang_Constants.TextType.Priority);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Priority);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1654,7 +1654,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getMaxTargetCount();
-        this._labelTitle.setLangText(Lang_Constants.TextType.MaxTargets);
+        this._labelTitle.setLangText(Lang_TextType.TextType.MaxTargets);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1667,8 +1667,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getCanAffectSelf();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectOwner);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectOwner);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
     }
@@ -1680,8 +1680,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getCanAffectAlly();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectAlly);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectAlly);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
     }
@@ -1693,8 +1693,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getCanAffectEnemy();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectEnemy);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectEnemy);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
     }
@@ -1708,10 +1708,10 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const data          = Helpers_Misc.getExisted(tile.getFinalCannonData());
         const offsetHp      = data.getOffsetHp();
         const canBeFatal    = data.getCanBeFatal();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsHpOffset);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsHpOffset);
         this._labelValue.setText(`${offsetHp}`);
         this._groupExtra.setIsVisible(canBeFatal);
-        this._labelExtraInfo.setLangText(Lang_Constants.TextType.CanBeFatal);
+        this._labelExtraInfo.setLangText(Lang_TextType.TextType.CanBeFatal);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
     }
     private _updateViewAsCannonDeltaFuelPercentage(): void {
@@ -1722,7 +1722,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getOffsetFuelPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsFuelOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsFuelOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1735,7 +1735,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalCannonData()).getOffsetPrimaryAmmoPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsPriAmmoOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsPriAmmoOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1748,7 +1748,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getRangeForUp();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeUp);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeUp);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1761,7 +1761,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getRangeForRight();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeRight);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeRight);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1774,7 +1774,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getRangeForDown();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeDown);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeDown);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1787,7 +1787,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getRangeForLeft();
-        this._labelTitle.setLangText(Lang_Constants.TextType.RangeLeft);
+        this._labelTitle.setLangText(Lang_TextType.TextType.RangeLeft);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1800,7 +1800,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getPriority();
-        this._labelTitle.setLangText(Lang_Constants.TextType.Priority);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Priority);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1813,8 +1813,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getCanAffectSelf();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectOwner);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectOwner);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
     }
@@ -1826,8 +1826,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getCanAffectAlly();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectAlly);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectAlly);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
     }
@@ -1839,8 +1839,8 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getCanAffectEnemy();
-        this._labelTitle.setLangText(Lang_Constants.TextType.AffectEnemy);
-        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTitle.setLangText(Lang_TextType.TextType.AffectEnemy);
+        this._labelValue.setLangText(currentValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
     }
@@ -1854,10 +1854,10 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const data          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData());
         const offsetHp      = data.getOffsetHp();
         const canBeFatal    = data.getCanBeFatal();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsHpOffset);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsHpOffset);
         this._labelValue.setText(`${offsetHp}`);
         this._groupExtra.setIsVisible(canBeFatal);
-        this._labelExtraInfo.setLangText(Lang_Constants.TextType.CanBeFatal);
+        this._labelExtraInfo.setLangText(Lang_TextType.TextType.CanBeFatal);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
     }
     private _updateViewAsLaserTurretDeltaFuelPercentage(): void {
@@ -1868,7 +1868,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getOffsetFuelPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsFuelOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsFuelOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1881,7 +1881,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { tile, war } = openData;
         const currentValue          = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getOffsetPrimaryAmmoPercentage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsPriAmmoOffset$);
+        this._labelTitle.setLangText(Lang_TextType.TextType.UnitsPriAmmoOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((WarTypes_Utils.checkCanCheatInWar(war.getWarType())) && (tile.checkIsCustomMapWeapon()));
@@ -1889,106 +1889,106 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     private _showHelpAsDefenseBonus(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0352),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0088),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0352),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0088),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsIncome(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Income),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0086),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.Income),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0086),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsVision(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.VisionRange),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0082),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.VisionRange),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0082),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsHideUnitCategory(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.HidableUnits),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0079),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.HidableUnits),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0079),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsIsDefeatedOnCapture(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.DefeatIfCaptured),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0077),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.DefeatIfCaptured),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0077),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsProduceUnitCategory(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.ProducibleUnits),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0074),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.ProducibleUnits),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0074),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsGlobalBonus(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0359),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0068),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0359),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0068),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsRepairUnitCategory(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.RepairableUnits),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0065),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.RepairableUnits),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0065),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsBlockEnemyUnit(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.BlockableEnemyUnits),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0012),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.BlockableEnemyUnits),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0012),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsCoBoardUnit(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.CoBoardableUnit),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0011),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.CoBoardableUnit),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0011),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsHp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0059),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.Hp),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0059),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsCapturePoint(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0052),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.CapturePoint),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0052),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsBuildPoint(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0051),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.BuildPoint),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0051),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsIsHighlighted(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0847),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0050),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0847),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0050),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsBuff(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0737),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.AbnormalStates),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0737),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
@@ -2330,7 +2330,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             gameConfig             : gameConfig,
             callbackOnConfirm      : newUnitTypeArray => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.DefBonus$),
+                    getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.DefBonus$),
                     minValue     : minValue,
                     maxValue     : maxValue,
                     currentValue : tile.getDefenseAmount(),
@@ -2355,7 +2355,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const maxValue  = Tiles_Constants_CustomLimits.Building.IncomePerTurn.MaxValue;
         const minValue  = Tiles_Constants_CustomLimits.Building.IncomePerTurn.MinValue;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Income),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Income),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : tile.getIncomePerTurn(),
@@ -2379,7 +2379,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const maxValue      = Tiles_Constants_CustomLimits.Building.VisionRange.MaxValue;
         const minValue      = Tiles_Constants_CustomLimits.Building.VisionRange.MinValue;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.VisionRange),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.VisionRange),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : tile.getCfgVisionRange(),
@@ -2394,11 +2394,11 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                     war.updateTilesAndUnitsOnVisibilityChanged(false);
                 };
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0018),
+                    getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0018),
                     callback          : () => callback(false),
                     callbackOnCancel  : () => callback(true),
-                    getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
-                    getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
+                    getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.Yes),
+                    getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.No),
                 });
             },
         });
@@ -2472,13 +2472,13 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const maxValue  = Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MaxValue;
         const minValue  = Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MinValue;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0183),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0183),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : tile.getGlobalAttackBonus(),
             callback     : newAttackBonus => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.DefBonus$),
+                    getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.DefBonus$),
                     minValue     : minValue,
                     maxValue     : maxValue,
                     currentValue : tile.getGlobalDefenseBonus(),
@@ -2517,7 +2517,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                     const minValue  = -1;
                     const maxValue  = Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MaxValue;
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                        getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
+                        getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Hp),
                         currentValue : tile.getRepairNormalizedHp() ?? -1,
                         minValue     : minValue,
                         maxValue     : maxValue,
@@ -2588,7 +2588,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const tile = openData.tile;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Hp),
             currentValue : tile.getCurrentHp(),
             minValue     : 0,
             maxValue     : tile.getMaxHp() ?? 0,
@@ -2611,7 +2611,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const currentValue = tile.getCurrentCapturePoint();
         if (tile.getIsCustomizableBuilding()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.MaxCapturePoint),
+                getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.MaxCapturePoint),
                 currentValue : tile.getMaxCapturePoint(),
                 minValue     : 0,
                 maxValue     : Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MaxValue,
@@ -2624,7 +2624,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                         this._updateView();
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
+                            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.CapturePoint),
                             currentValue : currentValue,
                             minValue     : 0,
                             maxValue     : newMaxCapturePoint,
@@ -2641,7 +2641,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
+                getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.CapturePoint),
                 currentValue : currentValue,
                 minValue     : 0,
                 maxValue     : tile.getMaxCapturePoint() ?? 0,
@@ -2665,7 +2665,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const tile = openData.tile;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.BuildPoint),
             currentValue : tile.getCurrentBuildPoint(),
             minValue     : Tiles_Constants_CustomLimits.Common.CurrentBuildPoint.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Common.CurrentBuildPoint.MaxValue,
@@ -2721,7 +2721,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const minValue  = Tiles_Constants_CustomLimits.Crystal.Radius.MinValue;
         const maxValue  = Tiles_Constants_CustomLimits.Crystal.Radius.MaxValue;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.EffectiveRadius),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.EffectiveRadius),
             currentValue : currValue,
             minValue     : minValue,
             maxValue     : maxValue,
@@ -2748,7 +2748,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const minValue  = Tiles_Constants_CustomLimits.Crystal.Priority.MinValue;
         const maxValue  = Tiles_Constants_CustomLimits.Crystal.Priority.MaxValue;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Priority),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Priority),
             currentValue : currValue,
             minValue     : minValue,
             maxValue     : maxValue,
@@ -2824,7 +2824,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getOffsetFund();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.FundOffset),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.FundOffset),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MaxValue,
@@ -2849,7 +2849,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getOffsetEnergyPercentage();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.CoEnergyOffset$),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.CoEnergyOffset$),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MaxValue,
@@ -2884,15 +2884,15 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         };
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.UnitsHpOffset),
             currentValue : customCrystalData.getOffsetHp(),
             minValue     : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MaxValue,
             callback     : value => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getTitle          : () => Lang_Utils.getText(Lang_Constants.TextType.CanBeFatal),
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0958),
-                getTextForConfirm : () => `${Lang_Utils.getText(Lang_Constants.TextType.Yes)}${canBeFatal ? `(${Lang_Utils.getText(Lang_Constants.TextType.B1379)})` : ``}`,
-                getTextForCancel  : () => `${Lang_Utils.getText(Lang_Constants.TextType.No)}${!canBeFatal ? `(${Lang_Utils.getText(Lang_Constants.TextType.B1379)})` : ``}`,
+                getTitle          : () => Lang_Utils.getText(Lang_TextType.TextType.CanBeFatal),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0958),
+                getTextForConfirm : () => `${Lang_Utils.getText(Lang_TextType.TextType.Yes)}${canBeFatal ? `(${Lang_Utils.getText(Lang_TextType.TextType.B1379)})` : ``}`,
+                getTextForCancel  : () => `${Lang_Utils.getText(Lang_TextType.TextType.No)}${!canBeFatal ? `(${Lang_Utils.getText(Lang_TextType.TextType.B1379)})` : ``}`,
                 callback          : () => callback(value, true),
                 callbackOnCancel  : () => callback(value, false),
             }),
@@ -2912,7 +2912,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getOffsetFuelPercentage();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.UnitsFuelOffset$),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MaxValue,
@@ -2937,7 +2937,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCrystalData()).getOffsetPrimaryAmmoPercentage();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.UnitsPriAmmoOffset$),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MaxValue,
@@ -2962,7 +2962,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCannonData()).getRangeForUp();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.RangeUp),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.RangeUp),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Cannon.RangeForUp.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Cannon.RangeForUp.MaxValue,
@@ -2987,7 +2987,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCannonData()).getRangeForRight();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.RangeRight),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.RangeRight),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Cannon.RangeForRight.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Cannon.RangeForRight.MaxValue,
@@ -3012,7 +3012,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCannonData()).getRangeForDown();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.RangeDown),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.RangeDown),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Cannon.RangeForDown.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Cannon.RangeForDown.MaxValue,
@@ -3037,7 +3037,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCannonData()).getRangeForLeft();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.RangeLeft),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.RangeLeft),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Cannon.RangeForLeft.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Cannon.RangeForLeft.MaxValue,
@@ -3062,7 +3062,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCannonData()).getPriority();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Priority),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Priority),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Cannon.Priority.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Cannon.Priority.MaxValue,
@@ -3087,7 +3087,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCannonData()).getMaxTargetCount();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.MaxTargets),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.MaxTargets),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Cannon.MaxTargetCount.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Cannon.MaxTargetCount.MaxValue,
@@ -3173,15 +3173,15 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         };
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.UnitsHpOffset),
             currentValue : customCannonData.getOffsetHp(),
             minValue     : Tiles_Constants_CustomLimits.Cannon.OffsetHp.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Cannon.OffsetHp.MaxValue,
             callback     : value => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getTitle          : () => Lang_Utils.getText(Lang_Constants.TextType.CanBeFatal),
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0958),
-                getTextForConfirm : () => `${Lang_Utils.getText(Lang_Constants.TextType.Yes)}${canBeFatal ? `(${Lang_Utils.getText(Lang_Constants.TextType.B1379)})` : ``}`,
-                getTextForCancel  : () => `${Lang_Utils.getText(Lang_Constants.TextType.No)}${!canBeFatal ? `(${Lang_Utils.getText(Lang_Constants.TextType.B1379)})` : ``}`,
+                getTitle          : () => Lang_Utils.getText(Lang_TextType.TextType.CanBeFatal),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0958),
+                getTextForConfirm : () => `${Lang_Utils.getText(Lang_TextType.TextType.Yes)}${canBeFatal ? `(${Lang_Utils.getText(Lang_TextType.TextType.B1379)})` : ``}`,
+                getTextForCancel  : () => `${Lang_Utils.getText(Lang_TextType.TextType.No)}${!canBeFatal ? `(${Lang_Utils.getText(Lang_TextType.TextType.B1379)})` : ``}`,
                 callback          : () => callback(value, true),
                 callbackOnCancel  : () => callback(value, false),
             }),
@@ -3201,7 +3201,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCannonData()).getOffsetFuelPercentage();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.UnitsFuelOffset$),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Cannon.OffsetFuelPercentage.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Cannon.OffsetFuelPercentage.MaxValue,
@@ -3226,7 +3226,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalCannonData()).getOffsetPrimaryAmmoPercentage();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.UnitsPriAmmoOffset$),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.Cannon.OffsetPrimaryAmmoPercentage.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.Cannon.OffsetPrimaryAmmoPercentage.MaxValue,
@@ -3251,7 +3251,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getRangeForUp();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.RangeUp),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.RangeUp),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.LaserTurret.RangeForUp.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.LaserTurret.RangeForUp.MaxValue,
@@ -3276,7 +3276,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getRangeForRight();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.RangeRight),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.RangeRight),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.LaserTurret.RangeForRight.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.LaserTurret.RangeForRight.MaxValue,
@@ -3301,7 +3301,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getRangeForDown();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.RangeDown),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.RangeDown),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.LaserTurret.RangeForDown.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.LaserTurret.RangeForDown.MaxValue,
@@ -3326,7 +3326,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getRangeForLeft();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.RangeLeft),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.RangeLeft),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.LaserTurret.RangeForLeft.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.LaserTurret.RangeForLeft.MaxValue,
@@ -3351,7 +3351,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getPriority();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Priority),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Priority),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.LaserTurret.Priority.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.LaserTurret.Priority.MaxValue,
@@ -3437,15 +3437,15 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         };
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.UnitsHpOffset),
             currentValue : customLaserTurretData.getOffsetHp(),
             minValue     : Tiles_Constants_CustomLimits.LaserTurret.OffsetHp.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.LaserTurret.OffsetHp.MaxValue,
             callback     : value => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getTitle          : () => Lang_Utils.getText(Lang_Constants.TextType.CanBeFatal),
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0958),
-                getTextForConfirm : () => `${Lang_Utils.getText(Lang_Constants.TextType.Yes)}${canBeFatal ? `(${Lang_Utils.getText(Lang_Constants.TextType.B1379)})` : ``}`,
-                getTextForCancel  : () => `${Lang_Utils.getText(Lang_Constants.TextType.No)}${!canBeFatal ? `(${Lang_Utils.getText(Lang_Constants.TextType.B1379)})` : ``}`,
+                getTitle          : () => Lang_Utils.getText(Lang_TextType.TextType.CanBeFatal),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0958),
+                getTextForConfirm : () => `${Lang_Utils.getText(Lang_TextType.TextType.Yes)}${canBeFatal ? `(${Lang_Utils.getText(Lang_TextType.TextType.B1379)})` : ``}`,
+                getTextForCancel  : () => `${Lang_Utils.getText(Lang_TextType.TextType.No)}${!canBeFatal ? `(${Lang_Utils.getText(Lang_TextType.TextType.B1379)})` : ``}`,
                 callback          : () => callback(value, true),
                 callbackOnCancel  : () => callback(value, false),
             }),
@@ -3465,7 +3465,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getOffsetFuelPercentage();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.UnitsFuelOffset$),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.LaserTurret.OffsetFuelPercentage.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.LaserTurret.OffsetFuelPercentage.MaxValue,
@@ -3490,7 +3490,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const currValue = Helpers_Misc.getExisted(tile.getFinalLaserTurretData()).getOffsetPrimaryAmmoPercentage();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.UnitsPriAmmoOffset$),
             currentValue : currValue,
             minValue     : Tiles_Constants_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MinValue,
             maxValue     : Tiles_Constants_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MaxValue,

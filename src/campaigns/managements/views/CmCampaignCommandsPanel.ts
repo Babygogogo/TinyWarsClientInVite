@@ -8,7 +8,7 @@ import {
     GamePanels_Manager,
     Campaigns_Managements_Gateway,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -67,17 +67,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgCmSetCampaignName(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
     private _onNotifyMsgCmSetCampaignDesc(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
     private _onNotifyMsgCmSetCampaignEnabled(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         this._updateBtnSetEnabled();
     }
     private _onNotifyMsgCmSetExtraLink(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     private _onTouchedBtnSetDesigner(): void {
@@ -88,7 +88,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnSetName(): Promise<void> {
         const selfUserId = Users_Model.getSelfUserId();
         if (selfUserId == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0102);
+            FloatText.showLang(Lang_TextType.TextType.A0102);
             return;
         }
 
@@ -99,7 +99,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const campaignInfo = await Campaigns_Mains_Provider.getCampaignInfo(campaignId);
         if ((campaignInfo == null) || (campaignInfo.getDesignerUserIdArray().indexOf(selfUserId) < 0)) {
-            FloatText.showLang(Lang_Constants.TextType.A0102);
+            FloatText.showLang(Lang_TextType.TextType.A0102);
             return;
         }
 
@@ -112,7 +112,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnSetDesc(): Promise<void> {
         const selfUserId = Users_Model.getSelfUserId();
         if (selfUserId == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0102);
+            FloatText.showLang(Lang_TextType.TextType.A0102);
             return;
         }
 
@@ -123,12 +123,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const campaignInfo = await Campaigns_Mains_Provider.getCampaignInfo(campaignId);
         if ((campaignInfo == null) || (campaignInfo.getDesignerUserIdArray().indexOf(selfUserId) < 0)) {
-            FloatText.showLang(Lang_Constants.TextType.A0102);
+            FloatText.showLang(Lang_TextType.TextType.A0102);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputLanguageTextPanel, {
-            getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B1137),
+            getTitle         : () => Lang_Utils.getText(Lang_TextType.TextType.B1137),
             currentTextArray : campaignInfo.getDescArray(),
             maxLength        : Campaigns_Constants.CampaignWar.MaxDescLength,
             callback         : descArray => Campaigns_Managements_Gateway.reqCmSetCampaignDesc(campaignId, descArray),
@@ -137,28 +137,28 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnSetExtraLink(): Promise<void> {
         const selfUserId = Users_Model.getSelfUserId();
         if (selfUserId == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0102);
+            FloatText.showLang(Lang_TextType.TextType.A0102);
             return;
         }
 
         const campaignId = this.getOpenData()?.campaignId;
         if (campaignId == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const campaignInfo = await Campaigns_Mains_Provider.getCampaignInfo(campaignId);
         if ((campaignInfo == null) || (!campaignInfo.getDesignerUserIdArray().includes(selfUserId))) {
-            FloatText.showLang(Lang_Constants.TextType.A0102);
+            FloatText.showLang(Lang_TextType.TextType.A0102);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B1481),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B1481),
             currentValue : campaignInfo.getExtraLink() ?? ``,
             minLength    : 0,
             maxChars     : Campaigns_Constants.MaxExtraLinkLength,
-            tips         : Lang_Utils.getText(Lang_Constants.TextType.A0999),
+            tips         : Lang_Utils.getText(Lang_TextType.TextType.A0999),
             charRestrict : null,
             isMultiLine  : false,
             canBeEmpty   : true,
@@ -169,14 +169,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     Campaigns_Managements_Gateway.reqCmSetExtraLink(campaignId, link);
                     panel.closePanel();
                 } else {
-                    FloatText.showLang(Lang_Constants.TextType.A0098);
+                    FloatText.showLang(Lang_TextType.TextType.A0098);
                 }
             },
         });
     }
     private async _onTouchedBtnSetEnabled(): Promise<void> {
         if (!Users_Model.getIsSelfCampaignManager()) {
-            FloatText.showLang(Lang_Constants.TextType.A0102);
+            FloatText.showLang(Lang_TextType.TextType.A0102);
             return;
         }
 
@@ -187,12 +187,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const campaignInfo = await Campaigns_Mains_Provider.getCampaignInfo(campaignId);
         if (campaignInfo == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0102);
+            FloatText.showLang(Lang_TextType.TextType.A0102);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => Campaigns_Managements_Gateway.reqCmSetCampaignEnabled(campaignId, !campaignInfo.getIsEnabled()),
         });
     }
@@ -207,12 +207,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1135)} #${this.getOpenData()?.campaignId}`);
-        this._btnSetDesigner.setLangText(Lang_Constants.TextType.B1136);
-        this._btnSetName.setLangText(Lang_Constants.TextType.B0708);
-        this._btnSetDesc.setLangText(Lang_Constants.TextType.B1137);
-        this._btnSetExtraLink.setLangText(Lang_Constants.TextType.B1481);
-        this._btnModifyMap.setLangText(Lang_Constants.TextType.B1045);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1135)} #${this.getOpenData()?.campaignId}`);
+        this._btnSetDesigner.setLangText(Lang_TextType.TextType.B1136);
+        this._btnSetName.setLangText(Lang_TextType.TextType.B0708);
+        this._btnSetDesc.setLangText(Lang_TextType.TextType.B1137);
+        this._btnSetExtraLink.setLangText(Lang_TextType.TextType.B1481);
+        this._btnModifyMap.setLangText(Lang_TextType.TextType.B1045);
 
         this._updateBtnSetEnabled();
     }
@@ -223,6 +223,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const info = await Campaigns_Mains_Provider.getCampaignInfo(campaignId);
-        this._btnSetEnabled.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1140)}: ${Lang_Utils.getTextForYesOrNo(info?.getIsEnabled())}`);
+        this._btnSetEnabled.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1140)}: ${Lang_Utils.getTextForYesOrNo(info?.getIsEnabled())}`);
     }
 }

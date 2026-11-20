@@ -7,7 +7,7 @@ import {
     GamePanels_Manager,
     Helpers_GameFlow,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MultiPlayerWar_Model_MpwModel,
     Players_Constants,
@@ -132,21 +132,21 @@ function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
         : null;
     if (mpwWarId != null) {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle          : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0964),
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0711),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B1446),
+            getTitle          : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0964),
+            getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B0711),
+            getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B1446),
             callback          : async () => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                    title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                    content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+                    title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                    content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
                 });
 
                 const warData = await MultiPlayerWar_Model_MpwModel.getOngoingWarData(mpwWarId);
                 if (warData) {
                     Helpers_GameFlow.gotoMultiPlayerWar(warData);
                 } else {
-                    FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                    FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 }
 
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
@@ -163,23 +163,23 @@ function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
     } else {
         if (war.getDrawVoteManager().checkIsDraw()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0030),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0030),
                 callback   : () => Helpers_GameFlow.gotoLobby(),
             });
         } else {
             const humanPlayerArray = war.getPlayerManager().getHumanPlayers();
             if (humanPlayerArray.length <= 0) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                    getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0035),
+                    getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0035),
                     callback   : () => Helpers_GameFlow.gotoLobby(),
                 });
             } else {
                 if (humanPlayerArray.every(v => v.getAliveState() === Players_Constants.AliveStateId.Dead)) {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                        getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0023),
+                        getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0023),
                         callback   : () => Helpers_GameFlow.gotoLobby(),
                     });
                 } else {
@@ -187,9 +187,9 @@ function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
                         const turnIndex     = war.getTurnManager().getTurnIndex();
                         const actionsCount  = war.getExecutedOperationManager().getExecutedOperationsCount();
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
+                            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
                             getContent : () => Lang_Utils.getFormattedText(
-                                Lang_Constants.TextType.F0127,
+                                Lang_TextType.TextType.F0127,
                                 SinglePlayerWars_Constants.PlayerScore.BaseScore,
                                 `${(turnIndex - 1) * -1000} (${turnIndex})`,
                                 `${-actionsCount} (${actionsCount})`,
@@ -200,7 +200,7 @@ function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
                                 Helpers_GameFlow.gotoLobby();
 
                                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0277),
+                                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0277),
                                     callback   : () => {
                                         SinglePlayerMode_Model_SpmProxy.reqSpmValidateSrw(war);
                                     },
@@ -213,9 +213,9 @@ function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
                         const actionsCount  = war.getExecutedOperationManager().getExecutedOperationsCount();
                         const newScore      = war.calculateTotalScore();
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
+                            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
                             getContent : () => Lang_Utils.getFormattedText(
-                                Lang_Constants.TextType.F0127,
+                                Lang_TextType.TextType.F0127,
                                 SinglePlayerWars_Constants.PlayerScore.BaseScore,
                                 `${(turnIndex - 1) * -1000} (${turnIndex})`,
                                 `${-actionsCount} (${actionsCount})`,
@@ -240,8 +240,8 @@ function checkAndEndWar(war: SinglePlayerWars_War.War): boolean {
 
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0022),
+                            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0022),
                             callback   : () => Helpers_GameFlow.gotoLobby(),
                         });
                     }

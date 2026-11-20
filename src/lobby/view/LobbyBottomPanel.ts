@@ -14,7 +14,7 @@ import {
     Helpers_PointerInput,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Graphics_Constants,
     Ui_Components_UiPanel,
     WarTypes_Constants,
@@ -109,14 +109,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
         const languageType2 = Lang_Utils.getSecondaryLanguageType();
-        this._labelProfile1.setLangText(Lang_Constants.TextType.B1375);
-        this._labelProfile2.setLangText(Lang_Constants.TextType.B1375, languageType2);
-        this._labelChat1.setLangText(Lang_Constants.TextType.B1376);
-        this._labelChat2.setLangText(Lang_Constants.TextType.B1376, languageType2);
-        this._labelMapEditor1.setLangText(Lang_Constants.TextType.B1377);
-        this._labelMapEditor2.setLangText(Lang_Constants.TextType.B1377, languageType2);
-        this._labelGameChart1.setLangText(Lang_Constants.TextType.B0900);
-        this._labelGameChart2.setLangText(Lang_Constants.TextType.B0900, languageType2);
+        this._labelProfile1.setLangText(Lang_TextType.TextType.B1375);
+        this._labelProfile2.setLangText(Lang_TextType.TextType.B1375, languageType2);
+        this._labelChat1.setLangText(Lang_TextType.TextType.B1376);
+        this._labelChat2.setLangText(Lang_TextType.TextType.B1376, languageType2);
+        this._labelMapEditor1.setLangText(Lang_TextType.TextType.B1377);
+        this._labelMapEditor2.setLangText(Lang_TextType.TextType.B1377, languageType2);
+        this._labelGameChart1.setLangText(Lang_TextType.TextType.B0900);
+        this._labelGameChart2.setLangText(Lang_TextType.TextType.B0900, languageType2);
         this._labelVersion.setText(Lang_Utils.getGameVersionName(window.GAME_VERSION) ?? Lang_Constants.UndefinedError);
 
         this._imgChatRed.setX(this._layoutChat.getX() + this._labelChat1.getScaledWidth());

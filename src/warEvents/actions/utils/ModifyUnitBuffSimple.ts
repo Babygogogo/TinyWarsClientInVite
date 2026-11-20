@@ -10,7 +10,7 @@ import {
     Lang_Utils,
     Numbers_Constants,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type Players_Player,
@@ -39,7 +39,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     const textArray: string[] = [];
     {
         if (data.getActBuffType() != null) {
-            textArray.push(Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
+            textArray.push(Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId));
         }
     }
     {
@@ -48,14 +48,14 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
             (data.getActEndTurnIndex() != null)                                            ||
             (data.getActEndTurnIndexMode() != WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange)
         ) {
-            textArray.push(Lang_Utils.getText(Lang_Constants.TextType.EndTime));
+            textArray.push(Lang_Utils.getText(Lang_TextType.TextType.EndTime));
         }
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0254,
-        Lang_Utils.getText(Lang_Constants.TextType.B1468),
-        textArray.join(`, `) || Lang_Utils.getText(Lang_Constants.TextType.None),
+        Lang_TextType.TextType.F0254,
+        Lang_Utils.getText(Lang_TextType.TextType.B1468),
+        textArray.join(`, `) || Lang_Utils.getText(Lang_TextType.TextType.None),
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaModifyUnitBuffSimple>): string | null {
@@ -80,18 +80,18 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         {
             const filter = data.getConTileFilter();
             if (filter != null) {
-                conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
+                conTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
         {
             const filter = data.getConPlayerFilter();
             if (filter != null) {
-                conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
+                conTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
 
         if (!conTextArray.length) {
-            conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
+            conTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.A0944)}`);
         }
     }
 
@@ -100,7 +100,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         {
             const act = data.getActBuffType();
             if (act != null) {
-                actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId)}: ${Lang_Utils.getUnitBuffName(act)}`);
+                actTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId)}: ${Lang_Utils.getUnitBuffName(act)}`);
             }
         }
         {
@@ -112,27 +112,27 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
                 if ((turnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete) ||
                     (playerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)
                 ) {
-                    actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndTime)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1455)}`);
+                    actTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.EndTime)}: ${Lang_Utils.getText(Lang_TextType.TextType.B1455)}`);
                 } else {
                     {
                         const turnIndex = data.getActEndTurnIndex() ?? 0;
                         if (turnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.AddOffset) {
-                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1460)} ${turnIndex >= 0 ? `+` : ``}${turnIndex}`);
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.EndTurnIndex)}: ${Lang_Utils.getText(Lang_TextType.TextType.B1460)} ${turnIndex >= 0 ? `+` : ``}${turnIndex}`);
                         } else if (turnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetAbsoluteValue) {
-                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex)}: ${turnIndex}`);
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.EndTurnIndex)}: ${turnIndex}`);
                         } else if (turnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetValueRelativeToCurrentTime) {
-                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1461)} ${turnIndex >= 0 ? `+` : ``}${turnIndex}`);
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.EndTurnIndex)}: ${Lang_Utils.getText(Lang_TextType.TextType.B1461)} ${turnIndex >= 0 ? `+` : ``}${turnIndex}`);
                         }
                     }
 
                     {
                         const playerIndex = data.getActEndPlayerIndex() ?? 0;
                         if (playerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.AddOffset) {
-                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1460)} ${playerIndex >= 0 ? `+` : ``}${playerIndex}`);
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.EndPlayerIndex)}: ${Lang_Utils.getText(Lang_TextType.TextType.B1460)} ${playerIndex >= 0 ? `+` : ``}${playerIndex}`);
                         } else if (playerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetAbsoluteValue) {
-                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex)}: ${playerIndex}`);
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.EndPlayerIndex)}: ${playerIndex}`);
                         } else if (playerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetValueRelativeToCurrentTime) {
-                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1461)} ${playerIndex >= 0 ? `+` : ``}${playerIndex}`);
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.EndPlayerIndex)}: ${Lang_Utils.getText(Lang_TextType.TextType.B1461)} ${playerIndex >= 0 ? `+` : ``}${playerIndex}`);
                         }
                     }
                 }
@@ -140,15 +140,15 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         }
 
         if (!actTextArray.length) {
-            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0957)}`);
+            actTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.A0957)}`);
         }
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0255,
-        Lang_Utils.getText(Lang_Constants.TextType.B1468),
+        Lang_TextType.TextType.F0255,
+        Lang_Utils.getText(Lang_TextType.TextType.B1468),
         conTextArray.join(`\n`),
-        Lang_Utils.getText(Lang_Constants.TextType.B1468),
+        Lang_Utils.getText(Lang_TextType.TextType.B1468),
         actTextArray.join(`\n`),
     );
 }
@@ -164,7 +164,7 @@ export function getErrorTip(
         if ((filter != null)                                                            &&
             (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gcData))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerFilter));
         }
     }
     {
@@ -172,7 +172,7 @@ export function getErrorTip(
         if ((filter != null) &&
             (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gcData))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitFilter));
         }
     }
     {
@@ -180,7 +180,7 @@ export function getErrorTip(
         if ((filter != null)                                                                    &&
             (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gcData))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileFilter));
         }
     }
     {
@@ -188,13 +188,13 @@ export function getErrorTip(
         if ((filter != null)                                &&
             (!UnitBuffs_Utils_Filter.checkIsValid(filter))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1235));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1235));
         }
     }
     {
         const con = data.getConMaxModifyCount();
         if ((con != null) && (con <= 0)) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1457));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1457));
         }
     }
 
@@ -202,7 +202,7 @@ export function getErrorTip(
         const act = data.getActBuffType();
         if (act != null) {
             if (!UnitBuffs_Utils_Common.checkIsValidTypeId(act)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId));
             }
         }
     }
@@ -212,54 +212,54 @@ export function getErrorTip(
         if ((!WarEvents_Actions_Utils_Common.checkIsValidBuffEndTimeModificationMode(actEndTurnIndexMode)) ||
             (!WarEvents_Actions_Utils_Common.checkIsValidBuffEndTimeModificationMode(actEndPlayerIndexMode))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1458));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1458));
         }
 
         if ((actEndTurnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)     ||
             (actEndPlayerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)
         ) {
             if (actEndTurnIndexMode != actEndPlayerIndexMode) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1458));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1458));
             }
 
             if (data.getActEndTurnIndex() != null) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EndTurnIndex));
             }
 
             if (data.getActEndPlayerIndex() != null) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EndPlayerIndex));
             }
 
         } else {
             if (actEndTurnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) {
                 if (data.getActEndTurnIndex() != null) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EndTurnIndex));
                 }
 
             } else {
                 const actEndTurnIndex = data.getActEndTurnIndex();
                 if (actEndTurnIndex == null) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EndTurnIndex));
                 }
 
                 if (!UnitBuffs_Utils_Common.checkIsValidModificationEndTurnIndex(actEndTurnIndex)) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EndTurnIndex));
                 }
             }
 
             if (actEndPlayerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) {
                 if (data.getActEndPlayerIndex() != null) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EndPlayerIndex));
                 }
 
             } else {
                 const actEndPlayerIndex = data.getActEndPlayerIndex();
                 if (actEndPlayerIndex == null) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EndPlayerIndex));
                 }
 
                 if (!UnitBuffs_Utils_Common.checkIsValidModificationEndPlayerIndex(actEndPlayerIndex)) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EndPlayerIndex));
                 }
             }
         }

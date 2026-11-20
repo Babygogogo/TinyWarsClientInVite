@@ -25,7 +25,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -38,7 +38,7 @@ import {
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
 
- 
+
 const enum CommandType {
     C0_SinglePlayer,
     C0_MultiPlayer,
@@ -336,7 +336,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                         callback        : async () => {
                                             const tourneyIdArray = (await AutoTourneys_Mains_Provider.getSinglePhaseInfoArrayForPhase(AutoTourneys_Constants.PhaseId.Registration))?.map(v => v.getTourneyId());
                                             if (tourneyIdArray.length <= 0) {
-                                                FloatText.showLang(Lang_Constants.TextType.A0403);
+                                                FloatText.showLang(Lang_TextType.TextType.A0403);
                                                 return;
                                             }
 
@@ -354,7 +354,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                         isExpandVisible : false,
                                         callback        : async () => {
                                             if ((await AutoTourneys_Mains_Provider.getLastTourneyId()) == null) {
-                                                FloatText.showLang(Lang_Constants.TextType.B0278);
+                                                FloatText.showLang(Lang_TextType.TextType.B0278);
                                                 return;
                                             }
 
@@ -368,7 +368,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                         callback        : async () => {
                                             const tourneyIdArray = (await AutoTourneys_Mains_Provider.getAtPhaseInfo())?.infoArray.map(v => v.getTourneyId()) ?? [];
                                             if (tourneyIdArray.length <= 0) {
-                                                FloatText.showLang(Lang_Constants.TextType.B0278);
+                                                FloatText.showLang(Lang_TextType.TextType.B0278);
                                                 return;
                                             }
 
@@ -740,43 +740,43 @@ class CommandRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
 function getCommandName(commandType: CommandType): string | null {
     switch (commandType) {
-        case CommandType.C0_SinglePlayer                : return Lang_Utils.getText(Lang_Constants.TextType.B0138);
-        case CommandType.C0_MultiPlayer                 : return Lang_Utils.getText(Lang_Constants.TextType.B0137);
-        case CommandType.C0_MyProfile                   : return Lang_Utils.getText(Lang_Constants.TextType.B0169);
-        case CommandType.C0_Chat                        : return Lang_Utils.getText(Lang_Constants.TextType.B0383);
-        case CommandType.C0_GameChart                   : return Lang_Utils.getText(Lang_Constants.TextType.B0900);
-        case CommandType.C0_GameSettings                : return Lang_Utils.getText(Lang_Constants.TextType.B0604);
-        case CommandType.C0_MapEditor                   : return Lang_Utils.getText(Lang_Constants.TextType.B0271);
-        case CommandType.C1_Sp_Campaign                 : return Lang_Utils.getText(Lang_Constants.TextType.B1135);
-        case CommandType.C1_Sp_Continue                 : return Lang_Utils.getText(Lang_Constants.TextType.B0024);
-        case CommandType.C1_Sp_Sandbox                  : return Lang_Utils.getText(Lang_Constants.TextType.B1262);
-        case CommandType.C1_Sp_WarRoom                  : return Lang_Utils.getText(Lang_Constants.TextType.B0614);
-        case CommandType.C1_Mp_AutoTourneyMode          : return Lang_Utils.getText(Lang_Constants.TextType.B1022);
-        case CommandType.C1_Mp_MatchMode                : return Lang_Utils.getText(Lang_Constants.TextType.B1012);
-        case CommandType.C1_Mp_RankedMode               : return Lang_Utils.getText(Lang_Constants.TextType.B0404);
-        case CommandType.C1_Mp_CreateRoom               : return Lang_Utils.getText(Lang_Constants.TextType.B0000);
-        case CommandType.C1_Mp_JoinRoom                 : return Lang_Utils.getText(Lang_Constants.TextType.B0580);
-        case CommandType.C1_Mp_MyRooms                  : return Lang_Utils.getText(Lang_Constants.TextType.B0410);
-        case CommandType.C1_Mp_MyGames                  : return Lang_Utils.getText(Lang_Constants.TextType.B1283);
-        case CommandType.C1_Mp_Replay                   : return Lang_Utils.getText(Lang_Constants.TextType.B0710);
-        case CommandType.C1_Mp_Spectate                 : return Lang_Utils.getText(Lang_Constants.TextType.B0872);
-        case CommandType.C2_Mp_CreateRoom_Ccr           : return Lang_Utils.getText(Lang_Constants.TextType.B0646);
-        case CommandType.C2_Mp_CreateRoom_Mcr           : return Lang_Utils.getText(Lang_Constants.TextType.B1011);
-        case CommandType.C2_Mp_Spectate_Continue        : return Lang_Utils.getText(Lang_Constants.TextType.B0222);
-        case CommandType.C2_Mp_Spectate_DeleteSpectator : return Lang_Utils.getText(Lang_Constants.TextType.B0219);
-        case CommandType.C2_Mp_Spectate_HandleRequest   : return Lang_Utils.getText(Lang_Constants.TextType.B0208);
-        case CommandType.C2_Mp_Spectate_MakeRequest     : return Lang_Utils.getText(Lang_Constants.TextType.B0207);
-        case CommandType.C2_Mp_RankedMode_BanMap        : return Lang_Utils.getText(Lang_Constants.TextType.B0084);
-        case CommandType.C2_Mp_RankedMode_PreviewMap    : return Lang_Utils.getText(Lang_Constants.TextType.B0594);
-        case CommandType.C2_Mp_RankedMode_SetGameNumber : return Lang_Utils.getText(Lang_Constants.TextType.B0413);
-        case CommandType.C2_Mp_RankedMode_SetGameTimer  : return Lang_Utils.getText(Lang_Constants.TextType.B1284);
-        case CommandType.C2_Mp_MatchMode_BanMap         : return Lang_Utils.getText(Lang_Constants.TextType.B0084);
-        case CommandType.C2_Mp_MatchMode_PreviewMap     : return Lang_Utils.getText(Lang_Constants.TextType.B0594);
-        case CommandType.C2_Mp_MatchMode_SetGameNumber  : return Lang_Utils.getText(Lang_Constants.TextType.B0413);
-        case CommandType.C2_Mp_MatchMode_SetGameTimer   : return Lang_Utils.getText(Lang_Constants.TextType.B1284);
-        case CommandType.C2_Mp_AutoTourney_PreviewMap   : return Lang_Utils.getText(Lang_Constants.TextType.B0594);
-        case CommandType.C2_Mp_AutoTourney_Registration : return Lang_Utils.getText(Lang_Constants.TextType.B1025);
-        case CommandType.C2_Mp_AutoTourney_TourneyInfo  : return Lang_Utils.getText(Lang_Constants.TextType.B0423);
+        case CommandType.C0_SinglePlayer                : return Lang_Utils.getText(Lang_TextType.TextType.B0138);
+        case CommandType.C0_MultiPlayer                 : return Lang_Utils.getText(Lang_TextType.TextType.B0137);
+        case CommandType.C0_MyProfile                   : return Lang_Utils.getText(Lang_TextType.TextType.B0169);
+        case CommandType.C0_Chat                        : return Lang_Utils.getText(Lang_TextType.TextType.B0383);
+        case CommandType.C0_GameChart                   : return Lang_Utils.getText(Lang_TextType.TextType.B0900);
+        case CommandType.C0_GameSettings                : return Lang_Utils.getText(Lang_TextType.TextType.B0604);
+        case CommandType.C0_MapEditor                   : return Lang_Utils.getText(Lang_TextType.TextType.B0271);
+        case CommandType.C1_Sp_Campaign                 : return Lang_Utils.getText(Lang_TextType.TextType.B1135);
+        case CommandType.C1_Sp_Continue                 : return Lang_Utils.getText(Lang_TextType.TextType.B0024);
+        case CommandType.C1_Sp_Sandbox                  : return Lang_Utils.getText(Lang_TextType.TextType.B1262);
+        case CommandType.C1_Sp_WarRoom                  : return Lang_Utils.getText(Lang_TextType.TextType.B0614);
+        case CommandType.C1_Mp_AutoTourneyMode          : return Lang_Utils.getText(Lang_TextType.TextType.B1022);
+        case CommandType.C1_Mp_MatchMode                : return Lang_Utils.getText(Lang_TextType.TextType.B1012);
+        case CommandType.C1_Mp_RankedMode               : return Lang_Utils.getText(Lang_TextType.TextType.B0404);
+        case CommandType.C1_Mp_CreateRoom               : return Lang_Utils.getText(Lang_TextType.TextType.B0000);
+        case CommandType.C1_Mp_JoinRoom                 : return Lang_Utils.getText(Lang_TextType.TextType.B0580);
+        case CommandType.C1_Mp_MyRooms                  : return Lang_Utils.getText(Lang_TextType.TextType.B0410);
+        case CommandType.C1_Mp_MyGames                  : return Lang_Utils.getText(Lang_TextType.TextType.B1283);
+        case CommandType.C1_Mp_Replay                   : return Lang_Utils.getText(Lang_TextType.TextType.B0710);
+        case CommandType.C1_Mp_Spectate                 : return Lang_Utils.getText(Lang_TextType.TextType.B0872);
+        case CommandType.C2_Mp_CreateRoom_Ccr           : return Lang_Utils.getText(Lang_TextType.TextType.B0646);
+        case CommandType.C2_Mp_CreateRoom_Mcr           : return Lang_Utils.getText(Lang_TextType.TextType.B1011);
+        case CommandType.C2_Mp_Spectate_Continue        : return Lang_Utils.getText(Lang_TextType.TextType.B0222);
+        case CommandType.C2_Mp_Spectate_DeleteSpectator : return Lang_Utils.getText(Lang_TextType.TextType.B0219);
+        case CommandType.C2_Mp_Spectate_HandleRequest   : return Lang_Utils.getText(Lang_TextType.TextType.B0208);
+        case CommandType.C2_Mp_Spectate_MakeRequest     : return Lang_Utils.getText(Lang_TextType.TextType.B0207);
+        case CommandType.C2_Mp_RankedMode_BanMap        : return Lang_Utils.getText(Lang_TextType.TextType.B0084);
+        case CommandType.C2_Mp_RankedMode_PreviewMap    : return Lang_Utils.getText(Lang_TextType.TextType.B0594);
+        case CommandType.C2_Mp_RankedMode_SetGameNumber : return Lang_Utils.getText(Lang_TextType.TextType.B0413);
+        case CommandType.C2_Mp_RankedMode_SetGameTimer  : return Lang_Utils.getText(Lang_TextType.TextType.B1284);
+        case CommandType.C2_Mp_MatchMode_BanMap         : return Lang_Utils.getText(Lang_TextType.TextType.B0084);
+        case CommandType.C2_Mp_MatchMode_PreviewMap     : return Lang_Utils.getText(Lang_TextType.TextType.B0594);
+        case CommandType.C2_Mp_MatchMode_SetGameNumber  : return Lang_Utils.getText(Lang_TextType.TextType.B0413);
+        case CommandType.C2_Mp_MatchMode_SetGameTimer   : return Lang_Utils.getText(Lang_TextType.TextType.B1284);
+        case CommandType.C2_Mp_AutoTourney_PreviewMap   : return Lang_Utils.getText(Lang_TextType.TextType.B0594);
+        case CommandType.C2_Mp_AutoTourney_Registration : return Lang_Utils.getText(Lang_TextType.TextType.B1025);
+        case CommandType.C2_Mp_AutoTourney_TourneyInfo  : return Lang_Utils.getText(Lang_TextType.TextType.B0423);
         case CommandType.TODO                           : return `TODO`;
         default                                         : return null;
     }

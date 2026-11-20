@@ -1,7 +1,7 @@
 import {
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     LocalData_Storage,
     Ui_Components_UiPanel,
@@ -53,11 +53,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue  = 0;
         const maxValue  = 5000;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0846),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0846),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : LocalData_Storage.getReplayPauseTime(),
-            getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0290),
+            getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0290),
             callback     : value => {
                 LocalData_Storage.setReplayPauseTime(value);
                 this._updateLabelPauseTime();
@@ -80,9 +80,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0846);
-        this._labelPauseTimeTitle.setLangText(Lang_Constants.TextType.B0846);
-        this._labelTurnStartTitle.setLangText(Lang_Constants.TextType.B1337);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0846);
+        this._labelPauseTimeTitle.setLangText(Lang_TextType.TextType.B0846);
+        this._labelTurnStartTitle.setLangText(Lang_TextType.TextType.B1337);
     }
     private _updateComponentsForFilter(): void {
         this._updateLabelPauseTime();
@@ -94,6 +94,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelTurnStart(): void {
-        this._labelTurnStart.setLangText(LocalData_Storage.getIsShowReplayTurnStartPopup() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTurnStart.setLangText(LocalData_Storage.getIsShowReplayTurnStartPopup() ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
 }

@@ -10,7 +10,7 @@ import {
     FloatText,
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     SinglePlayerWars_War,
     Sounds_Constants,
@@ -179,13 +179,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const targetsCount  = CoSkills_Utils_Common.getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
             if (targetsCount <= 0) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0142),
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0054),
+                    getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0142),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0054),
                     callback   : () => ActionPlanners_States_RequestingPlayerUseCoActiveSkill.RequestingPlayerUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null),
                 });
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
+                    getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0205, targetsCount),
                     callback   : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnTouchButton(actionPlanner, skillType),
                 });
             }
@@ -212,13 +212,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const targetsCount  = CoSkills_Utils_Common.getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
             if (targetsCount <= 0) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0144),
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0058),
+                    getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0144),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0058),
                     callback   : () => ActionPlanners_States_RequestingPlayerUseCoActiveSkill.RequestingPlayerUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null),
                 });
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
+                    getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0205, targetsCount),
                     callback   : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnTouchButton(actionPlanner, skillType),
                 });
             }
@@ -231,11 +231,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (war.getIsExecutingAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0374));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0374));
             return;
         }
         if (!war.checkIsHumanInTurn()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
@@ -243,7 +243,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const retractId         = retractManager.getNextRetractId() - 2;
         const retractState      = retractManager.getRetractState(retractId);
         if (retractState == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0318));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0318));
         } else {
             war.fastLoadState(SerialWar.decode(retractState));
             retractManager.setNextRetractId(retractId + 1);
@@ -261,11 +261,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (war.getIsExecutingAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0374));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0374));
             return;
         }
         if (!war.checkIsHumanInTurn()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
@@ -273,7 +273,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const retractId         = Math.max(1, retractManager.getNextRetractId());
         const retractState      = retractManager.getRetractState(retractId);
         if (retractState == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0319));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0319));
         } else {
             war.fastLoadState(SerialWar.decode(retractState));
             retractManager.setNextRetractId(retractId + 1);
@@ -352,10 +352,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (war.getDrawVoteManager().checkNeedVoteBeforeEndTurn(war.getPlayerIndexInTurn())) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0034));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0034));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0036),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0036),
                 getContent : () => war.getHintForEndTurn(),
                 callback   : () => ActionPlanners_States_RequestingPlayerEndTurn.RequestingPlayerEndTurn.getInstance().doApplyOnChooseAction(planner),
             });
@@ -429,17 +429,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCop.setLangText(Lang_Constants.TextType.B0142);
-        this._btnScop.setLangText(Lang_Constants.TextType.B0144);
-        this._btnUndo.setLangText(Lang_Constants.TextType.B0923);
-        this._btnRedo.setLangText(Lang_Constants.TextType.B0924);
-        this._btnNextUnit.setLangText(Lang_Constants.TextType.B0685);
-        this._btnNextTile.setLangText(Lang_Constants.TextType.B0686);
-        this._btnEndTurn.setLangText(Lang_Constants.TextType.B0036);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
-        this._btnInfo.setLangText(Lang_Constants.TextType.B0223);
-        this._btnMenu.setLangText(Lang_Constants.TextType.B0155);
-        this._btnTaskObjective.setLangText(Lang_Constants.TextType.B1480);
+        this._btnCop.setLangText(Lang_TextType.TextType.B0142);
+        this._btnScop.setLangText(Lang_TextType.TextType.B0144);
+        this._btnUndo.setLangText(Lang_TextType.TextType.B0923);
+        this._btnRedo.setLangText(Lang_TextType.TextType.B0924);
+        this._btnNextUnit.setLangText(Lang_TextType.TextType.B0685);
+        this._btnNextTile.setLangText(Lang_TextType.TextType.B0686);
+        this._btnEndTurn.setLangText(Lang_TextType.TextType.B0036);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
+        this._btnInfo.setLangText(Lang_TextType.TextType.B0223);
+        this._btnMenu.setLangText(Lang_TextType.TextType.B0155);
+        this._btnTaskObjective.setLangText(Lang_TextType.TextType.B1480);
 
         this._updateComponentsForTaskObjective();
     }
@@ -475,7 +475,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             group.removeAllItems(false);
 
             if (mainDataArray.length) {
-                group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_Constants.TextType.B1217)), false);
+                group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_TextType.TextType.B1217)), false);
 
                 for (const data of mainDataArray) {
                     group.addItem(createTaskObjectiveRenderer(data), false);
@@ -483,7 +483,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
 
             if (subDataArray.length) {
-                group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_Constants.TextType.B1220)), false);
+                group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_TextType.TextType.B1220)), false);
 
                 for (const data of subDataArray) {
                     group.addItem(createTaskObjectiveRenderer(data), false);

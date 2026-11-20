@@ -32,7 +32,7 @@ import {
     MultiFreeRoom_Model_MfrProxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
@@ -150,7 +150,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrRoomInfoPanel, { roomId });
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0069, roomId));
     }
     private _onNotifyMsgMcrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMcrGetRoomStaticInfo"]>): void {
         this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr, ((Helpers_Misc.getExisted(e.data)).msg).getRoomId() ?? 0);
@@ -168,7 +168,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrRoomInfoPanel, { roomId });
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0069, roomId));
     }
     private _onNotifyMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgCcrGetRoomStaticInfo"]>): void {
         this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr, ((Helpers_Misc.getExisted(e.data)).msg).getRoomId() ?? 0);
@@ -186,7 +186,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const roomId    = Helpers_Misc.getExisted(data.getRoomId());
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MfrRoomInfoPanel, { roomId });
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0069, roomId));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0069, roomId));
     }
     private _onNotifyMsgMfrGetRoomStaticInfo(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMfrGetRoomStaticInfo"]>): void {
         this._checkAndUpdateComponentsForTargetRoomInfo(MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr, ((Helpers_Misc.getExisted(e.data)).msg).getRoomId() ?? 0);
@@ -234,15 +234,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     MultiCustomRoom_Model_McrProxy.reqMcrJoinRoom(roomId);
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-                        title        : Lang_Utils.getText(Lang_Constants.TextType.B0449),
+                        title        : Lang_Utils.getText(Lang_TextType.TextType.B0449),
                         currentValue : ``,
-                        tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
+                        tips         : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
                         charRestrict : `0-9`,
                         maxChars     : Wars_Constants.Misc.MaxPasswordLength,
                         isAutoClose  : false,
                         callback     : panel => {
                             if (panel.getInputText() !== password) {
-                                FloatText.showLang(Lang_Constants.TextType.A0017);
+                                FloatText.showLang(Lang_TextType.TextType.A0017);
                             } else {
                                 MultiCustomRoom_Model_McrProxy.reqMcrJoinRoom(roomId);
                                 panel.closePanel();
@@ -264,15 +264,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     CoopCustomRoom_Model_CcrProxy.reqCcrJoinRoom(roomId);
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-                        title        : Lang_Utils.getText(Lang_Constants.TextType.B0449),
+                        title        : Lang_Utils.getText(Lang_TextType.TextType.B0449),
                         currentValue : ``,
-                        tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
+                        tips         : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
                         charRestrict : `0-9`,
                         maxChars     : Wars_Constants.Misc.MaxPasswordLength,
                         isAutoClose  : false,
                         callback     : panel => {
                             if (panel.getInputText() !== password) {
-                                FloatText.showLang(Lang_Constants.TextType.A0017);
+                                FloatText.showLang(Lang_TextType.TextType.A0017);
                             } else {
                                 CoopCustomRoom_Model_CcrProxy.reqCcrJoinRoom(roomId);
                                 panel.closePanel();
@@ -294,15 +294,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     MultiFreeRoom_Model_MfrProxy.reqMfrJoinRoom(roomId);
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-                        title        : Lang_Utils.getText(Lang_Constants.TextType.B0449),
+                        title        : Lang_Utils.getText(Lang_TextType.TextType.B0449),
                         currentValue : ``,
-                        tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
+                        tips         : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
                         charRestrict : `0-9`,
                         maxChars     : Wars_Constants.Misc.MaxPasswordLength,
                         isAutoClose  : false,
                         callback     : panel => {
                             if (panel.getInputText() !== password) {
-                                FloatText.showLang(Lang_Constants.TextType.A0017);
+                                FloatText.showLang(Lang_TextType.TextType.A0017);
                             } else {
                                 MultiFreeRoom_Model_MfrProxy.reqMfrJoinRoom(roomId);
                                 panel.closePanel();
@@ -342,22 +342,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = true;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -374,13 +374,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
-        this._labelMultiPlayer.setLangText(Lang_Constants.TextType.B0137);
-        this._labelChooseRoom.setLangText(Lang_Constants.TextType.B0580);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._labelNoRoom.setLangText(Lang_Constants.TextType.B0582);
-        this._btnNextStep.setLangText(Lang_Constants.TextType.B0583);
-        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0040);
+        this._labelMultiPlayer.setLangText(Lang_TextType.TextType.B0137);
+        this._labelChooseRoom.setLangText(Lang_TextType.TextType.B0580);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._labelNoRoom.setLangText(Lang_TextType.TextType.B0582);
+        this._btnNextStep.setLangText(Lang_TextType.TextType.B0583);
+        this._btnSearch.setLangText(Lang_TextType.TextType.B0228);
 
         this._groupNavigator.arrangeItems();
     }
@@ -795,7 +795,7 @@ class RoomRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             const settingsForMfw = (await MultiFreeRoom_Model_MfrModel.getRoomStaticInfo(roomId))?.getSettingsForMfw();
             if ((settingsForMfw) && (roomId === this.getOpenData()?.roomId) && (roomType === this.getOpenData()?.roomType)) {
                 labelName.setTextColor(settingsForMfw.getWarPassword() ? 0xFFFF00 : 0xFFFFFF);
-                labelName.setText(settingsForMfw.getWarName()?.trim() || `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`);
+                labelName.setText(settingsForMfw.getWarName()?.trim() || `(${Lang_Utils.getText(Lang_TextType.TextType.B0277)})`);
             }
 
         } else {

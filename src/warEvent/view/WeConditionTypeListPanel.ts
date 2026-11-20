@@ -5,7 +5,7 @@ import {
     GamePanels_Dict,
     Lang_Utils,
     WarEvents_Conditions_Utils_Common,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
@@ -66,8 +66,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0516);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0516);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
     }
     private async _updateListType(): Promise<void> {
         const openData = this.getOpenData();
@@ -139,7 +139,7 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSwitch.setLangText(Lang_Constants.TextType.B0520);
+        this._btnSwitch.setLangText(Lang_TextType.TextType.B0520);
 
         this._updateLabelType();
     }

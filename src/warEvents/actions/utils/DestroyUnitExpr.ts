@@ -6,7 +6,7 @@ import {
     ExpressionParsers_Parser,
     ExpressionParsers_Results_NullableUnit,
     ExpressionParsers_Results_Num,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Numbers_Utils,
     Players_Utils_Common,
@@ -52,7 +52,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0050, data.getConUnitFilter() ?? Lang_Constants.UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0050, data.getConUnitFilter() ?? Lang_Constants.UndefinedError);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaDestroyUnitExpr>): string | null {
     if (data == null) {
@@ -63,7 +63,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         data.getActPlayerAliveState()    ? `${WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ActPlayerAliveState.getTitleText()}: ${data.getActPlayerAliveState()}`   : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0050, data.getConUnitFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0050, data.getConUnitFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaDestroyUnitExpr, customCounterNameSet: Set<string>): string | null {
     {
@@ -74,7 +74,7 @@ export function getErrorTip(data: WeaDestroyUnitExpr, customCounterNameSet: Set<
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -86,7 +86,7 @@ export function getErrorTip(data: WeaDestroyUnitExpr, customCounterNameSet: Set<
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

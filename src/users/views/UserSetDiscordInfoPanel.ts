@@ -9,7 +9,7 @@ import {
     Users_Proxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -82,16 +82,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0067),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0067),
         });
     }
     private _onTouchedBtnConfirm(): void {
         if (this._isRequesting) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0046));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0046));
         } else {
             const discordId = this._inputDiscordId.getInputText() ?? ``;
             if (!Users_Utils.checkIsDiscordIdValid(discordId)) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0048));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0048));
             } else {
                 this._isRequesting = true;
                 Users_Proxy.reqSetDiscordInfo({
@@ -107,7 +107,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnDiscord(): void {
         if ((window) && (window.open)) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0065, `Discord`),
+                getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0065, `Discord`),
                 callback   : () => {
                     window.open(Urls_Constants.Constants.DiscordUrl);
                 },
@@ -135,7 +135,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onMsgUserSetDiscordId(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0049));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0049));
         this.closePanel();
     }
     private _onMsgUserSetDiscordIdFailed(): void {
@@ -150,12 +150,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0150);
-        this._labelDiscordId.setLangText(Lang_Constants.TextType.B0243);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnDiscord.setLangText(Lang_Constants.TextType.B1330);
-        this._labelTurn.setLangText(Lang_Constants.TextType.B0918);
-        this._labelRankPhase.setLangText(Lang_Constants.TextType.B0919);
-        this._labelRoom.setLangText(Lang_Constants.TextType.B0920);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0150);
+        this._labelDiscordId.setLangText(Lang_TextType.TextType.B0243);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnDiscord.setLangText(Lang_TextType.TextType.B1330);
+        this._labelTurn.setLangText(Lang_TextType.TextType.B0918);
+        this._labelRankPhase.setLangText(Lang_TextType.TextType.B0919);
+        this._labelRoom.setLangText(Lang_TextType.TextType.B0920);
     }
 }

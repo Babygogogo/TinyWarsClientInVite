@@ -3,7 +3,7 @@ import {
     GamePanels_Manager,
     Helpers_Misc,
     Helpers_PointerInput,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Ui_Components_UiPanel,
     Utils_ClientErrorCode,
@@ -122,8 +122,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private async _onTouchedBtnConfirm(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-            title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-            content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+            title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+            content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
         });
         await this.getOpenData()?.war.loadCheckpoint(this._getSelectedCheckpointId());
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
@@ -138,9 +138,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0712);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0712);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
 
         this._updateLabelTarget();
     }
@@ -155,7 +155,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _updateLabelTarget(): void {
         const checkpointInfo = Helpers_Misc.getExisted(this._allCheckpointInfoArray, Utils_ClientErrorCode.ClientErrorCode.RwReplayProgressPanel_UpdateGroupProgress_00)[this._getSelectedCheckpointId()];
-        this._labelTarget.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0191)}${checkpointInfo.turnIndex}  P${checkpointInfo.playerIndex}  ${Lang_Utils.getText(Lang_Constants.TextType.B0616)}${checkpointInfo.nextOperationId}`);
+        this._labelTarget.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0191)}${checkpointInfo.turnIndex}  P${checkpointInfo.playerIndex}  ${Lang_Utils.getText(Lang_TextType.TextType.B0616)}${checkpointInfo.nextOperationId}`);
         this._layoutProgress.arrangeItems();
     }
 

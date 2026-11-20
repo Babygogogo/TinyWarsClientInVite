@@ -6,7 +6,7 @@ import {
     ExpressionParsers_Utils,
     Helpers_Misc,
     ExpressionParsers_Results_Num,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type ExpressionParsers_Contexts_Base,
     type ExpressionParsers_Results_Base,
 } from "../../internal.ts";
@@ -67,7 +67,7 @@ export class Variable extends ExpressionParsers_Nodes_Base.Base {
             return contextVariable;
         }
 
-        throw Helpers_Misc.newError(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0021, name), Utils_ClientErrorCode.ClientErrorCode.EpNodeVariable_GetResultType_00);
+        throw Helpers_Misc.newError(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0021, name), Utils_ClientErrorCode.ClientErrorCode.EpNodeVariable_GetResultType_00);
     }
 
     public override getTokensCount(): number {

@@ -1,6 +1,6 @@
 import {
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Notifications_Dispatcher,
     Utils_ClientErrorCode,
@@ -157,12 +157,12 @@ export class Manager {
         const currentWeatherName = Lang_Utils.getWeatherName(currentWeatherType, gameConfig);
         const defaultWeatherName = Lang_Utils.getWeatherName(defaultWeatherType, gameConfig);
         if (expireTurnIndex == null) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0073, currentWeatherName, defaultWeatherName)}`
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0073, currentWeatherName, defaultWeatherName)}`
                 + `\n\n${Lang_Utils.getWeatherFullDesc(gameConfig)}`;
         } else {
             const turnManager   = war.getTurnManager();
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0073, currentWeatherName, defaultWeatherName)}`
-                + `\n${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0074, expireTurnIndex, this.getExpirePlayerIndex(), turnManager.getTurnIndex(), turnManager.getPlayerIndexInTurn())}`
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0073, currentWeatherName, defaultWeatherName)}`
+                + `\n${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0074, expireTurnIndex, this.getExpirePlayerIndex(), turnManager.getTurnIndex(), turnManager.getPlayerIndexInTurn())}`
                 + `\n\n${Lang_Utils.getWeatherFullDesc(gameConfig)}`;
         }
     }

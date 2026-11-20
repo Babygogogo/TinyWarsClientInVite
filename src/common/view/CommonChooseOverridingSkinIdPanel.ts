@@ -5,7 +5,7 @@ import {
     GamePanels_Manager,
     HalfwayReplayWar_Model_HrwWar,
     Helpers_ImageSource,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     LocalData_Storage,
     MultiPlayerWar_Model_MpwWar,
@@ -85,7 +85,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0951),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0951),
         });
     }
 
@@ -97,7 +97,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const war = openData.war;
         if (war.getActionPlanner()?.checkIsStateRequesting()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -128,11 +128,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0609);
-        this._labelOrigin.setLangText(Lang_Constants.TextType.B0543);
-        this._labelTarget.setLangText(Lang_Constants.TextType.B1388);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnReset.setLangText(Lang_Constants.TextType.B0543);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0609);
+        this._labelOrigin.setLangText(Lang_TextType.TextType.B0543);
+        this._labelTarget.setLangText(Lang_TextType.TextType.B1388);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnReset.setLangText(Lang_TextType.TextType.B0543);
     }
 
     private async _updateListSkin(): Promise<void> {

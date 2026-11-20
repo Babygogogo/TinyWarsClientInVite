@@ -4,7 +4,7 @@ import {
     Utils_ClientErrorCode,
     Dialogues_Constants,
     Players_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
@@ -156,7 +156,7 @@ export function getDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapSimpl
             coNameArray.push(`P${playerIndex}`);
         }
 
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0085, coNameArray.join(`, `));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0085, coNameArray.join(`, `));
     }
 }
 
@@ -164,7 +164,7 @@ export function getErrorTip(data: MapSimpleDialogue, playersCountUnneutral: numb
     const dialoguesArray    = data.getDataArray();
     const dialoguesCount    = dialoguesArray.length;
     if ((dialoguesCount <= 0) || (dialoguesCount > Dialogues_Constants.Common.MaxCount)) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.A0227)} (${dialoguesCount} / ${Dialogues_Constants.Common.MaxCount})`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.A0227)} (${dialoguesCount} / ${Dialogues_Constants.Common.MaxCount})`;
     }
 
     {
@@ -177,13 +177,13 @@ export function getErrorTip(data: MapSimpleDialogue, playersCountUnneutral: numb
                 minTextCount  : 1,
             }))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0162));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0162));
         }
     }
 
     for (let i = 0; i < dialoguesCount; ++i) {
         if (getErrorTipForDataForDialogue(dialoguesArray[i], playersCountUnneutral, gameConfig)) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0071, i);
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0071, i);
         }
     }
 
@@ -198,7 +198,7 @@ export function getErrorTipForDataForDialogue(dialogueData: DataForDialogue, pla
         const dataForCoDialogue = dialogueData.getDataForCoDialogue();
         if (dataForCoDialogue) {
             if (getErrorCodeForDataForCoDialogue(dataForCoDialogue, playersCountUnneutral, gameConfig)) {
-                return Lang_Utils.getText(Lang_Constants.TextType.A0231);
+                return Lang_Utils.getText(Lang_TextType.TextType.A0231);
             }
             return null;
         }
@@ -208,12 +208,12 @@ export function getErrorTipForDataForDialogue(dialogueData: DataForDialogue, pla
         const dataForAside = dialogueData.getDataForAside();
         if (dataForAside) {
             if (getErrorCodeForDataForAside(dataForAside)) {
-                return Lang_Utils.getText(Lang_Constants.TextType.A0232);
+                return Lang_Utils.getText(Lang_TextType.TextType.A0232);
             }
 
             return null;
         }
     }
 
-    return Lang_Utils.getText(Lang_Constants.TextType.A0230);
+    return Lang_Utils.getText(Lang_TextType.TextType.A0230);
 }

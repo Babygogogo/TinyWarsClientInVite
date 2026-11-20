@@ -18,7 +18,7 @@ import {
     GamePanels_Dict,
     Helpers_Misc,
     WarEvents_FullDatas_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type MapEditor_Model_MeWar,
@@ -219,7 +219,7 @@ export function getDetailedDescForCondition(con: WarEventCondition, gameConfig: 
 export function getErrorTipForCondition(fullData: WarEventFullData, condition: WarEventCondition, war: BaseWar_Model_War.War): string | null {
     const conditionsCount = fullData.getConditionArray().length;
     if (conditionsCount > WarEvents_Conditions_Constants.MaxCountPerMap) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.A0185)} (${conditionsCount}/${WarEvents_Conditions_Constants.MaxCountPerMap})`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.A0185)} (${conditionsCount}/${WarEvents_Conditions_Constants.MaxCountPerMap})`;
     }
 
     // if (Object.keys(condition.toJson()).length !== 2) {
@@ -282,7 +282,7 @@ export function getErrorTipForCondition(fullData: WarEventFullData, condition: W
         return WarEvents_Conditions_Utils_ManualActionStatistics.getErrorTip(wecManualActionStatistics, war);
     }
 
-    return Lang_Utils.getText(Lang_Constants.TextType.A0187);
+    return Lang_Utils.getText(Lang_TextType.TextType.A0187);
 }
 
 export function addDefaultCondition(fullData: WarEventFullData, nodeId: number): number { // DONE

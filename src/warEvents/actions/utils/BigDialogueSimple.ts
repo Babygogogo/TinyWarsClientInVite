@@ -7,7 +7,7 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Players_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_AuxiliaryTypes,
@@ -165,7 +165,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
             coNameArray.push(`P${playerIndex}`);
         }
 
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0070, coNameArray.join(`, `));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0070, coNameArray.join(`, `));
     }
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaBigDialogueSimple>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
@@ -175,18 +175,18 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
 export function getErrorTip(data: WeaBigDialogueSimple, playersCountUnneutral: number, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     const backgroundId = data.getBackgroundId();
     if ((backgroundId != null) && (backgroundId > Dialogues_Constants.Common.BackgroundMaxId)) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0258);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0258);
     }
 
     const dialoguesArray    = data.getDataArray();
     const dialoguesCount    = dialoguesArray.length;
     if ((dialoguesCount <= 0) || (dialoguesCount > Dialogues_Constants.Common.MaxCount)) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.A0227)} (${dialoguesCount} / ${Dialogues_Constants.Common.MaxCount})`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.A0227)} (${dialoguesCount} / ${Dialogues_Constants.Common.MaxCount})`;
     }
 
     for (let i = 0; i < dialoguesCount; ++i) {
         if (getErrorTipForWeaDialogueData(dialoguesArray[i], playersCountUnneutral, gameConfig)) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0071, i);
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0071, i);
         }
     }
 
@@ -201,7 +201,7 @@ export function getErrorTipForWeaDialogueData(dialogueData: DataForDialogue, pla
         const dataForCoDialogue = dialogueData.getDataForCoDialogue();
         if (dataForCoDialogue) {
             if (!checkIsValidDataForCoDialogue(dataForCoDialogue, playersCountUnneutral, gameConfig)) {
-                return Lang_Utils.getText(Lang_Constants.TextType.A0231);
+                return Lang_Utils.getText(Lang_TextType.TextType.A0231);
             }
             return null;
         }
@@ -211,7 +211,7 @@ export function getErrorTipForWeaDialogueData(dialogueData: DataForDialogue, pla
         const dataForAside = dialogueData.getDataForAside();
         if (dataForAside) {
             if (!checkIsValidDataForAside(dataForAside)) {
-                return Lang_Utils.getText(Lang_Constants.TextType.A0232);
+                return Lang_Utils.getText(Lang_TextType.TextType.A0232);
             }
 
             return null;
@@ -222,14 +222,14 @@ export function getErrorTipForWeaDialogueData(dialogueData: DataForDialogue, pla
         const data = dialogueData.getDataForMisc();
         if (data) {
             if (!checkIsValidDataForMisc(data)) {
-                return Lang_Utils.getText(Lang_Constants.TextType.A0496);
+                return Lang_Utils.getText(Lang_TextType.TextType.A0496);
             }
 
             return null;
         }
     }
 
-    return Lang_Utils.getText(Lang_Constants.TextType.A0230);
+    return Lang_Utils.getText(Lang_TextType.TextType.A0230);
 }
 
 export async function executeAsOuterWar(action: WeaBigDialogueSimple, isFast: boolean, war: BaseWar_Model_War.War): Promise<AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation> {

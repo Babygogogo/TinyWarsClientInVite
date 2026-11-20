@@ -11,7 +11,7 @@ import {
     Users_Proxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -122,7 +122,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0408),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0408),
         });
     }
 
@@ -133,15 +133,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0567),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B0567),
             availableNumberArray : [0, 1, 2, 3],
             currentNumber        : null,
             getNumberMainText    : num => {
                 switch (num) {
-                    case 0  : return Lang_Utils.getText(Lang_Constants.TextType.B0198);
-                    case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0199);
-                    case 2  : return Lang_Utils.getText(Lang_Constants.TextType.B1445);
-                    case 3  : return Lang_Utils.getText(Lang_Constants.TextType.B1207);
+                    case 0  : return Lang_Utils.getText(Lang_TextType.TextType.B0198);
+                    case 1  : return Lang_Utils.getText(Lang_TextType.TextType.B0199);
+                    case 2  : return Lang_Utils.getText(Lang_TextType.TextType.B1445);
+                    case 3  : return Lang_Utils.getText(Lang_TextType.TextType.B1207);
                     default : return Lang_Constants.UndefinedError;
                 }
             },
@@ -224,7 +224,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgAtSetInitialBrackets(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         this.closePanel();
     }
 
@@ -263,7 +263,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         if (userIdSet.size) {
             Users_Proxy.reqUserGetPublicInfoArray([...userIdSet]);
-            FloatText.showLang(Lang_Constants.TextType.A0040);
+            FloatText.showLang(Lang_TextType.TextType.A0040);
             await Timer_TimerModel.wait(2000);
         }
 
@@ -271,9 +271,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1046);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1046);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
     }
 }
 

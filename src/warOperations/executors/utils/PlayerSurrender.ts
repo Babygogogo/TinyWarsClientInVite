@@ -2,7 +2,7 @@ import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     FloatText,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
@@ -91,14 +91,14 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerSurrender): P
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         return Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0008,
+            Lang_TextType.TextType.F0008,
             await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname(),
         );
     } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
-        return `${await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0055)} ${war.getWarOperationDescSuffix()}`;
+        return `${await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname()} ${Lang_Utils.getText(Lang_TextType.TextType.B0055)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof SinglePlayerWars_War.War) {
         return Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0008,
+            Lang_TextType.TextType.F0008,
             await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname(),
         );
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {

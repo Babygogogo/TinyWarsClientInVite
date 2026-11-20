@@ -7,7 +7,7 @@ import {
     Lang_Utils,
     Ui_Utils_UiSkinHelpers,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiOpenableComponent,
@@ -119,10 +119,10 @@ class RuleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelMyScoreTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0822)}:`);
-        this._labelStdNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._labelStdNickname.setLangText(Lang_Constants.TextType.B0175);
-        this._labelStdScore.setLangText(Lang_Constants.TextType.B0579);
+        this._labelMyScoreTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0822)}:`);
+        this._labelStdNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._labelStdNickname.setLangText(Lang_TextType.TextType.B0175);
+        this._labelStdScore.setLangText(Lang_TextType.TextType.B0579);
 
         this._layoutMyScore.arrangeItems();
     }
@@ -222,7 +222,7 @@ class UserRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const rank          = openData.rank;
         const labelNickname = this._labelNickname;
-        labelNickname.setLangText(Lang_Constants.TextType.B0029);
+        labelNickname.setLangText(Lang_TextType.TextType.B0029);
         this._labelIndex.setText(`${rank}${Helpers_Text.getSuffixForRankIndex(rank)}`);
         this._labelScore.setText(`${openData.score}`);
         this._imgBg.setAlpha(openData.index % 2 == 1 ? 0.2 : 0.5);

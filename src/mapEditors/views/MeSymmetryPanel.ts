@@ -8,7 +8,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Geometries_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeTypes,
@@ -133,13 +133,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedLabelStatus(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0396),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0396),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedLabelAutoDraw(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0397),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0397),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
@@ -206,7 +206,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 drawer.setSymmetricalDrawType(Geometries_Constants.SymmetryTypeId.UpLeftToDownRight);
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0780),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0780),
                 });
                 return;
             }
@@ -230,7 +230,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 drawer.setSymmetricalDrawType(Geometries_Constants.SymmetryTypeId.UpRightToDownLeft);
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0780),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0780),
                 });
                 return;
             }
@@ -250,7 +250,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelpColorSymmetry(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0779),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0779),
         });
     }
     private _onTouchedGroupColorSymmetry(): void {
@@ -285,20 +285,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0306);
-        this._labelTileSymmetry.setLangText(Lang_Constants.TextType.B1248);
-        this._labelDirection.setLangText(Lang_Constants.TextType.B1247);
-        this._labelStatus.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0367)} ?`);
-        this._labelAutoDraw.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0307)} ?`);
-        this._labelUpDownTitle.setLangText(Lang_Constants.TextType.B0308);
-        this._labelLeftRightTitle.setLangText(Lang_Constants.TextType.B0309);
-        this._labelRotationalTitle.setLangText(Lang_Constants.TextType.B0310);
-        this._labelUpLeftDownRightTitle.setLangText(Lang_Constants.TextType.B0311);
-        this._labelUpRightDownLeftTitle.setLangText(Lang_Constants.TextType.B0312);
-        this._labelColorSymmetry.setLangText(Lang_Constants.TextType.B1155);
-        this._btnColorSymmetry.setLangText(Lang_Constants.TextType.B0560);
-        this._labelFillTile.setLangText(Lang_Constants.TextType.B1245);
-        this._btnFillTile.setLangText(Lang_Constants.TextType.B1246);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0306);
+        this._labelTileSymmetry.setLangText(Lang_TextType.TextType.B1248);
+        this._labelDirection.setLangText(Lang_TextType.TextType.B1247);
+        this._labelStatus.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0367)} ?`);
+        this._labelAutoDraw.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0307)} ?`);
+        this._labelUpDownTitle.setLangText(Lang_TextType.TextType.B0308);
+        this._labelLeftRightTitle.setLangText(Lang_TextType.TextType.B0309);
+        this._labelRotationalTitle.setLangText(Lang_TextType.TextType.B0310);
+        this._labelUpLeftDownRightTitle.setLangText(Lang_TextType.TextType.B0311);
+        this._labelUpRightDownLeftTitle.setLangText(Lang_TextType.TextType.B0312);
+        this._labelColorSymmetry.setLangText(Lang_TextType.TextType.B1155);
+        this._btnColorSymmetry.setLangText(Lang_TextType.TextType.B0560);
+        this._labelFillTile.setLangText(Lang_TextType.TextType.B1245);
+        this._btnFillTile.setLangText(Lang_TextType.TextType.B1246);
     }
 
     private _updateGroupBoxes(): void {

@@ -2,7 +2,7 @@ import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     FogMaps_Utils,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -28,8 +28,8 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     const turnsCount            = data.getTurnsCount();
     const textForForceFogCode   = Lang_Utils.getForceFogCodeName(data.getForceFogCode()) ?? Lang_Constants.UndefinedError;
     return (turnsCount == 0)
-        ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0109, textForForceFogCode)
-        : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0108, textForForceFogCode, turnsCount);
+        ? Lang_Utils.getFormattedText(Lang_TextType.TextType.F0109, textForForceFogCode)
+        : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0108, textForForceFogCode, turnsCount);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetForceFogCodeSimple>): string | null {
     return getBriefDesc(data);
@@ -38,11 +38,11 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
 export function getErrorTip(data: WeaSetForceFogCodeSimple): string | null {
     const forceFogCode = data.getForceFogCode();
     if ((forceFogCode == null) || (!FogMaps_Utils.checkIsValidForcedFogCode(forceFogCode))) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0264);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0264);
     }
 
     if (data.getTurnsCount() == null) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0253);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0253);
     }
 
     return null;

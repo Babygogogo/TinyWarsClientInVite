@@ -6,7 +6,7 @@ import {
     Units_Utils_Filter,
     Lang_Utils,
     Numbers_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type Players_Player,
@@ -33,8 +33,8 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0262,
-        Lang_Utils.getText(Lang_Constants.TextType.B1468),
+        Lang_TextType.TextType.F0262,
+        Lang_Utils.getText(Lang_TextType.TextType.B1468),
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaDeleteUnitBuffSimple>): string | null {
@@ -59,24 +59,24 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         {
             const filter = data.getConTileFilter();
             if (filter != null) {
-                conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
+                conTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
         {
             const filter = data.getConPlayerFilter();
             if (filter != null) {
-                conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
+                conTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
 
         if (!conTextArray.length) {
-            conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
+            conTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.A0944)}`);
         }
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0263,
-        Lang_Utils.getText(Lang_Constants.TextType.B1468),
+        Lang_TextType.TextType.F0263,
+        Lang_Utils.getText(Lang_TextType.TextType.B1468),
         conTextArray.join(`\n`),
     );
 }
@@ -92,7 +92,7 @@ export function getErrorTip(
         if ((filter != null)                                                            &&
             (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gcData))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerFilter));
         }
     }
     {
@@ -100,7 +100,7 @@ export function getErrorTip(
         if ((filter != null) &&
             (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gcData))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitFilter));
         }
     }
     {
@@ -108,7 +108,7 @@ export function getErrorTip(
         if ((filter != null)                                                                    &&
             (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gcData))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileFilter));
         }
     }
     {
@@ -116,13 +116,13 @@ export function getErrorTip(
         if ((filter != null)                                &&
             (!UnitBuffs_Utils_Filter.checkIsValid(filter))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1235));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1235));
         }
     }
     {
         const con = data.getConMaxDeleteCount();
         if ((con != null) && (con <= 0)) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1457));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1457));
         }
     }
 

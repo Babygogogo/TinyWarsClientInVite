@@ -4,7 +4,7 @@ import {
     Helpers_Collection,
     Helpers_Misc,
     Helpers_Team,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Constants,
     Tiles_Utils_Filter,
@@ -63,7 +63,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     const conTileFilter         = data.getConTileFilter();
     const textForConTileFilter  = ((conTileFilter == null) || (Tiles_Utils_Filter.checkIsEmpty(conTileFilter)))
         ? null
-        : Lang_Utils.getText(Lang_Constants.TextType.B1068);
+        : Lang_Utils.getText(Lang_TextType.TextType.B1068);
 
     const textArray = Helpers_Collection.getNonNullElements([
         textForConTileFilter,
@@ -71,20 +71,20 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
 
     const actIsInTurn           = data.getActIsInTurn();
     const textForActIsInTurn    = actIsInTurn
-        ? Lang_Utils.getText(Lang_Constants.TextType.A0419)
+        ? Lang_Utils.getText(Lang_TextType.TextType.A0419)
         : null;
 
     const unitType          = data.getActUnitData()?.getUnitType();
     const textForUnitType   = unitType == null ? `??` : (Lang_Utils.getUnitName(unitType, gameConfig) ?? `??`);
     if (textArray.length <= 0) {
         return Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0180,
+            Lang_TextType.TextType.F0180,
             textForUnitType,
         ) + (textForActIsInTurn ? ` ${textForActIsInTurn}` : ``);
     } else {
         return Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0166,
-            textArray.join(`${Lang_Utils.getText(Lang_Constants.TextType.B0783)}`),
+            Lang_TextType.TextType.F0166,
+            textArray.join(`${Lang_Utils.getText(Lang_TextType.TextType.B0783)}`),
             textForUnitType,
         ) + (textForActIsInTurn ? ` ${textForActIsInTurn}` : ``);
     }
@@ -97,13 +97,13 @@ export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: AuxiliaryType
     {
         const conTileFilter = data.getConTileFilter();
         if ((conTileFilter != null) && (!Tiles_Utils_Filter.checkIsValid(conTileFilter, playersCountUnneutral, mapSize, gameConfig))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileFilter));
         }
     }
 
     const rawUnitData = data.getActUnitData();
     if ((rawUnitData == null) || (rawUnitData.getLoaderUnitId() != null)) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1058));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1058));
     }
 
     const unitData = rawUnitData.clone();
@@ -114,7 +114,7 @@ export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: AuxiliaryType
         playersCountUnneutral : playersCountUnneutral,
         gameConfig            : gameConfig,
     })) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1058));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1058));
     }
 
     return null;

@@ -26,7 +26,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
@@ -139,15 +139,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const warId = this._listWar.getFirstSelectedData()?.warId;
         if (warId != null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+                title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
             });
 
             const warData = await MultiPlayerWar_Model_MpwModel.getOngoingWarData(warId);
             if (warData) {
                 Helpers_GameFlow.gotoMultiPlayerWar(warData);
             } else {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             }
 
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
@@ -161,22 +161,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -185,13 +185,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
-        this._labelMultiPlayer.setLangText(Lang_Constants.TextType.B0137);
-        this._labelMyWar.setLangText(Lang_Constants.TextType.B0024);
-        this._labelChooseWar.setLangText(Lang_Constants.TextType.B0589);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._labelNoWar.setLangText(Lang_Constants.TextType.B0210);
-        this._btnNextStep.setLangText(Lang_Constants.TextType.B0024);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0040);
+        this._labelMultiPlayer.setLangText(Lang_TextType.TextType.B0137);
+        this._labelMyWar.setLangText(Lang_TextType.TextType.B0024);
+        this._labelChooseWar.setLangText(Lang_TextType.TextType.B0589);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._labelNoWar.setLangText(Lang_TextType.TextType.B0210);
+        this._btnNextStep.setLangText(Lang_TextType.TextType.B0024);
 
         this._groupNavigator.arrangeItems();
     }
@@ -419,7 +419,7 @@ class WarRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
                 if (normalMapId != null) {
                     labelName.setText(await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId) || Lang_Constants.UndefinedError);
                 } else {
-                    labelName.setText(`(${Lang_Utils.getText(Lang_Constants.TextType.B0557)})`);
+                    labelName.setText(`(${Lang_Utils.getText(Lang_TextType.TextType.B0557)})`);
                 }
             }
         }

@@ -6,7 +6,7 @@ import {
     Helpers_ImageSource,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -95,8 +95,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0914);
-        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0914);
+        this._labelTips.setLangText(Lang_TextType.TextType.B1249);
     }
 
     private _createDataForList(): DataForItemRenderer[] {

@@ -4,7 +4,7 @@ import {
     Helpers_Misc,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -91,7 +91,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const text2 = this._input2.trimInputText();
         if ((!text1) && (!text2)) {
             if (!openData.allowEmpty) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0156));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0156));
             } else {
                 openData.callback([]);
                 this.closePanel();
@@ -109,9 +109,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const maxLength = openData.maxTextLength;
         if (textArray.every(v => Helpers_Misc.getExisted(v.getText()).length <= 0)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0155));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0155));
         } else if (textArray.some(v => Helpers_Misc.getExisted(v.getText()).length > maxLength)) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0034, maxLength));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0034, maxLength));
         } else {
             openData.callback(textArray);
             this.closePanel();
@@ -134,9 +134,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         const getTitleText = this.getOpenData()?.getTitleText;
-        this._labelTitle.setText(getTitleText ? getTitleText() : Lang_Utils.getText(Lang_Constants.TextType.B0708));
-        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._labelTitle.setText(getTitleText ? getTitleText() : Lang_Utils.getText(Lang_TextType.TextType.B0708));
+        this._btnClose.setLangText(Lang_TextType.TextType.B0154);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
         this._label1.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getCurrentLanguageType()) ?? Lang_Constants.UndefinedError);
         this._label2.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getSecondaryLanguageType()) ?? Lang_Constants.UndefinedError);
     }

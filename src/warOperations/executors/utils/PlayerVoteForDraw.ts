@@ -1,7 +1,7 @@
 import {
     FloatText,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
@@ -100,12 +100,12 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw):
         const nickname      = await war.getPlayer(playerIndex).getNickname();
 
         if (!(extraData ? extraData.getIsAgree() : action.getIsAgree())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0017, playerIndex, nickname);
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0017, playerIndex, nickname);
         } else {
             if (war.getDrawVoteManager().checkHasOngoingVote()) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0018, playerIndex, nickname);
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0018, playerIndex, nickname);
             } else {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0019, playerIndex, nickname);
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0019, playerIndex, nickname);
             }
         }
     } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
@@ -115,12 +115,12 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw):
         const suffix        = war.getWarOperationDescSuffix();
 
         if (!(extraData ? extraData.getIsAgree() : action.getIsAgree())) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0017, playerIndex, nickname)} ${suffix}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0017, playerIndex, nickname)} ${suffix}`;
         } else {
             if (war.getDrawVoteManager().checkHasOngoingVote()) {
-                return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0018, playerIndex, nickname)} ${suffix}`;
+                return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0018, playerIndex, nickname)} ${suffix}`;
             } else {
-                return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0019, playerIndex, nickname)} ${suffix}`;
+                return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0019, playerIndex, nickname)} ${suffix}`;
             }
         }
     } else if (war instanceof SinglePlayerWars_War.War) {
@@ -129,12 +129,12 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoPlayerVoteForDraw):
         const nickname      = await war.getPlayer(playerIndex).getNickname();
 
         if (!(extraData ? extraData.getIsAgree() : action.getIsAgree())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0017, playerIndex, nickname);
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0017, playerIndex, nickname);
         } else {
             if (war.getDrawVoteManager().checkHasOngoingVote()) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0018, playerIndex, nickname);
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0018, playerIndex, nickname);
             } else {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0019, playerIndex, nickname);
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0019, playerIndex, nickname);
             }
         }
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {

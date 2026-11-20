@@ -6,7 +6,7 @@ import {
     Lang_Utils,
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
@@ -79,9 +79,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1430);
-        this._labelTips.setLangText(Lang_Constants.TextType.A0785);
-        this._btnBatch.setLangText(Lang_Constants.TextType.B1434);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1430);
+        this._labelTips.setLangText(Lang_TextType.TextType.A0785);
+        this._btnBatch.setLangText(Lang_TextType.TextType.B1434);
     }
     private async _updateListName(): Promise<void> {
         const openData = this.getOpenData();
@@ -162,7 +162,7 @@ class NameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const index         = nameArray.findIndex(v => (v.getNameId()) === nameId);
         const nameData      = nameArray[index];
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
-            getTitleText     : () => `${Lang_Utils.getText(Lang_Constants.TextType.B1430)} #${nameId}`,
+            getTitleText     : () => `${Lang_Utils.getText(Lang_TextType.TextType.B1430)} #${nameId}`,
             currentTextArray : nameData?.getNameTextArray() ?? [],
             maxTextLength    : Tiles_Constants_Common.CustomName.MaxLength,
             allowEmpty       : true,
@@ -228,7 +228,7 @@ class NameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         const nameId = openData.nameId;
-        this._labelId.setText(`#${nameId}       ${openData.war.getTileMap().getTilesCount(v => v.getCustomNameId() === nameId)} ${Lang_Utils.getText(Lang_Constants.TextType.B1431)}`);
+        this._labelId.setText(`#${nameId}       ${openData.war.getTileMap().getTilesCount(v => v.getCustomNameId() === nameId)} ${Lang_Utils.getText(Lang_TextType.TextType.B1431)}`);
         this._layoutName.arrangeItems();
     }
 }

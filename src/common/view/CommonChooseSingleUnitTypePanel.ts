@@ -1,5 +1,5 @@
 import {
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Numbers_Utils,
     Sounds_Constants,
@@ -87,8 +87,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         const func              = this.getOpenData()?.getTitleText;
-        this._labelTitle.setText(func ? func() : Lang_Utils.getText(Lang_Constants.TextType.B0516));
-        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
+        this._labelTitle.setText(func ? func() : Lang_Utils.getText(Lang_TextType.TextType.B0516));
+        this._labelTips.setLangText(Lang_TextType.TextType.B1249);
     }
     private async _updateListType(): Promise<void> {
         const openData = this.getOpenData();

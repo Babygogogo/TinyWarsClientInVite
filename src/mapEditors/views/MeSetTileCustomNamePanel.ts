@@ -6,7 +6,7 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
@@ -83,7 +83,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 tile.setCustomNameId(customNameId == 0 ? null : customNameId, true);
             }
         }
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     private _onTouchedBtnTileFilter(): void {
@@ -112,14 +112,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const arr = war.getTileMap().getTileCustomNameArray();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1430),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B1430),
             availableNumberArray : Helpers_Collection.createRange(0, Tiles_Constants_Common.CustomName.MaxId + 1, 1),
             currentNumber        : this._customNameId,
             columnsCount         : 4,
             showNumber           : true,
             getNumberMainText    : num => {
                 if (num === 0) {
-                    return `(${Lang_Utils.getText(Lang_Constants.TextType.B0391)})`;
+                    return `(${Lang_Utils.getText(Lang_TextType.TextType.B0391)})`;
                 } else {
                     return Lang_Utils.getLanguageText({ textArray : arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() }) ?? `----`;
                 }
@@ -139,10 +139,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1373);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnTileFilter.setLangText(Lang_Constants.TextType.TileFilter);
-        this._btnCustomNameId.setLangText(Lang_Constants.TextType.B0162);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1373);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnTileFilter.setLangText(Lang_TextType.TextType.TileFilter);
+        this._btnCustomNameId.setLangText(Lang_TextType.TextType.B0162);
 
         this._updateLabelTileFilter();
         this._updateLabelCustomNameId();
@@ -156,11 +156,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const filter = this._tileFilter;
         this._labelTileFilter.setText(Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0257,
+            Lang_TextType.TextType.F0257,
             filter == null
                 ? allTiles.length
                 : allTiles.filter(v => Tiles_Utils_Filter.checkIsMeet(filter, v)).length,
-            Lang_Utils.getText(Lang_Constants.TextType.Tiles),
+            Lang_Utils.getText(Lang_TextType.TextType.Tiles),
         ));
     }
 
@@ -168,7 +168,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const customNameId  = this._customNameId;
         const label         = this._labelCustomNameId;
         if (customNameId === 0) {
-            label.setText(`(${Lang_Utils.getText(Lang_Constants.TextType.B0391)})`);
+            label.setText(`(${Lang_Utils.getText(Lang_TextType.TextType.B0391)})`);
         } else {
             label.setText(Lang_Utils.getLanguageText({
                 textArray : this.getOpenData()?.war.getTileMap().getTileCustomNameArray()?.find(v => (v.getNameId()) === customNameId)?.getNameTextArray(),

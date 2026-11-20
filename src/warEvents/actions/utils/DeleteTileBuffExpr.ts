@@ -4,7 +4,7 @@ import {
     Lang_Utils,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Parser,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_Tile,
     ExpressionParsers_Contexts_TileBuff,
     type BaseWar_Model_War,
@@ -47,7 +47,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0079, data.getConTileFilter() ?? Lang_Constants.UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0079, data.getConTileFilter() ?? Lang_Constants.UndefinedError);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaDeleteTileBuffExpr>): string | null {
     if (data == null) {
@@ -58,7 +58,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         `${WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileBuffFilter.getTitleText()}: ${data.getConTileBuffFilter()}`,
     ].filter(v => v != null).join(`\n`);
 
-    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0079, data.getConTileFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0079, data.getConTileFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaDeleteTileBuffExpr, customCounterNameSet: Set<string>): string | null {
     {
@@ -69,7 +69,7 @@ export function getErrorTip(data: WeaDeleteTileBuffExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -81,7 +81,7 @@ export function getErrorTip(data: WeaDeleteTileBuffExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

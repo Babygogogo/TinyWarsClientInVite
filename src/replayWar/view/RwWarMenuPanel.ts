@@ -14,7 +14,7 @@ import {
     MapEditor_Model_MeProxy,
     ReplayWar_Model_RwProxy,
     Users_Proxy,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type ReplayWar_Model_RwWar,
@@ -86,17 +86,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgReplaySetRating(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.OperationSucceeded));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.OperationSucceeded));
         this._updateBtnRate();
     }
     private _onNotifyMsgUserModifyFavoriteReplayIdArray(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.OperationSucceeded));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.OperationSucceeded));
         this._updateBtnFavorite();
     }
     private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
         const slotIndex = ((Helpers_Misc.getExisted(e.data)).msg).getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0872),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0872),
             callback   : async () => {
                 const mapEditorData             = await MapEditor_Model_MeModel.getMapEditorData(slotIndex);
                 const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent ?? null;
@@ -110,7 +110,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     });
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0015),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0015),
                         callback   : () => Helpers_GameFlow.gotoMapEditorWar({
                             mapRawData                : mapEditorData?.mapRawData,
                             slotIndex                 : slotIndex,
@@ -162,7 +162,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue  = ReplayWars_Constants.Common.MinRating;
         const maxValue  = ReplayWars_Constants.Common.MaxRating;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0365)}`,
+            getTitle     : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0365)}`,
             currentValue : (await ReplayWar_Model_RwModel.getReplaySelfRating(war.getReplayId())) ?? 5,
             minValue     : minValue,
             maxValue     : maxValue,
@@ -178,10 +178,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (war.getIsExecutingAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0103));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0103));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0931),
                 callback   : () => {
                     const warData = war.serializeForCreateSfw();
                     warData.createIfNotExistsSettingsForSfw();
@@ -201,7 +201,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (war.getPlayerManager().getAliveOrDyingTeamsCount(false) < 2) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0199));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0199));
             return;
         }
 
@@ -213,7 +213,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
+            getContent : () => `${Lang_Utils.getText(Lang_TextType.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_TextType.TextType.A0201)}`,
             callback   : () => {
                 Helpers_GameFlow.gotoMfrCreateSettingsPanel(warData);
             },
@@ -254,8 +254,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0651),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0651),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 if (war.getSettingsForSrw()) {
                     Helpers_GameFlow.gotoSrrCreateMapListPanel();
@@ -267,8 +267,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnLobby(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0054),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0025),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0054),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0025),
             callback   : () => Helpers_GameFlow.gotoLobby(),
         });
     }
@@ -281,14 +281,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0155);
-        this._btnRate.setLangText(Lang_Constants.TextType.B0365);
-        this._btnReplayList.setLangText(Lang_Constants.TextType.B0651);
-        this._btnLobby.setLangText(Lang_Constants.TextType.B0054);
-        this._btnSimulation.setLangText(Lang_Constants.TextType.B0325);
-        this._btnFreeMode.setLangText(Lang_Constants.TextType.B0557);
-        this._btnEditMap.setLangText(Lang_Constants.TextType.B0458);
-        this._btnOverrideSkin.setLangText(Lang_Constants.TextType.B0609);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0155);
+        this._btnRate.setLangText(Lang_TextType.TextType.B0365);
+        this._btnReplayList.setLangText(Lang_TextType.TextType.B0651);
+        this._btnLobby.setLangText(Lang_TextType.TextType.B0054);
+        this._btnSimulation.setLangText(Lang_TextType.TextType.B0325);
+        this._btnFreeMode.setLangText(Lang_TextType.TextType.B0557);
+        this._btnEditMap.setLangText(Lang_TextType.TextType.B0458);
+        this._btnOverrideSkin.setLangText(Lang_TextType.TextType.B0609);
 
         this._updateBtnRate();
         this._updateBtnFavorite();
@@ -300,7 +300,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._btnRate.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0363)}: ${(await ReplayWar_Model_RwModel.getReplaySelfRating(war.getReplayId())) ?? `--`}`);
+        this._btnRate.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0363)}: ${(await ReplayWar_Model_RwModel.getReplaySelfRating(war.getReplayId())) ?? `--`}`);
     }
     private _updateBtnFavorite(): void {
         const war = this.getOpenData()?.war;
@@ -308,6 +308,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._btnFavorite.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1291)}: ${Lang_Utils.getTextForYesOrNo(Users_Model.checkIsFavoriteReplayId(war.getReplayId()))}`);
+        this._btnFavorite.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1291)}: ${Lang_Utils.getTextForYesOrNo(Users_Model.checkIsFavoriteReplayId(war.getReplayId()))}`);
     }
 }

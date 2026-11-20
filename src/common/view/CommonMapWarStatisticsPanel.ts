@@ -4,7 +4,7 @@ import {
     Lang_Utils,
     Players_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     WarTypes_Constants,
@@ -103,13 +103,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const nextRuleId = await getNextRuleId(normalMapId, this._templateWarRuleId);
         if (nextRuleId == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0302));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0302));
             return;
         }
 
         const nextWarType = await getNextWarType(WarTypes_Constants.WarTypeId.Undefined, normalMapId, nextRuleId);
         if (nextWarType == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0302));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0302));
             return;
         }
 
@@ -126,7 +126,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const nextWarType = await getNextWarType(this._warType, normalMapId, this._templateWarRuleId);
         if (nextWarType == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0302));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0302));
             return;
         }
 
@@ -147,11 +147,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateLabelRule();
         this._updateLabelWarType();
 
-        this._btnRule.setLangText(Lang_Constants.TextType.B0318);
-        this._btnWarType.setLangText(Lang_Constants.TextType.B0599);
-        this._labelTurnIndexTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.Turns)}(${Lang_Utils.getText(Lang_Constants.TextType.B0877)})`);
-        this._labelStatisticsTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0876)} (${Lang_Utils.getText(Lang_Constants.TextType.B0550)} / ${Lang_Utils.getText(Lang_Constants.TextType.B0551)} / ${Lang_Utils.getText(Lang_Constants.TextType.B0552)})`);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._btnRule.setLangText(Lang_TextType.TextType.B0318);
+        this._btnWarType.setLangText(Lang_TextType.TextType.B0599);
+        this._labelTurnIndexTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.Turns)}(${Lang_Utils.getText(Lang_TextType.TextType.B0877)})`);
+        this._labelStatisticsTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0876)} (${Lang_Utils.getText(Lang_TextType.TextType.B0550)} / ${Lang_Utils.getText(Lang_TextType.TextType.B0551)} / ${Lang_Utils.getText(Lang_TextType.TextType.B0552)})`);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
     }
 
     private async _updateLabelTitle(): Promise<void> {
@@ -161,7 +161,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const mapName = await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId);
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0876)} #${normalMapId} ${mapName}`);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0876)} #${normalMapId} ${mapName}`);
     }
 
     private async _updateLabelRule(): Promise<void> {

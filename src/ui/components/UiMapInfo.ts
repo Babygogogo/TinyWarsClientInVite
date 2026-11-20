@@ -6,7 +6,7 @@ import {
     GamePanels_Manager,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Maps_Constants,
     NormalMap_Model_NormalMapModel,
@@ -122,11 +122,11 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
             const minValue = Maps_Constants.Common.MinRating;
             const maxValue = Maps_Constants.Common.MaxRating;
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0363),
+                getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0363),
                 currentValue : Users_Model.getMapRating(normalMapId) || 0,
                 minValue     : minValue,
                 maxValue     : maxValue,
-                getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0238),
+                getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0238),
                 callback     : value => {
                     Users_Proxy.reqUserSetMapRating(normalMapId, value);
                 },
@@ -148,13 +148,13 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelPlayersCountTitle.setLangText(Lang_Constants.TextType.B0229);
-        this._labelPlayedTimesTitle.setLangText(Lang_Constants.TextType.B0565);
-        this._labelMapSizeTitle.setLangText(Lang_Constants.TextType.B0300);
-        this._labelRatingTitle.setLangText(Lang_Constants.TextType.B0364);
-        this._labelMapIdTitle.setLangText(Lang_Constants.TextType.B0821);
-        this._labelMyRatingTitle.setLangText(Lang_Constants.TextType.B0363);
-        this._labelFogTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0020)}:`);
+        this._labelPlayersCountTitle.setLangText(Lang_TextType.TextType.B0229);
+        this._labelPlayedTimesTitle.setLangText(Lang_TextType.TextType.B0565);
+        this._labelMapSizeTitle.setLangText(Lang_TextType.TextType.B0300);
+        this._labelRatingTitle.setLangText(Lang_TextType.TextType.B0364);
+        this._labelMapIdTitle.setLangText(Lang_TextType.TextType.B0821);
+        this._labelMyRatingTitle.setLangText(Lang_TextType.TextType.B0363);
+        this._labelFogTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0020)}:`);
         this._updateLabelFog();
     }
 
@@ -177,7 +177,7 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
         if (openData == null) {
             labelMapName.setText(`--`);
             labelMapId.setText(`--`);
-            labelDesigner.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0163)}: --`);
+            labelDesigner.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0163)}: --`);
             labelPlayersCount.setText(`--`);
             labelRating.setText(`--`);
             labelRaters.setText(`(--)`);
@@ -212,11 +212,11 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
                 imgWarStatistics.setIsVisible(true);
                 labelMapName.setText(await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId) || Lang_Constants.UndefinedError);
                 labelMapId.setText(`${normalMapId}`);
-                labelDesigner.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0163)}: ${mapRawData.getDesignerName() ?? Lang_Constants.UndefinedError}`);
+                labelDesigner.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0163)}: ${mapRawData.getDesignerName() ?? Lang_Constants.UndefinedError}`);
                 labelPlayersCount.setText(`${mapRawData.getPlayersCountUnneutral()}`);
-                labelRating.setText(rating != null ? rating.toFixed(2) : Lang_Utils.getText(Lang_Constants.TextType.None));
+                labelRating.setText(rating != null ? rating.toFixed(2) : Lang_Utils.getText(Lang_TextType.TextType.None));
                 labelRaters.setText(`(${await NormalMap_Model_NormalMapModel.getTotalRatersCount(normalMapId)})`);
-                labelMyRating.setText(myRating != null ? `${myRating}` : Lang_Utils.getText(Lang_Constants.TextType.None));
+                labelMyRating.setText(myRating != null ? `${myRating}` : Lang_Utils.getText(Lang_TextType.TextType.None));
                 labelPlayedTimes.setText(`${await NormalMap_Model_NormalMapModel.getTotalPlayedTimes(normalMapId)}`);
                 labelMapSize.setText(`${mapRawData.getMapWidth()} x ${mapRawData.getMapHeight()}`);
                 await listTile.bindData(generateDataForListTile(mapRawData.getTileDataArray(), await GameConfigs_Provider.getLatestGameConfig()));
@@ -239,7 +239,7 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
                     imgWarStatistics.setIsVisible(false);
                     labelMapName.setText(`--`);
                     labelMapId.setText(`--`);
-                    labelDesigner.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0163)}: --`);
+                    labelDesigner.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0163)}: --`);
                     labelPlayersCount.setText(`--`);
                     labelRating.setText(`--`);
                     labelRaters.setText(`(--)`);
@@ -251,7 +251,7 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
                     imgWarStatistics.setIsVisible(false);
                     labelMapName.setText(Lang_Utils.getLanguageText({ textArray : mapRawData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
                     labelMapId.setText(`${campaignId} - ${campaignMapId}`);
-                    labelDesigner.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0163)}: ${mapRawData.getDesignerName() ?? Lang_Constants.UndefinedError}`);
+                    labelDesigner.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0163)}: ${mapRawData.getDesignerName() ?? Lang_Constants.UndefinedError}`);
                     labelPlayersCount.setText(`${mapRawData.getPlayersCountUnneutral()}`);
                     labelRating.setText(`--`);
                     labelRaters.setText(`(--)`);
@@ -275,7 +275,7 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
                 imgWarStatistics.setIsVisible(false);
                 labelMapName.setText(`--`);
                 labelMapId.setText(`--`);
-                labelDesigner.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0163)}: --`);
+                labelDesigner.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0163)}: --`);
                 labelPlayersCount.setText(`${Helpers_Misc.getExisted(warData.getPlayerManager()?.getPlayers()).length - 1}`);
                 labelRating.setText(`--`);
                 labelRaters.setText(`(--)`);
@@ -292,7 +292,7 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
     private _updateLabelFog(): void {
         const hasFog    = getHasFog(this.getOpenData());
         const label     = this._labelFog;
-        label.setLangText(hasFog ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        label.setLangText(hasFog ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         label.setTextColor(hasFog ? 0xFFFF00 : 0xFFFFFF);
 
         this._layoutFog.arrangeItems();

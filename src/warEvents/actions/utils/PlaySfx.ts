@@ -3,7 +3,7 @@ import {
     Sounds_Utils,
     Lang_Utils,
     Sounds_SoundPlayer,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../../internal.ts";
@@ -23,7 +23,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     }
 
     const sfxCode = data.getSfxCode() ?? 0;
-    return `${Lang_Utils.getText(Lang_Constants.TextType.B1164)}: ${Lang_Utils.getBgmSfxName(sfxCode, gameConfig) ?? Lang_Constants.UndefinedError}`;
+    return `${Lang_Utils.getText(Lang_TextType.TextType.B1164)}: ${Lang_Utils.getBgmSfxName(sfxCode, gameConfig) ?? Lang_Constants.UndefinedError}`;
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPlaySfx>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
@@ -31,7 +31,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
 
 export function getErrorTip(data: WeaPlaySfx): string | null {
     return !Sounds_Utils.checkIsSfx(data.getSfxCode() ?? 0)
-        ? Lang_Utils.getText(Lang_Constants.TextType.A0497)
+        ? Lang_Utils.getText(Lang_TextType.TextType.A0497)
         : null;
 }
 

@@ -6,7 +6,7 @@ import {
     Lang_Utils,
     Timer_TimerProxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Timer_TimerModel,
     Graphics_Constants,
 } from "../internal.ts";
@@ -110,9 +110,9 @@ export function updateOnMsgCommonHeartbeat(data: CommonHeartbeatResponse): void 
 function heartbeat(): void {
     if (!_isHeartbeatAnswered) {
         if (!Networks_Manager.checkCanAutoReconnect()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0013));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0013));
         } else {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0008));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0008));
             Networks_Manager.init();
         }
     }

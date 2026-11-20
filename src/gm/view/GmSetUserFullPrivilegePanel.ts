@@ -8,7 +8,7 @@ import {
     Gm_Model_GmProxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -107,7 +107,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgUserSetPrivilege(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0157));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0157));
     }
 
     private _onTouchedBtnSearchUser(): void {
@@ -177,18 +177,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0460);
-        this._btnSearchUser.setLangText(Lang_Constants.TextType.B0228);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
-        this._labelCanChat.setLangText(Lang_Constants.TextType.B0383);
-        this._labelCanLogin.setLangText(Lang_Constants.TextType.B0173);
-        this._labelIsAdmin.setLangText(Lang_Constants.TextType.B1116);
-        this._labelChatManager.setLangText(Lang_Constants.TextType.B1117);
-        this._labelIsChangeLogEditor.setLangText(Lang_Constants.TextType.B1118);
-        this._labelIsMapCommittee.setLangText(Lang_Constants.TextType.B1119);
-        this._labelAutoTourneyCommittee.setLangText(Lang_Constants.TextType.B1120);
-        this._labelIsCampaignManager.setLangText(Lang_Constants.TextType.B1132);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0460);
+        this._btnSearchUser.setLangText(Lang_TextType.TextType.B0228);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
+        this._labelCanChat.setLangText(Lang_TextType.TextType.B0383);
+        this._labelCanLogin.setLangText(Lang_TextType.TextType.B0173);
+        this._labelIsAdmin.setLangText(Lang_TextType.TextType.B1116);
+        this._labelChatManager.setLangText(Lang_TextType.TextType.B1117);
+        this._labelIsChangeLogEditor.setLangText(Lang_TextType.TextType.B1118);
+        this._labelIsMapCommittee.setLangText(Lang_TextType.TextType.B1119);
+        this._labelAutoTourneyCommittee.setLangText(Lang_TextType.TextType.B1120);
+        this._labelIsCampaignManager.setLangText(Lang_TextType.TextType.B1132);
         this._updateLabelUserName();
     }
     private async _updateLabelUserName(): Promise<void> {

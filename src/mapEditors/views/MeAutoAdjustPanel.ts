@@ -7,7 +7,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -93,7 +93,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0259),
             callback   : () => {
                 drawer.autoAdjustBeaches();
                 drawer.autoAdjustBridges(drawer.getBridgeConnectTileTypeArray().concat());
@@ -113,7 +113,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0259),
             callback   : () => drawer.autoAdjustRivers(),
         });
     }
@@ -124,7 +124,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0259),
             callback   : () => drawer.autoAdjustBeaches(),
         });
     }
@@ -135,7 +135,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0259),
             callback   : () => drawer.autoAdjustSeas(),
         });
     }
@@ -146,7 +146,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0259),
             callback   : () => drawer.autoFillTileDecorations(),
         });
     }
@@ -162,10 +162,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             gameConfig             : gameConfig,
             currentTileTypeArray   : drawer.getRoadConnectTileTypeArray(),
             availableTileTypeArray : gameConfig.getAllTileTypeArraySortedByWeight(),
-            getHelpText            : () => Lang_Utils.getText(Lang_Constants.TextType.A0398),
+            getHelpText            : () => Lang_Utils.getText(Lang_TextType.TextType.A0398),
             callbackOnConfirm      : tileTypeArray => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0259),
                     callback   : () => war.getDrawer().autoAdjustRoads(tileTypeArray),
                 });
             },
@@ -183,10 +183,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             gameConfig             : gameConfig,
             currentTileTypeArray   : drawer.getBridgeConnectTileTypeArray(),
             availableTileTypeArray : gameConfig.getAllTileTypeArraySortedByWeight(),
-            getHelpText            : () => Lang_Utils.getText(Lang_Constants.TextType.A0399),
+            getHelpText            : () => Lang_Utils.getText(Lang_TextType.TextType.A0399),
             callbackOnConfirm      : tileTypeArray => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0259),
                     callback   : () => war.getDrawer().autoAdjustBridges(tileTypeArray),
                 });
             },
@@ -199,7 +199,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0259),
             callback   : () => drawer.autoAdjustPlasmas(),
         });
     }
@@ -210,7 +210,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0259),
             callback   : () => drawer.autoAdjustPipes(),
         });
     }
@@ -229,12 +229,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelpRealTimeAdjust(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0032),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0032),
         });
     }
     private _onTouchedBtnHelpGlobalAdjust(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0778),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0778),
         });
     }
 
@@ -248,19 +248,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1451);
-        this._btnAll.setLangText(Lang_Constants.TextType.B0120);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1451);
+        this._btnAll.setLangText(Lang_TextType.TextType.B0120);
         this._btnRiver.setText(Lang_Utils.getTileName(Tiles_Constants_Common.TileTypeId.River, gameConfig) ?? Lang_Constants.UndefinedError);
         this._btnBeach.setText(Lang_Utils.getTileName(Tiles_Constants_Common.TileTypeId.Beach, gameConfig) ?? Lang_Constants.UndefinedError);
         this._btnSea.setText(Lang_Utils.getTileName(Tiles_Constants_Common.TileTypeId.Sea, gameConfig) ?? Lang_Constants.UndefinedError);
-        this._btnDecoration.setLangText(Lang_Constants.TextType.TileDecoration);
+        this._btnDecoration.setLangText(Lang_TextType.TextType.TileDecoration);
         this._btnRoad.setText(Lang_Utils.getTileObjectName(Tiles_Constants_Common.ObjectTypeId.Road, gameConfig) ?? Lang_Constants.UndefinedError);
         this._btnBridge.setText(Lang_Utils.getTileObjectName(Tiles_Constants_Common.ObjectTypeId.Bridge, gameConfig) ?? Lang_Constants.UndefinedError);
         this._btnPlasma.setText(Lang_Utils.getTileObjectName(Tiles_Constants_Common.ObjectTypeId.Plasma, gameConfig) ?? Lang_Constants.UndefinedError);
         this._btnSuperPlasma.setText(Lang_Utils.getTileObjectName(Tiles_Constants_Common.ObjectTypeId.Pipe, gameConfig) ?? Lang_Constants.UndefinedError);
-        this._labelRealTimeAdjust.setLangText(Lang_Constants.TextType.B1121);
-        this._labelRealTimeToggle.setLangText(Lang_Constants.TextType.B1452);
-        this._labelGlobalAdjust.setLangText(Lang_Constants.TextType.B1243);
+        this._labelRealTimeAdjust.setLangText(Lang_TextType.TextType.B1121);
+        this._labelRealTimeToggle.setLangText(Lang_TextType.TextType.B1452);
+        this._labelGlobalAdjust.setLangText(Lang_TextType.TextType.B1243);
 
         this._groupRealTimeAdjust.arrangeItems();
         this._groupRealTimeToggle.arrangeItems();

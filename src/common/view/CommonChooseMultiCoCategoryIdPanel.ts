@@ -9,7 +9,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiContainer,
     Ui_Components_UiImage,
     Ui_Components_UiLayout,
@@ -25,7 +25,7 @@ import {
     Ui_Utils_UiSkinHelpers,
 } from "../../internal.ts";
 
- 
+
 const enum InfoType {
     CoName,
     BpRates,
@@ -147,8 +147,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (const coCategoryId of openData.forceUnchosenCoCategoryIdArray ?? []) {
             if (chosenCoCategoryIdSet.has(coCategoryId)) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
-                    getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                    getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0133, openData.gameConfig.getCoNameAndTierText(coCategoryId)),
+                    getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                    getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0133, openData.gameConfig.getCoNameAndTierText(coCategoryId)),
                 });
                 return;
             }
@@ -156,7 +156,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const maxCount = openData.maxChooseCount;
         if ((maxCount != null) && (chosenCoCategoryIdSet.size > maxCount)) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0145, maxCount));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0145, maxCount));
             return;
         }
 
@@ -237,7 +237,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 if (maxCount == 1) {
                     chosenCoCategoryIdSet.clear();
                 } else {
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0145, maxCount));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0145, maxCount));
                     return;
                 }
             }
@@ -251,9 +251,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._labelSelectedTitle.setLangText(Lang_Constants.TextType.B1274);
-        this._labelSelectAll.setLangText(Lang_Constants.TextType.B0761);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._labelSelectedTitle.setLangText(Lang_TextType.TextType.B1274);
+        this._labelSelectAll.setLangText(Lang_TextType.TextType.B0761);
         this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? Lang_Constants.UndefinedError);
 
         this._groupSelected.arrangeItems();

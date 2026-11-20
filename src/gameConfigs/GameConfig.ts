@@ -2,7 +2,7 @@ import {
     WarTypes_Utils,
     Tiles_Constants_Common,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     GameModes_Constants,
     CoSkills_Constants,
     Units_Constants,

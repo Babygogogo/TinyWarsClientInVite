@@ -3,7 +3,7 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Helpers_Text,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -97,7 +97,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0477),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0477),
         });
     }
     private _onTouchedBtnSwitch(): void {
@@ -135,22 +135,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1148);
-        this._btnSwitch.setLangText(Lang_Constants.TextType.B0520);
-        this._btnPreviousPlayer.setLangText(Lang_Constants.TextType.B1029);
-        this._btnNextPlayer.setLangText(Lang_Constants.TextType.B1030);
-        this._labelNormalizedHpGain0.setLangText(IsShowHp ? Lang_Constants.TextType.B1149 : Lang_Constants.TextType.B1171);
-        this._labelNormalizedHpLoss0.setLangText(IsShowHp ? Lang_Constants.TextType.B1150 : Lang_Constants.TextType.B1172);
-        this._labelNormalizedHpRemain0.setLangText(IsShowHp ? Lang_Constants.TextType.B1153 : Lang_Constants.TextType.B1173);
-        this._labelUnitGain0.setLangText(Lang_Constants.TextType.B1151);
-        this._labelUnitLoss0.setLangText(Lang_Constants.TextType.B1152);
-        this._labelUnitRemain0.setLangText(Lang_Constants.TextType.B1154);
-        this._labelNormalizedHpGain1.setLangText(IsShowHp ? Lang_Constants.TextType.B1149 : Lang_Constants.TextType.B1171);
-        this._labelNormalizedHpLoss1.setLangText(IsShowHp ? Lang_Constants.TextType.B1150 : Lang_Constants.TextType.B1172);
-        this._labelNormalizedHpRemain1.setLangText(IsShowHp ? Lang_Constants.TextType.B1153 : Lang_Constants.TextType.B1173);
-        this._labelUnitGain1.setLangText(Lang_Constants.TextType.B1151);
-        this._labelUnitLoss1.setLangText(Lang_Constants.TextType.B1152);
-        this._labelUnitRemain1.setLangText(Lang_Constants.TextType.B1154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1148);
+        this._btnSwitch.setLangText(Lang_TextType.TextType.B0520);
+        this._btnPreviousPlayer.setLangText(Lang_TextType.TextType.B1029);
+        this._btnNextPlayer.setLangText(Lang_TextType.TextType.B1030);
+        this._labelNormalizedHpGain0.setLangText(IsShowHp ? Lang_TextType.TextType.B1149 : Lang_TextType.TextType.B1171);
+        this._labelNormalizedHpLoss0.setLangText(IsShowHp ? Lang_TextType.TextType.B1150 : Lang_TextType.TextType.B1172);
+        this._labelNormalizedHpRemain0.setLangText(IsShowHp ? Lang_TextType.TextType.B1153 : Lang_TextType.TextType.B1173);
+        this._labelUnitGain0.setLangText(Lang_TextType.TextType.B1151);
+        this._labelUnitLoss0.setLangText(Lang_TextType.TextType.B1152);
+        this._labelUnitRemain0.setLangText(Lang_TextType.TextType.B1154);
+        this._labelNormalizedHpGain1.setLangText(IsShowHp ? Lang_TextType.TextType.B1149 : Lang_TextType.TextType.B1171);
+        this._labelNormalizedHpLoss1.setLangText(IsShowHp ? Lang_TextType.TextType.B1150 : Lang_TextType.TextType.B1172);
+        this._labelNormalizedHpRemain1.setLangText(IsShowHp ? Lang_TextType.TextType.B1153 : Lang_TextType.TextType.B1173);
+        this._labelUnitGain1.setLangText(Lang_TextType.TextType.B1151);
+        this._labelUnitLoss1.setLangText(Lang_TextType.TextType.B1152);
+        this._labelUnitRemain1.setLangText(Lang_TextType.TextType.B1154);
     }
 
     private _updateView(): void {

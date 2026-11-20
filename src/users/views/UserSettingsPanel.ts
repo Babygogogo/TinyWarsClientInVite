@@ -11,7 +11,7 @@ import {
     Users_Model,
     GamePanels_Manager,
     Users_Proxy,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -123,7 +123,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, {
             toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({
                 toUserId : Users_Constants.Common.AdminUserId,
-            }), 
+            }),
         });
     }
     private async _onTouchedBtnGameChart(): Promise<void> {
@@ -141,14 +141,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0560);
-        this._btnSoundSettings.setLangText(Lang_Constants.TextType.B0540);
-        this._btnMiscSettings.setLangText(Lang_Constants.TextType.B1278);
-        this._btnGraphicSettings.setLangText(Lang_Constants.TextType.B0984);
-        this._btnChangeGameVersion.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1277)}: ${Lang_Utils.getGameVersionName(window.GAME_VERSION)}`);
-        this._btnGameChart.setLangText(Lang_Constants.TextType.B0900);
-        this._btnGameManagement.setLangText(Lang_Constants.TextType.B0878);
-        this._btnComplaint.setLangText(Lang_Constants.TextType.B0453);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0560);
+        this._btnSoundSettings.setLangText(Lang_TextType.TextType.B0540);
+        this._btnMiscSettings.setLangText(Lang_TextType.TextType.B1278);
+        this._btnGraphicSettings.setLangText(Lang_TextType.TextType.B0984);
+        this._btnChangeGameVersion.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1277)}: ${Lang_Utils.getGameVersionName(window.GAME_VERSION)}`);
+        this._btnGameChart.setLangText(Lang_TextType.TextType.B0900);
+        this._btnGameManagement.setLangText(Lang_TextType.TextType.B0878);
+        this._btnComplaint.setLangText(Lang_TextType.TextType.B0453);
     }
     private async _updateGroupButtons(): Promise<void> {
         const group = this._groupButtons;

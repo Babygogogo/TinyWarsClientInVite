@@ -7,7 +7,7 @@ import {
     Lang_Utils,
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -103,11 +103,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const currentText       = textData?.getText();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0455),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0455),
             currentValue : currentText || ``,
             charRestrict : null,
             maxChars     : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
-            tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength),
+            tips         : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0020, WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength),
             canBeEmpty   : true,
             isMultiLine  : true,
             callback     : panel => {
@@ -144,11 +144,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const currentText       = textData?.getText();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0455),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0455),
             currentValue : currentText || ``,
             charRestrict : null,
             maxChars     : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
-            tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength),
+            tips         : Lang_Utils.getFormattedText(Lang_TextType.TextType.F0020, WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength),
             canBeEmpty   : true,
             isMultiLine  : true,
             callback     : panel => {
@@ -183,8 +183,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
 
         this._btnActLang1.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getCurrentLanguageType()) ?? Lang_Constants.UndefinedError);
         this._btnActLang2.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getSecondaryLanguageType()) ?? Lang_Constants.UndefinedError);
@@ -202,7 +202,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Actions_Utils_Common.getBriefDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();

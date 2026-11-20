@@ -8,7 +8,7 @@ import {
     Numbers_Utils,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_War,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
     type Players_Player,
@@ -37,20 +37,20 @@ export class Player extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = Player.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(Player.VnPlayerIndex,     { desc : Lang_Constants.TextType.A0386, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnTeamIndex,       { desc : Lang_Constants.TextType.A0387, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnFund,            { desc : Lang_Constants.TextType.A0388, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnAliveState,      { desc : Lang_Constants.TextType.A0448, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnSkipTurn,        { desc : Lang_Constants.TextType.A0454, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnCoActiveSkill,   { desc : Lang_Constants.TextType.A0449, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnCoDiedInTurn,    { desc : Lang_Constants.TextType.A0450, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnCoId,            { desc : Lang_Constants.TextType.A0996, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnCoCategory,      { desc : Lang_Constants.TextType.A0451, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnCoPowerTimes,    { desc : Lang_Constants.TextType.A0453, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnCoZoneRadius,    { desc : Lang_Constants.TextType.A0772, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnCoZoneRadius0,   { desc : Lang_Constants.TextType.A0773, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnCoZoneRadius1,   { desc : Lang_Constants.TextType.A0774, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(Player.VnWar,             { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,    isExtension : false });
+        variables.set(Player.VnPlayerIndex,     { desc : Lang_TextType.TextType.A0386, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnTeamIndex,       { desc : Lang_TextType.TextType.A0387, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnFund,            { desc : Lang_TextType.TextType.A0388, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnAliveState,      { desc : Lang_TextType.TextType.A0448, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnSkipTurn,        { desc : Lang_TextType.TextType.A0454, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnCoActiveSkill,   { desc : Lang_TextType.TextType.A0449, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnCoDiedInTurn,    { desc : Lang_TextType.TextType.A0450, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnCoId,            { desc : Lang_TextType.TextType.A0996, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnCoCategory,      { desc : Lang_TextType.TextType.A0451, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnCoPowerTimes,    { desc : Lang_TextType.TextType.A0453, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnCoZoneRadius,    { desc : Lang_TextType.TextType.A0772, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnCoZoneRadius0,   { desc : Lang_TextType.TextType.A0773, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnCoZoneRadius1,   { desc : Lang_TextType.TextType.A0774, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Player.VnWar,             { desc : Lang_TextType.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,    isExtension : false });
 
         return variables;
     }
@@ -59,7 +59,7 @@ export class Player extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Player.FnCoEnergy,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0452,
+                Lang_TextType.TextType.A0452,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(

@@ -1,7 +1,7 @@
 import {
     Egret_Egret,
     Keyboard_KbTypes,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Notifications_Mapping,
     Numbers_Utils,
@@ -63,10 +63,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this._btnClose.setIsVisible(!!openData.showButtonClose);
         this._btnConfirm1.setIsVisible(!openData.showRedConfirm);
-        this._btnConfirm1.setText(openData.getTextForConfirm?.() || Lang_Utils.getText(Lang_Constants.TextType.B0026));
-        this._btnConfirm2.setText(openData.getTextForConfirm?.() || Lang_Utils.getText(Lang_Constants.TextType.B0026));
-        this._btnCancel.setText(openData.getTextForCancel?.() || Lang_Utils.getText(Lang_Constants.TextType.B0154));
-        this._labelTitle.setText(openData.getTitle?.() || Lang_Utils.getText(Lang_Constants.TextType.B0088));
+        this._btnConfirm1.setText(openData.getTextForConfirm?.() || Lang_Utils.getText(Lang_TextType.TextType.B0026));
+        this._btnConfirm2.setText(openData.getTextForConfirm?.() || Lang_Utils.getText(Lang_TextType.TextType.B0026));
+        this._btnCancel.setText(openData.getTextForCancel?.() || Lang_Utils.getText(Lang_TextType.TextType.B0154));
+        this._labelTitle.setText(openData.getTitle?.() || Lang_Utils.getText(Lang_TextType.TextType.B0088));
         this._scrContent.scrollTop();
 
         const labelContent = this._labelContent;

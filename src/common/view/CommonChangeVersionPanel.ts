@@ -4,7 +4,7 @@ import {
     Lang_Utils,
     Helpers_Misc,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     GameVersions_Constants,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -66,7 +66,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0219),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0219),
         });
     }
 
@@ -97,7 +97,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0555),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0555),
             callback   : () => {
                 downloadFile(filename);
                 this.closePanel();
@@ -113,10 +113,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1277);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0520);
-        this._btnDownload.setLangText(Lang_Constants.TextType.B1179);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1277);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0154);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0520);
+        this._btnDownload.setLangText(Lang_TextType.TextType.B1179);
     }
 
     private async _initListVersion(): Promise<void> {
@@ -184,7 +184,7 @@ class VersionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         this._labelDesc.setText(Lang_Utils.getGameVersionDesc(gameVersion) || Lang_Constants.UndefinedError);
 
         const labelCurrent = this._labelCurrent;
-        labelCurrent.setText(`(${Lang_Utils.getText(Lang_Constants.TextType.B0623)})`);
+        labelCurrent.setText(`(${Lang_Utils.getText(Lang_TextType.TextType.B0623)})`);
         labelCurrent.setIsVisible(gameVersion === window.GAME_VERSION);
     }
 }

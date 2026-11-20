@@ -6,7 +6,7 @@ import {
     GamePanels_Manager,
     MultiMatchRoom_Model_MmrProxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -76,8 +76,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnStd(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDoubleSliderPanel, {
-            getTitleText       : () => Lang_Utils.getText(Lang_Constants.TextType.B0548),
-            getHelpText        : () => Lang_Utils.getText(Lang_Constants.TextType.A0443),
+            getTitleText       : () => Lang_Utils.getText(Lang_TextType.TextType.B0548),
+            getHelpText        : () => Lang_Utils.getText(Lang_TextType.TextType.A0443),
             minNumber          : MultiRankedWars_Constants.BootTimer.MinDays,
             maxNumber          : MultiRankedWars_Constants.BootTimer.MaxDays,
             currentLowerNumber : this._selectedDaysForStdLower,
@@ -92,8 +92,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnFog(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDoubleSliderPanel, {
-            getTitleText       : () => Lang_Utils.getText(Lang_Constants.TextType.B0549),
-            getHelpText        : () => Lang_Utils.getText(Lang_Constants.TextType.A0443),
+            getTitleText       : () => Lang_Utils.getText(Lang_TextType.TextType.B0549),
+            getHelpText        : () => Lang_Utils.getText(Lang_TextType.TextType.A0443),
             minNumber          : MultiRankedWars_Constants.BootTimer.MinDays,
             maxNumber          : MultiRankedWars_Constants.BootTimer.MaxDays,
             currentLowerNumber : this._selectedDaysForFogLower,
@@ -118,7 +118,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             (fogLowerDays === rangeForFog[0])   &&
             (fogUpperDays === rangeForFog[1])
         ) {
-            FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+            FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         } else {
             MultiMatchRoom_Model_MmrProxy.reqMmrSetBootTimerDaysRange(
                 [stdLowerDays, stdUpperDays],
@@ -129,7 +129,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0443),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0443),
         });
     }
 
@@ -144,11 +144,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0124);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0124);
 
-        this._btnStd.setLangText(Lang_Constants.TextType.B0548);
-        this._btnFog.setLangText(Lang_Constants.TextType.B0549);
+        this._btnStd.setLangText(Lang_TextType.TextType.B0548);
+        this._btnFog.setLangText(Lang_TextType.TextType.B0549);
     }
 
     private _updateLabelStd(): void {

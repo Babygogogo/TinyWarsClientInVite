@@ -9,7 +9,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -159,7 +159,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0538),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0538),
                 callback   : () => {
                     action.setIsEffectiveInMpw(true);
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -170,7 +170,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnConPlayerFilter(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0533),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0533),
         });
     }
     private _onTouchedGroupModifyConPlayerFilter(): void {
@@ -201,7 +201,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActBannedUnitTypeArray(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0534),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0534),
         });
     }
     private _onTouchedGroupModifyActBannedUnitTypeArray(): void {
@@ -232,7 +232,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActUnbannedUnitTypeArray(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0535),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0535),
         });
     }
     private _onTouchedGroupModifyActUnbannedUnitTypeArray(): void {
@@ -263,7 +263,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActCanActivateCoSkill(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0536),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0536),
         });
     }
     private _onTouchedGroupModifyActCanActivateCoSkill(): void {
@@ -294,7 +294,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActEnergyGrowthMultiplierModifier(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0537),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0537),
         });
     }
     private _onTouchedGroupModifyActEnergyGrowthMultiplierModifier(): void {
@@ -394,11 +394,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnIdentifier.setLangText(Lang_Constants.TextType.B0131);
-        this._btnConIsEffectiveInMpw.setLangText(Lang_Constants.TextType.B1170);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnIdentifier.setLangText(Lang_TextType.TextType.B0131);
+        this._btnConIsEffectiveInMpw.setLangText(Lang_TextType.TextType.B1170);
 
         this._btnConPlayerFilter.setText(WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ConPlayerFilter.getTitleText());
         this._btnActBannedUnitTypeArray.setText(WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActBannedUnitTypeArray.getTitleText());
@@ -422,14 +422,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Actions_Utils_Common.getBriefDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
     private _updateLabelConIsEffectiveInMpw(): void {
-        this._labelConIsEffectiveInMpw.setLangText(this.getAction()?.getIsEffectiveInMpw() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelConIsEffectiveInMpw.setLangText(this.getAction()?.getIsEffectiveInMpw() ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
 
     private _updateInputs(): void {

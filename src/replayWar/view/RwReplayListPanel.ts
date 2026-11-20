@@ -26,7 +26,7 @@ import {
     Helpers_GameFlow,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
@@ -153,8 +153,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const replayId = this._getSelectedReplayId();
         if (replayId != null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+                title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
             });
 
             const data = await ReplayWar_Model_RwModel.getReplayData(replayId);
@@ -221,17 +221,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0223) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0223) },
                 pageClass   : ReplayWar_View_RwReplayWarInfoPage.Page,
                 pageData    : null,
             },
@@ -240,14 +240,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
-        this._labelReplay.setLangText(Lang_Constants.TextType.B0092);
-        this._labelChooseReplay.setLangText(Lang_Constants.TextType.B0598);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._labelNoReplay.setLangText(Lang_Constants.TextType.B0241);
-        this._btnNextStep.setLangText(Lang_Constants.TextType.B0249);
-        this._btnPrevPage.setLangText(Lang_Constants.TextType.B1384);
-        this._btnNextPage.setLangText(Lang_Constants.TextType.B1385);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0040);
+        this._labelReplay.setLangText(Lang_TextType.TextType.B0092);
+        this._labelChooseReplay.setLangText(Lang_TextType.TextType.B0598);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._labelNoReplay.setLangText(Lang_TextType.TextType.B0241);
+        this._btnNextStep.setLangText(Lang_TextType.TextType.B0249);
+        this._btnPrevPage.setLangText(Lang_TextType.TextType.B1384);
+        this._btnNextPage.setLangText(Lang_TextType.TextType.B1385);
         this._updateLabelPageTitle();
 
         this._layoutPage.arrangeItems();
@@ -258,10 +258,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const label = this._labelPageTitle;
         if (_checkIsEmptyFilter(this._replayFilter)) {
             label.setTextColor(0xCCCCCC);
-            label.setLangText(Lang_Constants.TextType.B1386);
+            label.setLangText(Lang_TextType.TextType.B1386);
         } else {
             label.setTextColor(0xFFFF00);
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1386)}(${Lang_Utils.getText(Lang_Constants.TextType.B1387)})`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1386)}(${Lang_Utils.getText(Lang_TextType.TextType.B1387)})`);
         }
         this._layoutPage.arrangeItems();
     }

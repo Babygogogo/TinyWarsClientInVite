@@ -8,7 +8,7 @@ import {
     GamePanels_Manager,
     ChangeLogs_Gateway,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -69,17 +69,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateListMessageAndLabelNoMessage();
     }
     private _onMsgChangeLogAddMessage(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0154));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0154));
         ChangeLogs_Gateway.reqChangeLogGetMessageList();
     }
     private _onMsgChangeLogModifyMessage(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0154));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0154));
         ChangeLogs_Gateway.reqChangeLogGetMessageList();
     }
 
     private _onTouchedBtnAddMessage(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputLanguageTextPanel, {
-            getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B0457),
+            getTitle         : () => Lang_Utils.getText(Lang_TextType.TextType.B0457),
             currentTextArray : null,
             isMultiline      : true,
             maxLength        : ChangeLogs_Constants.Constants.TextMaxLength,
@@ -97,9 +97,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._updateListMessageAndLabelNoMessage();
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0457);
-        this._labelNoMessage.setLangText(Lang_Constants.TextType.B0278);
-        this._btnAddMessage.setLangText(Lang_Constants.TextType.B0454);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0457);
+        this._labelNoMessage.setLangText(Lang_TextType.TextType.B0278);
+        this._btnAddMessage.setLangText(Lang_TextType.TextType.B0454);
     }
     private async _updateListMessageAndLabelNoMessage(): Promise<void> {
         const dataArray: DataForMessageRenderer[] = ChangeLogs_Provider.getAllMessageList()?.map(v => ({ data : v })) ?? [];
@@ -147,7 +147,7 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         this.setUnscaledManualHeight(labelContent.getScaledHeight() + 38);
 
         const btnModify = this._btnModify;
-        btnModify.setLangText(Lang_Constants.TextType.B0317);
+        btnModify.setLangText(Lang_TextType.TextType.B0317);
         btnModify.setIsVisible(false);
         btnModify.setIsVisible(Users_Model.checkCanSelfEditChangeLog());
     }
@@ -157,7 +157,7 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         const messageId = data?.getMessageId();
         if (messageId != null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputLanguageTextPanel, {
-                getTitle         : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0317)} #${messageId}`,
+                getTitle         : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0317)} #${messageId}`,
                 currentTextArray : data?.getTextList() ?? null,
                 maxLength        : ChangeLogs_Constants.Constants.TextMaxLength,
                 isMultiline      : true,

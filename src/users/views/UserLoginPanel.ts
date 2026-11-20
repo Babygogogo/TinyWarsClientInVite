@@ -12,7 +12,7 @@ import {
     Users_Model,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Graphics_Constants,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -90,7 +90,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onMsgUserLogin(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0000));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0000));
         this._btnLogin.setIsTouchEnabled(false);
     }
     private _onMsgUserLoginAsGuest(): void {
@@ -110,10 +110,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const account  = this._inputAccount.getInputText() ?? ``;
         const password = this._inputPassword.getInputText() ?? ``;
         if (!Users_Utils.checkIsAccountValid(account)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0001));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0001));
         } else {
             if (!Users_Utils.checkIsPasswordValid(password)) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0003));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0003));
             } else {
                 LocalData_Storage.setAccount(account);
                 LocalData_Storage.setPassword(password);
@@ -144,12 +144,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnLogin.setLangText(Lang_Constants.TextType.B0173);
-        this._btnRegister.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0174)}*`);
-        this._btnForgetPassword.setLangText(Lang_Constants.TextType.B0626);
-        this._labelRememberPassword.setLangText(Lang_Constants.TextType.B0172);
-        this._labelAccount.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0170)}:`);
-        this._labelPassword.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0171)}:`);
+        this._btnLogin.setLangText(Lang_TextType.TextType.B0173);
+        this._btnRegister.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0174)}*`);
+        this._btnForgetPassword.setLangText(Lang_TextType.TextType.B0626);
+        this._labelRememberPassword.setLangText(Lang_TextType.TextType.B0172);
+        this._labelAccount.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0170)}:`);
+        this._labelPassword.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0171)}:`);
     }
 
     protected async _showOpenAnimation(): Promise<void> {

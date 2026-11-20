@@ -4,7 +4,7 @@ import {
     Users_Model,
     Helpers_ImageSource,
     Users_Proxy,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -77,8 +77,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0707);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0707);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
     }
 
     private _updateImgAvatar(): void {

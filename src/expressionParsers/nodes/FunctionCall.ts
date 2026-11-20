@@ -4,7 +4,7 @@ import {
     Lang_Utils,
     ExpressionParsers_Utils,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type ExpressionParsers_Contexts_Base,
     type ExpressionParsers_Enums,
     type ExpressionParsers_Results_Base,
@@ -44,7 +44,7 @@ export class FunctionCall extends ExpressionParsers_Nodes_Base.Base {
         } else {
             const errorCode = Utils_ClientErrorCode.ClientErrorCode.EpNodeFunctionCall_GetResultType_00;
             throw Helpers_Misc.newError(
-                Lang_Utils.getFormattedText(Lang_Constants.TextType.F0024, name),
+                Lang_Utils.getFormattedText(Lang_TextType.TextType.F0024, name),
                 errorCode,
             );
         }

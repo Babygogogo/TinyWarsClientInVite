@@ -2,7 +2,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     ActionPlanners_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
     type Ui_Interfaces_IUiContainer,
@@ -91,9 +91,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitleIgnoreObstructiveUnits.setLangText(Lang_Constants.TextType.B1297);
-        this._labelIgnoreAlliedUnits.setLangText(Lang_Constants.TextType.B1298);
-        this._labelIgnoreEnemyUnits.setLangText(Lang_Constants.TextType.B1299);
+        this._labelTitleIgnoreObstructiveUnits.setLangText(Lang_TextType.TextType.B1297);
+        this._labelIgnoreAlliedUnits.setLangText(Lang_TextType.TextType.B1298);
+        this._labelIgnoreEnemyUnits.setLangText(Lang_TextType.TextType.B1299);
     }
 
     private _updateGroupIgnoreObstructiveUnits(): void {

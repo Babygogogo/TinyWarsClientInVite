@@ -2,7 +2,7 @@ import {
     WarEvents_Constants,
     Lang_Utils,
     Numbers_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
 } from "../internal.ts";
 import type { MultiplierAndOffset } from "../proto/schema/CommonProto/Structure/MultiplierAndOffset.ts";
 
@@ -33,22 +33,22 @@ export function getDesc(data: MultiplierAndOffset, name: string): string {
     const offset                = data.getOffset();
     const textForOffset         = offset >= 0 ? `+ ${offset}` : `- ${-offset}`;
 
-    return `${Lang_Utils.getText(Lang_Constants.TextType.B0317)} ${name}: ${textForMultiplierPct} ${textForOffset}`;
+    return `${Lang_Utils.getText(Lang_TextType.TextType.B0317)} ${name}: ${textForMultiplierPct} ${textForOffset}`;
 }
 
 export function getErrorTip(data: MultiplierAndOffset): string | null {
     const multiplierPct = data.getMultiplierPct();
     if (Math.abs(multiplierPct) > WarEvents_Constants.Event.MaxMultiplier) {
-        return Lang_Utils.getText(Lang_Constants.TextType.Multiplier);
+        return Lang_Utils.getText(Lang_TextType.TextType.Multiplier);
     }
 
     const offset = data.getOffset();
     if (Math.abs(offset) > WarEvents_Constants.Event.MaxOffset) {
-        return Lang_Utils.getText(Lang_Constants.TextType.Offset);
+        return Lang_Utils.getText(Lang_TextType.TextType.Offset);
     }
 
     if ((multiplierPct === 100) && (offset === 0)) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0957);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0957);
     }
 
     return null;

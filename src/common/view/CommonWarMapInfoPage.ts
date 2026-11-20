@@ -6,7 +6,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Graphics_Constants,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiOpenableComponent,
@@ -122,8 +122,8 @@ export class Page
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0150);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0150);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
     }
     private async _updateComponentsForRoomInfo(): Promise<void> {
         const zoomMap       = this._zoomMap;

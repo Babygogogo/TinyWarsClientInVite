@@ -12,7 +12,7 @@ import {
     GamePanels_Manager,
     NormalMap_Model_NormalMapProxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -60,13 +60,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgMmSetWarRuleAvailability(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
     private _onNotifyMsgMmSetWarRuleName(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
     private _onNotifyMsgMmSetWarRuleFixedTileTheme(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     private async _onTouchedBtnSetAvailability(): Promise<void> {
@@ -97,7 +97,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 GameModes_Constants.ModeId.WarRoom,
             ],
             currentNumberArray : currentGameModeArray,
-            getTitleText       : () => Lang_Utils.getText(Lang_Constants.TextType.B0406),
+            getTitleText       : () => Lang_Utils.getText(Lang_TextType.TextType.B0406),
             getNumberMainText  : gameMode => Lang_Utils.getGameModeName(gameMode) ?? Lang_Constants.UndefinedError,
             callbackOnHelp     : gameMode => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => Lang_Utils.getGameModeHelpText(gameMode) ?? Lang_Constants.UndefinedError,
@@ -146,7 +146,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const normalMapId       = openData.normalMapId;
         const templateWarRule   = (await NormalMap_Model_NormalMapModel.getRawData(normalMapId))?.getTemplateWarRuleArray().find(v => (v.getRuleId()) === ruleId);
         if (templateWarRule == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
                 currentTextArray : templateWarRule.getRuleNameArray(),
@@ -166,13 +166,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const templateWarRuleId = openData.templateWarRuleId;
         const templateWarRule   = (await NormalMap_Model_NormalMapModel.getRawData(normalMapId))?.getTemplateWarRuleArray().find(v => (v.getRuleId()) === templateWarRuleId);
         if (templateWarRule == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
                 availableNumberArray : [-1].concat(Helpers_Collection.getNonNullElements(Tiles_Constants_Common.AllThemeTypeIdArray)),
                 currentNumber        : templateWarRule.getWarRuleCommonData()?.getFixedTileTheme() ?? -1,
-                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1113),
-                getNumberMainText    : tileTheme => tileTheme === -1 ? Lang_Utils.getText(Lang_Constants.TextType.B0890) : (Lang_Utils.getTileThemeName(tileTheme) ?? Lang_Constants.UndefinedError),
+                getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B1113),
+                getNumberMainText    : tileTheme => tileTheme === -1 ? Lang_Utils.getText(Lang_TextType.TextType.B0890) : (Lang_Utils.getTileThemeName(tileTheme) ?? Lang_Constants.UndefinedError),
                 callbackOnConfirm    : tileTheme => {
                     NormalMap_Model_NormalMapProxy.reqMmSetWarRuleFixedTileTheme(normalMapId, templateWarRuleId, tileTheme === -1 ? null : tileTheme);
                 },
@@ -181,9 +181,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0317)} #${this.getOpenData()?.templateWarRuleId}`);
-        this._btnSetAvailability.setLangText(Lang_Constants.TextType.B0406);
-        this._btnSetRuleName.setLangText(Lang_Constants.TextType.B0495);
-        this._btnSetTileTheme.setLangText(Lang_Constants.TextType.B1113);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0317)} #${this.getOpenData()?.templateWarRuleId}`);
+        this._btnSetAvailability.setLangText(Lang_TextType.TextType.B0406);
+        this._btnSetRuleName.setLangText(Lang_TextType.TextType.B0495);
+        this._btnSetTileTheme.setLangText(Lang_TextType.TextType.B1113);
     }
 }

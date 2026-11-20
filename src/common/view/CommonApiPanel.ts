@@ -1,14 +1,15 @@
 import {
     ExpressionParsers_Enums,
-    GamePanels_Dict,
-    Lang_Utils,
     ExpressionParsers_Utils,
     GameConfigs_Provider,
+    GamePanels_Dict,
     GamePanels_Manager,
     Lang_Constants,
-    Ui_Types_UiInputEventType,
+    Lang_TextType,
+    Lang_Utils,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
+    Ui_Types_UiInputEventType,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -124,7 +125,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             availableNumberArray : ContextTypeArray,
             keepOrder            : true,
             columnsCount         : 3,
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0131),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B0131),
             getNumberMainText    : num => Lang_Utils.getExpressionParserContextName(num) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm    : contextType => {
                 if (contextType !== this._contextType) {
@@ -144,12 +145,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnOperator(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0020),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0020),
         });
     }
     private _onTouchedBtnExpression(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0061),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0061),
         });
     }
 
@@ -164,11 +165,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnTypeId.setLangText(Lang_Constants.TextType.B1168);
-        this._btnOperator.setLangText(Lang_Constants.TextType.B0130);
-        this._btnExpression.setLangText(Lang_Constants.TextType.B0129);
-        this._btnSwitch.setLangText(Lang_Constants.TextType.B0668);
-        this._inputFilter.setPromptText(Lang_Utils.getText(Lang_Constants.TextType.B0132));
+        this._btnTypeId.setLangText(Lang_TextType.TextType.B1168);
+        this._btnOperator.setLangText(Lang_TextType.TextType.B0130);
+        this._btnExpression.setLangText(Lang_TextType.TextType.B0129);
+        this._btnSwitch.setLangText(Lang_TextType.TextType.B0668);
+        this._inputFilter.setPromptText(Lang_Utils.getText(Lang_TextType.TextType.B0132));
         this._updateLabelTitle();
         this._updateLabelContent();
     }
@@ -184,7 +185,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         );
     }
     private _updateLabelTitle(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0131)} (${Lang_Utils.getExpressionParserContextName(this._contextType) ?? Lang_Constants.UndefinedError})`);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0131)} (${Lang_Utils.getExpressionParserContextName(this._contextType) ?? Lang_Constants.UndefinedError})`);
     }
     private _updateLabelContent(): void {
         const data = this._listItem.getFirstSelectedData();
@@ -226,7 +227,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
 interface DataForApiRenderer extends Ui_Types_UiListItemData.UiListItemData {
     name            : string;
-    langTextType    : number;
+    langTextType    : Lang_TextType.TextType;
     isExtension     : boolean;
     panel           : Panel;
 }
@@ -249,10 +250,10 @@ class ApiRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
         const labelExtension = this._labelExtension;
         if (openData.isExtension) {
-            labelExtension.setLangText(Lang_Constants.TextType.B1161);
+            labelExtension.setLangText(Lang_TextType.TextType.B1161);
             labelExtension.setTextColor(0xFFFF00);
         } else {
-            labelExtension.setLangText(Lang_Constants.TextType.B1160);
+            labelExtension.setLangText(Lang_TextType.TextType.B1160);
             labelExtension.setTextColor(0x00FF00);
         }
         this._layoutName.arrangeItems();

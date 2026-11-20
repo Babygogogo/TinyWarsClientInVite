@@ -4,7 +4,7 @@ import {
     GamePanels_Manager,
     Helpers_ImageSource,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeModel,
     Players_Constants,
@@ -134,8 +134,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0281);
-        this._labelRecentTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0372)}:`);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0281);
+        this._labelRecentTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0372)}:`);
     }
 
     private async _updateOnOpenDataChanged(): Promise<void> {

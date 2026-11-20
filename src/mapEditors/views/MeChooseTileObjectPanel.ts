@@ -5,7 +5,7 @@ import {
     GamePanels_Manager,
     Graphics_Constants,
     Helpers_ImageSource,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Constants,
     Sounds_Constants,
@@ -158,7 +158,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelpRealTimeAdjust(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0032),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0032),
         });
     }
 
@@ -166,9 +166,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0283);
-        this._labelRecentTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0372)}:`);
-        this._labelRealTimeAdjust.setLangText(Lang_Constants.TextType.B1121);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0283);
+        this._labelRecentTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0372)}:`);
+        this._labelRealTimeAdjust.setLangText(Lang_TextType.TextType.B1121);
 
         this._groupRealTimeAdjust.arrangeItems();
         this._groupRealTimeAdjustContainer.arrangeItems();
@@ -300,7 +300,7 @@ class PlayerIndexRenderer extends Ui_Components_UiListItemRenderer.UiListItemRen
 
     protected override _doApplyOpenData(): void {
         const playerIndex = this.getOpenData()?.playerIndex;
-        this._labelPlayerIndex.setText(playerIndex != null ? `P${playerIndex}` : Lang_Utils.getText(Lang_Constants.TextType.B0030));
+        this._labelPlayerIndex.setText(playerIndex != null ? `P${playerIndex}` : Lang_Utils.getText(Lang_TextType.TextType.B0030));
         this._imgBg.loadSource(Helpers_ImageSource.getSkinButtonBackground(playerIndex ?? 0));
     }
 

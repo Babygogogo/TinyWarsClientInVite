@@ -8,7 +8,7 @@ import {
     GamePanels_Manager,
     Users_Proxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -66,7 +66,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateView();
     }
     private _onMsgUserSetNickname(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
         const selfUserId = Helpers_Misc.getExisted(Users_Model.getSelfUserId());
         Users_Proxy.reqUserGetPublicInfo(selfUserId);
@@ -76,7 +76,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Users_Proxy.reqUserGetPublicInfo(selfUserId);
     }
     private _onMsgUserSetShowMedalIdArray(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.OperationSucceeded));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.OperationSucceeded));
     }
 
     private _onTouchedBtnChangeAvatar(): void {
@@ -85,8 +85,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnChangeNickname(): void {
         const currentNickname = Users_Model.getSelfNickname() ?? ``;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0149),
-            tips         : Lang_Utils.getText(Lang_Constants.TextType.A0066),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0149),
+            tips         : Lang_Utils.getText(Lang_TextType.TextType.A0066),
             minLength    : Users_Constants.Common.NicknameMinLength,
             maxChars     : Users_Constants.Common.NicknameMaxLength,
             charRestrict : null,
@@ -98,7 +98,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 }
 
                 if (!Users_Utils.checkIsNicknameValid(nickname)) {
-                    FloatText.showLang(Lang_Constants.TextType.A0002);
+                    FloatText.showLang(Lang_TextType.TextType.A0002);
                 } else {
                     Users_Proxy.reqSetNickname(nickname);
                 }
@@ -128,12 +128,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0560);
-        this._btnChangeAvatar.setLangText(Lang_Constants.TextType.B0707);
-        this._btnChangeNickname.setLangText(Lang_Constants.TextType.B0175);
-        this._btnChangePassword.setLangText(Lang_Constants.TextType.B0171);
-        this._btnChangeDiscordId.setLangText(Lang_Constants.TextType.B0150);
-        this._btnChangeMedal.setLangText(Lang_Constants.TextType.B1018);
-        this._btnChangeEmail.setLangText(Lang_Constants.TextType.B1332);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0560);
+        this._btnChangeAvatar.setLangText(Lang_TextType.TextType.B0707);
+        this._btnChangeNickname.setLangText(Lang_TextType.TextType.B0175);
+        this._btnChangePassword.setLangText(Lang_TextType.TextType.B0171);
+        this._btnChangeDiscordId.setLangText(Lang_TextType.TextType.B0150);
+        this._btnChangeMedal.setLangText(Lang_TextType.TextType.B1018);
+        this._btnChangeEmail.setLangText(Lang_TextType.TextType.B1332);
     }
 }

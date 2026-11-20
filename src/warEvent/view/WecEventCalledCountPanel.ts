@@ -10,7 +10,7 @@ import {
     Helpers_Collection,
     Helpers_Text,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
@@ -111,7 +111,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentNumberArray   : condition.getEventIdArray(),
             availableNumberArray : Helpers_Collection.getNonNullElements(fullData.getEventArray()?.map(v => v.getEventId())),
             showNumber           : true,
-            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0461)),
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.B0461)),
             getNumberMainText    : warEventId => Helpers_Text.getTruncatedText(
                 Lang_Utils.getLanguageText({
                     textArray : fullData.getEventArray()?.find(v => v.getEventId() === warEventId)?.getEventNameArray(),
@@ -127,7 +127,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTimesInTurn(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0790),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0790),
             minValue     : 0,
             maxValue     : WarEvents_Constants.Event.MaxCallCountInPlayerTurn,
             currentValue : condition.getTimesInTurn(),
@@ -145,7 +145,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTimesTotal(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0791),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0791),
             minValue     : 0,
             maxValue     : WarEvents_Constants.Event.MaxCallCountTotal,
             currentValue : condition.getTimesTotal(),
@@ -163,7 +163,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnEventsCount(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0788),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0788),
             minValue     : 0,
             maxValue     : WarEvents_Constants.Event.MaxEventsPerMap,
             currentValue : condition.getEventsCount(),
@@ -193,16 +193,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnEventId.setLangText(Lang_Constants.TextType.B0462);
-        this._btnTimesInTurn.setLangText(Lang_Constants.TextType.B0790);
-        this._btnTimesInTurnComparator.setLangText(Lang_Constants.TextType.Comparator);
-        this._btnTimesTotal.setLangText(Lang_Constants.TextType.B0791);
-        this._btnTimesTotalComparator.setLangText(Lang_Constants.TextType.Comparator);
-        this._btnEventsCount.setLangText(Lang_Constants.TextType.B0788);
-        this._btnEventsCountComparator.setLangText(Lang_Constants.TextType.Comparator);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnEventId.setLangText(Lang_TextType.TextType.B0462);
+        this._btnTimesInTurn.setLangText(Lang_TextType.TextType.B0790);
+        this._btnTimesInTurnComparator.setLangText(Lang_TextType.TextType.Comparator);
+        this._btnTimesTotal.setLangText(Lang_TextType.TextType.B0791);
+        this._btnTimesTotalComparator.setLangText(Lang_TextType.TextType.Comparator);
+        this._btnEventsCount.setLangText(Lang_TextType.TextType.B0788);
+        this._btnEventsCountComparator.setLangText(Lang_TextType.TextType.Comparator);
 
         this._updateLabelDescAndLabelError();
     }
@@ -216,14 +216,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war           = openData.war;
         const errorTip      = WarEvents_Conditions_Utils_Common.getErrorTipForCondition(openData.fullData, condition, war);
         const labelError    = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Conditions_Utils_Common.getDetailedDescForCondition(condition, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
     }
     private _updateLabelEventId(): void {
         const eventIdArray = this._getCondition().getEventIdArray();
-        this._labelEventId.setText(eventIdArray?.length ? eventIdArray.map(v => `${v}`).join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.B0776));
+        this._labelEventId.setText(eventIdArray?.length ? eventIdArray.map(v => `${v}`).join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.B0776));
     }
     private _updateInputTimesInTurn(): void {
         const timesInTurn = this._getCondition().getTimesInTurn();

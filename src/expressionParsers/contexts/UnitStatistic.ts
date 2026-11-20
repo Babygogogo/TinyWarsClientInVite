@@ -4,7 +4,7 @@ import {
     ExpressionParsers_Utils,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_War,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
     type ExpressionParsers_Results_Base,
@@ -27,16 +27,16 @@ export class UnitStatistic extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = UnitStatistic.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(UnitStatistic.VnPlayerIndex,     { desc : Lang_Constants.TextType.A0513, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(UnitStatistic.VnTeamIndex,       { desc : Lang_Constants.TextType.A0528, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(UnitStatistic.VnUnitType,        { desc : Lang_Constants.TextType.A0514, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(UnitStatistic.VnUnitGain,        { desc : Lang_Constants.TextType.A0515, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(UnitStatistic.VnUnitLoss,        { desc : Lang_Constants.TextType.A0516, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(UnitStatistic.VnUnitRemain,      { desc : Lang_Constants.TextType.A0517, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(UnitStatistic.VnHpGain,          { desc : Lang_Constants.TextType.A0518, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(UnitStatistic.VnHpLoss,          { desc : Lang_Constants.TextType.A0519, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(UnitStatistic.VnHpRemain,        { desc : Lang_Constants.TextType.A0520, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
-        variables.set(UnitStatistic.VnWar,             { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,    isExtension : false });
+        variables.set(UnitStatistic.VnPlayerIndex,     { desc : Lang_TextType.TextType.A0513, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(UnitStatistic.VnTeamIndex,       { desc : Lang_TextType.TextType.A0528, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(UnitStatistic.VnUnitType,        { desc : Lang_TextType.TextType.A0514, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(UnitStatistic.VnUnitGain,        { desc : Lang_TextType.TextType.A0515, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(UnitStatistic.VnUnitLoss,        { desc : Lang_TextType.TextType.A0516, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(UnitStatistic.VnUnitRemain,      { desc : Lang_TextType.TextType.A0517, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(UnitStatistic.VnHpGain,          { desc : Lang_TextType.TextType.A0518, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(UnitStatistic.VnHpLoss,          { desc : Lang_TextType.TextType.A0519, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(UnitStatistic.VnHpRemain,        { desc : Lang_TextType.TextType.A0520, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(UnitStatistic.VnWar,             { desc : Lang_TextType.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,    isExtension : false });
 
         return variables;
     }

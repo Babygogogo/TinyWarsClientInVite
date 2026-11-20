@@ -3,7 +3,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     Maps_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -102,9 +102,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1049);
-        this._labelIsAscending.setLangText(Lang_Constants.TextType.B1106);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1049);
+        this._labelIsAscending.setLangText(Lang_TextType.TextType.B1106);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
         this._groupIsAscending.arrangeItems();
     }
 

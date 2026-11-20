@@ -3,6 +3,26 @@ import {
     Common_View_CommonWarBasicSettingsPage,
     Common_View_CommonWarMapInfoPage,
     Common_View_CommonWarPlayerInfoPage,
+    FloatText,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Graphics_Constants,
+    Lang_Constants,
+    Lang_TextType,
+    Lang_Utils,
+    MultiPlayerWar_Model_MpwModel,
+    NormalMap_Model_NormalMapModel,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Timer_TimerModel,
+    Tween_Executor,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Components_UiTabItemRenderer,
+    Users_Model,
+    WarSettings_Utils_MpwWarSettings,
+    WatchWar_Model_WwModel,
+    WatchWar_Model_WwProxy,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiLabel,
@@ -11,25 +31,6 @@ import {
     type Ui_Interfaces_IUiScrollList,
     type Ui_Interfaces_IUiTab,
     type Ui_Types_UiListItemData,
-    Graphics_Constants,
-    WatchWar_Model_WwModel,
-    Tween_Executor,
-    GamePanels_Dict,
-    Lang_Utils,
-    NormalMap_Model_NormalMapModel,
-    Users_Model,
-    MultiPlayerWar_Model_MpwModel,
-    WarSettings_Utils_MpwWarSettings,
-    GamePanels_Manager,
-    Sounds_SoundPlayer,
-    WatchWar_Model_WwProxy,
-    Sounds_Constants,
-    FloatText,
-    Lang_Constants,
-    Ui_Components_UiListItemRenderer,
-    Ui_Components_UiPanel,
-    Ui_Components_UiTabItemRenderer,
-    Timer_TimerModel,
 } from "../../internal.ts";
 
 export type OpenData = void;
@@ -123,7 +124,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMpwWatchHandleRequest(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.OperationSucceeded));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.OperationSucceeded));
         WatchWar_Model_WwProxy.reqMpwWatchRequestedWarIdArray();
     }
 
@@ -144,21 +145,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const watchIncomingInfo     = await WatchWar_Model_WwModel.getWatchIncomingInfo(warId);
         const warPlayerInfoArray    = (await MultiPlayerWar_Model_MpwModel.getWarSettings(warId))?.getPlayerInfoArray();
         if ((watchIncomingInfo == null) || (warPlayerInfoArray == null)) {
-            FloatText.showLang(Lang_Constants.TextType.A0300);
+            FloatText.showLang(Lang_TextType.TextType.A0300);
             return;
         }
 
         const requestSrcUserIdArray = watchIncomingInfo.getRequestSrcUserIdArray();
         if (!requestSrcUserIdArray.length) {
-            FloatText.showLang(Lang_Constants.TextType.A0300);
+            FloatText.showLang(Lang_TextType.TextType.A0300);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
                 currentNumberArray     : [],
                 availableNumberArray   : requestSrcUserIdArray,
                 showNumber             : true,
                 columnsCount           : 3,
-                getTitleText           : () => Lang_Utils.getText(Lang_Constants.TextType.B0208),
-                getHelpText            : () => Lang_Utils.getText(Lang_Constants.TextType.A0859),
+                getTitleText           : () => Lang_Utils.getText(Lang_TextType.TextType.B0208),
+                getHelpText            : () => Lang_Utils.getText(Lang_TextType.TextType.A0859),
                 getNumberMainText      : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
                 getNumberMainTextColor : userId => {
                     if (warPlayerInfoArray.some(v => (v.getUserId() ?? 0) === userId)) {
@@ -175,7 +176,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     const acceptUserIdSet       = new Set(acceptUserIdArray);
                     const declineUserIdArray    = requestSrcUserIdArray.filter(v => !acceptUserIdSet.has(v));
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0082, acceptUserIdArray.length, declineUserIdArray.length),
+                        getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0082, acceptUserIdArray.length, declineUserIdArray.length),
                         callback   : () => WatchWar_Model_WwProxy.reqWatchHandleRequest(warId, acceptUserIdArray, declineUserIdArray),
                     });
                 },
@@ -190,22 +191,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -214,13 +215,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
-        this._labelWatchWar.setLangText(Lang_Constants.TextType.B0206);
-        this._labelHandleRequest.setLangText(Lang_Constants.TextType.B0208);
-        this._labelChooseWar.setLangText(Lang_Constants.TextType.B0589);
-        this._labelNoWar.setLangText(Lang_Constants.TextType.B0209);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._btnNextStep.setLangText(Lang_Constants.TextType.B0566);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0040);
+        this._labelWatchWar.setLangText(Lang_TextType.TextType.B0206);
+        this._labelHandleRequest.setLangText(Lang_TextType.TextType.B0208);
+        this._labelChooseWar.setLangText(Lang_TextType.TextType.B0589);
+        this._labelNoWar.setLangText(Lang_TextType.TextType.B0209);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._btnNextStep.setLangText(Lang_TextType.TextType.B0566);
 
         this._groupNavigator.arrangeItems();
     }

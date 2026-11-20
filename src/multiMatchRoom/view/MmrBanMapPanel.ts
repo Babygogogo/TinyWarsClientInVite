@@ -7,7 +7,7 @@ import {
     GamePanels_Manager,
     MultiMatchRoom_Model_MmrProxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -92,14 +92,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._resetNormalMapIdArrayAndView();
     }
     private _onMsgMmrSetBannedNormalMapIdArray(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         this._resetNormalMapIdArrayAndView();
     }
 
     private async _onTouchedBtnStdMap0(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
             availableNormalMapIdArray : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(false),
-            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
+            getTitleText              : () => Lang_Utils.getText(Lang_TextType.TextType.B0084),
             callback                  : normalMapId => {
                 this._normalMapIdArrayForStd[0] = normalMapId;
                 this._updateComponentsForStd();
@@ -114,7 +114,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnStdMap1(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
             availableNormalMapIdArray : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(false),
-            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
+            getTitleText              : () => Lang_Utils.getText(Lang_TextType.TextType.B0084),
             callback                  : normalMapId => {
                 this._normalMapIdArrayForStd[1] = normalMapId;
                 this._updateComponentsForStd();
@@ -129,7 +129,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnFogMap0(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
             availableNormalMapIdArray : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(true),
-            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
+            getTitleText              : () => Lang_Utils.getText(Lang_TextType.TextType.B0084),
             callback                  : normalMapId => {
                 this._normalMapIdArrayForFog[0] = normalMapId;
                 this._updateComponentsForFog();
@@ -144,7 +144,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnFogMap1(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
             availableNormalMapIdArray : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(true),
-            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
+            getTitleText              : () => Lang_Utils.getText(Lang_TextType.TextType.B0084),
             callback                  : normalMapId => {
                 this._normalMapIdArrayForFog[1] = normalMapId;
                 this._updateComponentsForFog();
@@ -158,7 +158,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0101),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0101),
         });
     }
     private _onTouchedBtnCancel(): void {
@@ -182,11 +182,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0084);
-        this._labelStd.setLangText(Lang_Constants.TextType.B0548);
-        this._labelFog.setLangText(Lang_Constants.TextType.B0549);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0084);
+        this._labelStd.setLangText(Lang_TextType.TextType.B0548);
+        this._labelFog.setLangText(Lang_TextType.TextType.B0549);
 
         this._layoutStd.arrangeItems();
         this._layoutFog.arrangeItems();

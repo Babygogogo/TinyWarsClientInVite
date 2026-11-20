@@ -8,7 +8,7 @@ import {
     Players_Constants,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiContainer,
     Ui_Components_UiImage,
     Ui_Components_UiLabel,
@@ -99,7 +99,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(this.getOpenData()?.isBan ? Lang_Constants.TextType.B0403 : Lang_Constants.TextType.B1346);
+        this._labelTitle.setLangText(this.getOpenData()?.isBan ? Lang_TextType.TextType.B0403 : Lang_TextType.TextType.B1346);
     }
 
     private _initGroupCoCategory(): void {
@@ -198,7 +198,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 label.setFontSize(14);
                 label.setIsBold(true);
                 label.setTextColor(Graphics_Constants.ColorValue.Dark);
-                label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1347)}: ${restCoIdArray.length}`);
+                label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1347)}: ${restCoIdArray.length}`);
                 groupCoCategory.addItem(label, false);
             }
 

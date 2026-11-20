@@ -7,7 +7,7 @@ import {
     ValueAndComparators_Utils,
     Lang_Utils,
     Numbers_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type Players_Player,
@@ -34,8 +34,8 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0262,
-        Lang_Utils.getText(Lang_Constants.TextType.B1459),
+        Lang_TextType.TextType.F0262,
+        Lang_Utils.getText(Lang_TextType.TextType.B1459),
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaDeleteTileBuffSimple>): string | null {
@@ -60,7 +60,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         {
             const filter = data.getConPlayerFilter();
             if (filter != null) {
-                conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
+                conTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
         {
@@ -68,19 +68,19 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
             if (comparator != null) {
                 conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                     comparator,
-                    Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
+                    Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_TextType.TextType.B1418 : Lang_TextType.TextType.B1419),
                 )}`);
             }
         }
 
         if (!conTextArray.length) {
-            conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
+            conTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.A0944)}`);
         }
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0263,
-        Lang_Utils.getText(Lang_Constants.TextType.B1459),
+        Lang_TextType.TextType.F0263,
+        Lang_Utils.getText(Lang_TextType.TextType.B1459),
         conTextArray.join(`\n`),
     );
 }
@@ -96,17 +96,17 @@ export function getErrorTip(
         if ((filter != null)                                                            &&
             (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gcData))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerFilter));
         }
     }
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
             if (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gcData)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
             }
         }
     }
@@ -115,7 +115,7 @@ export function getErrorTip(
         if ((filter != null)                                                                    &&
             (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gcData))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileFilter));
         }
     }
     {
@@ -123,7 +123,7 @@ export function getErrorTip(
         if ((comparator != null)                                    &&
             (!ValueAndComparators_Utils.checkIsValid(comparator))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
         }
     }
     {
@@ -131,13 +131,13 @@ export function getErrorTip(
         if ((filter != null)                                &&
             (!TileBuffs_Utils_Filter.checkIsValid(filter))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1235));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1235));
         }
     }
     {
         const con = data.getConMaxDeleteCount();
         if ((con != null) && (con <= 0)) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1457));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1457));
         }
     }
 

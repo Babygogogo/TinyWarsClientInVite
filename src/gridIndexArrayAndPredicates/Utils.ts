@@ -1,14 +1,14 @@
 import {
     Lang_Utils,
     AuxiliaryTypes_GridIndex,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_MapSize,
 } from "../internal.ts";
 import type { GridIndexArrayAndPredicate } from "../proto/schema/CommonProto/Structure/GridIndexArrayAndPredicate.ts";
 
 export function getDesc(data: GridIndexArrayAndPredicate, valueName: string): string {
     return Lang_Utils.getFormattedText(
-        data.getIsOneOf() ? Lang_Constants.TextType.F0228 : Lang_Constants.TextType.F0229,
+        data.getIsOneOf() ? Lang_TextType.TextType.F0228 : Lang_TextType.TextType.F0229,
         valueName,
         data.getGridIndexArray()?.map(v => `(${v.getX()},${v.getY()})`).join(`, `),
     );

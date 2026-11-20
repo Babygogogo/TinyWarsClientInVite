@@ -11,7 +11,7 @@ import {
     Users_Proxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiInputEventType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -132,7 +132,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnSearchNotFollowing(): void {
         const nickname = this._inputNickname.getInputText()?.trim() ?? ``;
         if (nickname.length <= 0) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0146, Lang_Utils.getText(Lang_Constants.TextType.B0175)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0146, Lang_Utils.getText(Lang_TextType.TextType.B0175)));
         } else {
             Users_Proxy.reqUserGetUsersByNickname(nickname, false);
         }
@@ -140,7 +140,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnSearchAll(): void {
         const nickname = this._inputNickname.getInputText()?.trim() ?? ``;
         if (nickname.length <= 0) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0146, Lang_Utils.getText(Lang_Constants.TextType.B0175)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0146, Lang_Utils.getText(Lang_TextType.TextType.B0175)));
         } else {
             Users_Proxy.reqUserGetUsersByNickname(nickname, null);
         }
@@ -157,19 +157,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSearchRange.setLangText(Lang_Constants.TextType.A0834);
-        this._btnSearchFollowing.setLangText(Lang_Constants.TextType.B0997);
-        this._btnSearchNotFollowing.setLangText(Lang_Constants.TextType.B0998);
-        this._btnSearchAll.setLangText(Lang_Constants.TextType.B0776);
-        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
-        this._inputNickname.setPromptText(Lang_Utils.getText(Lang_Constants.TextType.B0175));
+        this._labelSearchRange.setLangText(Lang_TextType.TextType.A0834);
+        this._btnSearchFollowing.setLangText(Lang_TextType.TextType.B0997);
+        this._btnSearchNotFollowing.setLangText(Lang_TextType.TextType.B0998);
+        this._btnSearchAll.setLangText(Lang_TextType.TextType.B0776);
+        this._labelTips.setLangText(Lang_TextType.TextType.B1249);
+        this._inputNickname.setPromptText(Lang_Utils.getText(Lang_TextType.TextType.B0175));
 
         this._updateLabelTitle();
     }
 
     private _updateLabelTitle(): void {
         const func = this.getOpenData()?.getTitleText;
-        this._labelTitle.setText(func ? func() : Lang_Utils.getText(Lang_Constants.TextType.B0031));
+        this._labelTitle.setText(func ? func() : Lang_Utils.getText(Lang_TextType.TextType.B0031));
     }
 
     private async _updateListNickname(): Promise<void> {

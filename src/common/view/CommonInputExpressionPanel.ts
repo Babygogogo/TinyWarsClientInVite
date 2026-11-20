@@ -5,7 +5,7 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     ExpressionParsers_Parser,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiInputEventType,
     Ui_Components_UiPanel,
     type ExpressionParsers_Types,
@@ -134,11 +134,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         this._labelTitle.setText(expressionInfo.getTitleText());
-        this._btnIdentifier.setLangText(Lang_Constants.TextType.B0131);
-        this._btnCustomCounter.setLangText(Lang_Constants.TextType.B1143);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
-        this._input.setPromptText(Lang_Utils.getText(expressionInfo.isRequired ? Lang_Constants.TextType.B1310 : Lang_Constants.TextType.B1311));
+        this._btnIdentifier.setLangText(Lang_TextType.TextType.B0131);
+        this._btnCustomCounter.setLangText(Lang_TextType.TextType.B1143);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
+        this._input.setPromptText(Lang_Utils.getText(expressionInfo.isRequired ? Lang_TextType.TextType.B1310 : Lang_TextType.TextType.B1311));
         this._updateLabelError();
     }
 
@@ -155,10 +155,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             customCounterNameSet : new Set(openData.fullData.getCustomCounterNameArray().map(v => v.getName() ?? ``)),
         });
         const errorText = errorData.errorCode
-            ? `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, expressionInfo.getTitleText())} ${errorData.errorText}`
+            ? `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, expressionInfo.getTitleText())} ${errorData.errorText}`
             : null;
         const label = this._labelError;
-        label.setText(errorText ?? Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        label.setText(errorText ?? Lang_Utils.getText(Lang_TextType.TextType.B0493));
         label.setTextColor(errorText ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
     }
 }

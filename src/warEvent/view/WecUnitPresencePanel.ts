@@ -7,7 +7,7 @@ import {
     WarEvents_Conditions_Utils_Common,
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
@@ -150,7 +150,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldCon = condition.getConUnitComparator();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0160),
             currentValue : oldCon?.getValue(),
             minValue     : 0,
             maxValue     : 100000,
@@ -160,7 +160,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-                        getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
+                        getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.Comparator),
                         availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
                         currentNumber        : oldCon?.getComparator(),
                         getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
@@ -217,13 +217,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
 
-        this._btnPlayerFilter.setLangText(Lang_Constants.TextType.PlayerFilter);
-        this._btnUnitFilter.setLangText(Lang_Constants.TextType.UnitFilter);
-        this._btnUnitComparator.setLangText(Lang_Constants.TextType.Comparator);
-        this._btnTileFilter.setLangText(Lang_Constants.TextType.TileFilter);
+        this._btnPlayerFilter.setLangText(Lang_TextType.TextType.PlayerFilter);
+        this._btnUnitFilter.setLangText(Lang_TextType.TextType.UnitFilter);
+        this._btnUnitComparator.setLangText(Lang_TextType.TextType.Comparator);
+        this._btnTileFilter.setLangText(Lang_TextType.TextType.TileFilter);
 
         this._updateLabelDescAndLabelError();
     }
@@ -238,16 +238,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Conditions_Utils_Common.getErrorTipForCondition(openData.fullData, condition, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Conditions_Utils_Common.getDetailedDescForCondition(condition, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
     }
     private _updateLabelPlayerFilter(): void {
-        this._labelPlayerFilter.setText(this._getCondition()?.getConPlayerFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
+        this._labelPlayerFilter.setText(this._getCondition()?.getConPlayerFilter() == null ? `` : Lang_Utils.getText(Lang_TextType.TextType.B1408));
     }
     private _updateLabelUnitFilter(): void {
-        this._labelUnitFilter.setText(this._getCondition()?.getConUnitFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
+        this._labelUnitFilter.setText(this._getCondition()?.getConUnitFilter() == null ? `` : Lang_Utils.getText(Lang_TextType.TextType.B1408));
     }
     private _updateLabelUnitComparator(): void {
         const comparator = this._getCondition()?.getConUnitComparator();
@@ -257,7 +257,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         );
     }
     private _updateLabelTileFilter(): void {
-        this._labelTileFilter.setText(this._getCondition()?.getConTileFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
+        this._labelTileFilter.setText(this._getCondition()?.getConTileFilter() == null ? `` : Lang_Utils.getText(Lang_TextType.TextType.B1408));
     }
 
     private _getCondition(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecUnitPresence> {

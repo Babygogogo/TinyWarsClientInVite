@@ -1,7 +1,7 @@
 import {
     ValueSetAndRelations_Constants,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 import type { ValueSetAndRelation } from "../proto/schema/CommonProto/Structure/ValueSetAndRelation.ts";
@@ -20,14 +20,14 @@ export function checkIsValid(data: ValueSetAndRelation): boolean {
 export function getDesc(data: ValueSetAndRelation, valueName: string, getValueText: (v: number) => AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): string {
     const textForValue = data.getValueArray()?.map(v => getValueText(v)).join(`, `);
     switch (data.getSetRelation()) {
-        case ValueSetAndRelations_Constants.SetRelationId.EqualTo          : return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0237, valueName, textForValue);
-        case ValueSetAndRelations_Constants.SetRelationId.NotEqualTo       : return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0238, valueName, textForValue);
-        case ValueSetAndRelations_Constants.SetRelationId.SupersetOf       : return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0239, valueName, textForValue);
-        case ValueSetAndRelations_Constants.SetRelationId.NotSupersetOf    : return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0240, valueName, textForValue);
-        case ValueSetAndRelations_Constants.SetRelationId.SubsetOf         : return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0241, valueName, textForValue);
-        case ValueSetAndRelations_Constants.SetRelationId.NotSubsetOf      : return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0242, valueName, textForValue);
-        case ValueSetAndRelations_Constants.SetRelationId.Intersection     : return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0243, valueName, textForValue);
-        case ValueSetAndRelations_Constants.SetRelationId.NoIntersection   : return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0244, valueName, textForValue);
+        case ValueSetAndRelations_Constants.SetRelationId.EqualTo          : return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0237, valueName, textForValue);
+        case ValueSetAndRelations_Constants.SetRelationId.NotEqualTo       : return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0238, valueName, textForValue);
+        case ValueSetAndRelations_Constants.SetRelationId.SupersetOf       : return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0239, valueName, textForValue);
+        case ValueSetAndRelations_Constants.SetRelationId.NotSupersetOf    : return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0240, valueName, textForValue);
+        case ValueSetAndRelations_Constants.SetRelationId.SubsetOf         : return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0241, valueName, textForValue);
+        case ValueSetAndRelations_Constants.SetRelationId.NotSubsetOf      : return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0242, valueName, textForValue);
+        case ValueSetAndRelations_Constants.SetRelationId.Intersection     : return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0243, valueName, textForValue);
+        case ValueSetAndRelations_Constants.SetRelationId.NoIntersection   : return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0244, valueName, textForValue);
         default                             : return Lang_Constants.UndefinedError;
     }
 }

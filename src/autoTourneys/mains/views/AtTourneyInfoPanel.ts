@@ -16,7 +16,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -109,7 +109,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this._bracketRoundId    = 1;
             this._updateView();
         } else {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
         }
     }
     private _onTouchedBtnSettings(): void {
@@ -123,7 +123,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this._bracketRoundId    = 1;
             this._updateView();
         } else {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
         }
     }
     private async _onTouchedBtnPreviousBracket(): Promise<void> {
@@ -133,7 +133,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this._bracketRoundId = bracketRoundId;
             this._updateView();
         } else {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
         }
     }
     private async _onTouchedGroupMapName(): Promise<void> {
@@ -166,7 +166,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this._bracketRoundId = bracketRoundId;
             this._updateView();
         } else {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
         }
     }
 
@@ -183,7 +183,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMpwWatchMakeRequest(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,14 +242,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1022);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B1042);
-        this._labelTourneyIdTitle.setLangText(Lang_Constants.TextType.B1026);
-        this._labelPhaseTitle.setLangText(Lang_Constants.TextType.B0367);
-        this._labeBracketRoundTitle.setLangText(Lang_Constants.TextType.B1033);
-        this._labelMapNameTitle.setLangText(Lang_Constants.TextType.B0225);
-        this._labelInfoTitle.setLangText(Lang_Constants.TextType.B0423);
-        this._labelBracketTitle.setLangText(Lang_Constants.TextType.B1293);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1022);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B1042);
+        this._labelTourneyIdTitle.setLangText(Lang_TextType.TextType.B1026);
+        this._labelPhaseTitle.setLangText(Lang_TextType.TextType.B0367);
+        this._labeBracketRoundTitle.setLangText(Lang_TextType.TextType.B1033);
+        this._labelMapNameTitle.setLangText(Lang_TextType.TextType.B0225);
+        this._labelInfoTitle.setLangText(Lang_TextType.TextType.B0423);
+        this._labelBracketTitle.setLangText(Lang_TextType.TextType.B1293);
 
         this._updateLabelTourneyId();
         this._updateLabelMapName();
@@ -417,11 +417,11 @@ class BracketRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         const replayId = this.getOpenData()?.bracketInfo.getReplayId();
         if (replayId != null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0406),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0406),
                 callback   : async () => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                        title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                        content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+                        title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                        content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
                     });
 
                     const data = await ReplayWar_Model_RwModel.getReplayData(replayId);
@@ -437,13 +437,13 @@ class BracketRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
     private async _onTouchedBtnSpectate(): Promise<void> {
         const warId = this.getOpenData()?.bracketInfo.getWarId();
         if (warId == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0297);
+            FloatText.showLang(Lang_TextType.TextType.A0297);
             return;
         }
 
         const watchOutgoingInfo = await WatchWar_Model_WwModel.getWatchOutgoingInfo(warId);
         if (watchOutgoingInfo == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0297);
+            FloatText.showLang(Lang_TextType.TextType.A0297);
             return;
         }
 
@@ -452,7 +452,7 @@ class BracketRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
             if (warData) {
                 Helpers_GameFlow.gotoMultiPlayerWar(warData);
             } else {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             }
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WwMakeRequestDetailPanel, {
@@ -462,8 +462,8 @@ class BracketRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnReplay.setLangText(Lang_Constants.TextType.B0710);
-        this._btnSpectateRequest.setLangText(Lang_Constants.TextType.B0872);
+        this._btnReplay.setLangText(Lang_TextType.TextType.B0710);
+        this._btnSpectateRequest.setLangText(Lang_TextType.TextType.B0872);
     }
 
     private async _updateBtnSpectate(): Promise<void> {

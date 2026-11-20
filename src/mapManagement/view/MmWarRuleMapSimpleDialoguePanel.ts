@@ -6,7 +6,7 @@ import {
     Helpers_Text,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -80,7 +80,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapRawData                = openData.mapRawData;
         const mapSimpleDialogueArray    = mapRawData.getMapSimpleDialogueArray();
         if (mapSimpleDialogueArray == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             const templateWarRule           = openData.templateWarRule;
             const allDialogueIdSet          = new Set(mapSimpleDialogueArray.map(v => v.getDialogueId()));
@@ -92,7 +92,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 availableNumberArray : [...allDialogueIdSet].sort((v1, v2) => v1 - v2),
                 currentNumberArray   : [],
                 showNumber           : true,
-                getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B1095)),
+                getTitleText         : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.B1095)),
                 getNumberMainText    : dialogueId => Helpers_Text.getTruncatedText(
                     Lang_Utils.getLanguageText({
                         textArray : mapSimpleDialogueArray.find(v => (v.getDialogueId()) === dialogueId)?.getDialogueNameArray(),
@@ -121,7 +121,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0803),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0803),
             callback   : () => {
                 openData.templateWarRule.setMapSimpleDialogueIdArray([]);
                 Notifications_Dispatcher.dispatch("MeWarRuleMapSimpleDialogueIdArrayChanged");
@@ -136,8 +136,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1095)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoData.setLangText(Lang_Constants.TextType.A0842);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1095)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
+        this._labelNoData.setLangText(Lang_TextType.TextType.A0842);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();

@@ -12,7 +12,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
 } from "../../internal.ts";
 
@@ -155,7 +155,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         this._labelTitle.setText(openData.getTitle());
-        this._labelKeyboardTips.setLangText(Lang_Constants.TextType.A0827);
+        this._labelKeyboardTips.setLangText(Lang_TextType.TextType.A0827);
         this._btnHelp.setIsVisible(!!openData.getHelpText);
         this._groupNumber.setIsVisible(true);
         this._groupOperator.setIsVisible(false);
@@ -254,7 +254,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const value = this._value;
         if ((value < openData.minValue) || (value > openData.maxValue)) {
-            FloatText.showLang(Lang_Constants.TextType.A0098);
+            FloatText.showLang(Lang_TextType.TextType.A0098);
             return;
         }
 
@@ -388,9 +388,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
         this._btnClear.setText(`C`);
-        this._labelTips.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${openData.minValue}, ${openData.maxValue}]`);
+        this._labelTips.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0319)}: [${openData.minValue}, ${openData.maxValue}]`);
         this._layoutValue.arrangeItems();
     }
 
@@ -452,35 +452,35 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _handleKeyboardCtrlC(): Promise<void> {
         if (navigator?.clipboard?.writeText == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0275));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0275));
         } else {
             try {
                 await navigator.clipboard.writeText(`${this._value}`);
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
             } catch {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0275));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0275));
             }
         }
     }
     private async _handleKeyboardCtrlV(): Promise<void> {
         if (navigator?.clipboard?.writeText == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0275));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0275));
         } else {
             let text = ``;
             try {
                 text = await navigator.clipboard.readText();
             } catch {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0275));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0275));
                 return;
             }
 
             const value = parseInt(text);
             if (isNaN(value)) {
-                FloatText.showLang(Lang_Constants.TextType.A0098);
+                FloatText.showLang(Lang_TextType.TextType.A0098);
             } else {
                 this._value = value;
                 this._updateLabelValue();
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
             }
         }
     }

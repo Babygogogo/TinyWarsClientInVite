@@ -17,7 +17,7 @@ import {
     FloatText,
     SinglePlayerWars_Constants,
     LocalData_Storage,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     SingleRankedWars_Constants,
     type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
@@ -63,13 +63,13 @@ function _onNotifyMsgSpmValidateSrw(e: Egret_Egret.Event<Notifications_Mapping.M
     const data      = (Helpers_Misc.getExisted(e.data)).msg;
     const status    = data.getStatus();
     if (status === SingleRankedWars_Constants.ValidateStatusId.ConfigVersionNotLatest) {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0278));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0278));
     } else if (status === SingleRankedWars_Constants.ValidateStatusId.ScoreNotHighest) {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0279));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0279));
     } else if (status === SingleRankedWars_Constants.ValidateStatusId.ScoreTooLow) {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0281));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0281));
     } else {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0280));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0280));
     }
 }
 
@@ -279,7 +279,7 @@ export async function getSlotName(slotIndex: number): Promise<string> {
 
     const mpwWarId = slotExtraData.getMpwWarId();
     if (mpwWarId != null) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.B0226)}: ${mpwWarId}`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.B0226)}: ${mpwWarId}`;
     }
 
     const warData       = slotData.warData;
@@ -294,7 +294,7 @@ export async function getSlotName(slotIndex: number): Promise<string> {
         return Lang_Utils.getLanguageText({ textArray : mapRawData?.getMapNameArray() }) ?? Lang_Constants.UndefinedError;
     }
 
-    return `(${Lang_Utils.getText(Lang_Constants.TextType.B0321)})`;
+    return `(${Lang_Utils.getText(Lang_TextType.TextType.B0321)})`;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

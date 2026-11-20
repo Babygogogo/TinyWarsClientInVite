@@ -2,7 +2,7 @@ import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     Lang_Utils,
     WarEvents_Actions_Constants_PersistentShowText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -32,9 +32,9 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
 
     const rawText = Lang_Utils.getLanguageText({ textArray : data.getTextArray() });
     if (rawText == null) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0131, Lang_Constants.UndefinedError);
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0131, Lang_Constants.UndefinedError);
     } else {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0131, rawText.length > 20 ? `${rawText?.substring(0, 20)}...` : rawText);
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0131, rawText.length > 20 ? `${rawText?.substring(0, 20)}...` : rawText);
     }
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentShowText>): string | null {
@@ -48,7 +48,7 @@ export function getErrorTip(data: WeaPersistentShowText): string | null {
         minTextLength : 1,
         maxTextLength : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
     })) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0308);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0308);
     }
 
     return null;

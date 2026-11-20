@@ -1,6 +1,6 @@
 import {
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
@@ -75,11 +75,11 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoSystemEndWar): Prom
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.B0087)}`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.B0087)}`;
     } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.B0087)} ${war.getWarOperationDescSuffix()}`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.B0087)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof SinglePlayerWars_War.War) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.B0087)}`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.B0087)}`;
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {

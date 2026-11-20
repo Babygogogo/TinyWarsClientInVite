@@ -3,7 +3,7 @@ import {
     Helpers_Collection,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
@@ -89,11 +89,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.Tags);
-        this._labelSelectAll.setLangText(Lang_Constants.TextType.B0761);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
-        this._labelTips.setLangText(Lang_Constants.TextType.A0983);
+        this._labelTitle.setLangText(Lang_TextType.TextType.Tags);
+        this._labelSelectAll.setLangText(Lang_TextType.TextType.B0761);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
+        this._labelTips.setLangText(Lang_TextType.TextType.A0983);
 
         this._groupSelectAll.arrangeItems();
     }

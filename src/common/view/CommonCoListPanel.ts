@@ -2,7 +2,7 @@ import {
     Players_Constants,
     Tween_Executor,
     Helpers_ImageSource,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
@@ -84,7 +84,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0140);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0140);
     }
 
     private async _updateListCo(): Promise<void> {

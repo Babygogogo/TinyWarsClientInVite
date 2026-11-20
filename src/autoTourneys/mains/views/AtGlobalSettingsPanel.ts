@@ -7,7 +7,7 @@ import {
     GamePanels_Manager,
     AutoTourneys_Mains_Gateway,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -75,12 +75,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue = AutoTourneys_Constants.Common.MinCreateInterval;
         const maxValue = AutoTourneys_Constants.Common.MaxCreateInterval;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B1035),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B1035),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : this._interval,
-            tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minValue)}, ${Lang_Utils.getTimeDurationText2(maxValue)}]`,
-            getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0847),
+            tips         : `${Lang_Utils.getText(Lang_TextType.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minValue)}, ${Lang_Utils.getTimeDurationText2(maxValue)}]`,
+            getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0847),
             callback     : interval => {
                 this._interval = interval;
                 this._updateLabelInterval();
@@ -91,16 +91,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnCreateTourney(): Promise<void> {
         const globalSettings = await AutoTourneys_Mains_Provider.getGlobalSettings();
         if (globalSettings == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const duration = globalSettings.lastCreateTimestamp + AutoTourneys_Constants.Common.MinCreateInterval - Timer_TimerModel.getServerTimestamp();
         if (duration > 0) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0201, Lang_Utils.getTimeDurationText2(duration)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0201, Lang_Utils.getTimeDurationText2(duration)));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0846),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0846),
                 callback   : () => AutoTourneys_Mains_Gateway.reqAtCreateTourney(),
             });
         }
@@ -108,7 +108,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnDeleteLastTourney(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0405),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0405),
             callback   : () => AutoTourneys_Mains_Gateway.reqAtDeleteLastTourney(),
         });
     }
@@ -126,15 +126,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgAtSetGlobalSettings(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     private _onNotifyMsgAtCreateTourney(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     private _onNotifyMsgAtDeleteLastTourney(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,11 +148,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1022);
-        this._btnIsEnabled.setLangText(Lang_Constants.TextType.B1034);
-        this._btnInterval.setLangText(Lang_Constants.TextType.B1035);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1022);
+        this._btnIsEnabled.setLangText(Lang_TextType.TextType.B1034);
+        this._btnInterval.setLangText(Lang_TextType.TextType.B1035);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
 
         this._updateLabelIsEnabled();
     }
@@ -162,6 +162,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelIsEnabled(): void {
-        this._labelIsEnabled.setLangText(this._isEnabled ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelIsEnabled.setLangText(this._isEnabled ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
 }

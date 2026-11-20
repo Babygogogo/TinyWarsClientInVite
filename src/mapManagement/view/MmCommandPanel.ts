@@ -13,7 +13,7 @@ import {
     MapEditor_Model_MeProxy,
     NormalMap_Model_NormalMapProxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -67,13 +67,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgMmSetMapTagIdFlags(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0151));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0151));
     }
     private _onNotifyMsgMmDeleteRedundantWarEvent(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.OperationSucceeded));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.OperationSucceeded));
     }
     private _onNotifyMsgMmSetMapName(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         this._updateLabelTitle();
     }
 
@@ -90,7 +90,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const srcWarEventFullData = mapRawData.getWarEventFullData();
         if ((srcWarEventFullData == null) || (WarEvents_FullDatas_Utils.checkIsEmptyWarEventFullData(srcWarEventFullData))) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0389));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0389));
             return;
         }
 
@@ -116,13 +116,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             (!redundantNodeArray.length)        &&
             (!redundantConditionArray.length)
         ) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0389));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0389));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getFormattedText(
-                Lang_Constants.TextType.F0158,
+                Lang_TextType.TextType.F0158,
                 redundantEventArray.length,
                 redundantEventArray.length ? redundantEventArray.map(v => `E${v.getEventId()}`).join(`, `) : `----`,
                 redundantNodeArray.length,
@@ -143,7 +143,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0080),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0080),
             callback   : () => {
                 NormalMap_Model_NormalMapProxy.reqMmSetMapEnabled(normalMapId, false);
                 this.closePanel();
@@ -159,7 +159,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const mapRawData = Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId));
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0391),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0391),
             callback   : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleMapEditorSlotPanel, {
                 currentSlotIndex     : 0,
                 needConfirmOverwrite : true,
@@ -174,7 +174,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         gridMarkData              : null,
                     });
                     Helpers_GameFlow.gotoLobby();
-                    FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0393));
+                    FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0393));
                 },
             }),
         });
@@ -195,14 +195,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         //     mapRawData,
         // });
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0314),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B0314),
             availableNumberArray : [1, 2, 3],
             currentNumber        : null,
             getNumberMainText    : num => {
                 switch (num) {
-                    case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0320);
-                    case 2  : return Lang_Utils.getText(Lang_Constants.TextType.B0317);
-                    case 3  : return Lang_Utils.getText(Lang_Constants.TextType.B0220);
+                    case 1  : return Lang_Utils.getText(Lang_TextType.TextType.B0320);
+                    case 2  : return Lang_Utils.getText(Lang_TextType.TextType.B0317);
+                    case 3  : return Lang_Utils.getText(Lang_TextType.TextType.B0220);
                     default : return Lang_Constants.UndefinedError;
                 }
             },
@@ -212,7 +212,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 if (num === 1) {
                     await generateHandler(
                         ruleArray,
-                        () => Lang_Utils.getText(Lang_Constants.TextType.B1471),
+                        () => Lang_Utils.getText(Lang_TextType.TextType.B1471),
                         async ruleId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmWarRulePanel, {
                             gcData          : await GameConfigs_Provider.getLatestGameConfig(),
                             mapRawData      : mapRawData,
@@ -223,7 +223,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 } else if (num === 2) {
                     await generateHandler(
                         ruleArray,
-                        () => Lang_Utils.getText(Lang_Constants.TextType.B0317),
+                        () => Lang_Utils.getText(Lang_TextType.TextType.B0317),
                         ruleId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmModifyWarRulePanel, {
                             normalMapId       : normalMapId,
                             templateWarRuleId : ruleId,
@@ -232,16 +232,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                 } else if (num === 3) {
                     if (ruleArray.length <= 1) {
-                        FloatText.showLang(Lang_Constants.TextType.A0978);
+                        FloatText.showLang(Lang_TextType.TextType.A0978);
                         return;
                     }
 
                     await generateHandler(
                         ruleArray,
-                        () => Lang_Utils.getText(Lang_Constants.TextType.B0220),
+                        () => Lang_Utils.getText(Lang_TextType.TextType.B0220),
                         ruleId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                             getContent : () => Lang_Utils.getFormattedText(
-                                Lang_Constants.TextType.F0265,
+                                Lang_TextType.TextType.F0265,
                                 `#${ruleId}, ${Lang_Utils.getLanguageText({ textArray : ruleArray.find(v => v.getRuleId() === ruleId)?.getRuleNameArray() })}`,
                             ),
                             callback : () => NormalMap_Model_NormalMapProxy.reqMmDeleteWarRule(normalMapId, ruleId),
@@ -274,7 +274,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             availableNumberArray : Helpers_Collection.getNonNullElements(mapTag?.getMapTagDataArray()?.map(v => v.getIsEnabled() ? v.getMapTagId() : null) ?? []).sort((v1, v2) => v1 - v2),
             currentNumberArray   : MapTags_Utils.getDecodedMapTagIdList(currentGroupedMapTagId),
             showNumber           : true,
-            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0445)),
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.B0445)),
             getNumberMainText    : mapTagId => Lang_Utils.getLanguageText({ textArray : mapTag?.getMapTagDataArray()?.find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm    : newMapTagIdArray => {
                 const newGroupedMapTagId = MapTags_Utils.getEncodedMapTagId(newMapTagIdArray);
@@ -292,7 +292,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
-            getTitleText     : () => Lang_Utils.getText(Lang_Constants.TextType.B0708),
+            getTitleText     : () => Lang_Utils.getText(Lang_TextType.TextType.B0708),
             maxTextLength    : Maps_Constants.Common.MaxNameLength,
             currentTextArray : (await NormalMap_Model_NormalMapModel.getBriefData(normalMapId))?.getMapNameArray() ?? [],
             callback         : mapNameArray => NormalMap_Model_NormalMapProxy.reqMmSetMapName(normalMapId, mapNameArray),
@@ -300,12 +300,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private async _updateComponentsForLanguage(): Promise<void> {
-        this._btnDeleteRedundantEvent.setLangText(Lang_Constants.TextType.B1005);
-        this._btnDeleteMap.setLangText(Lang_Constants.TextType.B0270);
-        this._btnEditWarEvent.setLangText(Lang_Constants.TextType.B1099);
-        this._btnWarRule.setLangText(Lang_Constants.TextType.B0314);
-        this._btnRename.setLangText(Lang_Constants.TextType.B0708);
-        this._btnMapTag.setLangText(Lang_Constants.TextType.B0445);
+        this._btnDeleteRedundantEvent.setLangText(Lang_TextType.TextType.B1005);
+        this._btnDeleteMap.setLangText(Lang_TextType.TextType.B0270);
+        this._btnEditWarEvent.setLangText(Lang_TextType.TextType.B1099);
+        this._btnWarRule.setLangText(Lang_TextType.TextType.B0314);
+        this._btnRename.setLangText(Lang_TextType.TextType.B0708);
+        this._btnMapTag.setLangText(Lang_TextType.TextType.B0445);
         this._updateLabelTitle();
     }
     private async _updateLabelTitle(): Promise<void> {

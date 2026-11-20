@@ -4,7 +4,7 @@ import {
     Users_Model,
     Players_Constants,
     Users_Proxy,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     WarTypes_Constants,
@@ -86,16 +86,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelHistoryStd.setLangText(Lang_Constants.TextType.B0548);
-        this._labelHistoryStdWin.setLangText(Lang_Constants.TextType.B0550);
-        this._labelHistoryStdLose.setLangText(Lang_Constants.TextType.B0551);
-        this._labelHistoryStdDraw.setLangText(Lang_Constants.TextType.B0552);
-        this._labelHistoryStdRatio.setLangText(Lang_Constants.TextType.B0553);
-        this._labelHistoryFog.setLangText(Lang_Constants.TextType.B0549);
-        this._labelHistoryFogWin.setLangText(Lang_Constants.TextType.B0550);
-        this._labelHistoryFogLose.setLangText(Lang_Constants.TextType.B0551);
-        this._labelHistoryFogDraw.setLangText(Lang_Constants.TextType.B0552);
-        this._labelHistoryFogRatio.setLangText(Lang_Constants.TextType.B0553);
+        this._labelHistoryStd.setLangText(Lang_TextType.TextType.B0548);
+        this._labelHistoryStdWin.setLangText(Lang_TextType.TextType.B0550);
+        this._labelHistoryStdLose.setLangText(Lang_TextType.TextType.B0551);
+        this._labelHistoryStdDraw.setLangText(Lang_TextType.TextType.B0552);
+        this._labelHistoryStdRatio.setLangText(Lang_TextType.TextType.B0553);
+        this._labelHistoryFog.setLangText(Lang_TextType.TextType.B0549);
+        this._labelHistoryFogWin.setLangText(Lang_TextType.TextType.B0550);
+        this._labelHistoryFogLose.setLangText(Lang_TextType.TextType.B0551);
+        this._labelHistoryFogDraw.setLangText(Lang_TextType.TextType.B0552);
+        this._labelHistoryFogRatio.setLangText(Lang_TextType.TextType.B0553);
 
         this._updateLabelTitle();
         this._updateSclHistoryStd();
@@ -108,7 +108,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0009, await Users_Model.getUserNickname(userId)));
+        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0009, await Users_Model.getUserNickname(userId)));
     }
     private async _updateSclHistoryStd(): Promise<void> {
         const userId = this.getOpenData()?.userId;
@@ -192,7 +192,7 @@ class HistoryRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         const playersCount  = openData.playersCount;
         const labelType     = this._labelType;
         if ((warType === WarTypes_Constants.WarTypeId.MrwFog) || (warType === WarTypes_Constants.WarTypeId.MrwStd)) {
-            labelType.setLangText(Lang_Constants.TextType.B1075);
+            labelType.setLangText(Lang_TextType.TextType.B1075);
         } else {
             labelType.setText(`${playersCount}P`);
         }

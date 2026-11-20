@@ -3,7 +3,7 @@ import {
     ValueAndComparators_Utils,
     ValueArrayAndPredicates_Utils,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
 } from "../../internal.ts";
 import type { TileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
@@ -95,7 +95,7 @@ export function getDesc(data: TileBuffFilter): string {
         if (conBuffTypeId != null) {
             textArrayForSubConditions.push(ValueArrayAndPredicates_Utils.getDesc(
                 conBuffTypeId,
-                Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+                Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId),
                 v => Lang_Utils.getTileBuffName(v),
             ));
         }
@@ -103,10 +103,10 @@ export function getDesc(data: TileBuffFilter): string {
 
     const conIsEverlasting = data.getConIsEverlasting();
     if (conIsEverlasting) {
-        textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_Constants.TextType.B1455)}: ${Lang_Utils.getText(Lang_Constants.TextType.Yes)}`);
+        textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_TextType.TextType.B1455)}: ${Lang_Utils.getText(Lang_TextType.TextType.Yes)}`);
     } else {
         if (conIsEverlasting != null) {
-            textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_Constants.TextType.B1455)}: ${Lang_Utils.getText(Lang_Constants.TextType.No)}`);
+            textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_TextType.TextType.B1455)}: ${Lang_Utils.getText(Lang_TextType.TextType.No)}`);
         }
 
         {
@@ -116,8 +116,8 @@ export function getDesc(data: TileBuffFilter): string {
                 const value             = con.getValue();
                 const comparator        = con.getComparator();
                 const textForComparator = Lang_Utils.getComparatorName(comparator);
-                const textForRelative   = isRelative ? `${Lang_Utils.getText(Lang_Constants.TextType.B1462)} ` : ``;
-                textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex)}: ${textForRelative}${textForComparator} ${value}`);
+                const textForRelative   = isRelative ? `${Lang_Utils.getText(Lang_TextType.TextType.B1462)} ` : ``;
+                textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_TextType.TextType.EndTurnIndex)}: ${textForRelative}${textForComparator} ${value}`);
             }
         }
 
@@ -128,25 +128,25 @@ export function getDesc(data: TileBuffFilter): string {
                 const value             = con.getValue();
                 const comparator        = con.getComparator();
                 const textForComparator = Lang_Utils.getComparatorName(comparator);
-                const textForRelative   = isRelative ? `${Lang_Utils.getText(Lang_Constants.TextType.B1462)} ` : ``;
-                textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex)}: ${textForRelative}${textForComparator} ${value}`);
+                const textForRelative   = isRelative ? `${Lang_Utils.getText(Lang_TextType.TextType.B1462)} ` : ``;
+                textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_TextType.TextType.EndPlayerIndex)}: ${textForRelative}${textForComparator} ${value}`);
             }
         }
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0230,
-        Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
+        Lang_TextType.TextType.F0230,
+        Lang_Utils.getText(Lang_TextType.TextType.AbnormalStates),
         textArrayForSubConditions.length
             ? textArrayForSubConditions.map(v => `- ${v}`).join(`\n`)
-            : Lang_Utils.getText(Lang_Constants.TextType.A0944),
+            : Lang_Utils.getText(Lang_TextType.TextType.A0944),
     );
 }
 export function getDescForEmbed(data: TileBuffFilter): string | null {
     const textArrayForSubConditions: string[] = [];
     {
         if (data.getConBuffTypeId() != null) {
-            textArrayForSubConditions.push(Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
+            textArrayForSubConditions.push(Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId));
         }
     }
     {
@@ -154,15 +154,15 @@ export function getDescForEmbed(data: TileBuffFilter): string | null {
             (data.getConEndTurnIndex() != null)   ||
             (data.getConEndPlayerIndex() != null)
         ) {
-            textArrayForSubConditions.push(Lang_Utils.getText(Lang_Constants.TextType.EndTime));
+            textArrayForSubConditions.push(Lang_Utils.getText(Lang_TextType.TextType.EndTime));
         }
     }
 
     return !textArrayForSubConditions.length
         ? null
         : Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0231,
-            Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
+            Lang_TextType.TextType.F0231,
+            Lang_Utils.getText(Lang_TextType.TextType.AbnormalStates),
             textArrayForSubConditions.join(`, `),
         );
 }
@@ -174,7 +174,7 @@ export function getErrorTip(data: TileBuffFilter): string | null {
             if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                     ||
                 (!TileBuffs_Utils_Common.checkIsValidTypeIdSubset(con.getValueArray()))
             ) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId));
             }
         }
     }
@@ -184,7 +184,7 @@ export function getErrorTip(data: TileBuffFilter): string | null {
         const con = data.getConEndTurnIndex();
         if (con != null) {
             if ((conIsEverlasting) || (!ValueAndComparators_Utils.checkIsValid(con))) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EndTurnIndex));
             }
         }
     }
@@ -193,7 +193,7 @@ export function getErrorTip(data: TileBuffFilter): string | null {
         const con = data.getConEndPlayerIndex();
         if (con != null) {
             if ((conIsEverlasting) || (!ValueAndComparators_Utils.checkIsValid(con))) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.EndPlayerIndex));
             }
         }
     }

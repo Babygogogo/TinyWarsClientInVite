@@ -9,7 +9,7 @@ import {
     GamePanels_Manager,
     Helpers_PointerInput,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -232,14 +232,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0540);
-        this._labelMainTitle.setLangText(Lang_Constants.TextType.B1325);
-        this._labelBgmTitle.setLangText(Lang_Constants.TextType.B0541);
-        this._labelEffectTitle.setLangText(Lang_Constants.TextType.B0542);
-        this._labelSwitchBgm.setLangText(Lang_Constants.TextType.B1281);
-        this._labelCoBgmSettings.setLangText(Lang_Constants.TextType.B1286);
-        this._btnCoBgmSettings.setLangText(Lang_Constants.TextType.B0425);
-        this._btnSceneBgmSettings.setLangText(Lang_Constants.TextType.B1287);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0540);
+        this._labelMainTitle.setLangText(Lang_TextType.TextType.B1325);
+        this._labelBgmTitle.setLangText(Lang_TextType.TextType.B0541);
+        this._labelEffectTitle.setLangText(Lang_TextType.TextType.B0542);
+        this._labelSwitchBgm.setLangText(Lang_TextType.TextType.B1281);
+        this._labelCoBgmSettings.setLangText(Lang_TextType.TextType.B1286);
+        this._btnCoBgmSettings.setLangText(Lang_TextType.TextType.B0425);
+        this._btnSceneBgmSettings.setLangText(Lang_TextType.TextType.B1287);
 
         this._layoutMain.arrangeItems();
         this._layoutBgm.arrangeItems();

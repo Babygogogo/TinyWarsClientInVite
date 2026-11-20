@@ -29,7 +29,7 @@ import {
     type Ui_Interfaces_IUiListItemRenderer,
     type Ui_Interfaces_IUiPromptedInput,
     type Ui_Interfaces_IUiScrollList,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
@@ -230,7 +230,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const currTime  = Timer_TimerModel.getServerTimestamp();
         const cdTime    = Chat_Model.getTimestampForNextReqAllMessages() - currTime;
         if (cdTime > 0) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0026, cdTime));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0026, cdTime));
         } else {
             Chat_Model.setTimestampForNextReqAllMessages(currTime + 30);
             Chat_Proxy.reqGetAllMessages();
@@ -239,7 +239,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0870),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0870),
         });
     }
 
@@ -247,7 +247,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const content = (this._inputMessage.getInputText() ?? ``).trim();
         if (content) {
             if (content.length > Chat_Constants.Common.MaxMessageLength) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0375));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.B0375));
             } else {
                 const data = this._listTarget.getFirstSelectedData();
                 if (data != null) {
@@ -282,10 +282,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0383);
-        this._labelNoContent.setLangText(Lang_Constants.TextType.B0278);
-        this._labelNoMessage.setLangText(Lang_Constants.TextType.B0381);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0383);
+        this._labelNoContent.setLangText(Lang_TextType.TextType.B0278);
+        this._labelNoMessage.setLangText(Lang_TextType.TextType.B0381);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
     }
     private async _updateGroupContent(): Promise<void> {
         const dataArray         = await this._createDataForListTarget();
@@ -805,22 +805,22 @@ class MainCategoryRenderer
 
         const labelType = this._labelName;
         if (category === Chat_Constants.MainCategoryId.PublicChannel) {
-            labelType.setLangText(Lang_Constants.TextType.B0376);
+            labelType.setLangText(Lang_TextType.TextType.B0376);
 
         } else if (category === Chat_Constants.MainCategoryId.War) {
-            labelType.setLangText(Lang_Constants.TextType.B0719);
+            labelType.setLangText(Lang_TextType.TextType.B0719);
 
         } else if (category === Chat_Constants.MainCategoryId.Room) {
-            labelType.setLangText(Lang_Constants.TextType.B0405);
+            labelType.setLangText(Lang_TextType.TextType.B0405);
 
         } else if (category === Chat_Constants.MainCategoryId.Following) {
-            labelType.setLangText(Lang_Constants.TextType.B0997);
+            labelType.setLangText(Lang_TextType.TextType.B0997);
 
         } else if (category === Chat_Constants.MainCategoryId.Stranger) {
-            labelType.setLangText(Lang_Constants.TextType.B0998);
+            labelType.setLangText(Lang_TextType.TextType.B0998);
 
         } else if (category === Chat_Constants.MainCategoryId.MapReview) {
-            labelType.setLangText(Lang_Constants.TextType.B0892);
+            labelType.setLangText(Lang_TextType.TextType.B0892);
 
         } else {
             labelType.setText(Lang_Constants.UndefinedError);
@@ -907,7 +907,7 @@ class TargetRenderer
                     ? Lang_Constants.LanguageType.English
                     : Lang_Utils.getCurrentLanguageType()
                 );
-            labelType.setLangText(Lang_Constants.TextType.B0376, languageType);
+            labelType.setLangText(Lang_TextType.TextType.B0376, languageType);
             labelName.setText(Lang_Utils.getChatChannelName(toTarget, languageType) ?? Lang_Constants.UndefinedError);
             imgOnlineState.setIsVisible(false);
 
@@ -921,18 +921,18 @@ class TargetRenderer
 
             if (war?.getWarId() !== warId) {
                 labelType.setText(`${warType == null ? Lang_Constants.UndefinedError : Lang_Utils.getWarTypeName(warType) ?? Lang_Constants.UndefinedError} #${warId}`);
-                labelName.setText(`${teamIndex === 0 ? Lang_Utils.getText(Lang_Constants.TextType.B0379) : Lang_Utils.getPlayerTeamName(teamIndex)}`);
+                labelName.setText(`${teamIndex === 0 ? Lang_Utils.getText(Lang_TextType.TextType.B0379) : Lang_Utils.getPlayerTeamName(teamIndex)}`);
             } else {
-                labelType.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1341)} #${warId}`);
+                labelType.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1341)} #${warId}`);
                 labelType.setTextColor(0x00FF00);
 
                 if (teamIndex === 0) {
-                    labelName.setLangText(Lang_Constants.TextType.B0379);
+                    labelName.setLangText(Lang_TextType.TextType.B0379);
                 } else {
                     if ((war instanceof MultiPlayerWar_Model_MpwWar.MpwWar)                                      &&
                         (teamIndex === war.getPlayerManager().getPlayerLoggedIn()?.getTeamIndex())
                     ) {
-                        labelName.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1342)} (${Lang_Utils.getPlayerShortTeamName(teamIndex)})` );
+                        labelName.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1342)} (${Lang_Utils.getPlayerShortTeamName(teamIndex)})` );
                         labelName.setTextColor(0x00FF00);
                     } else {
                         labelName.setText(Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError);
@@ -944,18 +944,18 @@ class TargetRenderer
             const warId             = Math.floor(toTarget / Chat_Constants.Common.TeamDivider);
             const warType           = await MultiPlayerWar_Model_MpwModel.getWarType(warId);
             imgOnlineState.setIsVisible(false);
-            labelName.setLangText(Lang_Constants.TextType.B1367);
+            labelName.setLangText(Lang_TextType.TextType.B1367);
             labelName.setTextColor(0x00FF00);
 
             if (Helpers_GameFlow.getOngoingWar()?.getWarId() !== warId) {
                 labelType.setText(`${warType == null ? Lang_Constants.UndefinedError : Lang_Utils.getWarTypeName(warType) ?? Lang_Constants.UndefinedError} #${warId}`);
             } else {
-                labelType.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1341)} #${warId}`);
+                labelType.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1341)} #${warId}`);
                 labelType.setTextColor(0x00FF00);
             }
 
         } else if (toCategory === Chat_Constants.ToCategoryId.Private) {
-            labelType.setLangText(Lang_Constants.TextType.B0378);
+            labelType.setLangText(Lang_TextType.TextType.B0378);
             labelName.setText(``);
             imgOnlineState.setIsVisible(true);
             imgOnlineState.loadSource(Helpers_ImageSource.getUserOnlineState(await Users_Model.getUserOnlineState(toTarget)));
@@ -1009,11 +1009,11 @@ class TargetRenderer
             if (roomInfo == null) {
                 labelName.setText(``);
             } else {
-                labelName.setText(roomInfo.getSettingsForMfw()?.getWarName() ?? Lang_Utils.getText(Lang_Constants.TextType.B0555));
+                labelName.setText(roomInfo.getSettingsForMfw()?.getWarName() ?? Lang_Utils.getText(Lang_TextType.TextType.B0555));
             }
 
         } else if (toCategory === Chat_Constants.ToCategoryId.MapReview) {
-            labelType.setLangText(Lang_Constants.TextType.B0892);
+            labelType.setLangText(Lang_TextType.TextType.B0892);
             labelName.setText((await Users_Model.getUserBriefInfo(toTarget))?.getNickname() ?? Lang_Constants.UndefinedError);
             imgOnlineState.setIsVisible(false);
 
@@ -1073,7 +1073,7 @@ class MessageRenderer
         const message       = openData.message;
         const labelContent  = this._labelContent;
         if (Users_Model.checkIsBlockingUser(message.getFromUserId())) {
-            labelContent.setText(`(${Lang_Utils.getText(Lang_Constants.TextType.B1301)})`);
+            labelContent.setText(`(${Lang_Utils.getText(Lang_TextType.TextType.B1301)})`);
             labelContent.setTextColor(0xAAAAAA);
         } else {
             labelContent.setText((message.getContent() ?? Lang_Constants.UndefinedError));

@@ -3,7 +3,7 @@ import {
     Numbers_Utils,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -17,7 +17,7 @@ export interface OpenData {
     getContent  : () => string;
     callback?   : () => any;
 }
- 
+
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!      : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
@@ -73,6 +73,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
     }
 }

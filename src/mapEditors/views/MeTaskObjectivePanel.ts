@@ -10,7 +10,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -123,7 +123,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputLanguageTextPanel, {
-            getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B1215),
+            getTitle         : () => Lang_Utils.getText(Lang_TextType.TextType.B1215),
             currentTextArray : taskObjective.getDesc(),
             maxLength        : TaskObjectives_Constants.Common.MaxDescLength,
             callback         : newValue => {
@@ -134,7 +134,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelpDesc(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0714),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0714),
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -161,7 +161,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelpIsMain(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0715),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0715),
         });
     }
 
@@ -176,7 +176,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const currentValue = taskObjective.getMaxProgress();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1216),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1216),
             minValue     : 1,
             maxValue     : Numbers_Constants.MaxInt32,
             currentValue : currentValue ?? 0,
@@ -190,7 +190,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelpMaxProgress(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0716),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0716),
         });
     }
 
@@ -205,7 +205,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const currentValue  = taskObjective.getScoreForCompletion();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1218),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1218),
             minValue     : Numbers_Constants.MinInt32,
             maxValue     : Numbers_Constants.MaxInt32,
             currentValue : currentValue,
@@ -223,7 +223,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelpScoreForCompletion(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0717),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0717),
         });
     }
 
@@ -238,7 +238,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const currentValue = taskObjective.getScoreForProgress();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1219),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1219),
             minValue     : Numbers_Constants.MinInt32,
             maxValue     : Numbers_Constants.MaxInt32,
             currentValue : currentValue,
@@ -256,13 +256,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelpScoreForProgress(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0718),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0718),
         });
     }
 
     private _onTouchedBtnUpdaterForCurrentProgress(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0730),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0730),
         });
     }
     private _onTouchedGroupModifyUpdaterForCurrentProgress(): void {
@@ -295,16 +295,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1214)} #${this.getOpenData()?.taskObjective.getObjectiveId() ?? 0}`);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
-        this._btnIdentifier.setLangText(Lang_Constants.TextType.B0131);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1214)} #${this.getOpenData()?.taskObjective.getObjectiveId() ?? 0}`);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
+        this._btnIdentifier.setLangText(Lang_TextType.TextType.B0131);
 
-        this._btnHelpDesc.setLangText(Lang_Constants.TextType.B1215);
-        this._btnHelpIsMain.setLangText(Lang_Constants.TextType.B1217);
-        this._btnHelpMaxProgress.setLangText(Lang_Constants.TextType.B1216);
-        this._btnHelpScoreForCompletion.setLangText(Lang_Constants.TextType.B1218);
-        this._btnHelpScoreForProgress.setLangText(Lang_Constants.TextType.B1219);
-        this._btnHelpUpdaterForCurrentProgress.setLangText(Lang_Constants.TextType.B1226);
+        this._btnHelpDesc.setLangText(Lang_TextType.TextType.B1215);
+        this._btnHelpIsMain.setLangText(Lang_TextType.TextType.B1217);
+        this._btnHelpMaxProgress.setLangText(Lang_TextType.TextType.B1216);
+        this._btnHelpScoreForCompletion.setLangText(Lang_TextType.TextType.B1218);
+        this._btnHelpScoreForProgress.setLangText(Lang_TextType.TextType.B1219);
+        this._btnHelpUpdaterForCurrentProgress.setLangText(Lang_TextType.TextType.B1226);
 
         this._updateLabelError();
     }
@@ -317,7 +317,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const errorTip      = TaskObjectives_Utils.getErrorText(openData.taskObjective, new Set(openData.warEventFullData.getCustomCounterNameArray()?.map(v => v.getName() ?? ``)));
         const labelError    = this._labelError;
-        labelError.setText(errorTip ?? Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip ?? Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
     }
 
@@ -330,7 +330,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
         {
             const label = this._labelIsMain;
-            label.setLangText(taskObjective?.getIsMain() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+            label.setLangText(taskObjective?.getIsMain() ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
             this._groupIsMain.setUnscaledManualHeight(Math.max(30, label.getScaledHeight()));
         }
         {

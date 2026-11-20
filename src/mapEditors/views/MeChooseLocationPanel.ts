@@ -7,7 +7,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
@@ -103,7 +103,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0781),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0781),
         });
     }
 
@@ -112,11 +112,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? Lang_Utils.getText(Lang_Constants.TextType.Location));
-        this._labelSelectAll.setLangText(Lang_Constants.TextType.B0761);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
-        this._labelTips.setLangText(Lang_Constants.TextType.A0982);
+        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? Lang_Utils.getText(Lang_TextType.TextType.Location));
+        this._labelSelectAll.setLangText(Lang_TextType.TextType.B0761);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
+        this._labelTips.setLangText(Lang_TextType.TextType.A0982);
 
         this._groupSelectAll.arrangeItems();
     }

@@ -3,7 +3,7 @@ import {
     GameConfigs_Provider,
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Notifications_Dispatcher,
     Ui_Components_UiPanel,
@@ -78,7 +78,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0876),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0876),
         });
     }
 
@@ -89,7 +89,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : async () => {
                 const war                   = openData.war;
                 const dstMapRawData         = await war.serializeForMap();
@@ -121,7 +121,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const srcMapRawData         = openData.srcMapRawData;
         const newWarEventFullData   = srcMapRawData.getWarEventFullData()?.clone();
         if (newWarEventFullData == null) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
         if ((!newWarEventFullData.getActionArray().length)             &&
@@ -130,7 +130,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             (!newWarEventFullData.getCustomCounterNameArray().length)  &&
             (!newWarEventFullData.getEventArray().length)
         ) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
 
@@ -145,20 +145,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 return ((id === id1) && (name != name1))
                     || ((id !== id1) && (name == name1));
             })) {
-                FloatText.showLang(Lang_Constants.TextType.A0877);
+                FloatText.showLang(Lang_TextType.TextType.A0877);
                 return;
             }
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1253),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1253),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 importWarEventFullData(newWarEventFullData, currentWarEventFullData);
                 warEventManager.setWarEventFullData(currentWarEventFullData);
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
 
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
             },
         });
     }
@@ -171,7 +171,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const srcMapRawData     = openData.srcMapRawData;
         const warEventFullData  = srcMapRawData.getWarEventFullData()?.clone();
         if (warEventFullData == null) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
         if ((!warEventFullData.getActionArray().length)             &&
@@ -180,18 +180,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             (!warEventFullData.getCustomCounterNameArray().length)  &&
             (!warEventFullData.getEventArray().length)
         ) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1255),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1255),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 openData.war.getWarEventManager().setWarEventFullData(warEventFullData);
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
 
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
             },
         });
     }
@@ -205,19 +205,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const srcMapRawData = openData.srcMapRawData;
         const srcFullData   = srcMapRawData.getTaskObjectiveFullData()?.clone();
         if (!srcFullData) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
 
         const srcDataArray = srcFullData.getTaskObjectiveArray();
         if (!srcDataArray?.length) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1253),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1253),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const war               = openData.war;
                 const existingFullData  = war.getTaskObjectiveFullData() ?? new TaskObjectiveFullData();
@@ -230,7 +230,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 war.setTaskObjectiveFullData(existingFullData);
                 Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
 
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
             },
         });
     }
@@ -243,24 +243,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const srcMapRawData = openData.srcMapRawData;
         const srcFullData   = srcMapRawData.getTaskObjectiveFullData()?.clone();
         if (!srcFullData) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
 
         const dataArray = srcFullData.getTaskObjectiveArray();
         if (!dataArray?.length) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1255),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1255),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 openData.war.setTaskObjectiveFullData(srcFullData);
                 Notifications_Dispatcher.dispatch("MeTaskObjectiveFullDataChanged");
 
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
             },
         });
     }
@@ -274,13 +274,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const srcMapRawData = openData.srcMapRawData;
         const srcDataArray  = srcMapRawData.getMapSimpleDialogueArray().map(v => v.clone());
         if (!srcDataArray) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1253),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1253),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 const existingDataArray = openData.war.getMapSimpleDialogueArray();
                 let dialogueId          = (existingDataArray.length ? Math.max(...existingDataArray.map(v => v.getDialogueId())) : 0) + 1;
@@ -291,7 +291,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                 Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
 
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
             },
         });
     }
@@ -304,18 +304,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const srcMapRawData = openData.srcMapRawData;
         const dataArray     = srcMapRawData.getMapSimpleDialogueArray().map(v => v.clone());
         if (!dataArray) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1255),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1255),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => {
                 openData.war.setMapSimpleDialogueArray(dataArray);
                 Notifications_Dispatcher.dispatch("MeMapSimpleDialogueChanged");
 
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
             },
         });
     }
@@ -327,7 +327,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0875),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0875),
             callback   : async () => {
                 const mapRawData = openData.srcMapRawData.clone();
                 for (const rule of mapRawData.getTemplateWarRuleArray()) {
@@ -356,25 +356,25 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1253);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1253);
 
-        this._labelTileAndUnit.setLangText(Lang_Constants.TextType.B1244);
-        this._btnOverwriteTileAndUnit.setLangText(Lang_Constants.TextType.B1255);
+        this._labelTileAndUnit.setLangText(Lang_TextType.TextType.B1244);
+        this._btnOverwriteTileAndUnit.setLangText(Lang_TextType.TextType.B1255);
 
-        this._labelWarEvent.setLangText(Lang_Constants.TextType.B0469);
-        this._btnImportWarEvent.setLangText(Lang_Constants.TextType.B1253);
-        this._btnOverwriteWarEvent.setLangText(Lang_Constants.TextType.B1255);
+        this._labelWarEvent.setLangText(Lang_TextType.TextType.B0469);
+        this._btnImportWarEvent.setLangText(Lang_TextType.TextType.B1253);
+        this._btnOverwriteWarEvent.setLangText(Lang_TextType.TextType.B1255);
 
-        this._labelTaskObjective.setLangText(Lang_Constants.TextType.B1214);
-        this._btnImportTaskObjective.setLangText(Lang_Constants.TextType.B1253);
-        this._btnOverwriteTaskObjective.setLangText(Lang_Constants.TextType.B1255);
+        this._labelTaskObjective.setLangText(Lang_TextType.TextType.B1214);
+        this._btnImportTaskObjective.setLangText(Lang_TextType.TextType.B1253);
+        this._btnOverwriteTaskObjective.setLangText(Lang_TextType.TextType.B1255);
 
-        this._labelRepeatableSimpleDialogue.setLangText(Lang_Constants.TextType.B1095);
-        this._btnImportRepeatableSimpleDialogue.setLangText(Lang_Constants.TextType.B1253);
-        this._btnOverwriteRepeatableSimpleDialogue.setLangText(Lang_Constants.TextType.B1255);
+        this._labelRepeatableSimpleDialogue.setLangText(Lang_TextType.TextType.B1095);
+        this._btnImportRepeatableSimpleDialogue.setLangText(Lang_TextType.TextType.B1253);
+        this._btnOverwriteRepeatableSimpleDialogue.setLangText(Lang_TextType.TextType.B1255);
 
-        this._labelAll.setLangText(Lang_Constants.TextType.B1338);
-        this._btnOverwriteAll.setLangText(Lang_Constants.TextType.B1255);
+        this._labelAll.setLangText(Lang_TextType.TextType.B1338);
+        this._btnOverwriteAll.setLangText(Lang_TextType.TextType.B1255);
     }
 }
 

@@ -8,7 +8,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -140,13 +140,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const arr               = [...this._selectedNumberSet].sort((v1, v2) => v1 - v2);
         const maxChooseCount    = openData.maxChooseCount;
         if ((maxChooseCount != null) && (arr.length > maxChooseCount)) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.A0148, maxChooseCount));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.A0148, maxChooseCount));
             return;
         }
 
         const minChooseCount = openData.minChooseCount;
         if ((minChooseCount != null) && (arr.length < minChooseCount)) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.A0150, minChooseCount));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.A0150, minChooseCount));
             return;
         }
 
@@ -180,10 +180,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? Lang_Constants.UndefinedError);
-        this._labelSelectAll.setLangText(Lang_Constants.TextType.B0761);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._labelSelectedTitle.setLangText(Lang_Constants.TextType.B1274);
+        this._labelSelectAll.setLangText(Lang_TextType.TextType.B0761);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._labelSelectedTitle.setLangText(Lang_TextType.TextType.B1274);
 
         this._groupSelectAll.arrangeItems();
         this._groupSelected.arrangeItems();

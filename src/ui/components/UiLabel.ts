@@ -1,14 +1,15 @@
 import {
-    Ui_Utils_UiSizerHelpers,
-    Helpers_Misc,
-    Ui_Utils_UiSkinHelpers,
-    Lang_Utils,
     Egret_Egret,
+    Helpers_Misc,
+    Lang_Utils,
     Ui_Components_UiContainerBase,
     Ui_Types_UiHorizontalAlign,
     Ui_Types_UiVerticalAlign,
-    type Ui_Interfaces_IUiLabel,
+    Ui_Utils_UiSizerHelpers,
+    Ui_Utils_UiSkinHelpers,
     type Lang_Constants,
+    type Lang_TextType,
+    type Ui_Interfaces_IUiLabel,
     type Ui_Types_UiSkinAttrs,
 } from "../../internal.ts";
 
@@ -165,7 +166,7 @@ export class UiLabel extends Ui_Components_UiContainerBase.UiContainerBase imple
             Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
         }
     }
-    public setLangText(langTextType: Lang_Constants.TextType, languageType?: Lang_Constants.LanguageType): void {
+    public setLangText(langTextType: Lang_TextType.TextType, languageType?: Lang_Constants.LanguageType): void {
         this.setText(Lang_Utils.getText(langTextType, languageType));
     }
     public getFontFamily(): string {

@@ -17,7 +17,7 @@ import {
     Sounds_SoundPlayer,
     Campaigns_Mains_Gateway,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Egret_Egret,
@@ -125,8 +125,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     playerCoInfoArray : [...this._playerCoDict.entries()].map(v => PlayerCoInfo.fromJson({ playerIndex : v[0], coId : v[1] })),
                 });
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                    title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                    content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+                    title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                    content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
                 });
             },
         });
@@ -143,9 +143,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0560);
-        this._labelHighScoreTitle.setLangText(Lang_Constants.TextType.B0907);
-        this._btnStart.setLangText(Lang_Constants.TextType.B0026);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0560);
+        this._labelHighScoreTitle.setLangText(Lang_TextType.TextType.B0907);
+        this._btnStart.setLangText(Lang_TextType.TextType.B0026);
 
         this._layoutHighScore.arrangeItems();
     }
@@ -176,7 +176,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 (cawHighScoreInfo.getConfigVersion() !== configVersion)                                         ||
                 (highScore == null)
             ) {
-                label.setLangText(Lang_Constants.TextType.B1300);
+                label.setLangText(Lang_TextType.TextType.B1300);
             } else {
                 label.setText(`${highScore}`);
             }
@@ -348,7 +348,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         this._labelPlayerIndex.setText(Lang_Utils.getPlayerForceName(playerIndex));
         this._labelTeamIndex.setText(Lang_Utils.getPlayerTeamName(playerRule.getTeamIndex()) || Lang_Constants.UndefinedError);
         this._imgSkin.loadSource(Helpers_ImageSource.getCoHeadFrame(playerRule.getCampaignSkinId() ?? 0));
-        this._labelPlayerType.setLangText(isAi ? Lang_Constants.TextType.B0607 : Lang_Constants.TextType.B0031);
+        this._labelPlayerType.setLangText(isAi ? Lang_TextType.TextType.B0607 : Lang_TextType.TextType.B0031);
 
         const coCfg = gameConfig.getCoBasicCfg(coId);
         this._labelCo.setText(coCfg ? coCfg.getName() : `??`);

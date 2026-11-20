@@ -2,7 +2,7 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     MapEditor_Model_MeModel,
     Tiles_Constants_Common,
     Tiles_TileViewBox,
@@ -90,7 +90,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1244);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1244);
     }
 
     private async _updateListTile(): Promise<void> {

@@ -23,7 +23,7 @@ import {
     CoopCustomRoom_Model_CcrProxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     WarRules_Utils_CommonData,
     BootTimers_Constants,
     Ui_Components_UiPanel,
@@ -109,7 +109,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (this._timeoutIdForBtnConfirm != null) {
-            FloatText.showLang(Lang_Constants.TextType.A0421);
+            FloatText.showLang(Lang_TextType.TextType.A0421);
             return;
         }
 
@@ -121,7 +121,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgCcrCreateRoom(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0015));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0015));
         Helpers_GameFlow.gotoLobby();
     }
 
@@ -143,12 +143,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Functions for the view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelCreateRoom.setLangText(Lang_Constants.TextType.B0000);
-        this._labelMultiPlayer.setLangText(Lang_Constants.TextType.B0646);
-        this._labelChooseMap.setLangText(Lang_Constants.TextType.B0227);
-        this._labelRoomSettings.setLangText(Lang_Constants.TextType.B0571);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._labelCreateRoom.setLangText(Lang_TextType.TextType.B0000);
+        this._labelMultiPlayer.setLangText(Lang_TextType.TextType.B0646);
+        this._labelChooseMap.setLangText(Lang_TextType.TextType.B0227);
+        this._labelRoomSettings.setLangText(Lang_TextType.TextType.B0571);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
 
         this._groupNavigator.arrangeItems();
     }
@@ -157,22 +157,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0224) },
                 pageClass   : CoopCustomRoom_View_CcrCreatePlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },

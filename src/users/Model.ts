@@ -14,7 +14,7 @@ import {
     Users_Proxy,
     Helpers_Compatibility,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Graphics_Constants,
     GameVersions_Constants,
     Common_Model_CommonModel,
@@ -673,11 +673,11 @@ function _onNotifyNetworkDisconnected(): void {
 function _onNotifyMsgUserLogout(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserLogout"]>): void {
     const reason = ((Helpers_Misc.getExisted(e.data)).msg).getReason();
     if (reason === Users_Constants.LogoutTypeId.SelfRequest) {
-        FloatText.showLang(Lang_Constants.TextType.A0005);
+        FloatText.showLang(Lang_TextType.TextType.A0005);
     } else if (reason === Users_Constants.LogoutTypeId.LoginCollision) {
-        FloatText.showLang(Lang_Constants.TextType.A0006);
+        FloatText.showLang(Lang_TextType.TextType.A0006);
     } else if (reason === Users_Constants.LogoutTypeId.NetworkFailure) {
-        FloatText.showLang(Lang_Constants.TextType.A0013);
+        FloatText.showLang(Lang_TextType.TextType.A0013);
     }
 
     setIsLoggedIn(false);

@@ -8,7 +8,7 @@ import {
     GamePanels_Manager,
     Graphics_Utils,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWars_War,
@@ -241,7 +241,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         if (!settings.isEnabled) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0021),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0021),
             });
         }
         settings.isEnabled = !settings.isEnabled;
@@ -494,8 +494,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelAttackTitle.setLangText(Lang_Constants.TextType.B0077);
-        this._labelCounterTitle.setLangText(Lang_Constants.TextType.B0078);
+        this._labelAttackTitle.setLangText(Lang_TextType.TextType.B0077);
+        this._labelCounterTitle.setLangText(Lang_TextType.TextType.B0078);
 
         this._layoutAttack.arrangeItems();
         this._layoutCounter.arrangeItems();

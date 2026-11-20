@@ -13,7 +13,7 @@ import {
     ExpressionParsers_Results_Player,
     ExpressionParsers_Results_Position,
     ExpressionParsers_Results_War,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Results_TileBuff,
     ExpressionParsers_Results_TileBuffArray,
     ExpressionParsers_Contexts_War,
@@ -53,21 +53,21 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Variables    = Tile.generateVariables();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(Tile.VnX,            { desc : Lang_Constants.TextType.A0131, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnY,            { desc : Lang_Constants.TextType.A0135, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnPos,          { desc : Lang_Constants.TextType.A0576, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnPlayerIndex,  { desc : Lang_Constants.TextType.A0146, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnTeamIndex,    { desc : Lang_Constants.TextType.A0152, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnType,         { desc : Lang_Constants.TextType.A0164, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnCustomNameId, { desc : Lang_Constants.TextType.A0962, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnBaseType,     { desc : Lang_Constants.TextType.A0879, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnObjectType,   { desc : Lang_Constants.TextType.A0880, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnHighlighted,  { desc : Lang_Constants.TextType.A0174, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnLocationIds,  { desc : Lang_Constants.TextType.A0707, resultType : ExpressionParsers_Enums.ResultType.NumberArray, isExtension : false });
-        variables.set(Tile.VnHasUnit,      { desc : Lang_Constants.TextType.A0465, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
-        variables.set(Tile.VnUnit,         { desc : Lang_Constants.TextType.A0466, resultType : ExpressionParsers_Enums.ResultType.Unit,        isExtension : false });
-        variables.set(Tile.VnPlayer,       { desc : Lang_Constants.TextType.A0470, resultType : ExpressionParsers_Enums.ResultType.Player,      isExtension : false });
-        variables.set(Tile.VnWar,          { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,         isExtension : false });
+        variables.set(Tile.VnX,            { desc : Lang_TextType.TextType.A0131, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnY,            { desc : Lang_TextType.TextType.A0135, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnPos,          { desc : Lang_TextType.TextType.A0576, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnPlayerIndex,  { desc : Lang_TextType.TextType.A0146, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnTeamIndex,    { desc : Lang_TextType.TextType.A0152, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnType,         { desc : Lang_TextType.TextType.A0164, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnCustomNameId, { desc : Lang_TextType.TextType.A0962, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnBaseType,     { desc : Lang_TextType.TextType.A0879, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnObjectType,   { desc : Lang_TextType.TextType.A0880, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnHighlighted,  { desc : Lang_TextType.TextType.A0174, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnLocationIds,  { desc : Lang_TextType.TextType.A0707, resultType : ExpressionParsers_Enums.ResultType.NumberArray, isExtension : false });
+        variables.set(Tile.VnHasUnit,      { desc : Lang_TextType.TextType.A0465, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnUnit,         { desc : Lang_TextType.TextType.A0466, resultType : ExpressionParsers_Enums.ResultType.Unit,        isExtension : false });
+        variables.set(Tile.VnPlayer,       { desc : Lang_TextType.TextType.A0470, resultType : ExpressionParsers_Enums.ResultType.Player,      isExtension : false });
+        variables.set(Tile.VnWar,          { desc : Lang_TextType.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,         isExtension : false });
 
         return variables;
     }
@@ -76,7 +76,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Tile.FnHp,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0165,
+                Lang_TextType.TextType.A0165,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -102,7 +102,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Tile.FnIncome,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0511,
+                Lang_TextType.TextType.A0511,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -128,7 +128,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Tile.FnCapturePoint,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0170,
+                Lang_TextType.TextType.A0170,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -154,7 +154,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Tile.FnBuildPoint,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0173,
+                Lang_TextType.TextType.A0173,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -180,7 +180,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Tile.FnInLocation,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0178,
+                Lang_TextType.TextType.A0178,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -206,7 +206,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Tile.FnDistanceToGrid,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0136,
+                Lang_TextType.TextType.A0136,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
@@ -234,7 +234,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Tile.FnDistanceToLocation,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0137,
+                Lang_TextType.TextType.A0137,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -260,7 +260,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Tile.FnAllAbnormalStates,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0758,
+                Lang_TextType.TextType.A0758,
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 0) {
@@ -277,7 +277,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Tile.FnCanHideUnitType,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0854,
+                Lang_TextType.TextType.A0854,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(

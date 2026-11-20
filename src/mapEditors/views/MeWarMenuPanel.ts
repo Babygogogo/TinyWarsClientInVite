@@ -9,7 +9,7 @@ import {
     GamePanels_Manager,
     Users_Proxy,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     WarTypes_Constants,
     type Egret_Egret,
@@ -63,11 +63,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue  = MapEditors_Constants.AutoSaveConstants.MinAutoSaveTime;
         const maxValue  = MapEditors_Constants.AutoSaveConstants.MaxAutoSaveTime;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0709),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0709),
             currentValue : currValue ?? maxValue,
             minValue     : minValue,
             maxValue     : maxValue,
-            getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0246),
+            getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0246),
             callback     : value => {
                 if (value != currValue) {
                     Users_Proxy.reqSetMapEditorAutoSaveTime(value);
@@ -80,8 +80,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnGotoLobby(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0054),
-            getContent : () => this.getOpenData()?.war.getIsMapModified() ? Lang_Utils.getText(Lang_Constants.TextType.A0143) : Lang_Utils.getText(Lang_Constants.TextType.A0025),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0054),
+            getContent : () => this.getOpenData()?.war.getIsMapModified() ? Lang_Utils.getText(Lang_TextType.TextType.A0143) : Lang_Utils.getText(Lang_TextType.TextType.A0025),
             callback   : () => Helpers_GameFlow.gotoLobby(),
         });
     }
@@ -90,8 +90,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmReviewListPanel, void 0);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1275),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B1275),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0072),
                 callback   : () => Helpers_GameFlow.gotoMyWarListPanel(WarTypes_Constants.WarTypeId.Me),
             });
         }
@@ -99,7 +99,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onNotifyMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgUserSetMapEditorAutoSaveTime"]>): void {
         const data = (Helpers_Misc.getExisted(e.data)).msg;
-        FloatText.show(Lang_Utils.getText(data.getTime() == null ? Lang_Constants.TextType.A0248 : Lang_Constants.TextType.A0247));
+        FloatText.show(Lang_Utils.getText(data.getTime() == null ? Lang_TextType.TextType.A0248 : Lang_TextType.TextType.A0247));
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -114,10 +114,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0155);
-        this._btnAutoSave.setLangText(Lang_Constants.TextType.B0709);
-        this._btnGameSettings.setLangText(Lang_Constants.TextType.B0604);
-        this._btnGotoLobby.setLangText(Lang_Constants.TextType.B0054);
-        this._btnGotoMapList.setLangText(Lang_Constants.TextType.B1275);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0155);
+        this._btnAutoSave.setLangText(Lang_TextType.TextType.B0709);
+        this._btnGameSettings.setLangText(Lang_TextType.TextType.B0604);
+        this._btnGotoLobby.setLangText(Lang_TextType.TextType.B0054);
+        this._btnGotoMapList.setLangText(Lang_TextType.TextType.B1275);
     }
 }

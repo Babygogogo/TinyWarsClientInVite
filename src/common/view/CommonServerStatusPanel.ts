@@ -3,7 +3,7 @@ import {
     type Notifications_Mapping,
     Lang_Utils,
     Common_Model_CommonProxy,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -65,16 +65,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const ongoingMpwInfo            = data.getOngoingMpwInfo();
         this._labelOngoingMpwInfo.setText(ongoingMpwInfo == null
             ? Lang_Constants.UndefinedError
-            : `${ongoingMpwInfo[0]} (${Lang_Utils.getText(Lang_Constants.TextType.Players)}: ${ongoingMpwInfo[1]})`,
+            : `${ongoingMpwInfo[0]} (${Lang_Utils.getText(Lang_TextType.TextType.Players)}: ${ongoingMpwInfo[1]})`,
         );
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0327);
-        this._labelAccountsTitle.setLangText(Lang_Constants.TextType.B0328);
-        this._labelOnlineTimeTitle.setLangText(Lang_Constants.TextType.B0329);
-        this._labelNewAccountsTitle.setLangText(Lang_Constants.TextType.B0330);
-        this._labelActiveAccountsTitle.setLangText(Lang_Constants.TextType.B0331);
-        this._labelOngoingMpwInfoTitle.setLangText(Lang_Constants.TextType.B1101);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0327);
+        this._labelAccountsTitle.setLangText(Lang_TextType.TextType.B0328);
+        this._labelOnlineTimeTitle.setLangText(Lang_TextType.TextType.B0329);
+        this._labelNewAccountsTitle.setLangText(Lang_TextType.TextType.B0330);
+        this._labelActiveAccountsTitle.setLangText(Lang_TextType.TextType.B0331);
+        this._labelOngoingMpwInfoTitle.setLangText(Lang_TextType.TextType.B1101);
     }
 }

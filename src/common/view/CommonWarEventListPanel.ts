@@ -8,7 +8,7 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -100,7 +100,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0793),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0793),
         });
     }
 
@@ -110,7 +110,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateBtnShowBrief();
         await this._updateListWarEventDetailAndLabelNoEvent();
 
-        FloatText.showLang(Lang_Constants.TextType.A0845);
+        FloatText.showLang(Lang_TextType.TextType.A0845);
     }
     private async _onTouchedBtnIsShowBrief(): Promise<void> {
         _isShowDetail = false;
@@ -118,7 +118,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateBtnShowBrief();
         await this._updateListWarEventDetailAndLabelNoEvent();
 
-        FloatText.showLang(Lang_Constants.TextType.A0844);
+        FloatText.showLang(Lang_TextType.TextType.A0844);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -134,9 +134,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelNoEvent.setLangText(Lang_Constants.TextType.A0821);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0461);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
+        this._labelNoEvent.setLangText(Lang_TextType.TextType.A0821);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0461);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
     }
 
     private async _resetListWarEventId(eventId: number | null): Promise<void> {
@@ -384,7 +384,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
             // const prefix        = prefixArray.join(`.`);
             this._btnModify.setText(prefixArray[prefixArray.length - 1]);
             labelDesc.setTextColor(Graphics_Constants.ColorValue.Yellow);
-            labelDesc.setLangText(Lang_Constants.TextType.A0166);
+            labelDesc.setLangText(Lang_TextType.TextType.A0166);
             this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
         }
     }
@@ -401,8 +401,8 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         const eventId               = data.eventId;
         const event                 = Helpers_Misc.getExisted(data.fullData.getEventArray().find(v => v.getEventId() === eventId));
         const prefixArray           = data.prefixArray;
-        const textForMaxCallCount   = `${Lang_Utils.getText(Lang_Constants.TextType.B0476)}: ${event.getMaxCallCountInPlayerTurn()}`;
-        const textForTrigger        = `${Lang_Utils.getText(Lang_Constants.TextType.B1400)}: ${Lang_Utils.getTextForYesOrNo(event.getCanBeTriggeredRightAfterAnyEvent())}`;
+        const textForMaxCallCount   = `${Lang_Utils.getText(Lang_TextType.TextType.B0476)}: ${event.getMaxCallCountInPlayerTurn()}`;
+        const textForTrigger        = `${Lang_Utils.getText(Lang_TextType.TextType.B1400)}: ${Lang_Utils.getTextForYesOrNo(event.getCanBeTriggeredRightAfterAnyEvent())}`;
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
         this._labelDesc.setText(`${textForMaxCallCount}, ${textForTrigger}`);
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
@@ -412,7 +412,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         const event                     = Helpers_Misc.getExisted(data.fullData.getEventArray().find(v => v.getEventId() === eventId));
         const prefixArray               = data.prefixArray;
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
-        this._labelDesc.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0477)}: ${event.getMaxCallCountTotal()}`);
+        this._labelDesc.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0477)}: ${event.getMaxCallCountTotal()}`);
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
     }
     private _updateForConditionNode(data: DataForWarEventDetailRenderer): void {              // DONE

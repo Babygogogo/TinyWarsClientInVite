@@ -3,7 +3,7 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeHelpers,
     MapEditor_Model_MeModel,
@@ -165,7 +165,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0657),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0657),
             callback   : () => {
                 const tileMap   = war.getTileMap();
                 const allTiles  = tileMap.getAllTiles();
@@ -209,7 +209,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelpRealTimeAdjust(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0032),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0032),
         });
     }
 
@@ -217,10 +217,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0282);
-        this._labelFill.setLangText(Lang_Constants.TextType.B0294);
-        this._labelRecentTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0372)}:`);
-        this._labelRealTimeAdjust.setLangText(Lang_Constants.TextType.B1121);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0282);
+        this._labelFill.setLangText(Lang_TextType.TextType.B0294);
+        this._labelRecentTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0372)}:`);
+        this._labelRealTimeAdjust.setLangText(Lang_TextType.TextType.B1121);
 
         this._groupFill.arrangeItems();
         this._groupRealTimeAdjust.arrangeItems();
@@ -392,7 +392,7 @@ class TileBaseRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar()).getDrawer().setModeDrawTileBase(dataForDrawTileBase);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0089),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0089),
                 callback   : () => {
                     const war           = Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar());
                     const gameConfig    = war.getGcData();

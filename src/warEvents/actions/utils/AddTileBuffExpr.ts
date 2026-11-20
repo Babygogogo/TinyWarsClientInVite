@@ -6,7 +6,7 @@ import {
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_NumArray,
     ExpressionParsers_Parser,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_Tile,
     AuxiliaryTypes_ChangedThingsForWarOperation,
     type BaseWar_Model_War,
@@ -79,7 +79,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0080, data.getConTileFilter() ?? Lang_Constants.UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0080, data.getConTileFilter() ?? Lang_Constants.UndefinedError);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddTileBuffExpr>): string | null {
     if (data == null) {
@@ -87,13 +87,13 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     }
 
     const additionalText = [
-        `${Lang_Utils.getText(Lang_Constants.TextType.B0805)}: ${data.getActBuffType()}`,
+        `${Lang_Utils.getText(Lang_TextType.TextType.B0805)}: ${data.getActBuffType()}`,
         data.getActExpiringTurnIndex()   ? `${WarEvents_Actions_Constants_AddTileBuffExpr.ExpressionInfoDict.ActExpiringTurnIndex.getTitleText()}: ${data.getActExpiringTurnIndex()}`     : null,
         data.getActExpiringPlayerIndex() ? `${WarEvents_Actions_Constants_AddTileBuffExpr.ExpressionInfoDict.ActExpiringPlayerIndex.getTitleText()}: ${data.getActExpiringPlayerIndex()}` : null,
         data.getActExtraParams()         ? `${WarEvents_Actions_Constants_AddTileBuffExpr.ExpressionInfoDict.ActExtraParams.getTitleText()}: ${data.getActExtraParams()}`                 : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0080, data.getConTileFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0080, data.getConTileFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaAddTileBuffExpr, customCounterNameSet: Set<string>): string | null {
     {
@@ -104,7 +104,7 @@ export function getErrorTip(data: WeaAddTileBuffExpr, customCounterNameSet: Set<
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -116,7 +116,7 @@ export function getErrorTip(data: WeaAddTileBuffExpr, customCounterNameSet: Set<
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -128,7 +128,7 @@ export function getErrorTip(data: WeaAddTileBuffExpr, customCounterNameSet: Set<
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -140,7 +140,7 @@ export function getErrorTip(data: WeaAddTileBuffExpr, customCounterNameSet: Set<
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -152,7 +152,7 @@ export function getErrorTip(data: WeaAddTileBuffExpr, customCounterNameSet: Set<
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

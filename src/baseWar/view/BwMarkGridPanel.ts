@@ -21,7 +21,7 @@ import {
     Sounds_SoundPlayer,
     MultiPlayerWar_Model_MpwProxy,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     GridMarks_Utils,
@@ -122,7 +122,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnImport(): void {
         const war = this.getOpenData()?.war;
         if (war == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -132,7 +132,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 window.focus();
                 text = await navigator.clipboard.readText();
             } catch {
-                FloatText.showLang(Lang_Constants.TextType.A0275);
+                FloatText.showLang(Lang_TextType.TextType.A0275);
                 return;
             }
 
@@ -140,12 +140,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             try {
                 data = GridMarkData.fromJson(JSON.parse(text));
             } catch {
-                FloatText.showLang(Lang_Constants.TextType.A0784);
+                FloatText.showLang(Lang_TextType.TextType.A0784);
                 return;
             }
 
             if (data == null) {
-                FloatText.showLang(Lang_Constants.TextType.A0784);
+                FloatText.showLang(Lang_TextType.TextType.A0784);
                 return;
             }
 
@@ -158,7 +158,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                     war : war,
                 });
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
             } else if (war instanceof SinglePlayerWars_War.War) {
                 war.getSaveSlotExtraData().createIfNotExistsGridMarkData().setGridIdAndMarkTypeIdList(data.getGridIdAndMarkTypeIdList());
@@ -166,7 +166,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                     war : war,
                 });
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
             } else {
                 // TODO
@@ -179,9 +179,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
-                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0026),
                 showButtonClose   : false,
                 callback          : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
@@ -197,7 +197,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnExport(): void {
         const war = this.getOpenData()?.war;
         if (war == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -221,11 +221,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 await navigator.clipboard.writeText(JSON.stringify(data.toJson()));
 
             } catch {
-                FloatText.showLang(Lang_Constants.TextType.A0275);
+                FloatText.showLang(Lang_TextType.TextType.A0275);
                 return;
             }
 
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0235));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0235));
         };
 
         if (Common_Model_CommonModel.getIsTransparentTouchLayerTouched()) {
@@ -234,9 +234,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
-                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0026),
                 showButtonClose   : false,
                 callback          : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
@@ -270,7 +270,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     war : war,
                 });
             }
-            FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+            FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
         } else if (war instanceof SinglePlayerWars_War.War) {
             const data = war.getSaveSlotExtraData().createIfNotExistsGridMarkData();
@@ -281,7 +281,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     war : war,
                 });
             }
-            FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+            FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
         } else {
             // TODO
@@ -290,7 +290,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedGroupHelpBatchMark(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0850),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0850),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
@@ -373,10 +373,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const metGridIdArray = this._getMetGridIdArray(player.getTeamIndex());
         const addGridIdArray = metGridIdArray.filter(v => player.getMarkTypeId(v) != _selectedMarkTypeId);
         if (addGridIdArray.length <= 0) {
-            FloatText.showLang(Lang_Constants.TextType.A0090);
+            FloatText.showLang(Lang_TextType.TextType.A0090);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0193, metGridIdArray.length, addGridIdArray.length),
+                getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0193, metGridIdArray.length, addGridIdArray.length),
                 callback   : () => {
                     if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
                         MultiPlayerWar_Model_MpwProxy.reqMpwCommonMarkGrid(Helpers_Misc.getExisted(war.getWarId()), addGridIdArray, [], _selectedMarkTypeId);
@@ -387,7 +387,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                             war : war,
                         });
-                        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
                     } else if (war instanceof SinglePlayerWars_War.War) {
                         GridMarks_Utils.updateGridMarkList(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), addGridIdArray, [], _selectedMarkTypeId);
@@ -395,7 +395,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                             war : war,
                         });
-                        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
                     } else {
                         // TODO
@@ -420,10 +420,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const metGridIdArray    = this._getMetGridIdArray(player.getTeamIndex());
         const deleteGridIdArray = metGridIdArray.filter(v => player.getMarkTypeId(v) != null);
         if (deleteGridIdArray.length <= 0) {
-            FloatText.showLang(Lang_Constants.TextType.A0090);
+            FloatText.showLang(Lang_TextType.TextType.A0090);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0193, metGridIdArray.length, deleteGridIdArray.length),
+                getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0193, metGridIdArray.length, deleteGridIdArray.length),
                 callback   : () => {
                     if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
                         MultiPlayerWar_Model_MpwProxy.reqMpwCommonMarkGrid(Helpers_Misc.getExisted(war.getWarId()), [], deleteGridIdArray, _selectedMarkTypeId);
@@ -434,7 +434,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                             war : war,
                         });
-                        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
                     } else if (war instanceof SinglePlayerWars_War.War) {
                         GridMarks_Utils.updateGridMarkList(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), [], deleteGridIdArray, _selectedMarkTypeId);
@@ -442,7 +442,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         Notifications_Dispatcher.dispatch("GridMarkListChanged", {
                             war : war,
                         });
-                        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
                     } else {
                         // TODO
@@ -469,28 +469,28 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMpwCommonSetPlayerIndexesForShowMarkedGrid(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     private _onNotifyMsgMpwCommonMarkTile(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1108);
-        this._labelShow.setLangText(Lang_Constants.TextType.B1309);
-        this._btnShow.setLangText(Lang_Constants.TextType.B0026);
-        this._btnImport.setLangText(Lang_Constants.TextType.B1253);
-        this._btnExport.setLangText(Lang_Constants.TextType.B1479);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1108);
+        this._labelShow.setLangText(Lang_TextType.TextType.B1309);
+        this._btnShow.setLangText(Lang_TextType.TextType.B0026);
+        this._btnImport.setLangText(Lang_TextType.TextType.B1253);
+        this._btnExport.setLangText(Lang_TextType.TextType.B1479);
 
-        this._labelBatchMark.setLangText(Lang_Constants.TextType.B1109);
-        this._btnPositionFilter.setLangText(Lang_Constants.TextType.B1073);
-        this._btnUnitFilter.setLangText(Lang_Constants.TextType.UnitFilter);
-        this._btnTileFilter.setLangText(Lang_Constants.TextType.TileFilter);
-        this._btnInVision.setLangText(Lang_Constants.TextType.B1110);
-        this._btnBatchMark.setLangText(Lang_Constants.TextType.B0914);
-        this._btnBatchUnmark.setLangText(Lang_Constants.TextType.B0915);
+        this._labelBatchMark.setLangText(Lang_TextType.TextType.B1109);
+        this._btnPositionFilter.setLangText(Lang_TextType.TextType.B1073);
+        this._btnUnitFilter.setLangText(Lang_TextType.TextType.UnitFilter);
+        this._btnTileFilter.setLangText(Lang_TextType.TextType.TileFilter);
+        this._btnInVision.setLangText(Lang_TextType.TextType.B1110);
+        this._btnBatchMark.setLangText(Lang_TextType.TextType.B0914);
+        this._btnBatchUnmark.setLangText(Lang_TextType.TextType.B0915);
         this._updateLabelPositionFilter();
         this._updateLabelUnitFilter();
         this._updateLabelTileFilter();
@@ -549,24 +549,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelPositionFilter(): void {
-        this._labelPositionFilter.setLangText(this._positionFilter ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelPositionFilter.setLangText(this._positionFilter ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
 
     private _updateLabelUnitFilter(): void {
-        this._labelUnitFilter.setLangText(this._unitFilter ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelUnitFilter.setLangText(this._unitFilter ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
 
     private _updateLabelTileFilter(): void {
-        this._labelTileFilter.setLangText(this._tileFilter ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelTileFilter.setLangText(this._tileFilter ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
 
     private _updateLabelInVision(): void {
         const label         = this._labelInVision;
         const isInVision    = this._isInVision;
         if (isInVision == null) {
-            label.setLangText(Lang_Constants.TextType.B0776);
+            label.setLangText(Lang_TextType.TextType.B0776);
         } else {
-            label.setLangText(isInVision ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+            label.setLangText(isInVision ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         }
     }
 

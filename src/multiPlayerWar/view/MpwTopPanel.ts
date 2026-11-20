@@ -18,7 +18,7 @@ import {
     Graphics_Constants,
     Helpers_ImageSource,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MultiPlayerWar_Model_MpwProxy,
     MultiPlayerWar_Model_MpwWar,
@@ -224,7 +224,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0826),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0826),
         });
     }
 
@@ -249,7 +249,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.Weather),
             getContent : () => desc,
         });
     }
@@ -346,8 +346,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTimerTitle.setLangText(Lang_Constants.TextType.B0188);
-        this._labelVisionTeamTitle.setLangText(Lang_Constants.TextType.B0891);
+        this._labelTimerTitle.setLangText(Lang_TextType.TextType.B0188);
+        this._labelVisionTeamTitle.setLangText(Lang_TextType.TextType.B0891);
 
         this._updateGroupVisionTeam();
         this._updateLabelPlayerState();
@@ -362,15 +362,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const userId    = this.getOpenData()?.war.getPlayerInTurn().getUserId();
         const label     = this._labelPlayerState;
         if ((userId == null) || (userId === Users_Model.getSelfUserId())) {
-            label.setLangText(Lang_Constants.TextType.B0676);
+            label.setLangText(Lang_TextType.TextType.B0676);
             label.setTextColor(Graphics_Constants.ColorValue.Green);
         } else {
             const userOnlineState = await Users_Model.getUserOnlineState(userId);
             if ((userOnlineState == null) || (!userOnlineState.isOnline)) {
-                label.setLangText(Lang_Constants.TextType.B0677);
+                label.setLangText(Lang_TextType.TextType.B0677);
                 label.setTextColor(Graphics_Constants.ColorValue.Red);
             } else {
-                label.setLangText(Lang_Constants.TextType.B0676);
+                label.setLangText(Lang_TextType.TextType.B0676);
                 label.setTextColor((Timer_TimerModel.getServerTimestamp() - userOnlineState.lastActivityTimestamp > 60) ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
             }
         }
@@ -383,7 +383,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelTurnIndex(): void {
-        this._labelTurnIndex.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0191)} ${this.getOpenData()?.war.getTurnManager().getTurnIndex()}`);
+        this._labelTurnIndex.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0191)} ${this.getOpenData()?.war.getTurnManager().getTurnIndex()}`);
         this._groupPlayer.arrangeItems();
     }
 
@@ -401,7 +401,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             const teamIndex = war.getVisionTeamIndex();
             if (teamIndex == null) {
-                this._labelVisionTeam.setLangText(Lang_Constants.TextType.B0890);
+                this._labelVisionTeam.setLangText(Lang_TextType.TextType.B0890);
             } else {
                 this._labelVisionTeam.setText(Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError);
             }

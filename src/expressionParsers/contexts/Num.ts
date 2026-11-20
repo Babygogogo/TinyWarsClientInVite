@@ -7,7 +7,7 @@ import {
     Helpers_Misc,
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_War,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
     type ExpressionParsers_Results_Base,
@@ -25,8 +25,8 @@ export class Num extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = Num.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(Num.VnSelf,   { desc : Lang_Constants.TextType.A0965, resultType : ExpressionParsers_Enums.ResultType.Number,    isExtension : false } );
-        variables.set(Num.VnWar,    { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,       isExtension : false } );
+        variables.set(Num.VnSelf,   { desc : Lang_TextType.TextType.A0965, resultType : ExpressionParsers_Enums.ResultType.Number,    isExtension : false } );
+        variables.set(Num.VnWar,    { desc : Lang_TextType.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,       isExtension : false } );
 
         return variables;
     }
@@ -35,7 +35,7 @@ export class Num extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Num.FnAbs,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0522,
+                Lang_TextType.TextType.A0522,
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 (argArray, contextType, lambdaArgumentInfoDict) => {
                     if (argArray.length !== 0) {
@@ -52,7 +52,7 @@ export class Num extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Num.FnFloor,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0523,
+                Lang_TextType.TextType.A0523,
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 (argArray, contextType, lambdaArgumentInfoDict) => {
                     if (argArray.length !== 0) {
@@ -69,7 +69,7 @@ export class Num extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Num.FnCeil,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0524,
+                Lang_TextType.TextType.A0524,
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 (argArray, contextType, lambdaArgumentInfoDict) => {
                     if (argArray.length !== 0) {

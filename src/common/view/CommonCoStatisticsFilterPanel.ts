@@ -6,7 +6,7 @@ import {
     NormalMap_Model_NormalMapModel,
     GameModes_Constants,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Turns_Constants,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -123,7 +123,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0312),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0312),
         });
     }
 
@@ -149,7 +149,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
             availableNormalMapIdArray : [...normalMapIdSet],
-            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
+            getTitleText              : () => Lang_Utils.getText(Lang_TextType.TextType.B0227),
             callback                  : normalMapId => {
                 this._filter.normalMapId = normalMapId;
                 this._updateLabelNormalMapId();
@@ -174,7 +174,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             ],
             currentNumber     : filter.gameMode,
             keepOrder         : true,
-            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B0153),
+            getTitleText      : () => Lang_Utils.getText(Lang_TextType.TextType.B0153),
             getNumberMainText : mode => Lang_Utils.getGameModeName(mode) ?? Lang_Constants.UndefinedError,
             getNumberHelpText : mode => Lang_Utils.getGameModeHelpText(mode) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm : mode => {
@@ -193,7 +193,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMinTurnIndex(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0611),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0611),
             minValue     : 6,
             maxValue     : filter.maxTurnIndex ?? Turns_Constants.TurnIndex.MaxLimit,
             currentValue : filter.minTurnIndex,
@@ -211,7 +211,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMaxTurnIndex(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0621),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0621),
             minValue     : filter.minTurnIndex ?? 6,
             maxValue     : Turns_Constants.TurnIndex.MaxLimit,
             currentValue : filter.maxTurnIndex,
@@ -229,7 +229,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMinRankScore(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0687),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0687),
             minValue     : 0,
             maxValue     : filter.maxRankScore ?? 9999,
             currentValue : filter.minRankScore,
@@ -247,7 +247,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMaxRankScore(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0863),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0863),
             minValue     : filter.minRankScore ?? 0,
             maxValue     : 9999,
             currentValue : filter.maxRankScore,
@@ -301,19 +301,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0132);
-        this._labelNormalMapIdTitle.setLangText(Lang_Constants.TextType.B0225);
-        this._labelGameModeTitle.setLangText(Lang_Constants.TextType.B0153);
-        this._labelMinTurnIndexTitle.setLangText(Lang_Constants.TextType.B0611);
-        this._labelMaxTurnIndexTitle.setLangText(Lang_Constants.TextType.B0621);
-        this._labelMinRankScoreTitle.setLangText(Lang_Constants.TextType.B0687);
-        this._labelMaxRankScoreTitle.setLangText(Lang_Constants.TextType.B0863);
-        this._labelHasFogTitle.setLangText(Lang_Constants.TextType.B0438);
-        this._labelIncludeMirrorGameTitle.setLangText(Lang_Constants.TextType.B0941);
-        this._labelShowDeprecatedCoTitle.setLangText(Lang_Constants.TextType.B0948);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0132);
+        this._labelNormalMapIdTitle.setLangText(Lang_TextType.TextType.B0225);
+        this._labelGameModeTitle.setLangText(Lang_TextType.TextType.B0153);
+        this._labelMinTurnIndexTitle.setLangText(Lang_TextType.TextType.B0611);
+        this._labelMaxTurnIndexTitle.setLangText(Lang_TextType.TextType.B0621);
+        this._labelMinRankScoreTitle.setLangText(Lang_TextType.TextType.B0687);
+        this._labelMaxRankScoreTitle.setLangText(Lang_TextType.TextType.B0863);
+        this._labelHasFogTitle.setLangText(Lang_TextType.TextType.B0438);
+        this._labelIncludeMirrorGameTitle.setLangText(Lang_TextType.TextType.B0941);
+        this._labelShowDeprecatedCoTitle.setLangText(Lang_TextType.TextType.B0948);
 
-        this._btnReset.setLangText(Lang_Constants.TextType.B0391);
-        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
+        this._btnReset.setLangText(Lang_TextType.TextType.B0391);
+        this._btnSearch.setLangText(Lang_TextType.TextType.B0228);
         this._updateLabelMaxRankScore();
     }
 
@@ -345,10 +345,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelHasFog.setText(hasFog == null ? `` : Lang_Utils.getTextForYesOrNo(hasFog));
     }
     private _updateLabelIncludeMirrorGame(): void {
-        this._labelIncludeMirrorGame.setLangText(this._filter.includeMirrorGame ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelIncludeMirrorGame.setLangText(this._filter.includeMirrorGame ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
     private _updateLabelShowDeprecatedCo(): void {
-        this._labelShowDeprecatedCo.setLangText(this._filter.showDeprecatedCo ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelShowDeprecatedCo.setLangText(this._filter.showDeprecatedCo ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
 }
 

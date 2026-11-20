@@ -4,7 +4,7 @@ import {
     Helpers_Misc,
     Lang_Utils,
     Timer_TimerModel,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     GamePanels_Manager,
     Broadcasts_Gateway,
     FloatText,
@@ -92,9 +92,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             textList.push(LanguageText.fromJson({ languageType : Lang_Constants.LanguageType.English, text : englishText }));
         }
         if (textList.every(v => Helpers_Misc.getExisted(v.getText()).length <= 0)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0155));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0155));
         } else if (textList.some(v => Helpers_Misc.getExisted(v.getText()).length > Broadcasts_Constants.Constants.TextMaxLength)) {
-            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0034, Broadcasts_Constants.Constants.TextMaxLength));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0034, Broadcasts_Constants.Constants.TextMaxLength));
         } else {
             const startTime = this._startTime;
             Broadcasts_Gateway.reqBroadcastAddMessage(textList, startTime, startTime + this._duration);
@@ -113,7 +113,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 2100;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0059),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0059),
             minValue,
             maxValue,
             currentValue : date.getFullYear(),
@@ -130,7 +130,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 12;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0058),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0058),
             minValue,
             maxValue,
             currentValue : date.getMonth() + 1,
@@ -147,7 +147,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 31;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0057),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0057),
             minValue,
             maxValue,
             currentValue : date.getDate(),
@@ -164,7 +164,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 23;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0884),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0884),
             minValue,
             maxValue,
             currentValue : date.getHours(),
@@ -181,7 +181,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 59;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0885),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0885),
             minValue,
             maxValue,
             currentValue : date.getMinutes(),
@@ -198,7 +198,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 59;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0886),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0886),
             minValue,
             maxValue,
             currentValue : date.getSeconds(),
@@ -215,7 +215,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue  = 30;
         const maxValue  = 3600 * 24;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0883),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0883),
             minValue,
             maxValue,
             currentValue : this._duration,
@@ -234,20 +234,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
-        this._btnModify.setLangText(Lang_Constants.TextType.B0320);
-        this._labelChinese.setLangText(Lang_Constants.TextType.B0455);
-        this._labelEnglish.setLangText(Lang_Constants.TextType.B0456);
-        this._labelTip.setLangText(Lang_Constants.TextType.A0156);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0454);
-        this._btnStartTime.setLangText(Lang_Constants.TextType.B0882);
-        this._btnDuration.setLangText(Lang_Constants.TextType.B0883);
-        this._btnStartTimeYear.setLangText(Lang_Constants.TextType.B0059);
-        this._btnStartTimeMonth.setLangText(Lang_Constants.TextType.B0058);
-        this._btnStartTimeDay.setLangText(Lang_Constants.TextType.B0057);
-        this._btnStartTimeHour.setLangText(Lang_Constants.TextType.B0884);
-        this._btnStartTimeMinute.setLangText(Lang_Constants.TextType.B0885);
-        this._btnStartTimeSecond.setLangText(Lang_Constants.TextType.B0886);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
+        this._btnModify.setLangText(Lang_TextType.TextType.B0320);
+        this._labelChinese.setLangText(Lang_TextType.TextType.B0455);
+        this._labelEnglish.setLangText(Lang_TextType.TextType.B0456);
+        this._labelTip.setLangText(Lang_TextType.TextType.A0156);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0454);
+        this._btnStartTime.setLangText(Lang_TextType.TextType.B0882);
+        this._btnDuration.setLangText(Lang_TextType.TextType.B0883);
+        this._btnStartTimeYear.setLangText(Lang_TextType.TextType.B0059);
+        this._btnStartTimeMonth.setLangText(Lang_TextType.TextType.B0058);
+        this._btnStartTimeDay.setLangText(Lang_TextType.TextType.B0057);
+        this._btnStartTimeHour.setLangText(Lang_TextType.TextType.B0884);
+        this._btnStartTimeMinute.setLangText(Lang_TextType.TextType.B0885);
+        this._btnStartTimeSecond.setLangText(Lang_TextType.TextType.B0886);
     }
 
     private _updateLabelStartTime(): void {

@@ -52,7 +52,7 @@ import {
     GamePanels_Manager,
     HalfwayReplayWar_Model_HrwWar,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Logger,
     MapEditor_Model_MeWar,
@@ -1247,7 +1247,7 @@ function getActionUnitJoin(actionPlanner: ActionPlanners_IActionPlanner.IActionP
                         cb();
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0885),
+                            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0885),
                             callback   : cb,
                         });
                     }
@@ -1290,7 +1290,7 @@ function getActionUnitUseCoSuperPower(actionPlanner: ActionPlanners_IActionPlann
                     const targetsCount = CoSkills_Utils_Common.getPowerSkillTargetsCount(focusUnit.getPlayer().getCoBasicCfg(), skillType);
                     if (targetsCount <= 0) {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0058),
+                            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0058),
                             callback   : () => {
                                 actionPlanner.setCoActiveSkillSkillType(skillType);
                                 ActionPlanners_States_RequestingUnitUseCoActiveSkill.RequestingUnitUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null);
@@ -1298,7 +1298,7 @@ function getActionUnitUseCoSuperPower(actionPlanner: ActionPlanners_IActionPlann
                         });
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
+                            getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0205, targetsCount),
                             callback   : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnChooseAction(actionPlanner, skillType),
                         });
                     }
@@ -1320,7 +1320,7 @@ function getActionUnitUseCoPower(actionPlanner: ActionPlanners_IActionPlanner.IA
                     const targetsCount = CoSkills_Utils_Common.getPowerSkillTargetsCount(focusUnit.getPlayer().getCoBasicCfg(), skillType);
                     if (targetsCount <= 0) {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0054),
+                            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0054),
                             callback   : () => {
                                 actionPlanner.setCoActiveSkillSkillType(skillType);
                                 ActionPlanners_States_RequestingUnitUseCoActiveSkill.RequestingUnitUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null);
@@ -1328,7 +1328,7 @@ function getActionUnitUseCoPower(actionPlanner: ActionPlanners_IActionPlanner.IA
                         });
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
+                            getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0205, targetsCount),
                             callback   : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnChooseAction(actionPlanner, skillType),
                         });
                     }
@@ -1400,7 +1400,7 @@ function getActionUnitSurface(actionPlanner: ActionPlanners_IActionPlanner.IActi
             ? [{
                 actionType : Units_Constants.ActionTypeId.Surface,
                 callback   : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
                     callback   : () => ActionPlanners_States_RequestingUnitSurface.RequestingUnitSurface.getInstance().doApplyOnChooseAction(actionPlanner),
                 }),
             }]
@@ -1445,7 +1445,7 @@ function getActionUnitSelfDetonate(actionPlanner: ActionPlanners_IActionPlanner.
             return [{
                 actionType : Units_Constants.ActionTypeId.SelfDetonate,
                 callback   : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0209, selfDetonateCfg.getRadius(), selfDetonateCfg.getDamage()),
+                    getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0209, selfDetonateCfg.getRadius(), selfDetonateCfg.getDamage()),
                     callback   : () => ActionPlanners_States_RequestingUnitSelfDetonate.RequestingUnitSelfDetonate.getInstance().doApplyOnChooseAction(actionPlanner),
                 }),
             }];
@@ -1470,7 +1470,7 @@ function getActionUnitSupply(actionPlanner: ActionPlanners_IActionPlanner.IActio
                         callback   : !canDropUnits
                             ? cb
                             : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
+                                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0055),
                                 callback   : cb,
                             }),
                     }];
@@ -1495,7 +1495,7 @@ function getActionUnitBuildTile(actionPlanner: ActionPlanners_IActionPlanner.IAc
                 callback   : !canDropUnits
                     ? cb
                     : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0055),
                         callback   : cb,
                     }),
             }];
@@ -1574,28 +1574,28 @@ function getActionUnitProduceUnit(actionPlanner: ActionPlanners_IActionPlanner.I
         if (focusUnit.getCurrentProduceMaterial() < 1) {
             return [{
                 actionType         : Units_Constants.ActionTypeId.ProduceUnit,
-                callback           : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0051)),
+                callback           : () => FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.B0051)),
                 costForProduceUnit : costForProduceUnit,
                 produceUnitType    : produceUnitType,
             }];
         } else if (focusUnit.getLoadedUnitsCount() >= Helpers_Misc.getExisted(focusUnit.getMaxLoadUnitsCount())) {
             return [{
                 actionType         : Units_Constants.ActionTypeId.ProduceUnit,
-                callback           : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0052)),
+                callback           : () => FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.B0052)),
                 costForProduceUnit : costForProduceUnit,
                 produceUnitType    : produceUnitType,
             }];
         } else if (player.getFund() < costForProduceUnit) {
             return [{
                 actionType         : Units_Constants.ActionTypeId.ProduceUnit,
-                callback           : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0053)),
+                callback           : () => FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.B0053)),
                 costForProduceUnit : costForProduceUnit,
                 produceUnitType    : produceUnitType,
             }];
         } else if ((maxUnitsCount != null) && (currentUnitsCount >= maxUnitsCount)) {
             return [{
                 actionType         : Units_Constants.ActionTypeId.ProduceUnit,
-                callback           : () => FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0266, currentUnitsCount, maxUnitsCount)),
+                callback           : () => FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0266, currentUnitsCount, maxUnitsCount)),
                 costForProduceUnit : costForProduceUnit,
                 produceUnitType    : produceUnitType,
             }];
@@ -1621,7 +1621,7 @@ function getActionUnitWait(actionPlanner: ActionPlanners_IActionPlanner.IActionP
                 callback   : !hasOtherAction
                     ? cb
                     : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0055),
                         callback   : cb,
                     }),
             }];
@@ -1632,7 +1632,7 @@ function getActionUnitWait(actionPlanner: ActionPlanners_IActionPlanner.IActionP
                 callback   : !hasOtherAction
                     ? cb
                     : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0055),
                         callback   : cb,
                     }),
             }];

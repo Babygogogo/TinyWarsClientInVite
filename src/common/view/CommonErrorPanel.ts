@@ -2,7 +2,7 @@ import {
     Stages_Constants,
     Lang_Utils,
     Numbers_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -35,11 +35,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     protected override async _doApplyOpenData(): Promise<void> {
         const openData = this.getOpenData();
-        this._labelTitle.setLangText(Lang_Constants.TextType.A0056);
+        this._labelTitle.setLangText(Lang_TextType.TextType.A0056);
         this._scrContent.scrollTop();
 
         const labelContent = this._labelContent;
-        labelContent.setText(`${openData?.content}\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0777)}`);
+        labelContent.setText(`${openData?.content}\n\n${Lang_Utils.getText(Lang_TextType.TextType.A0777)}`);
         this._updateLabelTips();
 
         this._group.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
@@ -51,7 +51,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateLabelTips(): void {
         const labelTips = this._labelTips;
-        labelTips.setLangText(Lang_Constants.TextType.A0379);
+        labelTips.setLangText(Lang_TextType.TextType.A0379);
         labelTips.setIsVisible(this._labelContent.getScaledHeight() > Stages_Constants.Dimension.DesignMinHeight - 130);
     }
 

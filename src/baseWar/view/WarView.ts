@@ -9,7 +9,7 @@ import {
     Egret_Egret,
     Graphics_Utils,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     Notifications_Dispatcher,

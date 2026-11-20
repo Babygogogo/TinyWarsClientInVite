@@ -4,7 +4,7 @@ import {
     GamePanels_Dict,
     GamePanels_Manager,
     Helpers_PointerInput,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Maps_Constants,
     NormalMap_Model_NormalMapModel,
@@ -160,7 +160,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const normalMapId   = this._selectedNormalMapId;
         const mapRawData    = normalMapId == null ? null : await NormalMap_Model_NormalMapModel.getRawData(normalMapId);
         if (mapRawData == null) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowMapPanel, {
                 mapInfo : {
@@ -184,10 +184,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? Lang_Constants.UndefinedError);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
-        this._btnPrevPage.setLangText(Lang_Constants.TextType.B1384);
-        this._btnNextPage.setLangText(Lang_Constants.TextType.B1385);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._labelTips.setLangText(Lang_TextType.TextType.B1249);
+        this._btnPrevPage.setLangText(Lang_TextType.TextType.B1384);
+        this._btnNextPage.setLangText(Lang_TextType.TextType.B1385);
         this._updateLabelPageTitle();
 
         this._layoutPage.arrangeItems();
@@ -197,10 +197,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapFilter = this._mapFilter;
         if ((mapFilter == null) || (mapFilter.checkIsEmpty())) {
             label.setTextColor(0xCCCCCC);
-            label.setLangText(Lang_Constants.TextType.B1386);
+            label.setLangText(Lang_TextType.TextType.B1386);
         } else {
             label.setTextColor(0xFFFF00);
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1386)}(${Lang_Utils.getText(Lang_Constants.TextType.B1387)})`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1386)}(${Lang_Utils.getText(Lang_TextType.TextType.B1387)})`);
         }
         this._layoutPage.arrangeItems();
     }

@@ -9,7 +9,7 @@ import {
     Lang_Utils,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Graphics_Constants,
     Ui_Components_UiPanel,
     Timer_TimerModel,
@@ -154,16 +154,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         const languageType2 = Lang_Utils.getSecondaryLanguageType();
-        this._labelMakeRequest1.setLangText(Lang_Constants.TextType.B0207);
-        this._labelMakeRequest2.setLangText(Lang_Constants.TextType.B0207, languageType2);
-        this._labelHandleRequest1.setLangText(Lang_Constants.TextType.B0208);
-        this._labelHandleRequest2.setLangText(Lang_Constants.TextType.B0208, languageType2);
-        this._labelDeleteWatcher1.setLangText(Lang_Constants.TextType.B0219);
-        this._labelDeleteWatcher2.setLangText(Lang_Constants.TextType.B0219, languageType2);
-        this._labelContinueWar1.setLangText(Lang_Constants.TextType.B1382);
-        this._labelContinueWar2.setLangText(Lang_Constants.TextType.B1382, languageType2);
-        this._labelBack1.setLangText(Lang_Constants.TextType.B0146);
-        this._labelBack2.setLangText(Lang_Constants.TextType.B0146, languageType2);
+        this._labelMakeRequest1.setLangText(Lang_TextType.TextType.B0207);
+        this._labelMakeRequest2.setLangText(Lang_TextType.TextType.B0207, languageType2);
+        this._labelHandleRequest1.setLangText(Lang_TextType.TextType.B0208);
+        this._labelHandleRequest2.setLangText(Lang_TextType.TextType.B0208, languageType2);
+        this._labelDeleteWatcher1.setLangText(Lang_TextType.TextType.B0219);
+        this._labelDeleteWatcher2.setLangText(Lang_TextType.TextType.B0219, languageType2);
+        this._labelContinueWar1.setLangText(Lang_TextType.TextType.B1382);
+        this._labelContinueWar2.setLangText(Lang_TextType.TextType.B1382, languageType2);
+        this._labelBack1.setLangText(Lang_TextType.TextType.B0146);
+        this._labelBack2.setLangText(Lang_TextType.TextType.B0146, languageType2);
 
         this._layoutMakeRequest.arrangeItems();
         this._layoutHandleRequest.arrangeItems();

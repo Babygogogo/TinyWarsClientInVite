@@ -11,7 +11,7 @@ import {
     GamePanels_Dict,
     ValueAndComparators_Utils,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -206,13 +206,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldCon = action.getConUnitComparator();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.Comparator),
             availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
             currentNumber        : oldCon?.getComparator(),
             getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm    : sign => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
+                    getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0160),
                     currentValue : oldCon?.getValue() ?? 0,
                     minValue     : 0,
                     maxValue     : 10,
@@ -284,13 +284,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldCon = action.getConTileComparator();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.Comparator),
             availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
             currentNumber        : oldCon?.getComparator(),
             getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm    : sign => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
+                    getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0160),
                     currentValue : oldCon?.getValue() ?? 0,
                     minValue     : 0,
                     maxValue     : 10,
@@ -326,12 +326,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActFund();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Multiplier),
             minValue     : -WarEvents_Constants.Event.MaxMultiplier,
             maxValue     : WarEvents_Constants.Event.MaxMultiplier,
             currentValue : act?.getMultiplierPct() ?? 100,
             callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Offset),
                 minValue     : -WarEvents_Constants.Event.MaxOffset,
                 maxValue     : WarEvents_Constants.Event.MaxOffset,
                 currentValue : act?.getOffset() ?? 0,
@@ -387,12 +387,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActCoEnergy();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Multiplier),
             minValue     : -WarEvents_Constants.Event.MaxMultiplier,
             maxValue     : WarEvents_Constants.Event.MaxMultiplier,
             currentValue : act?.getMultiplierPct() ?? 100,
             callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Offset),
                 minValue     : -WarEvents_Constants.Event.MaxOffset,
                 maxValue     : WarEvents_Constants.Event.MaxOffset,
                 currentValue : act?.getOffset() ?? 0,
@@ -419,10 +419,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.PlayerAliveState),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.PlayerAliveState),
             availableNumberArray : [-1].concat(Players_Constants.AllAliveStateIdArray),
             currentNumber        : action.getActAliveState() ?? -1,
-            getNumberMainText    : num => num === -1 ? `(${Lang_Utils.getText(Lang_Constants.TextType.B0022)})` : (Lang_Utils.getPlayerAliveStateName(num) ?? Lang_Constants.UndefinedError),
+            getNumberMainText    : num => num === -1 ? `(${Lang_Utils.getText(Lang_TextType.TextType.B0022)})` : (Lang_Utils.getPlayerAliveStateName(num) ?? Lang_Constants.UndefinedError),
             callbackOnConfirm    : num => {
                 if (num === -1) {
                     action.setActAliveState(null);
@@ -458,10 +458,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.ActivatingCoSkillType),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.ActivatingCoSkillType),
             availableNumberArray : [-1].concat(CoSkills_Constants.AllSkillTypeIdArray),
             currentNumber        : action.getActCoUsingSkillType() ?? -1,
-            getNumberMainText    : num => num === -1 ? `(${Lang_Utils.getText(Lang_Constants.TextType.B0022)})` : (Lang_Utils.getCoSkillTypeName(num) ?? Lang_Constants.UndefinedError),
+            getNumberMainText    : num => num === -1 ? `(${Lang_Utils.getText(Lang_TextType.TextType.B0022)})` : (Lang_Utils.getCoSkillTypeName(num) ?? Lang_Constants.UndefinedError),
             callbackOnConfirm    : num => {
                 if (num === -1) {
                     action.setActCoUsingSkillType(null);
@@ -480,10 +480,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.TriggerCoSkillType),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.TriggerCoSkillType),
             availableNumberArray : [-1].concat(CoSkills_Constants.AllSkillTypeIdArray),
             currentNumber        : action.getActActivateCoSkillType() ?? -1,
-            getNumberMainText    : num => num === -1 ? `(${Lang_Utils.getText(Lang_Constants.TextType.B0022)})` : (Lang_Utils.getCoSkillTypeName(num) ?? Lang_Constants.UndefinedError),
+            getNumberMainText    : num => num === -1 ? `(${Lang_Utils.getText(Lang_TextType.TextType.B0022)})` : (Lang_Utils.getCoSkillTypeName(num) ?? Lang_Constants.UndefinedError),
             callbackOnConfirm    : num => {
                 if (num === -1) {
                     action.setActActivateCoSkillType(null);
@@ -503,22 +503,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
 
-        this._btnConPlayerFilter.setLangText(Lang_Constants.TextType.PlayerFilter);
-        this._btnConUnitFilter.setLangText(Lang_Constants.TextType.UnitFilter);
-        this._btnConUnitComparator.setLangText(Lang_Constants.TextType.Comparator);
-        this._btnConTileFilter.setLangText(Lang_Constants.TextType.TileFilter);
-        this._btnConTileComparator.setLangText(Lang_Constants.TextType.Comparator);
+        this._btnConPlayerFilter.setLangText(Lang_TextType.TextType.PlayerFilter);
+        this._btnConUnitFilter.setLangText(Lang_TextType.TextType.UnitFilter);
+        this._btnConUnitComparator.setLangText(Lang_TextType.TextType.Comparator);
+        this._btnConTileFilter.setLangText(Lang_TextType.TextType.TileFilter);
+        this._btnConTileComparator.setLangText(Lang_TextType.TextType.Comparator);
 
-        this._btnActFund.setLangText(Lang_Constants.TextType.Fund);
+        this._btnActFund.setLangText(Lang_TextType.TextType.Fund);
         this._btnActCoId.setText(`CO`);
-        this._btnActCoEnergy.setLangText(Lang_Constants.TextType.CoEnergy);
-        this._btnActAliveState.setLangText(Lang_Constants.TextType.PlayerAliveState);
-        this._btnActIsSkipTurn.setLangText(Lang_Constants.TextType.SkipATurn);
-        this._btnActCoUsingSkillType.setLangText(Lang_Constants.TextType.ActivatingCoSkillType);
-        this._btnActActivateCoSkillType.setLangText(Lang_Constants.TextType.TriggerCoSkillType);
+        this._btnActCoEnergy.setLangText(Lang_TextType.TextType.CoEnergy);
+        this._btnActAliveState.setLangText(Lang_TextType.TextType.PlayerAliveState);
+        this._btnActIsSkipTurn.setLangText(Lang_TextType.TextType.SkipATurn);
+        this._btnActCoUsingSkillType.setLangText(Lang_TextType.TextType.ActivatingCoSkillType);
+        this._btnActActivateCoSkillType.setLangText(Lang_TextType.TextType.TriggerCoSkillType);
 
         this._updateLabelDescAndLabelError();
 
@@ -547,18 +547,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Actions_Utils_Common.getDetailDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
     private _updateLabelConPlayerFilter(): void {
-        this._labelConPlayerFilter.setText(this._getAction()?.getConPlayerFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
+        this._labelConPlayerFilter.setText(this._getAction()?.getConPlayerFilter() == null ? `` : Lang_Utils.getText(Lang_TextType.TextType.B1408));
     }
 
     private _updateLabelConUnitFilter(): void {
-        this._labelConUnitFilter.setText(this._getAction()?.getConUnitFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
+        this._labelConUnitFilter.setText(this._getAction()?.getConUnitFilter() == null ? `` : Lang_Utils.getText(Lang_TextType.TextType.B1408));
     }
 
     private _updateLabelConUnitComparator(): void {
@@ -567,7 +567,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelConTileFilter(): void {
-        this._labelConTileFilter.setText(this._getAction()?.getConTileFilter() == null ? `` : Lang_Utils.getText(Lang_Constants.TextType.B1408));
+        this._labelConTileFilter.setText(this._getAction()?.getConTileFilter() == null ? `` : Lang_Utils.getText(Lang_TextType.TextType.B1408));
     }
 
     private _updateLabelConTileComparator(): void {

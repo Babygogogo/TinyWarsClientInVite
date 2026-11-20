@@ -1,15 +1,16 @@
 import {
-    GamePanels_Dict,
-    NormalMap_Model_NormalMapModel,
+    AuxiliaryTypes_WarFilter,
     GameConfigs_Provider,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Lang_Constants,
+    Lang_TextType,
     Lang_Utils,
+    NormalMap_Model_NormalMapModel,
+    Players_Constants,
+    Ui_Components_UiPanel,
     Users_Model,
     Wars_Constants,
-    GamePanels_Manager,
-    Players_Constants,
-    Lang_Constants,
-    Ui_Components_UiPanel,
-    AuxiliaryTypes_WarFilter,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
     type Ui_Interfaces_IUiImage,
@@ -104,7 +105,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.A0838)}\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0063)}`,
+            getContent : () => `${Lang_Utils.getText(Lang_TextType.TextType.A0838)}\n\n${Lang_Utils.getText(Lang_TextType.TextType.A0063)}`,
         });
     }
 
@@ -124,7 +125,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
             availableNormalMapIdArray : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
-            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
+            getTitleText              : () => Lang_Utils.getText(Lang_TextType.TextType.B0227),
             callback                  : normalMapId => {
                 filter.normalMapId = normalMapId;
                 this._updateLabelMapName();
@@ -172,7 +173,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnPlayersCount(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0229),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0229),
             minValue     : 2,
             maxValue     : Players_Constants.PlayerIndex.Max,
             currentValue : filter.playersCountUnneutral ?? 2,
@@ -190,7 +191,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnWarId(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0226),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0226),
             minValue     : 0,
             maxValue     : 999999999,
             currentValue : filter.warId ?? 0,
@@ -208,7 +209,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnWarName(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title        : Lang_Utils.getText(Lang_Constants.TextType.B0185),
+            title        : Lang_Utils.getText(Lang_TextType.TextType.B0185),
             charRestrict : null,
             canBeEmpty   : true,
             maxChars     : Wars_Constants.Misc.MaxNameLength,
@@ -230,16 +231,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0228);
-        this._labelMapNameTitle.setLangText(Lang_Constants.TextType.B0225);
-        this._labelPlayerNameTitle.setLangText(Lang_Constants.TextType.B0031);
-        this._labelPlayersCountTitle.setLangText(Lang_Constants.TextType.B0922);
-        this._labelCoNameTitle.setLangText(Lang_Constants.TextType.B0394);
-        this._labelWarIdTitle.setLangText(Lang_Constants.TextType.B0226);
-        this._labelWarNameTitle.setLangText(Lang_Constants.TextType.B0185);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0228);
+        this._labelMapNameTitle.setLangText(Lang_TextType.TextType.B0225);
+        this._labelPlayerNameTitle.setLangText(Lang_TextType.TextType.B0031);
+        this._labelPlayersCountTitle.setLangText(Lang_TextType.TextType.B0922);
+        this._labelCoNameTitle.setLangText(Lang_TextType.TextType.B0394);
+        this._labelWarIdTitle.setLangText(Lang_TextType.TextType.B0226);
+        this._labelWarNameTitle.setLangText(Lang_TextType.TextType.B0185);
 
-        this._btnReset.setLangText(Lang_Constants.TextType.B0567);
-        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
+        this._btnReset.setLangText(Lang_TextType.TextType.B0567);
+        this._btnSearch.setLangText(Lang_TextType.TextType.B0228);
     }
 
     private _updateComponentsForFilter(): void {

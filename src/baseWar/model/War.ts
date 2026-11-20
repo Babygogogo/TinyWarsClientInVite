@@ -13,7 +13,7 @@ import {
     FogMaps_FogMap,
     HalfwayReplayWar_Model_HrwWar,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
@@ -832,7 +832,7 @@ export abstract class War {
                 }
             }
             if (idleUnitsCount) {
-                hints.push(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0006, idleUnitsCount));
+                hints.push(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0006, idleUnitsCount));
             }
         }
 
@@ -875,7 +875,7 @@ export abstract class War {
             const textArrayForBuildings: string[] = [];
             for (const [tileType, gridIndexArray] of idleBuildingsDict) {
                 textArrayForBuildings.push(Lang_Utils.getFormattedText(
-                    Lang_Constants.TextType.F0007, gridIndexArray.length,
+                    Lang_TextType.TextType.F0007, gridIndexArray.length,
                     Lang_Utils.getTileName(tileType, gameConfig),
                     gridIndexArray.map(v => `(${v.getX()}, ${v.getY()})`).join(`, `)),
                 );
@@ -885,7 +885,7 @@ export abstract class War {
             }
         }
 
-        hints.push(Lang_Utils.getText(Lang_Constants.TextType.A0024));
+        hints.push(Lang_Utils.getText(Lang_TextType.TextType.A0024));
         return hints.join(`\n\n`);
     }
 

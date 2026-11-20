@@ -1,6 +1,6 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Player,
     Players_Utils_Filter,
@@ -28,9 +28,9 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0258,
-        Lang_Utils.getText(Lang_Constants.TextType.Tiles),
-        Lang_Utils.getText(Lang_Constants.TextType.Tiles),
+        Lang_TextType.TextType.F0258,
+        Lang_Utils.getText(Lang_TextType.TextType.Tiles),
+        Lang_Utils.getText(Lang_TextType.TextType.Tiles),
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetViewpointSimple>): string | null {
@@ -48,7 +48,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
@@ -56,20 +56,20 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_TextType.TextType.B1418 : Lang_TextType.TextType.B1419),
             )}`);
         }
     }
 
     if (!conTextArray.length) {
-        conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
+        conTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.A0944)}`);
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0259,
-        Lang_Utils.getText(Lang_Constants.TextType.Tiles),
+        Lang_TextType.TextType.F0259,
+        Lang_Utils.getText(Lang_TextType.TextType.Tiles),
         conTextArray.join(`\n`),
-        Lang_Utils.getText(Lang_Constants.TextType.Tiles),
+        Lang_Utils.getText(Lang_TextType.TextType.Tiles),
     );
 }
 
@@ -78,10 +78,10 @@ export function getErrorTip(data: WeaSetViewpointSimple, mapSize: AuxiliaryTypes
         const filter = data.getConUnitFilter();
         if (filter != null) {
             if (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
             }
         }
     }
@@ -90,7 +90,7 @@ export function getErrorTip(data: WeaSetViewpointSimple, mapSize: AuxiliaryTypes
         if ((filter != null)                                                                    &&
             (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerFilter));
         }
     }
     {
@@ -98,7 +98,7 @@ export function getErrorTip(data: WeaSetViewpointSimple, mapSize: AuxiliaryTypes
         if ((filter != null)                                                                            &&
             (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileFilter));
         }
     }
     {
@@ -106,7 +106,7 @@ export function getErrorTip(data: WeaSetViewpointSimple, mapSize: AuxiliaryTypes
         if ((comparator != null)                            &&
             (!ValueAndComparators_Utils.checkIsValid(comparator))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
         }
     }
 
@@ -124,7 +124,7 @@ export function getErrorTip(data: WeaSetViewpointSimple, mapSize: AuxiliaryTypes
             (act > WarEvents_Actions_Constants_SetViewpointSimple.Common.MaxInterval)    ||
             (act < WarEvents_Actions_Constants_SetViewpointSimple.Common.MinInterval)
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1035));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B1035));
         }
     }
 

@@ -8,7 +8,7 @@ import {
     Helpers_Compatibility,
     Helpers_Gzip,
     Helpers_PointerInput,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     LocalData_DeprecatedStorage,
     LocalData_Storage,
@@ -89,12 +89,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 LocalData_Storage.setShowExportMapCachePopup(false);
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B1470),
-                    getContent       : () => Lang_Utils.getText(Lang_Constants.TextType.A0971),
+                    getTitle         : () => Lang_Utils.getText(Lang_TextType.TextType.B1470),
+                    getContent       : () => Lang_Utils.getText(Lang_TextType.TextType.A0971),
                     callback         : () => openPanelForExportMapCache(),
                     callbackOnCancel : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B1470),
-                        getContent       : () => Lang_Utils.getText(Lang_Constants.TextType.A0972),
+                        getTitle         : () => Lang_Utils.getText(Lang_TextType.TextType.B1470),
+                        getContent       : () => Lang_Utils.getText(Lang_TextType.TextType.A0972),
                         callback         : () => openPanelForExportMapCache(),
                         callbackOnCancel : () => LocalData_Storage.setShowExportMapCachePopup(false),
                     }),
@@ -127,27 +127,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const inject = window.TW_APK_INJECT;
         if (inject == null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getContent : () => Lang_Utils.getText(Helpers_Compatibility.isPc ? Lang_Constants.TextType.A0416 : Lang_Constants.TextType.A0417),
+                getContent : () => Lang_Utils.getText(Helpers_Compatibility.isPc ? Lang_TextType.TextType.A0416 : Lang_TextType.TextType.A0417),
             });
         } else {
             let currentRotation: number | undefined;
             try {
                 currentRotation = inject.getScreenOrientation();
             } catch {
-                FloatText.showLang(Lang_Constants.TextType.A0840);
+                FloatText.showLang(Lang_TextType.TextType.A0840);
                 return;
             }
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0159),
+                getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B0159),
                 currentNumber        : currentRotation,
                 availableNumberArray : [0, 1, 2, 3],
                 getNumberMainText    : num => {
                     switch (num) {
-                        case 0  : return Lang_Utils.getText(Lang_Constants.TextType.B0377);
-                        case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0419);
-                        case 2  : return Lang_Utils.getText(Lang_Constants.TextType.B0591);
-                        case 3  : return Lang_Utils.getText(Lang_Constants.TextType.B0597);
+                        case 0  : return Lang_Utils.getText(Lang_TextType.TextType.B0377);
+                        case 1  : return Lang_Utils.getText(Lang_TextType.TextType.B0419);
+                        case 2  : return Lang_Utils.getText(Lang_TextType.TextType.B0591);
+                        case 3  : return Lang_Utils.getText(Lang_TextType.TextType.B0597);
                         default : return Lang_Constants.UndefinedError;
                     }
                 },
@@ -156,7 +156,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         LocalData_Storage.setScreenRotation(num);
                         inject.setScreenOrientation(num);
                     } catch {
-                        FloatText.showLang(Lang_Constants.TextType.A0841);
+                        FloatText.showLang(Lang_TextType.TextType.A0841);
                     }
                 },
             });
@@ -173,16 +173,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnGuest.setLangText(Lang_Constants.TextType.B0982);
-        this._btnLandscape.setLangText(Lang_Constants.TextType.B0159);
-        this._btnExportMapCache.setLangText(Lang_Constants.TextType.B1470);
-        this._btnVersion.setLangText(Lang_Constants.TextType.B0620);
-        this._btnSound.setLangText(Lang_Constants.TextType.B0540);
-        this._btnTutorial.setLangText(Lang_Constants.TextType.B0978);
-        this._labelWebGl.setLangText(Lang_Constants.TextType.A0736);
-        this._labelPrivacy.setLangText(Lang_Constants.TextType.A0733);
-        this._labelCopyright0.setLangText(Lang_Constants.TextType.A0734);
-        this._labelCopyright1.setLangText(Lang_Constants.TextType.A0735);
+        this._btnGuest.setLangText(Lang_TextType.TextType.B0982);
+        this._btnLandscape.setLangText(Lang_TextType.TextType.B0159);
+        this._btnExportMapCache.setLangText(Lang_TextType.TextType.B1470);
+        this._btnVersion.setLangText(Lang_TextType.TextType.B0620);
+        this._btnSound.setLangText(Lang_TextType.TextType.B0540);
+        this._btnTutorial.setLangText(Lang_TextType.TextType.B0978);
+        this._labelWebGl.setLangText(Lang_TextType.TextType.A0736);
+        this._labelPrivacy.setLangText(Lang_TextType.TextType.A0733);
+        this._labelCopyright0.setLangText(Lang_TextType.TextType.A0734);
+        this._labelCopyright1.setLangText(Lang_TextType.TextType.A0735);
         this._labelVersion.setText(`${Lang_Utils.getGameVersionName(window.GAME_VERSION)}\nv.${window.CLIENT_VERSION}`);
         this._groupCopyright1.arrangeItems();
         this._groupCopyright.arrangeItems();
@@ -365,7 +365,7 @@ async function checkHasMapCache(): Promise<boolean> {
 async function openPanelForExportMapCache(): Promise<void> {
     if (!await checkHasMapCache()) {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0976),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0976),
         });
         return;
     }
@@ -379,7 +379,7 @@ async function openPanelForExportMapCache(): Promise<void> {
         ]));
     } catch {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0974),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0974),
         });
         return;
     }
@@ -389,7 +389,7 @@ async function openPanelForExportMapCache(): Promise<void> {
     const mapEditor     = resultArray[2];
     if (campaignMap.length + normalMap.length + mapEditor.length === 0) {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0974),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0974),
         });
         return;
     }
@@ -419,13 +419,13 @@ async function openPanelForExportMapCache(): Promise<void> {
                 await navigator.clipboard.writeText(resultString);
             } catch {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0973),
+                    getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0973),
                 });
                 return;
             }
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0975),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0975),
             });
             LocalData_Storage.setShowExportMapCachePopup(false);
         };
@@ -436,9 +436,9 @@ async function openPanelForExportMapCache(): Promise<void> {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
-                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0026),
                 showButtonClose   : false,
                 callback          : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);

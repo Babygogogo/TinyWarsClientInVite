@@ -13,7 +13,7 @@ import {
     Sounds_SoundPlayer,
     Common_Model_CommonProxy,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     WarTypes_Constants,
@@ -121,19 +121,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelStdNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._labelStdRank.setLangText(Lang_Constants.TextType.B0904);
-        this._labelStdNickname.setLangText(Lang_Constants.TextType.B0175);
-        this._labelStdScore.setLangText(Lang_Constants.TextType.B0579);
-        this._labelStdWin.setLangText(Lang_Constants.TextType.B0550);
-        this._labelStdLose.setLangText(Lang_Constants.TextType.B0551);
-        this._labelStdDraw.setLangText(Lang_Constants.TextType.B0552);
-        this._labelStdWinRate.setLangText(Lang_Constants.TextType.B0553);
+        this._labelStdNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._labelStdRank.setLangText(Lang_TextType.TextType.B0904);
+        this._labelStdNickname.setLangText(Lang_TextType.TextType.B0175);
+        this._labelStdScore.setLangText(Lang_TextType.TextType.B0579);
+        this._labelStdWin.setLangText(Lang_TextType.TextType.B0550);
+        this._labelStdLose.setLangText(Lang_TextType.TextType.B0551);
+        this._labelStdDraw.setLangText(Lang_TextType.TextType.B0552);
+        this._labelStdWinRate.setLangText(Lang_TextType.TextType.B0553);
 
         this._updateLabelTitle();
     }
     private _updateLabelTitle(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1102)} (${Lang_Utils.getText(this._isStd ? Lang_Constants.TextType.B0548 : Lang_Constants.TextType.B0549)})`);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1102)} (${Lang_Utils.getText(this._isStd ? Lang_TextType.TextType.B0548 : Lang_TextType.TextType.B0549)})`);
     }
     private async _updateComponentsForListStd(): Promise<void> {
         const playersCount  = 2;

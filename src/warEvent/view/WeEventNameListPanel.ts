@@ -9,7 +9,7 @@ import {
     GamePanels_Manager,
     Helpers_Text,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -84,8 +84,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0931),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0320),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0931),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0320),
             callback   : () => {
                 const warEventFullData = openData.fullData;
                 warEventFullData.getActionArray().length = 0;
@@ -110,10 +110,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0188),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0188),
             callback   : () => {
                 const result = WarEvents_FullDatas_Utils.checkAndDeleteUnusedComponents(Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData()));
-                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0063, result.deletedNodesCount, result.deletedConditionsCount, result.deletedActionsCount));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0063, result.deletedNodesCount, result.deletedConditionsCount, result.deletedActionsCount));
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             },
         });
@@ -126,10 +126,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0461);
-        this._labelNoEvent.setLangText(Lang_Constants.TextType.B0278);
-        this._btnDeleteAll.setLangText(Lang_Constants.TextType.B0931);
-        this._btnDeleteRedundancy.setLangText(Lang_Constants.TextType.B0498);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0461);
+        this._labelNoEvent.setLangText(Lang_TextType.TextType.B0278);
+        this._btnDeleteAll.setLangText(Lang_TextType.TextType.B0931);
+        this._btnDeleteRedundancy.setLangText(Lang_TextType.TextType.B0498);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();
@@ -203,13 +203,13 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         }
 
         if (openData.war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
                 callback   : () => {
                     const newEventId = WarEvents_Events_Utils.cloneEvent(openData.fullData, openData.eventId, false);
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `E${newEventId}`));
 
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
@@ -223,13 +223,13 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         }
 
         if (openData.war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
                 callback   : () => {
                     const newEventId = WarEvents_Events_Utils.cloneEvent(openData.fullData, openData.eventId, true);
-                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0084, `E${newEventId}`));
 
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 },
@@ -252,12 +252,12 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         }
 
         if (openData.war.getIsReviewingMap()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             const eventId = openData.eventId;
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0479)} E${eventId}`,
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0935),
+                getTitle   : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0479)} E${eventId}`,
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0935),
                 callback   : () => {
                     const war           = openData.war;
                     const eventArray    = Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData()?.getEventArray());
@@ -278,15 +278,15 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDeepClone.setLangText(Lang_Constants.TextType.B0748);
-        this._btnShallowClone.setLangText(Lang_Constants.TextType.B0487);
-        this._btnSelect.setLangText(Lang_Constants.TextType.B0258);
-        this._btnDelete.setLangText(Lang_Constants.TextType.B0220);
+        this._btnDeepClone.setLangText(Lang_TextType.TextType.B0748);
+        this._btnShallowClone.setLangText(Lang_TextType.TextType.B0487);
+        this._btnSelect.setLangText(Lang_TextType.TextType.B0258);
+        this._btnDelete.setLangText(Lang_TextType.TextType.B0220);
 
         this._updateLabelDesc();
         this._labelDescTitle.setText([
-            Lang_Utils.getText(Lang_Constants.TextType.B0162),
-            Lang_Utils.getText(Lang_Constants.TextType.B0749),
+            Lang_Utils.getText(Lang_TextType.TextType.B0162),
+            Lang_Utils.getText(Lang_TextType.TextType.B0749),
         ].join(`\n`));
     }
 

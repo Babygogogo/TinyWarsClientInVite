@@ -9,7 +9,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -219,7 +219,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnConTileFilter(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0662),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0662),
         });
     }
     private _onTouchedGroupModifyConTileFilter(): void {
@@ -250,7 +250,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActDefenseAmount(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0662),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0662),
         });
     }
     private _onTouchedGroupModifyActDefenseAmount(): void {
@@ -281,7 +281,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActDefenseUnitTypeArray(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0662),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0662),
         });
     }
     private _onTouchedGroupModifyActDefenseUnitTypeArray(): void {
@@ -312,7 +312,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActMaxCapturePoint(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0687),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0687),
         });
     }
     private _onTouchedGroupModifyActMaxCapturePoint(): void {
@@ -343,7 +343,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActIsDefeatedOnCapture(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0688),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0688),
         });
     }
     private _onTouchedGroupModifyActIsDefeatedOnCapture(): void {
@@ -374,7 +374,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActRepairNormalized(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0689),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0689),
         });
     }
     private _onTouchedGroupModifyActRepairNormalizedHp(): void {
@@ -405,7 +405,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActRepairUnitTypeArray(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0690),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0690),
         });
     }
     private _onTouchedGroupModifyActRepairUnitTypeArray(): void {
@@ -436,7 +436,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActIncomePerTurn(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0691),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0691),
         });
     }
     private _onTouchedGroupModifyActIncomePerTurn(): void {
@@ -467,7 +467,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActVisionRange(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0692),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0692),
         });
     }
     private _onTouchedGroupModifyActVisionRange(): void {
@@ -498,7 +498,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActIsVisionEnabledForAllPlayers(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0693),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0693),
         });
     }
     private _onTouchedGroupModifyActIsVisionEnabledForAllPlayers(): void {
@@ -529,7 +529,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActHideUnitTypeArray(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0693),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0693),
         });
     }
     private _onTouchedGroupModifyActHideUnitTypeArray(): void {
@@ -560,7 +560,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActProduceUnitTypeArray(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0695),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0695),
         });
     }
     private _onTouchedGroupModifyActProduceUnitTypeArray(): void {
@@ -591,7 +591,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActGlobalAttackBonus(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0695),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0695),
         });
     }
     private _onTouchedGroupModifyActGlobalAttackBonus(): void {
@@ -622,7 +622,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActGlobalDefenseBonus(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0695),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0695),
         });
     }
     private _onTouchedGroupModifyActGlobalDefenseBonus(): void {
@@ -653,7 +653,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActUnitTypeArrayForCoBoard(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0698),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0698),
         });
     }
     private _onTouchedGroupModifyActUnitTypeArrayForCoBoard(): void {
@@ -684,7 +684,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActBlockEnemyUnitTypeArray(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0699),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0699),
         });
     }
     private _onTouchedGroupModifyActBlockEnemyUnitTypeArray(): void {
@@ -722,10 +722,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnIdentifier.setLangText(Lang_Constants.TextType.B0131);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnIdentifier.setLangText(Lang_TextType.TextType.B0131);
 
         this._btnConTileFilter.setText(WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ConTileFilter.getTitleText());
         this._btnActDefenseAmount.setText(WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActDefenseAmount.getTitleText());
@@ -757,7 +757,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Actions_Utils_Common.getBriefDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();

@@ -3,7 +3,7 @@ import {
     Utils_ClientErrorCode,
     Lang_Utils,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
 } from "../../../internal.ts";
@@ -16,7 +16,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0096,
+        Lang_TextType.TextType.F0096,
         Lang_Utils.getComparatorName(data.getEventsCountComparator()),
         data.getEventsCount(),
     );
@@ -31,8 +31,8 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         const eventIdArray = data.getEventIdArray();
         if (eventIdArray?.length) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
-                Lang_Constants.TextType.F0095,
-                eventIdArray.join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `),
+                Lang_TextType.TextType.F0095,
+                eventIdArray.join(` ${Lang_Utils.getText(Lang_TextType.TextType.Or)} `),
             )}`);
         }
     }
@@ -40,7 +40,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         const timesInTurn = data.getTimesInTurn();
         if (timesInTurn != null) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
-                Lang_Constants.TextType.F0094,
+                Lang_TextType.TextType.F0094,
                 Lang_Utils.getComparatorName(Helpers_Misc.getExisted(data.getTimesInTurnComparator())),
                 timesInTurn,
             )}`);
@@ -50,7 +50,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         const timesTotal = data.getTimesTotal();
         if (timesTotal != null) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
-                Lang_Constants.TextType.F0105,
+                Lang_TextType.TextType.F0105,
                 Lang_Utils.getComparatorName(Helpers_Misc.getExisted(data.getTimesTotalComparator())),
                 timesTotal,
             )}`);
@@ -58,12 +58,12 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0944));
+        subTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.A0944));
     }
 
     return [
         Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0104,
+            Lang_TextType.TextType.F0104,
             Lang_Utils.getComparatorName(data.getEventsCountComparator()),
             data.getEventsCount(),
         ),
@@ -72,31 +72,31 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
 }
 export function getErrorTip(data: WecEventCalledCount, fullData: WarEventFullData): string | null {
     if (data.getEventsCount() == null) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0788));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0788));
     }
 
     {
         const comparator = data.getEventsCountComparator();
         if ((comparator == null) || (!ValueAndComparators_Utils.checkIsValidValueComparatorId(comparator))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
         }
     }
 
     if (data.getEventIdArray()?.some(eventId => !fullData.getEventArray()?.some(v => eventId === v.getEventId()))) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0462));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0462));
     }
 
     {
         const comparator = data.getTimesTotalComparator();
         if ((comparator == null) || (!ValueAndComparators_Utils.checkIsValidValueComparatorId(comparator))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
         }
     }
 
     {
         const comparator = data.getTimesInTurnComparator();
         if ((comparator == null) || (!ValueAndComparators_Utils.checkIsValidValueComparatorId(comparator))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
         }
     }
 

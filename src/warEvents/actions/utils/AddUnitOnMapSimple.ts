@@ -3,7 +3,7 @@ import {
     AuxiliaryTypes_GridIndex,
     Helpers_Misc,
     Helpers_Team,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Constants,
     Units_Unit,
@@ -36,7 +36,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         for (const [unitType, count] of unitCountDict) {
             unitNameArray.push(`${Lang_Utils.getUnitName(unitType, gameConfig)} * ${count}`);
         }
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0059, unitNameArray.join(", "));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0059, unitNameArray.join(", "));
     }
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddUnitOnMapSimple>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
@@ -90,7 +90,7 @@ export function getErrorTip(data: WeaAddUnitOnMapSimple, war: BaseWar_Model_War.
     const unitArray     = data.getUnitArray();
     const unitsCount    = unitArray.length;
     if ((unitsCount <= 0) || (unitsCount > WarEvents_Actions_Constants_AddUnitOnMapSimple.Common.MaxCount)) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.A0191)} (${unitsCount} / ${WarEvents_Actions_Constants_AddUnitOnMapSimple.Common.MaxCount})`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.A0191)} (${unitsCount} / ${WarEvents_Actions_Constants_AddUnitOnMapSimple.Common.MaxCount})`;
     }
 
     const mapSize               = war.getTileMap().getMapSize();
@@ -108,7 +108,7 @@ export function getErrorTip(data: WeaAddUnitOnMapSimple, war: BaseWar_Model_War.
             }));
     };
     if (!unitArray.every(validator)) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0169);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0169);
     }
 
     return null;

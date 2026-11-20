@@ -18,7 +18,7 @@ import {
     TileObjects_Utils,
     Players_Constants,
     Geometries_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type MapEditor_Model_MeTypes,
     type Egret_Egret,
     type MapEditor_Interface_IMeDrawer,
@@ -303,7 +303,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             }
         }
 
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0159, adjustCount));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0159, adjustCount));
     }
     public autoAdjustBeaches(): void {
         const war           = this._getWar();
@@ -327,7 +327,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             }
         }
 
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0159, adjustCount));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0159, adjustCount));
     }
     public autoAdjustSeas(): void {
         const war           = this._getWar();
@@ -351,7 +351,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             }
         }
 
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0159, adjustCount));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0159, adjustCount));
     }
     public autoAdjustRoads(connectTileTypeArray: number[]): void {
         this._roadConnectTileTypeArray.length = 0;
@@ -377,7 +377,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             }
         }
 
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0159, adjustCount));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0159, adjustCount));
     }
     public autoAdjustBridges(connectTileTypeArray: number[]): void {
         this._bridgeConnectTileTypeArray.length = 0;
@@ -403,7 +403,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             }
         }
 
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0159, adjustCount));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0159, adjustCount));
     }
     public autoAdjustPlasmas(): void {
         const war           = this._getWar();
@@ -426,7 +426,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             }
         }
 
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0159, adjustCount));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0159, adjustCount));
     }
     public autoAdjustPipes(): void {
         const war           = this._getWar();
@@ -449,7 +449,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             }
         }
 
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0159, adjustCount));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0159, adjustCount));
     }
     public autoFillTileDecorations(): void {
         const war           = this._getWar();
@@ -472,7 +472,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
             }
         }
 
-        FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0159, adjustCount));
+        FloatText.show(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0159, adjustCount));
     }
 
     private _handleAction(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
@@ -1094,14 +1094,14 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
     public loadNextCheckpoint(): void {
         const arr = this._checkpointArray;
         if (this._currentCheckpointIndex >= arr.length - 1) {
-            FloatText.showLang(Lang_Constants.TextType.A0319);
+            FloatText.showLang(Lang_TextType.TextType.A0319);
         } else {
             this._loadCheckpoint(arr[++this._currentCheckpointIndex]);
         }
     }
     public loadPreviousCheckpoint(): void {
         if (this._currentCheckpointIndex <= 0) {
-            FloatText.showLang(Lang_Constants.TextType.A0319);
+            FloatText.showLang(Lang_TextType.TextType.A0319);
         } else {
             const arr = this._checkpointArray;
             if (this._currentCheckpointIndex < arr.length) {

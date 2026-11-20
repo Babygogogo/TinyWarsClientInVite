@@ -2,7 +2,7 @@ import {
     GamePanels_Dict,
     Lang_Utils,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
     type Ui_Interfaces_IUiButton,
@@ -58,12 +58,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0004),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0004),
         });
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0140);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0140);
     }
     private async _updateUiCoInfo(): Promise<void> {
         const openData = this.getOpenData();

@@ -1,7 +1,7 @@
 import {
     GameConfigs_GameConfig,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Constants,
     TileBases_Utils,
@@ -89,7 +89,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.TileBase);
+        this._labelTitle.setLangText(Lang_TextType.TextType.TileBase);
     }
 
     private _createDataForListTileBase(): DataForTileBaseRenderer[] {

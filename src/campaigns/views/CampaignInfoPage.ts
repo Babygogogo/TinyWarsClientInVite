@@ -7,7 +7,7 @@ import {
     Ui_Utils_UiSkinHelpers,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiHorizontalAlign,
     Ui_Components_UiOpenableComponent,
     Ui_Types_UiVerticalAlign,
@@ -81,7 +81,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : designerIdArray[0] });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0163),
+                getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B0163),
                 availableNumberArray : designerIdArray,
                 currentNumber        : null,
                 columnsCount         : 2,
@@ -94,7 +94,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
     private async _onTouchedBtnLink(): Promise<void> {
         if ((!window) || (!window.open)) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -106,7 +106,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         const extraLink = (await Campaigns_Mains_Provider.getCampaignInfo(campaignId))?.getExtraLink() ?? ``;
         if (extraLink.length) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0269, extraLink),
+                getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0269, extraLink),
                 callback   : () => window.open(extraLink),
             });
         }
@@ -118,8 +118,8 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDesigner.setLangText(Lang_Constants.TextType.B0163);
-        this._btnLink.setLangText(Lang_Constants.TextType.B1481);
+        this._btnDesigner.setLangText(Lang_TextType.TextType.B0163);
+        this._btnLink.setLangText(Lang_TextType.TextType.B1481);
         this._updateLabelDesc();
     }
 

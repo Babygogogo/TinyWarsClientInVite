@@ -7,7 +7,7 @@ import {
     Sounds_SoundPlayer,
     GamePanels_Manager,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiInputEventType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
@@ -93,7 +93,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0820),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0820),
         });
     }
     private _onTouchedBtnClose(): void {
@@ -142,9 +142,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0541);
-        this._labelOngoingTitle.setLangText(Lang_Constants.TextType.B1281);
-        this._inputFilter.setPromptText(Lang_Utils.getText(Lang_Constants.TextType.B0132));
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0541);
+        this._labelOngoingTitle.setLangText(Lang_TextType.TextType.B1281);
+        this._inputFilter.setPromptText(Lang_Utils.getText(Lang_TextType.TextType.B0132));
         this._updateLabelOngoing();
     }
 

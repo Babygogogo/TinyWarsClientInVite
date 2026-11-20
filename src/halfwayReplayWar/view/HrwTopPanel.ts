@@ -12,7 +12,7 @@ import {
     HalfwayReplayWar_Model_HrwWar,
     Helpers_ImageSource,
     Keyboard_KbTypes,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     LocalData_Storage,
     Notifications_Dispatcher,
@@ -226,7 +226,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.Weather),
             getContent : () => war.getWeatherManager().getDesc() ?? Lang_Constants.UndefinedError,
         });
     }
@@ -249,7 +249,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if ((war.getIsAutoReplay()) || (war.getIsExecutingAction())) {
-            FloatText.showLang(Lang_Constants.TextType.A0412);
+            FloatText.showLang(Lang_TextType.TextType.A0412);
             return;
         }
 
@@ -302,9 +302,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (!war.getIsRunning()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0044));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwReplayProgressPanel, { war : war });
         }
@@ -330,13 +330,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0044));
         } else if (war.checkIsInBeginning()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0042));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0042));
         } else if (war.getIsTickingReplay()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             await Timer_TimerModel.checkAndCallLater();
             await war.loadPreviousAction();
@@ -352,13 +352,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0044));
         } else if (war.checkIsInBeginning()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0042));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0042));
         } else if (war.getIsTickingReplay()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             await Timer_TimerModel.checkAndCallLater();
             await war.loadPreviousCheckpoint();
@@ -374,13 +374,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0044));
         } else if (war.checkIsInBeginning()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0042));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0042));
         } else if (war.getIsTickingReplay()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             await Timer_TimerModel.checkAndCallLater();
             await war.loadCheckpoint(0);
@@ -396,13 +396,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0044));
         } else if (war.checkIsInEnd()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0043));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0043));
         } else if (war.getIsTickingReplay()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             await Timer_TimerModel.checkAndCallLater();
             await war.loadNextAction();
@@ -418,13 +418,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0044));
         } else if (war.checkIsInEnd()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0043));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0043));
         } else if (war.getIsTickingReplay()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             await Timer_TimerModel.checkAndCallLater();
             await war.loadNextCheckpoint();
@@ -440,19 +440,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0044));
         } else if (war.checkIsInEnd()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0043));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0043));
         } else if (war.getIsTickingReplay()) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         } else {
             await Timer_TimerModel.checkAndCallLater();
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
-                title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
-                content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
+                title   : Lang_Utils.getText(Lang_TextType.TextType.B0088),
+                content : Lang_Utils.getText(Lang_TextType.TextType.A0040),
             });
             await war.loadCheckpoint(war.getAllCheckpointInfoArray().length - 1);
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
@@ -468,7 +468,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (war.checkIsInEnd()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0041));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0041));
         } else {
             war.setIsAutoReplay(true);
         }
@@ -483,7 +483,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (war.checkIsInEnd()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0041));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0041));
         } else {
             war.setIsAutoReplay(true);
             war.setIsAutoReplay(false);
@@ -595,16 +595,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTurnTitle.setLangText(Lang_Constants.TextType.Turns);
-        this._labelActionTitle.setLangText(Lang_Constants.TextType.B0090);
-        this._labelPauseTimeTitle.setLangText(Lang_Constants.TextType.B0846);
-        this._labelVisionTeamTitle.setLangText(Lang_Constants.TextType.B0891);
-        this._btnRewindAction.setLangText(Lang_Constants.TextType.B0616);
-        this._btnRewindTurn.setLangText(Lang_Constants.TextType.B0191);
-        this._btnForwardTurn.setLangText(Lang_Constants.TextType.B0191);
-        this._btnForwardAction.setLangText(Lang_Constants.TextType.B0616);
-        this._btnInfo.setLangText(Lang_Constants.TextType.B0223);
-        this._btnMenu.setLangText(Lang_Constants.TextType.B0155);
+        this._labelTurnTitle.setLangText(Lang_TextType.TextType.Turns);
+        this._labelActionTitle.setLangText(Lang_TextType.TextType.B0090);
+        this._labelPauseTimeTitle.setLangText(Lang_TextType.TextType.B0846);
+        this._labelVisionTeamTitle.setLangText(Lang_TextType.TextType.B0891);
+        this._btnRewindAction.setLangText(Lang_TextType.TextType.B0616);
+        this._btnRewindTurn.setLangText(Lang_TextType.TextType.B0191);
+        this._btnForwardTurn.setLangText(Lang_TextType.TextType.B0191);
+        this._btnForwardAction.setLangText(Lang_TextType.TextType.B0616);
+        this._btnInfo.setLangText(Lang_TextType.TextType.B0223);
+        this._btnMenu.setLangText(Lang_TextType.TextType.B0155);
 
         this._layoutPauseTime.arrangeItems();
         this._layoutVisionTeam.arrangeItems();
@@ -631,7 +631,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelPauseTime(): void {
-        this._labelPauseTime.setText(`${LocalData_Storage.getReplayPauseTime()}${Lang_Utils.getText(Lang_Constants.TextType.B1290)}`);
+        this._labelPauseTime.setText(`${LocalData_Storage.getReplayPauseTime()}${Lang_Utils.getText(Lang_TextType.TextType.B1290)}`);
         this._layoutPauseTime.arrangeItems();
     }
 
@@ -639,7 +639,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const teamIndex = this.getOpenData()?.war.getVisionTeamIndex();
         const label     = this._labelVisionTeam;
         if (teamIndex == null) {
-            label.setLangText(Lang_Constants.TextType.B0890);
+            label.setLangText(Lang_TextType.TextType.B0890);
         } else {
             label.setText((Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError));
         }
@@ -782,7 +782,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         const labelNickname = this._labelNickname;
         if (userId == null) {
-            labelNickname.setLangText(Lang_Constants.TextType.B0607);
+            labelNickname.setLangText(Lang_TextType.TextType.B0607);
         } else {
             labelNickname.setText((await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError));
         }

@@ -10,7 +10,7 @@ import {
     ExpressionParsers_Utils,
     FogMaps_FogMap,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Numbers_Utils,
     Utils_ClientErrorCode,
 } from "../../internal.ts";
@@ -24,7 +24,7 @@ export class Fog extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Variables    = Fog.generateVariables();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(Fog.VnWar,         { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War, isExtension : false });
+        variables.set(Fog.VnWar,         { desc : Lang_TextType.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War, isExtension : false });
 
         return variables;
     }
@@ -33,7 +33,7 @@ export class Fog extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Fog.FnEnabled,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0457,
+                Lang_TextType.TextType.A0457,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(

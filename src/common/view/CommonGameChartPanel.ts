@@ -3,7 +3,7 @@ import {
     GamePanels_Dict,
     GameConfigs_Provider,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -121,20 +121,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0900);
-        this._labelLeaderboard.setLangText(Lang_Constants.TextType.B0436);
-        this._labelNumerical.setLangText(Lang_Constants.TextType.B0840);
-        this._labelMisc.setLangText(Lang_Constants.TextType.B1279);
-        this._btnLbMrw.setLangText(Lang_Constants.TextType.B0404);
-        this._btnLbSpmOverall.setLangText(Lang_Constants.TextType.B0614);
-        this._btnUnit.setLangText(Lang_Constants.TextType.Units);
-        this._btnTile.setLangText(Lang_Constants.TextType.B0899);
-        this._btnCo.setLangText(Lang_Constants.TextType.B0425);
-        this._btnCoStatistics.setLangText(Lang_Constants.TextType.B1076);
-        this._btnTutorial.setLangText(Lang_Constants.TextType.B0978);
-        this._btnOnlineUsers.setLangText(Lang_Constants.TextType.B0151);
-        this._btnChangeLog.setLangText(Lang_Constants.TextType.B0457);
-        this._btnServerStatus.setLangText(Lang_Constants.TextType.B0327);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0900);
+        this._labelLeaderboard.setLangText(Lang_TextType.TextType.B0436);
+        this._labelNumerical.setLangText(Lang_TextType.TextType.B0840);
+        this._labelMisc.setLangText(Lang_TextType.TextType.B1279);
+        this._btnLbMrw.setLangText(Lang_TextType.TextType.B0404);
+        this._btnLbSpmOverall.setLangText(Lang_TextType.TextType.B0614);
+        this._btnUnit.setLangText(Lang_TextType.TextType.Units);
+        this._btnTile.setLangText(Lang_TextType.TextType.B0899);
+        this._btnCo.setLangText(Lang_TextType.TextType.B0425);
+        this._btnCoStatistics.setLangText(Lang_TextType.TextType.B1076);
+        this._btnTutorial.setLangText(Lang_TextType.TextType.B0978);
+        this._btnOnlineUsers.setLangText(Lang_TextType.TextType.B0151);
+        this._btnChangeLog.setLangText(Lang_TextType.TextType.B0457);
+        this._btnServerStatus.setLangText(Lang_TextType.TextType.B0327);
 
         this._layoutLeaderboard.arrangeItems();
         this._layoutNumerical.arrangeItems();

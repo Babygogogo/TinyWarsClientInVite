@@ -8,7 +8,7 @@ import {
     Helpers_Misc,
     Lang_Utils,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -70,9 +70,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0258);
-        this._labelNoCondition.setLangText(Lang_Constants.TextType.B0278);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0258);
+        this._labelNoCondition.setLangText(Lang_TextType.TextType.B0278);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();
@@ -147,7 +147,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeConditionReplacePanel);
         } else {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         }
     }
     private _onTouchedBtnSelect(): void {        // DONE
@@ -166,7 +166,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeConditionReplacePanel);
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeCommandPanel);
         } else {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
         }
     }
     private _onNotifyLanguageChanged(): void {        // DONE
@@ -174,8 +174,8 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCopy.setLangText(Lang_Constants.TextType.B0487);
-        this._btnSelect.setLangText(Lang_Constants.TextType.B0492);
+        this._btnCopy.setLangText(Lang_TextType.TextType.B0487);
+        this._btnSelect.setLangText(Lang_TextType.TextType.B0492);
 
         this._updateLabelConditionId();
         this._updateLabelCondition();
@@ -189,7 +189,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 
         const conditionId   = openData.candidateConditionId;
         const nodeNameArray = openData.fullData.getConditionNodeArray().filter(node => node.getConditionIdAndFlagsArray().some(v => v.getConditionId() === conditionId)).map(v => `N${v.getNodeId()}`);
-        this._labelConditionId.setText(`C${conditionId} (${Lang_Utils.getText(Lang_Constants.TextType.B0749)}: ${nodeNameArray?.length ? nodeNameArray.join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.None)})`);
+        this._labelConditionId.setText(`C${conditionId} (${Lang_Utils.getText(Lang_TextType.TextType.B0749)}: ${nodeNameArray?.length ? nodeNameArray.join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.None)})`);
     }
     private _updateLabelCondition(): void {
         const openData = this.getOpenData();
@@ -200,7 +200,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         const condition = openData.fullData.getConditionArray().find(v => v.getWecCommonData()?.getConditionId() === openData.candidateConditionId);
         const label     = this._labelCondition;
         if (condition == null) {
-            label.setLangText(Lang_Constants.TextType.A0160);
+            label.setLangText(Lang_TextType.TextType.A0160);
         } else {
             label.setText(WarEvents_Conditions_Utils_Common.getBriefDescForCondition(condition, openData.gameConfig) || Lang_Constants.UndefinedError);
         }

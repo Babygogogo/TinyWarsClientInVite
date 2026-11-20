@@ -14,7 +14,7 @@ import {
     ExpressionParsers_Results_Position,
     ExpressionParsers_Results_War,
     Units_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Results_Tile,
     ExpressionParsers_Contexts_War,
     type ExpressionParsers_Types,
@@ -70,31 +70,31 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = Unit.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(Unit.VnX,                { desc : Lang_Constants.TextType.A0186, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnY,                { desc : Lang_Constants.TextType.A0200, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnPos,              { desc : Lang_Constants.TextType.A0577, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnPlayerIndex,      { desc : Lang_Constants.TextType.A0202, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnTeamIndex,        { desc : Lang_Constants.TextType.A0203, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnType,             { desc : Lang_Constants.TextType.A0204, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnId,               { desc : Lang_Constants.TextType.A0213, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnCustomNameId,     { desc : Lang_Constants.TextType.A0959, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnLoader,           { desc : Lang_Constants.TextType.A0471, resultType : ExpressionParsers_Enums.ResultType.Unit,          isExtension : false });
-        variables.set(Unit.VnLoaderId,         { desc : Lang_Constants.TextType.A0214, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnActionState,      { desc : Lang_Constants.TextType.A0229, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnCoOnboard,        { desc : Lang_Constants.TextType.A0234, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnCapturing,        { desc : Lang_Constants.TextType.A0236, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnBuilding,         { desc : Lang_Constants.TextType.A0255, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnDived,            { desc : Lang_Constants.TextType.A0256, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnTags,             { desc : Lang_Constants.TextType.A0709, resultType : ExpressionParsers_Enums.ResultType.NumberArray,   isExtension : false });
-        variables.set(Unit.VnAiMode,           { desc : Lang_Constants.TextType.A0307, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnMoveType,         { desc : Lang_Constants.TextType.A0927, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnInCoZone,         { desc : Lang_Constants.TextType.A0710, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnPlayer,           { desc : Lang_Constants.TextType.A0464, resultType : ExpressionParsers_Enums.ResultType.Player,        isExtension : false });
-        variables.set(Unit.VnTile,             { desc : Lang_Constants.TextType.A0462, resultType : ExpressionParsers_Enums.ResultType.Tile,          isExtension : false });
-        variables.set(Unit.VnExist,            { desc : Lang_Constants.TextType.A0463, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnVisionRange,      { desc : Lang_Constants.TextType.A0775, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnVisionRange0,     { desc : Lang_Constants.TextType.A0776, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
-        variables.set(Unit.VnWar,              { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,           isExtension : false });
+        variables.set(Unit.VnX,                { desc : Lang_TextType.TextType.A0186, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnY,                { desc : Lang_TextType.TextType.A0200, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnPos,              { desc : Lang_TextType.TextType.A0577, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnPlayerIndex,      { desc : Lang_TextType.TextType.A0202, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnTeamIndex,        { desc : Lang_TextType.TextType.A0203, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnType,             { desc : Lang_TextType.TextType.A0204, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnId,               { desc : Lang_TextType.TextType.A0213, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnCustomNameId,     { desc : Lang_TextType.TextType.A0959, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnLoader,           { desc : Lang_TextType.TextType.A0471, resultType : ExpressionParsers_Enums.ResultType.Unit,          isExtension : false });
+        variables.set(Unit.VnLoaderId,         { desc : Lang_TextType.TextType.A0214, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnActionState,      { desc : Lang_TextType.TextType.A0229, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnCoOnboard,        { desc : Lang_TextType.TextType.A0234, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnCapturing,        { desc : Lang_TextType.TextType.A0236, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnBuilding,         { desc : Lang_TextType.TextType.A0255, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnDived,            { desc : Lang_TextType.TextType.A0256, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnTags,             { desc : Lang_TextType.TextType.A0709, resultType : ExpressionParsers_Enums.ResultType.NumberArray,   isExtension : false });
+        variables.set(Unit.VnAiMode,           { desc : Lang_TextType.TextType.A0307, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnMoveType,         { desc : Lang_TextType.TextType.A0927, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnInCoZone,         { desc : Lang_TextType.TextType.A0710, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnPlayer,           { desc : Lang_TextType.TextType.A0464, resultType : ExpressionParsers_Enums.ResultType.Player,        isExtension : false });
+        variables.set(Unit.VnTile,             { desc : Lang_TextType.TextType.A0462, resultType : ExpressionParsers_Enums.ResultType.Tile,          isExtension : false });
+        variables.set(Unit.VnExist,            { desc : Lang_TextType.TextType.A0463, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnVisionRange,      { desc : Lang_TextType.TextType.A0775, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnVisionRange0,     { desc : Lang_TextType.TextType.A0776, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(Unit.VnWar,              { desc : Lang_TextType.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,           isExtension : false });
 
         return variables;
     }
@@ -103,7 +103,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnHp,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0215,
+                Lang_TextType.TextType.A0215,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -129,7 +129,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnFuel,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0216,
+                Lang_TextType.TextType.A0216,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -155,7 +155,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnMovement,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0554,
+                Lang_TextType.TextType.A0554,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -181,7 +181,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnPromotion,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0223,
+                Lang_TextType.TextType.A0223,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -207,7 +207,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnCost,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0472,
+                Lang_TextType.TextType.A0472,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -233,7 +233,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnPrimaryAmmo,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0257,
+                Lang_TextType.TextType.A0257,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -259,7 +259,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnFlareAmmo,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0260,
+                Lang_TextType.TextType.A0260,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -285,7 +285,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnBuildMaterial,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0261,
+                Lang_TextType.TextType.A0261,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -311,7 +311,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnProduceMaterial,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0287,
+                Lang_TextType.TextType.A0287,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -337,7 +337,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnLoadedUnitsCount,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0310,
+                Lang_TextType.TextType.A0310,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -363,7 +363,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnHasTag,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0335,
+                Lang_TextType.TextType.A0335,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -389,7 +389,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnHasProhibitedLocation,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0366,
+                Lang_TextType.TextType.A0366,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -415,7 +415,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnInLocation,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0473,
+                Lang_TextType.TextType.A0473,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -441,7 +441,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnDistanceToGrid,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0381,
+                Lang_TextType.TextType.A0381,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
@@ -469,7 +469,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnDistanceToLocation,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0382,
+                Lang_TextType.TextType.A0382,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -495,7 +495,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             Unit.FnDistanceToCoUnit,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0771,
+                Lang_TextType.TextType.A0771,
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 0) {

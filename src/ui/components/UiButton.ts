@@ -1,17 +1,18 @@
 import {
-    Ui_Utils_UiHelpers,
     Graphics_Constants,
-    Ui_Utils_UiSkinHelpers,
-    Lang_Utils,
     Helpers_PointerInput,
-    Sounds_SoundPlayer,
+    Lang_Utils,
     Sounds_Constants,
+    Sounds_SoundPlayer,
     Ui_Components_UiContainer,
     Ui_Types_UiSkinState,
+    Ui_Utils_UiHelpers,
+    Ui_Utils_UiSkinHelpers,
+    type Lang_Constants,
+    type Lang_TextType,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiImage,
     type Ui_Interfaces_IUiLabel,
-    type Lang_Constants,
     type Ui_Types_UiSkinAttrs,
 } from "../../internal.ts";
 
@@ -107,14 +108,14 @@ export class UiButton extends Ui_Components_UiContainer.UiContainer implements U
     public setText(text: string): void {
         this._labelDisplay?.setText(text);
     }
-    public setLangText(langTextType: Lang_Constants.TextType, languageType?: Lang_Constants.LanguageType): void {
+    public setLangText(langTextType: Lang_TextType.TextType, languageType?: Lang_Constants.LanguageType): void {
         this.setText(Lang_Utils.getText(langTextType, languageType));
     }
 
     public setExtraText(text: string): void {
         this._labelExtra?.setText(text);
     }
-    public setExtraLangText(langTextType: Lang_Constants.TextType, languageType?: Lang_Constants.LanguageType): void {
+    public setExtraLangText(langTextType: Lang_TextType.TextType, languageType?: Lang_Constants.LanguageType): void {
         this.setExtraText(Lang_Utils.getText(langTextType, languageType));
     }
 

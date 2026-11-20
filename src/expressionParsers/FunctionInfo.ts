@@ -1,16 +1,16 @@
 import {
     ExpressionParsers_Enums,
     type ExpressionParsers_Nodes_Base,
-    type Lang_Constants,
+    type Lang_TextType,
 } from "../internal.ts";
 
 type FunctionResultTypeGetter = (argArray: ExpressionParsers_Nodes_Base.Base[], contextType: ExpressionParsers_Enums.ContextType, lambdaArgumentInfoDict: Map<string, ExpressionParsers_Enums.ResultType> | null, localVariableDict: Map<string, ExpressionParsers_Enums.ResultType> | null, customCounterNameSet: Set<string>) => ExpressionParsers_Enums.ResultType;
 export class FunctionInfo {
-    public readonly desc            : Lang_Constants.TextType;
+    public readonly desc            : Lang_TextType.TextType;
     public readonly getResultType   : FunctionResultTypeGetter;
     public readonly isExtension     : boolean;
 
-    public constructor(desc: Lang_Constants.TextType, getResultType: FunctionResultTypeGetter, isExtension = false) {
+    public constructor(desc: Lang_TextType.TextType, getResultType: FunctionResultTypeGetter, isExtension = false) {
         this.desc           = desc;
         this.getResultType  = getResultType;
         this.isExtension    = isExtension;

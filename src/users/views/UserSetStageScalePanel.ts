@@ -7,7 +7,7 @@ import {
     Stages_Constants,
     LocalData_Storage,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Egret_Egret,
     type Ui_Interfaces_IUiButton,
@@ -115,11 +115,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0558);
-        this._labelScaleTitle.setLangText(Lang_Constants.TextType.B0559);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnDefault.setLangText(Lang_Constants.TextType.B0543);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0558);
+        this._labelScaleTitle.setLangText(Lang_TextType.TextType.B0559);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnDefault.setLangText(Lang_TextType.TextType.B0543);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0154);
 
         this._layoutContent.arrangeItems();
     }

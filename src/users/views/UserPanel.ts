@@ -10,7 +10,7 @@ import {
     Sounds_SoundPlayer,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiLayoutBase,
     Ui_Components_UiPanel,
     AuxiliaryTypes_AuxiliaryTypes,
@@ -151,13 +151,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         if (navigator?.clipboard?.writeText == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0275));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0275));
         } else {
             try {
                 navigator.clipboard.writeText(nickname);
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0839));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0839));
             } catch {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0275));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0275));
             }
         }
     }
@@ -356,23 +356,23 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelStdRank.setLangText(Lang_Constants.TextType.B1328);
-        this._labelStdRankScoreTitle.setLangText(Lang_Constants.TextType.B0060);
-        this._labelStdGamesTitle.setLangText(Lang_Constants.TextType.B0252);
+        this._labelStdRank.setLangText(Lang_TextType.TextType.B1328);
+        this._labelStdRankScoreTitle.setLangText(Lang_TextType.TextType.B0060);
+        this._labelStdGamesTitle.setLangText(Lang_TextType.TextType.B0252);
 
-        this._labelFogRank.setLangText(Lang_Constants.TextType.B1329);
-        this._labelFogRankScoreTitle.setLangText(Lang_Constants.TextType.B0060);
-        this._labelFogGamesTitle.setLangText(Lang_Constants.TextType.B0252);
+        this._labelFogRank.setLangText(Lang_TextType.TextType.B1329);
+        this._labelFogRankScoreTitle.setLangText(Lang_TextType.TextType.B0060);
+        this._labelFogGamesTitle.setLangText(Lang_TextType.TextType.B0252);
 
-        this._labelSpmRankScoreTitle.setLangText(Lang_Constants.TextType.B0819);
-        this._labelUserIdTitle.setLangText(Lang_Constants.TextType.B0640);
-        this._labelRegisterTimeTitle.setLangText(Lang_Constants.TextType.B0194);
-        this._labelLastLoginTimeTitle.setLangText(Lang_Constants.TextType.B0195);
-        this._labelOnlineTimeTitle.setLangText(Lang_Constants.TextType.B0196);
-        this._labelLoginCountTitle.setLangText(Lang_Constants.TextType.B0197);
-        this._labelLastActivityTimeTitle.setLangText(Lang_Constants.TextType.B0917);
-        this._btnSetProfile.setLangText(Lang_Constants.TextType.B0560);
-        this._labelSpmRank.setLangText(Lang_Constants.TextType.B0614);
+        this._labelSpmRankScoreTitle.setLangText(Lang_TextType.TextType.B0819);
+        this._labelUserIdTitle.setLangText(Lang_TextType.TextType.B0640);
+        this._labelRegisterTimeTitle.setLangText(Lang_TextType.TextType.B0194);
+        this._labelLastLoginTimeTitle.setLangText(Lang_TextType.TextType.B0195);
+        this._labelOnlineTimeTitle.setLangText(Lang_TextType.TextType.B0196);
+        this._labelLoginCountTitle.setLangText(Lang_TextType.TextType.B0197);
+        this._labelLastActivityTimeTitle.setLangText(Lang_TextType.TextType.B0917);
+        this._btnSetProfile.setLangText(Lang_TextType.TextType.B0560);
+        this._labelSpmRank.setLangText(Lang_TextType.TextType.B0614);
 
         this._updateLabelTitle();
         this._updateComponentsForMultiPlayerStd();
@@ -387,7 +387,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const nickname = await Users_Model.getUserNickname(userId);
-        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0009, nickname));
+        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0009, nickname));
     }
     private async _updateComponentsForMultiPlayerStd(): Promise<void> {
         const userId = this.getOpenData()?.userId;
@@ -400,7 +400,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const score         = rawScore != null ? rawScore : MultiRankedWars_Constants.Common.InitialScore;
         // const rankName   = `(${Lang.getRankName(score, await GameConfig.GameConfigurationManager.getLatestGameConfig()) ?? Lang.ErrorTextForUndefined})`;
         const rankIndex     = await Leaderboard_Model_LeaderboardModel.getMrwRankIndex(WarTypes_Constants.WarTypeId.MrwStd, userId);
-        const textForRank   = rankIndex == null ? Lang_Utils.getText(Lang_Constants.TextType.B0435) : `${rankIndex}${Helpers_Text.getSuffixForRankIndex(rankIndex)}`;
+        const textForRank   = rankIndex == null ? Lang_Utils.getText(Lang_TextType.TextType.B0435) : `${rankIndex}${Helpers_Text.getSuffixForRankIndex(rankIndex)}`;
         this._labelStdRankScore.setText(`${score} (${textForRank})`);
         this._labelStdGames.setText(`${await getUserMpwGamesCount(userId, false)}`);
     }
@@ -415,7 +415,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const score         = rawScore != null ? rawScore : MultiRankedWars_Constants.Common.InitialScore;
         // const rankName   = `(${Lang.getRankName(score, await GameConfig.GameConfigurationManager.getLatestGameConfig()) ?? Lang.ErrorTextForUndefined})`;
         const rankIndex     = await Leaderboard_Model_LeaderboardModel.getMrwRankIndex(WarTypes_Constants.WarTypeId.MrwFog, userId);
-        const textForRank   = rankIndex == null ? Lang_Utils.getText(Lang_Constants.TextType.B0435) : `${rankIndex}${Helpers_Text.getSuffixForRankIndex(rankIndex)}`;
+        const textForRank   = rankIndex == null ? Lang_Utils.getText(Lang_TextType.TextType.B0435) : `${rankIndex}${Helpers_Text.getSuffixForRankIndex(rankIndex)}`;
         this._labelFogRankScore.setText(`${score} (${textForRank})`);
         this._labelFogGames.setText(`${await getUserMpwGamesCount(userId, true)}`);
     }
@@ -431,7 +431,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const rankScore     = rankInfo?.score ?? 0;
         const rankIndex     = rankInfo?.rankIndex ?? 0;
         const isRankValid   = (rankIndex > 0) && (rankScore > 0);
-        const textForRank   = isRankValid ? `${rankIndex}${Helpers_Text.getSuffixForRankIndex(rankIndex)}` : Lang_Utils.getText(Lang_Constants.TextType.B0435);
+        const textForRank   = isRankValid ? `${rankIndex}${Helpers_Text.getSuffixForRankIndex(rankIndex)}` : Lang_Utils.getText(Lang_TextType.TextType.B0435);
         const textForScore  = rankScore > 0 ? Helpers_Text.format(`%.2f`, rankScore) : `--`;
         this._labelSpmRankScore.setText(`${textForScore} (${textForRank})`);
     }

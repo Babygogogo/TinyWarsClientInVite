@@ -11,7 +11,7 @@ import {
     TileDecorations_Utils,
     TileObjects_Utils,
     Players_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type BaseWar_Model_War,
     type Players_Player,
     type Tiles_Tile,
@@ -33,27 +33,27 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     const actTextArray: string[] = [];
     {
         if (data.getActChangeTileBase()) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.TileBase));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.TileBase));
         }
     }
     {
         if ((data.getActChangeTileDecoration()) || (data.getActDeleteTileDecoration())) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.TileDecoration));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.TileDecoration));
         }
     }
     {
         if ((data.getActChangeTileObject()) || (data.getActDeleteTileObject())) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.TileObject));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.TileObject));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
+        actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.A0957));
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0254,
-        Lang_Utils.getText(Lang_Constants.TextType.Tiles),
+        Lang_TextType.TextType.F0254,
+        Lang_Utils.getText(Lang_TextType.TextType.Tiles),
         actTextArray.join(`, `),
     );
 }
@@ -72,7 +72,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
@@ -80,41 +80,41 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_TextType.TextType.B1418 : Lang_TextType.TextType.B1419),
             )}`);
         }
     }
 
     if (!conTextArray.length) {
-        conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
+        conTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.A0944)}`);
     }
 
     const actTextArray: string[] = [];
     {
         if (data.getActChangeTileBase()) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.TileBase));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.TileBase));
         }
     }
     {
         if ((data.getActChangeTileDecoration()) || (data.getActDeleteTileDecoration())) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.TileDecoration));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.TileDecoration));
         }
     }
     {
         if ((data.getActChangeTileObject()) || (data.getActDeleteTileObject())) {
-            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.TileObject));
+            actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.TileObject));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
+        actTextArray.push(Lang_Utils.getText(Lang_TextType.TextType.A0957));
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0255,
-        Lang_Utils.getText(Lang_Constants.TextType.Tiles),
+        Lang_TextType.TextType.F0255,
+        Lang_Utils.getText(Lang_TextType.TextType.Tiles),
         conTextArray.join(`\n`),
-        Lang_Utils.getText(Lang_Constants.TextType.Tiles),
+        Lang_Utils.getText(Lang_TextType.TextType.Tiles),
         actTextArray.join(`, `),
     );
 }
@@ -124,10 +124,10 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: AuxiliaryTypes_
         const filter = data.getConUnitFilter();
         if (filter != null) {
             if (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
             }
         }
     }
@@ -136,7 +136,7 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: AuxiliaryTypes_
         if ((filter != null) &&
             (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerFilter));
         }
     }
     {
@@ -144,7 +144,7 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: AuxiliaryTypes_
         if ((filter != null) &&
             (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileFilter));
         }
     }
     {
@@ -152,7 +152,7 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: AuxiliaryTypes_
         if ((comparator != null) &&
             (!ValueAndComparators_Utils.checkIsValid(comparator))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Comparator));
         }
     }
 
@@ -162,19 +162,19 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: AuxiliaryTypes_
         const actTileBaseShapeId = data.getActTileBaseShapeId();
         if (!actChangeTileBase) {
             if ((actTileBaseType != null) || (actTileBaseShapeId != null)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileBase));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileBase));
             }
         } else {
             if ((actTileBaseType == null) || (actTileBaseShapeId == null)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileBase));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileBase));
             }
 
             const cfg = TileBases_Utils.getTileBaseCfg(actTileBaseType);
             if (cfg == null) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileBase));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileBase));
             }
             if ((actTileBaseShapeId < 0) || (actTileBaseShapeId >= cfg.shapesCount)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileBase));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileBase));
             }
         }
     }
@@ -184,24 +184,24 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: AuxiliaryTypes_
         const actTileDecorationShapeId = data.getActTileDecorationShapeId();
         if (data.getActDeleteTileDecoration()) {
             if (actTileChangeDecoration) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileDecoration));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileDecoration));
             }
         } else {
             if (!actTileChangeDecoration) {
                 if ((actTileDecorationType != null) || (actTileDecorationShapeId != null)) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileDecoration));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileDecoration));
                 }
             } else {
                 if ((actTileDecorationType == null) || (actTileDecorationShapeId == null)) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileDecoration));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileDecoration));
                 }
 
                 const cfg = TileDecorations_Utils.getTileDecorationCfg(actTileDecorationType);
                 if (cfg == null) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileDecoration));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileDecoration));
                 }
                 if ((actTileDecorationShapeId < 0) || (actTileDecorationShapeId >= cfg.shapesCount)) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileDecoration));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileDecoration));
                 }
             }
         }
@@ -212,24 +212,24 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: AuxiliaryTypes_
         const actTileObjectShapeId = data.getActTileObjectShapeId();
         if (data.getActDeleteTileObject()) {
             if (actChangeTileObject) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileObject));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileObject));
             }
         } else {
             if (!actChangeTileObject) {
                 if ((actTileObjectType != null) || (actTileObjectShapeId != null)) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileObject));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileObject));
                 }
             } else {
                 if ((actTileObjectType == null) || (actTileObjectShapeId == null)) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileObject));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileObject));
                 }
 
                 const cfg = TileObjects_Utils.getTileObjectCfg(actTileObjectType);
                 if (cfg == null) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileObject));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileObject));
                 }
                 if ((actTileObjectShapeId < 0) || (actTileObjectShapeId >= cfg.shapesCount)) {
-                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileObject));
+                    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileObject));
                 }
             }
         }
@@ -241,7 +241,7 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: AuxiliaryTypes_
         (!data.getActChangeTileObject()) &&
         (!data.getActDeleteTileObject())
     ) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0957);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0957);
     }
 
     return null;

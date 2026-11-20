@@ -1,7 +1,7 @@
 import {
     ExpressionParsers_Enums,
     Lang_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type ExpressionParsers_Types,
 } from "../../../internal.ts";
 
@@ -14,21 +14,21 @@ export const ExpressionInfoDict: {
         contextType  : ExpressionParsers_Enums.ContextType.Unit,
         resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
         isRequired   : true,
-        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.UnitFilter),
-        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0645),
+        getTitleText : () => Lang_Utils.getText(Lang_TextType.TextType.UnitFilter),
+        getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0645),
     },
     ActDestination : {
         contextType  : ExpressionParsers_Enums.ContextType.Unit,
         resultTypes  : [ExpressionParsers_Enums.ResultType.Tile, ExpressionParsers_Enums.ResultType.Position],
         isRequired   : true,
-        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B1196),
-        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0646),
+        getTitleText : () => Lang_Utils.getText(Lang_TextType.TextType.B1196),
+        getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0646),
     },
     ActAlternativeTileFilter : {
         contextType  : ExpressionParsers_Enums.ContextType.Tile,
         resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
         isRequired   : false,
-        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B1197),
-        getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0647),
+        getTitleText : () => Lang_Utils.getText(Lang_TextType.TextType.B1197),
+        getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0647),
     },
 };

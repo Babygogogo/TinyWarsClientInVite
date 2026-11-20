@@ -13,7 +13,7 @@ import {
     Helpers_GameFlow,
     Helpers_ImageSource,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Constants,
     SingleCustomWars_War,
@@ -214,7 +214,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgSpmCreateSfw(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgSpmCreateSfw"]>): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
 
         const war = this.getOpenData()?.war;
         if (war == null) {
@@ -231,16 +231,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onNotifyMsgSpmSaveScw(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0073));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0073));
     }
     private _onNotifyMsgSpmSaveSfw(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0073));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0073));
     }
     private _onNotifyMsgSpmSaveSrw(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0073));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0073));
     }
     private _onNotifyMsgCampaignSaveWar(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0073));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0073));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,7 +253,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.Weather),
             getContent : () => desc,
         });
     }
@@ -284,7 +284,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedGroupScore(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0997),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0997),
         });
     }
 
@@ -318,7 +318,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnSave(): Promise<void> {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0273));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0273));
             return;
         }
 
@@ -350,8 +350,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0260),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0071),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0260),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0071),
             callback   : () => {
                 const warType = war.getWarType();
                 if ((warType === WarTypes_Constants.WarTypeId.ScwFog) || (warType === WarTypes_Constants.WarTypeId.ScwStd)) {
@@ -371,31 +371,31 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnLoad(): Promise<void> {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0273));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0273));
             return;
         }
 
         const war = this.getOpenData()?.war;
         if (war == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const slotIndex = war.getSaveSlotIndex();
         if (slotIndex == null) {
-            FloatText.showLang(Lang_Constants.TextType.A0930);
+            FloatText.showLang(Lang_TextType.TextType.A0930);
             return;
         }
 
         const slotInfo = await SinglePlayerMode_Model_SpmModel.getSlotFullData(slotIndex);
         if (slotInfo == null) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0303));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0303));
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0261),
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
+            getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0261),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0072),
             callback   : () => {
                 Helpers_GameFlow.gotoSinglePlayerWar({
                     slotIndex         : slotInfo.slotIndex,
@@ -478,7 +478,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelTurnIndex(): void {
-        this._labelTurnIndex.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0191)} ${this.getOpenData()?.war.getTurnManager().getTurnIndex()}`);
+        this._labelTurnIndex.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0191)} ${this.getOpenData()?.war.getTurnManager().getTurnIndex()}`);
         this._groupPlayer.arrangeItems();
     }
 
@@ -498,11 +498,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         group.setIsVisible(true);
 
-        this._labelPauseAiTitle.setLangText(Lang_Constants.TextType.B1399);
+        this._labelPauseAiTitle.setLangText(Lang_TextType.TextType.B1399);
 
         const labelPauseAi  = this._labelPauseAi;
         const isPaused      = war.getIsAiPaused();
-        labelPauseAi.setLangText(isPaused ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        labelPauseAi.setLangText(isPaused ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         labelPauseAi.setTextColor(isPaused ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.White);
 
         this._layoutPauseAi.arrangeItems();
@@ -528,7 +528,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         group.setIsVisible(true);
-        this._labelScore.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1114)} ${war.calculateTotalScore()}`);
+        this._labelScore.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B1114)} ${war.calculateTotalScore()}`);
     }
 
     private _updateLabelFundAndAddFund(): void {

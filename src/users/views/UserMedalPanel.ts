@@ -9,7 +9,7 @@ import {
     Timer_TimerModel,
     GamePanels_Manager,
     Users_Proxy,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -87,7 +87,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0402),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0402),
         });
     }
     private _onTouchedBtnConfirm(): void {
@@ -105,12 +105,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1018);
-        this._labelNoMedal.setLangText(Lang_Constants.TextType.A0401);
-        this._labelObtainTitle.setLangText(Lang_Constants.TextType.B1020);
-        this._labelExpireTitle.setLangText(Lang_Constants.TextType.B1021);
-        this._labelShow.setLangText(Lang_Constants.TextType.B1019);
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1018);
+        this._labelNoMedal.setLangText(Lang_TextType.TextType.A0401);
+        this._labelObtainTitle.setLangText(Lang_TextType.TextType.B1020);
+        this._labelExpireTitle.setLangText(Lang_TextType.TextType.B1021);
+        this._labelShow.setLangText(Lang_TextType.TextType.B1019);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
 
         this._layoutExpireTime.arrangeItems();
         this._layoutObtainTime.arrangeItems();

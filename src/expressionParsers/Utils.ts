@@ -13,7 +13,7 @@ import {
     ExpressionParsers_Contexts_Position,
     ExpressionParsers_Contexts_PositionArray,
     ExpressionParsers_Contexts_TaskObjective,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_Tile,
     ExpressionParsers_Contexts_TileArray,
     ExpressionParsers_Contexts_TileBuff,
@@ -141,11 +141,11 @@ export function extendVariableInfoDict(src: ExpressionParsers_Types.EpVariableIn
 }
 
 export function getErrorTextForParameterCount(functionName: string, expectedCount: string | number, actualCount: number): string {
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0013, functionName, expectedCount, actualCount);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0013, functionName, expectedCount, actualCount);
 }
 export function getErrorTextForParameterType(functionName: string, index: number, expectedType: ExpressionParsers_Enums.ResultType | ExpressionParsers_Enums.ResultType[], actualType: ExpressionParsers_Enums.ResultType): string {
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0014,
+        Lang_TextType.TextType.F0014,
         functionName,
         index,
         typeof expectedType == "number"
@@ -156,7 +156,7 @@ export function getErrorTextForParameterType(functionName: string, index: number
 }
 export function getErrorTextForLambdaResultType(functionName: string, index: number, expectedTypes: ExpressionParsers_Enums.ResultType[], actualType: ExpressionParsers_Enums.ResultType): string {
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0015,
+        Lang_TextType.TextType.F0015,
         functionName,
         index,
         expectedTypes.map(v => Lang_Utils.getExpressionParserResultTypeName(v)).join(" / "),
@@ -165,7 +165,7 @@ export function getErrorTextForLambdaResultType(functionName: string, index: num
 }
 export function getErrorTextForOperandType(operatorName: string, index: number, expectedType: ExpressionParsers_Enums.ResultType | ExpressionParsers_Enums.ResultType[], actualType: ExpressionParsers_Enums.ResultType): string {
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0025,
+        Lang_TextType.TextType.F0025,
         operatorName,
         index,
         typeof expectedType == "number"

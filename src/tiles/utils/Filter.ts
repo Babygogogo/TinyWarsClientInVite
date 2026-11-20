@@ -10,7 +10,7 @@ import {
     Lang_Utils,
     Helpers_Collection,
     Players_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     type GameConfigs_GameConfig,
     type Tiles_Tile,
     type AuxiliaryTypes_MapSize,
@@ -221,123 +221,123 @@ export function getDesc(data: TileFilter, gameConfig: GameConfigs_GameConfig.Gam
     {
         const con = data.getConPlayerIndex();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicates_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex), v => `P${v}`));
+            textArrayForSubConditions.push(ValueArrayAndPredicates_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.PlayerIndex), v => `P${v}`));
         }
     }
 
     {
         const con = data.getConTeamIndex();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicates_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.B0019), v => Lang_Utils.getPlayerTeamName(v)));
+            textArrayForSubConditions.push(ValueArrayAndPredicates_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.B0019), v => Lang_Utils.getPlayerTeamName(v)));
         }
     }
 
     {
         const con = data.getConTileType();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicates_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.B0718), v => Lang_Utils.getTileName(v, gameConfig)));
+            textArrayForSubConditions.push(ValueArrayAndPredicates_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.B0718), v => Lang_Utils.getTileName(v, gameConfig)));
         }
     }
 
     {
         const con = data.getConIsOwnerPlayerInTurn();
         if (con != null) {
-            textArrayForSubConditions.push(Lang_Utils.getText(con ? Lang_Constants.TextType.A0831 : Lang_Constants.TextType.A0832));
+            textArrayForSubConditions.push(Lang_Utils.getText(con ? Lang_TextType.TextType.A0831 : Lang_TextType.TextType.A0832));
         }
     }
 
     {
         const con = data.getConIsHighlighted();
         if (con != null) {
-            textArrayForSubConditions.push(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0245, Lang_Utils.getTextForYesOrNo(con)));
+            textArrayForSubConditions.push(Lang_Utils.getFormattedText(Lang_TextType.TextType.F0245, Lang_Utils.getTextForYesOrNo(con)));
         }
     }
 
     {
         const con = data.getConHp();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparators_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.Hp)));
+            textArrayForSubConditions.push(ValueAndComparators_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.Hp)));
         }
     }
 
     {
         const con = data.getConCapturePoint();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparators_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.CapturePoint)));
+            textArrayForSubConditions.push(ValueAndComparators_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.CapturePoint)));
         }
     }
 
     {
         const con = data.getConBuildPoint();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparators_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.BuildPoint)));
+            textArrayForSubConditions.push(ValueAndComparators_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.BuildPoint)));
         }
     }
 
     {
         const con = data.getConUnitsCount();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparators_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.B1418)));
+            textArrayForSubConditions.push(ValueAndComparators_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.B1418)));
         }
     }
 
     {
         const con = data.getConCustomNameId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparators_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.CustomNameId)));
+            textArrayForSubConditions.push(ValueAndComparators_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.CustomNameId)));
         }
     }
 
     {
         const con = data.getConGridIndex();
         if (con != null) {
-            textArrayForSubConditions.push(GridIndexArrayAndPredicates_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.B0531)));
+            textArrayForSubConditions.push(GridIndexArrayAndPredicates_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.B0531)));
         }
     }
 
     {
         const con = data.getConLocationId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueSetAndRelations_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.Location), v => `${v}`));
+            textArrayForSubConditions.push(ValueSetAndRelations_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.Location), v => `${v}`));
         }
     }
 
     {
         const con = data.getConBuffTypeId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueSetAndRelations_Utils.getDesc(con, Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId), v => `${Lang_Utils.getTileBuffName(v)}`));
+            textArrayForSubConditions.push(ValueSetAndRelations_Utils.getDesc(con, Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId), v => `${Lang_Utils.getTileBuffName(v)}`));
         }
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0230,
-        Lang_Utils.getText(Lang_Constants.TextType.B1144),
+        Lang_TextType.TextType.F0230,
+        Lang_Utils.getText(Lang_TextType.TextType.B1144),
         textArrayForSubConditions.length
             ? textArrayForSubConditions.map(v => `- ${v}`).join(`\n`)
-            : Lang_Utils.getText(Lang_Constants.TextType.A0944),
+            : Lang_Utils.getText(Lang_TextType.TextType.A0944),
     );
 }
 export function getDescForEmbed(data: TileFilter): string | null {
     const textArrayForSubConditions = Helpers_Collection.getNonNullElements([
-        data.getConPlayerIndex() == null         ? null : Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex),
-        data.getConTeamIndex() == null           ? null : Lang_Utils.getText(Lang_Constants.TextType.B0019),
-        data.getConTileType() == null            ? null : Lang_Utils.getText(Lang_Constants.TextType.B0718),
-        data.getConIsOwnerPlayerInTurn() == null ? null : Lang_Utils.getText(Lang_Constants.TextType.B0086),
-        data.getConIsHighlighted() == null       ? null : Lang_Utils.getText(Lang_Constants.TextType.IsHighlighted),
-        data.getConHp() == null                  ? null : Lang_Utils.getText(Lang_Constants.TextType.Hp),
-        data.getConCapturePoint() == null        ? null : Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
-        data.getConBuildPoint() == null          ? null : Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
-        data.getConUnitsCount() == null          ? null : Lang_Utils.getText(Lang_Constants.TextType.B0773),
-        data.getConCustomNameId() == null        ? null : Lang_Utils.getText(Lang_Constants.TextType.CustomNameId),
-        data.getConGridIndex() == null           ? null : Lang_Utils.getText(Lang_Constants.TextType.B0531),
-        data.getConLocationId() == null          ? null : Lang_Utils.getText(Lang_Constants.TextType.Location),
-        data.getConBuffTypeId() == null          ? null : Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+        data.getConPlayerIndex() == null         ? null : Lang_Utils.getText(Lang_TextType.TextType.PlayerIndex),
+        data.getConTeamIndex() == null           ? null : Lang_Utils.getText(Lang_TextType.TextType.B0019),
+        data.getConTileType() == null            ? null : Lang_Utils.getText(Lang_TextType.TextType.B0718),
+        data.getConIsOwnerPlayerInTurn() == null ? null : Lang_Utils.getText(Lang_TextType.TextType.B0086),
+        data.getConIsHighlighted() == null       ? null : Lang_Utils.getText(Lang_TextType.TextType.IsHighlighted),
+        data.getConHp() == null                  ? null : Lang_Utils.getText(Lang_TextType.TextType.Hp),
+        data.getConCapturePoint() == null        ? null : Lang_Utils.getText(Lang_TextType.TextType.CapturePoint),
+        data.getConBuildPoint() == null          ? null : Lang_Utils.getText(Lang_TextType.TextType.BuildPoint),
+        data.getConUnitsCount() == null          ? null : Lang_Utils.getText(Lang_TextType.TextType.B0773),
+        data.getConCustomNameId() == null        ? null : Lang_Utils.getText(Lang_TextType.TextType.CustomNameId),
+        data.getConGridIndex() == null           ? null : Lang_Utils.getText(Lang_TextType.TextType.B0531),
+        data.getConLocationId() == null          ? null : Lang_Utils.getText(Lang_TextType.TextType.Location),
+        data.getConBuffTypeId() == null          ? null : Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId),
     ]);
     return !textArrayForSubConditions.length
         ? null
         : Lang_Utils.getFormattedText(
-            Lang_Constants.TextType.F0231,
-            Lang_Utils.getText(Lang_Constants.TextType.B1144),
+            Lang_TextType.TextType.F0231,
+            Lang_Utils.getText(Lang_TextType.TextType.B1144),
             textArrayForSubConditions.join(`, `),
         );
 }
@@ -349,7 +349,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
             if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                                               ||
                 (!Players_Utils_Common.checkIsValidPlayerIndexSubset(con.getValueArray(), playersCountUnneutral))
             ) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerIndex));
             }
         }
     }
@@ -360,7 +360,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
             if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                                                   ||
                 (!Teams_Utils.checkIsValidTeamIndexSubset(con.getValueArray(), playersCountUnneutral))
             ) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0019));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0019));
             }
         }
     }
@@ -371,7 +371,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
             if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                   ||
                 (!gameConfig.checkIsValidTileTypeSubset(con.getValueArray()))
             ) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0718));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0718));
             }
         }
     }
@@ -390,7 +390,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConHp();
         if (con != null) {
             if (!ValueAndComparators_Utils.checkIsValid(con)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Hp));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Hp));
             }
         }
     }
@@ -399,7 +399,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConCapturePoint();
         if (con != null) {
             if (!ValueAndComparators_Utils.checkIsValid(con)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.CapturePoint));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.CapturePoint));
             }
         }
     }
@@ -408,7 +408,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConBuildPoint();
         if (con != null) {
             if (!ValueAndComparators_Utils.checkIsValid(con)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.BuildPoint));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.BuildPoint));
             }
         }
     }
@@ -417,7 +417,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConUnitsCount();
         if (con != null) {
             if (!ValueAndComparators_Utils.checkIsValid(con)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0773));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0773));
             }
         }
     }
@@ -426,7 +426,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConCustomNameId();
         if (con != null) {
             if (!ValueAndComparators_Utils.checkIsValid(con)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.CustomNameId));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.CustomNameId));
             }
         }
     }
@@ -435,7 +435,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConGridIndex();
         if (con != null) {
             if (!GridIndexArrayAndPredicates_Utils.checkIsValid(con, mapSize)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0531));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0531));
             }
         }
     }
@@ -444,10 +444,10 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConLocationId();
         if (con != null) {
             if (!ValueSetAndRelations_Utils.checkIsValid(con)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Location));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Location));
             }
             if (!Locations_Utils.checkIsValidLocationIdSubset(con.getValueArray())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Location));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Location));
             }
         }
     }
@@ -456,10 +456,10 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConBuffTypeId();
         if (con != null) {
             if (!ValueSetAndRelations_Utils.checkIsValid(con)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId));
             }
             if (!TileBuffs_Utils_Common.checkIsValidTypeIdSubset(con.getValueArray())) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.AbnormalStateTypeId));
             }
         }
     }

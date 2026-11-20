@@ -1,6 +1,6 @@
 import {
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Types_UiInputEventType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -85,13 +85,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const text          = this.getInputText();
         const textLength    = text.length;
         if ((!openData.canBeEmpty) && (!textLength)) {
-            FloatText.showLang(Lang_Constants.TextType.A0787);
+            FloatText.showLang(Lang_TextType.TextType.A0787);
             return;
         }
 
         const minLength = openData.minLength;
         if ((minLength != null) && (textLength < minLength)) {
-            FloatText.showLang(Lang_Constants.TextType.A0155);
+            FloatText.showLang(Lang_TextType.TextType.A0155);
             return;
         }
 
@@ -111,7 +111,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
-        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._btnConfirm.setLangText(Lang_TextType.TextType.B0026);
+        this._btnCancel.setLangText(Lang_TextType.TextType.B0154);
     }
 }

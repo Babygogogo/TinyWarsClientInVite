@@ -16,7 +16,7 @@ import {
     ExpressionParsers_Results_PositionArray,
     ExpressionParsers_Results_Lambda,
     ExpressionParsers_Results_UnitStatisticArray,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Results_Tile,
     ExpressionParsers_Results_TileArray,
     ExpressionParsers_Results_TileBuff,
@@ -48,7 +48,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             UnitStatisticArray.FnMerge,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0521,
+                Lang_TextType.TextType.A0521,
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 0) {
@@ -65,7 +65,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             UnitStatisticArray.FnWhere,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0558,
+                Lang_TextType.TextType.A0558,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -105,7 +105,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             UnitStatisticArray.FnSelect,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0557,
+                Lang_TextType.TextType.A0557,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -163,7 +163,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             UnitStatisticArray.FnAll,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0559,
+                Lang_TextType.TextType.A0559,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
@@ -203,7 +203,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
         functions.set(
             UnitStatisticArray.FnAny,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
-                Lang_Constants.TextType.A0560,
+                Lang_TextType.TextType.A0560,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(

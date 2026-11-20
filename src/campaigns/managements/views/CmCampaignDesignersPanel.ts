@@ -6,7 +6,7 @@ import {
     GamePanels_Manager,
     Campaigns_Managements_Gateway,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -72,7 +72,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchMultiUserPanel, {
-            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B1138),
+            getTitleText      : () => Lang_Utils.getText(Lang_TextType.TextType.B1138),
             minChooseCount    : 1,
             maxChooseCount    : 5,
             callbackOnConfirm : userIdArray => {
@@ -92,7 +92,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCmUpdateCampaignDesigners(): void {
-        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+        FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
         this._updateComponentsForListDesigner();
     }
 
@@ -107,8 +107,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1136);
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1136);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
     }
 
     private _updateTopButtons(): void {
@@ -182,13 +182,13 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             callback   : () => Campaigns_Managements_Gateway.reqCmUpdateCampaignDesigners(openData.campaignId, [], [openData.designerUserId]),
         });
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDelete.setLangText(Lang_Constants.TextType.B0220);
+        this._btnDelete.setLangText(Lang_TextType.TextType.B0220);
         this._updateLabelName();
     }
 
@@ -203,7 +203,7 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
         const userNickname = await Users_Model.getUserNickname(userId);
         if (userId === this.getOpenData()?.designerUserId) {
-            label.setText(`#${userId} ${userNickname ?? Lang_Utils.getText(Lang_Constants.TextType.B0277)}`);
+            label.setText(`#${userId} ${userNickname ?? Lang_Utils.getText(Lang_TextType.TextType.B0277)}`);
         }
     }
 }

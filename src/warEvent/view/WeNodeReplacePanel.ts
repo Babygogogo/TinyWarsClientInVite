@@ -9,7 +9,7 @@ import {
     Helpers_Misc,
     Lang_Utils,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -71,9 +71,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0258);
-        this._labelNoNode.setLangText(Lang_Constants.TextType.B0278);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0258);
+        this._labelNoNode.setLangText(Lang_TextType.TextType.B0278);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
     }
     private async _updateListNodeAndLabelNoNode(): Promise<void> {
         const openData = this.getOpenData();
@@ -151,7 +151,7 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const isNeedFalse       = candidateNode.getIsNeedFalse();
         if (parentNodeId == null) {
             if (srcNodeId == null) {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             } else {
                 if (WarEvents_ConditionNodes_Utils.createAndReplaceRootNodeInEvent({
                     fullData                 : fullData,
@@ -167,7 +167,7 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             }
         } else {
             if (getAllSubNodesAndConditionsForNode({ fullData, nodeId : candidateNodeId }).nodeIdSet.has(parentNodeId)) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0179));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0179));
                 return;
             }
 
@@ -198,9 +198,9 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                     eventId   : openData.eventId,
                     newNodeId : newNodeId,
                 })) {
-                    FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                    FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 } else {
-                    FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                    FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
                     GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeNodeReplacePanel);
                     GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeCommandPanel);
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -212,9 +212,9 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                     oldNodeId : srcNodeId,
                     newNodeId : newNodeId,
                 })) {
-                    FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                    FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
                 } else {
-                    FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                    FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
                     GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeNodeReplacePanel);
                     GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeCommandPanel);
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -222,7 +222,7 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             }
         } else {
             if (getAllSubNodesAndConditionsForNode({ fullData, nodeId : newNodeId }).nodeIdSet.has(parentNodeId)) {
-                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0179));
+                FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0179));
                 return;
             }
 
@@ -232,9 +232,9 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 oldNodeId    : srcNodeId,
                 newNodeId    : newNodeId,
             })) {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             } else {
-                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
+                FloatText.showLang(Lang_TextType.TextType.OperationSucceeded);
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeNodeReplacePanel);
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeCommandPanel);
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -246,8 +246,8 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCopy.setLangText(Lang_Constants.TextType.B0487);
-        this._btnSelect.setLangText(Lang_Constants.TextType.B0492);
+        this._btnCopy.setLangText(Lang_TextType.TextType.B0487);
+        this._btnSelect.setLangText(Lang_TextType.TextType.B0492);
 
         this._updateLabelNodeId();
         this._updateLabelSubNode();
@@ -261,7 +261,7 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             const fullData          = data.fullData;
             const obtainerNameArray = (fullData.getConditionNodeArray().filter(node => node.getSubNodeIdAndFlagsArray().some(v => v.getNodeId() === nodeId)).map(v => `N${v.getNodeId()}`))
                 .concat(fullData.getEventArray().filter(event => event.getRootNodeAndActionsArray().some(v => v.getNodeIdAndFlags()?.getNodeId() === nodeId)).map(v => `E${v.getEventId()}`));
-            this._labelNodeId.setText(`N${nodeId} (${Lang_Utils.getText(Lang_Constants.TextType.B0749)}: ${obtainerNameArray.length ? obtainerNameArray.join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.None)})`);
+            this._labelNodeId.setText(`N${nodeId} (${Lang_Utils.getText(Lang_TextType.TextType.B0749)}: ${obtainerNameArray.length ? obtainerNameArray.join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.None)})`);
         }
     }
     private _updateLabelSubNode(): void {
@@ -273,14 +273,14 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const node  = openData.fullData.getConditionNodeArray().find(v => v.getNodeId() === openData.candidateNodeId);
         const label = this._labelSubNode;
         if (node == null) {
-            label.setLangText(Lang_Constants.TextType.A0160);
+            label.setLangText(Lang_TextType.TextType.A0160);
         } else {
             const textArray: string[] = [];
             for (const subNodeIdAndFlags of node.getSubNodeIdAndFlagsArray().concat().sort((v1, v2) => v1.getNodeId() - v2.getNodeId())) {
                 textArray.push(`${subNodeIdAndFlags.getIsNegated() ? `! ` : ``}N${subNodeIdAndFlags.getNodeId()}`);
             }
 
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0489)}: ${textArray.length ? textArray.join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.None)}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0489)}: ${textArray.length ? textArray.join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.None)}`);
         }
     }
     private _updateLabelSubCondition(): void {
@@ -299,7 +299,7 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 textArray.push(`${conditionIdAndFlags.getIsNegated() ? `! ` : ``}C${conditionIdAndFlags.getConditionId()}`);
             }
 
-            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0490)}: ${textArray.length ? textArray.join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.None)}`);
+            label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0490)}: ${textArray.length ? textArray.join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.None)}`);
         }
 
         const labelSubNode  = this._labelSubNode;

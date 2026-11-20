@@ -6,7 +6,7 @@ import {
     CoSkills_Utils_Executor,
     Helpers_Collection,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
@@ -306,7 +306,7 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoUnitUseCoSkill): Pr
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         return null;
     } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.B0142)} ${war.getWarOperationDescSuffix()}`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.B0142)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof SinglePlayerWars_War.War) {
         return null;
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {

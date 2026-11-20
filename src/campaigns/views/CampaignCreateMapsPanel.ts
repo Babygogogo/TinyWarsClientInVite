@@ -17,7 +17,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
@@ -152,13 +152,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSinglePlayer.setLangText(Lang_Constants.TextType.B0138);
-        this._labelCampaign.setLangText(Lang_Constants.TextType.B1135);
-        this._labelChooseCampaign.setLangText(Lang_Constants.TextType.B0085);
-        this._labelChooseMap.setLangText(Lang_Constants.TextType.B1082);
-        this._labelNoCampaign.setLangText(Lang_Constants.TextType.B0278);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._btnNextStep.setLangText(Lang_Constants.TextType.B0566);
+        this._labelSinglePlayer.setLangText(Lang_TextType.TextType.B0138);
+        this._labelCampaign.setLangText(Lang_TextType.TextType.B1135);
+        this._labelChooseCampaign.setLangText(Lang_TextType.TextType.B0085);
+        this._labelChooseMap.setLangText(Lang_TextType.TextType.B1082);
+        this._labelNoCampaign.setLangText(Lang_TextType.TextType.B0278);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._btnNextStep.setLangText(Lang_TextType.TextType.B0566);
 
         this._groupNavigator.arrangeItems();
     }
@@ -167,12 +167,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0423) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0423) },
                 pageClass   : Campaigns_Views_CampaignMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0436) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0436) },
                 pageClass   : Campaigns_Views_CampaignMapRankPage.Page,
                 pageData    : null,
             },
@@ -373,9 +373,9 @@ class CampaignMapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRen
                 (cawHighScoreInfo.getConfigVersion() !== configVersion)                                         ||
                 (highScore == null)
             ) {
-                labelId.setText(`#${campaignId}-${campaignMapId} ${Lang_Utils.getText(Lang_Constants.TextType.B0121)}`);
+                labelId.setText(`#${campaignId}-${campaignMapId} ${Lang_Utils.getText(Lang_TextType.TextType.B0121)}`);
             } else {
-                labelId.setText(`#${campaignId}-${campaignMapId} ${Lang_Utils.getText(Lang_Constants.TextType.B0907)}: ${highScore}`);
+                labelId.setText(`#${campaignId}-${campaignMapId} ${Lang_Utils.getText(Lang_TextType.TextType.B0907)}: ${highScore}`);
             }
         }
         this._layoutName.arrangeItems();

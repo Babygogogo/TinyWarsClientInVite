@@ -68,7 +68,7 @@ import {
     Helpers_Misc,
     Players_Constants,
     Dialogues_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     TileBuffs_Constants,
     UnitBuffs_Constants,
     Units_Constants,
@@ -547,7 +547,7 @@ export function getDetailDescForAction(action: WarEventAction, gameConfig: GameC
 export function getErrorTipForAction(fullData: WarEventFullData, action: WarEventAction, war: BaseWar_Model_War.War): string | null {
     const actionsCountTotal = fullData.getActionArray().length;
     if (actionsCountTotal > WarEvents_Actions_Constants_Common.MaxCounts.PerMap) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.A0184)} (${actionsCountTotal}/${WarEvents_Actions_Constants_Common.MaxCounts.PerMap})`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.A0184)} (${actionsCountTotal}/${WarEvents_Actions_Constants_Common.MaxCounts.PerMap})`;
     }
 
     // if (Object.keys(action.toJson()).length !== 2) {
@@ -556,7 +556,7 @@ export function getErrorTipForAction(fullData: WarEventFullData, action: WarEven
 
     const actionId = action.getWeaCommonData()?.getActionId();
     if ((actionId == null) || (!checkIsValidWarEventActionId(actionId))) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0177);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0177);
     }
 
     const playersCountUnneutral = war.getPlayersCountUnneutral();
@@ -845,7 +845,7 @@ export function getErrorTipForAction(fullData: WarEventFullData, action: WarEven
         return WarEvents_Actions_Utils_PersistentModifyUnitAttribute.getErrorTip(weaPersistentModifyUnitAttribute, customCounterNameSet);
     }
 
-    return Lang_Utils.getText(Lang_Constants.TextType.A0177);
+    return Lang_Utils.getText(Lang_TextType.TextType.A0177);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

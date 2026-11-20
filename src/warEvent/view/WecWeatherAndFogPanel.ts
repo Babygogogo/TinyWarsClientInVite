@@ -6,7 +6,7 @@ import {
     Helpers_Misc,
     Lang_Utils,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -89,7 +89,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             currentNumberArray   : condition.getWeatherTypeArray(),
             availableNumberArray : gameConfig.getAllWeatherTypeArray(),
             showNumber           : true,
-            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.Weather)),
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.Weather)),
             getNumberMainText    : weatherType => Lang_Utils.getWeatherName(weatherType, gameConfig) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm    : weatherTypeArray => {
                 condition.setWeatherTypeArray(weatherTypeArray);
@@ -119,11 +119,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnWeatherType.setLangText(Lang_Constants.TextType.Weather);
-        this._btnHasFogCurrently.setLangText(Lang_Constants.TextType.B0020);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnWeatherType.setLangText(Lang_TextType.TextType.Weather);
+        this._btnHasFogCurrently.setLangText(Lang_TextType.TextType.B0020);
 
         this._updateLabelDescAndLabelError();
     }
@@ -138,7 +138,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Conditions_Utils_Common.getErrorTipForCondition(openData.fullData, condition, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Conditions_Utils_Common.getDetailedDescForCondition(condition, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
@@ -150,11 +150,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const weatherTypeArray = this._getCondition().getWeatherTypeArray();
-        this._labelWeatherType.setText(weatherTypeArray?.length ? weatherTypeArray.map(v => Lang_Utils.getWeatherName(v, gameConfig)).join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.B0776));
+        this._labelWeatherType.setText(weatherTypeArray?.length ? weatherTypeArray.map(v => Lang_Utils.getWeatherName(v, gameConfig)).join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.B0776));
     }
     private _updateLabelHasFogCurrently(): void {
         const hasFogCurrently           = this._getCondition().getHasFogCurrently();
-        this._labelHasFogCurrently.setLangText(hasFogCurrently != null ? hasFogCurrently ? Lang_Constants.TextType.B0431 : Lang_Constants.TextType.B0432 : Lang_Constants.TextType.B0776);
+        this._labelHasFogCurrently.setLangText(hasFogCurrently != null ? hasFogCurrently ? Lang_TextType.TextType.B0431 : Lang_TextType.TextType.B0432 : Lang_TextType.TextType.B0776);
     }
 
     private _getCondition(): WecWeatherAndFog {

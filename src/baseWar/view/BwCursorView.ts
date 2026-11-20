@@ -13,7 +13,7 @@ import {
     Helpers_PointerInput,
     Keyboard_KbManager,
     Keyboard_KbTypes,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeHelpers,
     MapEditor_Model_MeModel,
@@ -351,13 +351,13 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                 if (deltaTime < 500) {
                     return;
                 } else if (deltaTime < 10000) {
-                    FloatText.showLang(Lang_Constants.TextType.A0421);
+                    FloatText.showLang(Lang_TextType.TextType.A0421);
                     return;
                 }
                 this._lastSaveMapTime = currentTime;
 
                 if ((war == null) || (war.getIsReviewingMap())) {
-                    FloatText.showLang(Lang_Constants.TextType.A0273);
+                    FloatText.showLang(Lang_TextType.TextType.A0273);
                     return;
                 }
                 // if (!war.getIsMapModified()) {
@@ -367,14 +367,14 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
 
                 const slotIndex = war.getMapSlotIndex();
                 if (slotIndex === await MapEditor_Model_MeModel.getReviewingMapSlotIndex()) {
-                    FloatText.showLang(Lang_Constants.TextType.A0422);
+                    FloatText.showLang(Lang_TextType.TextType.A0422);
                     return;
                 }
 
                 const mapRawData = await war.serializeForMap();
                 MapEditor_Model_MeHelpers.getCriticalErrorCodeForMapRawData(mapRawData).then(errorCode => {
                     if (errorCode) {
-                        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0304));
+                        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0304));
                     } else {
                         MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
                             slotIndex                 : slotIndex,
@@ -438,11 +438,11 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
                 ((war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) && (war.getPlayerIndexLoggedIn() === war.getPlayerIndexInTurn()))
             ) {
                 if (war.getDrawVoteManager().checkNeedVoteBeforeEndTurn(war.getPlayerIndexInTurn())) {
-                    FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0034));
+                    FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0034));
                     Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0036),
+                        getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0036),
                         getContent : () => war.getHintForEndTurn(),
                         callback   : () => ActionPlanners_States_RequestingPlayerEndTurn.RequestingPlayerEndTurn.getInstance().doApplyOnChooseAction(actionPlanner),
                     });

@@ -2,7 +2,7 @@ import {
     FloatText,
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     LocalData_Storage,
     MapEditor_Model_MeWar,
@@ -29,7 +29,7 @@ export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoSy
         ) {
             const nickname = await playerInTurn.getNickname();
             if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (!LocalData_Storage.getIsShowReplayTurnStartPopup())) {
-                FloatText.show(`[P${playerIndex} ${nickname}] ${Lang_Utils.getText(Lang_Constants.TextType.B0679)}`);
+                FloatText.show(`[P${playerIndex} ${nickname}] ${Lang_Utils.getText(Lang_TextType.TextType.B0679)}`);
             } else {
                 await new Promise<void>(resolve => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBeginTurnPanel, {
@@ -85,7 +85,7 @@ export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: Wo
         ) {
             const nickname = await playerInTurn.getNickname();
             if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (!LocalData_Storage.getIsShowReplayTurnStartPopup())) {
-                FloatText.show(`[P${playerIndex} ${nickname}] ${Lang_Utils.getText(Lang_Constants.TextType.B0679)}`);
+                FloatText.show(`[P${playerIndex} ${nickname}] ${Lang_Utils.getText(Lang_TextType.TextType.B0679)}`);
             } else {
                 await new Promise<void>(resolve => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBeginTurnPanel, {
@@ -115,18 +115,18 @@ async function getDesc(war: BaseWar_Model_War.War, action: WoSystemBeginTurn): P
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         const playerIndex = war.getPlayerIndexInTurn();
         if (playerIndex === Players_Constants.PlayerIndex.Neutral) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0022, Lang_Utils.getText(Lang_Constants.TextType.B0111), playerIndex);
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0022, Lang_Utils.getText(Lang_TextType.TextType.B0111), playerIndex);
         } else {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0022, await war.getPlayerInTurn().getNickname(), playerIndex);
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0022, await war.getPlayerInTurn().getNickname(), playerIndex);
         }
     } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
-        return `P${war.getPlayerIndexInTurn()} ${await war.getPlayerInTurn().getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0094)} ${war.getWarOperationDescSuffix()}`;
+        return `P${war.getPlayerIndexInTurn()} ${await war.getPlayerInTurn().getNickname()} ${Lang_Utils.getText(Lang_TextType.TextType.B0094)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof SinglePlayerWars_War.War) {
         const playerIndex = war.getPlayerIndexInTurn();
         if (playerIndex === Players_Constants.PlayerIndex.Neutral) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0022, Lang_Utils.getText(Lang_Constants.TextType.B0111), playerIndex);
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0022, Lang_Utils.getText(Lang_TextType.TextType.B0111), playerIndex);
         } else {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0022, await war.getPlayerInTurn().getNickname(), playerIndex);
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0022, await war.getPlayerInTurn().getNickname(), playerIndex);
         }
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;

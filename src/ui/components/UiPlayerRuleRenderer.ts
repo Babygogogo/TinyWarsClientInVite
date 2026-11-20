@@ -12,7 +12,7 @@ import {
     GameModes_Constants,
     Helpers_Misc,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     type Egret_Egret,
     type GameConfigs_GameConfig,
@@ -128,7 +128,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 availableCoCategoryIdArray : availableCoCategoryIdArray,
                 currentCoCategoryIdArray   : currentBannedCoCategoryIdArray,
                 isBan                      : true,
-                getTitleText               : () => Lang_Utils.getText(Lang_Constants.TextType.B0590),
+                getTitleText               : () => Lang_Utils.getText(Lang_TextType.TextType.B0590),
             });
             return;
         }
@@ -141,7 +141,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 forceUnchosenCoCategoryIdArray : null,
                 maxChooseCount                 : null,
                 isBan                          : true,
-                getTitleText                   : () => Lang_Utils.getText(Lang_Constants.TextType.B0590),
+                getTitleText                   : () => Lang_Utils.getText(Lang_TextType.TextType.B0590),
                 callbackOnConfirm              : bannedCoCategoryIdArray => {
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
@@ -558,7 +558,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 availableCoCategoryIdArray : allCoCategoryIdArray,
                 currentCoCategoryIdArray   : currentHumanCoCategoryIdArray,
                 isBan                      : false,
-                getTitleText               : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText               : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
             });
             return;
         }
@@ -571,7 +571,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 forceUnchosenCoCategoryIdArray : null,
                 maxChooseCount                 : null,
                 isBan                          : false,
-                getTitleText                   : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText                   : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
                 callbackOnConfirm              : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -612,7 +612,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 availableCoCategoryIdArray : allCoCategoryIdArray,
                 currentCoCategoryIdArray   : currentHumanCoCategoryIdArray,
                 isBan                      : false,
-                getTitleText               : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText               : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
             });
             return;
         }
@@ -625,7 +625,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 forceUnchosenCoCategoryIdArray : null,
                 maxChooseCount                 : null,
                 isBan                          : false,
-                getTitleText                   : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText                   : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
                 callbackOnConfirm              : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -666,7 +666,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 availableCoCategoryIdArray : allCoCategoryIdArray,
                 currentCoCategoryIdArray   : currentHumanCoCategoryIdArray,
                 isBan                      : false,
-                getTitleText               : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText               : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
             });
             return;
         }
@@ -679,7 +679,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 forceUnchosenCoCategoryIdArray : null,
                 maxChooseCount                 : null,
                 isBan                          : false,
-                getTitleText                   : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText                   : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
                 callbackOnConfirm              : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -720,7 +720,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 availableCoCategoryIdArray : allCoCategoryIdArray,
                 currentCoCategoryIdArray   : currentHumanCoCategoryIdArray,
                 isBan                      : false,
-                getTitleText               : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText               : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
             });
             return;
         }
@@ -733,7 +733,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 forceUnchosenCoCategoryIdArray : null,
                 maxChooseCount                 : null,
                 isBan                          : false,
-                getTitleText                   : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText                   : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
                 callbackOnConfirm              : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -774,7 +774,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 availableCoCategoryIdArray : allCoCategoryIdArray,
                 currentCoCategoryIdArray   : currentHumanCoCategoryIdArray,
                 isBan                      : false,
-                getTitleText               : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText               : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
             });
             return;
         }
@@ -787,7 +787,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 forceUnchosenCoCategoryIdArray : null,
                 maxChooseCount                 : null,
                 isBan                          : false,
-                getTitleText                   : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText                   : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
                 callbackOnConfirm              : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -826,7 +826,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 availableCoCategoryIdArray : allCoCategoryIdArray,
                 currentCoCategoryIdArray   : currentHumanCoCategoryIdArray,
                 isBan                      : false,
-                getTitleText               : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText               : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
             });
             return;
         }
@@ -839,7 +839,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 forceUnchosenCoCategoryIdArray : null,
                 maxChooseCount                 : null,
                 isBan                          : false,
-                getTitleText                   : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText                   : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
                 callbackOnConfirm              : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -878,7 +878,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
                 availableCoIdArray : allCoIdArray,
                 currentCoIdArray   : currentHumanCoIdArray,
                 isBan              : false,
-                getTitleText       : () => Lang_Utils.getText(Lang_Constants.TextType.B0238),
+                getTitleText       : () => Lang_Utils.getText(Lang_TextType.TextType.B0238),
             });
             return;
         }
@@ -920,9 +920,9 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0808),
-                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
-                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0808),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.Yes),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.No),
                 showButtonClose   : true,
                 callback          : () => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
@@ -977,9 +977,9 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0808),
-                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
-                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0808),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.Yes),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.No),
                 showButtonClose   : true,
                 callback          : () => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
@@ -1316,7 +1316,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
     private _updateViewAsCanActivateCoSkill(openData: DataForUiPlayerRuleRenderer): void {
         const canActivateCoSkill    = openData.playerRule.getCanActivateCoSkill();
         const label                 = this._labelValue;
-        label.setLangText(canActivateCoSkill ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        label.setLangText(canActivateCoSkill ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         label.setTextColor(canActivateCoSkill ? Graphics_Constants.ColorValue.White : Graphics_Constants.ColorValue.Red);
 
         this._applySettingsForWholeTouch(openData.canModify);
@@ -1324,7 +1324,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
     private _updateViewAsCanCoBoard(openData: DataForUiPlayerRuleRenderer): void {
         const canCoBoard    = openData.playerRule.getCanCoBoard();
         const label         = this._labelValue;
-        label.setLangText(canCoBoard ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        label.setLangText(canCoBoard ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         label.setTextColor(canCoBoard ? Graphics_Constants.ColorValue.White : Graphics_Constants.ColorValue.Red);
 
         this._applySettingsForWholeTouch(openData.canModify);
@@ -1332,7 +1332,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
     private _updateViewAsCanUnitJoin(openData: DataForUiPlayerRuleRenderer): void {
         const currValue     = openData.playerRule.getCanUnitJoin();
         const label         = this._labelValue;
-        label.setLangText(currValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        label.setLangText(currValue ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         label.setTextColor(currValue ? Graphics_Constants.ColorValue.White : Graphics_Constants.ColorValue.Red);
 
         this._applySettingsForWholeTouch(openData.canModify);
@@ -1365,7 +1365,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
         const currentValue  = openData.playerRule.getMcwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setLangText(Lang_Constants.TextType.B0120);
+            label.setLangText(Lang_TextType.TextType.B0120);
             label.setTextColor(Graphics_Constants.ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1378,7 +1378,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
         const currentValue  = openData.playerRule.getMmwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setLangText(Lang_Constants.TextType.B0120);
+            label.setLangText(Lang_TextType.TextType.B0120);
             label.setTextColor(Graphics_Constants.ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1391,7 +1391,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
         const currentValue  = openData.playerRule.getMrwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setLangText(Lang_Constants.TextType.B0120);
+            label.setLangText(Lang_TextType.TextType.B0120);
             label.setTextColor(Graphics_Constants.ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1404,7 +1404,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
         const currentValue  = openData.playerRule.getAtwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setLangText(Lang_Constants.TextType.B0120);
+            label.setLangText(Lang_TextType.TextType.B0120);
             label.setTextColor(Graphics_Constants.ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1417,7 +1417,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
         const currentValue  = openData.playerRule.getCcwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setLangText(Lang_Constants.TextType.B0120);
+            label.setLangText(Lang_TextType.TextType.B0120);
             label.setTextColor(Graphics_Constants.ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1430,7 +1430,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
         const currentValue  = openData.playerRule.getSrwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setLangText(Lang_Constants.TextType.B0120);
+            label.setLangText(Lang_TextType.TextType.B0120);
             label.setTextColor(Graphics_Constants.ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1443,7 +1443,7 @@ export class UiPlayerRuleRenderer extends Ui_Components_UiListItemRenderer.UiLis
         const currentValue  = openData.playerRule.getCampaignHumanCoIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setLangText(Lang_Constants.TextType.B0120);
+            label.setLangText(Lang_TextType.TextType.B0120);
             label.setTextColor(Graphics_Constants.ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1523,7 +1523,7 @@ function checkAndSetCustomWarRuleId(instanceWarRule: AuxiliaryTypes_AuxiliaryTyp
         callback();
     } else {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0129),
             callback   : () => {
                 instanceWarRule.setTemplateWarRuleId(null);
                 callback();

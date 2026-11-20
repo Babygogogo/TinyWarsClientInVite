@@ -2,7 +2,7 @@ import {
     GameConfigs_GameConfig,
     Graphics_Constants,
     Helpers_ImageSource,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Constants,
     TileObjects_Utils,
@@ -96,7 +96,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.TileObject);
+        this._labelTitle.setLangText(Lang_TextType.TextType.TileObject);
     }
 
     private async _resetListPlayerIndex(selectedPlayerIndex: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Promise<void> {
@@ -212,7 +212,7 @@ class PlayerIndexRenderer extends Ui_Components_UiListItemRenderer.UiListItemRen
         }
 
         const playerIndex = openData.playerIndex;
-        this._labelPlayerIndex.setText(playerIndex != null ? `P${playerIndex}` : Lang_Utils.getText(Lang_Constants.TextType.B0030));
+        this._labelPlayerIndex.setText(playerIndex != null ? `P${playerIndex}` : Lang_Utils.getText(Lang_TextType.TextType.B0030));
         this._imgBg.loadSource(Helpers_ImageSource.getSkinButtonBackground(openData.skinId ?? 0));
     }
 

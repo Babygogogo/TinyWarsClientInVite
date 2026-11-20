@@ -10,7 +10,7 @@ import {
     GamePanels_Manager,
     Turns_Constants,
     Players_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type BaseWar_Model_War,
     type Ui_Interfaces_IUiButton,
@@ -135,7 +135,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
             currentNumberArray   : condition.getPlayerIndexArray(),
             availableNumberArray : Helpers_Collection.createRange(Players_Constants.PlayerIndex.Neutral, war.getPlayersCountUnneutral() + 1, 1),
-            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0031)),
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.B0031)),
             getNumberMainText    : playerIndex => `P${playerIndex}`,
             callbackOnConfirm    : playerIndexArray => {
                 condition.setPlayerIndexArray(playerIndexArray);
@@ -146,7 +146,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTurnIndex(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Turns),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Turns),
             minValue     : 0,
             maxValue     : Turns_Constants.TurnIndex.MaxLimit,
             currentValue : condition.getTurnIndex(),
@@ -159,7 +159,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTurnDivider(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0518),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0518),
             minValue     : 2,
             maxValue     : Turns_Constants.TurnIndex.MaxLimit,
             currentValue : condition.getTurnIndexDivider(),
@@ -172,7 +172,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTurnRemainder(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0519),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0519),
             minValue     : 0,
             maxValue     : Turns_Constants.TurnIndex.MaxLimit,
             currentValue : condition.getTurnIndexRemainder(),
@@ -197,16 +197,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnTurnIndex.setLangText(Lang_Constants.TextType.Turns);
-        this._btnTurnIndexComparator.setLangText(Lang_Constants.TextType.Comparator);
-        this._btnTurnDivider.setLangText(Lang_Constants.TextType.B0518);
-        this._btnTurnRemainder.setLangText(Lang_Constants.TextType.B0519);
-        this._btnTurnRemainderComparator.setLangText(Lang_Constants.TextType.Comparator);
-        this._btnTurnPhase.setLangText(Lang_Constants.TextType.B0782);
-        this._btnPlayerIndex.setLangText(Lang_Constants.TextType.B0031);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnTurnIndex.setLangText(Lang_TextType.TextType.Turns);
+        this._btnTurnIndexComparator.setLangText(Lang_TextType.TextType.Comparator);
+        this._btnTurnDivider.setLangText(Lang_TextType.TextType.B0518);
+        this._btnTurnRemainder.setLangText(Lang_TextType.TextType.B0519);
+        this._btnTurnRemainderComparator.setLangText(Lang_TextType.TextType.Comparator);
+        this._btnTurnPhase.setLangText(Lang_TextType.TextType.B0782);
+        this._btnPlayerIndex.setLangText(Lang_TextType.TextType.B0031);
 
         this._updateLabelDescAndLabelError();
     }
@@ -221,7 +221,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Conditions_Utils_Common.getErrorTipForCondition(openData.fullData, condition, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Conditions_Utils_Common.getDetailedDescForCondition(condition, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
@@ -248,11 +248,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _updateLabelTurnPhase(): void {
         const turnPhase = this._getCondition().getTurnPhase();
-        this._labelTurnPhase.setText(turnPhase == null ? Lang_Utils.getText(Lang_Constants.TextType.B0776) : (Lang_Utils.getTurnPhaseName(turnPhase) ?? Lang_Constants.UndefinedError));
+        this._labelTurnPhase.setText(turnPhase == null ? Lang_Utils.getText(Lang_TextType.TextType.B0776) : (Lang_Utils.getTurnPhaseName(turnPhase) ?? Lang_Constants.UndefinedError));
     }
     private _updateLabelPlayerIndex(): void {
         const playerIndexArray = this._getCondition().getPlayerIndexArray();
-        this._labelPlayerIndex.setText(playerIndexArray?.length ? playerIndexArray.map(v => `P${v}`).join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.B0776));
+        this._labelPlayerIndex.setText(playerIndexArray?.length ? playerIndexArray.map(v => `P${v}`).join(`, `) : Lang_Utils.getText(Lang_TextType.TextType.B0776));
     }
 
     private _getCondition(): WecTurnAndPlayer {

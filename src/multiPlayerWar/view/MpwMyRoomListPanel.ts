@@ -38,7 +38,7 @@ import {
     MultiRankRoom_Model_MrrProxy,
     Sounds_Constants,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     Ui_Components_UiTabItemRenderer,
@@ -392,7 +392,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Atr) {
             const roomInfo = await AutoTourneys_Rooms_Provider.getRoomInfo(roomId);
             if (roomInfo == null) {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             } else {
                 (await AutoTourneys_Rooms_Provider.getSelfSettings(roomId))?.resetData(roomInfo);
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtrRoomInfoPanel, {
@@ -418,7 +418,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mmr) {
             const roomInfo = await MultiMatchRoom_Model_MmrModel.getRoomInfo(roomId);
             if (roomInfo == null) {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             } else {
                 (await MultiMatchRoom_Model_MmrModel.getSelfSettings(roomId))?.resetData(roomInfo);
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmrRoomInfoPanel, {
@@ -429,7 +429,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mrr) {
             const roomInfo = await MultiRankRoom_Model_MrrModel.getRoomInfo(roomId);
             if (roomInfo == null) {
-                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+                FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             } else {
                 (await MultiRankRoom_Model_MrrModel.getSelfSettings(roomId))?.resetData(roomInfo);
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MrrRoomInfoPanel, {
@@ -446,22 +446,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -478,12 +478,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
-        this._labelMultiPlayer.setLangText(Lang_Constants.TextType.B0137);
-        this._labelMyRoom.setLangText(Lang_Constants.TextType.B0410);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._labelNoRoom.setLangText(Lang_Constants.TextType.B0582);
-        this._btnNextStep.setLangText(Lang_Constants.TextType.B1383);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0040);
+        this._labelMultiPlayer.setLangText(Lang_TextType.TextType.B0137);
+        this._labelMyRoom.setLangText(Lang_TextType.TextType.B0410);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._labelNoRoom.setLangText(Lang_TextType.TextType.B0582);
+        this._btnNextStep.setLangText(Lang_TextType.TextType.B1383);
 
         this._groupNavigator.arrangeItems();
     }
@@ -922,7 +922,7 @@ class RoomRenderer
                 : ``,
             );
             labelName.setText(roomInfo
-                ? roomInfo.getSettingsForMfw()?.getWarName() || `(${Lang_Utils.getText(Lang_Constants.TextType.B0557)})`
+                ? roomInfo.getSettingsForMfw()?.getWarName() || `(${Lang_Utils.getText(Lang_TextType.TextType.B0557)})`
                 : ``,
             );
 

@@ -8,7 +8,7 @@ import {
     GamePanels_Manager,
     Helpers_GameFlow,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeModel,
     MapEditor_Model_MeProxy,
@@ -103,7 +103,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
         const slotIndex = ((Helpers_Misc.getExisted(e.data)).msg).getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0872),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0872),
             callback   : async () => {
                 const mapEditorData             = await MapEditor_Model_MeModel.getMapEditorData(slotIndex);
                 const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent ?? null;
@@ -117,7 +117,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     });
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0015),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0015),
                         callback   : () => Helpers_GameFlow.gotoMapEditorWar({
                             mapRawData                : mapEditorData?.mapRawData,
                             slotIndex                 : slotIndex,
@@ -136,7 +136,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnDeleteUnit(): void {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
@@ -146,7 +146,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (war.getPlayerInTurn().getUserId() !== Users_Model.getSelfUserId()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0242));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0242));
             return;
         }
 
@@ -159,11 +159,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const unit          = unitMap.getVisibleUnitOnMap(gridIndex);
         const playerIndex   = war.getPlayerIndexInTurn();
         if (!unit) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0027));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0027));
         } else if ((unit.getPlayerIndex() !== playerIndex) || (unit.getActionState() !== Units_Constants.ActionStateId.Idle)) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0028));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0028));
         } else if (unitMap.countUnitsOnMapForPlayer(playerIndex) <= 1) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0076));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0076));
         } else {
             const planner = war.getActionPlanner();
             if (planner == null) {
@@ -171,8 +171,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0081),
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0029),
+                getTitle   : () => Lang_Utils.getText(Lang_TextType.TextType.B0081),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0029),
                 callback   : () => ActionPlanners_States_RequestingPlayerDeleteUnit.RequestingPlayerDeleteUnit.getInstance().doApplyOnChooseAction(planner),
             });
         }
@@ -180,7 +180,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnFreeMode(): void {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
@@ -190,7 +190,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         if (war.getPlayerManager().getAliveOrDyingTeamsCount(false) < 2) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0199));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0199));
             return;
         }
 
@@ -202,7 +202,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
+            getContent : () => `${Lang_Utils.getText(Lang_TextType.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_TextType.TextType.A0201)}`,
             callback   : () => {
                 Helpers_GameFlow.gotoMfrCreateSettingsPanel(warData);
             },
@@ -223,11 +223,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue      = Maps_Constants.Common.MinRating;
         const maxValue      = Maps_Constants.Common.MaxRating;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0363),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0363),
             currentValue : Users_Model.getMapRating(normalMapId) || 0,
             minValue,
             maxValue,
-            getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0238),
+            getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0238),
             callback     : value => {
                 Users_Proxy.reqUserSetMapRating(normalMapId, value);
             },
@@ -291,7 +291,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const playerIndex = war.getPlayerIndexLoggedIn();
         if (playerIndex == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -299,7 +299,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if ((!drawVoteManager.checkCanVote(playerIndex, true))  &&
             (!drawVoteManager.checkCanVote(playerIndex, false))
         ) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0240));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0240));
             return;
         }
 
@@ -311,14 +311,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const state = ActionPlanners_States_RequestingPlayerVoteForDraw.RequestingPlayerVoteForDraw.getInstance();
         if (!drawVoteManager.checkHasOngoingVote()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0031),
+                getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0031),
                 callback   : () => state.doApplyOnChooseAction(actionPlanner, playerIndex, true),
             });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0241),
-                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0214),
-                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0215),
+                getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0241),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.B0214),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.B0215),
                 showButtonClose   : true,
                 callback          : () => {
                     state.doApplyOnChooseAction(actionPlanner, playerIndex, true);
@@ -334,7 +334,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnSurrender(): void {
         if (!this._checkCanDoAction()) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0239));
             return;
         }
 
@@ -345,7 +345,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const player = war.getPlayerLoggedIn();
         if (player?.getAliveState() !== Players_Constants.AliveStateId.Alive) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.YouCanNotDoThisRightNow));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.YouCanNotDoThisRightNow));
             return;
         }
 
@@ -355,8 +355,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B0055),
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            getTitle       : () => Lang_Utils.getText(Lang_TextType.TextType.B0055),
+            getContent     : () => Lang_Utils.getText(Lang_TextType.TextType.AreYouSureYouWantToContinue),
             showRedConfirm : true,
             callback       : () => {
                 ActionPlanners_States_RequestingPlayerSurrender.RequestingPlayerSurrender.getInstance().doApplyOnChooseAction(planner, player.getPlayerIndex());
@@ -375,21 +375,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0155);
-        this._btnDeleteUnit.setLangText(Lang_Constants.TextType.B0081);
-        this._btnFreeMode.setLangText(Lang_Constants.TextType.B1285);
-        this._btnMarkGrid.setLangText(Lang_Constants.TextType.B1108);
-        this._btnSurrender.setLangText(Lang_Constants.TextType.B0055);
-        this._btnEditMap.setLangText(Lang_Constants.TextType.B0458);
-        this._btnOverrideSkin.setLangText(Lang_Constants.TextType.B0609);
-        this._btnCustomCounter.setLangText(Lang_Constants.TextType.B1143);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0155);
+        this._btnDeleteUnit.setLangText(Lang_TextType.TextType.B0081);
+        this._btnFreeMode.setLangText(Lang_TextType.TextType.B1285);
+        this._btnMarkGrid.setLangText(Lang_TextType.TextType.B1108);
+        this._btnSurrender.setLangText(Lang_TextType.TextType.B0055);
+        this._btnEditMap.setLangText(Lang_TextType.TextType.B0458);
+        this._btnOverrideSkin.setLangText(Lang_TextType.TextType.B0609);
+        this._btnCustomCounter.setLangText(Lang_TextType.TextType.B1143);
         this._updateBtnUnitOpacity();
         this._updateBtnMapRating();
         this._updateBtnSetDraw();
     }
 
     private _updateBtnUnitOpacity(): void {
-        this._btnUnitOpacity.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0747)}: ${Users_Model.getSelfSettingsOpacitySettings()?.getUnitOpacity() ?? 100}%`);
+        this._btnUnitOpacity.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0747)}: ${Users_Model.getSelfSettingsOpacitySettings()?.getUnitOpacity() ?? 100}%`);
     }
 
     private _updateBtnMapRating(): void {
@@ -398,7 +398,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (normalMapId == null) {
             btn.setText(``);
         } else {
-            btn.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0804)}: ${Users_Model.getMapRating(normalMapId) ?? `--`}`);
+            btn.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0804)}: ${Users_Model.getMapRating(normalMapId) ?? `--`}`);
         }
     }
 
@@ -428,7 +428,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateBtnSetDraw(): void {
-        this._btnSetDraw.setLangText(!this.getOpenData()?.war.getDrawVoteManager().checkHasOngoingVote() ? Lang_Constants.TextType.B0690 : Lang_Constants.TextType.B0841);
+        this._btnSetDraw.setLangText(!this.getOpenData()?.war.getDrawVoteManager().checkHasOngoingVote() ? Lang_TextType.TextType.B0690 : Lang_TextType.TextType.B0841);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

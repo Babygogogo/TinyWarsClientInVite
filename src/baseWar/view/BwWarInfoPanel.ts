@@ -8,7 +8,7 @@ import {
     GamePanels_Manager,
     Helpers_ImageSource,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MultiMatchWar_Model_MmwWar,
     MultiRankWar_Model_MrwWar,
@@ -386,15 +386,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const label = this._labelTitle;
         if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             if (war.getSettingsForSrw()) {
-                label.setLangText(Lang_Constants.TextType.B1115);
+                label.setLangText(Lang_TextType.TextType.B1115);
             } else {
-                label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0710)} #${war.getReplayId()}`);
+                label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0710)} #${war.getReplayId()}`);
             }
         } else {
             const warId = war.getWarId();
             label.setText(warId == null
-                ? Lang_Utils.getText(Lang_Constants.TextType.B0223)
-                : `${Lang_Utils.getText(Lang_Constants.TextType.B0719)} #${warId}`,
+                ? Lang_Utils.getText(Lang_TextType.TextType.B0223)
+                : `${Lang_Utils.getText(Lang_TextType.TextType.B0719)} #${warId}`,
             );
         }
     }
@@ -402,7 +402,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _updateLabelTips(): void {
         const war = this.getOpenData()?.war;
         this._labelTips.setText((war instanceof SingleCustomWars_War.War) || (war instanceof SingleFreeWars_War.War)
-            ? Lang_Utils.getText(Lang_Constants.TextType.A0998)
+            ? Lang_Utils.getText(Lang_TextType.TextType.A0998)
             : ``,
         );
     }
@@ -644,7 +644,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const player                = war.getPlayer(playerIndex);
         const isHuman               = player.getUserId() != null;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => isHuman ? Lang_Utils.getText(Lang_Constants.TextType.A0110) : Lang_Utils.getText(Lang_Constants.TextType.A0111),
+            getContent : () => isHuman ? Lang_Utils.getText(Lang_TextType.TextType.A0110) : Lang_Utils.getText(Lang_TextType.TextType.A0111),
             callback   : () => {
                 player.setUserId(isHuman ? null : Users_Model.getSelfUserId());
                 this._updateView();
@@ -659,7 +659,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const { playerIndex, war }  = openData;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0072, playerIndex),
+            getContent : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0072, playerIndex),
             callback   : () => {
                 const warRuleCommonData = Helpers_Misc.getExisted(war.getInstanceWarRule().getWarRuleCommonData());
                 const playerRule        = WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex);
@@ -706,7 +706,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             availableCoCategoryIdArray : gameConfig.getAllEnabledCoCategoryIdArray(),
             currentCoCategoryIdArray   : getBannedCoCategoryIdArray(war, playerIndex),
             isBan                      : true,
-            getTitleText               : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0403)} (P${playerIndex})`,
+            getTitleText               : () => `${Lang_Utils.getText(Lang_TextType.TextType.B0403)} (P${playerIndex})`,
         });
     }
     private _modifyAsEnergy(): void {
@@ -719,7 +719,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const player                = war.getPlayer(playerIndex);
         const currValue             = player.getCoCurrentEnergy();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => `P${playerIndex} ${Lang_Utils.getText(Lang_Constants.TextType.B0033)}`,
+            getTitle     : () => `P${playerIndex} ${Lang_Utils.getText(Lang_TextType.TextType.B0033)}`,
             currentValue : currValue,
             minValue     : Cos_Constants.EnergyHardLimit.Min,
             maxValue     : Cos_Constants.EnergyHardLimit.Max,
@@ -741,7 +741,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const maxValue              = PlayerRules_Constants.InitialFund.MaxLimit;
         const minValue              = PlayerRules_Constants.InitialFund.MinLimit;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => `P${player.getPlayerIndex()} ${Lang_Utils.getText(Lang_Constants.TextType.Fund)}`,
+            getTitle     : () => `P${player.getPlayerIndex()} ${Lang_Utils.getText(Lang_TextType.TextType.Fund)}`,
             currentValue : currValue,
             minValue     : minValue,
             maxValue     : maxValue,
@@ -781,7 +781,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const userId                = war.getPlayer(playerIndex).getUserId();
         const labelValue            = this._labelValue;
         labelValue.setText(userId == null
-            ? Lang_Utils.getText(Lang_Constants.TextType.B0607)
+            ? Lang_Utils.getText(Lang_TextType.TextType.B0607)
             : Helpers_Misc.getExisted(await Users_Model.getUserNickname(userId), Utils_ClientErrorCode.ClientErrorCode.BwWarInfoPanel_InfoRenderer_UpdateViewAsPlayer_00),
         );
         labelValue.setTextColor(0xFFFFFF);
@@ -1003,15 +1003,15 @@ function getInfoTypesForInfoList(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
 
 function getInfoTypeName(type: InfoType): string | null {
     switch (type) {
-        case InfoType.Player                    : return Lang_Utils.getText(Lang_Constants.TextType.B0031);
-        case InfoType.TeamIndex                 : return Lang_Utils.getText(Lang_Constants.TextType.B0019);
-        case InfoType.Co                        : return Lang_Utils.getText(Lang_Constants.TextType.B0425);
-        case InfoType.BannedCo                  : return Lang_Utils.getText(Lang_Constants.TextType.B0403);
-        case InfoType.Energy                    : return Lang_Utils.getText(Lang_Constants.TextType.B0033);
-        case InfoType.CurrentFund               : return Lang_Utils.getText(Lang_Constants.TextType.Fund);
-        case InfoType.BuildingsAndIncome        : return Lang_Utils.getText(Lang_Constants.TextType.B0689);
-        case InfoType.UnitsAndValue             : return Lang_Utils.getText(Lang_Constants.TextType.B0688);
-        case InfoType.TimeLimit                 : return Lang_Utils.getText(Lang_Constants.TextType.B0021);
+        case InfoType.Player                    : return Lang_Utils.getText(Lang_TextType.TextType.B0031);
+        case InfoType.TeamIndex                 : return Lang_Utils.getText(Lang_TextType.TextType.B0019);
+        case InfoType.Co                        : return Lang_Utils.getText(Lang_TextType.TextType.B0425);
+        case InfoType.BannedCo                  : return Lang_Utils.getText(Lang_TextType.TextType.B0403);
+        case InfoType.Energy                    : return Lang_Utils.getText(Lang_TextType.TextType.B0033);
+        case InfoType.CurrentFund               : return Lang_Utils.getText(Lang_TextType.TextType.Fund);
+        case InfoType.BuildingsAndIncome        : return Lang_Utils.getText(Lang_TextType.TextType.B0689);
+        case InfoType.UnitsAndValue             : return Lang_Utils.getText(Lang_TextType.TextType.B0688);
+        case InfoType.TimeLimit                 : return Lang_Utils.getText(Lang_TextType.TextType.B0021);
         case InfoType.BannedUnitTypeArray       : return Lang_Utils.getPlayerRuleName(PlayerRules_Constants.RuleTypeId.BannedUnitTypeArray);
         case InfoType.InitialFund               : return Lang_Utils.getPlayerRuleName(PlayerRules_Constants.RuleTypeId.InitialFund);
         case InfoType.IncomeMultiplier          : return Lang_Utils.getPlayerRuleName(PlayerRules_Constants.RuleTypeId.IncomeMultiplier);

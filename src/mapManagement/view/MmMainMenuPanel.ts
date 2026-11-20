@@ -4,7 +4,7 @@ import {
     Lang_Utils,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -54,7 +54,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _onMsgMmReloadAllMaps(): void {
-        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0075));
+        FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0075));
     }
     private _onMsgMmGetReviewingMaps(): void {
         this._updateRedForBtnReviewMap();
@@ -64,10 +64,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0192);
-        this._btnReviewMap.setLangText(Lang_Constants.TextType.B0295);
-        this._btnModifyMap.setLangText(Lang_Constants.TextType.B0317);
-        this._btnModifyMapTag.setLangText(Lang_Constants.TextType.B0445);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0192);
+        this._btnReviewMap.setLangText(Lang_TextType.TextType.B0295);
+        this._btnModifyMap.setLangText(Lang_TextType.TextType.B0317);
+        this._btnModifyMapTag.setLangText(Lang_TextType.TextType.B0445);
     }
 
     private async _updateRedForBtnReviewMap(): Promise<void> {
@@ -80,7 +80,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnModifyMap(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
             availableNormalMapIdArray : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
-            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0317),
+            getTitleText              : () => Lang_Utils.getText(Lang_TextType.TextType.B0317),
             isAutoClose               : false,
             callback                  : normalMapId => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmCommandPanel, { normalMapId });

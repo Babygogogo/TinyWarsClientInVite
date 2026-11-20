@@ -2,7 +2,7 @@ import {
     Stages_Constants,
     Lang_Utils,
     Numbers_Utils,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
     type Ui_Interfaces_IUiContainer,
@@ -51,7 +51,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const getTitleText  = openData.getTitleText;
         const textArray     = openData.textArray;
-        this._labelTitle.setText(getTitleText ? getTitleText() : Lang_Utils.getText(Lang_Constants.TextType.B1250));
+        this._labelTitle.setText(getTitleText ? getTitleText() : Lang_Utils.getText(Lang_TextType.TextType.B1250));
         this._scrContent.scrollTop();
 
         const labelText1  = this._labelText1;
@@ -84,6 +84,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _updateComponentsForLanguage(): void {
         this._labelTitle1.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getCurrentLanguageType()) ?? Lang_Constants.UndefinedError);
         this._labelTitle2.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getSecondaryLanguageType()) ?? Lang_Constants.UndefinedError);
-        this._labelTips.setLangText(Lang_Constants.TextType.A0379);
+        this._labelTips.setLangText(Lang_TextType.TextType.A0379);
     }
 }

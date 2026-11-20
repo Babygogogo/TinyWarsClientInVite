@@ -7,7 +7,7 @@ import {
     Graphics_Constants,
     Helpers_Collection,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Notifications_Dispatcher,
     Players_Constants,
@@ -100,7 +100,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const unitArray = action.getUnitArray();
         if (unitArray.length >= WarEvents_Actions_Constants_AddUnitOnMapSimple.Common.MaxCount) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0189));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.A0189));
         } else {
             unitArray.push(getDefaultAddUnitData(openData.war.getGcData()));
             Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -114,7 +114,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0190),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0190),
             callback   : () => {
                 action.getUnitArray().length = 0;
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -145,11 +145,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnAddUnit.setLangText(Lang_Constants.TextType.B0535);
-        this._btnClear.setLangText(Lang_Constants.TextType.B0391);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnAddUnit.setLangText(Lang_TextType.TextType.B0535);
+        this._btnClear.setLangText(Lang_TextType.TextType.B0391);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
     }
 
     private async _updateComponentsForUnits(): Promise<void> {
@@ -175,7 +175,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const label     = this._labelUnitsCount;
         const maxCount  = WarEvents_Actions_Constants_AddUnitOnMapSimple.Common.MaxCount;
         const currCount = dataArray.length;
-        label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0524)}: ${currCount} / ${maxCount}`);
+        label.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0524)}: ${currCount} / ${maxCount}`);
         label.setTextColor(((currCount <= maxCount) && (currCount > 0)) ? Graphics_Constants.ColorValue.White : Graphics_Constants.ColorValue.Red);
     }
 }
@@ -297,7 +297,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0029),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0029),
             callback   : () => {
                 Helpers_Collection.deleteElementFromList(Helpers_Misc.getExisted(openData.action.getWeaAddUnitOnMapSimple()?.getUnitArray()), openData.dataForAddUnit);
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -312,7 +312,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         const unitArray = Helpers_Misc.getExisted(openData.action.getWeaAddUnitOnMapSimple()?.getUnitArray());
         if (unitArray.length >= WarEvents_Actions_Constants_AddUnitOnMapSimple.Common.MaxCount) {
-            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.YouCanNotDoThisRightNow));
+            FloatText.show(Lang_Utils.getText(Lang_TextType.TextType.YouCanNotDoThisRightNow));
         } else {
             const srcData   = openData.dataForAddUnit;
             const index     = unitArray.indexOf(srcData);
@@ -333,9 +333,9 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0414),
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0414),
+            getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.Yes),
+            getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.No),
             callback          : () => {
                 data.setCanBeBlockedByUnit(true);
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -353,9 +353,9 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0415),
-            getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
-            getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
+            getContent        : () => Lang_Utils.getText(Lang_TextType.TextType.A0415),
+            getTextForConfirm : () => Lang_Utils.getText(Lang_TextType.TextType.Yes),
+            getTextForCancel  : () => Lang_Utils.getText(Lang_TextType.TextType.No),
             callback          : () => {
                 data.setNeedMovableTile(true);
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -383,7 +383,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiIntegerPanel, {
             currentIntegerArray   : Units_Utils_Common.getTagIdList(unitData.getGroupedTagId(), true),
             availableIntegerArray : Units_Constants.AllTagIdArray,
-            getTitleText          : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.Tags)),
+            getTitleText          : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.Tags)),
             callbackOnConfirm     : tagIdArray => {
                 unitData.setGroupedTagId(Units_Utils_Common.getEncodedTagId(tagIdArray));
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -419,7 +419,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const destination   = unitData.getAiWeightedDestination();
         const mapSize       = openData.war.getTileMap().getMapSize();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1071),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1071),
             minValue     : 0,
             maxValue     : mapSize.getWidth() - 1,
             currentValue : destination?.getGridIndex()?.getX() ?? 0,
@@ -429,7 +429,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                     Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                        getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1072),
+                        getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1072),
                         minValue     : 0,
                         maxValue     : mapSize.getHeight() - 1,
                         currentValue : destination?.getGridIndex()?.getY() ?? 0,
@@ -439,11 +439,11 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
                             } else {
                                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1094),
+                                    getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1094),
                                     currentValue : destination?.getWeight() ?? 0,
                                     minValue     : -99999999,
                                     maxValue     : 99999999,
-                                    getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0432),
+                                    getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0432),
                                     callback     : value => {
                                         unitData.setAiWeightedDestination(WeightedGridIndex.fromJson({
                                             gridIndex : { x : newX, y : newY },
@@ -511,13 +511,13 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const mapSize   = openData.war.getTileMap().getMapSize();
         const gridIndex = openData.dataForAddUnit.createIfNotExistsUnitData().createIfNotExistsGridIndex();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1071),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1071),
             minValue     : 0,
             maxValue     : mapSize.getWidth() - 1,
             currentValue : gridIndex.getX() ?? 0,
             callback     : gridX => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1072),
+                    getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B1072),
                     minValue     : 0,
                     maxValue     : mapSize.getHeight() - 1,
                     currentValue : gridIndex.getY() ?? 0,
@@ -541,7 +541,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const minValue      = 1;
         const maxValue      = Helpers_Misc.getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getMaxHp());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Hp),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : unitData.getCurrentHp(),
@@ -562,7 +562,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const minValue      = 0;
         const maxValue      = Helpers_Misc.getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getMaxFuel());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Fuel),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Fuel),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : unitData.getCurrentFuel(),
@@ -583,7 +583,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const minValue      = 0;
         const maxValue      = openData.war.getGcData().getUnitMaxPromotion();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Promotion),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Promotion),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : unitData.getCurrentPromotion(),
@@ -603,14 +603,14 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const unitData  = Helpers_Misc.getExisted(openData.dataForAddUnit.getUnitData());
         const arr       = openData.war.getUnitMap().getUnitCustomNameArray();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.CustomNameId),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.CustomNameId),
             availableNumberArray : Helpers_Collection.createRange(0, Units_Constants.CustomName.MaxId + 1, 1),
             currentNumber        : unitData.getCustomNameId() ?? 0,
             columnsCount         : 4,
             showNumber           : true,
             getNumberMainText    : num => {
                 if (num === 0) {
-                    return `(${Lang_Utils.getText(Lang_Constants.TextType.B0391)})`;
+                    return `(${Lang_Utils.getText(Lang_TextType.TextType.B0391)})`;
                 } else {
                     return Lang_Utils.getLanguageText({ textArray : arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() }) ?? `----`;
                 }
@@ -636,7 +636,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const minValue      = 0;
         const maxValue      = Helpers_Misc.getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getPrimaryWeaponMaxAmmo());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.PrimaryWeaponAmmo),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.PrimaryWeaponAmmo),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : unitData.getPrimaryWeaponCurrentAmmo(),
@@ -657,7 +657,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const minValue      = 0;
         const maxValue      = Helpers_Misc.getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getFlareMaxAmmo());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.FlareAmmo),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.FlareAmmo),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : unitData.getFlareCurrentAmmo(),
@@ -678,7 +678,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const minValue      = 0;
         const maxValue      = Helpers_Misc.getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getMaxBuildMaterial());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.BuildMaterial),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.BuildMaterial),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : unitData.getCurrentBuildMaterial(),
@@ -699,7 +699,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const minValue      = 0;
         const maxValue      = Helpers_Misc.getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getMaxProduceMaterial());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.ProductionMaterial),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.ProductionMaterial),
             minValue     : minValue,
             maxValue     : maxValue,
             currentValue : unitData.getCurrentProduceMaterial(),
@@ -743,26 +743,26 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnClone.setLangText(Lang_Constants.TextType.B0748);
-        this._btnDelete.setLangText(Lang_Constants.TextType.B0220);
-        this._btnCanBeBlockedByUnit.setLangText(Lang_Constants.TextType.B0532);
-        this._btnNeedMovableTile.setLangText(Lang_Constants.TextType.B0534);
-        this._btnAiMode.setLangText(Lang_Constants.TextType.AiMode);
-        this._btnUnitTag.setLangText(Lang_Constants.TextType.Tags);
-        this._btnIsDiving.setLangText(Lang_Constants.TextType.B0371);
-        this._btnHasLoadedCo.setLangText(Lang_Constants.TextType.CoOnboard);
-        this._btnGridIndex.setLangText(Lang_Constants.TextType.B0531);
-        this._btnHp.setLangText(Lang_Constants.TextType.Hp);
-        this._btnFuel.setLangText(Lang_Constants.TextType.Fuel);
-        this._btnPromotion.setLangText(Lang_Constants.TextType.Promotion);
-        this._btnCustomNameId.setLangText(Lang_Constants.TextType.CustomNameId);
-        this._btnPrimaryAmmo.setLangText(Lang_Constants.TextType.PrimaryWeaponAmmo);
-        this._btnFlareAmmo.setLangText(Lang_Constants.TextType.FlareAmmo);
-        this._btnBuildMaterial.setLangText(Lang_Constants.TextType.BuildMaterial);
-        this._btnProduceMaterial.setLangText(Lang_Constants.TextType.ProductionMaterial);
-        this._btnActionState.setLangText(Lang_Constants.TextType.ActionState);
-        this._btnAiDestination.setLangText(Lang_Constants.TextType.AiDestination);
-        this._btnUnitType.setLangText(Lang_Constants.TextType.B0525);
+        this._btnClone.setLangText(Lang_TextType.TextType.B0748);
+        this._btnDelete.setLangText(Lang_TextType.TextType.B0220);
+        this._btnCanBeBlockedByUnit.setLangText(Lang_TextType.TextType.B0532);
+        this._btnNeedMovableTile.setLangText(Lang_TextType.TextType.B0534);
+        this._btnAiMode.setLangText(Lang_TextType.TextType.AiMode);
+        this._btnUnitTag.setLangText(Lang_TextType.TextType.Tags);
+        this._btnIsDiving.setLangText(Lang_TextType.TextType.B0371);
+        this._btnHasLoadedCo.setLangText(Lang_TextType.TextType.CoOnboard);
+        this._btnGridIndex.setLangText(Lang_TextType.TextType.B0531);
+        this._btnHp.setLangText(Lang_TextType.TextType.Hp);
+        this._btnFuel.setLangText(Lang_TextType.TextType.Fuel);
+        this._btnPromotion.setLangText(Lang_TextType.TextType.Promotion);
+        this._btnCustomNameId.setLangText(Lang_TextType.TextType.CustomNameId);
+        this._btnPrimaryAmmo.setLangText(Lang_TextType.TextType.PrimaryWeaponAmmo);
+        this._btnFlareAmmo.setLangText(Lang_TextType.TextType.FlareAmmo);
+        this._btnBuildMaterial.setLangText(Lang_TextType.TextType.BuildMaterial);
+        this._btnProduceMaterial.setLangText(Lang_TextType.TextType.ProductionMaterial);
+        this._btnActionState.setLangText(Lang_TextType.TextType.ActionState);
+        this._btnAiDestination.setLangText(Lang_TextType.TextType.AiDestination);
+        this._btnUnitType.setLangText(Lang_TextType.TextType.B0525);
     }
     private _updateComponentsForData(): void {
         this._updateLabelError();
@@ -798,14 +798,14 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             dataForAddUnit : dataForAddUnit,
             war            : openData.war,
         });
-        label.setText(`${Helpers_Misc.getExisted(openData.action.getWeaAddUnitOnMapSimple()?.getUnitArray().indexOf(dataForAddUnit)) + 1}. ${errorTips || Lang_Utils.getText(Lang_Constants.TextType.B0493)}`);
+        label.setText(`${Helpers_Misc.getExisted(openData.action.getWeaAddUnitOnMapSimple()?.getUnitArray().indexOf(dataForAddUnit)) + 1}. ${errorTips || Lang_Utils.getText(Lang_TextType.TextType.B0493)}`);
         label.setTextColor(errorTips ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
     }
     private _updateComponentsForCanBeBlockedByUnit(): void {
-        this._labelCanBeBlockedByUnit.setLangText(this.getOpenData()?.dataForAddUnit.getCanBeBlockedByUnit() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelCanBeBlockedByUnit.setLangText(this.getOpenData()?.dataForAddUnit.getCanBeBlockedByUnit() ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
     private _updateComponentsForNeedMovableTile(): void {
-        this._labelNeedMovableTile.setLangText(this.getOpenData()?.dataForAddUnit.getNeedMovableTile() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelNeedMovableTile.setLangText(this.getOpenData()?.dataForAddUnit.getNeedMovableTile() ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
     private _updateComponentsForAiMode(): void {
         this._labelAiMode.setText(Lang_Utils.getUnitAiModeName(this.getOpenData()?.dataForAddUnit.getUnitData()?.getAiMode() ?? Units_Constants.AiModeId.Normal) ?? Lang_Constants.UndefinedError);
@@ -827,11 +827,11 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             group.setIsVisible(false);
         } else {
             group.setIsVisible(true);
-            this._labelIsDiving.setLangText(unitData.getIsDiving() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+            this._labelIsDiving.setLangText(unitData.getIsDiving() ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
         }
     }
     private _updateComponentsForIsCoOnboard(): void {
-        this._labelHasLoadedCo.setLangText(this.getOpenData()?.dataForAddUnit.getUnitData()?.getIsCoOnboard() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelHasLoadedCo.setLangText(this.getOpenData()?.dataForAddUnit.getUnitData()?.getIsCoOnboard() ? Lang_TextType.TextType.Yes : Lang_TextType.TextType.No);
     }
     private _updateComponentsForActionState(): void {
         const label = this._labelActionState;
@@ -960,22 +960,22 @@ function getErrorTipsForAddUnit({ dataForAddUnit, war }: {
     war             : MapEditor_Model_MeWar.MeWar;
 }): string | null {
     if (dataForAddUnit.getCanBeBlockedByUnit() == null) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0192);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0192);
     }
 
     if (dataForAddUnit.getNeedMovableTile() == null) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0193);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0193);
     }
 
     const unitData      = Helpers_Misc.getExisted(dataForAddUnit.getUnitData());
     const gameConfig    = war.getGcData();
     const unitCfg       = gameConfig.getUnitTemplateCfg(unitData.getUnitType());
     if (unitCfg == null) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.B0525));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.B0525));
     }
 
     if (!AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(unitData.getGridIndex())?.checkIsInsideMap(war.getTileMap().getMapSize())) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.B0531));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.B0531));
     }
 
     {
@@ -983,48 +983,48 @@ function getErrorTipsForAddUnit({ dataForAddUnit, war }: {
         if ((playerIndex > war.getPlayersCountUnneutral())      ||
             (playerIndex < Players_Constants.PlayerIndex.First)
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.PlayerIndex));
         }
     }
 
     {
         if (!Units_Utils_Common.checkIsValidActionStateId(unitData.getActionState())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.ActionState));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.ActionState));
         }
     }
 
     {
         const currentFuel = unitData.getCurrentFuel();
         if ((currentFuel < 0) || (currentFuel > unitCfg.getMaxFuel())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.Fuel));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.Fuel));
         }
     }
 
     {
         const currentHp = unitData.getCurrentHp();
         if ((currentHp < 0) || (currentHp > unitCfg.getMaxHp())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.Hp));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.Hp));
         }
     }
 
     {
         const currentBuildMaterial  = unitData.getCurrentBuildMaterial();
         if ((currentBuildMaterial < 0) || (currentBuildMaterial > (unitCfg.getMaxBuildMaterial() ?? 0))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.BuildMaterial));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.BuildMaterial));
         }
     }
 
     {
         const currentProduceMaterial = unitData.getCurrentProduceMaterial();
         if ((currentProduceMaterial < 0) || (currentProduceMaterial > (unitCfg.getMaxProduceMaterial() ?? 0))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.ProductionMaterial));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.ProductionMaterial));
         }
     }
 
     {
         const currentPromotion = unitData.getCurrentPromotion();
         if ((currentPromotion < 0) || (currentPromotion > gameConfig.getUnitMaxPromotion())) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.Promotion));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.Promotion));
         }
     }
 
@@ -1036,14 +1036,14 @@ function getErrorTipsForAddUnit({ dataForAddUnit, war }: {
     {
         const flareCurrentAmmo  = unitData.getFlareCurrentAmmo();
         if ((flareCurrentAmmo < 0) || (flareCurrentAmmo > (unitCfg.getFlareMaxAmmo() ?? 0))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.FlareAmmo));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.FlareAmmo));
         }
     }
 
     {
         const primaryCurrentAmmo  = unitData.getPrimaryWeaponCurrentAmmo();
         if ((primaryCurrentAmmo < 0) || (primaryCurrentAmmo > (unitCfg.getPrimaryWeaponMaxAmmo() ?? 0))) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.PrimaryWeaponAmmo));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.PrimaryWeaponAmmo));
         }
     }
 
@@ -1052,17 +1052,17 @@ function getErrorTipsForAddUnit({ dataForAddUnit, war }: {
     // }
 
     if (unitData.getLoaderUnitId() != null) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.B0528));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.B0528));
     }
 
     if ((unitData.getIsDiving()) && (unitCfg.getDiveCfg() == null)) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0064, Lang_Utils.getText(Lang_Constants.TextType.B0371));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0064, Lang_Utils.getText(Lang_TextType.TextType.B0371));
     }
 
     // unitData.hasLoadedCo的值不需要检查
 
     if (!Units_Utils_Common.checkIsValidEncodedTagId(unitData.getGroupedTagId())) {
-        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Tags));
+        return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.Tags));
     }
 
     // if (unitData.deprecatedIsBuildingTile) {

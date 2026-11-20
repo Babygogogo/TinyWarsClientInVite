@@ -6,7 +6,7 @@ import {
     Helpers_GameFlow,
     Helpers_Misc,
     Helpers_PointerInput,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     NormalMap_Model_NormalMapModel,
     NormalMap_Model_NormalMapProxy,
@@ -107,19 +107,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnIgnore(): void {
         const data = this._listMap.getFirstSelectedData();
         if (data == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const designerUserId = data.mapRawData.getDesignerUserId();
         if (designerUserId == null) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const mapEditorData = data.mapEditorData;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0980),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0980),
             callback   : () => NormalMap_Model_NormalMapProxy.reqMmAddIgnoredReviewingMap(
                 designerUserId,
                 mapEditorData.getSlotIndex(),
@@ -133,7 +133,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const mapRawData = this._listMap.getFirstSelectedData()?.mapRawData;
         if (mapRawData == null) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowMapPanel, {
                 mapInfo : {
@@ -149,11 +149,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._labelTitle.setLangText(Lang_Constants.TextType.B0892);
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0078);
-        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
-        this._btnIgnore.setLangText(Lang_Constants.TextType.B1472);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B0892);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0078);
+        this._labelTips.setLangText(Lang_TextType.TextType.B1249);
+        this._btnIgnore.setLangText(Lang_TextType.TextType.B1472);
     }
 
     private async _updateComponentsForMaps(): Promise<void> {
@@ -251,7 +251,7 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
         const mapRawData = openData.mapRawData;
         this._labelMapId.setText(`#${openData.index}`);
-        this._labelMapName.setText(Lang_Utils.getLanguageText({ textArray : mapRawData.getMapNameArray() }) || `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`);
+        this._labelMapName.setText(Lang_Utils.getLanguageText({ textArray : mapRawData.getMapNameArray() }) || `(${Lang_Utils.getText(Lang_TextType.TextType.B0277)})`);
         this._labelDesigner.setText(mapRawData.getDesignerName() ?? Lang_Constants.UndefinedError);
 
         this._layoutName.arrangeItems();

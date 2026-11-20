@@ -8,7 +8,7 @@ import {
     Users_Model,
     GamePanels_Manager,
     FloatText,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type GameConfigs_GameConfig,
@@ -78,7 +78,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnPreviousVersion(): Promise<void> {
         const configVersion = await GameConfigs_Provider.getPreviousConfigVersion(this._configVersion);
         if (configVersion == null) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
         } else {
             this._configVersion = configVersion;
             this._updateView();
@@ -88,7 +88,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnNextVersion(): Promise<void> {
         const configVersion = await GameConfigs_Provider.getNextConfigVersion(this._configVersion);
         if (configVersion == null) {
-            FloatText.showLang(Lang_Constants.TextType.B0278);
+            FloatText.showLang(Lang_TextType.TextType.B0278);
         } else {
             this._configVersion = configVersion;
             this._updateView();
@@ -111,14 +111,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1103);
-        this._labelSpmNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._labelSpmRank.setLangText(Lang_Constants.TextType.B0904);
-        this._labelSpmNickname.setLangText(Lang_Constants.TextType.B0175);
-        this._labelSpmScore.setLangText(Lang_Constants.TextType.B0579);
-        this._labelVersionTitle.setLangText(Lang_Constants.TextType.B1104);
-        this._btnPreviousVersion.setLangText(Lang_Constants.TextType.B1029);
-        this._btnNextVersion.setLangText(Lang_Constants.TextType.B1030);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1103);
+        this._labelSpmNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._labelSpmRank.setLangText(Lang_TextType.TextType.B0904);
+        this._labelSpmNickname.setLangText(Lang_TextType.TextType.B0175);
+        this._labelSpmScore.setLangText(Lang_TextType.TextType.B0579);
+        this._labelVersionTitle.setLangText(Lang_TextType.TextType.B1104);
+        this._btnPreviousVersion.setLangText(Lang_TextType.TextType.B1029);
+        this._btnNextVersion.setLangText(Lang_TextType.TextType.B1030);
     }
 
     private async _updateComponentsForSpm(): Promise<void> {

@@ -5,7 +5,7 @@ import {
     GamePanels_Dict,
     Lang_Utils,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Turns_Constants,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
@@ -99,7 +99,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.Weather),
             availableNumberArray : gameConfig.getAllWeatherTypeArray(),
             currentNumber        : action.getWeatherType(),
             getNumberMainText    : num => Lang_Utils.getWeatherName(num, gameConfig) ?? Lang_Constants.UndefinedError,
@@ -122,7 +122,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Turns),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.Turns),
             minValue     : 0,
             maxValue     : Turns_Constants.TurnIndex.MaxLimit,
             currentValue : action.getWeatherTurnsCount(),
@@ -141,11 +141,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
 
-        this._btnWeatherType.setLangText(Lang_Constants.TextType.Weather);
-        this._btnWeatherTurnsCount.setLangText(Lang_Constants.TextType.Turns);
+        this._btnWeatherType.setLangText(Lang_TextType.TextType.Weather);
+        this._btnWeatherTurnsCount.setLangText(Lang_TextType.TextType.Turns);
 
         this._updateLabelDescAndLabelError();
 
@@ -163,7 +163,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Actions_Utils_Common.getDetailDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
@@ -183,7 +183,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelWeatherTurnsCount.setText(turnsCount == null
             ? Lang_Constants.UndefinedError
             : (turnsCount == 0
-                ? Lang_Utils.getText(Lang_Constants.TextType.B0141)
+                ? Lang_Utils.getText(Lang_TextType.TextType.B0141)
                 : `${turnsCount}`
             ),
         );

@@ -5,7 +5,7 @@ import {
     WarEvents_Constants,
     Helpers_Misc,
     WarEvents_Actions_Constants_Common,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
 } from "../../internal.ts";
 import { WarEvent as ProtoWarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
@@ -90,7 +90,7 @@ export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DO
 export function getErrorTipForEvent(fullData: WarEventFullData, event: ProtoWarEvent): string | null {
     const eventsCount = fullData.getEventArray().length;
     if (eventsCount > WarEvents_Constants.Event.MaxEventsPerMap) {
-        return `${Lang_Utils.getText(Lang_Constants.TextType.A0182)} (${eventsCount}/${WarEvents_Constants.Event.MaxEventsPerMap})`;
+        return `${Lang_Utils.getText(Lang_TextType.TextType.A0182)} (${eventsCount}/${WarEvents_Constants.Event.MaxEventsPerMap})`;
     }
 
     const rootNodeAndActionsArray = event.getRootNodeAndActionsArray();
@@ -99,14 +99,14 @@ export function getErrorTipForEvent(fullData: WarEventFullData, event: ProtoWarE
         const minCount  = 1;
         const maxCount  = WarEvents_Constants.ConditionNode.MaxCountPerEventRoot;
         if ((count < minCount) || (count > maxCount)) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0267, minCount, maxCount, count);
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0267, minCount, maxCount, count);
         }
     }
 
     for (const rootNodeAndActions of rootNodeAndActionsArray) {
         const nodeIdAndFlags = rootNodeAndActions.getNodeIdAndFlags();
         if (nodeIdAndFlags == null) {
-            return Lang_Utils.getText(Lang_Constants.TextType.A0159);
+            return Lang_Utils.getText(Lang_TextType.TextType.A0159);
         }
 
         {
@@ -114,7 +114,7 @@ export function getErrorTipForEvent(fullData: WarEventFullData, event: ProtoWarE
             const minCount  = 1;
             const maxCount  = WarEvents_Actions_Constants_Common.MaxCounts.PerEvent;
             if ((count < minCount) || (count > maxCount)) {
-                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0268, `N${nodeIdAndFlags.getNodeId()}`, `E${event.getEventId()}`, minCount, maxCount, count);
+                return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0268, `N${nodeIdAndFlags.getNodeId()}`, `E${event.getEventId()}`, minCount, maxCount, count);
             }
         }
     }
@@ -125,14 +125,14 @@ export function getErrorTipForEvent(fullData: WarEventFullData, event: ProtoWarE
 export function getErrorTipForEventCallCountInPlayerTurn(event: ProtoWarEvent): string | null {
     const count = event.getMaxCallCountInPlayerTurn();
     if ((count == null) || (count < 1)) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0181);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0181);
     }
 
     const canBeTriggeredRightAfterAnyEvent = event.getCanBeTriggeredRightAfterAnyEvent();
     if (((canBeTriggeredRightAfterAnyEvent) && (count > WarEvents_Constants.Event.MaxCallCountInPlayerTurn))    ||
         ((!canBeTriggeredRightAfterAnyEvent) && (count > WarEvents_Constants.Event.MaxCallCountTotal))
     ) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0181);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0181);
     }
 
     return null;
@@ -141,7 +141,7 @@ export function getErrorTipForEventCallCountInPlayerTurn(event: ProtoWarEvent): 
 export function getErrorTipForEventCallCountTotal(event: ProtoWarEvent): string | null {
     const count = event.getMaxCallCountTotal();
     if ((count == null) || (count < 1) || (count > WarEvents_Constants.Event.MaxCallCountTotal)) {
-        return Lang_Utils.getText(Lang_Constants.TextType.A0181);
+        return Lang_Utils.getText(Lang_TextType.TextType.A0181);
     }
 
     return null;
@@ -158,8 +158,8 @@ export function addEvent(fullData: WarEventFullData): number | null {
                 canBeTriggeredRightAfterAnyEvent : false,
                 rootNodeAndActionsArray          : [],
                 eventNameArray                   : [
-                    { languageType : Lang_Utils.getCurrentLanguageType(), text : `${Lang_Utils.getText(Lang_Constants.TextType.B0469)} #${eventId}` },
-                    { languageType : Lang_Utils.getSecondaryLanguageType(), text : `${Lang_Utils.getText(Lang_Constants.TextType.B0469, Lang_Utils.getSecondaryLanguageType())} #${eventId}` },
+                    { languageType : Lang_Utils.getCurrentLanguageType(), text : `${Lang_Utils.getText(Lang_TextType.TextType.B0469)} #${eventId}` },
+                    { languageType : Lang_Utils.getSecondaryLanguageType(), text : `${Lang_Utils.getText(Lang_TextType.TextType.B0469, Lang_Utils.getSecondaryLanguageType())} #${eventId}` },
                 ],
                 deprecatedActionIdArray : [],
             }));

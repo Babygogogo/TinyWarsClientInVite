@@ -9,7 +9,7 @@ import {
     GamePanels_Manager,
     Sounds_SoundPlayer,
     Sounds_Constants,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -139,7 +139,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnConTileFilter(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0662),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0662),
         });
     }
     private _onTouchedGroupModifyConTileFilter(): void {
@@ -170,7 +170,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnConBuffFilter(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0765),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0765),
         });
     }
     private _onTouchedGroupModifyConBuffFilter(): void {
@@ -201,7 +201,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActBuffType(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0766),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0766),
         });
     }
     private _onTouchedGroupModifyActBuffType(): void {
@@ -232,7 +232,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActExpiringTurnIndex(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0767),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0767),
         });
     }
     private _onTouchedGroupModifyActExpiringTurnIndex(): void {
@@ -263,7 +263,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActExpiringPlayerIndex(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0768),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0768),
         });
     }
     private _onTouchedGroupModifyActExpiringPlayerIndex(): void {
@@ -294,7 +294,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnActExtraParams(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0769),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0769),
         });
     }
     private _onTouchedGroupModifyActExtraParams(): void {
@@ -332,17 +332,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnIdentifier.setLangText(Lang_Constants.TextType.B0131);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnClose.setLangText(Lang_TextType.TextType.B0146);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnIdentifier.setLangText(Lang_TextType.TextType.B0131);
 
-        this._btnConTileFilter.setLangText(Lang_Constants.TextType.TileFilter);
-        this._btnConBuffFilter.setLangText(Lang_Constants.TextType.B1235);
-        this._btnActBuffType.setLangText(Lang_Constants.TextType.B0805);
-        this._btnActExpiringTurnIndex.setLangText(Lang_Constants.TextType.EndTurnIndex);
-        this._btnActExpiringPlayerIndex.setLangText(Lang_Constants.TextType.EndPlayerIndex);
-        this._btnActExtraParams.setLangText(Lang_Constants.TextType.B1229);
+        this._btnConTileFilter.setLangText(Lang_TextType.TextType.TileFilter);
+        this._btnConBuffFilter.setLangText(Lang_TextType.TextType.B1235);
+        this._btnActBuffType.setLangText(Lang_TextType.TextType.B0805);
+        this._btnActExpiringTurnIndex.setLangText(Lang_TextType.TextType.EndTurnIndex);
+        this._btnActExpiringPlayerIndex.setLangText(Lang_TextType.TextType.EndPlayerIndex);
+        this._btnActExtraParams.setLangText(Lang_TextType.TextType.B1229);
 
         this._updateLabelDescAndLabelError();
     }
@@ -357,7 +357,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Actions_Utils_Common.getBriefDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();

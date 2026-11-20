@@ -2,7 +2,7 @@ import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     Helpers_Misc,
     Helpers_Team,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Player,
     Players_Utils_Filter,
@@ -34,7 +34,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
 
     const unitType = data.getActUnitType();
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0252,
+        Lang_TextType.TextType.F0252,
         unitType == null ? Lang_Constants.UndefinedError : Lang_Utils.getUnitName(unitType, gameConfig),
     );
 }
@@ -53,23 +53,23 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${Lang_Utils.getText(Lang_TextType.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
 
     if (!conTextArray.length) {
-        conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
+        conTextArray.push(`- ${Lang_Utils.getText(Lang_TextType.TextType.A0944)}`);
     }
 
     const unitType = data.getActUnitType();
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0253,
+        Lang_TextType.TextType.F0253,
         conTextArray.join(`\n`),
         unitType == null ? Lang_Constants.UndefinedError : Lang_Utils.getUnitName(unitType, gameConfig),
     );
@@ -81,7 +81,7 @@ export function getErrorTip(data: WeaSetUnitTypeSimple, mapSize: AuxiliaryTypes_
         if ((filter != null)                                                                            &&
             (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.UnitFilter));
         }
     }
 
@@ -90,7 +90,7 @@ export function getErrorTip(data: WeaSetUnitTypeSimple, mapSize: AuxiliaryTypes_
         if ((filter != null)                                                                    &&
             (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.PlayerFilter));
         }
     }
 
@@ -99,7 +99,7 @@ export function getErrorTip(data: WeaSetUnitTypeSimple, mapSize: AuxiliaryTypes_
         if ((filter != null)                                                                            &&
             (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.TileFilter));
         }
     }
 
@@ -108,7 +108,7 @@ export function getErrorTip(data: WeaSetUnitTypeSimple, mapSize: AuxiliaryTypes_
         if ((unitType == null)                              ||
             (!gameConfig.checkIsValidUnitType(unitType))
         ) {
-            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0525));
+            return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, Lang_Utils.getText(Lang_TextType.TextType.B0525));
         }
     }
 

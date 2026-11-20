@@ -7,7 +7,7 @@ import {
     Helpers_GameFlow,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeModel,
     MapEditor_Model_MeProxy,
@@ -115,7 +115,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnEdit(): void {
         const mapRawData = this._revisedMapRawData?.clone();
         if (!mapRawData) {
-            FloatText.showLang(Lang_Constants.TextType.A0871);
+            FloatText.showLang(Lang_TextType.TextType.A0871);
         } else {
             for (const rule of mapRawData.getTemplateWarRuleArray()) {
                 rule.getRuleAvailability()?.setCanMrw(false);
@@ -128,7 +128,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 needConfirmOverwrite : true,
                 needNonEmptySlot     : false,
                 getHelpText          : null,
-                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1454),
+                getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B1454),
                 callback             : slotIndex => MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
                     slotIndex                 : slotIndex,
                     mapRawData                : mapRawData,
@@ -148,18 +148,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 allowRedundantMapSimpleDialogues : false,
             }))
         ) {
-            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_TextType.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
             availableNumberArray : [1, 2],
             currentNumber        : 1,
-            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0401),
+            getTitleText         : () => Lang_Utils.getText(Lang_TextType.TextType.B0401),
             getNumberMainText    : num => {
                 switch (num) {
-                    case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0325);
-                    case 2  : return Lang_Utils.getText(Lang_Constants.TextType.B0557);
+                    case 1  : return Lang_Utils.getText(Lang_TextType.TextType.B0325);
+                    case 2  : return Lang_Utils.getText(Lang_TextType.TextType.B0557);
                     default : throw Helpers_Misc.newError(`Invalid num: ${num}`);
                 }
             },
@@ -185,7 +185,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0952),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0952),
             callback   : () => Helpers_GameFlow.gotoRwReplayListPanel({
                 usePreviousFilter    : false,
                 usePreviousPageIndex : false,
@@ -204,11 +204,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue = Maps_Constants.Common.MinRating;
         const maxValue = Maps_Constants.Common.MaxRating;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0363),
+            getTitle     : () => Lang_Utils.getText(Lang_TextType.TextType.B0363),
             currentValue : Users_Model.getMapRating(normalMapId) || 0,
             minValue     : minValue,
             maxValue     : maxValue,
-            getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0238),
+            getHelpText  : () => Lang_Utils.getText(Lang_TextType.TextType.A0238),
             callback     : value => {
                 Users_Proxy.reqUserSetMapRating(normalMapId, value);
             },
@@ -221,7 +221,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event<Notifications_Mapping.Mapping["MsgMeSubmitNormalMap"]>): void {
         const slotIndex = ((Helpers_Misc.getExisted(e.data)).msg).getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0872),
+            getContent : () => Lang_Utils.getText(Lang_TextType.TextType.A0872),
             callback   : async () => {
                 const mapEditorData             = await MapEditor_Model_MeModel.getMapEditorData(slotIndex);
                 const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent ?? null;
@@ -235,7 +235,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     });
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0015),
+                        getContent : () => Lang_Utils.getText(Lang_TextType.TextType.R0015),
                         callback   : () => {
                             Helpers_GameFlow.gotoMapEditorWar({
                                 mapRawData                : mapEditorData?.mapRawData,
@@ -301,7 +301,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             btn.setIsVisible(true);
 
             const rating = Users_Model.getMapRating(normalMapId);
-            btn.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0363)}:\n${rating != null ? rating : `--`}`);
+            btn.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0363)}:\n${rating != null ? rating : `--`}`);
         }
     }
 
@@ -332,7 +332,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 const campaignMapData   = mapRawData.getCampaignMapData();
                 const mapName           = Lang_Utils.getLanguageText({ textArray : mapRawData.getMapNameArray() }) ?? `----`;
                 labelMapName.setText(campaignMapData
-                    ? `${Lang_Utils.getText(Lang_Constants.TextType.B1135)} #${campaignMapData.getCampaignId()}-${campaignMapData.getCampaignMapId()} ${mapName}`
+                    ? `${Lang_Utils.getText(Lang_TextType.TextType.B1135)} #${campaignMapData.getCampaignId()}-${campaignMapData.getCampaignMapId()} ${mapName}`
                     : `#${mapRawData.getNormalMapId()} ${mapName}`,
                 );
                 return;
@@ -361,8 +361,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
-        this._btnReplay.setLangText(Lang_Constants.TextType.B0710);
+        this._labelNoData.setLangText(Lang_TextType.TextType.B0278);
+        this._btnReplay.setLangText(Lang_TextType.TextType.B0710);
     }
 
     protected _showOpenAnimation(): Promise<void> {

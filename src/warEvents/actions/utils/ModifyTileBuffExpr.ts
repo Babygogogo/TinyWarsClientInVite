@@ -7,7 +7,7 @@ import {
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_NumArray,
     ExpressionParsers_Parser,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_Tile,
     ExpressionParsers_Contexts_TileBuff,
     type BaseWar_Model_War,
@@ -90,7 +90,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0081, data.getConTileFilter() ?? Lang_Constants.UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_TextType.TextType.F0081, data.getConTileFilter() ?? Lang_Constants.UndefinedError);
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaModifyTileBuffExpr>): string | null {
     if (data == null) {
@@ -98,14 +98,14 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     }
 
     const additionalText = [
-        `${Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates)}: ${data.getConBuffFilter()}`,
+        `${Lang_Utils.getText(Lang_TextType.TextType.AbnormalStates)}: ${data.getConBuffFilter()}`,
         data.getActBuffType()            ? `${WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActBuffType.getTitleText()}: ${data.getActBuffType()}`                       : null,
         data.getActExpiringTurnIndex()   ? `${WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActExpiringTurnIndex.getTitleText()}: ${data.getActExpiringTurnIndex()}`     : null,
         data.getActExpiringPlayerIndex() ? `${WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActExpiringPlayerIndex.getTitleText()}: ${data.getActExpiringPlayerIndex()}` : null,
         data.getActExtraParams()         ? `${WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActExtraParams.getTitleText()}: ${data.getActExtraParams()}`                 : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0081, data.getConTileFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0081, data.getConTileFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaModifyTileBuffExpr, customCounterNameSet: Set<string>): string | null {
     {
@@ -116,7 +116,7 @@ export function getErrorTip(data: WeaModifyTileBuffExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -128,7 +128,7 @@ export function getErrorTip(data: WeaModifyTileBuffExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -140,7 +140,7 @@ export function getErrorTip(data: WeaModifyTileBuffExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -152,7 +152,7 @@ export function getErrorTip(data: WeaModifyTileBuffExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -164,7 +164,7 @@ export function getErrorTip(data: WeaModifyTileBuffExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -176,7 +176,7 @@ export function getErrorTip(data: WeaModifyTileBuffExpr, customCounterNameSet: S
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

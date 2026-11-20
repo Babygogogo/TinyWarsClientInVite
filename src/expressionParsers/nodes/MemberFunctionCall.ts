@@ -32,7 +32,7 @@ import {
     ExpressionParsers_Results_War,
     ExpressionParsers_Results_WarOperation,
     ExpressionParsers_Contexts_TaskObjective,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_Tile,
     ExpressionParsers_Contexts_TileArray,
     ExpressionParsers_Contexts_TileBuff,
@@ -124,13 +124,13 @@ export class MemberFunctionCall extends ExpressionParsers_Nodes_Base.Base {
         customCounterNameSet    : Set<string>;
     }): ExpressionParsers_Enums.ResultType {
         const lhsResultType     = this._lhs.getResultType({
-            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet,
         });
         const newContextType    = ExpressionParsers_Utils.getContextType(lhsResultType);
         const identifierName    = this._identifierName;
         if ((newContextType == null) || (newContextType === ExpressionParsers_Enums.ContextType.Unknown)) {
             throw Helpers_Misc.newError(
-                Lang_Utils.getFormattedText(Lang_Constants.TextType.F0035, identifierName),
+                Lang_Utils.getFormattedText(Lang_TextType.TextType.F0035, identifierName),
                 Utils_ClientErrorCode.ClientErrorCode.EpNodeMemberFunction_GetResultType_00,
             );
         }
@@ -138,7 +138,7 @@ export class MemberFunctionCall extends ExpressionParsers_Nodes_Base.Base {
         const info = ExpressionParsers_Utils.getFunctionInfoDict(newContextType).get(identifierName);
         if (info == null) {
             throw Helpers_Misc.newError(
-                Lang_Utils.getFormattedText(Lang_Constants.TextType.F0036, Lang_Utils.getExpressionParserContextName(newContextType), identifierName),
+                Lang_Utils.getFormattedText(Lang_TextType.TextType.F0036, Lang_Utils.getExpressionParserContextName(newContextType), identifierName),
                 Utils_ClientErrorCode.ClientErrorCode.EpNodeMemberFunction_GetResultType_01,
             );
         }

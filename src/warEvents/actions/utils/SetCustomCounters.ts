@@ -7,7 +7,7 @@ import {
     ExpressionParsers_Results_Num,
     ExpressionParsers_Results_NumArray,
     ExpressionParsers_Parser,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     ExpressionParsers_Contexts_War,
     type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
@@ -48,7 +48,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     }
 
     return Lang_Utils.getFormattedText(
-        Lang_Constants.TextType.F0042,
+        Lang_TextType.TextType.F0042,
         data.getIdExpression(),
         data.getValueExpression(),
     );
@@ -66,7 +66,7 @@ export function getErrorTip(data: WeaSetCustomCounters, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -78,7 +78,7 @@ export function getErrorTip(data: WeaSetCustomCounters, customCounterNameSet: Se
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_TextType.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 

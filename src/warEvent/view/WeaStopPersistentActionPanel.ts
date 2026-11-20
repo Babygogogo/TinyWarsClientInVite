@@ -7,7 +7,7 @@ import {
     Helpers_Misc,
     Lang_Utils,
     GamePanels_Manager,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiPanel,
     type MapEditor_Model_MeWar,
     type Ui_Interfaces_IUiButton,
@@ -103,7 +103,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             availableNumberArray : warEventFullData.getActionArray().filter(v => WarEvents_Actions_Utils_Common.checkIsPersistentAction(v)).map(v => Helpers_Misc.getExisted(v.getWeaCommonData()?.getActionId())),
             showNumber           : true,
             getNumberMainText    : actionId => WarEvents_Actions_Utils_Common.getBriefDescForAction(Helpers_Misc.getExisted(WarEvents_FullDatas_Utils.getAction(warEventFullData, actionId)), gameConfig) ?? Lang_Constants.UndefinedError,
-            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0889)),
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_TextType.TextType.F0092, Lang_Utils.getText(Lang_TextType.TextType.B0889)),
             callbackOnConfirm    : actionIdArray => {
                 action.setActionIdArray(actionIdArray);
                 Notifications_Dispatcher.dispatch("WarEventFullDataChanged");
@@ -120,9 +120,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(Lang_Constants.TextType.B0516);
-        this._btnActActionIdArray.setLangText(Lang_Constants.TextType.B0889);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_TextType.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_TextType.TextType.B0516);
+        this._btnActActionIdArray.setLangText(Lang_TextType.TextType.B0889);
 
         this._updateLabelDescAndLabelError();
     }
@@ -137,7 +137,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war               = openData.war;
         const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_TextType.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
         this._labelDesc.setText(WarEvents_Actions_Utils_Common.getBriefDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();

@@ -10,7 +10,7 @@ import {
     Helpers_GameFlow,
     Helpers_Misc,
     Helpers_ProtoSchema_WarSerialization_SerialWar,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Lang_Utils,
     Players_Constants,
     SinglePlayerMode_Model_SpmModel,
@@ -139,22 +139,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_TextType.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -171,13 +171,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
-        this._labelSinglePlayer.setLangText(Lang_Constants.TextType.B0138);
-        this._labelContinue.setLangText(Lang_Constants.TextType.B0024);
-        this._labelChooseWar.setLangText(Lang_Constants.TextType.B0589);
-        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
-        this._labelNoWar.setLangText(Lang_Constants.TextType.B0210);
-        this._btnNextStep.setLangText(Lang_Constants.TextType.B0024);
+        this._labelLoading.setLangText(Lang_TextType.TextType.A0040);
+        this._labelSinglePlayer.setLangText(Lang_TextType.TextType.B0138);
+        this._labelContinue.setLangText(Lang_TextType.TextType.B0024);
+        this._labelChooseWar.setLangText(Lang_TextType.TextType.B0589);
+        this._btnBack.setLangText(Lang_TextType.TextType.B0146);
+        this._labelNoWar.setLangText(Lang_TextType.TextType.B0210);
+        this._btnNextStep.setLangText(Lang_TextType.TextType.B0024);
 
         this._groupNavigator.arrangeItems();
     }

@@ -6,7 +6,7 @@ import {
     TileObjects_Utils,
     Lang_Utils,
     Helpers_Misc,
-    Lang_Constants,
+    Lang_Constants, Lang_TextType,
     Ui_Components_UiListItemRenderer,
     Ui_Components_UiPanel,
     type Ui_Interfaces_IUiButton,
@@ -113,8 +113,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(Lang_Constants.TextType.B1168);
-        this._btnSort.setLangText(Lang_Constants.TextType.B1049);
+        this._labelTitle.setLangText(Lang_TextType.TextType.B1168);
+        this._btnSort.setLangText(Lang_TextType.TextType.B1049);
         this._updateLabelContent();
     }
 
@@ -187,7 +187,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 };
             }), sortType);
         } else if (category === Category.TileBuff) {
-            return Lang_Utils.getText(Lang_Constants.TextType.A0759);
+            return Lang_Utils.getText(Lang_TextType.TextType.A0759);
         } else if (category === Category.Weather) {
             return getTextForCategoryData(
                 gameConfig.getAllWeatherTypeArray().map(v => ({
@@ -200,10 +200,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return getTextForCategoryData(gameConfig.getAllEnabledCoCategoryIdArray().map(v => ({ typeId : v, typeName : gameConfig.getCoCategoryCfg(v)?.getName() ?? Lang_Constants.UndefinedError })), sortType);
         } else if (category === Category.PlayerAliveState) {
             const text1 = getTextForCategoryData(Players_Constants.AllAliveStateIdArray.map(v => ({ typeId : v, typeName : Lang_Utils.getPlayerAliveStateName(v) ?? Lang_Constants.UndefinedError })), sortType);
-            const text2 = Lang_Utils.getText(Lang_Constants.TextType.A0272);
+            const text2 = Lang_Utils.getText(Lang_TextType.TextType.A0272);
             return `${text1}\n\n${text2}`;
         } else if (category === Category.WarOperation) {
-            return Lang_Utils.getText(Lang_Constants.TextType.A0708);
+            return Lang_Utils.getText(Lang_TextType.TextType.A0708);
         } else {
             throw Helpers_Misc.newError(`Invalid category: ${category}`);
         }
@@ -234,17 +234,17 @@ class CategoryRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
 function getCategoryName(category: Category): string {
     switch (category) {
-        case Category.TileType              : return Lang_Utils.getText(Lang_Constants.TextType.B1357);
-        case Category.UnitType              : return Lang_Utils.getText(Lang_Constants.TextType.B1358);
-        case Category.UnitMoveType          : return Lang_Utils.getText(Lang_Constants.TextType.B1362);
-        case Category.TileBaseType          : return Lang_Utils.getText(Lang_Constants.TextType.B1199);
-        case Category.TileObjectType        : return Lang_Utils.getText(Lang_Constants.TextType.B1201);
-        case Category.TileDecorationType    : return Lang_Utils.getText(Lang_Constants.TextType.B1203);
-        case Category.TileBuff              : return Lang_Utils.getText(Lang_Constants.TextType.B1361);
-        case Category.Weather               : return Lang_Utils.getText(Lang_Constants.TextType.B1359);
-        case Category.CoCategory            : return Lang_Utils.getText(Lang_Constants.TextType.B1213);
-        case Category.PlayerAliveState      : return Lang_Utils.getText(Lang_Constants.TextType.PlayerAliveState);
-        case Category.WarOperation          : return Lang_Utils.getText(Lang_Constants.TextType.B1360);
+        case Category.TileType              : return Lang_Utils.getText(Lang_TextType.TextType.B1357);
+        case Category.UnitType              : return Lang_Utils.getText(Lang_TextType.TextType.B1358);
+        case Category.UnitMoveType          : return Lang_Utils.getText(Lang_TextType.TextType.B1362);
+        case Category.TileBaseType          : return Lang_Utils.getText(Lang_TextType.TextType.B1199);
+        case Category.TileObjectType        : return Lang_Utils.getText(Lang_TextType.TextType.B1201);
+        case Category.TileDecorationType    : return Lang_Utils.getText(Lang_TextType.TextType.B1203);
+        case Category.TileBuff              : return Lang_Utils.getText(Lang_TextType.TextType.B1361);
+        case Category.Weather               : return Lang_Utils.getText(Lang_TextType.TextType.B1359);
+        case Category.CoCategory            : return Lang_Utils.getText(Lang_TextType.TextType.B1213);
+        case Category.PlayerAliveState      : return Lang_Utils.getText(Lang_TextType.TextType.PlayerAliveState);
+        case Category.WarOperation          : return Lang_Utils.getText(Lang_TextType.TextType.B1360);
         default                             : throw Helpers_Misc.newError(`Invalid category: ${category}`);
     }
 }
