@@ -247,7 +247,7 @@ export * as CoSkills_Utils_Persistent_SelfUnitFuelConsumption from "./coSkills/u
 export * as CoSkills_Utils_Persistent_SelfUnitLuckRange from "./coSkills/utils/persistent/SelfUnitLuckRange.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitMoveRange from "./coSkills/utils/persistent/SelfUnitMoveRange.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitOffense from "./coSkills/utils/persistent/SelfUnitOffense.ts";
-export * as CoSkills_Utils_Persistent_SelfUnitVision from "./coSkills/utils/persistent/SelfUnitVision.ts";
+export * as CoSkills_Utils_Persistent_Visions from "./coSkills/utils/persistent/Visions.ts";
 export * as CoSkills_Utils_InstantManual_ChangeWeather from "./coSkills/utils/instantManual/ChangeWeather.ts";
 export * as CoSkills_Utils_InstantManual_EnemyEnergy from "./coSkills/utils/instantManual/EnemyEnergy.ts";
 export * as CoSkills_Utils_InstantManual_EnemyFuelGain from "./coSkills/utils/instantManual/EnemyFuelGain.ts";

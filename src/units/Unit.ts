@@ -17,7 +17,7 @@ import {
     CoSkills_Utils_Persistent_SelfUnitLuckRange,
     CoSkills_Utils_Persistent_SelfUnitMoveRange,
     CoSkills_Utils_Persistent_SelfUnitOffense,
-    CoSkills_Utils_Persistent_SelfUnitVision,
+    CoSkills_Utils_Persistent_Visions,
     type GameConfigs_GameConfig,
     Helpers_Collection,
     Helpers_Misc,
@@ -1802,16 +1802,20 @@ export class Unit {
 
         const gameConfig                = this.getGcData();
         const selfUnitTypeId            = this.getUnitTypeId();
+        const tileTypeId                = this.getWar().getTileMap().getTile(selfGridIndex).getTileTypeId();
+        const weatherTypeId             = Helpers_Misc.getExisted(this.getWar().getWeatherManager().getCurrentWeatherType());
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills() || []) {
-            modifier += CoSkills_Utils_Persistent_SelfUnitVision.getTotalRangeOffset({
-                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitVision(),
+            modifier += CoSkills_Utils_Persistent_Visions.getTotalRangeOffset({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 gridIndex                : selfGridIndex,
                 unitTypeId               : selfUnitTypeId,
+                tileTypeId               : tileTypeId,
+                weatherTypeId            : weatherTypeId,
                 coZoneRadius             : coZoneRadius,
                 isCoOnboard              : isCoOnboard,
                 getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
@@ -1840,11 +1844,15 @@ export class Unit {
         const coZoneRadius              = player.getCoZoneRadius();
         const isCoOnboard               = this.getIsCoOnboard();
         const selfGridIndex             = this.getGridIndex();
-        return player.getCoCurrentSkills().some(skillId => CoSkills_Utils_Persistent_SelfUnitVision.checkCanSeeThrough({
-            cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitVision(),
+        const tileTypeId                = this.getWar().getTileMap().getTile(selfGridIndex).getTileTypeId();
+        const weatherTypeId             = Helpers_Misc.getExisted(this.getWar().getWeatherManager().getCurrentWeatherType());
+        return player.getCoCurrentSkills().some(skillId => CoSkills_Utils_Persistent_Visions.checkCanSeeThrough({
+            cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
             gameConfig               : gameConfig,
             gridIndex                : selfGridIndex,
             unitTypeId               : selfUnitTypeId,
+            tileTypeId               : tileTypeId,
+            weatherTypeId            : weatherTypeId,
             coZoneRadius             : coZoneRadius,
             isCoOnboard              : isCoOnboard,
             getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,

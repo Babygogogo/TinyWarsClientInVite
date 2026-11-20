@@ -46,6 +46,8 @@ const runtime = (async () => {
     GameConfigs_GameConfig: 'gameConfigs/GameConfig',
     CoSkills_Utils_Persistent_AttackRangeOffsets: 'coSkills/utils/persistent/AttackRangeOffsets',
     CoSkills_Utils_Persistent_SelfUnitMoveRange: 'coSkills/utils/persistent/SelfUnitMoveRange',
+    CoSkills_Utils_Persistent_Visions: 'coSkills/utils/persistent/Visions',
+    AuxiliaryTypes_UnitVisionInfo: 'auxiliaryTypes/UnitVisionInfo',
     Units_Unit: 'units/Unit',
   })) internal[name] = loadSource(filename)
   const { FullConfig, SelfUnitCommonAttributes, CoSkillCfg } = proto
@@ -154,6 +156,137 @@ test('other common attributes do not grant range and a range effect requires sha
     conditions: { coSkillAreaTypeId: 2, unitCategoryId: 1, tileCategoryId: 1, weatherCategoryId: 1 },
     moveRangeOffsets: { offset: 2 },
   })), 0)
+})
+
+test('both vision effects match common attribute conditions; CO units bypass only area, not categories', async () => {
+  const { internal, gameConfig, raw, SelfUnitCommonAttributes } = await runtime
+  const unit = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(cfg => cfg.getUnitTypeId()),
+    cfg => cfg.getUnitCategoryId(), (type, id) => gameConfig.checkIsUnitTypeInCategory(type, id))
+  const tile = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(cfg => cfg.getTileTypeId()),
+    cfg => cfg.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(cfg => cfg.getWeatherTypeId()),
+    cfg => cfg.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const vision = internal.CoSkills_Utils_Persistent_Visions
+  for (const coSkillAreaTypeId of Object.values(internal.CoSkills_Constants.AreaTypeId).filter(v => typeof v === 'number')) {
+    const conditions = { coSkillAreaTypeId, unitCategoryId: unit.id, tileCategoryId: tile.id, weatherCategoryId: weather.id }
+    const cfg = SelfUnitCommonAttributes.fromJson({ conditions, visions: { rangeOffset: -1, canSeeThrough: true } })
+    const common = SelfUnitCommonAttributes.fromJson({ conditions, moveRangeOffsets: { offset: -1 } })
+    for (const unitTypeId of [unit.included, unit.excluded]) {
+      for (const tileTypeId of [tile.included, tile.excluded]) {
+        for (const weatherTypeId of [weather.included, weather.excluded]) {
+          for (const isCoOnboard of [false, true]) {
+            for (const distance of [0, 1, 2, 5]) {
+              const args = { gameConfig, unitTypeId, tileTypeId, weatherTypeId, isCoOnboard,
+                gridIndex: new internal.AuxiliaryTypes_GridIndex.GridIndex(distance, 0), coZoneRadius: 1,
+                getCoGridIndexArrayOnMap: () => [new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)] }
+              const expected = unitTypeId === unit.included && tileTypeId === tile.included
+                && weatherTypeId === weather.included && (isCoOnboard || args.gridIndex.checkIsInsideCoSkillArea({
+                  coSkillAreaType: coSkillAreaTypeId, coZoneRadius: 1, getCoGridIndexArrayOnMap: args.getCoGridIndexArrayOnMap,
+                }))
+              assert.equal(vision.getTotalRangeOffset({ ...args, cfg }), expected ? -1 : 0)
+              assert.equal(vision.checkCanSeeThrough({ ...args, cfg }), expected)
+              assert.equal(vision.getTotalRangeOffset({ ...args, cfg }),
+                internal.CoSkills_Utils_Persistent_SelfUnitMoveRange.getTotalOffset({ ...args, cfg: common }))
+            }
+          }
+        }
+      }
+    }
+  }
+  const args = { gameConfig, unitTypeId: unit.included, tileTypeId: tile.included,
+    weatherTypeId: weather.included, isCoOnboard: true }
+  for (const cfg of [null, SelfUnitCommonAttributes.fromJson({ visions: { rangeOffset: 2, canSeeThrough: true } }),
+    SelfUnitCommonAttributes.fromJson({ conditions: { coSkillAreaTypeId: 0, unitCategoryId: 1, tileCategoryId: 1,
+      weatherCategoryId: 1 }, attackRangeOffsets: { upperOffset: 2 } })]) {
+    assert.equal(vision.getTotalRangeOffset({ ...args, cfg }), 0)
+    assert.equal(vision.checkCanSeeThrough({ ...args, cfg }), false)
+  }
+  const all = SelfUnitCommonAttributes.fromJson({ conditions: { coSkillAreaTypeId: 0, unitCategoryId: 1, tileCategoryId: 1,
+    weatherCategoryId: 1 }, visions: { rangeOffset: 2, canSeeThrough: true } })
+  assert.equal(vision.getTotalRangeOffset({ ...args, cfg: all }), 2)
+  assert.equal(vision.checkCanSeeThrough({ ...args, cfg: all }), true)
+  all.getVisions().setRangeOffset(0)
+  assert.equal(vision.getTotalRangeOffset({ ...args, cfg: all }), 0)
+  assert.equal(vision.checkCanSeeThrough({ ...args, cfg: all }), true)
+  all.getVisions().setRangeOffset(-2)
+  all.getVisions().setCanSeeThrough(false)
+  assert.equal(vision.getTotalRangeOffset({ ...args, cfg: all }), -2)
+  assert.equal(vision.checkCanSeeThrough({ ...args, cfg: all }), false)
+})
+
+test('unit vision passes its own tile and current weather to stacked range and penetrating effects', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg } = await runtime
+  const tile = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(cfg => cfg.getTileTypeId()),
+    cfg => cfg.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(cfg => cfg.getWeatherTypeId()),
+    cfg => cfg.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const skills = [2, -1].map(rangeOffset => CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: {
+    conditions: { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone, unitCategoryId: 1,
+      tileCategoryId: tile.id, weatherCategoryId: weather.id }, visions: { rangeOffset, canSeeThrough: true },
+  } } }))
+  const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id] })
+  let tileTypeId = tile.included
+  let weatherTypeId = weather.included
+  let distance = 0
+  let onboard = false
+  const player = { getCoId: () => 1, getCoZoneRadius: () => 1, getCoCurrentSkills: () => [0, 1],
+    getCoGridIndexListOnMap: () => [new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)] }
+  const unit = Object.assign(Object.create(internal.Units_Unit.Unit.prototype), {
+    getPlayer: () => player, getGcData: () => config, getCfgVisionRange: () => 3, getPlayerIndex: () => 1,
+    getUnitTypeId: () => raw.getUnitTemplate()[0].getUnitTypeId(), getIsCoOnboard: () => onboard,
+    getGridIndex: () => new internal.AuxiliaryTypes_GridIndex.GridIndex(distance, 0),
+    getWar: () => ({
+      getTileMap: () => ({ getTile: grid => { assert.equal(grid.getX(), distance); return { getTileTypeId: () => tileTypeId } } }),
+      getWeatherManager: () => ({ getCurrentWeatherType: () => weatherTypeId, getCurrentWeatherCfg: () => null }),
+      getCommonSettingManager: () => ({ getPlayerRule: () => ({ getUnitVisionRangeModifier: () => 0 }) }),
+      getWarEventManager: () => ({ getOpaUnitVisionRangeModifier: () => 0, getOpaIsPenetratingVision: () => null }),
+    }),
+  })
+  const check = enabled => {
+    const info = unit.getVisionInfo()
+    assert.equal(info.baseRange, enabled ? 4 : 3)
+    assert.equal(info.isPenetrating, enabled)
+  }
+  check(true)
+  tileTypeId = tile.excluded
+  check(false)
+  onboard = true
+  check(false)
+  tileTypeId = tile.included
+  weatherTypeId = weather.excluded
+  check(false)
+  weatherTypeId = weather.included
+  distance = 5
+  onboard = false
+  check(false)
+  onboard = true
+  check(true)
+  for (const skill of skills) {
+    skill.getPersistent().getSelfUnitCommonAttributes().getConditions().setTileCategoryId(1)
+    skill.getPersistent().getSelfUnitCommonAttributes().getConditions().setWeatherCategoryId(1)
+  }
+  tileTypeId = tile.excluded
+  weatherTypeId = weather.excluded
+  check(true)
+})
+
+test('merged vision skills retain selective infantry vision without duplicating the all-unit common effect', async () => {
+  const { internal, FullConfig } = await runtime
+  for (const version of ['A0000000', 'B0000000', 'B0000001', 'B0000002', 'C0000000', 'D0000000']) {
+    const raw = FullConfig.decode(readFileSync(new URL(`../src/assets/resource/config/FullConfig${version}.bin`, import.meta.url)))
+    const gameConfig = new internal.GameConfigs_GameConfig.GameConfig(version, raw)
+    const ids = gameConfig.getCoBasicCfg(10000).getSuperPowerSkillIds()
+    for (const unit of raw.getUnitTemplate()) {
+      const args = { gameConfig, unitTypeId: unit.getUnitTypeId(), tileTypeId: raw.getTileTemplate()[0].getTileTypeId(),
+        weatherTypeId: raw.getWeather()[0].getWeatherTypeId(), isCoOnboard: true }
+      const expected = gameConfig.checkIsUnitTypeInCategory(args.unitTypeId, 2)
+      const calculate = id => ({ ...args, cfg: gameConfig.getCoSkillCfg(id).getPersistent()?.getSelfUnitCommonAttributes() })
+      assert.equal(ids.reduce((sum, id) => sum + internal.CoSkills_Utils_Persistent_Visions.getTotalRangeOffset(calculate(id)), 0),
+        expected ? 2 : 0, `${version}: vision range`)
+      assert.equal(ids.some(id => internal.CoSkills_Utils_Persistent_Visions.checkCanSeeThrough(calculate(id))),
+        expected, `${version}: penetrating vision`)
+    }
+  }
 })
 
 test('migrated skill groups retain all-unit range and separate indirect-unit-only range without double counting', async () => {
