@@ -796,10 +796,13 @@ export class Unit {
             return 0;
         }
 
+        const war                       = this.getWar();
         const gameConfig                = this.getGcData();
         const selfUnitTypeId            = this.getUnitTypeId();
         const isCoOnboard               = this.getIsCoOnboard();
         const selfOldGridIndex          = this.getGridIndex();
+        const selfTileTypeId            = war.getTileMap().getTile(selfOldGridIndex).getTileTypeId();
+        const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifier                    = 0;
@@ -808,6 +811,8 @@ export class Unit {
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitAttackRange(),
                 gameConfig               : gameConfig,
                 unitTypeId               : selfUnitTypeId,
+                tileTypeId               : selfTileTypeId,
+                weatherTypeId            : weatherTypeId,
                 isCoOnboard              : isCoOnboard,
                 coZoneRadius             : coZoneRadius,
                 gridIndex                : selfOldGridIndex,

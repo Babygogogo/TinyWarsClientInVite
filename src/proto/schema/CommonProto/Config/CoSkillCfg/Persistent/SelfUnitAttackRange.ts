@@ -5,12 +5,16 @@ export interface SelfUnitAttackRangeJson extends $ProtoSchemaJsonBase {
     coSkillAreaTypeId?: number | null | undefined;
     unitCategoryId?: number | null | undefined;
     upperOffset?: number | null | undefined;
+    tileCategoryId?: number | null | undefined;
+    weatherCategoryId?: number | null | undefined;
 }
 
 export class SelfUnitAttackRange extends $ProtoSchemaBase {
     private _coSkillAreaTypeId?: number | null | undefined;
     private _unitCategoryId?: number | null | undefined;
     private _upperOffset?: number | null | undefined;
+    private _tileCategoryId?: number | null | undefined;
+    private _weatherCategoryId?: number | null | undefined;
 
     public static fromJson(obj: SelfUnitAttackRangeJson): SelfUnitAttackRange {
         return new SelfUnitAttackRange().loadJson(obj);
@@ -19,6 +23,8 @@ export class SelfUnitAttackRange extends $ProtoSchemaBase {
         this.setCoSkillAreaTypeId(obj.coSkillAreaTypeId);
         this.setUnitCategoryId(obj.unitCategoryId);
         this.setUpperOffset(obj.upperOffset);
+        this.setTileCategoryId(obj.tileCategoryId);
+        this.setWeatherCategoryId(obj.weatherCategoryId);
         return this;
     }
     public override toJson(obj?: SelfUnitAttackRangeJson): SelfUnitAttackRangeJson {
@@ -38,6 +44,16 @@ export class SelfUnitAttackRange extends $ProtoSchemaBase {
             const value = this.getUpperOffset();
             (value != null) && (obj.upperOffset = value);
         }
+
+        {
+            const value = this.getTileCategoryId();
+            (value != null) && (obj.tileCategoryId = value);
+        }
+
+        {
+            const value = this.getWeatherCategoryId();
+            (value != null) && (obj.weatherCategoryId = value);
+        }
         return obj;
     }
 
@@ -51,7 +67,7 @@ export class SelfUnitAttackRange extends $ProtoSchemaBase {
 
         {
             const value = this.getUnitCategoryId();
-            if (value != null) {
+            if ((value != null) && (value != 0)) {
                 writer.uint32(16).int32(value);
             }
         }
@@ -60,6 +76,20 @@ export class SelfUnitAttackRange extends $ProtoSchemaBase {
             const value = this.getUpperOffset();
             if ((value != null) && (value != 0)) {
                 writer.uint32(24).int32(value);
+            }
+        }
+
+        {
+            const value = this.getTileCategoryId();
+            if ((value != null) && (value != 0)) {
+                writer.uint32(32).int32(value);
+            }
+        }
+
+        {
+            const value = this.getWeatherCategoryId();
+            if ((value != null) && (value != 0)) {
+                writer.uint32(40).int32(value);
             }
         }
 
@@ -86,6 +116,14 @@ export class SelfUnitAttackRange extends $ProtoSchemaBase {
 
                 case 3:
                     msg.setUpperOffset(reader.int32());
+                    break;
+
+                case 4:
+                    msg.setTileCategoryId(reader.int32());
+                    break;
+
+                case 5:
+                    msg.setWeatherCategoryId(reader.int32());
                     break;
 
                 default:
@@ -122,11 +160,15 @@ export class SelfUnitAttackRange extends $ProtoSchemaBase {
     public checkHasUnitCategoryId(): boolean {
         return this._unitCategoryId != null;
     }
-    public getUnitCategoryId(): number | null | undefined {
-        return this._unitCategoryId;
+    public getUnitCategoryId(): number {
+        return this._unitCategoryId ?? 0;
     }
     public setUnitCategoryId(value: number | null | undefined): void {
-        this._unitCategoryId = value;
+        if ((value == null) || (value == 0)) {
+            this._unitCategoryId = null;
+        } else {
+            this._unitCategoryId = value;
+        }
     }
 
     public checkHasUpperOffset(): boolean {
@@ -140,6 +182,34 @@ export class SelfUnitAttackRange extends $ProtoSchemaBase {
             this._upperOffset = null;
         } else {
             this._upperOffset = value;
+        }
+    }
+
+    public checkHasTileCategoryId(): boolean {
+        return this._tileCategoryId != null;
+    }
+    public getTileCategoryId(): number {
+        return this._tileCategoryId ?? 0;
+    }
+    public setTileCategoryId(value: number | null | undefined): void {
+        if ((value == null) || (value == 0)) {
+            this._tileCategoryId = null;
+        } else {
+            this._tileCategoryId = value;
+        }
+    }
+
+    public checkHasWeatherCategoryId(): boolean {
+        return this._weatherCategoryId != null;
+    }
+    public getWeatherCategoryId(): number {
+        return this._weatherCategoryId ?? 0;
+    }
+    public setWeatherCategoryId(value: number | null | undefined): void {
+        if ((value == null) || (value == 0)) {
+            this._weatherCategoryId = null;
+        } else {
+            this._weatherCategoryId = value;
         }
     }
 }

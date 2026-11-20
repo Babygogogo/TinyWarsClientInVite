@@ -8,6 +8,8 @@ export function getTotalUpperOffset({
     cfg,
     gameConfig,
     unitTypeId,
+    tileTypeId,
+    weatherTypeId,
     isCoOnboard,
     gridIndex,
     coZoneRadius,
@@ -16,6 +18,8 @@ export function getTotalUpperOffset({
     cfg                         : SelfUnitAttackRange | null | undefined;
     gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
+    tileTypeId                  : number;
+    weatherTypeId               : number;
     isCoOnboard                 : boolean;
     gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
@@ -25,11 +29,16 @@ export function getTotalUpperOffset({
         return 0;
     }
 
-    {
-        const unitCategoryId = cfg.getUnitCategoryId();
-        if ((unitCategoryId != null) && (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, unitCategoryId))) {
-            return 0;
-        }
+    if (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, cfg.getUnitCategoryId())) {
+        return 0;
+    }
+
+    if (!gameConfig.checkIsTileTypeInCategory(tileTypeId, cfg.getTileCategoryId())) {
+        return 0;
+    }
+
+    if (!gameConfig.checkIsWeatherTypeInCategory(weatherTypeId, cfg.getWeatherCategoryId())) {
+        return 0;
     }
 
     if ((!isCoOnboard)                                                  &&
