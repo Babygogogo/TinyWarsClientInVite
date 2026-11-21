@@ -9,7 +9,7 @@ import {
     Cos_Constants,
     CoSkills_Constants,
     CoSkills_Utils_Common,
-    CoSkills_Utils_Persistent_SelfCanCoBoard,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardables,
     CoSkills_Utils_Persistent_SelfUnitCaptureAmount,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts,
@@ -1929,11 +1929,15 @@ export class Unit {
             return false;
         }
 
-        const tile          = war.getTileMap().getTile(movePath[0]);
+        const destination   = movePath[movePath.length - 1];
+        const tile          = war.getTileMap().getTile(destination);
         const isOwnTile     = tile.getPlayerIndex() == playerIndex;
         const gameConfig    = this.getGcData();
         const unitTypeId    = this.getUnitTypeId();
         const tileTypeId    = tile.getTileTypeId();
+        const weatherTypeId = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
+        const coZoneRadius  = player.getCoZoneRadius();
+        const getCoGridIndexArrayOnMap = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         for (const skillId of player.getCoCurrentSkills()) {
             const skillCfg = gameConfig.getCoSkillCfg(skillId);
             if (skillCfg == null) {
@@ -1941,14 +1945,19 @@ export class Unit {
             }
 
             {
-                const cfg = skillCfg.getPersistent()?.getSelfCanCoBoard();
+                const cfg = skillCfg.getPersistent()?.getSelfUnitCommonAttributes();
                 if (cfg != null) {
-                    const canCoBoard = CoSkills_Utils_Persistent_SelfCanCoBoard.checkCanCoBoard({
-                        cfg        : cfg,
-                        gameConfig : gameConfig,
-                        unitTypeId : unitTypeId,
-                        tileTypeId : tileTypeId,
-                        isOwnTile  : isOwnTile,
+                    const canCoBoard = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardables.checkCanCoBoard({
+                        cfg                      : cfg,
+                        gameConfig               : gameConfig,
+                        unitTypeId               : unitTypeId,
+                        tileTypeId               : tileTypeId,
+                        isOwnTile                : isOwnTile,
+                        weatherTypeId            : weatherTypeId,
+                        isCoOnboard              : this.getIsCoOnboard(),
+                        gridIndex                : destination,
+                        coZoneRadius             : coZoneRadius,
+                        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                     });
                     if (canCoBoard != null) {
                         return canCoBoard;

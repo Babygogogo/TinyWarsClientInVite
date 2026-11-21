@@ -1,6 +1,5 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../$runtime.js";
-import { SelfCanCoBoard as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard, type SelfCanCoBoardJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard } from "./Persistent/SelfCanCoBoard.js";
 import { SelfCannotBeCounterAttacked as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked, type SelfCannotBeCounterAttackedJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked } from "./Persistent/SelfCannotBeCounterAttacked.js";
 import { SelfCannotCounterAttack as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack, type SelfCannotCounterAttackJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack } from "./Persistent/SelfCannotCounterAttack.js";
 import { SelfDefenseBonusByTileIgnoreHp as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfDefenseBonusByTileIgnoreHp, type SelfDefenseBonusByTileIgnoreHpJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfDefenseBonusByTileIgnoreHp } from "./Persistent/SelfDefenseBonusByTileIgnoreHp.js";
@@ -31,7 +30,6 @@ export interface PersistentJson extends $ProtoSchemaJsonBase {
     selfInvisible?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible | null | undefined;
     selfCannotBeCounterAttacked?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked | null | undefined;
     selfCannotCounterAttack?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack | null | undefined;
-    selfCanCoBoard?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard | null | undefined;
 }
 
 export class Persistent extends $ProtoSchemaBase {
@@ -49,7 +47,6 @@ export class Persistent extends $ProtoSchemaBase {
     private _selfInvisible?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible | null | undefined;
     private _selfCannotBeCounterAttacked?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked | null | undefined;
     private _selfCannotCounterAttack?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack | null | undefined;
-    private _selfCanCoBoard?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard | null | undefined;
 
     public static fromJson(obj: PersistentJson): Persistent {
         return new Persistent().loadJson(obj);
@@ -69,7 +66,6 @@ export class Persistent extends $ProtoSchemaBase {
         this.setSelfInvisible(obj.selfInvisible != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible.fromJson(obj.selfInvisible) : null);
         this.setSelfCannotBeCounterAttacked(obj.selfCannotBeCounterAttacked != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked.fromJson(obj.selfCannotBeCounterAttacked) : null);
         this.setSelfCannotCounterAttack(obj.selfCannotCounterAttack != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack.fromJson(obj.selfCannotCounterAttack) : null);
-        this.setSelfCanCoBoard(obj.selfCanCoBoard != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard.fromJson(obj.selfCanCoBoard) : null);
         return this;
     }
     public override toJson(obj?: PersistentJson): PersistentJson {
@@ -143,11 +139,6 @@ export class Persistent extends $ProtoSchemaBase {
         {
             const value = this.getSelfCannotCounterAttack();
             (value != null) && (obj.selfCannotCounterAttack = value.toJson());
-        }
-
-        {
-            const value = this.getSelfCanCoBoard();
-            (value != null) && (obj.selfCanCoBoard = value.toJson());
         }
         return obj;
     }
@@ -251,13 +242,6 @@ export class Persistent extends $ProtoSchemaBase {
             }
         }
 
-        {
-            const value = this.getSelfCanCoBoard();
-            if (value != null) {
-                value.toWriter(writer.uint32(170).fork()).ldelim();
-            }
-        }
-
         return writer;
     }
 
@@ -325,10 +309,6 @@ export class Persistent extends $ProtoSchemaBase {
 
                 case 19:
                     msg.setSelfCannotCounterAttack($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack.decode(reader, reader.uint32()));
-                    break;
-
-                case 21:
-                    msg.setSelfCanCoBoard($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -528,18 +508,5 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public createIfNotExistsSelfCannotCounterAttack(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack {
         return this._selfCannotCounterAttack ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack();
-    }
-
-    public checkHasSelfCanCoBoard(): boolean {
-        return this._selfCanCoBoard != null;
-    }
-    public getSelfCanCoBoard(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard | null | undefined {
-        return this._selfCanCoBoard;
-    }
-    public setSelfCanCoBoard(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard | null | undefined): void {
-        this._selfCanCoBoard = value;
-    }
-    public createIfNotExistsSelfCanCoBoard(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard {
-        return this._selfCanCoBoard ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard();
     }
 }
