@@ -350,6 +350,8 @@ export type Mapping = {
 
     WarOperationNormalExecuted: undefined;
 
+    SpwRetractStateLoaded: undefined;
+
     ReplayAutoReplayChanged: undefined;
     ReplayTick: undefined;
 

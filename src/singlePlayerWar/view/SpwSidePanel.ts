@@ -10,8 +10,9 @@ import {
     FloatText,
     GamePanels_Dict,
     GamePanels_Manager,
-    Lang_Constants, Lang_TextType,
+    Lang_TextType,
     Lang_Utils,
+    Notifications_Dispatcher,
     SinglePlayerWars_War,
     Sounds_Constants,
     Sounds_SoundPlayer,
@@ -30,7 +31,6 @@ import {
     type Ui_Interfaces_IUiLayout,
     type Ui_Interfaces_IUiScroller,
 } from "../../internal.ts";
-
 import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
@@ -71,6 +71,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { type : "BwCoUsingSkillTypeChanged",       callback : this._onNotifyBwCoUsingSkillChanged },
             { type : "ActionPlannerStateChanged",       callback : this._onNotifyActionPlannerStateChanged },
             { type : "WarOperationNormalExecuted",      callback : this._onNotifyWarOperationNormalExecuted },
+            { type : "SpwRetractStateLoaded",           callback : this._onNotifySpwRetractStateLoaded },
         ]);
         this._setUiListenerArray([
             { ui : this._btnCop,                 callback : this._onTouchedBtnCop },
@@ -156,6 +157,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onNotifyWarOperationNormalExecuted(): void {
         this._updateComponentsForTaskObjective();
+    }
+    private _onNotifySpwRetractStateLoaded(): void {
+        this._updateView();
     }
 
     private _onTouchedBtnCop(): void {
@@ -252,6 +256,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 force                          : false,
                 coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
             });
+
+            Notifications_Dispatcher.dispatch("SpwRetractStateLoaded");
         }
     }
     private _onTouchedBtnRedo(): void {
@@ -282,6 +288,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 force                          : false,
                 coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
             });
+
+            Notifications_Dispatcher.dispatch("SpwRetractStateLoaded");
         }
     }
     private _onTouchedBtnNextUnit(): void {
@@ -386,7 +394,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if ((planner != null) && (!planner.checkIsStateRequesting())) {
             ActionPlanners_States_Idle.Idle.getInstance().apply(planner);
         }
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarInfoPanel, { war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarInfoPanel, { war : war });
     }
     private _onTouchedBtnMenu(): void {
         const war = this.getOpenData()?.war;

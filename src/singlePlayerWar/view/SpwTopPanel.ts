@@ -20,7 +20,6 @@ import {
     SingleFreeWars_War,
     SinglePlayerMode_Model_SpmModel,
     SinglePlayerMode_Model_SpmProxy,
-    WarOperations_AutoWarOpManager,
     SinglePlayerWars_War,
     SingleRankedWars_War,
     Sounds_Constants,
@@ -32,6 +31,7 @@ import {
     Ui_Utils_UiSkinHelpers,
     Users_Model,
     Utils_ClientErrorCode,
+    WarOperations_AutoWarOpManager,
     WarTypes_Constants,
     type AuxiliaryTypes_AuxiliaryTypes,
     type Egret_Egret,
@@ -106,6 +106,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             { type : "BwForceWeatherTypeChanged",       callback : this._onNotifyBwForceWeatherTypeChanged },
             { type : "BwOverridingSkinIdChanged",       callback : this._onNotifyBwOverridingSkinIdChanged },
             { type : "WarOperationNormalExecuted",      callback : this._onNotifyWarOperationNormalExecuted },
+            { type : "SpwRetractStateLoaded",           callback : this._onNotifySpwRetractStateLoaded },
             { type : "MsgChatGetAllReadProgressList",   callback : this._onNotifyMsgChatGetAllReadProgressList },
             { type : "MsgChatUpdateReadProgress",       callback : this._onNotifyMsgChatUpdateReadProgress },
             { type : "MsgChatGetAllMessages",           callback : this._onNotifyMsgChatGetAllMessages },
@@ -198,6 +199,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyWarOperationNormalExecuted(): void {
         this._updateLabelFundAndAddFund();
         this._updateGroupScore();
+    }
+    private _onNotifySpwRetractStateLoaded(): void {
+        this._updateView();
     }
 
     private _onNotifyMsgChatGetAllReadProgressList(): void {
