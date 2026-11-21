@@ -29,9 +29,9 @@ export function checkCanCoBoard({
     coZoneRadius                : number;
     getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): boolean | null {
-    const coBoardables = cfg?.getCoBoardables();
+    const coBoardingPermissions = cfg?.getCoBoardingPermissions();
     if ((cfg == null) ||
-        (coBoardables == null) ||
+        (coBoardingPermissions == null) ||
         (!CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions.checkIsMeet({
             conditions               : cfg.getConditions(),
             gameConfig               : gameConfig,
@@ -49,11 +49,11 @@ export function checkCanCoBoard({
     }
 
     {
-        const isOwnTileValue = coBoardables.getIsOwnTile();
+        const isOwnTileValue = coBoardingPermissions.getConIsOwnTile();
         if ((isOwnTileValue != null) && (isOwnTile !== isOwnTileValue)) {
             return null;
         }
     }
 
-    return Helpers_Misc.getExisted(coBoardables.getCanBoard());
+    return Helpers_Misc.getExisted(coBoardingPermissions.getActCanBoard());
 }

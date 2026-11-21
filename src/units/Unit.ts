@@ -9,7 +9,7 @@ import {
     Cos_Constants,
     CoSkills_Constants,
     CoSkills_Utils_Common,
-    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardables,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions,
     CoSkills_Utils_Persistent_SelfUnitCaptureAmount,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts,
@@ -1947,7 +1947,7 @@ export class Unit {
             {
                 const cfg = skillCfg.getPersistent()?.getSelfUnitCommonAttributes();
                 if (cfg != null) {
-                    const canCoBoard = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardables.checkCanCoBoard({
+                    const canCoBoard = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions.checkCanCoBoard({
                         cfg                      : cfg,
                         gameConfig               : gameConfig,
                         unitTypeId               : unitTypeId,

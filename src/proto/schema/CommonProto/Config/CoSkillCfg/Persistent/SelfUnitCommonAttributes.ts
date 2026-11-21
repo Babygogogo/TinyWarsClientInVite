@@ -1,8 +1,8 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../$runtime.js";
 import { AttackRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets, type AttackRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets } from "./SelfUnitCommonAttributes/AttackRangeOffsets.js";
-import { CoBoardables as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardables, type CoBoardablesJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardables } from "./SelfUnitCommonAttributes/CoBoardables.js";
 import { CoBoardingCosts as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts, type CoBoardingCostsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts } from "./SelfUnitCommonAttributes/CoBoardingCosts.js";
+import { CoBoardingPermissions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions, type CoBoardingPermissionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions } from "./SelfUnitCommonAttributes/CoBoardingPermissions.js";
 import { Conditions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions, type ConditionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions } from "./SelfUnitCommonAttributes/Conditions.js";
 import { DefensePercentOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets, type DefensePercentOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets } from "./SelfUnitCommonAttributes/DefensePercentOffsets.js";
 import { FuelConsumptions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions, type FuelConsumptionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions } from "./SelfUnitCommonAttributes/FuelConsumptions.js";
@@ -21,7 +21,7 @@ export interface SelfUnitCommonAttributesJson extends $ProtoSchemaJsonBase {
     fuelConsumptions?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions | null | undefined;
     luckRangeOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$LuckRangeOffsets | null | undefined;
     coBoardingCosts?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts | null | undefined;
-    coBoardables?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardables | null | undefined;
+    coBoardingPermissions?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions | null | undefined;
 }
 
 export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
@@ -34,7 +34,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     private _fuelConsumptions?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions | null | undefined;
     private _luckRangeOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$LuckRangeOffsets | null | undefined;
     private _coBoardingCosts?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts | null | undefined;
-    private _coBoardables?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardables | null | undefined;
+    private _coBoardingPermissions?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions | null | undefined;
 
     public static fromJson(obj: SelfUnitCommonAttributesJson): SelfUnitCommonAttributes {
         return new SelfUnitCommonAttributes().loadJson(obj);
@@ -49,7 +49,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         this.setFuelConsumptions(obj.fuelConsumptions != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions.fromJson(obj.fuelConsumptions) : null);
         this.setLuckRangeOffsets(obj.luckRangeOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$LuckRangeOffsets.fromJson(obj.luckRangeOffsets) : null);
         this.setCoBoardingCosts(obj.coBoardingCosts != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts.fromJson(obj.coBoardingCosts) : null);
-        this.setCoBoardables(obj.coBoardables != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardables.fromJson(obj.coBoardables) : null);
+        this.setCoBoardingPermissions(obj.coBoardingPermissions != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions.fromJson(obj.coBoardingPermissions) : null);
         return this;
     }
     public override toJson(obj?: SelfUnitCommonAttributesJson): SelfUnitCommonAttributesJson {
@@ -101,8 +101,8 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getCoBoardables();
-            (value != null) && (obj.coBoardables = value.toJson());
+            const value = this.getCoBoardingPermissions();
+            (value != null) && (obj.coBoardingPermissions = value.toJson());
         }
         return obj;
     }
@@ -172,7 +172,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getCoBoardables();
+            const value = this.getCoBoardingPermissions();
             if (value != null) {
                 value.toWriter(writer.uint32(82).fork()).ldelim();
             }
@@ -228,7 +228,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
                     break;
 
                 case 10:
-                    msg.setCoBoardables($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardables.decode(reader, reader.uint32()));
+                    msg.setCoBoardingPermissions($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -365,16 +365,16 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         return this._coBoardingCosts ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts();
     }
 
-    public checkHasCoBoardables(): boolean {
-        return this._coBoardables != null;
+    public checkHasCoBoardingPermissions(): boolean {
+        return this._coBoardingPermissions != null;
     }
-    public getCoBoardables(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardables | null | undefined {
-        return this._coBoardables;
+    public getCoBoardingPermissions(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions | null | undefined {
+        return this._coBoardingPermissions;
     }
-    public setCoBoardables(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardables | null | undefined): void {
-        this._coBoardables = value;
+    public setCoBoardingPermissions(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions | null | undefined): void {
+        this._coBoardingPermissions = value;
     }
-    public createIfNotExistsCoBoardables(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardables {
-        return this._coBoardables ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardables();
+    public createIfNotExistsCoBoardingPermissions(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions {
+        return this._coBoardingPermissions ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions();
     }
 }

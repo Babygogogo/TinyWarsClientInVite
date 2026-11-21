@@ -40,12 +40,12 @@ const runtime = (async () => {
     Geometries_Constants: 'geometries/Constants', Numbers_Constants: 'numbers/Constants',
     AuxiliaryTypes_GridIndex: 'auxiliaryTypes/GridIndex',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
-    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardables: 'coSkills/utils/persistent/selfUnitCommonAttributes/CoBoardables',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions: 'coSkills/utils/persistent/selfUnitCommonAttributes/CoBoardingPermissions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts: 'coSkills/utils/persistent/selfUnitCommonAttributes/CoBoardingCosts',
     Units_Unit: 'units/Unit',
   })) internal[name] = loadSource(filename)
   return { ...proto, internal, GridIndex: internal.AuxiliaryTypes_GridIndex.GridIndex,
-    board: internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardables.checkCanCoBoard }
+    board: internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions.checkCanCoBoard }
 })()
 
 const gameConfig = {
@@ -57,7 +57,7 @@ const gameConfig = {
 test('boarding shares category and zone conditions; ownership remains effect-specific and CO bypasses only area', async () => {
   const { SelfUnitCommonAttributes, GridIndex, board, internal } = await runtime
   const conditions = { coSkillAreaTypeId: 0, unitCategoryId: 7, tileCategoryId: 8, weatherCategoryId: 9 }
-  const cfg = SelfUnitCommonAttributes.fromJson({ conditions, coBoardables: { isOwnTile: false, canBoard: true } })
+  const cfg = SelfUnitCommonAttributes.fromJson({ conditions, coBoardingPermissions: { conIsOwnTile: false, actCanBoard: true } })
   const costCfg = SelfUnitCommonAttributes.fromJson({ conditions, coBoardingCosts: { multiplierPct: 0 } })
   for (const unitTypeId of [11, 21]) for (const tileTypeId of [12, 22]) for (const weatherTypeId of [13, 23]) {
     for (const isCoOnboard of [false, true]) for (const distance of [0, 1, 2]) {
@@ -80,22 +80,22 @@ test('false boarding flags survive serialization; absent effects fall through an
   const args = { gameConfig, unitTypeId: 11, tileTypeId: 12, weatherTypeId: 13,
     isCoOnboard: false, isOwnTile: true, gridIndex: new GridIndex(100, 100),
     coZoneRadius: 0, getCoGridIndexArrayOnMap: () => [] }
-  const original = SelfUnitCommonAttributes.fromJson({ conditions, coBoardables: { isOwnTile: false, canBoard: false } })
+  const original = SelfUnitCommonAttributes.fromJson({ conditions, coBoardingPermissions: { conIsOwnTile: false, actCanBoard: false } })
   const cfg = original.clone()
-  assert.equal(cfg.getCoBoardables().checkHasCanBoard(), true)
-  assert.equal(cfg.getCoBoardables().getCanBoard(), false)
-  assert.equal(cfg.getCoBoardables().getIsOwnTile(), false)
+  assert.equal(cfg.getCoBoardingPermissions().checkHasActCanBoard(), true)
+  assert.equal(cfg.getCoBoardingPermissions().getActCanBoard(), false)
+  assert.equal(cfg.getCoBoardingPermissions().getConIsOwnTile(), false)
   assert.equal(board({ ...args, cfg, isOwnTile: false }), false)
   assert.equal(board({ ...args, cfg }), null)
-  cfg.getCoBoardables().setIsOwnTile(null)
+  cfg.getCoBoardingPermissions().setConIsOwnTile(null)
   assert.equal(board({ ...args, cfg }), false)
   for (const absent of [null, SelfUnitCommonAttributes.fromJson({ conditions }),
-    SelfUnitCommonAttributes.fromJson({ coBoardables: { canBoard: true } })]) {
+    SelfUnitCommonAttributes.fromJson({ coBoardingPermissions: { actCanBoard: true } })]) {
     assert.equal(board({ ...args, cfg: absent }), null)
   }
-  cfg.getCoBoardables().setCanBoard(null)
+  cfg.getCoBoardingPermissions().setActCanBoard(null)
   assert.throws(() => board({ ...args, cfg }))
-  cfg.getCoBoardables().setCanBoard(true)
+  cfg.getCoBoardingPermissions().setActCanBoard(true)
   cfg.getConditions().setCoSkillAreaTypeId(1)
   assert.equal(board({ ...args, cfg }), null)
   cfg.getConditions().setCoSkillAreaTypeId(2)
@@ -106,8 +106,8 @@ test('unit boarding uses destination, weather and ordered first-match flags befo
   const { CoSkillCfg, GridIndex, internal } = await runtime
   const destination = new GridIndex(1, 0)
   const conditions = { coSkillAreaTypeId: 0, unitCategoryId: 7, tileCategoryId: 8, weatherCategoryId: 9 }
-  const skills = [false, true].map(canBoard => CoSkillCfg.fromJson({
-    persistent: { selfUnitCommonAttributes: { conditions, coBoardables: { canBoard } } },
+  const skills = [false, true].map(actCanBoard => CoSkillCfg.fromJson({
+    persistent: { selfUnitCommonAttributes: { conditions, coBoardingPermissions: { actCanBoard } } },
   }))
   let ids = [0, 1], weather = 13, owner = 2, fallbackCalls = 0
   internal.Tiles_Utils_Common = { checkCanCoBoard: () => { fallbackCalls++; return true } }
@@ -146,12 +146,12 @@ test('all migrated versions retain global boarding even before a CO is deployed'
     const raw = FullConfig.decode(readFileSync(new URL(`../src/assets/resource/config/FullConfig${version}.bin`, import.meta.url)))
     const skills = raw.getCoSkill()
     const byId = new Map(skills.map(s => [s.getSkillId(), s]))
-    const effects = skills.map(s => s.getPersistent()?.getSelfUnitCommonAttributes()).filter(s => s?.getCoBoardables())
+    const effects = skills.map(s => s.getPersistent()?.getSelfUnitCommonAttributes()).filter(s => s?.getCoBoardingPermissions())
     assert.equal(effects.length, version.startsWith('B') ? 6 : 2)
     for (const cfg of effects) {
       assert.equal(cfg.getConditions().getCoSkillAreaTypeId(), 2)
-      assert.equal(cfg.getCoBoardables().checkHasCanBoard(), true)
-      if (cfg.getCoBoardables().getCanBoard()) {
+      assert.equal(cfg.getCoBoardingPermissions().checkHasActCanBoard(), true)
+      if (cfg.getCoBoardingPermissions().getActCanBoard()) {
         assert.equal(board({ cfg, gameConfig, unitTypeId: 21, tileTypeId: 22, weatherTypeId: 23,
           isOwnTile: false, isCoOnboard: false, gridIndex: new GridIndex(100, 100),
           coZoneRadius: 0, getCoGridIndexArrayOnMap: () => [] }), true)
