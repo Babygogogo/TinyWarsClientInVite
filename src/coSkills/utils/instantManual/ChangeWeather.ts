@@ -1,4 +1,5 @@
 import {
+    AuxiliaryTypes_AuxiliaryTypes,
     AuxiliaryTypes_ChangedThingsForWarOperation,
     Helpers_Misc,
     type Players_Player,
@@ -11,30 +12,35 @@ import type { DataForUseCoSkill } from "../../../proto/schema/CommonProto/Struct
 export function executeAsOuterWar({ skillCfg, player, skillData, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_Player.Player;
-    skillData       : DataForUseCoSkill;
+    skillData       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataForUseCoSkill>;
     isFastExecute   : boolean;
 }): void {
     const cfg = skillCfg.getInstantManual()?.getChangeWeather();
-    if (cfg) {
-        const war               = player.getWar();
-        const playerIndex       = player.getPlayerIndex();
-        const weatherManager    = war.getWeatherManager();
-        const fogMap            = war.getFogMap();
-        const hasFog            = fogMap.checkHasFogCurrently();
-        weatherManager.setForceWeatherType(Helpers_Misc.getExisted(skillData.getNewWeatherType(), Utils_ClientErrorCode.ClientErrorCode.WarCoSkillHelpers_ExeChangeWeatherWithExtraData_00), !isFastExecute);
-        weatherManager.setExpirePlayerIndex(playerIndex);
-        weatherManager.setExpireTurnIndex(war.getTurnManager().getTurnIndex() + (cfg.getTurns()));
-        // war.getFogMap().resetMapFromPathsForPlayer(playerIndex);
-        if ((!hasFog) && (fogMap.checkHasFogCurrently()) && (cfg.getKeepVision())) {
-            const mapSize           = fogMap.getMapSize();
-            const visibilityArray   : Visibilities_Constants.VisibilityTypeId[] = new Array(mapSize.getWidth() * mapSize.getHeight());
-            visibilityArray.fill(Visibilities_Constants.VisibilityTypeId.Penetrating);
-            fogMap.resetMapFromPathsForPlayer(playerIndex, visibilityArray);
-        }
+    if (cfg == null) {
+        return;
+    }
 
-        if (!isFastExecute) {
-            weatherManager.getView()?.resetView(false);
-        }
+    const war               = player.getWar();
+    const playerIndex       = player.getPlayerIndex();
+    const weatherManager    = war.getWeatherManager();
+    const fogMap            = war.getFogMap();
+    const hasFog            = fogMap.checkHasFogCurrently();
+    weatherManager.setForceWeatherType(
+        skillData?.getNewWeatherType() ?? weatherManager.getCurrentWeatherType(),   // currentWeatherType仅用于容错，正常情况下 skillData 必定有值
+        !isFastExecute,
+    );
+    weatherManager.setExpirePlayerIndex(playerIndex);
+    weatherManager.setExpireTurnIndex(war.getTurnManager().getTurnIndex() + (cfg.getTurns()));
+    // war.getFogMap().resetMapFromPathsForPlayer(playerIndex);
+    if ((!hasFog) && (fogMap.checkHasFogCurrently()) && (cfg.getKeepVision())) {
+        const mapSize           = fogMap.getMapSize();
+        const visibilityArray   : Visibilities_Constants.VisibilityTypeId[] = new Array(mapSize.getWidth() * mapSize.getHeight());
+        visibilityArray.fill(Visibilities_Constants.VisibilityTypeId.Penetrating);
+        fogMap.resetMapFromPathsForPlayer(playerIndex, visibilityArray);
+    }
+
+    if (!isFastExecute) {
+        weatherManager.getView()?.resetView(false);
     }
 }
 

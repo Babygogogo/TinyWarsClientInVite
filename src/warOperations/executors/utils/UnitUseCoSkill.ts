@@ -6,7 +6,7 @@ import {
     CoSkills_Utils_Executor,
     Helpers_Collection,
     Helpers_Misc,
-    Lang_Constants, Lang_TextType,
+    Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
@@ -45,11 +45,9 @@ export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoUn
         const skillDataArray    = actionExtraData.getSkillDataArray();
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
             CoSkills_Utils_Executor.executeInstantSkillAsOuterWar({
-                player    : playerInTurn,
-                skillId   : skillIdArray[skillIndex],
-                skillData : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), isFast
-                    ? Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_01
-                    : Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_02),
+                player            : playerInTurn,
+                skillId           : skillIdArray[skillIndex],
+                skillData         : skillDataArray.find(v => v.getSkillIndex() === skillIndex),
                 targetGridIndexes : action.getTargetGridIndexArray(),
                 isFastExecute     : isFast,
             });

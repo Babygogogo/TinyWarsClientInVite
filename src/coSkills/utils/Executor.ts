@@ -29,7 +29,9 @@ import type { GridIndex as ProtoGridIndex } from "../../proto/schema/CommonProto
 export function executeInstantSkillAsOuterWar({ player, skillId, skillData, targetGridIndexes, isFastExecute }: {
     player              : Players_Player.Player;
     skillId             : number;
-    skillData           : DataForUseCoSkill;
+    // HACK: skillData本应必定非空，但由于重构CO技能配置时给部分CO新增了技能而没有相应修改进行中的对局，导致局内回放出错，因此改为允许为空
+    // 为空时，相关技能将可能不会被执行；若以后发现相关对局的完整回放可以正常播放，或者直接删除相关数据，就可以改回必定非空
+    skillData           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataForUseCoSkill>;
     targetGridIndexes   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ProtoGridIndex[]>;
     isFastExecute       : boolean;
 }): void {

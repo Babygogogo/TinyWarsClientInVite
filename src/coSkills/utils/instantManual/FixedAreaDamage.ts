@@ -1,4 +1,16 @@
-import { AuxiliaryTypes_AuxiliaryTypes, AuxiliaryTypes_ChangedThingsForWarOperation, AuxiliaryTypes_GridIndex, CoSkills_Constants, Destructions_Utils, Helpers_Misc, Helpers_Team, Numbers_Utils, Players_Player, Units_Constants, Visibilities_Utils } from "../../../internal";
+import {
+    AuxiliaryTypes_AuxiliaryTypes,
+    AuxiliaryTypes_ChangedThingsForWarOperation,
+    AuxiliaryTypes_GridIndex,
+    CoSkills_Constants,
+    Destructions_Utils,
+    Helpers_Misc,
+    Helpers_Team,
+    Numbers_Utils,
+    Players_Player,
+    Units_Constants,
+    Visibilities_Utils,
+} from "../../../internal";
 import type { CoSkillCfg } from "../../../proto/schema/CommonProto/Config/CoSkillCfg";
 import type { DataForUseCoSkill } from "../../../proto/schema/CommonProto/Structure/DataForUseCoSkill";
 import type { GridIndex as ProtoGridIndex } from "../../../proto/schema/CommonProto/Structure/GridIndex.ts";
@@ -7,7 +19,7 @@ import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerializa
 export function executeAsOuterWar({ skillCfg, player, skillData, targetGridIndexes, isFastExecute }: {
     skillCfg            : CoSkillCfg;
     player              : Players_Player.Player;
-    skillData           : DataForUseCoSkill;
+    skillData           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataForUseCoSkill>;
     targetGridIndexes   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ProtoGridIndex[]>;
     isFastExecute       : boolean;
 }): void {
@@ -26,7 +38,10 @@ export function executeAsOuterWar({ skillCfg, player, skillData, targetGridIndex
             centerArray.push(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(protoGridIndex)));
         }
     } else {
-        centerArray.push(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(skillData.getFixedAreaDamageCenter())));
+        centerArray.push(skillData
+            ? Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(skillData.getFixedAreaDamageCenter()))
+            : new AuxiliaryTypes_GridIndex.GridIndex(0, 0), // 仅用于容错，正常情况下skillData不会为空
+        );
     }
 
     const gridVisualEffect  = player.getWar().getGridVisualEffect();

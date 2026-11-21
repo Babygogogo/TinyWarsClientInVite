@@ -27,7 +27,7 @@ export async function executeAsOuterWar(war: BaseWar_Model_War.War, action: WoPl
         CoSkills_Utils_Executor.executeInstantSkillAsOuterWar({
             player            : playerInTurn,
             skillId           : skillIdArray[skillIndex],
-            skillData         : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex)),
+            skillData         : skillDataArray.find(v => v.getSkillIndex() === skillIndex),
             targetGridIndexes : action.getTargetGridIndexArray(),
             isFastExecute     : isFast,
         });
