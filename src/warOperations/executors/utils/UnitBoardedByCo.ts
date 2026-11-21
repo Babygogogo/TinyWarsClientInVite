@@ -2,7 +2,7 @@ import {
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_ThingsForMovePath,
     Helpers_Misc,
-    Lang_Constants, Lang_TextType,
+    Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
@@ -68,7 +68,7 @@ export function executeAsInnerWar(war: SinglePlayerWars_War.War, operation: WoUn
 
         const player                = focusUnit.getPlayer();
         const energyAddPctOnCoBoard = war.getCommonSettingManager().getPlayerRule(player.getPlayerIndex()).getEnergyAddPctOnCoBoard();
-        player.setFund(player.getFund() - focusUnit.getCoBoardCost(), false);
+        player.setFund(player.getFund() - focusUnit.getCoBoardingCost(focusUnit.getGridIndex()), false);
         player.addAndValidateCoCurrentEnergy(player.getCoMaxEnergy() * energyAddPctOnCoBoard / 100, false);
         changedThings.addPlayer(player);
     }
@@ -120,7 +120,7 @@ export async function executeAsUnifiedWar(war: BaseWar_Model_War.War, action: Wo
 
         const player        = war.getPlayer(playerIndex);
         const coMaxEnergy   = player.getCoMaxEnergy();
-        player.setFund(player.getFund() - focusUnit.getCoBoardCost(), !isFast);
+        player.setFund(player.getFund() - focusUnit.getCoBoardingCost(focusUnit.getGridIndex()), !isFast);
         player.addAndValidateCoCurrentEnergy(coMaxEnergy * energyAddPctOnCoBoard / 100, !isFast);
     }
 

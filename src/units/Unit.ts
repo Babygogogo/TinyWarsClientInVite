@@ -10,8 +10,9 @@ import {
     CoSkills_Constants,
     CoSkills_Utils_Common,
     CoSkills_Utils_Persistent_SelfCanCoBoard,
-    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCaptureAmount,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_FuelConsumptions,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets,
@@ -1915,15 +1916,15 @@ export class Unit {
         const playerIndex   = this.getPlayerIndex();
         const player        = war.getPlayer(playerIndex);
         const maxBoardCount = player.getCoMaxBoardCount();
-        if ((maxBoardCount <= 0)                                                                            ||
-            (movePath.length !== 1)                                                                         ||
-            (this.getLoaderUnitId() != null)                                                                ||
-            (player.getCoId() == Cos_Constants.CoId.Empty)                                                ||
-            (!war.getCommonSettingManager().getPlayerRule(playerIndex).getCanCoBoard())                     ||
-            (war.getUnitMap().getAllCoUnits(playerIndex).length >= maxBoardCount)                           ||
-            (player.getCoIsDestroyedInTurn())                                                               ||
-            (this.getIsCoOnboard())                                                                         ||
-            (this.getCoBoardCost() > player.getFund())
+        if ((maxBoardCount <= 0)                                                        ||
+            (movePath.length !== 1)                                                     ||
+            (this.getLoaderUnitId() != null)                                            ||
+            (player.getCoId() == Cos_Constants.CoId.Empty)                              ||
+            (!war.getCommonSettingManager().getPlayerRule(playerIndex).getCanCoBoard()) ||
+            (war.getUnitMap().getAllCoUnits(playerIndex).length >= maxBoardCount)       ||
+            (player.getCoIsDestroyedInTurn())                                           ||
+            (this.getIsCoOnboard())                                                     ||
+            (this.getCoBoardingCost(movePath[movePath.length - 1]) > player.getFund())
         ) {
             return false;
         }
@@ -2006,22 +2007,29 @@ export class Unit {
         }
     }
 
-    public getCoBoardCost(): number {
+    public getCoBoardingCost(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
         const player        = this.getPlayer();
         const gameConfig    = this.getGcData();
+        const war           = this.getWar();
+        const tileTypeId    = war.getTileMap().getTile(selfGridIndex).getTileTypeId();
+        const weatherTypeId = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
+        const unitTypeId    = this.getUnitTypeId();
+        const isCoOnboard   = this.getIsCoOnboard();
+        const coZoneRadius  = player.getCoZoneRadius();
+        const getCoGridIndexArrayOnMap = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let percentage      = player.getCoBasicCfg().getBoardCostPercentage();
         for (const skillId of player.getCoCurrentSkills()) {
-            const skillCfg = gameConfig.getCoSkillCfg(skillId);
-            if (skillCfg == null) {
-                continue;
-            }
-
-            {
-                const cfg = skillCfg.getPersistent()?.getSelfCoBoardingCost();
-                if (cfg) {
-                    percentage *= (cfg.getMultiplierPct()) / 100;
-                }
-            }
+            percentage *= CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts.getMultiplierPct({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+                gameConfig               : gameConfig,
+                unitTypeId               : unitTypeId,
+                tileTypeId               : tileTypeId,
+                weatherTypeId            : weatherTypeId,
+                isCoOnboard              : isCoOnboard,
+                gridIndex                : selfGridIndex,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+            }) / 100;
         }
 
         return Numbers_Utils.getValueInInt32(percentage * this.getProductionCfgCost() / 100);

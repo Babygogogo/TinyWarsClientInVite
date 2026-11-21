@@ -3,7 +3,6 @@ import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $Proto
 import { SelfCanCoBoard as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard, type SelfCanCoBoardJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard } from "./Persistent/SelfCanCoBoard.js";
 import { SelfCannotBeCounterAttacked as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked, type SelfCannotBeCounterAttackedJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked } from "./Persistent/SelfCannotBeCounterAttacked.js";
 import { SelfCannotCounterAttack as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack, type SelfCannotCounterAttackJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack } from "./Persistent/SelfCannotCounterAttack.js";
-import { SelfCoBoardingCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost, type SelfCoBoardingCostJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost } from "./Persistent/SelfCoBoardingCost.js";
 import { SelfDefenseBonusByTileIgnoreHp as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfDefenseBonusByTileIgnoreHp, type SelfDefenseBonusByTileIgnoreHpJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfDefenseBonusByTileIgnoreHp } from "./Persistent/SelfDefenseBonusByTileIgnoreHp.js";
 import { SelfInvisible as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible, type SelfInvisibleJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible } from "./Persistent/SelfInvisible.js";
 import { SelfOffensePierce as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce, type SelfOffensePierceJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce } from "./Persistent/SelfOffensePierce.js";
@@ -32,7 +31,6 @@ export interface PersistentJson extends $ProtoSchemaJsonBase {
     selfInvisible?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible | null | undefined;
     selfCannotBeCounterAttacked?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked | null | undefined;
     selfCannotCounterAttack?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack | null | undefined;
-    selfCoBoardingCost?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost | null | undefined;
     selfCanCoBoard?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard | null | undefined;
 }
 
@@ -51,7 +49,6 @@ export class Persistent extends $ProtoSchemaBase {
     private _selfInvisible?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible | null | undefined;
     private _selfCannotBeCounterAttacked?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked | null | undefined;
     private _selfCannotCounterAttack?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack | null | undefined;
-    private _selfCoBoardingCost?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost | null | undefined;
     private _selfCanCoBoard?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard | null | undefined;
 
     public static fromJson(obj: PersistentJson): Persistent {
@@ -72,7 +69,6 @@ export class Persistent extends $ProtoSchemaBase {
         this.setSelfInvisible(obj.selfInvisible != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible.fromJson(obj.selfInvisible) : null);
         this.setSelfCannotBeCounterAttacked(obj.selfCannotBeCounterAttacked != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked.fromJson(obj.selfCannotBeCounterAttacked) : null);
         this.setSelfCannotCounterAttack(obj.selfCannotCounterAttack != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack.fromJson(obj.selfCannotCounterAttack) : null);
-        this.setSelfCoBoardingCost(obj.selfCoBoardingCost != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost.fromJson(obj.selfCoBoardingCost) : null);
         this.setSelfCanCoBoard(obj.selfCanCoBoard != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard.fromJson(obj.selfCanCoBoard) : null);
         return this;
     }
@@ -147,11 +143,6 @@ export class Persistent extends $ProtoSchemaBase {
         {
             const value = this.getSelfCannotCounterAttack();
             (value != null) && (obj.selfCannotCounterAttack = value.toJson());
-        }
-
-        {
-            const value = this.getSelfCoBoardingCost();
-            (value != null) && (obj.selfCoBoardingCost = value.toJson());
         }
 
         {
@@ -261,13 +252,6 @@ export class Persistent extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getSelfCoBoardingCost();
-            if (value != null) {
-                value.toWriter(writer.uint32(162).fork()).ldelim();
-            }
-        }
-
-        {
             const value = this.getSelfCanCoBoard();
             if (value != null) {
                 value.toWriter(writer.uint32(170).fork()).ldelim();
@@ -341,10 +325,6 @@ export class Persistent extends $ProtoSchemaBase {
 
                 case 19:
                     msg.setSelfCannotCounterAttack($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack.decode(reader, reader.uint32()));
-                    break;
-
-                case 20:
-                    msg.setSelfCoBoardingCost($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost.decode(reader, reader.uint32()));
                     break;
 
                 case 21:
@@ -548,19 +528,6 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public createIfNotExistsSelfCannotCounterAttack(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack {
         return this._selfCannotCounterAttack ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack();
-    }
-
-    public checkHasSelfCoBoardingCost(): boolean {
-        return this._selfCoBoardingCost != null;
-    }
-    public getSelfCoBoardingCost(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost | null | undefined {
-        return this._selfCoBoardingCost;
-    }
-    public setSelfCoBoardingCost(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost | null | undefined): void {
-        this._selfCoBoardingCost = value;
-    }
-    public createIfNotExistsSelfCoBoardingCost(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost {
-        return this._selfCoBoardingCost ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost();
     }
 
     public checkHasSelfCanCoBoard(): boolean {
