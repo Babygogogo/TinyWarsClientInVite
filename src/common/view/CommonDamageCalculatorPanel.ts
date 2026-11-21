@@ -1472,6 +1472,7 @@ function getAttackModifierByWeather(calculatorData: CalculatorData): number {
     for (const skillId of getCoSkillIdArray(gameConfig, attackerData.coId, attackerData.coSkillType)) {
         const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
         if ((cfg)                                                                                   &&
+            (cfg.getIsImmune())                                                                      &&
             (gameConfig.checkIsUnitTypeInCategory(attackerUnitType, cfg.getUnitCategoryId()))  &&
             (gameConfig.checkIsTileTypeInCategory(attackerTileType, cfg.getTileCategoryId()))  &&
             (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))

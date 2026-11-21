@@ -6,6 +6,7 @@ export interface SelfUnitIgnoreWeatherJson extends $ProtoSchemaJsonBase {
     unitCategoryId?: number | null | undefined;
     tileCategoryId?: number | null | undefined;
     weatherCategoryId?: number | null | undefined;
+    isImmune?: boolean | null | undefined;
 }
 
 export class SelfUnitIgnoreWeather extends $ProtoSchemaBase {
@@ -13,6 +14,7 @@ export class SelfUnitIgnoreWeather extends $ProtoSchemaBase {
     private _unitCategoryId?: number | null | undefined;
     private _tileCategoryId?: number | null | undefined;
     private _weatherCategoryId?: number | null | undefined;
+    private _isImmune?: boolean | null | undefined;
 
     public static fromJson(obj: SelfUnitIgnoreWeatherJson): SelfUnitIgnoreWeather {
         return new SelfUnitIgnoreWeather().loadJson(obj);
@@ -22,6 +24,7 @@ export class SelfUnitIgnoreWeather extends $ProtoSchemaBase {
         this.setUnitCategoryId(obj.unitCategoryId);
         this.setTileCategoryId(obj.tileCategoryId);
         this.setWeatherCategoryId(obj.weatherCategoryId);
+        this.setIsImmune(obj.isImmune);
         return this;
     }
     public override toJson(obj?: SelfUnitIgnoreWeatherJson): SelfUnitIgnoreWeatherJson {
@@ -45,6 +48,11 @@ export class SelfUnitIgnoreWeather extends $ProtoSchemaBase {
         {
             const value = this.getWeatherCategoryId();
             (value != null) && (obj.weatherCategoryId = value);
+        }
+
+        {
+            const value = this.getIsImmune();
+            (value != null) && (obj.isImmune = value);
         }
         return obj;
     }
@@ -78,6 +86,13 @@ export class SelfUnitIgnoreWeather extends $ProtoSchemaBase {
             }
         }
 
+        {
+            const value = this.getIsImmune();
+            if ((value != null) && (value != false)) {
+                writer.uint32(40).bool(value);
+            }
+        }
+
         return writer;
     }
 
@@ -105,6 +120,10 @@ export class SelfUnitIgnoreWeather extends $ProtoSchemaBase {
 
                 case 4:
                     msg.setWeatherCategoryId(reader.int32());
+                    break;
+
+                case 5:
+                    msg.setIsImmune(reader.bool());
                     break;
 
                 default:
@@ -177,6 +196,20 @@ export class SelfUnitIgnoreWeather extends $ProtoSchemaBase {
             this._weatherCategoryId = null;
         } else {
             this._weatherCategoryId = value;
+        }
+    }
+
+    public checkHasIsImmune(): boolean {
+        return this._isImmune != null;
+    }
+    public getIsImmune(): boolean {
+        return this._isImmune ?? false;
+    }
+    public setIsImmune(value: boolean | null | undefined): void {
+        if ((value == null) || (value == false)) {
+            this._isImmune = null;
+        } else {
+            this._isImmune = value;
         }
     }
 }

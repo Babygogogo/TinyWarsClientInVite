@@ -527,6 +527,7 @@ export class Unit {
         for (const skillId of this.getPlayer().getCoCurrentSkills()) {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
             if ((cfg)                                                                               &&
+                (cfg.getIsImmune())                                                                  &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))             &&
                 (gameConfig.checkIsTileTypeInCategory(selfTileType, cfg.getTileCategoryId()))         &&
                 (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))    &&
@@ -1397,6 +1398,7 @@ export class Unit {
         for (const skillId of this.getPlayer().getCoCurrentSkills()) {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
             if ((cfg)                                                                               &&
+                (cfg.getIsImmune())                                                                  &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))             &&
                 (gameConfig.checkIsTileTypeInCategory(selfTileType, cfg.getTileCategoryId()))         &&
                 (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))    &&
@@ -1770,6 +1772,7 @@ export class Unit {
                 if (!player.getCoCurrentSkills().some(skillId => {
                     const skillCfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
                     return (skillCfg != null)
+                        && (skillCfg.getIsImmune())
                         && (gameConfig.checkIsUnitTypeInCategory(unitType, skillCfg.getUnitCategoryId()))
                         && (gameConfig.checkIsTileTypeInCategory(tileType, skillCfg.getTileCategoryId()))
                         && (gameConfig.checkIsWeatherTypeInCategory(weatherType, skillCfg.getWeatherCategoryId()))
