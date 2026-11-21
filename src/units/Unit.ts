@@ -13,7 +13,7 @@ import {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCaptureAmount,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
-    CoSkills_Utils_Persistent_SelfUnitFuelConsumption,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_FuelConsumptions,
     CoSkills_Utils_Persistent_SelfUnitLuckRange,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets,
@@ -1119,19 +1119,24 @@ export class Unit {
         }
     }
     private _getFuelConsumptionModifierByCo(): number {
+        const war                       = this.getWar();
         const player                    = this.getPlayer();
         const gameConfig                = this.getGcData();
         const selfUnitTypeId            = this.getUnitTypeId();
         const selfGridIndex             = this.getGridIndex();
+        const selfTileTypeId            = war.getTileMap().getTile(selfGridIndex).getTileTypeId();
+        const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkills_Utils_Persistent_SelfUnitFuelConsumption.getTotalOffset({
-                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitFuelConsumption(),
+            modifier += CoSkills_Utils_Persistent_SelfUnitCommonAttributes_FuelConsumptions.getTotalOffset({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId               : selfUnitTypeId,
+                tileTypeId               : selfTileTypeId,
+                weatherTypeId            : weatherTypeId,
                 gridIndex                : selfGridIndex,
                 isCoOnboard              : isCoOnboard,
                 coZoneRadius             : coZoneRadius,

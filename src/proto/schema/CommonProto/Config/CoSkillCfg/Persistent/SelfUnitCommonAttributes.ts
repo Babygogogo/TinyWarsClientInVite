@@ -3,6 +3,7 @@ import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $Proto
 import { AttackRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets, type AttackRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets } from "./SelfUnitCommonAttributes/AttackRangeOffsets.js";
 import { Conditions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions, type ConditionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions } from "./SelfUnitCommonAttributes/Conditions.js";
 import { DefensePercentOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets, type DefensePercentOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets } from "./SelfUnitCommonAttributes/DefensePercentOffsets.js";
+import { FuelConsumptions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions, type FuelConsumptionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions } from "./SelfUnitCommonAttributes/FuelConsumptions.js";
 import { MoveRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets, type MoveRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets } from "./SelfUnitCommonAttributes/MoveRangeOffsets.js";
 import { OffensePercentOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets, type OffensePercentOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets } from "./SelfUnitCommonAttributes/OffensePercentOffsets.js";
 import { Visions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions, type VisionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions } from "./SelfUnitCommonAttributes/Visions.js";
@@ -14,6 +15,7 @@ export interface SelfUnitCommonAttributesJson extends $ProtoSchemaJsonBase {
     moveRangeOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets | null | undefined;
     attackRangeOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets | null | undefined;
     visions?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions | null | undefined;
+    fuelConsumptions?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions | null | undefined;
 }
 
 export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
@@ -23,6 +25,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     private _moveRangeOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets | null | undefined;
     private _attackRangeOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets | null | undefined;
     private _visions?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions | null | undefined;
+    private _fuelConsumptions?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions | null | undefined;
 
     public static fromJson(obj: SelfUnitCommonAttributesJson): SelfUnitCommonAttributes {
         return new SelfUnitCommonAttributes().loadJson(obj);
@@ -34,6 +37,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         this.setMoveRangeOffsets(obj.moveRangeOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets.fromJson(obj.moveRangeOffsets) : null);
         this.setAttackRangeOffsets(obj.attackRangeOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets.fromJson(obj.attackRangeOffsets) : null);
         this.setVisions(obj.visions != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions.fromJson(obj.visions) : null);
+        this.setFuelConsumptions(obj.fuelConsumptions != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions.fromJson(obj.fuelConsumptions) : null);
         return this;
     }
     public override toJson(obj?: SelfUnitCommonAttributesJson): SelfUnitCommonAttributesJson {
@@ -67,6 +71,11 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         {
             const value = this.getVisions();
             (value != null) && (obj.visions = value.toJson());
+        }
+
+        {
+            const value = this.getFuelConsumptions();
+            (value != null) && (obj.fuelConsumptions = value.toJson());
         }
         return obj;
     }
@@ -114,6 +123,13 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
             }
         }
 
+        {
+            const value = this.getFuelConsumptions();
+            if (value != null) {
+                value.toWriter(writer.uint32(58).fork()).ldelim();
+            }
+        }
+
         return writer;
     }
 
@@ -149,6 +165,10 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
 
                 case 6:
                     msg.setVisions($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions.decode(reader, reader.uint32()));
+                    break;
+
+                case 7:
+                    msg.setFuelConsumptions($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -244,5 +264,18 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     }
     public createIfNotExistsVisions(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions {
         return this._visions ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions();
+    }
+
+    public checkHasFuelConsumptions(): boolean {
+        return this._fuelConsumptions != null;
+    }
+    public getFuelConsumptions(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions | null | undefined {
+        return this._fuelConsumptions;
+    }
+    public setFuelConsumptions(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions | null | undefined): void {
+        this._fuelConsumptions = value;
+    }
+    public createIfNotExistsFuelConsumptions(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions {
+        return this._fuelConsumptions ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions();
     }
 }
