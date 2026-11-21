@@ -1,10 +1,10 @@
 import {
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_GridIndex,
-} from "../../../internal.ts";
-import type { SelfUnitFuelConsumption } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitFuelConsumption.ts";
+} from "../../../../internal.ts";
+import type { SelfUnitCaptureAmount } from "../../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCaptureAmount.ts";
 
-export function getTotalOffset({
+export function getTotalOffsetPct({
     cfg,
     gameConfig,
     unitTypeId,
@@ -13,7 +13,7 @@ export function getTotalOffset({
     coZoneRadius,
     getCoGridIndexArrayOnMap,
 }: {
-    cfg                         : SelfUnitFuelConsumption | null | undefined;
+    cfg                         : SelfUnitCaptureAmount | null | undefined;
     gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
@@ -42,5 +42,5 @@ export function getTotalOffset({
         return 0;
     }
 
-    return cfg.getOffset();
+    return cfg.getOffsetPct();
 }

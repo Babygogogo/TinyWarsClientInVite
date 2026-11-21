@@ -1,27 +1,27 @@
 import {
-    Players_Constants,
     AuxiliaryTypes_BattleInfo,
-    Utils_ClientErrorCode,
+    AuxiliaryTypes_GridIndex,
     Cos_Constants,
-    DamageCalculators_Constants,
-    Destructions_Utils,
-    Helpers_Team,
-    Helpers_Misc,
-    Units_Utils_Common,
-    Visibilities_Utils,
     CoSkills_Utils_InstantMisc_SelfFundAfterBattle,
     CoSkills_Utils_InstantMisc_SelfUnitPromotionAfterBattle,
-    Numbers_Utils,
-    AuxiliaryTypes_GridIndex,
+    DamageCalculators_Constants,
+    Destructions_Utils,
+    Helpers_Misc,
+    Helpers_Team,
     Numbers_Constants,
+    Numbers_Utils,
+    Players_Constants,
     Units_Constants,
+    Units_Utils_Common,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type BaseWar_Model_War,
     type GameConfigs_GameConfig,
     type Players_Player,
     type Tiles_Tile,
     type Units_Unit,
     type Units_UnitMap,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 import { BattleDamageInfo } from "../proto/schema/CommonProto/Structure/BattleDamageInfo.ts";
 import { WsUnitStatistics } from "../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
@@ -1082,7 +1082,7 @@ export function getEstimatedBattleInfo({
     const playerManager   = war.getPlayerManager();
     const gameConfig      = war.getGcData();
     for (const [playerIndex, playerData] of battleInfo.oldPlayers) {
-        playerManager.getPlayer(playerIndex).init(playerData, gameConfig);
+        playerManager.getPlayer(playerIndex).init(playerData, gameConfig, false);
     }
     for (const [gridId, tileData] of battleInfo.oldTiles) {
         tileMap.getTileWithGridId(gridId).init(tileData, gameConfig);

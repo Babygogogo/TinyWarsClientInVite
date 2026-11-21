@@ -1,8 +1,9 @@
 import {
-    type GameConfigs_GameConfig,
     type AuxiliaryTypes_GridIndex,
-} from "../../../internal.ts";
-import type { SelfUnitCommonAttributes } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes.ts";
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions,
+    type GameConfigs_GameConfig,
+} from "../../../../internal.ts";
+import type { SelfUnitCommonAttributes } from "../../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes.ts";
 
 export function getTotalUpperOffset({
     cfg,
@@ -29,27 +30,17 @@ export function getTotalUpperOffset({
         return 0;
     }
 
-    const conditions            = cfg.getConditions();
-    const attackRangeOffsets    = cfg.getAttackRangeOffsets();
-    if ((conditions == null) || (attackRangeOffsets == null)) {
-        return 0;
-    }
-
-    if (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, conditions.getUnitCategoryId())) {
-        return 0;
-    }
-
-    if (!gameConfig.checkIsTileTypeInCategory(tileTypeId, conditions.getTileCategoryId())) {
-        return 0;
-    }
-
-    if (!gameConfig.checkIsWeatherTypeInCategory(weatherTypeId, conditions.getWeatherCategoryId())) {
-        return 0;
-    }
-
-    if ((!isCoOnboard)                                                  &&
-        (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType          : conditions.getCoSkillAreaTypeId(),
+    const attackRangeOffsets = cfg.getAttackRangeOffsets();
+    if ((attackRangeOffsets == null)                                                    ||
+        (!CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions.checkIsMeet({
+            conditions               : cfg.getConditions(),
+            gameConfig               : gameConfig,
+            unitTypeId               : unitTypeId,
+            tileTypeId               : tileTypeId,
+            weatherTypeId            : weatherTypeId,
+            isCoOnboard              : isCoOnboard,
+            isInCozByPreviewSettings : false,
+            gridIndex                : gridIndex,
             coZoneRadius             : coZoneRadius,
             getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))

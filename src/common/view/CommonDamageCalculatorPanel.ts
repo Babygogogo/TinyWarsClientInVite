@@ -3,9 +3,9 @@ import {
     AuxiliaryTypes_DamageCalculatorPlayerData,
     Cos_Constants,
     CoSkills_Constants,
-    CoSkills_Utils_Persistent_SelfUnitDefense,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
     CoSkills_Utils_Persistent_SelfUnitLuckRange,
-    CoSkills_Utils_Persistent_SelfUnitOffense,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets,
     DamageCalculators_Utils,
     FloatText,
     ForceSkins_Utils,
@@ -1429,7 +1429,7 @@ function getAttackModifierByCo({ isCounter, calculatorData }: {
     const getOwnTilesCount                  = Helpers_Misc.createLazyFunc2(() => attackerData.citiesCount);  // TODO: 这里做了简化处理（因为只有kindle有这个技能），以后如果有类似的新技能，就需要完整实现地形计数逻辑
     let modifier                            = 0;
     for (const skillId of getCoSkillIdArray(gameConfig, attackerCoId, attackerCoSkillType)) {
-        modifier += CoSkills_Utils_Persistent_SelfUnitOffense.getTotalOffsetPctForDamageCalculatorPanel({
+        modifier += CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets.getTotalOffsetPctForDamageCalculatorPanel({
             cfg               : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
             gameConfig        : gameConfig,
             unitTypeId        : attackerUnitTypeId,
@@ -1560,7 +1560,7 @@ function getDefenseModifierByCo(calculatorData: CalculatorData): number {
     });
     let modifier                            = 0;
     for (const skillId of getCoSkillIdArray(gameConfig, defenderCoId, defenderCoSkillType)) {
-        modifier += CoSkills_Utils_Persistent_SelfUnitDefense.getTotalDefensePercentOffsetForDamageCalculatorPanel({
+        modifier += CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets.getTotalDefensePercentOffsetForDamageCalculatorPanel({
             cfg               : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
             gameConfig        : gameConfig,
             unitTypeId1       : calculatorData.attackerData.unitType,

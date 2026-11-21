@@ -56,7 +56,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
     const playerArrayAfterAction    = commonExtraData.getPlayerArrayAfterAction();
     for (const playerData of playerArrayAfterAction) {
         const player = war.getPlayer(playerData.getPlayerIndex());
-        player.init(playerData, gameConfig);
+        player.init(playerData, gameConfig, !isFastExecute);
         player.startRunning(war);
     }
 

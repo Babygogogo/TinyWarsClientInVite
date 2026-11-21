@@ -1,8 +1,8 @@
 import {
     type GameConfigs_GameConfig,
     type AuxiliaryTypes_GridIndex,
-} from "../../../internal.ts";
-import type { SelfUnitLuckRange } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitLuckRange.ts";
+} from "../../../../internal.ts";
+import type { SelfUnitLuckRange } from "../../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitLuckRange.ts";
 
 export function getTotalOffset({
     cfg,

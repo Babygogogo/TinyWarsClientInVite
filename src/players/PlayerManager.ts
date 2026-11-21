@@ -53,7 +53,7 @@ export class PlayerManager {
             skinIdSet.add(skinId);
 
             const player = new Players_Player.Player();
-            player.init(playerData, gameConfig);
+            player.init(playerData, gameConfig, false);
 
             newPlayerMap.set(playerIndex, player);
         }
@@ -82,7 +82,7 @@ export class PlayerManager {
         for (const playerData of data ? data.getPlayers() : []) {
             const playerIndex   = playerData.getPlayerIndex();
             const player        = this.getPlayer(playerIndex);
-            player.init(playerData, gameConfig);
+            player.init(playerData, gameConfig, false);
         }
     }
     public initWatcherTeamIndexesForHrw(warData: SerialWar): void {

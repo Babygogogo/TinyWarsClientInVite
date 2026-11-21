@@ -45,7 +45,7 @@ export class Player implements Players_Player.Player {
 
     private _war?                               : BaseWar_Model_War.War;
 
-    public init(data: SerialPlayer, gcData: GameConfigs_GameConfig.GameConfig): void {
+    public init(data: SerialPlayer, gcData: GameConfigs_GameConfig.GameConfig, needUpdateView: boolean): void {
         const coId = data.getCoId();
         if (gcData.getCoBasicCfg(coId) == null) {
             throw Helpers_Misc.newError(`Invalid coId: ${coId}`, Utils_ClientErrorCode.ClientErrorCode.BwPlayer_Init_01);
@@ -102,17 +102,17 @@ export class Player implements Players_Player.Player {
         //     throw Helpers.newError(`The neutral player is not alive.`, ClientErrorCode.BwPlayer_Init_11);
         // }
 
-        this.setFund(fund, false);
+        this.setFund(fund, needUpdateView);
         this.setHasVotedForDraw(hasVotedForDraw);
         this.setAliveState(aliveState);
         this._setPlayerIndex(playerIndex);
         this.setRestTimeToBoot(restTimeToBoot);
-        this.setCoUsingSkillType(coUsingSkillType, false);
+        this.setCoUsingSkillType(coUsingSkillType, needUpdateView);
         this.setCoIsDestroyedInTurn(coIsDestroyedInTurn);
         this.setUserId(data.getUserId() ?? null);
         this._setUnitAndTileSkinId(unitAndTileSkinId);
-        this.setCoId(coId, false);
-        this._setCoCurrentEnergy(coCurrentEnergy, false);
+        this.setCoId(coId, needUpdateView);
+        this._setCoCurrentEnergy(coCurrentEnergy, needUpdateView);
         this._setCoPowerActivatedCount(data.getCoPowerActivatedCount());
         this.setWatchOngoingSrcUserIds(data.getWatchOngoingSrcUserIdArray() || []);
         this.setWatchRequestSrcUserIds(data.getWatchRequestSrcUserIdArray() || []);

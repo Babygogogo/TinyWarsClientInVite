@@ -1,10 +1,11 @@
 import {
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions,
     Units_Utils_Common,
-    type GameConfigs_GameConfig,
-    type AuxiliaryTypes_GridIndex,
     type AuxiliaryTypes_AuxiliaryTypes,
-} from "../../../internal.ts";
-import type { SelfUnitCommonAttributes } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes";
+    type AuxiliaryTypes_GridIndex,
+    type GameConfigs_GameConfig,
+} from "../../../../internal.ts";
+import type { SelfUnitCommonAttributes } from "../../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes.ts";
 
 function getTotalPctFromOwnTiles(cfg: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
     if (!cfg?.length) {
@@ -70,35 +71,22 @@ export function getTotalDefensePercentOffset({
         return 0;
     }
 
-    const conditions            = cfg.getConditions();
     const defensePercentOffsets = cfg.getDefensePercentOffsets();
-    if ((conditions == null) || (defensePercentOffsets == null)) {
+    if ((defensePercentOffsets == null)                                                 ||
+        (!CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions.checkIsMeet({
+            conditions               : cfg.getConditions(),
+            gameConfig               : gameConfig,
+            unitTypeId               : unitTypeId2,
+            tileTypeId               : tileTypeId2,
+            weatherTypeId            : weatherTypeId,
+            isCoOnboard              : isCoOnboard,
+            isInCozByPreviewSettings : isInCozByPreviewSettings,
+            gridIndex                : gridIndex,
+            coZoneRadius             : coZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+        }))
+    ) {
         return 0;
-    }
-
-    {
-        if (!gameConfig.checkIsUnitTypeInCategory(unitTypeId2, conditions.getUnitCategoryId())) {
-            return 0;
-        }
-
-        if (!gameConfig.checkIsTileTypeInCategory(tileTypeId2, conditions.getTileCategoryId())) {
-            return 0;
-        }
-
-        if (!gameConfig.checkIsWeatherTypeInCategory(weatherTypeId, conditions.getWeatherCategoryId())) {
-            return 0;
-        }
-
-        if ((!isCoOnboard)                                                  &&
-            (!isInCozByPreviewSettings)                                     &&
-            (!gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType          : conditions.getCoSkillAreaTypeId(),
-                coZoneRadius             : coZoneRadius,
-                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-            }))
-        ) {
-            return 0;
-        }
     }
 
     return (defensePercentOffsets.getOffsetPct())
@@ -142,24 +130,17 @@ export function getTotalDefensePercentOffsetForDamageCalculatorPanel({
         return 0;
     }
 
-    const conditions            = cfg.getConditions();
     const defensePercentOffsets = cfg.getDefensePercentOffsets();
-    if ((conditions == null) || (defensePercentOffsets == null)) {
+    if ((defensePercentOffsets == null)                                                                         ||
+        (!CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions.checkIsMeetForDamageCalculatorPanel({
+            conditions    : cfg.getConditions(),
+            gameConfig    : gameConfig,
+            unitTypeId    : unitTypeId2,
+            tileTypeId    : tileTypeId2,
+            weatherTypeId : weatherTypeId,
+        }))
+    ) {
         return 0;
-    }
-
-    {
-        if (!gameConfig.checkIsUnitTypeInCategory(unitTypeId2, conditions.getUnitCategoryId())) {
-            return 0;
-        }
-
-        if (!gameConfig.checkIsTileTypeInCategory(tileTypeId2, conditions.getTileCategoryId())) {
-            return 0;
-        }
-
-        if (!gameConfig.checkIsWeatherTypeInCategory(weatherTypeId, conditions.getWeatherCategoryId())) {
-            return 0;
-        }
     }
 
     return (defensePercentOffsets.getOffsetPct())

@@ -10,14 +10,14 @@ import {
     CoSkills_Constants,
     CoSkills_Utils_Common,
     CoSkills_Utils_Persistent_SelfCanCoBoard,
-    CoSkills_Utils_Persistent_AttackRangeOffsets,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCaptureAmount,
-    CoSkills_Utils_Persistent_SelfUnitDefense,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
     CoSkills_Utils_Persistent_SelfUnitFuelConsumption,
     CoSkills_Utils_Persistent_SelfUnitLuckRange,
-    CoSkills_Utils_Persistent_SelfUnitMoveRange,
-    CoSkills_Utils_Persistent_SelfUnitOffense,
-    CoSkills_Utils_Persistent_Visions,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveRangeOffsets,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Visions,
     type GameConfigs_GameConfig,
     Helpers_Collection,
     Helpers_Misc,
@@ -466,7 +466,7 @@ export class Unit {
 
         let modifier = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkills_Utils_Persistent_SelfUnitOffense.getTotalOffsetPct({
+            modifier += CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets.getTotalOffsetPct({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId               : unitTypeId,
@@ -630,7 +630,7 @@ export class Unit {
 
         let modifier = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkills_Utils_Persistent_SelfUnitDefense.getTotalDefensePercentOffset({
+            modifier += CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets.getTotalDefensePercentOffset({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId1              : attackerUnitTypeId,
@@ -807,7 +807,7 @@ export class Unit {
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills() || []) {
-            modifier += CoSkills_Utils_Persistent_AttackRangeOffsets.getTotalUpperOffset({
+            modifier += CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets.getTotalUpperOffset({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId               : selfUnitTypeId,
@@ -1338,7 +1338,7 @@ export class Unit {
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkills_Utils_Persistent_SelfUnitMoveRange.getTotalOffset({
+            modifier += CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveRangeOffsets.getTotalOffset({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId               : selfUnitTypeId,
@@ -1809,7 +1809,7 @@ export class Unit {
         const isCoOnboard               = this.getIsCoOnboard();
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills() || []) {
-            modifier += CoSkills_Utils_Persistent_Visions.getTotalRangeOffset({
+            modifier += CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Visions.getTotalRangeOffset({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 gridIndex                : selfGridIndex,
@@ -1846,7 +1846,7 @@ export class Unit {
         const selfGridIndex             = this.getGridIndex();
         const tileTypeId                = this.getWar().getTileMap().getTile(selfGridIndex).getTileTypeId();
         const weatherTypeId             = Helpers_Misc.getExisted(this.getWar().getWeatherManager().getCurrentWeatherType());
-        return player.getCoCurrentSkills().some(skillId => CoSkills_Utils_Persistent_Visions.checkCanSeeThrough({
+        return player.getCoCurrentSkills().some(skillId => CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Visions.checkCanSeeThrough({
             cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
             gameConfig               : gameConfig,
             gridIndex                : selfGridIndex,
