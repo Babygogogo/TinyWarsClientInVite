@@ -240,7 +240,7 @@ export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermiss
 export * as CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction from "./coSkills/utils/persistent/SelfTileEnabledForUnitProduction.ts";
 export * as CoSkills_Utils_Persistent_SelfTileIncome from "./coSkills/utils/persistent/SelfTileIncome.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets.ts";
-export * as CoSkills_Utils_Persistent_SelfUnitCaptureAmount from "./coSkills/utils/persistent/selfUnitCommonAttributes/SelfUnitCaptureAmount.ts";
+export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts from "./coSkills/utils/persistent/selfUnitCommonAttributes/CaptureAmounts.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCost from "./coSkills/utils/persistent/SelfUnitCost.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions from "./coSkills/utils/persistent/selfUnitCommonAttributes/Conditions.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts from "./coSkills/utils/persistent/selfUnitCommonAttributes/CoBoardingCosts.ts";

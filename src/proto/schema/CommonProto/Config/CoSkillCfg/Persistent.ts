@@ -9,7 +9,6 @@ import { SelfPromotionBonusByProduce as $Message$CommonProto$Config$CoSkillCfg$P
 import { SelfRepairAmountBonus as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus, type SelfRepairAmountBonusJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus } from "./Persistent/SelfRepairAmountBonus.js";
 import { SelfTileEnabledForUnitProduction as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction, type SelfTileEnabledForUnitProductionJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction } from "./Persistent/SelfTileEnabledForUnitProduction.js";
 import { SelfTileIncome as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome, type SelfTileIncomeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome } from "./Persistent/SelfTileIncome.js";
-import { SelfUnitCaptureAmount as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount, type SelfUnitCaptureAmountJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount } from "./Persistent/SelfUnitCaptureAmount.js";
 import { SelfUnitCommonAttributes as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes, type SelfUnitCommonAttributesJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes } from "./Persistent/SelfUnitCommonAttributes.js";
 import { SelfUnitCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost, type SelfUnitCostJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost } from "./Persistent/SelfUnitCost.js";
 import { SelfUnitIgnoreWeather as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather, type SelfUnitIgnoreWeatherJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather } from "./Persistent/SelfUnitIgnoreWeather.js";
@@ -18,7 +17,6 @@ import { SelfUnitMoveCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$S
 export interface PersistentJson extends $ProtoSchemaJsonBase {
     selfUnitCommonAttributes?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
     selfUnitCost?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost | null | undefined;
-    selfUnitCaptureAmount?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount | null | undefined;
     selfTileIncome?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome | null | undefined;
     selfTileEnabledForUnitProduction?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction | null | undefined;
     selfUnitIgnoreWeather?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather | null | undefined;
@@ -35,7 +33,6 @@ export interface PersistentJson extends $ProtoSchemaJsonBase {
 export class Persistent extends $ProtoSchemaBase {
     private _selfUnitCommonAttributes?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
     private _selfUnitCost?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost | null | undefined;
-    private _selfUnitCaptureAmount?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount | null | undefined;
     private _selfTileIncome?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome | null | undefined;
     private _selfTileEnabledForUnitProduction?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction | null | undefined;
     private _selfUnitIgnoreWeather?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather | null | undefined;
@@ -54,7 +51,6 @@ export class Persistent extends $ProtoSchemaBase {
     public override loadJson(obj: PersistentJson): this {
         this.setSelfUnitCommonAttributes(obj.selfUnitCommonAttributes != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes.fromJson(obj.selfUnitCommonAttributes) : null);
         this.setSelfUnitCost(obj.selfUnitCost != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost.fromJson(obj.selfUnitCost) : null);
-        this.setSelfUnitCaptureAmount(obj.selfUnitCaptureAmount != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount.fromJson(obj.selfUnitCaptureAmount) : null);
         this.setSelfTileIncome(obj.selfTileIncome != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome.fromJson(obj.selfTileIncome) : null);
         this.setSelfTileEnabledForUnitProduction(obj.selfTileEnabledForUnitProduction != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction.fromJson(obj.selfTileEnabledForUnitProduction) : null);
         this.setSelfUnitIgnoreWeather(obj.selfUnitIgnoreWeather != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather.fromJson(obj.selfUnitIgnoreWeather) : null);
@@ -79,11 +75,6 @@ export class Persistent extends $ProtoSchemaBase {
         {
             const value = this.getSelfUnitCost();
             (value != null) && (obj.selfUnitCost = value.toJson());
-        }
-
-        {
-            const value = this.getSelfUnitCaptureAmount();
-            (value != null) && (obj.selfUnitCaptureAmount = value.toJson());
         }
 
         {
@@ -155,13 +146,6 @@ export class Persistent extends $ProtoSchemaBase {
             const value = this.getSelfUnitCost();
             if (value != null) {
                 value.toWriter(writer.uint32(58).fork()).ldelim();
-            }
-        }
-
-        {
-            const value = this.getSelfUnitCaptureAmount();
-            if (value != null) {
-                value.toWriter(writer.uint32(66).fork()).ldelim();
             }
         }
 
@@ -263,10 +247,6 @@ export class Persistent extends $ProtoSchemaBase {
                     msg.setSelfUnitCost($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost.decode(reader, reader.uint32()));
                     break;
 
-                case 8:
-                    msg.setSelfUnitCaptureAmount($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount.decode(reader, reader.uint32()));
-                    break;
-
                 case 9:
                     msg.setSelfTileIncome($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome.decode(reader, reader.uint32()));
                     break;
@@ -352,19 +332,6 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public createIfNotExistsSelfUnitCost(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost {
         return this._selfUnitCost ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost();
-    }
-
-    public checkHasSelfUnitCaptureAmount(): boolean {
-        return this._selfUnitCaptureAmount != null;
-    }
-    public getSelfUnitCaptureAmount(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount | null | undefined {
-        return this._selfUnitCaptureAmount;
-    }
-    public setSelfUnitCaptureAmount(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount | null | undefined): void {
-        this._selfUnitCaptureAmount = value;
-    }
-    public createIfNotExistsSelfUnitCaptureAmount(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount {
-        return this._selfUnitCaptureAmount ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount();
     }
 
     public checkHasSelfTileIncome(): boolean {

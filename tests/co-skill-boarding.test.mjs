@@ -42,6 +42,7 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions: 'coSkills/utils/persistent/selfUnitCommonAttributes/CoBoardingPermissions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts: 'coSkills/utils/persistent/selfUnitCommonAttributes/CoBoardingCosts',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts: 'coSkills/utils/persistent/selfUnitCommonAttributes/CaptureAmounts',
     Units_Unit: 'units/Unit',
   })) internal[name] = loadSource(filename)
   return { ...proto, internal, GridIndex: internal.AuxiliaryTypes_GridIndex.GridIndex,
@@ -53,6 +54,78 @@ const gameConfig = {
   checkIsTileTypeInCategory: (type, category) => category === 1 || category === 8 && type === 12,
   checkIsWeatherTypeInCategory: (type, category) => category === 1 || category === 9 && type === 13,
 }
+
+test('capture amounts share all common conditions and CO units bypass only area', async () => {
+  const { SelfUnitCommonAttributes, GridIndex, internal } = await runtime
+  const calculate = internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts.getTotalOffsetPct
+  for (const coSkillAreaTypeId of [0, 1, 2]) {
+    const conditions = { coSkillAreaTypeId, unitCategoryId: 7, tileCategoryId: 8, weatherCategoryId: 9 }
+    const cfg = SelfUnitCommonAttributes.fromJson({ conditions, captureAmounts: { offsetPct: -25 } }).clone()
+    for (const unitTypeId of [11, 21]) for (const tileTypeId of [12, 22]) for (const weatherTypeId of [13, 23]) {
+      for (const isCoOnboard of [false, true]) for (const distance of [0, 1, 2]) {
+        const gridIndex = new GridIndex(distance, 0)
+        const args = { cfg, gameConfig, unitTypeId, tileTypeId, weatherTypeId, isCoOnboard,
+          gridIndex, coZoneRadius: 1, getCoGridIndexArrayOnMap: () => [new GridIndex(0, 0)] }
+        const matches = unitTypeId === 11 && tileTypeId === 12 && weatherTypeId === 13 &&
+          (isCoOnboard || gridIndex.checkIsInsideCoSkillArea({
+            coSkillAreaType: coSkillAreaTypeId, coZoneRadius: 1,
+            getCoGridIndexArrayOnMap: args.getCoGridIndexArrayOnMap,
+          }))
+        assert.equal(calculate(args), matches ? -25 : 0)
+      }
+    }
+  }
+  for (const cfg of [null, SelfUnitCommonAttributes.fromJson({ captureAmounts: { offsetPct: 50 } }),
+    SelfUnitCommonAttributes.fromJson({ conditions: { coSkillAreaTypeId: 2, unitCategoryId: 1,
+      tileCategoryId: 1, weatherCategoryId: 1 }, coBoardingPermissions: { actCanBoard: true } })]) {
+    assert.equal(calculate({ cfg, gameConfig }), 0)
+  }
+})
+
+test('unit capture uses destination terrain and weather, stacks percentages and rounds down', async () => {
+  const { CoSkillCfg, GridIndex, internal } = await runtime
+  const destination = new GridIndex(1, 0)
+  const conditions = { coSkillAreaTypeId: 0, unitCategoryId: 7, tileCategoryId: 8, weatherCategoryId: 9 }
+  const skills = [50, -25].map(offsetPct => CoSkillCfg.fromJson({
+    persistent: { selfUnitCommonAttributes: { conditions, captureAmounts: { offsetPct } } },
+  }))
+  let tileTypeId = 12, weatherTypeId = 13, unitTypeId = 11, onboard = false, capturer = true, coId = 1
+  const player = { getCoId: () => coId, getCoZoneRadius: () => 0, getCoCurrentSkills: () => [0, 1],
+    getCoGridIndexListOnMap: () => [new GridIndex(0, 0)] }
+  const unit = Object.assign(Object.create(internal.Units_Unit.Unit.prototype), {
+    checkIsCapturer: () => capturer, getNormalizedCurrentHp: () => 9,
+    getPlayer: () => player, getGcData: () => ({ ...gameConfig, getCoSkillCfg: id => skills[id] }),
+    getUnitTypeId: () => unitTypeId, getIsCoOnboard: () => onboard,
+    getWar: () => ({
+      getTileMap: () => ({ getTile: grid => { assert.equal(grid, destination); return { getTileTypeId: () => tileTypeId } } }),
+      getWeatherManager: () => ({ getCurrentWeatherType: () => weatherTypeId }),
+    }),
+  })
+  assert.equal(unit.getFinalCaptureAmount(destination), 9)
+  onboard = true
+  assert.equal(unit.getFinalCaptureAmount(destination), 11)
+  tileTypeId = 22
+  assert.equal(unit.getFinalCaptureAmount(destination), 9)
+  tileTypeId = 12
+  weatherTypeId = 23
+  assert.equal(unit.getFinalCaptureAmount(destination), 9)
+  weatherTypeId = 13
+  unitTypeId = 21
+  assert.equal(unit.getFinalCaptureAmount(destination), 9)
+  unitTypeId = 11
+  for (const skill of skills) {
+    skill.getPersistent().getSelfUnitCommonAttributes().getConditions().setCoSkillAreaTypeId(2)
+  }
+  onboard = false
+  assert.equal(unit.getFinalCaptureAmount(destination), 11)
+  skills[0].getPersistent().getSelfUnitCommonAttributes().getCaptureAmounts().setOffsetPct(10000)
+  skills[1].getPersistent().getSelfUnitCommonAttributes().setCaptureAmounts(null)
+  assert.equal(unit.getFinalCaptureAmount(destination), 909)
+  coId = internal.Cos_Constants.CoId.Empty
+  assert.equal(unit.getFinalCaptureAmount(destination), 9)
+  capturer = false
+  assert.equal(unit.getFinalCaptureAmount(destination), null)
+})
 
 test('boarding shares category and zone conditions; ownership remains effect-specific and CO bypasses only area', async () => {
   const { SelfUnitCommonAttributes, GridIndex, board, internal } = await runtime

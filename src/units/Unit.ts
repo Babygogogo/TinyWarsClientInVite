@@ -10,7 +10,7 @@ import {
     CoSkills_Constants,
     CoSkills_Utils_Common,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions,
-    CoSkills_Utils_Persistent_SelfUnitCaptureAmount,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
@@ -1008,6 +1008,9 @@ export class Unit {
             return cfgAmount;
         }
 
+        const war                       = this.getWar();
+        const tileTypeId                = war.getTileMap().getTile(selfGridIndex).getTileTypeId();
+        const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const gameConfig                = this.getGcData();
         const selfUnitTypeId            = this.getUnitTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
@@ -1015,9 +1018,11 @@ export class Unit {
         const isCoOnboard               = this.getIsCoOnboard();
         let modifier                    = 100;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkills_Utils_Persistent_SelfUnitCaptureAmount.getTotalOffsetPct({
-                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCaptureAmount(),
+            modifier += CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts.getTotalOffsetPct({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 unitTypeId               : selfUnitTypeId,
+                tileTypeId               : tileTypeId,
+                weatherTypeId            : weatherTypeId,
                 gridIndex                : selfGridIndex,
                 gameConfig               : gameConfig,
                 coZoneRadius             : coZoneRadius,
