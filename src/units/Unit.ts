@@ -15,6 +15,7 @@ import {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_FuelConsumptions,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets,
@@ -525,18 +526,18 @@ export class Unit {
         );
 
         for (const skillId of this.getPlayer().getCoCurrentSkills()) {
-            const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
-            if ((cfg)                                                                               &&
-                (cfg.getIsImmune())                                                                  &&
-                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))             &&
-                (gameConfig.checkIsTileTypeInCategory(selfTileType, cfg.getTileCategoryId()))         &&
-                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))    &&
-                ((isCoOnboard) || (isInCozByPreviewSettings) || (selfGridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                    coZoneRadius             : coZoneRadius,
-                    getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                })))
-            ) {
+            if (CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers.checkIsImmuneToWeather({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+                gameConfig               : gameConfig,
+                unitTypeId               : unitType,
+                tileTypeId               : selfTileType,
+                weatherTypeId            : weatherType,
+                isCoOnboard              : isCoOnboard,
+                isInCozByPreviewSettings : isInCozByPreviewSettings,
+                gridIndex                : selfGridIndex,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+            })) {
                 return 0;
             }
         }
@@ -1396,18 +1397,18 @@ export class Unit {
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         for (const skillId of this.getPlayer().getCoCurrentSkills()) {
-            const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
-            if ((cfg)                                                                               &&
-                (cfg.getIsImmune())                                                                  &&
-                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))             &&
-                (gameConfig.checkIsTileTypeInCategory(selfTileType, cfg.getTileCategoryId()))         &&
-                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))    &&
-                ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                    coZoneRadius             : coZoneRadius,
-                    getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                })))
-            ) {
+            if (CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers.checkIsImmuneToWeather({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+                gameConfig               : gameConfig,
+                unitTypeId               : unitType,
+                tileTypeId               : selfTileType,
+                weatherTypeId            : weatherType,
+                isCoOnboard              : isCoOnboard,
+                isInCozByPreviewSettings : false,
+                gridIndex                : selfGridIndex,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+            })) {
                 return 0;
             }
         }
@@ -1769,19 +1770,20 @@ export class Unit {
                 const coZoneRadius              = player.getCoZoneRadius();
                 const isCoOnboard               = this.getIsCoOnboard();
                 const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
-                if (!player.getCoCurrentSkills().some(skillId => {
-                    const skillCfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
-                    return (skillCfg != null)
-                        && (skillCfg.getIsImmune())
-                        && (gameConfig.checkIsUnitTypeInCategory(unitType, skillCfg.getUnitCategoryId()))
-                        && (gameConfig.checkIsTileTypeInCategory(tileType, skillCfg.getTileCategoryId()))
-                        && (gameConfig.checkIsWeatherTypeInCategory(weatherType, skillCfg.getWeatherCategoryId()))
-                        && ((isCoOnboard) || (gridIndex.checkIsInsideCoSkillArea({
-                            coSkillAreaType          : skillCfg.getCoSkillAreaTypeId(),
-                            coZoneRadius             : coZoneRadius,
-                            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                        })));
-                })) {
+                if (!player.getCoCurrentSkills().some(skillId =>
+                    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers.checkIsImmuneToWeather({
+                        cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+                        gameConfig               : gameConfig,
+                        unitTypeId               : unitType,
+                        tileTypeId               : tileType,
+                        weatherTypeId            : weatherType,
+                        isCoOnboard              : isCoOnboard,
+                        isInCozByPreviewSettings : false,
+                        gridIndex                : gridIndex,
+                        coZoneRadius             : coZoneRadius,
+                        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                    }),
+                )) {
                     return new AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo({
                         baseRange     : unitVisionFixedCfg[2] + modifierByCo,
                         isFixed       : true,

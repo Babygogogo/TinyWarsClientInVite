@@ -7,6 +7,7 @@ import { CoBoardingPermissions as $Message$CommonProto$Config$CoSkillCfg$Persist
 import { Conditions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions, type ConditionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions } from "./SelfUnitCommonAttributes/Conditions.js";
 import { DefensePercentOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets, type DefensePercentOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets } from "./SelfUnitCommonAttributes/DefensePercentOffsets.js";
 import { FuelConsumptions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions, type FuelConsumptionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions } from "./SelfUnitCommonAttributes/FuelConsumptions.js";
+import { ImmuneToWeathers as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers, type ImmuneToWeathersJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers } from "./SelfUnitCommonAttributes/ImmuneToWeathers.js";
 import { LuckRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$LuckRangeOffsets, type LuckRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$LuckRangeOffsets } from "./SelfUnitCommonAttributes/LuckRangeOffsets.js";
 import { MoveRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets, type MoveRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets } from "./SelfUnitCommonAttributes/MoveRangeOffsets.js";
 import { OffensePercentOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets, type OffensePercentOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets } from "./SelfUnitCommonAttributes/OffensePercentOffsets.js";
@@ -24,6 +25,7 @@ export interface SelfUnitCommonAttributesJson extends $ProtoSchemaJsonBase {
     coBoardingCosts?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts | null | undefined;
     coBoardingPermissions?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions | null | undefined;
     captureAmounts?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts | null | undefined;
+    immuneToWeathers?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers | null | undefined;
 }
 
 export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
@@ -38,6 +40,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     private _coBoardingCosts?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts | null | undefined;
     private _coBoardingPermissions?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions | null | undefined;
     private _captureAmounts?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts | null | undefined;
+    private _immuneToWeathers?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers | null | undefined;
 
     public static fromJson(obj: SelfUnitCommonAttributesJson): SelfUnitCommonAttributes {
         return new SelfUnitCommonAttributes().loadJson(obj);
@@ -54,6 +57,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         this.setCoBoardingCosts(obj.coBoardingCosts != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts.fromJson(obj.coBoardingCosts) : null);
         this.setCoBoardingPermissions(obj.coBoardingPermissions != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingPermissions.fromJson(obj.coBoardingPermissions) : null);
         this.setCaptureAmounts(obj.captureAmounts != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts.fromJson(obj.captureAmounts) : null);
+        this.setImmuneToWeathers(obj.immuneToWeathers != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers.fromJson(obj.immuneToWeathers) : null);
         return this;
     }
     public override toJson(obj?: SelfUnitCommonAttributesJson): SelfUnitCommonAttributesJson {
@@ -112,6 +116,11 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         {
             const value = this.getCaptureAmounts();
             (value != null) && (obj.captureAmounts = value.toJson());
+        }
+
+        {
+            const value = this.getImmuneToWeathers();
+            (value != null) && (obj.immuneToWeathers = value.toJson());
         }
         return obj;
     }
@@ -194,6 +203,13 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
             }
         }
 
+        {
+            const value = this.getImmuneToWeathers();
+            if (value != null) {
+                value.toWriter(writer.uint32(98).fork()).ldelim();
+            }
+        }
+
         return writer;
     }
 
@@ -249,6 +265,10 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
 
                 case 11:
                     msg.setCaptureAmounts($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts.decode(reader, reader.uint32()));
+                    break;
+
+                case 12:
+                    msg.setImmuneToWeathers($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -409,5 +429,18 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     }
     public createIfNotExistsCaptureAmounts(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts {
         return this._captureAmounts ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts();
+    }
+
+    public checkHasImmuneToWeathers(): boolean {
+        return this._immuneToWeathers != null;
+    }
+    public getImmuneToWeathers(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers | null | undefined {
+        return this._immuneToWeathers;
+    }
+    public setImmuneToWeathers(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers | null | undefined): void {
+        this._immuneToWeathers = value;
+    }
+    public createIfNotExistsImmuneToWeathers(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers {
+        return this._immuneToWeathers ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers();
     }
 }

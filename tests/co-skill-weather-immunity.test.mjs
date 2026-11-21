@@ -10,8 +10,8 @@ const runtime = (async () => {
   const schemaFile = fileURLToPath(new URL('../src/proto/schema/CommonProto/Config/CoSkillCfg.ts', import.meta.url))
   const module = await loadModules(schemaFile)
   const { CoSkillCfg } = await module(schemaFile)
-  const { SelfUnitIgnoreWeather } = await module(fileURLToPath(new URL(
-    '../src/proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitIgnoreWeather.ts', import.meta.url)))
+  const { SelfUnitCommonAttributes } = await module(fileURLToPath(new URL(
+    '../src/proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes.ts', import.meta.url)))
   const internal = {
     Helpers_Misc: {
       getExisted: value => { assert.notEqual(value, undefined); assert.notEqual(value, null); return value },
@@ -37,19 +37,25 @@ const runtime = (async () => {
     return context.exports
   }
   internal.CoSkills_Constants = loadSource('coSkills/Constants')
+  internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions =
+    loadSource('coSkills/utils/persistent/selfUnitCommonAttributes/Conditions')
+  internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers =
+    loadSource('coSkills/utils/persistent/selfUnitCommonAttributes/ImmuneToWeathers')
   internal.AuxiliaryTypes_UnitVisionInfo = loadSource('auxiliaryTypes/UnitVisionInfo')
   const { Unit } = loadSource('units/Unit')
   const calculator = loadSource('common/view/CommonDamageCalculatorPanel', ['getCoSkillIdArray', 'getAttackModifierByWeather'])
-  return { CoSkillCfg, SelfUnitIgnoreWeather, Unit, calculator, internal }
+  return { CoSkillCfg, SelfUnitCommonAttributes, Unit, calculator, internal }
 })()
 
 test('weather immunity defaults to false and survives protocol round trips', async () => {
-  const { SelfUnitIgnoreWeather } = await runtime
+  const { SelfUnitCommonAttributes } = await runtime
   for (const isImmune of [undefined, false, true]) {
-    const cfg = SelfUnitIgnoreWeather.fromJson({ weatherCategoryId: 9, isImmune })
-    const decoded = SelfUnitIgnoreWeather.decode(cfg.encode())
-    assert.equal(decoded.getIsImmune(), isImmune === true)
-    assert.equal(decoded.getWeatherCategoryId(), 9)
+    const cfg = SelfUnitCommonAttributes.fromJson({
+      conditions: { weatherCategoryId: 9 }, immuneToWeathers: { isImmune },
+    })
+    const decoded = SelfUnitCommonAttributes.decode(cfg.encode())
+    assert.equal(decoded.getImmuneToWeathers().getIsImmune(), isImmune === true)
+    assert.equal(decoded.getConditions().getWeatherCategoryId(), 9)
   }
 })
 
@@ -59,6 +65,7 @@ test('attack, movement, vision and calculator immunity require true and matching
   let weatherType = 3
   let inArea = true
   let onboard = false
+  let previewForced = false
   let unitType = 1
   let tileType = 1
   const grid = { checkIsInsideCoSkillArea: () => inArea }
@@ -83,7 +90,9 @@ test('attack, movement, vision and calculator immunity require true and matching
     getGcData: () => config,
     getTileMap: () => ({ getTile: () => ({ getTileTypeId: () => tileType }) }),
     getWeatherManager: () => ({ getCurrentWeatherType: () => weatherType, getCurrentWeatherCfg: () => weather }),
-    getDamagePreviewSettings: () => ({ isEnabled: false }),
+    getDamagePreviewSettings: () => ({
+      isEnabled: previewForced, settings: [{ playerIndex: 0, isForcedInCoZone: true }],
+    }),
     getCommonSettingManager: () => ({ getPlayerRule: () => ({ getUnitVisionRangeModifier: () => 0 }) }),
     getWarEventManager: () => ({ getOpaUnitVisionRangeModifier: () => 0 }),
   }
@@ -93,13 +102,16 @@ test('attack, movement, vision and calculator immunity require true and matching
     _getVisionRangeModifierByCo: () => 0, _checkVisionCanSeeThrough: () => false,
   })
   function skill(isImmune) {
-    return CoSkillCfg.fromJson({ persistent: { selfUnitIgnoreWeather: {
-      coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
-      unitCategoryId: 8, tileCategoryId: 8, weatherCategoryId: 9, isImmune,
+    return CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: {
+      conditions: {
+        coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+        unitCategoryId: 8, tileCategoryId: 8, weatherCategoryId: 9,
+      },
+      immuneToWeathers: { isImmune },
     } } })
   }
   function check(expected, calculatorExpected = expected) {
-    assert.equal(unit.getAttackModifierByWeather(grid), expected ? 0 : -20)
+    assert.equal(unit.getAttackModifierByWeather(grid, null, false), expected ? 0 : -20)
     assert.equal(unit._getMoveRangeModifierByWeather(), expected ? 0 : -2)
     assert.equal(unit.getVisionInfo().isFixed, !expected)
     assert.equal(unit.getVisionInfo().baseRange, expected ? 5 : 1)
@@ -126,9 +138,31 @@ test('attack, movement, vision and calculator immunity require true and matching
   tileType = 1
   inArea = false
   check(false, true)
+  previewForced = true
+  assert.equal(unit.getAttackModifierByWeather(grid, null, true), 0)
+  assert.equal(unit.getAttackModifierByWeather(grid, null, false), -20)
+  unitType = 2
+  assert.equal(unit.getAttackModifierByWeather(grid, null, true), -20)
+  unitType = 1
+  previewForced = false
   onboard = true
   check(true)
+  weatherType = 4
+  check(false)
+  weatherType = 3
   skills = [skill(false)]
+  check(false)
+  skills = [CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: {
+    immuneToWeathers: { isImmune: true },
+  } } })]
+  check(false)
+  skills = [CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: {
+    conditions: {
+      coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+      unitCategoryId: 8, tileCategoryId: 8, weatherCategoryId: 9,
+    },
+    captureAmounts: { offsetPct: 20 },
+  } } })]
   check(false)
   skills = []
   check(false)

@@ -4,6 +4,7 @@ import {
     Cos_Constants,
     CoSkills_Constants,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets,
     DamageCalculators_Utils,
@@ -1470,13 +1471,13 @@ function getAttackModifierByWeather(calculatorData: CalculatorData): number {
     }
 
     for (const skillId of getCoSkillIdArray(gameConfig, attackerData.coId, attackerData.coSkillType)) {
-        const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
-        if ((cfg)                                                                                   &&
-            (cfg.getIsImmune())                                                                      &&
-            (gameConfig.checkIsUnitTypeInCategory(attackerUnitType, cfg.getUnitCategoryId()))  &&
-            (gameConfig.checkIsTileTypeInCategory(attackerTileType, cfg.getTileCategoryId()))  &&
-            (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))
-        ) {
+        if (CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers.checkIsImmuneToWeatherForDamageCalculatorPanel({
+            cfg           : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+            gameConfig    : gameConfig,
+            unitTypeId    : attackerUnitType,
+            tileTypeId    : attackerTileType,
+            weatherTypeId : weatherType,
+        })) {
             return 0;
         }
     }
