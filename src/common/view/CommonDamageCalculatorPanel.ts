@@ -4,7 +4,7 @@ import {
     Cos_Constants,
     CoSkills_Constants,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
-    CoSkills_Utils_Persistent_SelfUnitLuckRange,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets,
     DamageCalculators_Utils,
     FloatText,
@@ -1324,10 +1324,12 @@ function getLuckLimitModifierByCo(calculatorData: CalculatorData): { lower: numb
     let lowerModifier           = 0;
     let upperModifier           = 0;
     for (const skillId of getCoSkillIdArray(gameConfig, attackerData.coId, attackerData.coSkillType)) {
-        const offsets = CoSkills_Utils_Persistent_SelfUnitLuckRange.getTotalOffsetForDamageCalculatorPanel({
-            cfg        : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitLuckRange(),
-            gameConfig : gameConfig,
-            unitTypeId : attackerUnitTypeId,
+        const offsets = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets.getTotalOffsetForDamageCalculatorPanel({
+            cfg           : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+            gameConfig    : gameConfig,
+            unitTypeId    : attackerUnitTypeId,
+            tileTypeId    : attackerData.tileType,
+            weatherTypeId : calculatorData.weatherType,
         });
         lowerModifier += offsets.lower;
         upperModifier += offsets.upper;

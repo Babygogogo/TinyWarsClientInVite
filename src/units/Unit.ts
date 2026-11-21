@@ -14,7 +14,7 @@ import {
     CoSkills_Utils_Persistent_SelfUnitCaptureAmount,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_FuelConsumptions,
-    CoSkills_Utils_Persistent_SelfUnitLuckRange,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Visions,
@@ -724,17 +724,22 @@ export class Unit {
     public getLuckLimitModifierByCo(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex): { lower: number, upper: number } {
         const player                    = this.getPlayer();
         const gameConfig                = this.getGcData();
-        const selfUnitType                  = this.getUnitTypeId();
+        const selfUnitType              = this.getUnitTypeId();
+        const war                       = this.getWar();
+        const tileTypeId                = war.getTileMap().getTile(selfGridIndex).getTileTypeId();
+        const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const coZoneRadius              = player.getCoZoneRadius();
         const isCoOnboard               = this.getIsCoOnboard();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let lowerModifier               = 0;
         let upperModifier               = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            const offset = CoSkills_Utils_Persistent_SelfUnitLuckRange.getTotalOffset({
-                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitLuckRange(),
+            const offset = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets.getTotalOffset({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId               : selfUnitType,
+                tileTypeId               : tileTypeId,
+                weatherTypeId            : weatherTypeId,
                 gridIndex                : selfGridIndex,
                 coZoneRadius             : coZoneRadius,
                 isCoOnboard              : isCoOnboard,

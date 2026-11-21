@@ -15,12 +15,10 @@ import { SelfUnitCaptureAmount as $Message$CommonProto$Config$CoSkillCfg$Persist
 import { SelfUnitCommonAttributes as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes, type SelfUnitCommonAttributesJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes } from "./Persistent/SelfUnitCommonAttributes.js";
 import { SelfUnitCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost, type SelfUnitCostJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost } from "./Persistent/SelfUnitCost.js";
 import { SelfUnitIgnoreWeather as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather, type SelfUnitIgnoreWeatherJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather } from "./Persistent/SelfUnitIgnoreWeather.js";
-import { SelfUnitLuckRange as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange, type SelfUnitLuckRangeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange } from "./Persistent/SelfUnitLuckRange.js";
 import { SelfUnitMoveCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveCost, type SelfUnitMoveCostJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveCost } from "./Persistent/SelfUnitMoveCost.js";
 
 export interface PersistentJson extends $ProtoSchemaJsonBase {
     selfUnitCommonAttributes?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
-    selfUnitLuckRange?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange | null | undefined;
     selfUnitCost?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost | null | undefined;
     selfUnitCaptureAmount?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount | null | undefined;
     selfTileIncome?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome | null | undefined;
@@ -40,7 +38,6 @@ export interface PersistentJson extends $ProtoSchemaJsonBase {
 
 export class Persistent extends $ProtoSchemaBase {
     private _selfUnitCommonAttributes?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
-    private _selfUnitLuckRange?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange | null | undefined;
     private _selfUnitCost?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost | null | undefined;
     private _selfUnitCaptureAmount?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount | null | undefined;
     private _selfTileIncome?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome | null | undefined;
@@ -62,7 +59,6 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public override loadJson(obj: PersistentJson): this {
         this.setSelfUnitCommonAttributes(obj.selfUnitCommonAttributes != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes.fromJson(obj.selfUnitCommonAttributes) : null);
-        this.setSelfUnitLuckRange(obj.selfUnitLuckRange != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange.fromJson(obj.selfUnitLuckRange) : null);
         this.setSelfUnitCost(obj.selfUnitCost != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost.fromJson(obj.selfUnitCost) : null);
         this.setSelfUnitCaptureAmount(obj.selfUnitCaptureAmount != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount.fromJson(obj.selfUnitCaptureAmount) : null);
         this.setSelfTileIncome(obj.selfTileIncome != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome.fromJson(obj.selfTileIncome) : null);
@@ -86,11 +82,6 @@ export class Persistent extends $ProtoSchemaBase {
         {
             const value = this.getSelfUnitCommonAttributes();
             (value != null) && (obj.selfUnitCommonAttributes = value.toJson());
-        }
-
-        {
-            const value = this.getSelfUnitLuckRange();
-            (value != null) && (obj.selfUnitLuckRange = value.toJson());
         }
 
         {
@@ -175,13 +166,6 @@ export class Persistent extends $ProtoSchemaBase {
             const value = this.getSelfUnitCommonAttributes();
             if (value != null) {
                 value.toWriter(writer.uint32(10).fork()).ldelim();
-            }
-        }
-
-        {
-            const value = this.getSelfUnitLuckRange();
-            if (value != null) {
-                value.toWriter(writer.uint32(50).fork()).ldelim();
             }
         }
 
@@ -307,10 +291,6 @@ export class Persistent extends $ProtoSchemaBase {
                     msg.setSelfUnitCommonAttributes($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes.decode(reader, reader.uint32()));
                     break;
 
-                case 6:
-                    msg.setSelfUnitLuckRange($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange.decode(reader, reader.uint32()));
-                    break;
-
                 case 7:
                     msg.setSelfUnitCost($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost.decode(reader, reader.uint32()));
                     break;
@@ -399,19 +379,6 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public createIfNotExistsSelfUnitCommonAttributes(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes {
         return this._selfUnitCommonAttributes ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes();
-    }
-
-    public checkHasSelfUnitLuckRange(): boolean {
-        return this._selfUnitLuckRange != null;
-    }
-    public getSelfUnitLuckRange(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange | null | undefined {
-        return this._selfUnitLuckRange;
-    }
-    public setSelfUnitLuckRange(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange | null | undefined): void {
-        this._selfUnitLuckRange = value;
-    }
-    public createIfNotExistsSelfUnitLuckRange(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange {
-        return this._selfUnitLuckRange ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange();
     }
 
     public checkHasSelfUnitCost(): boolean {
