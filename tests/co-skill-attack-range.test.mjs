@@ -44,12 +44,21 @@ const runtime = (async () => {
     Tiles_Constants_Common: 'tiles/constants/Common', Numbers_Constants: 'numbers/Constants',
     Cos_Constants: 'cos/Constants', Numbers_Utils: 'numbers/Utils', AuxiliaryTypes_GridIndex: 'auxiliaryTypes/GridIndex',
     GameConfigs_GameConfig: 'gameConfigs/GameConfig',
-    CoSkills_Utils_Persistent_AttackRangeOffsets: 'coSkills/utils/persistent/AttackRangeOffsets',
-    CoSkills_Utils_Persistent_SelfUnitMoveRange: 'coSkills/utils/persistent/SelfUnitMoveRange',
-    CoSkills_Utils_Persistent_Visions: 'coSkills/utils/persistent/Visions',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveCosts',
+    CoSkills_Utils_Persistent_AttackRangeOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets',
+    CoSkills_Utils_Persistent_SelfUnitMoveRange: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveRangeOffsets',
+    CoSkills_Utils_Persistent_Visions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Visions',
     AuxiliaryTypes_UnitVisionInfo: 'auxiliaryTypes/UnitVisionInfo',
     Units_Unit: 'units/Unit',
-  })) internal[name] = loadSource(filename)
+    Locations_Utils: 'locations/Utils',
+    Tiles_Tile: 'tiles/Tile',
+  })) {
+    internal[name] = loadSource(filename)
+    if (filename.includes('/selfUnitCommonAttributes/')) {
+      internal[`CoSkills_Utils_Persistent_SelfUnitCommonAttributes_${filename.split('/').at(-1)}`] = internal[name]
+    }
+  }
   const { FullConfig, SelfUnitCommonAttributes, CoSkillCfg } = proto
   const raw = FullConfig.decode(readFileSync(new URL('../src/assets/resource/config/FullConfigD0000000.bin', import.meta.url)))
   const gameConfig = new internal.GameConfigs_GameConfig.GameConfig('D0000000', raw)
@@ -65,6 +74,136 @@ function categoryFixture(categories, types, getId, matches) {
   }
   assert.fail('Expected a category with both matching and nonmatching types')
 }
+
+test('tile move costs use destination categories and common area conditions, including the CO-only area exemption', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg } = await runtime
+  const unitCategory = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(cfg => cfg.getUnitTypeId()),
+    cfg => cfg.getUnitCategoryId(), (type, id) => gameConfig.checkIsUnitTypeInCategory(type, id))
+  const tileCategory = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(cfg => cfg.getTileTypeId()),
+    cfg => cfg.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(cfg => cfg.getWeatherTypeId()),
+    cfg => cfg.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const skill = CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: {
+    conditions: { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+      unitCategoryId: unitCategory.id, tileCategoryId: tileCategory.id, weatherCategoryId: weather.id },
+    moveCosts: { fixedCost: 1 },
+  } } })
+  const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: () => skill })
+  const origin = new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)
+  const player = { getCoCurrentSkills: () => [0], getCoZoneRadius: () => 1, getCoGridIndexListOnMap: () => [origin] }
+  for (const unitTypeId of [unitCategory.included, unitCategory.excluded]) {
+    for (const tileTypeId of [tileCategory.included, tileCategory.excluded]) {
+      for (const weatherTypeId of [weather.included, weather.excluded]) {
+        for (const onboard of [false, true]) {
+          for (const distance of [0, 1, 2]) {
+            const unit = { getUnitTypeId: () => unitTypeId, getTeamIndex: () => 1,
+              getForbiddenGroupedLocationIdArray: () => [], getMoveTypeId: () => 1,
+              getPlayer: () => player, getIsCoOnboard: () => onboard }
+            const tile = Object.assign(Object.create(internal.Tiles_Tile.Tile.prototype), {
+              getTeamIndex: () => 1, getGroupedLocationIdArray: () => [], getMoveCostByMoveType: () => 3,
+              getTileTypeId: () => tileTypeId, getGridIndex: () => new internal.AuxiliaryTypes_GridIndex.GridIndex(distance, 0),
+              getWar: () => ({ getGcData: () => config, getWeatherManager: () => ({ getCurrentWeatherType: () => weatherTypeId }) }),
+            })
+            const enabled = unitTypeId === unitCategory.included && tileTypeId === tileCategory.included
+              && weatherTypeId === weather.included && (onboard || distance <= 1)
+            assert.equal(tile.getMoveCostByUnit(unit), enabled ? 1 : 3)
+          }
+        }
+      }
+    }
+  }
+})
+
+test('tile move costs preserve first-match ordering, zero costs and impassability', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg } = await runtime
+  const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+    unitCategoryId: 1, tileCategoryId: 1, weatherCategoryId: 1 }
+  const skills = [2, 0].map(fixedCost => CoSkillCfg.fromJson({
+    persistent: { selfUnitCommonAttributes: { conditions, moveCosts: { fixedCost } } },
+  }))
+  let ids = [0, 1]
+  let rawCost = 3
+  let enemy = false
+  let forbidden = []
+  const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id] })
+  const player = { getCoCurrentSkills: () => ids, getCoZoneRadius: () => 1,
+    getCoGridIndexListOnMap: () => [new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)] }
+  const unit = { getUnitTypeId: () => raw.getUnitTemplate()[0].getUnitTypeId(), getTeamIndex: () => 1,
+    getForbiddenGroupedLocationIdArray: () => forbidden, getMoveTypeId: () => 1,
+    getPlayer: () => player, getIsCoOnboard: () => false }
+  const tile = Object.assign(Object.create(internal.Tiles_Tile.Tile.prototype), {
+    getTeamIndex: () => enemy ? 2 : 1, checkCanBlockEnemyUnitType: () => true,
+    getGroupedLocationIdArray: () => [1], getMoveCostByMoveType: () => rawCost,
+    getTileTypeId: () => raw.getTileTemplate()[0].getTileTypeId(),
+    getGridIndex: () => new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0),
+    getWar: () => ({ getGcData: () => config,
+      getWeatherManager: () => ({ getCurrentWeatherType: () => raw.getWeather()[0].getWeatherTypeId() }) }),
+  })
+  assert.equal(tile.getMoveCostByUnit(unit), 2)
+  ids = [1, 0]
+  assert.equal(tile.getMoveCostByUnit(unit), 0)
+  ids = [0]
+  rawCost = 1
+  assert.equal(tile.getMoveCostByUnit(unit), 1)
+  rawCost = null
+  assert.equal(tile.getMoveCostByUnit(unit), null)
+  rawCost = 3
+  forbidden = [1]
+  assert.equal(tile.getMoveCostByUnit(unit), null)
+  forbidden = []
+  enemy = true
+  assert.equal(tile.getMoveCostByUnit(unit), null)
+  enemy = false
+  skills[0].getPersistent().getSelfUnitCommonAttributes().setMoveCosts(null)
+  assert.equal(tile.getMoveCostByUnit(unit), 3)
+  ids = [1]
+  skills[1].getPersistent().getSelfUnitCommonAttributes().getMoveCosts().setFixedCost(null)
+  assert.throws(() => tile.getMoveCostByUnit(unit))
+  skills[1].getPersistent().getSelfUnitCommonAttributes().setConditions(null)
+  assert.equal(tile.getMoveCostByUnit(unit), 3)
+})
+
+test('move-cost serialization distinguishes explicitly zero cost from a missing fixedCost', async () => {
+  const { SelfUnitCommonAttributes } = await runtime
+  for (const fixedCost of [undefined, 0, 1]) {
+    const cfg = SelfUnitCommonAttributes.fromJson({ moveCosts: { fixedCost } })
+    const decoded = SelfUnitCommonAttributes.decode(cfg.encode()).getMoveCosts()
+    assert.equal(decoded.checkHasFixedCost(), fixedCost !== undefined)
+    if (fixedCost === undefined) assert.equal(decoded.getFixedCost() == null, true)
+    else assert.equal(decoded.getFixedCost(), fixedCost)
+  }
+})
+
+test('migrated move-cost skills preserve weather filters and do not modify shared all-CO skills', async () => {
+  const { internal, FullConfig } = await runtime
+  for (const version of ['A0000000', 'B0000000', 'B0000001', 'B0000002', 'C0000000', 'D0000000']) {
+    const raw = FullConfig.decode(readFileSync(new URL(`../src/assets/resource/config/FullConfig${version}.bin`, import.meta.url)))
+    const config = new internal.GameConfigs_GameConfig.GameConfig(version, raw)
+    const sharedSkill = config.getCoSkillCfg(99999999)
+    if (version.startsWith('D')) assert.ok(sharedSkill)
+    assert.equal(sharedSkill?.getPersistent()?.getSelfUnitCommonAttributes()?.getMoveCosts() ?? null, null)
+    if (!version.startsWith('B') && !version.startsWith('D')) continue
+    const co = config.getCoBasicCfg(43000)
+    for (const ids of [co.getPassiveSkillIds(), co.getSuperPowerSkillIds()]) {
+      const player = { getCoCurrentSkills: () => ids, getCoZoneRadius: () => 1,
+        getCoGridIndexListOnMap: () => [new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)] }
+      const unit = { getUnitTypeId: () => raw.getUnitTemplate()[0].getUnitTypeId(), getTeamIndex: () => 1,
+        getForbiddenGroupedLocationIdArray: () => [], getMoveTypeId: () => 1,
+        getPlayer: () => player, getIsCoOnboard: () => false }
+      for (const weather of raw.getWeather()) {
+        const weatherTypeId = weather.getWeatherTypeId()
+        const tile = Object.assign(Object.create(internal.Tiles_Tile.Tile.prototype), {
+          getTeamIndex: () => 1, getGroupedLocationIdArray: () => [], getMoveCostByMoveType: () => 3,
+          getTileTypeId: () => raw.getTileTemplate()[0].getTileTypeId(),
+          getGridIndex: () => new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0),
+          getWar: () => ({ getGcData: () => config, getWeatherManager: () => ({ getCurrentWeatherType: () => weatherTypeId }) }),
+        })
+        const enabled = version.startsWith('D') || config.checkIsWeatherTypeInCategory(weatherTypeId, 4)
+        assert.equal(tile.getMoveCostByUnit(unit), enabled ? 1 : 3, `${version}: weather ${weatherTypeId}`)
+      }
+    }
+  }
+})
 
 test('attack range uses the same conjunctive category and area conditions as common attributes, including CO units', async () => {
   const { internal, gameConfig, raw, SelfUnitCommonAttributes } = await runtime

@@ -249,6 +249,7 @@ export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOff
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_FuelConsumptions from "./coSkills/utils/persistent/selfUnitCommonAttributes/FuelConsumptions.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/LuckRangeOffsets.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveRangeOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/MoveRangeOffsets.ts";
+export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts from "./coSkills/utils/persistent/selfUnitCommonAttributes/MoveCosts.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/OffensePercentOffsets.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Visions from "./coSkills/utils/persistent/selfUnitCommonAttributes/Visions.ts";
 export * as CoSkills_Utils_InstantManual_ChangeWeather from "./coSkills/utils/instantManual/ChangeWeather.ts";

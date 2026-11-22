@@ -3,6 +3,7 @@ import {
     AuxiliaryTypes_TileAppearanceInfo,
     CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction,
     CoSkills_Utils_Persistent_SelfTileIncome,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts,
     GameConfigs_GameConfig,
     Helpers_Collection,
     Helpers_Misc,
@@ -901,18 +902,19 @@ export class Tile {
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         for (const skillId of player.getCoCurrentSkills() || []) {
-            const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitMoveCost();
-            if ((cfg)                                                                               &&
-                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))           &&
-                (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId()))           &&
-                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))  &&
-                (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                    coZoneRadius             : coZoneRadius,
-                }))
-            ) {
-                return Math.min(rawCost, cfg.getFixedCost());
+            const fixedCost = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts.getFixedCost({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+                gameConfig               : gameConfig,
+                unitTypeId               : unitType,
+                tileTypeId               : tileType,
+                weatherTypeId            : weatherType,
+                isCoOnboard              : unit.getIsCoOnboard(),
+                gridIndex                : gridIndex,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                coZoneRadius             : coZoneRadius,
+            });
+            if (fixedCost != null) {
+                return Math.min(rawCost, fixedCost);
             }
         }
 

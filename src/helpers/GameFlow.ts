@@ -671,6 +671,14 @@ function initListenerForWindowOnError(): void {
         const reason = err.reason;
         if (reason instanceof Error) {
             showErrorText(`Code: ${(reason as AuxiliaryTypes_AuxiliaryTypes.CustomError).errorCode ?? `--`}\n${reason.message}\n${reason.stack ?? "No available call stack."}`);
+        } else if ((typeof reason === `object`) && (reason !== null)) {
+            let errorText: string;
+            try {
+                errorText = JSON.stringify(reason, null, 2);
+            } catch {
+                errorText = Object.prototype.toString.call(reason);
+            }
+            showErrorText(`Unhandled rejection in promise, reason object:\n${errorText}`);
         } else {
             showErrorText(`Unhandled rejection in promise, reason:\n${reason}`);
         }

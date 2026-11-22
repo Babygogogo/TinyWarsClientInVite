@@ -9,10 +9,10 @@ import {
     Cos_Constants,
     CoSkills_Constants,
     CoSkills_Utils_Common,
-    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions,
-    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_FuelConsumptions,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers,
@@ -2309,9 +2309,12 @@ export class Unit {
             throw Helpers_Misc.newError(`Invalid nameId: ${nameId}`);
         }
 
-        if ((this.getCustomNameId() != nameId) && (this.getView())) {
+        if (this.getCustomNameId() != nameId) {
             this._customNameId = nameId;
-            Notifications_Dispatcher.dispatch("BwUnitCustomNameIdChanged");
+
+            if (this.getView()) {
+                Notifications_Dispatcher.dispatch("BwUnitCustomNameIdChanged");
+            }
         }
     }
 
