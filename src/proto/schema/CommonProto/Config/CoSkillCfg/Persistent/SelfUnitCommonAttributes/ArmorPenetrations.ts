@@ -1,9 +1,7 @@
 import protobuf from "protobufjs/minimal.js";
-import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../$runtime.js";
+import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../../$runtime.js";
 
-export interface SelfOffensePierceJson extends $ProtoSchemaJsonBase {
-    coSkillAreaTypeId?: number | null | undefined;
-    unitCategoryId?: number | null | undefined;
+export interface ArmorPenetrationsJson extends $ProtoSchemaJsonBase {
     pierceTilePct?: number | null | undefined;
     piercePromotionPct?: number | null | undefined;
     pierceCoPct?: number | null | undefined;
@@ -12,9 +10,7 @@ export interface SelfOffensePierceJson extends $ProtoSchemaJsonBase {
     pierceWarEventPct?: number | null | undefined;
 }
 
-export class SelfOffensePierce extends $ProtoSchemaBase {
-    private _coSkillAreaTypeId?: number | null | undefined;
-    private _unitCategoryId?: number | null | undefined;
+export class ArmorPenetrations extends $ProtoSchemaBase {
     private _pierceTilePct?: number | null | undefined;
     private _piercePromotionPct?: number | null | undefined;
     private _pierceCoPct?: number | null | undefined;
@@ -22,12 +18,10 @@ export class SelfOffensePierce extends $ProtoSchemaBase {
     private _pierceRulePct?: number | null | undefined;
     private _pierceWarEventPct?: number | null | undefined;
 
-    public static fromJson(obj: SelfOffensePierceJson): SelfOffensePierce {
-        return new SelfOffensePierce().loadJson(obj);
+    public static fromJson(obj: ArmorPenetrationsJson): ArmorPenetrations {
+        return new ArmorPenetrations().loadJson(obj);
     }
-    public override loadJson(obj: SelfOffensePierceJson): this {
-        this.setCoSkillAreaTypeId(obj.coSkillAreaTypeId);
-        this.setUnitCategoryId(obj.unitCategoryId);
+    public override loadJson(obj: ArmorPenetrationsJson): this {
         this.setPierceTilePct(obj.pierceTilePct);
         this.setPiercePromotionPct(obj.piercePromotionPct);
         this.setPierceCoPct(obj.pierceCoPct);
@@ -36,18 +30,8 @@ export class SelfOffensePierce extends $ProtoSchemaBase {
         this.setPierceWarEventPct(obj.pierceWarEventPct);
         return this;
     }
-    public override toJson(obj?: SelfOffensePierceJson): SelfOffensePierceJson {
-        obj ??= ({} as SelfOffensePierceJson);
-
-        {
-            const value = this.getCoSkillAreaTypeId();
-            (value != null) && (obj.coSkillAreaTypeId = value);
-        }
-
-        {
-            const value = this.getUnitCategoryId();
-            (value != null) && (obj.unitCategoryId = value);
-        }
+    public override toJson(obj?: ArmorPenetrationsJson): ArmorPenetrationsJson {
+        obj ??= ({} as ArmorPenetrationsJson);
 
         {
             const value = this.getPierceTilePct();
@@ -82,20 +66,6 @@ export class SelfOffensePierce extends $ProtoSchemaBase {
     }
 
     public override toWriter(writer = protobuf.Writer.create()): protobuf.Writer {
-        {
-            const value = this.getCoSkillAreaTypeId();
-            if ((value != null) && (value != 0)) {
-                writer.uint32(8).int32(value);
-            }
-        }
-
-        {
-            const value = this.getUnitCategoryId();
-            if ((value != null) && (value != 0)) {
-                writer.uint32(16).int32(value);
-            }
-        }
-
         {
             const value = this.getPierceTilePct();
             if ((value != null) && (value != 0)) {
@@ -141,24 +111,16 @@ export class SelfOffensePierce extends $ProtoSchemaBase {
         return writer;
     }
 
-    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): SelfOffensePierce {
+    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): ArmorPenetrations {
         if (!(reader instanceof protobuf.Reader)) {
             reader = protobuf.Reader.create(reader);
         }
 
         const end = length == null ? reader.len : reader.pos + length;
-        const msg = new SelfOffensePierce();
+        const msg = new ArmorPenetrations();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
-                case 1:
-                    msg.setCoSkillAreaTypeId(reader.int32());
-                    break;
-
-                case 2:
-                    msg.setUnitCategoryId(reader.int32());
-                    break;
-
                 case 3:
                     msg.setPierceTilePct(reader.int32());
                     break;
@@ -192,40 +154,12 @@ export class SelfOffensePierce extends $ProtoSchemaBase {
         return msg;
     }
 
-    public override clone(): SelfOffensePierce {
-        return SelfOffensePierce.decode(this.encode());
+    public override clone(): ArmorPenetrations {
+        return ArmorPenetrations.decode(this.encode());
     }
 
-    public override getSchemaName(): "SelfOffensePierce" {
-        return "SelfOffensePierce";
-    }
-
-    public checkHasCoSkillAreaTypeId(): boolean {
-        return this._coSkillAreaTypeId != null;
-    }
-    public getCoSkillAreaTypeId(): number {
-        return this._coSkillAreaTypeId ?? 0;
-    }
-    public setCoSkillAreaTypeId(value: number | null | undefined): void {
-        if ((value == null) || (value == 0)) {
-            this._coSkillAreaTypeId = null;
-        } else {
-            this._coSkillAreaTypeId = value;
-        }
-    }
-
-    public checkHasUnitCategoryId(): boolean {
-        return this._unitCategoryId != null;
-    }
-    public getUnitCategoryId(): number {
-        return this._unitCategoryId ?? 0;
-    }
-    public setUnitCategoryId(value: number | null | undefined): void {
-        if ((value == null) || (value == 0)) {
-            this._unitCategoryId = null;
-        } else {
-            this._unitCategoryId = value;
-        }
+    public override getSchemaName(): "ArmorPenetrations" {
+        return "ArmorPenetrations";
     }
 
     public checkHasPierceTilePct(): boolean {

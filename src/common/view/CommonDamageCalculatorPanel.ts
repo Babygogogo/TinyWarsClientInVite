@@ -3,6 +3,7 @@ import {
     AuxiliaryTypes_DamageCalculatorPlayerData,
     Cos_Constants,
     CoSkills_Constants,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets,
@@ -1502,9 +1503,16 @@ function getAttackerOffensePierce(calculatorData: CalculatorData): number[] {
         }
 
         {
-            const cfg = skillCfg.getPersistent()?.getSelfOffensePierce();
-            if ((cfg)                                                                           &&
-                (gameConfig.checkIsUnitTypeInCategory(attackerUnitType, cfg.getUnitCategoryId()))
+            const commonCfg = skillCfg.getPersistent()?.getSelfUnitCommonAttributes();
+            const cfg = commonCfg?.getArmorPenetrations();
+            if ((cfg != null) &&
+                (CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions.checkIsMeetForDamageCalculatorPanel({
+                    conditions    : commonCfg?.getConditions(),
+                    gameConfig    : gameConfig,
+                    unitTypeId    : attackerUnitType,
+                    tileTypeId    : attackerData.tileType,
+                    weatherTypeId : calculatorData.weatherType,
+                }))
             ) {
                 result[0] += cfg.getPierceTilePct();
                 result[1] += cfg.getPiercePromotionPct();

@@ -9,6 +9,7 @@ import {
     Cos_Constants,
     CoSkills_Constants,
     CoSkills_Utils_Common,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts,
@@ -553,31 +554,27 @@ export class Unit {
 
         const gameConfig                = this.getGcData();
         const unitType                  = this.getUnitTypeId();
+        const war                       = this.getWar();
+        const tileTypeId                = war.getTileMap().getTile(selfGridIndex).getTileTypeId();
+        const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const coZoneRadius              = player.getCoZoneRadius();
         const isCoOnboard               = this.getIsCoOnboard();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         for (const skillId of player.getCoCurrentSkills()) {
-            const skillCfg = gameConfig.getCoSkillCfg(skillId);
-            if (skillCfg == null) {
-                continue;
-            }
-
-            {
-                const cfg = skillCfg.getPersistent()?.getSelfOffensePierce();
-                if ((cfg)                                                                           &&
-                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))  &&
-                    ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                        coZoneRadius             : coZoneRadius,
-                        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                    })))
-                ) {
-                    result[0] += cfg.getPierceTilePct();
-                    result[1] += cfg.getPiercePromotionPct();
-                    result[2] += cfg.getPierceCoPct();
-                    result[3] += cfg.getPierceGlobalTilePct();
-                    result[4] += cfg.getPierceRulePct();
-                    result[5] += cfg.getPierceWarEventPct();
+            const values = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations.getPenetrationValues({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+                gameConfig               : gameConfig,
+                unitTypeId               : unitType,
+                tileTypeId               : tileTypeId,
+                weatherTypeId            : weatherTypeId,
+                isCoOnboard              : isCoOnboard,
+                gridIndex                : selfGridIndex,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+            });
+            if (values != null) {
+                for (let index = 0; index < values.length; ++index) {
+                    result[index] += values[index];
                 }
             }
         }

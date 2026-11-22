@@ -1,5 +1,6 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../$runtime.js";
+import { ArmorPenetrations as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations, type ArmorPenetrationsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations } from "./SelfUnitCommonAttributes/ArmorPenetrations.js";
 import { AttackRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets, type AttackRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets } from "./SelfUnitCommonAttributes/AttackRangeOffsets.js";
 import { CaptureAmounts as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts, type CaptureAmountsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts } from "./SelfUnitCommonAttributes/CaptureAmounts.js";
 import { CoBoardingCosts as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts, type CoBoardingCostsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CoBoardingCosts } from "./SelfUnitCommonAttributes/CoBoardingCosts.js";
@@ -28,6 +29,7 @@ export interface SelfUnitCommonAttributesJson extends $ProtoSchemaJsonBase {
     captureAmounts?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts | null | undefined;
     immuneToWeathers?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers | null | undefined;
     moveCosts?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts | null | undefined;
+    armorPenetrations?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations | null | undefined;
 }
 
 export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
@@ -44,6 +46,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     private _captureAmounts?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts | null | undefined;
     private _immuneToWeathers?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers | null | undefined;
     private _moveCosts?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts | null | undefined;
+    private _armorPenetrations?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations | null | undefined;
 
     public static fromJson(obj: SelfUnitCommonAttributesJson): SelfUnitCommonAttributes {
         return new SelfUnitCommonAttributes().loadJson(obj);
@@ -62,6 +65,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         this.setCaptureAmounts(obj.captureAmounts != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts.fromJson(obj.captureAmounts) : null);
         this.setImmuneToWeathers(obj.immuneToWeathers != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers.fromJson(obj.immuneToWeathers) : null);
         this.setMoveCosts(obj.moveCosts != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts.fromJson(obj.moveCosts) : null);
+        this.setArmorPenetrations(obj.armorPenetrations != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations.fromJson(obj.armorPenetrations) : null);
         return this;
     }
     public override toJson(obj?: SelfUnitCommonAttributesJson): SelfUnitCommonAttributesJson {
@@ -130,6 +134,11 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         {
             const value = this.getMoveCosts();
             (value != null) && (obj.moveCosts = value.toJson());
+        }
+
+        {
+            const value = this.getArmorPenetrations();
+            (value != null) && (obj.armorPenetrations = value.toJson());
         }
         return obj;
     }
@@ -226,6 +235,13 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
             }
         }
 
+        {
+            const value = this.getArmorPenetrations();
+            if (value != null) {
+                value.toWriter(writer.uint32(114).fork()).ldelim();
+            }
+        }
+
         return writer;
     }
 
@@ -289,6 +305,10 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
 
                 case 13:
                     msg.setMoveCosts($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts.decode(reader, reader.uint32()));
+                    break;
+
+                case 14:
+                    msg.setArmorPenetrations($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -475,5 +495,18 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     }
     public createIfNotExistsMoveCosts(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts {
         return this._moveCosts ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts();
+    }
+
+    public checkHasArmorPenetrations(): boolean {
+        return this._armorPenetrations != null;
+    }
+    public getArmorPenetrations(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations | null | undefined {
+        return this._armorPenetrations;
+    }
+    public setArmorPenetrations(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations | null | undefined): void {
+        this._armorPenetrations = value;
+    }
+    public createIfNotExistsArmorPenetrations(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations {
+        return this._armorPenetrations ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations();
     }
 }

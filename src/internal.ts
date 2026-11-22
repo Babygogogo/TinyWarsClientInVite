@@ -244,6 +244,7 @@ export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts fr
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers from "./coSkills/utils/persistent/selfUnitCommonAttributes/ImmuneToWeathers.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCost from "./coSkills/utils/persistent/SelfUnitCost.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions from "./coSkills/utils/persistent/selfUnitCommonAttributes/Conditions.ts";
+export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations from "./coSkills/utils/persistent/selfUnitCommonAttributes/ArmorPenetrations.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingCosts from "./coSkills/utils/persistent/selfUnitCommonAttributes/CoBoardingCosts.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/DefensePercentOffsets.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_FuelConsumptions from "./coSkills/utils/persistent/selfUnitCommonAttributes/FuelConsumptions.ts";

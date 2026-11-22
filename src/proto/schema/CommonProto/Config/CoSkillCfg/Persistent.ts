@@ -4,7 +4,6 @@ import { SelfCannotBeCounterAttacked as $Message$CommonProto$Config$CoSkillCfg$P
 import { SelfCannotCounterAttack as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack, type SelfCannotCounterAttackJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack } from "./Persistent/SelfCannotCounterAttack.js";
 import { SelfDefenseBonusByTileIgnoreHp as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfDefenseBonusByTileIgnoreHp, type SelfDefenseBonusByTileIgnoreHpJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfDefenseBonusByTileIgnoreHp } from "./Persistent/SelfDefenseBonusByTileIgnoreHp.js";
 import { SelfInvisible as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible, type SelfInvisibleJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible } from "./Persistent/SelfInvisible.js";
-import { SelfOffensePierce as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce, type SelfOffensePierceJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce } from "./Persistent/SelfOffensePierce.js";
 import { SelfPromotionBonusByProduce as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce, type SelfPromotionBonusByProduceJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce } from "./Persistent/SelfPromotionBonusByProduce.js";
 import { SelfRepairAmountBonus as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus, type SelfRepairAmountBonusJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus } from "./Persistent/SelfRepairAmountBonus.js";
 import { SelfTileEnabledForUnitProduction as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction, type SelfTileEnabledForUnitProductionJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction } from "./Persistent/SelfTileEnabledForUnitProduction.js";
@@ -19,7 +18,6 @@ export interface PersistentJson extends $ProtoSchemaJsonBase {
     selfTileEnabledForUnitProduction?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction | null | undefined;
     selfRepairAmountBonus?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus | null | undefined;
     selfPromotionBonusByProduce?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce | null | undefined;
-    selfOffensePierce?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce | null | undefined;
     selfDefenseBonusByTileIgnoreHp?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfDefenseBonusByTileIgnoreHp | null | undefined;
     selfInvisible?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible | null | undefined;
     selfCannotBeCounterAttacked?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked | null | undefined;
@@ -33,7 +31,6 @@ export class Persistent extends $ProtoSchemaBase {
     private _selfTileEnabledForUnitProduction?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction | null | undefined;
     private _selfRepairAmountBonus?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus | null | undefined;
     private _selfPromotionBonusByProduce?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce | null | undefined;
-    private _selfOffensePierce?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce | null | undefined;
     private _selfDefenseBonusByTileIgnoreHp?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfDefenseBonusByTileIgnoreHp | null | undefined;
     private _selfInvisible?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible | null | undefined;
     private _selfCannotBeCounterAttacked?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked | null | undefined;
@@ -49,7 +46,6 @@ export class Persistent extends $ProtoSchemaBase {
         this.setSelfTileEnabledForUnitProduction(obj.selfTileEnabledForUnitProduction != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction.fromJson(obj.selfTileEnabledForUnitProduction) : null);
         this.setSelfRepairAmountBonus(obj.selfRepairAmountBonus != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus.fromJson(obj.selfRepairAmountBonus) : null);
         this.setSelfPromotionBonusByProduce(obj.selfPromotionBonusByProduce != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce.fromJson(obj.selfPromotionBonusByProduce) : null);
-        this.setSelfOffensePierce(obj.selfOffensePierce != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce.fromJson(obj.selfOffensePierce) : null);
         this.setSelfDefenseBonusByTileIgnoreHp(obj.selfDefenseBonusByTileIgnoreHp != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfDefenseBonusByTileIgnoreHp.fromJson(obj.selfDefenseBonusByTileIgnoreHp) : null);
         this.setSelfInvisible(obj.selfInvisible != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible.fromJson(obj.selfInvisible) : null);
         this.setSelfCannotBeCounterAttacked(obj.selfCannotBeCounterAttacked != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked.fromJson(obj.selfCannotBeCounterAttacked) : null);
@@ -87,11 +83,6 @@ export class Persistent extends $ProtoSchemaBase {
         {
             const value = this.getSelfPromotionBonusByProduce();
             (value != null) && (obj.selfPromotionBonusByProduce = value.toJson());
-        }
-
-        {
-            const value = this.getSelfOffensePierce();
-            (value != null) && (obj.selfOffensePierce = value.toJson());
         }
 
         {
@@ -160,13 +151,6 @@ export class Persistent extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getSelfOffensePierce();
-            if (value != null) {
-                value.toWriter(writer.uint32(122).fork()).ldelim();
-            }
-        }
-
-        {
             const value = this.getSelfDefenseBonusByTileIgnoreHp();
             if (value != null) {
                 value.toWriter(writer.uint32(130).fork()).ldelim();
@@ -229,10 +213,6 @@ export class Persistent extends $ProtoSchemaBase {
 
                 case 14:
                     msg.setSelfPromotionBonusByProduce($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce.decode(reader, reader.uint32()));
-                    break;
-
-                case 15:
-                    msg.setSelfOffensePierce($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce.decode(reader, reader.uint32()));
                     break;
 
                 case 16:
@@ -344,19 +324,6 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public createIfNotExistsSelfPromotionBonusByProduce(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce {
         return this._selfPromotionBonusByProduce ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce();
-    }
-
-    public checkHasSelfOffensePierce(): boolean {
-        return this._selfOffensePierce != null;
-    }
-    public getSelfOffensePierce(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce | null | undefined {
-        return this._selfOffensePierce;
-    }
-    public setSelfOffensePierce(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce | null | undefined): void {
-        this._selfOffensePierce = value;
-    }
-    public createIfNotExistsSelfOffensePierce(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce {
-        return this._selfOffensePierce ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce();
     }
 
     public checkHasSelfDefenseBonusByTileIgnoreHp(): boolean {
