@@ -69,42 +69,42 @@ export class ArmorPenetrations extends $ProtoSchemaBase {
         {
             const value = this.getPierceTilePct();
             if ((value != null) && (value != 0)) {
-                writer.uint32(24).int32(value);
+                writer.uint32(8).int32(value);
             }
         }
 
         {
             const value = this.getPiercePromotionPct();
             if ((value != null) && (value != 0)) {
-                writer.uint32(32).int32(value);
+                writer.uint32(16).int32(value);
             }
         }
 
         {
             const value = this.getPierceCoPct();
             if ((value != null) && (value != 0)) {
-                writer.uint32(40).int32(value);
+                writer.uint32(24).int32(value);
             }
         }
 
         {
             const value = this.getPierceGlobalTilePct();
             if ((value != null) && (value != 0)) {
-                writer.uint32(48).int32(value);
+                writer.uint32(32).int32(value);
             }
         }
 
         {
             const value = this.getPierceRulePct();
             if ((value != null) && (value != 0)) {
-                writer.uint32(56).int32(value);
+                writer.uint32(40).int32(value);
             }
         }
 
         {
             const value = this.getPierceWarEventPct();
             if ((value != null) && (value != 0)) {
-                writer.uint32(64).int32(value);
+                writer.uint32(48).int32(value);
             }
         }
 
@@ -121,27 +121,27 @@ export class ArmorPenetrations extends $ProtoSchemaBase {
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
-                case 3:
+                case 1:
                     msg.setPierceTilePct(reader.int32());
                     break;
 
-                case 4:
+                case 2:
                     msg.setPiercePromotionPct(reader.int32());
                     break;
 
-                case 5:
+                case 3:
                     msg.setPierceCoPct(reader.int32());
                     break;
 
-                case 6:
+                case 4:
                     msg.setPierceGlobalTilePct(reader.int32());
                     break;
 
-                case 7:
+                case 5:
                     msg.setPierceRulePct(reader.int32());
                     break;
 
-                case 8:
+                case 6:
                     msg.setPierceWarEventPct(reader.int32());
                     break;
 
