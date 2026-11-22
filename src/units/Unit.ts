@@ -16,6 +16,7 @@ import {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_FuelConsumptions,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToCounterAttacks,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Invisibilities,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets,
@@ -664,25 +665,25 @@ export class Unit {
         const gameConfig                = this.getGcData();
         const unitType                  = this.getUnitTypeId();
         const tileType                  = this.getWar().getTileMap().getTile(selfGridIndex).getTileTypeId();
+        const weatherType               = Helpers_Misc.getExisted(this.getWar().getWeatherManager().getCurrentWeatherType());
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
         for (const skillId of player.getCoCurrentSkills()) {
             const skillCfg = Helpers_Misc.getExisted(gameConfig.getCoSkillCfg(skillId));
 
-            {
-                const cfg = skillCfg.getPersistent()?.getSelfCannotBeCounterAttacked();
-                if ((cfg)                                                                       &&
-                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))   &&
-                    (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId()))   &&
-                    ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                        coZoneRadius             : coZoneRadius,
-                        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                    })))
-                ) {
-                    return false;
-                }
+            if (CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToCounterAttacks.checkIsImmune({
+                cfg                      : skillCfg.getPersistent()?.getSelfUnitCommonAttributes(),
+                gameConfig               : gameConfig,
+                unitTypeId               : unitType,
+                tileTypeId               : tileType,
+                weatherTypeId            : weatherType,
+                isCoOnboard              : isCoOnboard,
+                gridIndex                : selfGridIndex,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+            })) {
+                return false;
             }
         }
 
