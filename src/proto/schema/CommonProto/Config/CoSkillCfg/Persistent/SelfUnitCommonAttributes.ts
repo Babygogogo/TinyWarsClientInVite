@@ -1,5 +1,6 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../$runtime.js";
+import { AbleToDoCounterAttacks as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks, type AbleToDoCounterAttacksJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks } from "./SelfUnitCommonAttributes/AbleToDoCounterAttacks.js";
 import { ArmorPenetrations as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations, type ArmorPenetrationsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations } from "./SelfUnitCommonAttributes/ArmorPenetrations.js";
 import { AttackRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets, type AttackRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AttackRangeOffsets } from "./SelfUnitCommonAttributes/AttackRangeOffsets.js";
 import { CaptureAmounts as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts, type CaptureAmountsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$CaptureAmounts } from "./SelfUnitCommonAttributes/CaptureAmounts.js";
@@ -36,6 +37,7 @@ export interface SelfUnitCommonAttributesJson extends $ProtoSchemaJsonBase {
     receiveFullTileDefenseWhenDamaged?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged | null | undefined;
     invisibilities?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities | null | undefined;
     immuneToCounterAttacks?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToCounterAttacks | null | undefined;
+    ableToDoCounterAttacks?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks | null | undefined;
 }
 
 export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
@@ -56,6 +58,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     private _receiveFullTileDefenseWhenDamaged?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged | null | undefined;
     private _invisibilities?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities | null | undefined;
     private _immuneToCounterAttacks?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToCounterAttacks | null | undefined;
+    private _ableToDoCounterAttacks?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks | null | undefined;
 
     public static fromJson(obj: SelfUnitCommonAttributesJson): SelfUnitCommonAttributes {
         return new SelfUnitCommonAttributes().loadJson(obj);
@@ -78,6 +81,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         this.setReceiveFullTileDefenseWhenDamaged(obj.receiveFullTileDefenseWhenDamaged != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged.fromJson(obj.receiveFullTileDefenseWhenDamaged) : null);
         this.setInvisibilities(obj.invisibilities != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities.fromJson(obj.invisibilities) : null);
         this.setImmuneToCounterAttacks(obj.immuneToCounterAttacks != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToCounterAttacks.fromJson(obj.immuneToCounterAttacks) : null);
+        this.setAbleToDoCounterAttacks(obj.ableToDoCounterAttacks != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks.fromJson(obj.ableToDoCounterAttacks) : null);
         return this;
     }
     public override toJson(obj?: SelfUnitCommonAttributesJson): SelfUnitCommonAttributesJson {
@@ -166,6 +170,11 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         {
             const value = this.getImmuneToCounterAttacks();
             (value != null) && (obj.immuneToCounterAttacks = value.toJson());
+        }
+
+        {
+            const value = this.getAbleToDoCounterAttacks();
+            (value != null) && (obj.ableToDoCounterAttacks = value.toJson());
         }
         return obj;
     }
@@ -290,6 +299,13 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
             }
         }
 
+        {
+            const value = this.getAbleToDoCounterAttacks();
+            if (value != null) {
+                value.toWriter(writer.uint32(146).fork()).ldelim();
+            }
+        }
+
         return writer;
     }
 
@@ -369,6 +385,10 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
 
                 case 17:
                     msg.setImmuneToCounterAttacks($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToCounterAttacks.decode(reader, reader.uint32()));
+                    break;
+
+                case 18:
+                    msg.setAbleToDoCounterAttacks($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -607,5 +627,18 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     }
     public createIfNotExistsImmuneToCounterAttacks(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToCounterAttacks {
         return this._immuneToCounterAttacks ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToCounterAttacks();
+    }
+
+    public checkHasAbleToDoCounterAttacks(): boolean {
+        return this._ableToDoCounterAttacks != null;
+    }
+    public getAbleToDoCounterAttacks(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks | null | undefined {
+        return this._ableToDoCounterAttacks;
+    }
+    public setAbleToDoCounterAttacks(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks | null | undefined): void {
+        this._ableToDoCounterAttacks = value;
+    }
+    public createIfNotExistsAbleToDoCounterAttacks(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks {
+        return this._ableToDoCounterAttacks ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks();
     }
 }

@@ -50,6 +50,7 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged: 'coSkills/utils/persistent/selfUnitCommonAttributes/ReceiveFullTileDefenseWhenDamaged',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Invisibilities: 'coSkills/utils/persistent/selfUnitCommonAttributes/Invisibilities',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToCounterAttacks: 'coSkills/utils/persistent/selfUnitCommonAttributes/ImmuneToCounterAttacks',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AbleToDoCounterAttacks: 'coSkills/utils/persistent/selfUnitCommonAttributes/AbleToDoCounterAttacks',
     CoSkills_Utils_Persistent_AttackRangeOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets',
     CoSkills_Utils_Persistent_SelfUnitMoveRange: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveRangeOffsets',
     CoSkills_Utils_Persistent_Visions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Visions',
@@ -91,6 +92,106 @@ function categoryFixture(categories, types, getId, matches) {
   }
   assert.fail('Expected a category with both matching and nonmatching types')
 }
+
+test('counterattack permission only disables on explicit false with matching shared conditions in helper and Unit', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg, SelfUnitCommonAttributes } = await runtime
+  const unitCategory = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(cfg => cfg.getUnitTypeId()),
+    cfg => cfg.getUnitCategoryId(), (type, id) => gameConfig.checkIsUnitTypeInCategory(type, id))
+  const tileCategory = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(cfg => cfg.getTileTypeId()),
+    cfg => cfg.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(cfg => cfg.getWeatherTypeId()),
+    cfg => cfg.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+    unitCategoryId: unitCategory.id, tileCategoryId: tileCategory.id, weatherCategoryId: weather.id }
+  const origin = new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)
+  const skill = CoSkillCfg.fromJson({ persistent: {} })
+  const allowingSkill = CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: {
+    conditions, ableToDoCounterAttacks: { isAble: true },
+  } } })
+  const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => id === 0 ? skill : allowingSkill })
+  let coId = 52000
+  let skillIds = [0]
+  const player = { getCoId: () => coId, getCoCurrentSkills: () => skillIds, getCoZoneRadius: () => 1,
+    getCoGridIndexListOnMap: () => [origin] }
+  const check = internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AbleToDoCounterAttacks.checkIsAble
+  let args
+  let unit
+  for (const isAble of [undefined, true, false]) {
+    const common = SelfUnitCommonAttributes.decode(SelfUnitCommonAttributes.fromJson({
+      conditions, ableToDoCounterAttacks: { isAble },
+    }).encode())
+    const effect = common.getAbleToDoCounterAttacks()
+    assert.equal(effect.checkHasIsAble(), isAble != null)
+    assert.equal(effect.getIsAble() ?? undefined, isAble)
+    skill.getPersistent().setSelfUnitCommonAttributes(common)
+    for (const unitTypeId of [unitCategory.excluded, unitCategory.included]) {
+      for (const tileTypeId of [tileCategory.excluded, tileCategory.included]) {
+        for (const weatherTypeId of [weather.excluded, weather.included]) {
+          for (const isCoOnboard of [false, true]) {
+            for (const distance of [2, 1, 0]) {
+              const gridIndex = new internal.AuxiliaryTypes_GridIndex.GridIndex(distance, 0)
+              args = { cfg: common, gameConfig: config, unitTypeId, tileTypeId, weatherTypeId, isCoOnboard,
+                gridIndex, coZoneRadius: 1, getCoGridIndexArrayOnMap: () => [origin] }
+              unit = Object.assign(Object.create(internal.Units_Unit.Unit.prototype), {
+                getPlayer: () => player, getGcData: () => config, getUnitTypeId: () => unitTypeId,
+                getIsCoOnboard: () => isCoOnboard,
+                getWar: () => ({
+                  getTileMap: () => ({ getTile: actual => {
+                    assert.equal(actual, gridIndex)
+                    return { getTileTypeId: () => tileTypeId }
+                  } }),
+                  getWeatherManager: () => ({ getCurrentWeatherType: () => weatherTypeId }),
+                }),
+              })
+              const able = !(isAble === false && unitTypeId === unitCategory.included
+                && tileTypeId === tileCategory.included && weatherTypeId === weather.included
+                && (isCoOnboard || distance <= 1))
+              assert.equal(check(args), able)
+              assert.equal(unit.checkCanCounterAttackByCo(gridIndex), able)
+            }
+          }
+        }
+      }
+    }
+  }
+  for (const cfg of [null, undefined, SelfUnitCommonAttributes.fromJson({ conditions }),
+    SelfUnitCommonAttributes.fromJson({ ableToDoCounterAttacks: { isAble: false } })]) {
+    assert.equal(check({ ...args, cfg }), true)
+    skill.getPersistent().setSelfUnitCommonAttributes(cfg)
+    assert.equal(unit.checkCanCounterAttackByCo(args.gridIndex), true)
+  }
+  skill.getPersistent().setSelfUnitCommonAttributes(args.cfg)
+  for (const ids of [[0, 1], [1, 0]]) {
+    skillIds = ids
+    assert.equal(unit.checkCanCounterAttackByCo(args.gridIndex), false, 'true does not override a disabling skill')
+  }
+  coId = internal.Cos_Constants.CoId.Empty
+  assert.equal(unit.checkCanCounterAttackByCo(args.gridIndex), true)
+})
+
+test('counterattack permission migration preserves all Grimm skill groups and all-weather conditions', async () => {
+  const { FullConfig } = await runtime
+  for (const version of ['A0000000', 'B0000000', 'B0000001', 'B0000002', 'C0000000', 'D0000000']) {
+    const raw = FullConfig.decode(readFileSync(new URL(`../src/assets/resource/config/FullConfig${version}.bin`, import.meta.url)))
+    const skills = new Map(raw.getCoSkill().map(skill => [skill.getSkillId(), skill]))
+    const effects = []
+    for (const co of raw.getCoBasic()) {
+      for (const group of ['getPassiveSkillIds', 'getPowerSkillIds', 'getSuperPowerSkillIds']) {
+        for (const id of co[group]()) {
+          const common = skills.get(id).getPersistent()?.getSelfUnitCommonAttributes()
+          if (common?.getAbleToDoCounterAttacks()?.getIsAble() !== false) continue
+          const conditions = common.getConditions()
+          effects.push([co.getCoId(), group, id, conditions.getCoSkillAreaTypeId(),
+            conditions.getUnitCategoryId(), conditions.getTileCategoryId(), conditions.getWeatherCategoryId()])
+        }
+      }
+    }
+    assert.deepEqual(effects, version.startsWith('B') ? [
+      [52000, 'getPowerSkillIds', 52000101, 2, 7, 1, 1],
+      [52000, 'getSuperPowerSkillIds', 52000201, 2, 7, 1, 1],
+    ] : [])
+  }
+})
 
 test('counterattack immunity requires its flag and all shared filters in the helper and Unit', async () => {
   const { internal, gameConfig, raw, CoSkillCfg, SelfUnitCommonAttributes } = await runtime

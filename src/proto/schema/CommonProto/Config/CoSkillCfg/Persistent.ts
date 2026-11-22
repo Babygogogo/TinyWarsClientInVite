@@ -1,6 +1,5 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../$runtime.js";
-import { SelfCannotCounterAttack as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack, type SelfCannotCounterAttackJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack } from "./Persistent/SelfCannotCounterAttack.js";
 import { SelfPromotionBonusByProduce as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce, type SelfPromotionBonusByProduceJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce } from "./Persistent/SelfPromotionBonusByProduce.js";
 import { SelfRepairAmountBonus as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus, type SelfRepairAmountBonusJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus } from "./Persistent/SelfRepairAmountBonus.js";
 import { SelfTileEnabledForUnitProduction as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction, type SelfTileEnabledForUnitProductionJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction } from "./Persistent/SelfTileEnabledForUnitProduction.js";
@@ -15,7 +14,6 @@ export interface PersistentJson extends $ProtoSchemaJsonBase {
     selfTileEnabledForUnitProduction?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction | null | undefined;
     selfRepairAmountBonus?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus | null | undefined;
     selfPromotionBonusByProduce?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce | null | undefined;
-    selfCannotCounterAttack?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack | null | undefined;
 }
 
 export class Persistent extends $ProtoSchemaBase {
@@ -25,7 +23,6 @@ export class Persistent extends $ProtoSchemaBase {
     private _selfTileEnabledForUnitProduction?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction | null | undefined;
     private _selfRepairAmountBonus?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus | null | undefined;
     private _selfPromotionBonusByProduce?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce | null | undefined;
-    private _selfCannotCounterAttack?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack | null | undefined;
 
     public static fromJson(obj: PersistentJson): Persistent {
         return new Persistent().loadJson(obj);
@@ -37,7 +34,6 @@ export class Persistent extends $ProtoSchemaBase {
         this.setSelfTileEnabledForUnitProduction(obj.selfTileEnabledForUnitProduction != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction.fromJson(obj.selfTileEnabledForUnitProduction) : null);
         this.setSelfRepairAmountBonus(obj.selfRepairAmountBonus != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus.fromJson(obj.selfRepairAmountBonus) : null);
         this.setSelfPromotionBonusByProduce(obj.selfPromotionBonusByProduce != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce.fromJson(obj.selfPromotionBonusByProduce) : null);
-        this.setSelfCannotCounterAttack(obj.selfCannotCounterAttack != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack.fromJson(obj.selfCannotCounterAttack) : null);
         return this;
     }
     public override toJson(obj?: PersistentJson): PersistentJson {
@@ -71,11 +67,6 @@ export class Persistent extends $ProtoSchemaBase {
         {
             const value = this.getSelfPromotionBonusByProduce();
             (value != null) && (obj.selfPromotionBonusByProduce = value.toJson());
-        }
-
-        {
-            const value = this.getSelfCannotCounterAttack();
-            (value != null) && (obj.selfCannotCounterAttack = value.toJson());
         }
         return obj;
     }
@@ -123,13 +114,6 @@ export class Persistent extends $ProtoSchemaBase {
             }
         }
 
-        {
-            const value = this.getSelfCannotCounterAttack();
-            if (value != null) {
-                value.toWriter(writer.uint32(154).fork()).ldelim();
-            }
-        }
-
         return writer;
     }
 
@@ -165,10 +149,6 @@ export class Persistent extends $ProtoSchemaBase {
 
                 case 14:
                     msg.setSelfPromotionBonusByProduce($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce.decode(reader, reader.uint32()));
-                    break;
-
-                case 19:
-                    msg.setSelfCannotCounterAttack($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -264,18 +244,5 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public createIfNotExistsSelfPromotionBonusByProduce(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce {
         return this._selfPromotionBonusByProduce ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce();
-    }
-
-    public checkHasSelfCannotCounterAttack(): boolean {
-        return this._selfCannotCounterAttack != null;
-    }
-    public getSelfCannotCounterAttack(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack | null | undefined {
-        return this._selfCannotCounterAttack;
-    }
-    public setSelfCannotCounterAttack(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack | null | undefined): void {
-        this._selfCannotCounterAttack = value;
-    }
-    public createIfNotExistsSelfCannotCounterAttack(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack {
-        return this._selfCannotCounterAttack ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack();
     }
 }

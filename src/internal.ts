@@ -254,6 +254,7 @@ export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts from ".
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged from "./coSkills/utils/persistent/selfUnitCommonAttributes/ReceiveFullTileDefenseWhenDamaged.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Invisibilities from "./coSkills/utils/persistent/selfUnitCommonAttributes/Invisibilities.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToCounterAttacks from "./coSkills/utils/persistent/selfUnitCommonAttributes/ImmuneToCounterAttacks.ts";
+export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AbleToDoCounterAttacks from "./coSkills/utils/persistent/selfUnitCommonAttributes/AbleToDoCounterAttacks.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/OffensePercentOffsets.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Visions from "./coSkills/utils/persistent/selfUnitCommonAttributes/Visions.ts";
 export * as CoSkills_Utils_InstantManual_ChangeWeather from "./coSkills/utils/instantManual/ChangeWeather.ts";
