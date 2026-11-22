@@ -9,6 +9,7 @@ import { Conditions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUni
 import { DefensePercentOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets, type DefensePercentOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets } from "./SelfUnitCommonAttributes/DefensePercentOffsets.js";
 import { FuelConsumptions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions, type FuelConsumptionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$FuelConsumptions } from "./SelfUnitCommonAttributes/FuelConsumptions.js";
 import { ImmuneToWeathers as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers, type ImmuneToWeathersJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers } from "./SelfUnitCommonAttributes/ImmuneToWeathers.js";
+import { Invisibilities as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities, type InvisibilitiesJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities } from "./SelfUnitCommonAttributes/Invisibilities.js";
 import { LuckRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$LuckRangeOffsets, type LuckRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$LuckRangeOffsets } from "./SelfUnitCommonAttributes/LuckRangeOffsets.js";
 import { MoveCosts as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts, type MoveCostsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts } from "./SelfUnitCommonAttributes/MoveCosts.js";
 import { MoveRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets, type MoveRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets } from "./SelfUnitCommonAttributes/MoveRangeOffsets.js";
@@ -32,6 +33,7 @@ export interface SelfUnitCommonAttributesJson extends $ProtoSchemaJsonBase {
     moveCosts?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts | null | undefined;
     armorPenetrations?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations | null | undefined;
     receiveFullTileDefenseWhenDamaged?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged | null | undefined;
+    invisibilities?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities | null | undefined;
 }
 
 export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
@@ -50,6 +52,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     private _moveCosts?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts | null | undefined;
     private _armorPenetrations?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations | null | undefined;
     private _receiveFullTileDefenseWhenDamaged?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged | null | undefined;
+    private _invisibilities?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities | null | undefined;
 
     public static fromJson(obj: SelfUnitCommonAttributesJson): SelfUnitCommonAttributes {
         return new SelfUnitCommonAttributes().loadJson(obj);
@@ -70,6 +73,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         this.setMoveCosts(obj.moveCosts != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts.fromJson(obj.moveCosts) : null);
         this.setArmorPenetrations(obj.armorPenetrations != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations.fromJson(obj.armorPenetrations) : null);
         this.setReceiveFullTileDefenseWhenDamaged(obj.receiveFullTileDefenseWhenDamaged != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged.fromJson(obj.receiveFullTileDefenseWhenDamaged) : null);
+        this.setInvisibilities(obj.invisibilities != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities.fromJson(obj.invisibilities) : null);
         return this;
     }
     public override toJson(obj?: SelfUnitCommonAttributesJson): SelfUnitCommonAttributesJson {
@@ -148,6 +152,11 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         {
             const value = this.getReceiveFullTileDefenseWhenDamaged();
             (value != null) && (obj.receiveFullTileDefenseWhenDamaged = value.toJson());
+        }
+
+        {
+            const value = this.getInvisibilities();
+            (value != null) && (obj.invisibilities = value.toJson());
         }
         return obj;
     }
@@ -258,6 +267,13 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
             }
         }
 
+        {
+            const value = this.getInvisibilities();
+            if (value != null) {
+                value.toWriter(writer.uint32(130).fork()).ldelim();
+            }
+        }
+
         return writer;
     }
 
@@ -329,6 +345,10 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
 
                 case 15:
                     msg.setReceiveFullTileDefenseWhenDamaged($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged.decode(reader, reader.uint32()));
+                    break;
+
+                case 16:
+                    msg.setInvisibilities($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -541,5 +561,18 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     }
     public createIfNotExistsReceiveFullTileDefenseWhenDamaged(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged {
         return this._receiveFullTileDefenseWhenDamaged ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged();
+    }
+
+    public checkHasInvisibilities(): boolean {
+        return this._invisibilities != null;
+    }
+    public getInvisibilities(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities | null | undefined {
+        return this._invisibilities;
+    }
+    public setInvisibilities(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities | null | undefined): void {
+        this._invisibilities = value;
+    }
+    public createIfNotExistsInvisibilities(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities {
+        return this._invisibilities ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Invisibilities();
     }
 }

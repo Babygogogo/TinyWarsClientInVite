@@ -48,6 +48,7 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations: 'coSkills/utils/persistent/selfUnitCommonAttributes/ArmorPenetrations',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveCosts',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged: 'coSkills/utils/persistent/selfUnitCommonAttributes/ReceiveFullTileDefenseWhenDamaged',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Invisibilities: 'coSkills/utils/persistent/selfUnitCommonAttributes/Invisibilities',
     CoSkills_Utils_Persistent_AttackRangeOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets',
     CoSkills_Utils_Persistent_SelfUnitMoveRange: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveRangeOffsets',
     CoSkills_Utils_Persistent_Visions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Visions',
@@ -89,6 +90,99 @@ function categoryFixture(categories, types, getId, matches) {
   }
   assert.fail('Expected a category with both matching and nonmatching types')
 }
+
+test('invisibility requires its flag and shared filters; CO units bypass only the area filter', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg } = await runtime
+  const unitCategory = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(cfg => cfg.getUnitTypeId()),
+    cfg => cfg.getUnitCategoryId(), (type, id) => gameConfig.checkIsUnitTypeInCategory(type, id))
+  const tileCategory = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(cfg => cfg.getTileTypeId()),
+    cfg => cfg.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(cfg => cfg.getWeatherTypeId()),
+    cfg => cfg.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+    unitCategoryId: unitCategory.id, tileCategoryId: tileCategory.id, weatherCategoryId: weather.id }
+  let common
+  const skill = CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: {
+    conditions, invisibilities: { isInvisible: true },
+  } } })
+  const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => id === 0 ? skill : undefined })
+  const origin = new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)
+  const player = { getCoCurrentSkills: () => [1, 0], getCoZoneRadius: () => 1,
+    getCoGridIndexListOnMap: () => [origin] }
+  for (const isInvisible of [undefined, false, true]) {
+    const cfg = CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: {
+      conditions, invisibilities: { isInvisible },
+    } } })
+    common = CoSkillCfg.decode(cfg.encode()).getPersistent().getSelfUnitCommonAttributes()
+    assert.equal(common.getInvisibilities().getIsInvisible(), isInvisible === true)
+    skill.getPersistent().setSelfUnitCommonAttributes(common)
+    for (const unitTypeId of [unitCategory.included, unitCategory.excluded]) {
+      for (const tileTypeId of [tileCategory.included, tileCategory.excluded]) {
+        for (const weatherTypeId of [weather.included, weather.excluded]) {
+          for (const isCoOnboard of [false, true]) {
+            for (const distance of [0, 1, 2]) {
+              const gridIndex = new internal.AuxiliaryTypes_GridIndex.GridIndex(distance, 0)
+              const args = { cfg: common, gameConfig: config, unitTypeId, tileTypeId, weatherTypeId, isCoOnboard,
+                gridIndex, coZoneRadius: 1, getCoGridIndexArrayOnMap: () => [origin] }
+              const unit = Object.assign(Object.create(internal.Units_Unit.Unit.prototype), {
+                getPlayer: () => player, getGcData: () => config, getUnitTypeId: () => unitTypeId,
+                getIsCoOnboard: () => isCoOnboard,
+                getWar: () => ({
+                  getTileMap: () => ({ getTile: actual => {
+                    assert.equal(actual, gridIndex)
+                    return { getTileTypeId: () => tileTypeId }
+                  } }),
+                  getWeatherManager: () => ({ getCurrentWeatherType: () => weatherTypeId }),
+                }),
+              })
+              const enabled = isInvisible === true && unitTypeId === unitCategory.included
+                && tileTypeId === tileCategory.included && weatherTypeId === weather.included
+                && (isCoOnboard || distance <= 1)
+              assert.equal(internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Invisibilities.checkIsInvisible(args), enabled)
+              assert.equal(unit.checkIsInvisible(gridIndex), enabled)
+            }
+          }
+        }
+      }
+    }
+  }
+  const args = { cfg: common, gameConfig: config, unitTypeId: unitCategory.included, tileTypeId: tileCategory.included,
+    weatherTypeId: weather.included, isCoOnboard: true, gridIndex: origin, coZoneRadius: 1,
+    getCoGridIndexArrayOnMap: () => [origin] }
+  const check = cfg => internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Invisibilities.checkIsInvisible({ ...args, cfg })
+  common.setConditions(null)
+  assert.equal(check(common), false)
+  common.setConditions(CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: { conditions } } })
+    .getPersistent().getSelfUnitCommonAttributes().getConditions())
+  common.setInvisibilities(null)
+  assert.equal(check(common), false)
+  assert.equal(check(undefined), false)
+  assert.equal(check(null), false)
+})
+
+test('migrated invisibility remains limited to the original CO groups and condition tuples in all six configs', async () => {
+  const { FullConfig } = await runtime
+  for (const version of ['A0000000', 'B0000000', 'B0000001', 'B0000002', 'C0000000', 'D0000000']) {
+    const raw = FullConfig.decode(readFileSync(new URL(`../src/assets/resource/config/FullConfig${version}.bin`, import.meta.url)))
+    const skills = new Map(raw.getCoSkill().map(skill => [skill.getSkillId(), skill]))
+    const effects = []
+    for (const co of raw.getCoBasic()) {
+      for (const group of ['getPassiveSkillIds', 'getPowerSkillIds', 'getSuperPowerSkillIds']) {
+        for (const id of co[group]()) {
+          const common = skills.get(id).getPersistent()?.getSelfUnitCommonAttributes()
+          if (!common?.getInvisibilities()?.getIsInvisible()) continue
+          const conditions = common.getConditions()
+          effects.push([co.getCoId(), group, conditions.getCoSkillAreaTypeId(), conditions.getUnitCategoryId(),
+            conditions.getTileCategoryId(), conditions.getWeatherCategoryId()])
+        }
+      }
+    }
+    assert.deepEqual(effects, version.startsWith('B') ? [
+      [10000, 'getSuperPowerSkillIds', 2, 2, 16, 1],
+      [49000, 'getSuperPowerSkillIds', 2, 1, 1, 1],
+    ] : [])
+  }
+})
 
 test('full tile defense requires enabled shared conditions and preserves HP scaling, previews and unsupported terrain', async () => {
   const { internal, gameConfig, raw, CoSkillCfg, getPanelTileDefense } = await runtime
