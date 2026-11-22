@@ -13,6 +13,7 @@ import { LuckRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$S
 import { MoveCosts as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts, type MoveCostsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts } from "./SelfUnitCommonAttributes/MoveCosts.js";
 import { MoveRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets, type MoveRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets } from "./SelfUnitCommonAttributes/MoveRangeOffsets.js";
 import { OffensePercentOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets, type OffensePercentOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets } from "./SelfUnitCommonAttributes/OffensePercentOffsets.js";
+import { ReceiveFullTileDefenseWhenDamaged as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged, type ReceiveFullTileDefenseWhenDamagedJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged } from "./SelfUnitCommonAttributes/ReceiveFullTileDefenseWhenDamaged.js";
 import { Visions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions, type VisionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions } from "./SelfUnitCommonAttributes/Visions.js";
 
 export interface SelfUnitCommonAttributesJson extends $ProtoSchemaJsonBase {
@@ -30,6 +31,7 @@ export interface SelfUnitCommonAttributesJson extends $ProtoSchemaJsonBase {
     immuneToWeathers?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers | null | undefined;
     moveCosts?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts | null | undefined;
     armorPenetrations?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations | null | undefined;
+    receiveFullTileDefenseWhenDamaged?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged | null | undefined;
 }
 
 export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
@@ -47,6 +49,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     private _immuneToWeathers?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers | null | undefined;
     private _moveCosts?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts | null | undefined;
     private _armorPenetrations?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations | null | undefined;
+    private _receiveFullTileDefenseWhenDamaged?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged | null | undefined;
 
     public static fromJson(obj: SelfUnitCommonAttributesJson): SelfUnitCommonAttributes {
         return new SelfUnitCommonAttributes().loadJson(obj);
@@ -66,6 +69,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         this.setImmuneToWeathers(obj.immuneToWeathers != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToWeathers.fromJson(obj.immuneToWeathers) : null);
         this.setMoveCosts(obj.moveCosts != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts.fromJson(obj.moveCosts) : null);
         this.setArmorPenetrations(obj.armorPenetrations != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations.fromJson(obj.armorPenetrations) : null);
+        this.setReceiveFullTileDefenseWhenDamaged(obj.receiveFullTileDefenseWhenDamaged != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged.fromJson(obj.receiveFullTileDefenseWhenDamaged) : null);
         return this;
     }
     public override toJson(obj?: SelfUnitCommonAttributesJson): SelfUnitCommonAttributesJson {
@@ -139,6 +143,11 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         {
             const value = this.getArmorPenetrations();
             (value != null) && (obj.armorPenetrations = value.toJson());
+        }
+
+        {
+            const value = this.getReceiveFullTileDefenseWhenDamaged();
+            (value != null) && (obj.receiveFullTileDefenseWhenDamaged = value.toJson());
         }
         return obj;
     }
@@ -242,6 +251,13 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
             }
         }
 
+        {
+            const value = this.getReceiveFullTileDefenseWhenDamaged();
+            if (value != null) {
+                value.toWriter(writer.uint32(122).fork()).ldelim();
+            }
+        }
+
         return writer;
     }
 
@@ -309,6 +325,10 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
 
                 case 14:
                     msg.setArmorPenetrations($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations.decode(reader, reader.uint32()));
+                    break;
+
+                case 15:
+                    msg.setReceiveFullTileDefenseWhenDamaged($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -508,5 +528,18 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     }
     public createIfNotExistsArmorPenetrations(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations {
         return this._armorPenetrations ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ArmorPenetrations();
+    }
+
+    public checkHasReceiveFullTileDefenseWhenDamaged(): boolean {
+        return this._receiveFullTileDefenseWhenDamaged != null;
+    }
+    public getReceiveFullTileDefenseWhenDamaged(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged | null | undefined {
+        return this._receiveFullTileDefenseWhenDamaged;
+    }
+    public setReceiveFullTileDefenseWhenDamaged(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged | null | undefined): void {
+        this._receiveFullTileDefenseWhenDamaged = value;
+    }
+    public createIfNotExistsReceiveFullTileDefenseWhenDamaged(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged {
+        return this._receiveFullTileDefenseWhenDamaged ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged();
     }
 }

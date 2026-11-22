@@ -4,6 +4,7 @@ import {
     CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction,
     CoSkills_Utils_Persistent_SelfTileIncome,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged,
     GameConfigs_GameConfig,
     Helpers_Collection,
     Helpers_Misc,
@@ -658,15 +659,18 @@ export class Tile {
             }
 
             {
-                const cfg = skillCfg.getPersistent()?.getSelfDefenseBonusByTileIgnoreHp();
-                if ((cfg)                                                                                   &&
-                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))               &&
-                    ((isCoOnboard) || (isInCozByPreviewSettings) || (gridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                        coZoneRadius             : coZoneRadius,
-                    })))
-                ) {
+                if (CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged.checkIsEnabled({
+                    cfg                      : skillCfg.getPersistent()?.getSelfUnitCommonAttributes(),
+                    gameConfig               : gameConfig,
+                    unitTypeId               : unitType,
+                    tileTypeId               : this.getTileTypeId(),
+                    weatherTypeId            : Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType()),
+                    isCoOnboard              : isCoOnboard,
+                    isInCozByPreviewSettings : isInCozByPreviewSettings,
+                    gridIndex                : gridIndex,
+                    getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                    coZoneRadius             : coZoneRadius,
+                })) {
                     return rawDefenseAmount;
                 }
             }

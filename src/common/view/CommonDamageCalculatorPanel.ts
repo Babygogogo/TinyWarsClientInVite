@@ -1350,11 +1350,12 @@ function getAttackerLuckLimit(calculatorData: CalculatorData): { lower: number, 
         upper : attackerData.upperLuck + limitFromCo.upper,
     };
 }
-function getTileDefenseAmountForUnit({ gameConfig, unitType, unitHp, tileType, tileCustomBuildingData, coId, coSkillType }: {
+function getTileDefenseAmountForUnit({ gameConfig, unitType, unitHp, tileType, weatherType, tileCustomBuildingData, coId, coSkillType }: {
     gameConfig              : GameConfigs_GameConfig.GameConfig;
     unitType                : number;
     unitHp                  : number;
     tileType                : number;
+    weatherType             : number;
     tileCustomBuildingData  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomBuildingData>;
     coId                    : number;
     coSkillType             : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
@@ -1377,9 +1378,15 @@ function getTileDefenseAmountForUnit({ gameConfig, unitType, unitHp, tileType, t
         }
 
         {
-            const cfg = skillCfg.getPersistent()?.getSelfDefenseBonusByTileIgnoreHp();
-            if ((cfg)                                                                   &&
-                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))
+            const cfg = skillCfg.getPersistent()?.getSelfUnitCommonAttributes();
+            if ((cfg?.getReceiveFullTileDefenseWhenDamaged()?.getIsEnabled()) &&
+                (CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions.checkIsMeetForDamageCalculatorPanel({
+                    conditions    : cfg.getConditions(),
+                    gameConfig    : gameConfig,
+                    unitTypeId    : unitType,
+                    tileTypeId    : tileType,
+                    weatherTypeId : weatherType,
+                }))
             ) {
                 return rawDefenseAmount;
             }
@@ -1601,6 +1608,7 @@ function getDefenseBonusMultiplier(calculatorData: CalculatorData): number {
         unitType               : defenderData.unitType,
         unitHp                 : defenderData.unitHp,
         tileType               : defenderData.tileType,
+        weatherType            : calculatorData.weatherType,
         tileCustomBuildingData : defenderData.tileCustomBuildingData,
         coId                   : defenderData.coId,
         coSkillType            : defenderData.coSkillType,

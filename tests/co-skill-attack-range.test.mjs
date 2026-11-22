@@ -47,12 +47,15 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations: 'coSkills/utils/persistent/selfUnitCommonAttributes/ArmorPenetrations',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveCosts',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged: 'coSkills/utils/persistent/selfUnitCommonAttributes/ReceiveFullTileDefenseWhenDamaged',
     CoSkills_Utils_Persistent_AttackRangeOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets',
     CoSkills_Utils_Persistent_SelfUnitMoveRange: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveRangeOffsets',
     CoSkills_Utils_Persistent_Visions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Visions',
     AuxiliaryTypes_UnitVisionInfo: 'auxiliaryTypes/UnitVisionInfo',
     Units_Unit: 'units/Unit',
+    Units_Utils_Common: 'units/utils/Common',
     Locations_Utils: 'locations/Utils',
+    Tiles_Utils_Common: 'tiles/utils/Common',
     Tiles_Tile: 'tiles/Tile',
   })) {
     internal[name] = loadSource(filename)
@@ -67,13 +70,14 @@ const runtime = (async () => {
     readFileSync(new URL('../src/common/view/CommonDamageCalculatorPanel.ts', import.meta.url), 'utf8'),
     ts.ScriptTarget.Latest, true)
   const panelFunctions = panelSource.statements.filter(node => ts.isFunctionDeclaration(node)
-    && ['getAttackerOffensePierce', 'getCoSkillIdArray'].includes(node.name?.text)).map(node => node.getText(panelSource)).join('\n')
+    && ['getAttackerOffensePierce', 'getCoSkillIdArray', 'getTileDefenseAmountForUnit'].includes(node.name?.text)).map(node => node.getText(panelSource)).join('\n')
   const panelContext = { ...internal }
   vm.runInNewContext(ts.transpileModule(panelFunctions, {
     compilerOptions: { target: ts.ScriptTarget.ES2023 },
   }).outputText, panelContext)
   return { internal, gameConfig, raw, FullConfig, SelfUnitCommonAttributes, CoSkillCfg,
-    getPanelOffensePierce: panelContext.getAttackerOffensePierce }
+    getPanelOffensePierce: panelContext.getAttackerOffensePierce,
+    getPanelTileDefense: panelContext.getTileDefenseAmountForUnit }
 })()
 
 function categoryFixture(categories, types, getId, matches) {
@@ -85,6 +89,108 @@ function categoryFixture(categories, types, getId, matches) {
   }
   assert.fail('Expected a category with both matching and nonmatching types')
 }
+
+test('full tile defense requires enabled shared conditions and preserves HP scaling, previews and unsupported terrain', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg, getPanelTileDefense } = await runtime
+  const unitCategory = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(cfg => cfg.getUnitTypeId()),
+    cfg => cfg.getUnitCategoryId(), (type, id) => gameConfig.checkIsUnitTypeInCategory(type, id))
+  const tileCategory = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(cfg => cfg.getTileTypeId()),
+    cfg => cfg.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(cfg => cfg.getWeatherTypeId()),
+    cfg => cfg.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+    unitCategoryId: unitCategory.id, tileCategoryId: tileCategory.id, weatherCategoryId: weather.id }
+  const skill = CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: {
+    conditions, receiveFullTileDefenseWhenDamaged: { isEnabled: true },
+  } } })
+  let ids = [0]
+  let canDefend = true
+  const template = { getIsCustomizableBuilding: () => false, getDefenseAmount: () => 30,
+    getDefenseUnitCategoryId: () => canDefend ? 1 : 0 }
+  const config = Object.assign(Object.create(gameConfig), {
+    getCoSkillCfg: id => id === 0 ? skill : undefined,
+    getCoBasicCfg: () => ({ getPassiveSkillIds: () => ids }),
+    getTileTemplateCfg: () => template,
+  })
+  const origin = new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)
+  const player = { getPlayerIndex: () => 1, getCoCurrentSkills: () => ids, getCoZoneRadius: () => 1,
+    getCoGridIndexListOnMap: () => [origin], getVisibleCoGridIndexArrayOnMap: () => [] }
+  for (const unitType of [unitCategory.included, unitCategory.excluded]) {
+    for (const tileType of [tileCategory.included, tileCategory.excluded]) {
+      for (const weatherType of [weather.included, weather.excluded]) {
+        for (const onboard of [false, true]) {
+          for (const distance of [0, 1, 2]) {
+            for (const preview of [false, true]) {
+              const unit = { getUnitTypeId: () => unitType, getPlayer: () => player,
+                getIsCoOnboard: () => onboard, getNormalizedCurrentHp: () => 5, getNormalizedMaxHp: () => 10 }
+              const tile = Object.assign(Object.create(internal.Tiles_Tile.Tile.prototype), {
+                checkCanDefendUnit: () => canDefend, getDefenseAmount: () => 30, getTileTypeId: () => tileType,
+                getGridIndex: () => new internal.AuxiliaryTypes_GridIndex.GridIndex(distance, 0),
+                getWar: () => ({ getGcData: () => config,
+                  getWeatherManager: () => ({ getCurrentWeatherType: () => weatherType }),
+                  getDamagePreviewSettings: () => ({ isEnabled: true,
+                    settings: [{ playerIndex: 1, isForcedInCoZone: true }] }),
+                }),
+              })
+              const matches = unitType === unitCategory.included && tileType === tileCategory.included
+                && weatherType === weather.included
+              assert.equal(tile.getDefenseAmountForUnit(unit, null, preview),
+                matches && (onboard || preview || distance <= 1) ? 30 : 15)
+              assert.equal(tile.getDefenseAmountForUnit(unit, new Set([1]), preview),
+                matches && (onboard || preview) ? 30 : 15)
+              assert.equal(getPanelTileDefense({ gameConfig: config, unitType, tileType, weatherType,
+                unitHp: 50, coId: 1, coSkillType: internal.CoSkills_Constants.SkillTypeId.Passive }),
+              matches ? 30 : 15)
+              ids = [2]
+              assert.equal(tile.getDefenseAmountForUnit(unit, null, preview), 15)
+              ids = [0]
+              canDefend = false
+              assert.equal(tile.getDefenseAmountForUnit(unit, null, preview), 0)
+              assert.equal(getPanelTileDefense({ gameConfig: config, unitType, tileType, weatherType,
+                unitHp: 50, coId: 1, coSkillType: internal.CoSkills_Constants.SkillTypeId.Passive }), 0)
+              canDefend = true
+            }
+          }
+        }
+      }
+    }
+  }
+  const args = { gameConfig: config, unitType: unitCategory.included, tileType: tileCategory.included,
+    weatherType: weather.included, unitHp: 50, coId: 1, coSkillType: internal.CoSkills_Constants.SkillTypeId.Passive }
+  const common = skill.getPersistent().getSelfUnitCommonAttributes()
+  let normalizedHp = 5
+  const unit = { getUnitTypeId: () => args.unitType, getPlayer: () => player, getIsCoOnboard: () => false,
+    getNormalizedCurrentHp: () => normalizedHp, getNormalizedMaxHp: () => 10 }
+  const tile = Object.assign(Object.create(internal.Tiles_Tile.Tile.prototype), {
+    checkCanDefendUnit: () => true, getDefenseAmount: () => 30, getTileTypeId: () => args.tileType,
+    getGridIndex: () => origin,
+    getWar: () => ({ getGcData: () => config,
+      getWeatherManager: () => ({ getCurrentWeatherType: () => args.weatherType }),
+      getDamagePreviewSettings: () => ({ isEnabled: false }),
+    }),
+  })
+  for (const isEnabled of [undefined, false, true]) {
+    const cfg = CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: {
+      conditions, receiveFullTileDefenseWhenDamaged: { isEnabled },
+    } } })
+    const decoded = CoSkillCfg.decode(cfg.encode()).getPersistent().getSelfUnitCommonAttributes()
+    assert.equal(decoded.getReceiveFullTileDefenseWhenDamaged().getIsEnabled(), isEnabled === true)
+    common.setReceiveFullTileDefenseWhenDamaged(decoded.getReceiveFullTileDefenseWhenDamaged())
+    assert.equal(getPanelTileDefense(args), isEnabled === true ? 30 : 15)
+    assert.equal(tile.getDefenseAmountForUnit(unit, null, false), isEnabled === true ? 30 : 15)
+    normalizedHp = 10
+    assert.equal(tile.getDefenseAmountForUnit(unit, null, false), 30)
+    normalizedHp = 5
+  }
+  common.setConditions(null)
+  assert.equal(getPanelTileDefense(args), 15)
+  assert.equal(tile.getDefenseAmountForUnit(unit, null, false), 15)
+  common.setConditions(CoSkillCfg.fromJson({ persistent: { selfUnitCommonAttributes: { conditions } } })
+    .getPersistent().getSelfUnitCommonAttributes().getConditions())
+  common.setReceiveFullTileDefenseWhenDamaged(null)
+  assert.equal(getPanelTileDefense(args), 15)
+  assert.equal(tile.getDefenseAmountForUnit(unit, null, false), 15)
+})
 
 test('armor penetrations stack all six values using current tile, weather and common conditions', async () => {
   const { internal, gameConfig, raw, CoSkillCfg, getPanelOffensePierce } = await runtime
