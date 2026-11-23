@@ -45,6 +45,8 @@ const runtime = (async () => {
     Tiles_Constants_Common: 'tiles/constants/Common', Numbers_Constants: 'numbers/Constants',
     Cos_Constants: 'cos/Constants', Numbers_Utils: 'numbers/Utils', AuxiliaryTypes_GridIndex: 'auxiliaryTypes/GridIndex',
     GameConfigs_GameConfig: 'gameConfigs/GameConfig',
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions: 'coSkills/utils/persistent/selfTileCommonAttributes/Conditions',
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets: 'coSkills/utils/persistent/selfTileCommonAttributes/IncomeOffsets',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations: 'coSkills/utils/persistent/selfUnitCommonAttributes/ArmorPenetrations',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveCosts',
@@ -97,6 +99,53 @@ function categoryFixture(categories, types, getId, matches) {
   }
   assert.fail('Expected a category with both matching and nonmatching types')
 }
+
+test('tile income filters by tile, current weather and CO area, and multiplies matching effects', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg } = await runtime
+  const tile = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(c => c.getTileTypeId()),
+    c => c.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(c => c.getWeatherTypeId()),
+    c => c.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+    tileCategoryId: tile.id, weatherCategoryId: weather.id }
+  const skill = (multiplierPct, filters = conditions) => CoSkillCfg.fromJson({
+    persistent: { selfTileCommonAttributes: {
+      conditions: filters,
+      incomeOffsets: multiplierPct === undefined ? undefined : { multiplierPct },
+    } },
+  })
+  const skills = [skill(125), skill(50), skill(0), skill(undefined), skill(200, null)]
+  const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id] })
+  const GridIndex = internal.AuxiliaryTypes_GridIndex.GridIndex
+  const coGridIndex = new GridIndex(0, 0)
+  let gridIndex = new GridIndex(1, 0)
+  let tileType = tile.included
+  let weatherType = weather.included
+  let skillIds = [0, 1, 3, 4, 99]
+  const player = { getCoCurrentSkills: () => skillIds, getCoZoneRadius: () => 1, getCoGridIndexListOnMap: () => [coGridIndex] }
+  const war = { getGcData: () => config,
+    getWeatherManager: () => ({ getCurrentWeatherType: () => weatherType }),
+    getCommonSettingManager: () => ({ getPlayerRule: () => ({ getIncomeMultiplier: () => 120 }) }),
+  }
+  const receiver = { getPlayerIndex: () => 1, getUnfixedBuffList: () => undefined,
+    getWar: () => war, getPlayer: () => player, getTileTypeId: () => tileType,
+    getGridIndex: () => gridIndex, getIncomePerTurn: () => 1001,
+  }
+  const income = () => internal.Tiles_Tile.Tile.prototype.getIncomeForPlayer.call(receiver, 1)
+  assert.equal(income(), 750)
+  weatherType = weather.excluded
+  assert.equal(income(), 1201)
+  weatherType = weather.included
+  tileType = tile.excluded
+  assert.equal(income(), 1201)
+  tileType = tile.included
+  gridIndex = new GridIndex(2, 0)
+  assert.equal(income(), 1201)
+  gridIndex = coGridIndex
+  assert.equal(income(), 750)
+  skillIds = [0, 2]
+  assert.equal(income(), 0)
+})
 
 test('production promotion filters the new unit, production tile and weather, and clamps stacked offsets', async () => {
   const { internal, gameConfig, raw, CoSkillCfg, getTileProductionPromotion, getUnitProductionPromotion } = await runtime

@@ -239,7 +239,8 @@ export * as CoSkills_Utils_InstantMisc_SelfUnitHpAfterWait from "./coSkills/util
 export * as CoSkills_Utils_InstantMisc_SelfUnitPromotionAfterBattle from "./coSkills/utils/instantMisc/SelfUnitPromotionAfterBattle.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions from "./coSkills/utils/persistent/selfUnitCommonAttributes/CoBoardingPermissions.ts";
 export * as CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction from "./coSkills/utils/persistent/SelfTileEnabledForUnitProduction.ts";
-export * as CoSkills_Utils_Persistent_SelfTileIncome from "./coSkills/utils/persistent/SelfTileIncome.ts";
+export * as CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions from "./coSkills/utils/persistent/selfTileCommonAttributes/Conditions.ts";
+export * as CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets from "./coSkills/utils/persistent/selfTileCommonAttributes/IncomeOffsets.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts from "./coSkills/utils/persistent/selfUnitCommonAttributes/CaptureAmounts.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers from "./coSkills/utils/persistent/selfUnitCommonAttributes/ImmuneToWeathers.ts";

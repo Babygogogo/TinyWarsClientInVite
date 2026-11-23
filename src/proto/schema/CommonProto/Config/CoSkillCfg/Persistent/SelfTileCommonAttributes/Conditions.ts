@@ -1,28 +1,28 @@
 import protobuf from "protobufjs/minimal.js";
-import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../$runtime.js";
+import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../../$runtime.js";
 
-export interface SelfTileIncomeJson extends $ProtoSchemaJsonBase {
+export interface ConditionsJson extends $ProtoSchemaJsonBase {
     coSkillAreaTypeId?: number | null | undefined;
     tileCategoryId?: number | null | undefined;
-    multiplierPct?: number | null | undefined;
+    weatherCategoryId?: number | null | undefined;
 }
 
-export class SelfTileIncome extends $ProtoSchemaBase {
+export class Conditions extends $ProtoSchemaBase {
     private _coSkillAreaTypeId?: number | null | undefined;
     private _tileCategoryId?: number | null | undefined;
-    private _multiplierPct?: number | null | undefined;
+    private _weatherCategoryId?: number | null | undefined;
 
-    public static fromJson(obj: SelfTileIncomeJson): SelfTileIncome {
-        return new SelfTileIncome().loadJson(obj);
+    public static fromJson(obj: ConditionsJson): Conditions {
+        return new Conditions().loadJson(obj);
     }
-    public override loadJson(obj: SelfTileIncomeJson): this {
+    public override loadJson(obj: ConditionsJson): this {
         this.setCoSkillAreaTypeId(obj.coSkillAreaTypeId);
         this.setTileCategoryId(obj.tileCategoryId);
-        this.setMultiplierPct(obj.multiplierPct);
+        this.setWeatherCategoryId(obj.weatherCategoryId);
         return this;
     }
-    public override toJson(obj?: SelfTileIncomeJson): SelfTileIncomeJson {
-        obj ??= ({} as SelfTileIncomeJson);
+    public override toJson(obj?: ConditionsJson): ConditionsJson {
+        obj ??= ({} as ConditionsJson);
 
         {
             const value = this.getCoSkillAreaTypeId();
@@ -35,8 +35,8 @@ export class SelfTileIncome extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getMultiplierPct();
-            (value != null) && (obj.multiplierPct = value);
+            const value = this.getWeatherCategoryId();
+            (value != null) && (obj.weatherCategoryId = value);
         }
         return obj;
     }
@@ -51,13 +51,13 @@ export class SelfTileIncome extends $ProtoSchemaBase {
 
         {
             const value = this.getTileCategoryId();
-            if (value != null) {
+            if ((value != null) && (value != 0)) {
                 writer.uint32(16).int32(value);
             }
         }
 
         {
-            const value = this.getMultiplierPct();
+            const value = this.getWeatherCategoryId();
             if ((value != null) && (value != 0)) {
                 writer.uint32(24).int32(value);
             }
@@ -66,13 +66,13 @@ export class SelfTileIncome extends $ProtoSchemaBase {
         return writer;
     }
 
-    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): SelfTileIncome {
+    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): Conditions {
         if (!(reader instanceof protobuf.Reader)) {
             reader = protobuf.Reader.create(reader);
         }
 
         const end = length == null ? reader.len : reader.pos + length;
-        const msg = new SelfTileIncome();
+        const msg = new Conditions();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -85,7 +85,7 @@ export class SelfTileIncome extends $ProtoSchemaBase {
                     break;
 
                 case 3:
-                    msg.setMultiplierPct(reader.int32());
+                    msg.setWeatherCategoryId(reader.int32());
                     break;
 
                 default:
@@ -97,12 +97,12 @@ export class SelfTileIncome extends $ProtoSchemaBase {
         return msg;
     }
 
-    public override clone(): SelfTileIncome {
-        return SelfTileIncome.decode(this.encode());
+    public override clone(): Conditions {
+        return Conditions.decode(this.encode());
     }
 
-    public override getSchemaName(): "SelfTileIncome" {
-        return "SelfTileIncome";
+    public override getSchemaName(): "Conditions" {
+        return "Conditions";
     }
 
     public checkHasCoSkillAreaTypeId(): boolean {
@@ -122,24 +122,28 @@ export class SelfTileIncome extends $ProtoSchemaBase {
     public checkHasTileCategoryId(): boolean {
         return this._tileCategoryId != null;
     }
-    public getTileCategoryId(): number | null | undefined {
-        return this._tileCategoryId;
+    public getTileCategoryId(): number {
+        return this._tileCategoryId ?? 0;
     }
     public setTileCategoryId(value: number | null | undefined): void {
-        this._tileCategoryId = value;
+        if ((value == null) || (value == 0)) {
+            this._tileCategoryId = null;
+        } else {
+            this._tileCategoryId = value;
+        }
     }
 
-    public checkHasMultiplierPct(): boolean {
-        return this._multiplierPct != null;
+    public checkHasWeatherCategoryId(): boolean {
+        return this._weatherCategoryId != null;
     }
-    public getMultiplierPct(): number {
-        return this._multiplierPct ?? 0;
+    public getWeatherCategoryId(): number {
+        return this._weatherCategoryId ?? 0;
     }
-    public setMultiplierPct(value: number | null | undefined): void {
+    public setWeatherCategoryId(value: number | null | undefined): void {
         if ((value == null) || (value == 0)) {
-            this._multiplierPct = null;
+            this._weatherCategoryId = null;
         } else {
-            this._multiplierPct = value;
+            this._weatherCategoryId = value;
         }
     }
 }

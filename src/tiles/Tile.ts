@@ -2,7 +2,7 @@ import {
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_TileAppearanceInfo,
     CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction,
-    CoSkills_Utils_Persistent_SelfTileIncome,
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged,
     GameConfigs_GameConfig,
@@ -819,20 +819,22 @@ export class Tile {
         const war                       = this.getWar();
         const gameConfig                = war.getGcData();
         const player                    = this.getPlayer();
-        const selfTileTypeId                  = this.getTileTypeId();
-        const selfGridIndex                 = this.getGridIndex();
+        const selfTileTypeId             = this.getTileTypeId();
+        const selfGridIndex              = this.getGridIndex();
+        const weatherTypeId              = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifierForSkill            = 1;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifierForSkill *= CoSkills_Utils_Persistent_SelfTileIncome.getTotalMultiplier({
-                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfTileIncome(),
+            modifierForSkill *= CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets.getTotalIncomeMultiplierPct({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfTileCommonAttributes(),
                 gameConfig               : gameConfig,
                 tileTypeId               : selfTileTypeId,
+                weatherTypeId            : weatherTypeId,
                 gridIndex                : selfGridIndex,
                 coZoneRadius             : coZoneRadius,
                 getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-            });
+            }) / 100;
         }
 
         return Math.floor(
