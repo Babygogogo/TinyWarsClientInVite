@@ -3,19 +3,16 @@ import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $Proto
 
 export interface RepairAmountOffsetsJson extends $ProtoSchemaJsonBase {
     offset?: number | null | undefined;
-    costMultiplierPct?: number | null | undefined;
 }
 
 export class RepairAmountOffsets extends $ProtoSchemaBase {
     private _offset?: number | null | undefined;
-    private _costMultiplierPct?: number | null | undefined;
 
     public static fromJson(obj: RepairAmountOffsetsJson): RepairAmountOffsets {
         return new RepairAmountOffsets().loadJson(obj);
     }
     public override loadJson(obj: RepairAmountOffsetsJson): this {
         this.setOffset(obj.offset);
-        this.setCostMultiplierPct(obj.costMultiplierPct);
         return this;
     }
     public override toJson(obj?: RepairAmountOffsetsJson): RepairAmountOffsetsJson {
@@ -25,11 +22,6 @@ export class RepairAmountOffsets extends $ProtoSchemaBase {
             const value = this.getOffset();
             (value != null) && (obj.offset = value);
         }
-
-        {
-            const value = this.getCostMultiplierPct();
-            (value != null) && (obj.costMultiplierPct = value);
-        }
         return obj;
     }
 
@@ -38,13 +30,6 @@ export class RepairAmountOffsets extends $ProtoSchemaBase {
             const value = this.getOffset();
             if ((value != null) && (value != 0)) {
                 writer.uint32(8).int32(value);
-            }
-        }
-
-        {
-            const value = this.getCostMultiplierPct();
-            if (value != null) {
-                writer.uint32(16).int32(value);
             }
         }
 
@@ -63,10 +48,6 @@ export class RepairAmountOffsets extends $ProtoSchemaBase {
             switch (tag >>> 3) {
                 case 1:
                     msg.setOffset(reader.int32());
-                    break;
-
-                case 2:
-                    msg.setCostMultiplierPct(reader.int32());
                     break;
 
                 default:
@@ -98,15 +79,5 @@ export class RepairAmountOffsets extends $ProtoSchemaBase {
         } else {
             this._offset = value;
         }
-    }
-
-    public checkHasCostMultiplierPct(): boolean {
-        return this._costMultiplierPct != null;
-    }
-    public getCostMultiplierPct(): number | null | undefined {
-        return this._costMultiplierPct;
-    }
-    public setCostMultiplierPct(value: number | null | undefined): void {
-        this._costMultiplierPct = value;
     }
 }

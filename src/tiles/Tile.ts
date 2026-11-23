@@ -4,6 +4,7 @@ import {
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions,
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets,
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets,
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCostOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged,
     GameConfigs_GameConfig,
@@ -946,7 +947,7 @@ export class Tile {
         let amountModifier              = 0;
         let costMultiplierPct           = 100;
         for (const skillId of player.getCoCurrentSkills()) {
-            const modifier = CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets.getAmountAndCostModifier({
+            const args = {
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfTileCommonAttributes(),
                 gameConfig               : gameConfig,
                 tileTypeId               : tileTypeId,
@@ -954,9 +955,15 @@ export class Tile {
                 gridIndex                : gridIndex,
                 coZoneRadius             : coZoneRadius,
                 getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-            });
-            amountModifier      += modifier.amountModifier;
-            costMultiplierPct   = costMultiplierPct * modifier.costMultiplierPct / 100;
+            };
+            const offset        = CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets.getOffset(args);
+            const multiplierPct = CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCostOffsets.getMultiplierPct(args);
+            if (offset != null) {
+                amountModifier += offset;
+            }
+            if (multiplierPct != null) {
+                costMultiplierPct = costMultiplierPct * multiplierPct / 100;
+            }
         }
 
         return { amountModifier : amountModifier, costMultiplierPct : costMultiplierPct };

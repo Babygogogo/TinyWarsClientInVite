@@ -5,7 +5,7 @@ import {
 } from "../../../../internal.ts";
 import type { SelfTileCommonAttributes } from "../../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileCommonAttributes.ts";
 
-export function getAmountAndCostModifier({
+export function getOffset({
     cfg,
     gameConfig,
     tileTypeId,
@@ -21,9 +21,10 @@ export function getAmountAndCostModifier({
     gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
     getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
-}): { amountModifier: number, costMultiplierPct: number } {
-    const effect = cfg?.getRepairAmountOffsets();
-    if ((effect == null) ||
+}): number | null {
+    const amountEffect = cfg?.getRepairAmountOffsets();
+    if ((amountEffect == null) ||
+        (!amountEffect.checkHasOffset()) ||
         (!CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions.checkIsMeet({
             conditions               : cfg?.getConditions(),
             gameConfig               : gameConfig,
@@ -34,8 +35,8 @@ export function getAmountAndCostModifier({
             getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))
     ) {
-        return { amountModifier: 0, costMultiplierPct: 100 };
+        return null;
     }
 
-    return { amountModifier: effect.getOffset(), costMultiplierPct: effect.getCostMultiplierPct() ?? 100 };
+    return amountEffect.getOffset();
 }

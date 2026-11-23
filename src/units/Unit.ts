@@ -24,6 +24,7 @@ import {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCostOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Visions,
     type GameConfigs_GameConfig,
     Helpers_Collection,
@@ -1620,7 +1621,7 @@ export class Unit {
         let amountModifier              = 0;
         let costMultiplierPct           = 100;
         for (const skillId of player.getCoCurrentSkills()) {
-            const modifier = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets.getAmountAndCostModifier({
+            const args = {
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId               : unitTypeId,
@@ -1630,9 +1631,15 @@ export class Unit {
                 gridIndex                : gridIndex,
                 coZoneRadius             : coZoneRadius,
                 getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-            });
-            amountModifier    += modifier.amountModifier;
-            costMultiplierPct *= modifier.costMultiplierPct / 100;
+            };
+            const offset        = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets.getOffset(args);
+            const multiplierPct = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCostOffsets.getMultiplierPct(args);
+            if (offset != null) {
+                amountModifier += offset;
+            }
+            if (multiplierPct != null) {
+                costMultiplierPct *= multiplierPct / 100;
+            }
         }
 
         return { amountModifier : amountModifier, costMultiplierPct : costMultiplierPct };

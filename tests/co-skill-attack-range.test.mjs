@@ -48,6 +48,7 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions: 'coSkills/utils/persistent/selfTileCommonAttributes/Conditions',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets: 'coSkills/utils/persistent/selfTileCommonAttributes/IncomeOffsets',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets: 'coSkills/utils/persistent/selfTileCommonAttributes/RepairAmountOffsets',
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCostOffsets: 'coSkills/utils/persistent/selfTileCommonAttributes/RepairCostOffsets',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions: 'coSkills/utils/persistent/selfTileCommonAttributes/UnitProductionPermissions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations: 'coSkills/utils/persistent/selfUnitCommonAttributes/ArmorPenetrations',
@@ -59,6 +60,7 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_AttackRangeOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets',
     CoSkills_Utils_Persistent_SelfUnitMoveRange: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveRangeOffsets',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/RepairAmountOffsets',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCostOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/RepairCostOffsets',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_PromotionOffsetsWhenProduced: 'coSkills/utils/persistent/selfUnitCommonAttributes/PromotionOffsetsWhenProduced',
     CoSkills_Utils_Persistent_Visions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Visions',
     AuxiliaryTypes_UnitVisionInfo: 'auxiliaryTypes/UnitVisionInfo',
@@ -255,9 +257,13 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
     c => c.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
   const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
     tileCategoryId: tile.id, weatherCategoryId: weather.id }
-  const skills = [{ offset: 3 }, { offset: -1, costMultiplierPct: 50 }, { costMultiplierPct: 80 }, { costMultiplierPct: 0 }]
-    .map(repairAmountOffsets => CoSkillCfg.decode(CoSkillCfg.fromJson({
-      persistent: { selfTileCommonAttributes: { conditions, repairAmountOffsets } },
+  const skills = [
+    { repairAmountOffsets: { offset: 3 } },
+    { repairAmountOffsets: { offset: -1 }, repairCostOffsets: { multiplierPct: 50 } },
+    { repairCostOffsets: { multiplierPct: 80 } },
+    { repairCostOffsets: { multiplierPct: 0 } },
+  ].map(effect => CoSkillCfg.decode(CoSkillCfg.fromJson({
+      persistent: { selfTileCommonAttributes: { conditions, ...effect } },
     }).encode()))
   const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id] })
   const GridIndex = internal.AuxiliaryTypes_GridIndex.GridIndex
@@ -293,6 +299,21 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
   gridIndex = origin
   ids.push(3)
   check(40, 0)
+  const { getOffset } = internal.CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets
+  const { getMultiplierPct } = internal.CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCostOffsets
+  const args = { gameConfig, tileTypeId, weatherTypeId, gridIndex, coZoneRadius: 1,
+    getCoGridIndexArrayOnMap: () => [origin] }
+  const cfg = i => skills[i].getPersistent().getSelfTileCommonAttributes()
+  assert.equal(getOffset({ ...args, cfg: cfg(3) }), null)
+  assert.equal(getMultiplierPct({ ...args, cfg: cfg(0) }), null)
+  assert.equal(getMultiplierPct({ ...args, cfg: cfg(3) }), 0)
+  assert.equal(getOffset({ ...args, cfg: cfg(0), tileTypeId: tile.excluded }), null)
+  assert.equal(getMultiplierPct({ ...args, cfg: cfg(3), tileTypeId: tile.excluded }), null)
+  const empty = CoSkillCfg.fromJson({ persistent: { selfTileCommonAttributes: {
+    conditions, repairAmountOffsets: {}, repairCostOffsets: {},
+  } } }).getPersistent().getSelfTileCommonAttributes()
+  assert.equal(getOffset({ ...args, cfg: empty }), null)
+  assert.equal(getMultiplierPct({ ...args, cfg: empty }), null)
 })
 
   test('loaded-unit repair uses the repairing unit shared conditions, additive offsets and multiplicative optional costs', async () => {
@@ -306,11 +327,15 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
     const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
       unitCategoryId: unitCategory.id, tileCategoryId: tileCategory.id, weatherCategoryId: weather.id }
     const origin = new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)
-    const effects = [{ offset: 3 }, { offset: -1, costMultiplierPct: 50 }, { costMultiplierPct: 80 }]
-    const skills = effects.map(repairAmountOffsets => CoSkillCfg.fromJson({
-      persistent: { selfUnitCommonAttributes: { conditions, repairAmountOffsets },
+    const effects = [
+      { repairAmountOffsets: { offset: 3 } },
+      { repairAmountOffsets: { offset: -1 }, repairCostOffsets: { multiplierPct: 50 } },
+      { repairCostOffsets: { multiplierPct: 80 } },
+    ]
+    const skills = effects.map(effect => CoSkillCfg.fromJson({
+      persistent: { selfUnitCommonAttributes: { conditions, ...effect },
         selfTileCommonAttributes: { conditions: { coSkillAreaTypeId: 2, tileCategoryId: 1, weatherCategoryId: 1 },
-          repairAmountOffsets: { offset: 9, costMultiplierPct: 25 } } },
+          repairAmountOffsets: { offset: 9 }, repairCostOffsets: { multiplierPct: 25 } } },
     }))
     const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id] })
     const player = { getCoCurrentSkills: () => [0, 1, 2, 99], getCoZoneRadius: () => 1,
@@ -353,21 +378,24 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
         }
       }
     }
-    const check = internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets.getAmountAndCostModifier
+    const { getOffset } = internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets
+    const { getMultiplierPct } = internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCostOffsets
     for (const cfg of [null, undefined, SelfUnitCommonAttributes.fromJson({ conditions }),
-      SelfUnitCommonAttributes.fromJson({ repairAmountOffsets: { offset: 1 } })]) {
-      const result = check({ ...args, cfg })
-      assert.equal(result.amountModifier, 0)
-      assert.equal(result.costMultiplierPct, 100)
+      SelfUnitCommonAttributes.fromJson({ conditions, repairAmountOffsets: {}, repairCostOffsets: {} }),
+      SelfUnitCommonAttributes.fromJson({ repairAmountOffsets: { offset: 1 }, repairCostOffsets: { multiplierPct: 0 } })]) {
+      assert.equal(getOffset({ ...args, cfg }), null)
+      assert.equal(getMultiplierPct({ ...args, cfg }), null)
     }
+    const amountCfg = SelfUnitCommonAttributes.fromJson({ conditions, repairAmountOffsets: { offset: -1 } })
+    assert.equal(getOffset({ ...args, cfg: amountCfg }), -1)
+    assert.equal(getOffset({ ...args, cfg: amountCfg, tileTypeId: tileCategory.excluded }), null)
     for (const cost of [undefined, 0, 50, 100]) {
       const cfg = SelfUnitCommonAttributes.decode(SelfUnitCommonAttributes.fromJson({
-        conditions, repairAmountOffsets: { costMultiplierPct: cost },
+        conditions, repairCostOffsets: { multiplierPct: cost },
       }).encode())
-      assert.equal(cfg.getRepairAmountOffsets().getCostMultiplierPct() ?? undefined, cost)
-      const result = check({ ...args, cfg })
-      assert.equal(result.amountModifier, 0)
-      assert.equal(result.costMultiplierPct, cost ?? 100)
+      assert.equal(getOffset({ ...args, cfg }), null)
+      assert.equal(getMultiplierPct({ ...args, cfg }), cost ?? null)
+      assert.equal(getMultiplierPct({ ...args, cfg, tileTypeId: tileCategory.excluded }), null)
     }
   })
 
@@ -391,7 +419,7 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
           for (const common of effects) {
             const effect = common.getRepairAmountOffsets(), conditions = common.getConditions()
             actual.push([co.getCoId(), group, effect.getOffset(), conditions.getCoSkillAreaTypeId()])
-            assert.equal(effect.getCostMultiplierPct(), 100)
+            assert.equal(common.getRepairCostOffsets() ?? null, null)
             assert.equal(conditions.getUnitCategoryId(), 1)
             assert.equal(conditions.getTileCategoryId(), 1)
             assert.equal(conditions.getWeatherCategoryId(), 1)
@@ -407,11 +435,12 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
         const conditions = common.getConditions()
         assert.equal(conditions.getTileCategoryId(), 1)
         assert.equal(conditions.getWeatherCategoryId(), 1)
-        return [[skill.getSkillId(), conditions.getCoSkillAreaTypeId(), repair.getOffset(), repair.getCostMultiplierPct()]]
+        assert.equal(common.getRepairCostOffsets() ?? null, null)
+        return [[skill.getSkillId(), conditions.getCoSkillAreaTypeId(), repair.getOffset()]]
       })
-      assert.deepEqual(tileEffects, version === 'A0000000' ? [[61001002, 0, 2, 100]]
-        : version === 'D0000000' ? [47000001, 47000101, 47000201].map(id => [id, 2, 1, 100])
-          : ['B0000001', 'B0000002'].includes(version) ? [47001001, 47001101, 47001201].map(id => [id, 2, 1, 100]) : [])
+      assert.deepEqual(tileEffects, version === 'A0000000' ? [[61001002, 0, 2]]
+        : version === 'D0000000' ? [47000001, 47000101, 47000201].map(id => [id, 2, 1])
+          : ['B0000001', 'B0000002'].includes(version) ? [47001001, 47001101, 47001201].map(id => [id, 2, 1]) : [])
       if (version === 'A0000000') {
         const production = skills.get(61001001).getPersistent().getSelfTileCommonAttributes()
         assert.equal(production.getConditions().getCoSkillAreaTypeId(), 2)
