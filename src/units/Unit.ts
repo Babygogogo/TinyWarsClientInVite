@@ -23,6 +23,7 @@ import {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Visions,
     type GameConfigs_GameConfig,
     Helpers_Collection,
@@ -1609,22 +1610,29 @@ export class Unit {
         const player                    = this.getPlayer();
         const gameConfig                = this.getGcData();
         const gridIndex                 = this.getGridIndex();
+        const war                       = this.getWar();
+        const unitTypeId                = this.getUnitTypeId();
+        const tileTypeId                = war.getTileMap().getTile(gridIndex).getTileTypeId();
+        const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
+        const isCoOnboard               = this.getIsCoOnboard();
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let amountModifier              = 0;
         let costMultiplierPct           = 100;
         for (const skillId of player.getCoCurrentSkills()) {
-            const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfRepairAmountBonus();
-            if ((cfg)                                               &&
-                (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                    coZoneRadius             : coZoneRadius,
-                    getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                }))
-            ) {
-                amountModifier      += cfg.getRepairOffsetFromUnit();
-                costMultiplierPct   = costMultiplierPct * (cfg.getCostMultiplierPct()) / 100;
-            }
+            const modifier = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets.getAmountAndCostModifier({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+                gameConfig               : gameConfig,
+                unitTypeId               : unitTypeId,
+                tileTypeId               : tileTypeId,
+                weatherTypeId            : weatherTypeId,
+                isCoOnboard              : isCoOnboard,
+                gridIndex                : gridIndex,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+            });
+            amountModifier    += modifier.amountModifier;
+            costMultiplierPct *= modifier.costMultiplierPct / 100;
         }
 
         return { amountModifier : amountModifier, costMultiplierPct : costMultiplierPct };

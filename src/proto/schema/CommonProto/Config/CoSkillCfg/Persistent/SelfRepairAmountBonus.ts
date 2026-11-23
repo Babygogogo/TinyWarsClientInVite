@@ -3,14 +3,12 @@ import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $Proto
 
 export interface SelfRepairAmountBonusJson extends $ProtoSchemaJsonBase {
     coSkillAreaTypeId?: number | null | undefined;
-    repairOffsetFromUnit?: number | null | undefined;
     repairOffsetFromTile?: number | null | undefined;
     costMultiplierPct?: number | null | undefined;
 }
 
 export class SelfRepairAmountBonus extends $ProtoSchemaBase {
     private _coSkillAreaTypeId?: number | null | undefined;
-    private _repairOffsetFromUnit?: number | null | undefined;
     private _repairOffsetFromTile?: number | null | undefined;
     private _costMultiplierPct?: number | null | undefined;
 
@@ -19,7 +17,6 @@ export class SelfRepairAmountBonus extends $ProtoSchemaBase {
     }
     public override loadJson(obj: SelfRepairAmountBonusJson): this {
         this.setCoSkillAreaTypeId(obj.coSkillAreaTypeId);
-        this.setRepairOffsetFromUnit(obj.repairOffsetFromUnit);
         this.setRepairOffsetFromTile(obj.repairOffsetFromTile);
         this.setCostMultiplierPct(obj.costMultiplierPct);
         return this;
@@ -30,11 +27,6 @@ export class SelfRepairAmountBonus extends $ProtoSchemaBase {
         {
             const value = this.getCoSkillAreaTypeId();
             (value != null) && (obj.coSkillAreaTypeId = value);
-        }
-
-        {
-            const value = this.getRepairOffsetFromUnit();
-            (value != null) && (obj.repairOffsetFromUnit = value);
         }
 
         {
@@ -54,13 +46,6 @@ export class SelfRepairAmountBonus extends $ProtoSchemaBase {
             const value = this.getCoSkillAreaTypeId();
             if ((value != null) && (value != 0)) {
                 writer.uint32(8).int32(value);
-            }
-        }
-
-        {
-            const value = this.getRepairOffsetFromUnit();
-            if ((value != null) && (value != 0)) {
-                writer.uint32(16).int32(value);
             }
         }
 
@@ -93,10 +78,6 @@ export class SelfRepairAmountBonus extends $ProtoSchemaBase {
             switch (tag >>> 3) {
                 case 1:
                     msg.setCoSkillAreaTypeId(reader.int32());
-                    break;
-
-                case 2:
-                    msg.setRepairOffsetFromUnit(reader.int32());
                     break;
 
                 case 3:
@@ -135,20 +116,6 @@ export class SelfRepairAmountBonus extends $ProtoSchemaBase {
             this._coSkillAreaTypeId = null;
         } else {
             this._coSkillAreaTypeId = value;
-        }
-    }
-
-    public checkHasRepairOffsetFromUnit(): boolean {
-        return this._repairOffsetFromUnit != null;
-    }
-    public getRepairOffsetFromUnit(): number {
-        return this._repairOffsetFromUnit ?? 0;
-    }
-    public setRepairOffsetFromUnit(value: number | null | undefined): void {
-        if ((value == null) || (value == 0)) {
-            this._repairOffsetFromUnit = null;
-        } else {
-            this._repairOffsetFromUnit = value;
         }
     }
 

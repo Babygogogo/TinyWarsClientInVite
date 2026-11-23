@@ -670,7 +670,7 @@ function initListenerForWindowOnError(): void {
     window.addEventListener('unhandledrejection', (err) => {
         const reason = err.reason;
         if (reason instanceof Error) {
-            showErrorText(`Code: ${(reason as AuxiliaryTypes_AuxiliaryTypes.CustomError).errorCode ?? `--`}\n${reason.message}\n${reason.stack ?? "No available call stack."}`);
+            showErrorText(`ErrorCode: ${(reason as AuxiliaryTypes_AuxiliaryTypes.CustomError).errorCode ?? `--`}\nname: ${reason.name}\nmessage: ${reason.message}\nstack: ${reason.stack ?? "No available call stack."}`);
         } else if ((typeof reason === `object`) && (reason !== null)) {
             let errorText: string;
             try {
@@ -678,9 +678,9 @@ function initListenerForWindowOnError(): void {
             } catch {
                 errorText = Object.prototype.toString.call(reason);
             }
-            showErrorText(`Unhandled rejection in promise, reason object:\n${errorText}`);
+            showErrorText(`Unhandled rejection, reason object:\n${errorText}`);
         } else {
-            showErrorText(`Unhandled rejection in promise, reason:\n${reason}`);
+            showErrorText(`Unhandled rejection.\ntype: ${typeof reason}\nreason: ${reason}`);
         }
     });
 }

@@ -53,6 +53,7 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AbleToDoCounterAttacks: 'coSkills/utils/persistent/selfUnitCommonAttributes/AbleToDoCounterAttacks',
     CoSkills_Utils_Persistent_AttackRangeOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets',
     CoSkills_Utils_Persistent_SelfUnitMoveRange: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveRangeOffsets',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/RepairAmountOffsets',
     CoSkills_Utils_Persistent_Visions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Visions',
     AuxiliaryTypes_UnitVisionInfo: 'auxiliaryTypes/UnitVisionInfo',
     Units_Unit: 'units/Unit',
@@ -93,6 +94,120 @@ function categoryFixture(categories, types, getId, matches) {
   assert.fail('Expected a category with both matching and nonmatching types')
 }
 
+  test('loaded-unit repair uses the repairing unit shared conditions, additive offsets and multiplicative optional costs', async () => {
+    const { internal, gameConfig, raw, CoSkillCfg, SelfUnitCommonAttributes } = await runtime
+    const unitCategory = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(c => c.getUnitTypeId()),
+      c => c.getUnitCategoryId(), (type, id) => gameConfig.checkIsUnitTypeInCategory(type, id))
+    const tileCategory = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(c => c.getTileTypeId()),
+      c => c.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+    const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(c => c.getWeatherTypeId()),
+      c => c.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+    const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+      unitCategoryId: unitCategory.id, tileCategoryId: tileCategory.id, weatherCategoryId: weather.id }
+    const origin = new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)
+    const effects = [{ offset: 3 }, { offset: -1, costMultiplierPct: 50 }, { costMultiplierPct: 80 }]
+    const skills = effects.map(repairAmountOffsets => CoSkillCfg.fromJson({
+      persistent: { selfUnitCommonAttributes: { conditions, repairAmountOffsets },
+        selfRepairAmountBonus: { coSkillAreaTypeId: 2, repairOffsetFromTile: 9, costMultiplierPct: 25 } },
+    }))
+    const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id] })
+    const player = { getCoCurrentSkills: () => [0, 1, 2, 99], getCoZoneRadius: () => 1,
+      getCoGridIndexListOnMap: () => [origin], getFund: () => 10000 }
+    let args, repairingUnit
+    for (const unitTypeId of [unitCategory.excluded, unitCategory.included]) {
+      for (const tileTypeId of [tileCategory.excluded, tileCategory.included]) {
+        for (const weatherTypeId of [weather.excluded, weather.included]) {
+          for (const isCoOnboard of [false, true]) {
+            for (const distance of [0, 1, 2]) {
+              const gridIndex = new internal.AuxiliaryTypes_GridIndex.GridIndex(distance, 0)
+              args = { gameConfig: config, unitTypeId, tileTypeId, weatherTypeId, isCoOnboard, gridIndex,
+                coZoneRadius: 1, getCoGridIndexArrayOnMap: () => [origin] }
+              repairingUnit = Object.assign(Object.create(internal.Units_Unit.Unit.prototype), {
+                getPlayer: () => player, getGcData: () => config, getGridIndex: () => gridIndex,
+                getUnitTypeId: () => unitTypeId, getIsCoOnboard: () => isCoOnboard, getUnitId: () => 10,
+                getNormalizedRepairHpForLoadedUnit: () => 2,
+                getWar: () => ({
+                  getTileMap: () => ({ getTile: actual => {
+                    assert.equal(actual, gridIndex)
+                    return { getTileTypeId: () => tileTypeId }
+                  } }),
+                  getWeatherManager: () => ({ getCurrentWeatherType: () => weatherTypeId }),
+                }),
+              })
+              const matches = unitTypeId === unitCategory.included && tileTypeId === tileCategory.included
+                && weatherTypeId === weather.included && (isCoOnboard || distance <= 1)
+              const result = repairingUnit.getNormalizedRepairAmountAndCostModifier()
+              assert.equal(result.amountModifier, matches ? 2 : 0)
+              assert.equal(result.costMultiplierPct, matches ? 40 : 100)
+              const loadedUnit = { getLoaderUnitId: () => 10, checkIsFullHp: () => false,
+                getNormalizedMaxHp: () => 10, getNormalizedCurrentHp: () => 1, getCurrentHp: () => 10,
+                getProductionFinalCost: () => 10000, getPlayer: () => player,
+                getUnitTypeId: () => unitCategory.excluded }
+              const repair = repairingUnit.getRepairHpAndCostForLoadedUnit(loadedUnit)
+              assert.equal(repair.hp, matches ? 40 : 20)
+              assert.equal(repair.cost, matches ? 1600 : 2000)
+            }
+          }
+        }
+      }
+    }
+    const check = internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets.getAmountAndCostModifier
+    for (const cfg of [null, undefined, SelfUnitCommonAttributes.fromJson({ conditions }),
+      SelfUnitCommonAttributes.fromJson({ repairAmountOffsets: { offset: 1 } })]) {
+      const result = check({ ...args, cfg })
+      assert.equal(result.amountModifier, 0)
+      assert.equal(result.costMultiplierPct, 100)
+    }
+    for (const cost of [undefined, 0, 50, 100]) {
+      const cfg = SelfUnitCommonAttributes.decode(SelfUnitCommonAttributes.fromJson({
+        conditions, repairAmountOffsets: { costMultiplierPct: cost },
+      }).encode())
+      assert.equal(cfg.getRepairAmountOffsets().getCostMultiplierPct() ?? undefined, cost)
+      const result = check({ ...args, cfg })
+      assert.equal(result.amountModifier, 0)
+      assert.equal(result.costMultiplierPct, cost ?? 100)
+    }
+  })
+
+  test('repair migration preserves the ten effects without modifying globally shared skills or tile repair', async () => {
+    const { FullConfig } = await runtime
+    for (const version of ['A0000000', 'B0000000', 'B0000001', 'B0000002', 'C0000000', 'D0000000']) {
+      const raw = FullConfig.decode(readFileSync(new URL(`../src/assets/resource/config/FullConfig${version}.bin`, import.meta.url)))
+      const skills = new Map(raw.getCoSkill().map(s => [s.getSkillId(), s]))
+      const expected = version === 'A0000000' ? [[61001, 'getPassiveSkillIds', 2, 0]]
+        : ['B0000001', 'B0000002', 'D0000000'].includes(version)
+          ? ['getPassiveSkillIds', 'getPowerSkillIds', 'getSuperPowerSkillIds'].map(group =>
+            [version.startsWith('B') ? 47001 : 47000, group, 1, 2]) : []
+      const actual = []
+      for (const co of raw.getCoBasic()) {
+        for (const group of ['getPassiveSkillIds', 'getPowerSkillIds', 'getSuperPowerSkillIds']) {
+          assert.equal(new Set(co[group]()).size, co[group]().length)
+          const effects = co[group]().map(id => {
+            assert.ok(skills.has(id))
+            return skills.get(id).getPersistent()?.getSelfUnitCommonAttributes()
+          }).filter(c => c?.getRepairAmountOffsets())
+          for (const common of effects) {
+            const effect = common.getRepairAmountOffsets(), conditions = common.getConditions()
+            actual.push([co.getCoId(), group, effect.getOffset(), conditions.getCoSkillAreaTypeId()])
+            assert.equal(effect.getCostMultiplierPct(), 100)
+            assert.equal(conditions.getUnitCategoryId(), 1)
+            assert.equal(conditions.getTileCategoryId(), 1)
+            assert.equal(conditions.getWeatherCategoryId(), 1)
+          }
+        }
+      }
+      assert.deepEqual(actual, expected)
+      assert.equal(skills.get(99999999)?.getPersistent()?.getSelfUnitCommonAttributes()?.getRepairAmountOffsets() ?? null, null)
+      for (const skill of skills.values()) {
+        const tile = skill.getPersistent()?.getSelfRepairAmountBonus()
+        if (tile) {
+          assert.equal(tile.getRepairOffsetFromTile(), version === 'A0000000' ? 2 : 1)
+          assert.equal(tile.getCostMultiplierPct(), 100)
+          assert.equal('repairOffsetFromUnit' in tile.toJson(), false)
+        }
+      }
+    }
+  })
 test('counterattack permission only disables on explicit false with matching shared conditions in helper and Unit', async () => {
   const { internal, gameConfig, raw, CoSkillCfg, SelfUnitCommonAttributes } = await runtime
   const unitCategory = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(cfg => cfg.getUnitTypeId()),
