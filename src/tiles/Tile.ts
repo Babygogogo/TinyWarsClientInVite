@@ -3,6 +3,7 @@ import {
     AuxiliaryTypes_TileAppearanceInfo,
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions,
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets,
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged,
     GameConfigs_GameConfig,
@@ -938,22 +939,24 @@ export class Tile {
         const player                    = this.getPlayer();
         const gameConfig                = this.getGameConfig();
         const gridIndex                 = this.getGridIndex();
+        const tileTypeId                = this.getTileTypeId();
+        const weatherTypeId             = Helpers_Misc.getExisted(this.getWar().getWeatherManager().getCurrentWeatherType());
         const coZoneRadius              = player.getCoZoneRadius();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let amountModifier              = 0;
         let costMultiplierPct           = 100;
         for (const skillId of player.getCoCurrentSkills()) {
-            const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfRepairAmountBonus();
-            if ((cfg)                                               &&
-                (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                    coZoneRadius             : coZoneRadius,
-                    getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                }))
-            ) {
-                amountModifier      += cfg.getRepairOffsetFromTile();
-                costMultiplierPct   = costMultiplierPct * (cfg.getCostMultiplierPct()) / 100;
-            }
+            const modifier = CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets.getAmountAndCostModifier({
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfTileCommonAttributes(),
+                gameConfig               : gameConfig,
+                tileTypeId               : tileTypeId,
+                weatherTypeId            : weatherTypeId,
+                gridIndex                : gridIndex,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+            });
+            amountModifier      += modifier.amountModifier;
+            costMultiplierPct   = costMultiplierPct * modifier.costMultiplierPct / 100;
         }
 
         return { amountModifier : amountModifier, costMultiplierPct : costMultiplierPct };

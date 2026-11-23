@@ -47,6 +47,7 @@ const runtime = (async () => {
     GameConfigs_GameConfig: 'gameConfigs/GameConfig',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions: 'coSkills/utils/persistent/selfTileCommonAttributes/Conditions',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets: 'coSkills/utils/persistent/selfTileCommonAttributes/IncomeOffsets',
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets: 'coSkills/utils/persistent/selfTileCommonAttributes/RepairAmountOffsets',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions: 'coSkills/utils/persistent/selfTileCommonAttributes/UnitProductionPermissions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations: 'coSkills/utils/persistent/selfUnitCommonAttributes/ArmorPenetrations',
@@ -246,6 +247,54 @@ test('production promotion filters the new unit, production tile and weather, an
   check(0, 0)
 })
 
+test('tile repair uses the tile, current weather and CO area, with optional and free costs', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg } = await runtime
+  const tile = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(c => c.getTileTypeId()),
+    c => c.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(c => c.getWeatherTypeId()),
+    c => c.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+    tileCategoryId: tile.id, weatherCategoryId: weather.id }
+  const skills = [{ offset: 3 }, { offset: -1, costMultiplierPct: 50 }, { costMultiplierPct: 80 }, { costMultiplierPct: 0 }]
+    .map(repairAmountOffsets => CoSkillCfg.decode(CoSkillCfg.fromJson({
+      persistent: { selfTileCommonAttributes: { conditions, repairAmountOffsets } },
+    }).encode()))
+  const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id] })
+  const GridIndex = internal.AuxiliaryTypes_GridIndex.GridIndex
+  const origin = new GridIndex(0, 0)
+  let tileTypeId = tile.included
+  let weatherTypeId = weather.included
+  let gridIndex = new GridIndex(1, 0)
+  const ids = [0, 1, 2, 99]
+  const player = { getCoCurrentSkills: () => ids, getCoZoneRadius: () => 1,
+    getCoGridIndexListOnMap: () => [origin], getFund: () => 10000 }
+  const repairingTile = Object.assign(Object.create(internal.Tiles_Tile.Tile.prototype), {
+    getPlayer: () => player, getGameConfig: () => config, getGridIndex: () => gridIndex,
+    getTileTypeId: () => tileTypeId, getTeamIndex: () => 1, getRepairNormalizedHp: () => 2,
+    checkCanRepairOrSupplyUnitType: () => true,
+    getWar: () => ({ getWeatherManager: () => ({ getCurrentWeatherType: () => weatherTypeId }) }),
+  })
+  const unit = { getTeamIndex: () => 1, getUnitTypeId: () => 1, getNormalizedMaxHp: () => 10,
+    getCurrentHp: () => 10, getProductionFinalCost: () => 10000, getPlayer: () => player }
+  const check = (hp, cost) => {
+    const actual = repairingTile.getRepairHpAndCostForUnit(unit)
+    assert.equal(actual.hp, hp)
+    assert.equal(actual.cost, cost)
+  }
+  check(40, 1600)
+  tileTypeId = tile.excluded
+  check(20, 2000)
+  tileTypeId = tile.included
+  weatherTypeId = weather.excluded
+  check(20, 2000)
+  weatherTypeId = weather.included
+  gridIndex = new GridIndex(2, 0)
+  check(20, 2000)
+  gridIndex = origin
+  ids.push(3)
+  check(40, 0)
+})
+
   test('loaded-unit repair uses the repairing unit shared conditions, additive offsets and multiplicative optional costs', async () => {
     const { internal, gameConfig, raw, CoSkillCfg, SelfUnitCommonAttributes } = await runtime
     const unitCategory = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(c => c.getUnitTypeId()),
@@ -260,7 +309,8 @@ test('production promotion filters the new unit, production tile and weather, an
     const effects = [{ offset: 3 }, { offset: -1, costMultiplierPct: 50 }, { costMultiplierPct: 80 }]
     const skills = effects.map(repairAmountOffsets => CoSkillCfg.fromJson({
       persistent: { selfUnitCommonAttributes: { conditions, repairAmountOffsets },
-        selfRepairAmountBonus: { coSkillAreaTypeId: 2, repairOffsetFromTile: 9, costMultiplierPct: 25 } },
+        selfTileCommonAttributes: { conditions: { coSkillAreaTypeId: 2, tileCategoryId: 1, weatherCategoryId: 1 },
+          repairAmountOffsets: { offset: 9, costMultiplierPct: 25 } } },
     }))
     const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id] })
     const player = { getCoCurrentSkills: () => [0, 1, 2, 99], getCoZoneRadius: () => 1,
@@ -350,13 +400,23 @@ test('production promotion filters the new unit, production tile and weather, an
       }
       assert.deepEqual(actual, expected)
       assert.equal(skills.get(99999999)?.getPersistent()?.getSelfUnitCommonAttributes()?.getRepairAmountOffsets() ?? null, null)
-      for (const skill of skills.values()) {
-        const tile = skill.getPersistent()?.getSelfRepairAmountBonus()
-        if (tile) {
-          assert.equal(tile.getRepairOffsetFromTile(), version === 'A0000000' ? 2 : 1)
-          assert.equal(tile.getCostMultiplierPct(), 100)
-          assert.equal('repairOffsetFromUnit' in tile.toJson(), false)
-        }
+      const tileEffects = [...skills.values()].flatMap(skill => {
+        const common = skill.getPersistent()?.getSelfTileCommonAttributes()
+        const repair = common?.getRepairAmountOffsets()
+        if (!repair) return []
+        const conditions = common.getConditions()
+        assert.equal(conditions.getTileCategoryId(), 1)
+        assert.equal(conditions.getWeatherCategoryId(), 1)
+        return [[skill.getSkillId(), conditions.getCoSkillAreaTypeId(), repair.getOffset(), repair.getCostMultiplierPct()]]
+      })
+      assert.deepEqual(tileEffects, version === 'A0000000' ? [[61001002, 0, 2, 100]]
+        : version === 'D0000000' ? [47000001, 47000101, 47000201].map(id => [id, 2, 1, 100])
+          : ['B0000001', 'B0000002'].includes(version) ? [47001001, 47001101, 47001201].map(id => [id, 2, 1, 100]) : [])
+      if (version === 'A0000000') {
+        const production = skills.get(61001001).getPersistent().getSelfTileCommonAttributes()
+        assert.equal(production.getConditions().getCoSkillAreaTypeId(), 2)
+        assert.equal(production.getConditions().getTileCategoryId(), 16)
+        assert.ok(production.getUnitProductionPermissions())
       }
     }
   })

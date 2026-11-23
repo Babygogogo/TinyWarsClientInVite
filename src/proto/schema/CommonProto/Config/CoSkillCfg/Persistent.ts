@@ -1,6 +1,5 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../$runtime.js";
-import { SelfRepairAmountBonus as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus, type SelfRepairAmountBonusJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus } from "./Persistent/SelfRepairAmountBonus.js";
 import { SelfTileCommonAttributes as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes, type SelfTileCommonAttributesJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes } from "./Persistent/SelfTileCommonAttributes.js";
 import { SelfUnitCommonAttributes as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes, type SelfUnitCommonAttributesJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes } from "./Persistent/SelfUnitCommonAttributes.js";
 import { SelfUnitCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost, type SelfUnitCostJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost } from "./Persistent/SelfUnitCost.js";
@@ -8,14 +7,12 @@ import { SelfUnitCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfU
 export interface PersistentJson extends $ProtoSchemaJsonBase {
     selfUnitCommonAttributes?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
     selfUnitCost?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost | null | undefined;
-    selfRepairAmountBonus?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus | null | undefined;
     selfTileCommonAttributes?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes | null | undefined;
 }
 
 export class Persistent extends $ProtoSchemaBase {
     private _selfUnitCommonAttributes?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
     private _selfUnitCost?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost | null | undefined;
-    private _selfRepairAmountBonus?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus | null | undefined;
     private _selfTileCommonAttributes?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes | null | undefined;
 
     public static fromJson(obj: PersistentJson): Persistent {
@@ -24,7 +21,6 @@ export class Persistent extends $ProtoSchemaBase {
     public override loadJson(obj: PersistentJson): this {
         this.setSelfUnitCommonAttributes(obj.selfUnitCommonAttributes != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes.fromJson(obj.selfUnitCommonAttributes) : null);
         this.setSelfUnitCost(obj.selfUnitCost != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost.fromJson(obj.selfUnitCost) : null);
-        this.setSelfRepairAmountBonus(obj.selfRepairAmountBonus != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus.fromJson(obj.selfRepairAmountBonus) : null);
         this.setSelfTileCommonAttributes(obj.selfTileCommonAttributes != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes.fromJson(obj.selfTileCommonAttributes) : null);
         return this;
     }
@@ -39,11 +35,6 @@ export class Persistent extends $ProtoSchemaBase {
         {
             const value = this.getSelfUnitCost();
             (value != null) && (obj.selfUnitCost = value.toJson());
-        }
-
-        {
-            const value = this.getSelfRepairAmountBonus();
-            (value != null) && (obj.selfRepairAmountBonus = value.toJson());
         }
 
         {
@@ -65,13 +56,6 @@ export class Persistent extends $ProtoSchemaBase {
             const value = this.getSelfUnitCost();
             if (value != null) {
                 value.toWriter(writer.uint32(58).fork()).ldelim();
-            }
-        }
-
-        {
-            const value = this.getSelfRepairAmountBonus();
-            if (value != null) {
-                value.toWriter(writer.uint32(106).fork()).ldelim();
             }
         }
 
@@ -101,10 +85,6 @@ export class Persistent extends $ProtoSchemaBase {
 
                 case 7:
                     msg.setSelfUnitCost($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost.decode(reader, reader.uint32()));
-                    break;
-
-                case 13:
-                    msg.setSelfRepairAmountBonus($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus.decode(reader, reader.uint32()));
                     break;
 
                 case 15:
@@ -152,19 +132,6 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public createIfNotExistsSelfUnitCost(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost {
         return this._selfUnitCost ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost();
-    }
-
-    public checkHasSelfRepairAmountBonus(): boolean {
-        return this._selfRepairAmountBonus != null;
-    }
-    public getSelfRepairAmountBonus(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus | null | undefined {
-        return this._selfRepairAmountBonus;
-    }
-    public setSelfRepairAmountBonus(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus | null | undefined): void {
-        this._selfRepairAmountBonus = value;
-    }
-    public createIfNotExistsSelfRepairAmountBonus(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus {
-        return this._selfRepairAmountBonus ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus();
     }
 
     public checkHasSelfTileCommonAttributes(): boolean {
