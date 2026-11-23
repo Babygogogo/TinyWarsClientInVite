@@ -251,6 +251,7 @@ export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_DefensePercentOff
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_FuelConsumptions from "./coSkills/utils/persistent/selfUnitCommonAttributes/FuelConsumptions.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/LuckRangeOffsets.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveRangeOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/MoveRangeOffsets.ts";
+export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_PromotionOffsetsWhenProduced from "./coSkills/utils/persistent/selfUnitCommonAttributes/PromotionOffsetsWhenProduced.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts from "./coSkills/utils/persistent/selfUnitCommonAttributes/MoveCosts.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged from "./coSkills/utils/persistent/selfUnitCommonAttributes/ReceiveFullTileDefenseWhenDamaged.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Invisibilities from "./coSkills/utils/persistent/selfUnitCommonAttributes/Invisibilities.ts";

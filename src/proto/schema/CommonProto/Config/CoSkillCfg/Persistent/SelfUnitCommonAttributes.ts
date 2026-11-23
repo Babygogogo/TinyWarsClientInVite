@@ -16,6 +16,7 @@ import { LuckRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$S
 import { MoveCosts as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts, type MoveCostsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveCosts } from "./SelfUnitCommonAttributes/MoveCosts.js";
 import { MoveRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets, type MoveRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets } from "./SelfUnitCommonAttributes/MoveRangeOffsets.js";
 import { OffensePercentOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets, type OffensePercentOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets } from "./SelfUnitCommonAttributes/OffensePercentOffsets.js";
+import { PromotionOffsetsWhenProduced as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$PromotionOffsetsWhenProduced, type PromotionOffsetsWhenProducedJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$PromotionOffsetsWhenProduced } from "./SelfUnitCommonAttributes/PromotionOffsetsWhenProduced.js";
 import { ReceiveFullTileDefenseWhenDamaged as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged, type ReceiveFullTileDefenseWhenDamagedJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ReceiveFullTileDefenseWhenDamaged } from "./SelfUnitCommonAttributes/ReceiveFullTileDefenseWhenDamaged.js";
 import { RepairAmountOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$RepairAmountOffsets, type RepairAmountOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$RepairAmountOffsets } from "./SelfUnitCommonAttributes/RepairAmountOffsets.js";
 import { Visions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions, type VisionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Visions } from "./SelfUnitCommonAttributes/Visions.js";
@@ -40,6 +41,7 @@ export interface SelfUnitCommonAttributesJson extends $ProtoSchemaJsonBase {
     immuneToCounterAttacks?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToCounterAttacks | null | undefined;
     ableToDoCounterAttacks?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks | null | undefined;
     repairAmountOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$RepairAmountOffsets | null | undefined;
+    promotionOffsetsWhenProduced?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$PromotionOffsetsWhenProduced | null | undefined;
 }
 
 export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
@@ -62,6 +64,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     private _immuneToCounterAttacks?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToCounterAttacks | null | undefined;
     private _ableToDoCounterAttacks?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks | null | undefined;
     private _repairAmountOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$RepairAmountOffsets | null | undefined;
+    private _promotionOffsetsWhenProduced?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$PromotionOffsetsWhenProduced | null | undefined;
 
     public static fromJson(obj: SelfUnitCommonAttributesJson): SelfUnitCommonAttributes {
         return new SelfUnitCommonAttributes().loadJson(obj);
@@ -86,6 +89,7 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         this.setImmuneToCounterAttacks(obj.immuneToCounterAttacks != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$ImmuneToCounterAttacks.fromJson(obj.immuneToCounterAttacks) : null);
         this.setAbleToDoCounterAttacks(obj.ableToDoCounterAttacks != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$AbleToDoCounterAttacks.fromJson(obj.ableToDoCounterAttacks) : null);
         this.setRepairAmountOffsets(obj.repairAmountOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$RepairAmountOffsets.fromJson(obj.repairAmountOffsets) : null);
+        this.setPromotionOffsetsWhenProduced(obj.promotionOffsetsWhenProduced != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$PromotionOffsetsWhenProduced.fromJson(obj.promotionOffsetsWhenProduced) : null);
         return this;
     }
     public override toJson(obj?: SelfUnitCommonAttributesJson): SelfUnitCommonAttributesJson {
@@ -184,6 +188,11 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         {
             const value = this.getRepairAmountOffsets();
             (value != null) && (obj.repairAmountOffsets = value.toJson());
+        }
+
+        {
+            const value = this.getPromotionOffsetsWhenProduced();
+            (value != null) && (obj.promotionOffsetsWhenProduced = value.toJson());
         }
         return obj;
     }
@@ -322,6 +331,13 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
             }
         }
 
+        {
+            const value = this.getPromotionOffsetsWhenProduced();
+            if (value != null) {
+                value.toWriter(writer.uint32(162).fork()).ldelim();
+            }
+        }
+
         return writer;
     }
 
@@ -409,6 +425,10 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
 
                 case 19:
                     msg.setRepairAmountOffsets($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$RepairAmountOffsets.decode(reader, reader.uint32()));
+                    break;
+
+                case 20:
+                    msg.setPromotionOffsetsWhenProduced($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$PromotionOffsetsWhenProduced.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -673,5 +693,18 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     }
     public createIfNotExistsRepairAmountOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$RepairAmountOffsets {
         return this._repairAmountOffsets ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$RepairAmountOffsets();
+    }
+
+    public checkHasPromotionOffsetsWhenProduced(): boolean {
+        return this._promotionOffsetsWhenProduced != null;
+    }
+    public getPromotionOffsetsWhenProduced(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$PromotionOffsetsWhenProduced | null | undefined {
+        return this._promotionOffsetsWhenProduced;
+    }
+    public setPromotionOffsetsWhenProduced(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$PromotionOffsetsWhenProduced | null | undefined): void {
+        this._promotionOffsetsWhenProduced = value;
+    }
+    public createIfNotExistsPromotionOffsetsWhenProduced(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$PromotionOffsetsWhenProduced {
+        return this._promotionOffsetsWhenProduced ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$PromotionOffsetsWhenProduced();
     }
 }

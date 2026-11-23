@@ -1,12 +1,14 @@
 import {
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_ThingsForMovePath,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_PromotionOffsetsWhenProduced,
     Helpers_Misc,
     Helpers_Team,
     Lang_Constants, Lang_TextType,
     Lang_Utils,
     MapEditor_Model_MeWar,
     MultiPlayerWar_Model_MpwWar,
+    Numbers_Utils,
     ReplayWar_Model_RwWarBase,
     SinglePlayerWars_War,
     Sounds_Constants,
@@ -288,22 +290,24 @@ function getPromotionForUnitProduceUnit(war: BaseWar_Model_War.War, producerUnit
     const coZoneRadius              = player.getCoZoneRadius();
     const gridIndex                 = producerUnit.getGridIndex();
     const gameConfig                = war.getGcData();
+    const tileTypeId                = war.getTileMap().getTile(gridIndex).getTileTypeId();
+    const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
     const isCoOnboard               = producerUnit.getIsCoOnboard();
     const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
     let promotion                   = 0;
-    for (const skillId of war.getPlayerInTurn().getCoCurrentSkills()) {
-        const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfPromotionBonusByProduce();
-        if ((cfg)                                                                           &&
-            (gameConfig.checkIsUnitTypeInCategory(targetUnitType, cfg.getUnitCategoryId())) &&
-            ((isCoOnboard) || (gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                coZoneRadius             : coZoneRadius,
-            })))
-        ) {
-            promotion += cfg.getBonus();
-        }
+    for (const skillId of player.getCoCurrentSkills()) {
+        promotion += CoSkills_Utils_Persistent_SelfUnitCommonAttributes_PromotionOffsetsWhenProduced.getTotalOffset({
+            cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+            gameConfig               : gameConfig,
+            unitTypeId               : targetUnitType,
+            tileTypeId               : tileTypeId,
+            weatherTypeId            : weatherTypeId,
+            isCoOnboard              : isCoOnboard,
+            gridIndex                : gridIndex,
+            coZoneRadius             : coZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+        });
     }
 
-    return promotion;
+    return Numbers_Utils.getValueInRange({ rawValue: promotion, minValue: 0, maxValue: gameConfig.getUnitMaxPromotion() });
 }

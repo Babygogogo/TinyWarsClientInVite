@@ -1,6 +1,5 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../$runtime.js";
-import { SelfPromotionBonusByProduce as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce, type SelfPromotionBonusByProduceJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce } from "./Persistent/SelfPromotionBonusByProduce.js";
 import { SelfRepairAmountBonus as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus, type SelfRepairAmountBonusJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus } from "./Persistent/SelfRepairAmountBonus.js";
 import { SelfTileEnabledForUnitProduction as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction, type SelfTileEnabledForUnitProductionJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction } from "./Persistent/SelfTileEnabledForUnitProduction.js";
 import { SelfTileIncome as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome, type SelfTileIncomeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome } from "./Persistent/SelfTileIncome.js";
@@ -13,7 +12,6 @@ export interface PersistentJson extends $ProtoSchemaJsonBase {
     selfTileIncome?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome | null | undefined;
     selfTileEnabledForUnitProduction?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction | null | undefined;
     selfRepairAmountBonus?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus | null | undefined;
-    selfPromotionBonusByProduce?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce | null | undefined;
 }
 
 export class Persistent extends $ProtoSchemaBase {
@@ -22,7 +20,6 @@ export class Persistent extends $ProtoSchemaBase {
     private _selfTileIncome?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome | null | undefined;
     private _selfTileEnabledForUnitProduction?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction | null | undefined;
     private _selfRepairAmountBonus?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus | null | undefined;
-    private _selfPromotionBonusByProduce?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce | null | undefined;
 
     public static fromJson(obj: PersistentJson): Persistent {
         return new Persistent().loadJson(obj);
@@ -33,7 +30,6 @@ export class Persistent extends $ProtoSchemaBase {
         this.setSelfTileIncome(obj.selfTileIncome != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome.fromJson(obj.selfTileIncome) : null);
         this.setSelfTileEnabledForUnitProduction(obj.selfTileEnabledForUnitProduction != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction.fromJson(obj.selfTileEnabledForUnitProduction) : null);
         this.setSelfRepairAmountBonus(obj.selfRepairAmountBonus != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus.fromJson(obj.selfRepairAmountBonus) : null);
-        this.setSelfPromotionBonusByProduce(obj.selfPromotionBonusByProduce != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce.fromJson(obj.selfPromotionBonusByProduce) : null);
         return this;
     }
     public override toJson(obj?: PersistentJson): PersistentJson {
@@ -62,11 +58,6 @@ export class Persistent extends $ProtoSchemaBase {
         {
             const value = this.getSelfRepairAmountBonus();
             (value != null) && (obj.selfRepairAmountBonus = value.toJson());
-        }
-
-        {
-            const value = this.getSelfPromotionBonusByProduce();
-            (value != null) && (obj.selfPromotionBonusByProduce = value.toJson());
         }
         return obj;
     }
@@ -107,13 +98,6 @@ export class Persistent extends $ProtoSchemaBase {
             }
         }
 
-        {
-            const value = this.getSelfPromotionBonusByProduce();
-            if (value != null) {
-                value.toWriter(writer.uint32(114).fork()).ldelim();
-            }
-        }
-
         return writer;
     }
 
@@ -145,10 +129,6 @@ export class Persistent extends $ProtoSchemaBase {
 
                 case 13:
                     msg.setSelfRepairAmountBonus($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus.decode(reader, reader.uint32()));
-                    break;
-
-                case 14:
-                    msg.setSelfPromotionBonusByProduce($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -231,18 +211,5 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public createIfNotExistsSelfRepairAmountBonus(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus {
         return this._selfRepairAmountBonus ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus();
-    }
-
-    public checkHasSelfPromotionBonusByProduce(): boolean {
-        return this._selfPromotionBonusByProduce != null;
-    }
-    public getSelfPromotionBonusByProduce(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce | null | undefined {
-        return this._selfPromotionBonusByProduce;
-    }
-    public setSelfPromotionBonusByProduce(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce | null | undefined): void {
-        this._selfPromotionBonusByProduce = value;
-    }
-    public createIfNotExistsSelfPromotionBonusByProduce(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce {
-        return this._selfPromotionBonusByProduce ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce();
     }
 }

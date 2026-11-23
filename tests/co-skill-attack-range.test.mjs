@@ -26,8 +26,9 @@ const runtime = (async () => {
       return () => value ??= fn()
     },
   } }
-  function loadSource(filename) {
-    const compiled = ts.transpileModule(readFileSync(new URL(`../src/${filename}.ts`, import.meta.url), 'utf8'),
+  function loadSource(filename, testExport) {
+    const source = readFileSync(new URL(`../src/${filename}.ts`, import.meta.url), 'utf8')
+    const compiled = ts.transpileModule(testExport ? `${source}\nexport { ${testExport} };` : source,
       { compilerOptions: { target: ts.ScriptTarget.ES2023, module: ts.ModuleKind.CommonJS } }).outputText
     const context = { exports: {}, require(specifier) {
       if (specifier.endsWith('/internal.ts')) return internal
@@ -54,6 +55,7 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_AttackRangeOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets',
     CoSkills_Utils_Persistent_SelfUnitMoveRange: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveRangeOffsets',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/RepairAmountOffsets',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_PromotionOffsetsWhenProduced: 'coSkills/utils/persistent/selfUnitCommonAttributes/PromotionOffsetsWhenProduced',
     CoSkills_Utils_Persistent_Visions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Visions',
     AuxiliaryTypes_UnitVisionInfo: 'auxiliaryTypes/UnitVisionInfo',
     Units_Unit: 'units/Unit',
@@ -80,6 +82,8 @@ const runtime = (async () => {
     compilerOptions: { target: ts.ScriptTarget.ES2023 },
   }).outputText, panelContext)
   return { internal, gameConfig, raw, FullConfig, SelfUnitCommonAttributes, CoSkillCfg,
+    getTileProductionPromotion: loadSource('warOperations/executors/utils/PlayerProduceUnit', 'getPromotionForPlayerProduceUnit').getPromotionForPlayerProduceUnit,
+    getUnitProductionPromotion: loadSource('warOperations/executors/utils/UnitProduceUnit', 'getPromotionForUnitProduceUnit').getPromotionForUnitProduceUnit,
     getPanelOffensePierce: panelContext.getAttackerOffensePierce,
     getPanelTileDefense: panelContext.getTileDefenseAmountForUnit }
 })()
@@ -93,6 +97,62 @@ function categoryFixture(categories, types, getId, matches) {
   }
   assert.fail('Expected a category with both matching and nonmatching types')
 }
+
+test('production promotion filters the new unit, production tile and weather, and clamps stacked offsets', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg, getTileProductionPromotion, getUnitProductionPromotion } = await runtime
+  const unit = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(c => c.getUnitTypeId()),
+    c => c.getUnitCategoryId(), (type, id) => gameConfig.checkIsUnitTypeInCategory(type, id))
+  const tile = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(c => c.getTileTypeId()),
+    c => c.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(c => c.getWeatherTypeId()),
+    c => c.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+    unitCategoryId: unit.id, tileCategoryId: tile.id, weatherCategoryId: weather.id }
+  const skills = [3, -1, 10, -10, undefined].map(offset => CoSkillCfg.fromJson({
+    persistent: { selfUnitCommonAttributes: {
+      conditions, ...(offset === undefined ? {} : { promotionOffsetsWhenProduced: { offset } }),
+    } },
+  }))
+  const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id], getUnitMaxPromotion: () => 3 })
+  const GridIndex = internal.AuxiliaryTypes_GridIndex.GridIndex
+  const origin = new GridIndex(0, 0)
+  let gridIndex = new GridIndex(1, 0)
+  let tileType = tile.included
+  let weatherType = weather.included
+  let skillIds = [0, 1, 4, 99]
+  let isCoOnboard = false
+  const player = { getCoCurrentSkills: () => skillIds, getCoZoneRadius: () => 1, getCoGridIndexListOnMap: () => [origin] }
+  const war = { getPlayerInTurn: () => player, getGcData: () => config,
+    getTileMap: () => ({ getTile: actual => {
+      assert.equal(actual, gridIndex)
+      return { getTileTypeId: () => tileType }
+    } }),
+    getWeatherManager: () => ({ getCurrentWeatherType: () => weatherType }),
+  }
+  const producer = { getPlayer: () => player, getGridIndex: () => gridIndex,
+    getUnitTypeId: () => unit.excluded, getIsCoOnboard: () => isCoOnboard }
+  const check = (tileResult, unitResult, unitType = unit.included) => {
+    assert.equal(getTileProductionPromotion(war, gridIndex, unitType), tileResult)
+    assert.equal(getUnitProductionPromotion(war, producer, unitType), unitResult)
+  }
+  check(2, 2)
+  gridIndex = new GridIndex(2, 0)
+  check(0, 0)
+  isCoOnboard = true
+  check(0, 2)
+  check(0, 0, unit.excluded)
+  tileType = tile.excluded
+  check(0, 0)
+  tileType = tile.included
+  weatherType = weather.excluded
+  check(0, 0)
+  weatherType = weather.included
+  gridIndex = origin
+  skillIds.push(2)
+  check(3, 3)
+  skillIds = [1, 3]
+  check(0, 0)
+})
 
   test('loaded-unit repair uses the repairing unit shared conditions, additive offsets and multiplicative optional costs', async () => {
     const { internal, gameConfig, raw, CoSkillCfg, SelfUnitCommonAttributes } = await runtime
