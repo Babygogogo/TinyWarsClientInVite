@@ -47,6 +47,7 @@ const runtime = (async () => {
     GameConfigs_GameConfig: 'gameConfigs/GameConfig',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions: 'coSkills/utils/persistent/selfTileCommonAttributes/Conditions',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets: 'coSkills/utils/persistent/selfTileCommonAttributes/IncomeOffsets',
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions: 'coSkills/utils/persistent/selfTileCommonAttributes/UnitProductionPermissions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations: 'coSkills/utils/persistent/selfUnitCommonAttributes/ArmorPenetrations',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveCosts',
@@ -145,6 +146,48 @@ test('tile income filters by tile, current weather and CO area, and multiplies m
   assert.equal(income(), 750)
   skillIds = [0, 2]
   assert.equal(income(), 0)
+})
+
+test('tile production uses the first permission whose shared tile conditions match', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg } = await runtime
+  const tile = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(c => c.getTileTypeId()),
+    c => c.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weather = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(c => c.getWeatherTypeId()),
+    c => c.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+    tileCategoryId: tile.id, weatherCategoryId: weather.id }
+  const skills = [
+    { conditions, incomeOffsets: { multiplierPct: 125 } },
+    { unitProductionPermissions: { costMultiplierPct: 110 } },
+    { conditions, unitProductionPermissions: { costMultiplierPct: 120 } },
+    { conditions, unitProductionPermissions: { costMultiplierPct: 80 } },
+  ].map(selfTileCommonAttributes => CoSkillCfg.fromJson({ persistent: { selfTileCommonAttributes } }))
+  const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id] })
+  const GridIndex = internal.AuxiliaryTypes_GridIndex.GridIndex
+  let gridIndex = new GridIndex(1, 0)
+  let tileType = tile.included
+  let weatherType = weather.included
+  let skillIds = [0, 1, 2, 3]
+  const player = { getCoId: () => 1, getCoCurrentSkills: () => skillIds,
+    getCoZoneRadius: () => 1, getCoGridIndexListOnMap: () => [new GridIndex(0, 0)] }
+  const war = { getGcData: () => config, getPlayerManager: () => ({ getPlayer: () => player }),
+    getWeatherManager: () => ({ getCurrentWeatherType: () => weatherType }) }
+  const receiver = { getWar: () => war, getPlayerIndex: () => 1,
+    getTileTypeId: () => tileType, getGridIndex: () => gridIndex }
+  const permission = (playerIndex = 1) =>
+    internal.Tiles_Tile.Tile.prototype.getEffectiveSelfUnitProductionSkillCfg.call(receiver, playerIndex)
+  assert.equal(permission().getCostMultiplierPct(), 120)
+  skillIds = [3, 2]
+  assert.equal(permission().getCostMultiplierPct(), 80)
+  assert.equal(permission(2), null)
+  weatherType = weather.excluded
+  assert.equal(permission(), null)
+  weatherType = weather.included
+  tileType = tile.excluded
+  assert.equal(permission(), null)
+  tileType = tile.included
+  gridIndex = new GridIndex(2, 0)
+  assert.equal(permission(), null)
 })
 
 test('production promotion filters the new unit, production tile and weather, and clamps stacked offsets', async () => {

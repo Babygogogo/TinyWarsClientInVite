@@ -35,7 +35,7 @@ import {
     Units_Utils_Serialization,
 } from "../../internal.ts";
 
-import type { SelfTileEnabledForUnitProduction } from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import type { UnitProductionPermissions } from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileCommonAttributes/UnitProductionPermissions.ts";
 
 const COLUMNS = 4;
 
@@ -319,7 +319,7 @@ interface DataForUnitRenderer extends Ui_Types_UiListItemData.UiListItemData {
     currentFund             : number;
     actionPlanner           : ActionPlanners_IActionPlanner.IActionPlanner;
     gridIndex               : AuxiliaryTypes_GridIndex.GridIndex;
-    unitProductionSkillCfg  : SelfTileEnabledForUnitProduction | null;
+    unitProductionSkillCfg  : UnitProductionPermissions | null;
     panel                   : Panel;
 }
 class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUnitRenderer> {

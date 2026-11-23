@@ -19,13 +19,13 @@ import {
     Players_Constants,
 } from "../../internal.ts";
 
-import type { SelfTileEnabledForUnitProduction } from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import type { UnitProductionPermissions } from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileCommonAttributes/UnitProductionPermissions.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 interface ProduceUnitInfo {
     gridIndex           : AuxiliaryTypes_GridIndex.GridIndex;
     unitTypeArray       : number[];
-    effectiveCoSkill    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SelfTileEnabledForUnitProduction>;
+    effectiveCoSkill    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitProductionPermissions>;
 }
 
 export async function getActionForPhase09(commonParams: Bots_CommonParams.CommonParams): Promise<WoContainer | null> {
@@ -70,7 +70,7 @@ async function getBestActionPlayerProduceUnit(commonParams: Bots_CommonParams.Co
         }
 
         const effectiveSkill  = tile.getEffectiveSelfUnitProductionSkillCfg(playerIndexInTurn);
-        const unitTypeList    = (effectiveSkill ? gameConfig.getUnitCategoryCfg(effectiveSkill.getUnitCategoryId() ?? Units_Constants.CategoryId.All)?.getUnitTypeIds() : tile.getRegularProducibleUnitTypeArray())
+        const unitTypeList    = (effectiveSkill ? gameConfig.getUnitCategoryCfg(effectiveSkill.getUnitCategoryId())?.getUnitTypeIds() : tile.getRegularProducibleUnitTypeArray())
             ?.filter(unitType => {
                 if (!producibleUnitDict.has(unitType)) {
                     producibleUnitDict.set(unitType, war.checkCanProduceUnitByOpaAndRule(playerIndexInTurn, unitType));
@@ -213,7 +213,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
     commonParams                : Bots_CommonParams.CommonParams;
     producingGridIndex          : AuxiliaryTypes_GridIndex.GridIndex;
     producingUnitType           : number;
-    effectiveCoSkill            : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SelfTileEnabledForUnitProduction>;
+    effectiveCoSkill            : AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitProductionPermissions>;
     getMinTurnsCountForAttack   : (attackerUnit: Units_Unit.Unit, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex) => Promise<number | null>;
 }): Promise<number | null> {
     await Timer_TimerModel.checkAndCallLater();

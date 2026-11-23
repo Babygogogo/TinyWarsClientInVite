@@ -1,7 +1,7 @@
 import {
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_TileAppearanceInfo,
-    CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction,
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions,
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged,
@@ -37,7 +37,7 @@ import {
     type Units_Unit,
 } from "../internal.ts";
 
-import type { SelfTileEnabledForUnitProduction } from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import type { UnitProductionPermissions } from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileCommonAttributes/UnitProductionPermissions.ts";
 import type { MoveCostCfg } from "../proto/schema/CommonProto/Config/MoveCostCfg.ts";
 import type { TileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
 import type { TileBuff } from "../proto/schema/CommonProto/Structure/TileBuff.ts";
@@ -1027,7 +1027,7 @@ export class Tile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for produce unit.
     ////////////////////////////////////////////////////////////////////////////////
-    public getEffectiveSelfUnitProductionSkillCfg(playerIndex: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SelfTileEnabledForUnitProduction> {
+    public getEffectiveSelfUnitProductionSkillCfg(playerIndex: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitProductionPermissions> {
         const war       = this.getWar();
         const player    = war.getPlayerManager().getPlayer(playerIndex);
         if ((!player.getCoId()) || (this.getPlayerIndex() !== playerIndex)) {
@@ -1036,20 +1036,22 @@ export class Tile {
 
         const gameConfig                = war.getGcData();
         const selfTileTypeId            = this.getTileTypeId();
+        const weatherTypeId             = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const coZoneRadius              = player.getCoZoneRadius();
         const selfGridIndex             = this.getGridIndex();
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         for (const skillId of player.getCoCurrentSkills()) {
-            const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfTileEnabledForUnitProduction();
-            if (CoSkills_Utils_Persistent_SelfTileEnabledForUnitProduction.checkIsEffective({
+            const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfTileCommonAttributes();
+            if (CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions.checkIsEffective({
                 cfg                      : cfg,
                 gameConfig               : gameConfig,
                 tileTypeId               : selfTileTypeId,
+                weatherTypeId            : weatherTypeId,
                 gridIndex                : selfGridIndex,
                 coZoneRadius             : coZoneRadius,
                 getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
             })) {
-                return cfg;
+                return cfg?.getUnitProductionPermissions();
             }
         }
 
@@ -1067,7 +1069,7 @@ export class Tile {
         const war               = this.getWar();
         const effectiveCoSkill  = this.getEffectiveSelfUnitProductionSkillCfg(playerIndex);
         const unitTypeArray     = effectiveCoSkill
-            ? war.getGcData().getUnitCategoryCfg(effectiveCoSkill.getUnitCategoryId() ?? Units_Constants.CategoryId.All)?.getUnitTypeIds()
+            ? war.getGcData().getUnitCategoryCfg(effectiveCoSkill.getUnitCategoryId())?.getUnitTypeIds()
             : this.getRegularProducibleUnitTypeArray();
         return unitTypeArray?.some(v => war.checkCanProduceUnitByOpaAndRule(playerIndex, v)) ?? false;
     }
@@ -1083,7 +1085,7 @@ export class Tile {
         const war               = this.getWar();
         const effectiveCoSkill  = this.getEffectiveSelfUnitProductionSkillCfg(playerIndex);
         const unitTypeArray     = effectiveCoSkill
-            ? war.getGcData().getUnitCategoryCfg(effectiveCoSkill.getUnitCategoryId() ?? Units_Constants.CategoryId.All)?.getUnitTypeIds()
+            ? war.getGcData().getUnitCategoryCfg(effectiveCoSkill.getUnitCategoryId())?.getUnitTypeIds()
             : this.getRegularProducibleUnitTypeArray();
         return unitTypeArray?.filter(v => war.checkCanProduceUnitByOpaAndRule(playerIndex, v));
     }

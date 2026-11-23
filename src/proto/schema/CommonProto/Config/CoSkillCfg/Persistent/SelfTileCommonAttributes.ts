@@ -2,15 +2,18 @@ import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../$runtime.js";
 import { Conditions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions, type ConditionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions } from "./SelfTileCommonAttributes/Conditions.js";
 import { IncomeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets, type IncomeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets } from "./SelfTileCommonAttributes/IncomeOffsets.js";
+import { UnitProductionPermissions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions, type UnitProductionPermissionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions } from "./SelfTileCommonAttributes/UnitProductionPermissions.js";
 
 export interface SelfTileCommonAttributesJson extends $ProtoSchemaJsonBase {
     conditions?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions | null | undefined;
     incomeOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets | null | undefined;
+    unitProductionPermissions?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions | null | undefined;
 }
 
 export class SelfTileCommonAttributes extends $ProtoSchemaBase {
     private _conditions?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions | null | undefined;
     private _incomeOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets | null | undefined;
+    private _unitProductionPermissions?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions | null | undefined;
 
     public static fromJson(obj: SelfTileCommonAttributesJson): SelfTileCommonAttributes {
         return new SelfTileCommonAttributes().loadJson(obj);
@@ -18,6 +21,7 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
     public override loadJson(obj: SelfTileCommonAttributesJson): this {
         this.setConditions(obj.conditions != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions.fromJson(obj.conditions) : null);
         this.setIncomeOffsets(obj.incomeOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets.fromJson(obj.incomeOffsets) : null);
+        this.setUnitProductionPermissions(obj.unitProductionPermissions != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions.fromJson(obj.unitProductionPermissions) : null);
         return this;
     }
     public override toJson(obj?: SelfTileCommonAttributesJson): SelfTileCommonAttributesJson {
@@ -31,6 +35,11 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
         {
             const value = this.getIncomeOffsets();
             (value != null) && (obj.incomeOffsets = value.toJson());
+        }
+
+        {
+            const value = this.getUnitProductionPermissions();
+            (value != null) && (obj.unitProductionPermissions = value.toJson());
         }
         return obj;
     }
@@ -47,6 +56,13 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
             const value = this.getIncomeOffsets();
             if (value != null) {
                 value.toWriter(writer.uint32(18).fork()).ldelim();
+            }
+        }
+
+        {
+            const value = this.getUnitProductionPermissions();
+            if (value != null) {
+                value.toWriter(writer.uint32(26).fork()).ldelim();
             }
         }
 
@@ -69,6 +85,10 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
 
                 case 2:
                     msg.setIncomeOffsets($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets.decode(reader, reader.uint32()));
+                    break;
+
+                case 3:
+                    msg.setUnitProductionPermissions($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -112,5 +132,18 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
     }
     public createIfNotExistsIncomeOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets {
         return this._incomeOffsets ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets();
+    }
+
+    public checkHasUnitProductionPermissions(): boolean {
+        return this._unitProductionPermissions != null;
+    }
+    public getUnitProductionPermissions(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions | null | undefined {
+        return this._unitProductionPermissions;
+    }
+    public setUnitProductionPermissions(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions | null | undefined): void {
+        this._unitProductionPermissions = value;
+    }
+    public createIfNotExistsUnitProductionPermissions(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions {
+        return this._unitProductionPermissions ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions();
     }
 }

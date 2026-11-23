@@ -75,7 +75,7 @@ export function revise(war: BaseWar_Model_War.War, rawAction: WoPlayerProduceUni
         if ((unitHp > (skillCfg.getHpUpperLimit())) || (unitHp < (skillCfg.getHpLowerLimit()))) {
             return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_09);
         }
-        if ((gameConfig.getUnitCategoryCfg(skillCfg.getUnitCategoryId() ?? Units_Constants.CategoryId.All)?.getUnitTypeIds() ?? []).indexOf(unitType) < 0) {
+        if ((gameConfig.getUnitCategoryCfg(skillCfg.getUnitCategoryId())?.getUnitTypeIds() ?? []).indexOf(unitType) < 0) {
             return WarOperations_Revisers_Result.Result.create(Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_10);
         }
     } else {
