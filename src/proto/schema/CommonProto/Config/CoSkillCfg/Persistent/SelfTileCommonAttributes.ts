@@ -1,35 +1,35 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../$runtime.js";
 import { Conditions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions, type ConditionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions } from "./SelfTileCommonAttributes/Conditions.js";
-import { IncomeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets, type IncomeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets } from "./SelfTileCommonAttributes/IncomeOffsets.js";
-import { RepairAmountOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmountOffsets, type RepairAmountOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmountOffsets } from "./SelfTileCommonAttributes/RepairAmountOffsets.js";
-import { RepairCostOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCostOffsets, type RepairCostOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCostOffsets } from "./SelfTileCommonAttributes/RepairCostOffsets.js";
+import { Incomes as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Incomes, type IncomesJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Incomes } from "./SelfTileCommonAttributes/Incomes.js";
+import { RepairAmounts as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmounts, type RepairAmountsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmounts } from "./SelfTileCommonAttributes/RepairAmounts.js";
+import { RepairCosts as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCosts, type RepairCostsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCosts } from "./SelfTileCommonAttributes/RepairCosts.js";
 import { UnitProductionPermissions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions, type UnitProductionPermissionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions } from "./SelfTileCommonAttributes/UnitProductionPermissions.js";
 
 export interface SelfTileCommonAttributesJson extends $ProtoSchemaJsonBase {
     conditions?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions | null | undefined;
-    incomeOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets | null | undefined;
+    incomes?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Incomes | null | undefined;
     unitProductionPermissions?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions | null | undefined;
-    repairAmountOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmountOffsets | null | undefined;
-    repairCostOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCostOffsets | null | undefined;
+    repairAmounts?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmounts | null | undefined;
+    repairCosts?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCosts | null | undefined;
 }
 
 export class SelfTileCommonAttributes extends $ProtoSchemaBase {
     private _conditions?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions | null | undefined;
-    private _incomeOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets | null | undefined;
+    private _incomes?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Incomes | null | undefined;
     private _unitProductionPermissions?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions | null | undefined;
-    private _repairAmountOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmountOffsets | null | undefined;
-    private _repairCostOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCostOffsets | null | undefined;
+    private _repairAmounts?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmounts | null | undefined;
+    private _repairCosts?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCosts | null | undefined;
 
     public static fromJson(obj: SelfTileCommonAttributesJson): SelfTileCommonAttributes {
         return new SelfTileCommonAttributes().loadJson(obj);
     }
     public override loadJson(obj: SelfTileCommonAttributesJson): this {
         this.setConditions(obj.conditions != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions.fromJson(obj.conditions) : null);
-        this.setIncomeOffsets(obj.incomeOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets.fromJson(obj.incomeOffsets) : null);
+        this.setIncomes(obj.incomes != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Incomes.fromJson(obj.incomes) : null);
         this.setUnitProductionPermissions(obj.unitProductionPermissions != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions.fromJson(obj.unitProductionPermissions) : null);
-        this.setRepairAmountOffsets(obj.repairAmountOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmountOffsets.fromJson(obj.repairAmountOffsets) : null);
-        this.setRepairCostOffsets(obj.repairCostOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCostOffsets.fromJson(obj.repairCostOffsets) : null);
+        this.setRepairAmounts(obj.repairAmounts != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmounts.fromJson(obj.repairAmounts) : null);
+        this.setRepairCosts(obj.repairCosts != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCosts.fromJson(obj.repairCosts) : null);
         return this;
     }
     public override toJson(obj?: SelfTileCommonAttributesJson): SelfTileCommonAttributesJson {
@@ -41,8 +41,8 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getIncomeOffsets();
-            (value != null) && (obj.incomeOffsets = value.toJson());
+            const value = this.getIncomes();
+            (value != null) && (obj.incomes = value.toJson());
         }
 
         {
@@ -51,13 +51,13 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getRepairAmountOffsets();
-            (value != null) && (obj.repairAmountOffsets = value.toJson());
+            const value = this.getRepairAmounts();
+            (value != null) && (obj.repairAmounts = value.toJson());
         }
 
         {
-            const value = this.getRepairCostOffsets();
-            (value != null) && (obj.repairCostOffsets = value.toJson());
+            const value = this.getRepairCosts();
+            (value != null) && (obj.repairCosts = value.toJson());
         }
         return obj;
     }
@@ -71,7 +71,7 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getIncomeOffsets();
+            const value = this.getIncomes();
             if (value != null) {
                 value.toWriter(writer.uint32(18).fork()).ldelim();
             }
@@ -85,14 +85,14 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getRepairAmountOffsets();
+            const value = this.getRepairAmounts();
             if (value != null) {
                 value.toWriter(writer.uint32(34).fork()).ldelim();
             }
         }
 
         {
-            const value = this.getRepairCostOffsets();
+            const value = this.getRepairCosts();
             if (value != null) {
                 value.toWriter(writer.uint32(42).fork()).ldelim();
             }
@@ -116,7 +116,7 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
                     break;
 
                 case 2:
-                    msg.setIncomeOffsets($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets.decode(reader, reader.uint32()));
+                    msg.setIncomes($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Incomes.decode(reader, reader.uint32()));
                     break;
 
                 case 3:
@@ -124,11 +124,11 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
                     break;
 
                 case 4:
-                    msg.setRepairAmountOffsets($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmountOffsets.decode(reader, reader.uint32()));
+                    msg.setRepairAmounts($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmounts.decode(reader, reader.uint32()));
                     break;
 
                 case 5:
-                    msg.setRepairCostOffsets($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCostOffsets.decode(reader, reader.uint32()));
+                    msg.setRepairCosts($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCosts.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -161,17 +161,17 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
         return this._conditions ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Conditions();
     }
 
-    public checkHasIncomeOffsets(): boolean {
-        return this._incomeOffsets != null;
+    public checkHasIncomes(): boolean {
+        return this._incomes != null;
     }
-    public getIncomeOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets | null | undefined {
-        return this._incomeOffsets;
+    public getIncomes(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Incomes | null | undefined {
+        return this._incomes;
     }
-    public setIncomeOffsets(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets | null | undefined): void {
-        this._incomeOffsets = value;
+    public setIncomes(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Incomes | null | undefined): void {
+        this._incomes = value;
     }
-    public createIfNotExistsIncomeOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets {
-        return this._incomeOffsets ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$IncomeOffsets();
+    public createIfNotExistsIncomes(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Incomes {
+        return this._incomes ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$Incomes();
     }
 
     public checkHasUnitProductionPermissions(): boolean {
@@ -187,29 +187,29 @@ export class SelfTileCommonAttributes extends $ProtoSchemaBase {
         return this._unitProductionPermissions ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$UnitProductionPermissions();
     }
 
-    public checkHasRepairAmountOffsets(): boolean {
-        return this._repairAmountOffsets != null;
+    public checkHasRepairAmounts(): boolean {
+        return this._repairAmounts != null;
     }
-    public getRepairAmountOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmountOffsets | null | undefined {
-        return this._repairAmountOffsets;
+    public getRepairAmounts(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmounts | null | undefined {
+        return this._repairAmounts;
     }
-    public setRepairAmountOffsets(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmountOffsets | null | undefined): void {
-        this._repairAmountOffsets = value;
+    public setRepairAmounts(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmounts | null | undefined): void {
+        this._repairAmounts = value;
     }
-    public createIfNotExistsRepairAmountOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmountOffsets {
-        return this._repairAmountOffsets ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmountOffsets();
+    public createIfNotExistsRepairAmounts(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmounts {
+        return this._repairAmounts ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairAmounts();
     }
 
-    public checkHasRepairCostOffsets(): boolean {
-        return this._repairCostOffsets != null;
+    public checkHasRepairCosts(): boolean {
+        return this._repairCosts != null;
     }
-    public getRepairCostOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCostOffsets | null | undefined {
-        return this._repairCostOffsets;
+    public getRepairCosts(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCosts | null | undefined {
+        return this._repairCosts;
     }
-    public setRepairCostOffsets(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCostOffsets | null | undefined): void {
-        this._repairCostOffsets = value;
+    public setRepairCosts(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCosts | null | undefined): void {
+        this._repairCosts = value;
     }
-    public createIfNotExistsRepairCostOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCostOffsets {
-        return this._repairCostOffsets ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCostOffsets();
+    public createIfNotExistsRepairCosts(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCosts {
+        return this._repairCosts ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileCommonAttributes$RepairCosts();
     }
 }

@@ -5,9 +5,14 @@ import {
 } from "../../../../internal.ts";
 import type { SelfTileCommonAttributes } from "../../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileCommonAttributes.ts";
 
-export function getMultiplierPct({
+export function getOffset({
     cfg,
-    ...context
+    gameConfig,
+    tileTypeId,
+    weatherTypeId,
+    gridIndex,
+    coZoneRadius,
+    getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfTileCommonAttributes | null | undefined;
     gameConfig                  : GameConfigs_GameConfig.GameConfig;
@@ -17,15 +22,21 @@ export function getMultiplierPct({
     coZoneRadius                : number;
     getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): number | null {
-    const multiplierPct = cfg?.getRepairCostOffsets()?.getMultiplierPct();
-    if ((multiplierPct == null) ||
+    const amountEffect = cfg?.getRepairAmounts();
+    if ((amountEffect == null) ||
+        (!amountEffect.checkHasOffset()) ||
         (!CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions.checkIsMeet({
-            ...context,
-            conditions : cfg?.getConditions(),
+            conditions               : cfg?.getConditions(),
+            gameConfig               : gameConfig,
+            tileTypeId               : tileTypeId,
+            weatherTypeId            : weatherTypeId,
+            gridIndex                : gridIndex,
+            coZoneRadius             : coZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))
     ) {
         return null;
     }
 
-    return multiplierPct;
+    return amountEffect.getOffset();
 }

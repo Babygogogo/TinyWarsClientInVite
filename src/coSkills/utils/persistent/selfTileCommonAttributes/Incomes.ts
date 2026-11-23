@@ -5,7 +5,7 @@ import {
 } from "../../../../internal.ts";
 import type { SelfTileCommonAttributes } from "../../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileCommonAttributes.ts";
 
-export function getOffset({
+export function getTotalIncomeMultiplierPct({
     cfg,
     gameConfig,
     tileTypeId,
@@ -21,12 +21,11 @@ export function getOffset({
     gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
     getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
-}): number | null {
-    const amountEffect = cfg?.getRepairAmountOffsets();
-    if ((amountEffect == null) ||
-        (!amountEffect.checkHasOffset()) ||
+}): number {
+    const multiplierPct = cfg?.getIncomes()?.getMultiplierPct();
+    if ((cfg == null) || (multiplierPct == null) ||
         (!CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions.checkIsMeet({
-            conditions               : cfg?.getConditions(),
+            conditions               : cfg.getConditions(),
             gameConfig               : gameConfig,
             tileTypeId               : tileTypeId,
             weatherTypeId            : weatherTypeId,
@@ -35,8 +34,8 @@ export function getOffset({
             getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))
     ) {
-        return null;
+        return 100;
     }
 
-    return amountEffect.getOffset();
+    return multiplierPct;
 }

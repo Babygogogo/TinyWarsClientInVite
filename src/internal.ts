@@ -68,8 +68,8 @@ export * as ActionPlanners_States_RequestingUnitSurface from "./actionPlanners/s
 export * as ActionPlanners_States_RequestingUnitUseCoActiveSkill from "./actionPlanners/states/RequestingUnitUseCoActiveSkill.ts";
 export * as ActionPlanners_States_RequestingUnitWait from "./actionPlanners/states/RequestingUnitWait.ts";
 export * as ArrayModifiers_Utils from "./arrayModifiers/Utils.ts";
-export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/RepairAmountOffsets.ts";
-export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCostOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/RepairCostOffsets.ts";
+export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmounts from "./coSkills/utils/persistent/selfUnitCommonAttributes/RepairAmounts.ts";
+export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCosts from "./coSkills/utils/persistent/selfUnitCommonAttributes/RepairCosts.ts";
 export * as AutoTourneys_Constants from "./autoTourneys/Constants.ts";
 export * as AutoTourneys_Mains_Gateway from "./autoTourneys/mains/Gateway.ts";
 export * as AuxiliaryTypes_CachedDataAccessor from "./auxiliaryTypes/CachedDataAccessor.ts";
@@ -241,9 +241,9 @@ export * as CoSkills_Utils_InstantMisc_SelfUnitPromotionAfterBattle from "./coSk
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CoBoardingPermissions from "./coSkills/utils/persistent/selfUnitCommonAttributes/CoBoardingPermissions.ts";
 export * as CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions from "./coSkills/utils/persistent/selfTileCommonAttributes/UnitProductionPermissions.ts";
 export * as CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions from "./coSkills/utils/persistent/selfTileCommonAttributes/Conditions.ts";
-export * as CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets from "./coSkills/utils/persistent/selfTileCommonAttributes/IncomeOffsets.ts";
-export * as CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets from "./coSkills/utils/persistent/selfTileCommonAttributes/RepairAmountOffsets.ts";
-export * as CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCostOffsets from "./coSkills/utils/persistent/selfTileCommonAttributes/RepairCostOffsets.ts";
+export * as CoSkills_Utils_Persistent_SelfTileCommonAttributes_Incomes from "./coSkills/utils/persistent/selfTileCommonAttributes/Incomes.ts";
+export * as CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmounts from "./coSkills/utils/persistent/selfTileCommonAttributes/RepairAmounts.ts";
+export * as CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCosts from "./coSkills/utils/persistent/selfTileCommonAttributes/RepairCosts.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AttackRangeOffsets from "./coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_CaptureAmounts from "./coSkills/utils/persistent/selfUnitCommonAttributes/CaptureAmounts.ts";
 export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ImmuneToWeathers from "./coSkills/utils/persistent/selfUnitCommonAttributes/ImmuneToWeathers.ts";

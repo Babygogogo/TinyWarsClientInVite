@@ -1,22 +1,22 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../../$runtime.js";
 
-export interface IncomeOffsetsJson extends $ProtoSchemaJsonBase {
+export interface IncomesJson extends $ProtoSchemaJsonBase {
     multiplierPct?: number | null | undefined;
 }
 
-export class IncomeOffsets extends $ProtoSchemaBase {
+export class Incomes extends $ProtoSchemaBase {
     private _multiplierPct?: number | null | undefined;
 
-    public static fromJson(obj: IncomeOffsetsJson): IncomeOffsets {
-        return new IncomeOffsets().loadJson(obj);
+    public static fromJson(obj: IncomesJson): Incomes {
+        return new Incomes().loadJson(obj);
     }
-    public override loadJson(obj: IncomeOffsetsJson): this {
+    public override loadJson(obj: IncomesJson): this {
         this.setMultiplierPct(obj.multiplierPct);
         return this;
     }
-    public override toJson(obj?: IncomeOffsetsJson): IncomeOffsetsJson {
-        obj ??= ({} as IncomeOffsetsJson);
+    public override toJson(obj?: IncomesJson): IncomesJson {
+        obj ??= ({} as IncomesJson);
 
         {
             const value = this.getMultiplierPct();
@@ -36,13 +36,13 @@ export class IncomeOffsets extends $ProtoSchemaBase {
         return writer;
     }
 
-    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): IncomeOffsets {
+    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): Incomes {
         if (!(reader instanceof protobuf.Reader)) {
             reader = protobuf.Reader.create(reader);
         }
 
         const end = length == null ? reader.len : reader.pos + length;
-        const msg = new IncomeOffsets();
+        const msg = new Incomes();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -59,12 +59,12 @@ export class IncomeOffsets extends $ProtoSchemaBase {
         return msg;
     }
 
-    public override clone(): IncomeOffsets {
-        return IncomeOffsets.decode(this.encode());
+    public override clone(): Incomes {
+        return Incomes.decode(this.encode());
     }
 
-    public override getSchemaName(): "IncomeOffsets" {
-        return "IncomeOffsets";
+    public override getSchemaName(): "Incomes" {
+        return "Incomes";
     }
 
     public checkHasMultiplierPct(): boolean {

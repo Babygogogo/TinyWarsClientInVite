@@ -5,14 +5,9 @@ import {
 } from "../../../../internal.ts";
 import type { SelfTileCommonAttributes } from "../../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileCommonAttributes.ts";
 
-export function getTotalIncomeMultiplierPct({
+export function getMultiplierPct({
     cfg,
-    gameConfig,
-    tileTypeId,
-    weatherTypeId,
-    gridIndex,
-    coZoneRadius,
-    getCoGridIndexArrayOnMap,
+    ...context
 }: {
     cfg                         : SelfTileCommonAttributes | null | undefined;
     gameConfig                  : GameConfigs_GameConfig.GameConfig;
@@ -21,20 +16,15 @@ export function getTotalIncomeMultiplierPct({
     gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
     getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
-}): number {
-    const multiplierPct = cfg?.getIncomeOffsets()?.getMultiplierPct();
-    if ((cfg == null) || (multiplierPct == null) ||
+}): number | null {
+    const multiplierPct = cfg?.getRepairCosts()?.getMultiplierPct();
+    if ((multiplierPct == null) ||
         (!CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions.checkIsMeet({
-            conditions               : cfg.getConditions(),
-            gameConfig               : gameConfig,
-            tileTypeId               : tileTypeId,
-            weatherTypeId            : weatherTypeId,
-            gridIndex                : gridIndex,
-            coZoneRadius             : coZoneRadius,
-            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+            ...context,
+            conditions : cfg?.getConditions(),
         }))
     ) {
-        return 100;
+        return null;
     }
 
     return multiplierPct;

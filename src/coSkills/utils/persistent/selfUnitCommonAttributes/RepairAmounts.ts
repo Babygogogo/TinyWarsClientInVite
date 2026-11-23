@@ -19,7 +19,7 @@ export function getOffset({
     coZoneRadius                : number;
     getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): number | null {
-    const amountEffect = cfg?.getRepairAmountOffsets();
+    const amountEffect = cfg?.getRepairAmounts();
     if ((amountEffect == null) ||
         (!amountEffect.checkHasOffset()) ||
         (!CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions.checkIsMeet({

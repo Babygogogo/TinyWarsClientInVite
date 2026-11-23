@@ -23,8 +23,8 @@ import {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_LuckRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveRangeOffsets,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_OffensePercentOffsets,
-    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets,
-    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCostOffsets,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmounts,
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCosts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Visions,
     type GameConfigs_GameConfig,
     Helpers_Collection,
@@ -1632,8 +1632,8 @@ export class Unit {
                 coZoneRadius             : coZoneRadius,
                 getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
             };
-            const offset        = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets.getOffset(args);
-            const multiplierPct = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCostOffsets.getMultiplierPct(args);
+            const offset        = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmounts.getOffset(args);
+            const multiplierPct = CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCosts.getMultiplierPct(args);
             if (offset != null) {
                 amountModifier += offset;
             }

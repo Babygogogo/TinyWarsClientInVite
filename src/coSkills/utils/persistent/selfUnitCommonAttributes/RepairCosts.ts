@@ -19,7 +19,7 @@ export function getMultiplierPct({
     coZoneRadius                : number;
     getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): number | null {
-    const multiplierPct = cfg?.getRepairCostOffsets()?.getMultiplierPct();
+    const multiplierPct = cfg?.getRepairCosts()?.getMultiplierPct();
     if ((multiplierPct == null) ||
         (!CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions.checkIsMeet({
             ...context,

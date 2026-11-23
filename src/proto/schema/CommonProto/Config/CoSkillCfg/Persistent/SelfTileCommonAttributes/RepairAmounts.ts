@@ -1,22 +1,22 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../../$runtime.js";
 
-export interface RepairAmountOffsetsJson extends $ProtoSchemaJsonBase {
+export interface RepairAmountsJson extends $ProtoSchemaJsonBase {
     offset?: number | null | undefined;
 }
 
-export class RepairAmountOffsets extends $ProtoSchemaBase {
+export class RepairAmounts extends $ProtoSchemaBase {
     private _offset?: number | null | undefined;
 
-    public static fromJson(obj: RepairAmountOffsetsJson): RepairAmountOffsets {
-        return new RepairAmountOffsets().loadJson(obj);
+    public static fromJson(obj: RepairAmountsJson): RepairAmounts {
+        return new RepairAmounts().loadJson(obj);
     }
-    public override loadJson(obj: RepairAmountOffsetsJson): this {
+    public override loadJson(obj: RepairAmountsJson): this {
         this.setOffset(obj.offset);
         return this;
     }
-    public override toJson(obj?: RepairAmountOffsetsJson): RepairAmountOffsetsJson {
-        obj ??= ({} as RepairAmountOffsetsJson);
+    public override toJson(obj?: RepairAmountsJson): RepairAmountsJson {
+        obj ??= ({} as RepairAmountsJson);
 
         {
             const value = this.getOffset();
@@ -36,13 +36,13 @@ export class RepairAmountOffsets extends $ProtoSchemaBase {
         return writer;
     }
 
-    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): RepairAmountOffsets {
+    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): RepairAmounts {
         if (!(reader instanceof protobuf.Reader)) {
             reader = protobuf.Reader.create(reader);
         }
 
         const end = length == null ? reader.len : reader.pos + length;
-        const msg = new RepairAmountOffsets();
+        const msg = new RepairAmounts();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -59,12 +59,12 @@ export class RepairAmountOffsets extends $ProtoSchemaBase {
         return msg;
     }
 
-    public override clone(): RepairAmountOffsets {
-        return RepairAmountOffsets.decode(this.encode());
+    public override clone(): RepairAmounts {
+        return RepairAmounts.decode(this.encode());
     }
 
-    public override getSchemaName(): "RepairAmountOffsets" {
-        return "RepairAmountOffsets";
+    public override getSchemaName(): "RepairAmounts" {
+        return "RepairAmounts";
     }
 
     public checkHasOffset(): boolean {

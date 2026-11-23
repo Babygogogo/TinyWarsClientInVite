@@ -46,9 +46,9 @@ const runtime = (async () => {
     Cos_Constants: 'cos/Constants', Numbers_Utils: 'numbers/Utils', AuxiliaryTypes_GridIndex: 'auxiliaryTypes/GridIndex',
     GameConfigs_GameConfig: 'gameConfigs/GameConfig',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_Conditions: 'coSkills/utils/persistent/selfTileCommonAttributes/Conditions',
-    CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets: 'coSkills/utils/persistent/selfTileCommonAttributes/IncomeOffsets',
-    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets: 'coSkills/utils/persistent/selfTileCommonAttributes/RepairAmountOffsets',
-    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCostOffsets: 'coSkills/utils/persistent/selfTileCommonAttributes/RepairCostOffsets',
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_Incomes: 'coSkills/utils/persistent/selfTileCommonAttributes/Incomes',
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmounts: 'coSkills/utils/persistent/selfTileCommonAttributes/RepairAmounts',
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCosts: 'coSkills/utils/persistent/selfTileCommonAttributes/RepairCosts',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions: 'coSkills/utils/persistent/selfTileCommonAttributes/UnitProductionPermissions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations: 'coSkills/utils/persistent/selfUnitCommonAttributes/ArmorPenetrations',
@@ -59,8 +59,8 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_AbleToDoCounterAttacks: 'coSkills/utils/persistent/selfUnitCommonAttributes/AbleToDoCounterAttacks',
     CoSkills_Utils_Persistent_AttackRangeOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/AttackRangeOffsets',
     CoSkills_Utils_Persistent_SelfUnitMoveRange: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveRangeOffsets',
-    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/RepairAmountOffsets',
-    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCostOffsets: 'coSkills/utils/persistent/selfUnitCommonAttributes/RepairCostOffsets',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmounts: 'coSkills/utils/persistent/selfUnitCommonAttributes/RepairAmounts',
+    CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCosts: 'coSkills/utils/persistent/selfUnitCommonAttributes/RepairCosts',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_PromotionOffsetsWhenProduced: 'coSkills/utils/persistent/selfUnitCommonAttributes/PromotionOffsetsWhenProduced',
     CoSkills_Utils_Persistent_Visions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Visions',
     AuxiliaryTypes_UnitVisionInfo: 'auxiliaryTypes/UnitVisionInfo',
@@ -115,7 +115,7 @@ test('tile income filters by tile, current weather and CO area, and multiplies m
   const skill = (multiplierPct, filters = conditions) => CoSkillCfg.fromJson({
     persistent: { selfTileCommonAttributes: {
       conditions: filters,
-      incomeOffsets: multiplierPct === undefined ? undefined : { multiplierPct },
+      incomes: multiplierPct === undefined ? undefined : { multiplierPct },
     } },
   })
   const skills = [skill(125), skill(50), skill(0), skill(undefined), skill(200, null)]
@@ -160,7 +160,7 @@ test('tile production uses the first permission whose shared tile conditions mat
   const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
     tileCategoryId: tile.id, weatherCategoryId: weather.id }
   const skills = [
-    { conditions, incomeOffsets: { multiplierPct: 125 } },
+    { conditions, incomes: { multiplierPct: 125 } },
     { unitProductionPermissions: { costMultiplierPct: 110 } },
     { conditions, unitProductionPermissions: { costMultiplierPct: 120 } },
     { conditions, unitProductionPermissions: { costMultiplierPct: 80 } },
@@ -258,10 +258,10 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
   const conditions = { coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
     tileCategoryId: tile.id, weatherCategoryId: weather.id }
   const skills = [
-    { repairAmountOffsets: { offset: 3 } },
-    { repairAmountOffsets: { offset: -1 }, repairCostOffsets: { multiplierPct: 50 } },
-    { repairCostOffsets: { multiplierPct: 80 } },
-    { repairCostOffsets: { multiplierPct: 0 } },
+    { repairAmounts: { offset: 3 } },
+    { repairAmounts: { offset: -1 }, repairCosts: { multiplierPct: 50 } },
+    { repairCosts: { multiplierPct: 80 } },
+    { repairCosts: { multiplierPct: 0 } },
   ].map(effect => CoSkillCfg.decode(CoSkillCfg.fromJson({
       persistent: { selfTileCommonAttributes: { conditions, ...effect } },
     }).encode()))
@@ -299,8 +299,8 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
   gridIndex = origin
   ids.push(3)
   check(40, 0)
-  const { getOffset } = internal.CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets
-  const { getMultiplierPct } = internal.CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCostOffsets
+  const { getOffset } = internal.CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmounts
+  const { getMultiplierPct } = internal.CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCosts
   const args = { gameConfig, tileTypeId, weatherTypeId, gridIndex, coZoneRadius: 1,
     getCoGridIndexArrayOnMap: () => [origin] }
   const cfg = i => skills[i].getPersistent().getSelfTileCommonAttributes()
@@ -310,7 +310,7 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
   assert.equal(getOffset({ ...args, cfg: cfg(0), tileTypeId: tile.excluded }), null)
   assert.equal(getMultiplierPct({ ...args, cfg: cfg(3), tileTypeId: tile.excluded }), null)
   const empty = CoSkillCfg.fromJson({ persistent: { selfTileCommonAttributes: {
-    conditions, repairAmountOffsets: {}, repairCostOffsets: {},
+    conditions, repairAmounts: {}, repairCosts: {},
   } } }).getPersistent().getSelfTileCommonAttributes()
   assert.equal(getOffset({ ...args, cfg: empty }), null)
   assert.equal(getMultiplierPct({ ...args, cfg: empty }), null)
@@ -328,14 +328,14 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
       unitCategoryId: unitCategory.id, tileCategoryId: tileCategory.id, weatherCategoryId: weather.id }
     const origin = new internal.AuxiliaryTypes_GridIndex.GridIndex(0, 0)
     const effects = [
-      { repairAmountOffsets: { offset: 3 } },
-      { repairAmountOffsets: { offset: -1 }, repairCostOffsets: { multiplierPct: 50 } },
-      { repairCostOffsets: { multiplierPct: 80 } },
+      { repairAmounts: { offset: 3 } },
+      { repairAmounts: { offset: -1 }, repairCosts: { multiplierPct: 50 } },
+      { repairCosts: { multiplierPct: 80 } },
     ]
     const skills = effects.map(effect => CoSkillCfg.fromJson({
       persistent: { selfUnitCommonAttributes: { conditions, ...effect },
         selfTileCommonAttributes: { conditions: { coSkillAreaTypeId: 2, tileCategoryId: 1, weatherCategoryId: 1 },
-          repairAmountOffsets: { offset: 9 }, repairCostOffsets: { multiplierPct: 25 } } },
+          repairAmounts: { offset: 9 }, repairCosts: { multiplierPct: 25 } } },
     }))
     const config = Object.assign(Object.create(gameConfig), { getCoSkillCfg: id => skills[id] })
     const player = { getCoCurrentSkills: () => [0, 1, 2, 99], getCoZoneRadius: () => 1,
@@ -378,20 +378,20 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
         }
       }
     }
-    const { getOffset } = internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmountOffsets
-    const { getMultiplierPct } = internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCostOffsets
+    const { getOffset } = internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairAmounts
+    const { getMultiplierPct } = internal.CoSkills_Utils_Persistent_SelfUnitCommonAttributes_RepairCosts
     for (const cfg of [null, undefined, SelfUnitCommonAttributes.fromJson({ conditions }),
-      SelfUnitCommonAttributes.fromJson({ conditions, repairAmountOffsets: {}, repairCostOffsets: {} }),
-      SelfUnitCommonAttributes.fromJson({ repairAmountOffsets: { offset: 1 }, repairCostOffsets: { multiplierPct: 0 } })]) {
+      SelfUnitCommonAttributes.fromJson({ conditions, repairAmounts: {}, repairCosts: {} }),
+      SelfUnitCommonAttributes.fromJson({ repairAmounts: { offset: 1 }, repairCosts: { multiplierPct: 0 } })]) {
       assert.equal(getOffset({ ...args, cfg }), null)
       assert.equal(getMultiplierPct({ ...args, cfg }), null)
     }
-    const amountCfg = SelfUnitCommonAttributes.fromJson({ conditions, repairAmountOffsets: { offset: -1 } })
+    const amountCfg = SelfUnitCommonAttributes.fromJson({ conditions, repairAmounts: { offset: -1 } })
     assert.equal(getOffset({ ...args, cfg: amountCfg }), -1)
     assert.equal(getOffset({ ...args, cfg: amountCfg, tileTypeId: tileCategory.excluded }), null)
     for (const cost of [undefined, 0, 50, 100]) {
       const cfg = SelfUnitCommonAttributes.decode(SelfUnitCommonAttributes.fromJson({
-        conditions, repairCostOffsets: { multiplierPct: cost },
+        conditions, repairCosts: { multiplierPct: cost },
       }).encode())
       assert.equal(getOffset({ ...args, cfg }), null)
       assert.equal(getMultiplierPct({ ...args, cfg }), cost ?? null)
@@ -415,11 +415,11 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
           const effects = co[group]().map(id => {
             assert.ok(skills.has(id))
             return skills.get(id).getPersistent()?.getSelfUnitCommonAttributes()
-          }).filter(c => c?.getRepairAmountOffsets())
+          }).filter(c => c?.getRepairAmounts())
           for (const common of effects) {
-            const effect = common.getRepairAmountOffsets(), conditions = common.getConditions()
+            const effect = common.getRepairAmounts(), conditions = common.getConditions()
             actual.push([co.getCoId(), group, effect.getOffset(), conditions.getCoSkillAreaTypeId()])
-            assert.equal(common.getRepairCostOffsets() ?? null, null)
+            assert.equal(common.getRepairCosts() ?? null, null)
             assert.equal(conditions.getUnitCategoryId(), 1)
             assert.equal(conditions.getTileCategoryId(), 1)
             assert.equal(conditions.getWeatherCategoryId(), 1)
@@ -427,15 +427,15 @@ test('tile repair uses the tile, current weather and CO area, with optional and 
         }
       }
       assert.deepEqual(actual, expected)
-      assert.equal(skills.get(99999999)?.getPersistent()?.getSelfUnitCommonAttributes()?.getRepairAmountOffsets() ?? null, null)
+      assert.equal(skills.get(99999999)?.getPersistent()?.getSelfUnitCommonAttributes()?.getRepairAmounts() ?? null, null)
       const tileEffects = [...skills.values()].flatMap(skill => {
         const common = skill.getPersistent()?.getSelfTileCommonAttributes()
-        const repair = common?.getRepairAmountOffsets()
+        const repair = common?.getRepairAmounts()
         if (!repair) return []
         const conditions = common.getConditions()
         assert.equal(conditions.getTileCategoryId(), 1)
         assert.equal(conditions.getWeatherCategoryId(), 1)
-        assert.equal(common.getRepairCostOffsets() ?? null, null)
+        assert.equal(common.getRepairCosts() ?? null, null)
         return [[skill.getSkillId(), conditions.getCoSkillAreaTypeId(), repair.getOffset()]]
       })
       assert.deepEqual(tileEffects, version === 'A0000000' ? [[61001002, 0, 2]]

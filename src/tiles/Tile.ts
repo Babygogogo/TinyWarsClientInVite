@@ -2,9 +2,9 @@ import {
     AuxiliaryTypes_GridIndex,
     AuxiliaryTypes_TileAppearanceInfo,
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions,
-    CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets,
-    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets,
-    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCostOffsets,
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_Incomes,
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmounts,
+    CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCosts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts,
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged,
     GameConfigs_GameConfig,
@@ -828,7 +828,7 @@ export class Tile {
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifierForSkill            = 1;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifierForSkill *= CoSkills_Utils_Persistent_SelfTileCommonAttributes_IncomeOffsets.getTotalIncomeMultiplierPct({
+            modifierForSkill *= CoSkills_Utils_Persistent_SelfTileCommonAttributes_Incomes.getTotalIncomeMultiplierPct({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfTileCommonAttributes(),
                 gameConfig               : gameConfig,
                 tileTypeId               : selfTileTypeId,
@@ -956,8 +956,8 @@ export class Tile {
                 coZoneRadius             : coZoneRadius,
                 getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
             };
-            const offset        = CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmountOffsets.getOffset(args);
-            const multiplierPct = CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCostOffsets.getMultiplierPct(args);
+            const offset        = CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairAmounts.getOffset(args);
+            const multiplierPct = CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCosts.getMultiplierPct(args);
             if (offset != null) {
                 amountModifier += offset;
             }

@@ -1,22 +1,22 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../../$runtime.js";
 
-export interface RepairCostOffsetsJson extends $ProtoSchemaJsonBase {
+export interface RepairCostsJson extends $ProtoSchemaJsonBase {
     multiplierPct?: number | null | undefined;
 }
 
-export class RepairCostOffsets extends $ProtoSchemaBase {
+export class RepairCosts extends $ProtoSchemaBase {
     private _multiplierPct?: number | null | undefined;
 
-    public static fromJson(obj: RepairCostOffsetsJson): RepairCostOffsets {
-        return new RepairCostOffsets().loadJson(obj);
+    public static fromJson(obj: RepairCostsJson): RepairCosts {
+        return new RepairCosts().loadJson(obj);
     }
-    public override loadJson(obj: RepairCostOffsetsJson): this {
+    public override loadJson(obj: RepairCostsJson): this {
         this.setMultiplierPct(obj.multiplierPct);
         return this;
     }
-    public override toJson(obj?: RepairCostOffsetsJson): RepairCostOffsetsJson {
-        obj ??= ({} as RepairCostOffsetsJson);
+    public override toJson(obj?: RepairCostsJson): RepairCostsJson {
+        obj ??= ({} as RepairCostsJson);
 
         {
             const value = this.getMultiplierPct();
@@ -36,13 +36,13 @@ export class RepairCostOffsets extends $ProtoSchemaBase {
         return writer;
     }
 
-    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): RepairCostOffsets {
+    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): RepairCosts {
         if (!(reader instanceof protobuf.Reader)) {
             reader = protobuf.Reader.create(reader);
         }
 
         const end = length == null ? reader.len : reader.pos + length;
-        const msg = new RepairCostOffsets();
+        const msg = new RepairCosts();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -59,12 +59,12 @@ export class RepairCostOffsets extends $ProtoSchemaBase {
         return msg;
     }
 
-    public override clone(): RepairCostOffsets {
-        return RepairCostOffsets.decode(this.encode());
+    public override clone(): RepairCosts {
+        return RepairCosts.decode(this.encode());
     }
 
-    public override getSchemaName(): "RepairCostOffsets" {
-        return "RepairCostOffsets";
+    public override getSchemaName(): "RepairCosts" {
+        return "RepairCosts";
     }
 
     public checkHasMultiplierPct(): boolean {
