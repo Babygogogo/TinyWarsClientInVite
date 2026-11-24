@@ -15,7 +15,7 @@ import {
     CoSkills_Utils_InstantManual_SelfFund,
     CoSkills_Utils_InstantManual_SelfHp,
     CoSkills_Utils_InstantManual_SelfMaterialGain,
-    CoSkills_Utils_InstantManual_SelfPrimaryAmmoGain,
+    CoSkills_Utils_InstantManual_SelfPrimaryAmmo,
     CoSkills_Utils_InstantManual_SelfPromotionGain,
     CoSkills_Utils_InstantManual_SelfUnitActionState,
     CoSkills_Utils_InstantManual_SelfUnitBuffGain,
@@ -47,7 +47,7 @@ export function executeInstantSkillAsOuterWar({ player, skillId, skillData, targ
     CoSkills_Utils_InstantManual_EnemyFuelGain.executeAsOuterWar({ isFastExecute : isFastExecute });
     CoSkills_Utils_InstantManual_SelfMaterialGain.executeAsOuterWar({ isFastExecute : isFastExecute });
     CoSkills_Utils_InstantManual_EnemyMaterialGain.executeAsOuterWar({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_SelfPrimaryAmmoGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_SelfPrimaryAmmo.executeAsOuterWar({ isFastExecute : isFastExecute });
     CoSkills_Utils_InstantManual_EnemyPrimaryAmmoGain.executeAsOuterWar({ isFastExecute : isFastExecute });
     CoSkills_Utils_InstantManual_SelfUnitBuffGain.executeAsOuterWar({ isFastExecute : isFastExecute });
     CoSkills_Utils_InstantManual_EnemyUnitBuffGain.executeAsOuterWar({ isFastExecute : isFastExecute });
@@ -173,7 +173,7 @@ export function executeInstantSkillAsLocalWar({ player, skillId, dataForUseCoSki
             skillUserCoZoneRadius    : skillUserCoZoneRadius,
             isFastExecute            : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_SelfPrimaryAmmoGain.executeAsLocalWar({
+        .mergeFrom(CoSkills_Utils_InstantManual_SelfPrimaryAmmo.executeAsLocalWar({
             skillCfg                 : skillCfg,
             player                   : player,
             skillUserCoGridIndexList : skillUserCoGridIndexList,

@@ -3,17 +3,20 @@ import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $Proto
 import { Conditions as $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$Conditions, type ConditionsJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$Conditions } from "./UnitAttributes/Conditions.js";
 import { EnemyHp as $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$EnemyHp, type EnemyHpJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$EnemyHp } from "./UnitAttributes/EnemyHp.js";
 import { SelfHp as $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfHp, type SelfHpJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfHp } from "./UnitAttributes/SelfHp.js";
+import { SelfPrimaryAmmo as $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfPrimaryAmmo, type SelfPrimaryAmmoJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfPrimaryAmmo } from "./UnitAttributes/SelfPrimaryAmmo.js";
 
 export interface UnitAttributesJson extends $ProtoSchemaJsonBase {
     conditions?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$Conditions | null | undefined;
     selfHp?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfHp | null | undefined;
     enemyHp?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$EnemyHp | null | undefined;
+    selfPrimaryAmmo?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfPrimaryAmmo | null | undefined;
 }
 
 export class UnitAttributes extends $ProtoSchemaBase {
     private _conditions?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$Conditions | null | undefined;
     private _selfHp?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfHp | null | undefined;
     private _enemyHp?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$EnemyHp | null | undefined;
+    private _selfPrimaryAmmo?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfPrimaryAmmo | null | undefined;
 
     public static fromJson(obj: UnitAttributesJson): UnitAttributes {
         return new UnitAttributes().loadJson(obj);
@@ -22,6 +25,7 @@ export class UnitAttributes extends $ProtoSchemaBase {
         this.setConditions(obj.conditions != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$Conditions.fromJson(obj.conditions) : null);
         this.setSelfHp(obj.selfHp != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfHp.fromJson(obj.selfHp) : null);
         this.setEnemyHp(obj.enemyHp != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$EnemyHp.fromJson(obj.enemyHp) : null);
+        this.setSelfPrimaryAmmo(obj.selfPrimaryAmmo != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfPrimaryAmmo.fromJson(obj.selfPrimaryAmmo) : null);
         return this;
     }
     public override toJson(obj?: UnitAttributesJson): UnitAttributesJson {
@@ -40,6 +44,11 @@ export class UnitAttributes extends $ProtoSchemaBase {
         {
             const value = this.getEnemyHp();
             (value != null) && (obj.enemyHp = value.toJson());
+        }
+
+        {
+            const value = this.getSelfPrimaryAmmo();
+            (value != null) && (obj.selfPrimaryAmmo = value.toJson());
         }
         return obj;
     }
@@ -66,6 +75,13 @@ export class UnitAttributes extends $ProtoSchemaBase {
             }
         }
 
+        {
+            const value = this.getSelfPrimaryAmmo();
+            if (value != null) {
+                value.toWriter(writer.uint32(34).fork()).ldelim();
+            }
+        }
+
         return writer;
     }
 
@@ -89,6 +105,10 @@ export class UnitAttributes extends $ProtoSchemaBase {
 
                 case 3:
                     msg.setEnemyHp($Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$EnemyHp.decode(reader, reader.uint32()));
+                    break;
+
+                case 4:
+                    msg.setSelfPrimaryAmmo($Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfPrimaryAmmo.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -145,5 +165,18 @@ export class UnitAttributes extends $ProtoSchemaBase {
     }
     public createIfNotExistsEnemyHp(): $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$EnemyHp {
         return this._enemyHp ??= new $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$EnemyHp();
+    }
+
+    public checkHasSelfPrimaryAmmo(): boolean {
+        return this._selfPrimaryAmmo != null;
+    }
+    public getSelfPrimaryAmmo(): $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfPrimaryAmmo | null | undefined {
+        return this._selfPrimaryAmmo;
+    }
+    public setSelfPrimaryAmmo(value: $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfPrimaryAmmo | null | undefined): void {
+        this._selfPrimaryAmmo = value;
+    }
+    public createIfNotExistsSelfPrimaryAmmo(): $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfPrimaryAmmo {
+        return this._selfPrimaryAmmo ??= new $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes$SelfPrimaryAmmo();
     }
 }

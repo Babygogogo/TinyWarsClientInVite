@@ -279,7 +279,7 @@ export * as CoSkills_Utils_InstantManual_SelfFund from "./coSkills/utils/instant
 export * as CoSkills_Utils_InstantManual_Conditions from "./coSkills/utils/instantManual/Conditions.ts";
 export * as CoSkills_Utils_InstantManual_SelfHp from "./coSkills/utils/instantManual/SelfHp.ts";
 export * as CoSkills_Utils_InstantManual_SelfMaterialGain from "./coSkills/utils/instantManual/SelfMaterialGain.ts";
-export * as CoSkills_Utils_InstantManual_SelfPrimaryAmmoGain from "./coSkills/utils/instantManual/SelfPrimaryAmmoGain.ts";
+export * as CoSkills_Utils_InstantManual_SelfPrimaryAmmo from "./coSkills/utils/instantManual/SelfPrimaryAmmo.ts";
 export * as CoSkills_Utils_InstantManual_SelfPromotionGain from "./coSkills/utils/instantManual/SelfPromotionGain.ts";
 export * as CoSkills_Utils_InstantManual_SelfUnitActionState from "./coSkills/utils/instantManual/SelfUnitActionState.ts";
 export * as CoSkills_Utils_InstantManual_SelfUnitBuffGain from "./coSkills/utils/instantManual/SelfUnitBuffGain.ts";
