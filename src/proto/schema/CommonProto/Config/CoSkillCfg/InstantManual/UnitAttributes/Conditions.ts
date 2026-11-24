@@ -1,34 +1,34 @@
 import protobuf from "protobufjs/minimal.js";
-import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../$runtime.js";
+import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../../$runtime.js";
 
-export interface SelfUnitHpJson extends $ProtoSchemaJsonBase {
+export interface ConditionsJson extends $ProtoSchemaJsonBase {
     coSkillAreaTypeId?: number | null | undefined;
     unitCategoryId?: number | null | undefined;
+    tileCategoryId?: number | null | undefined;
+    weatherCategoryId?: number | null | undefined;
     unitLoadedStateId?: number | null | undefined;
-    regularHpOffset?: number | null | undefined;
-    costMultiplierPct?: number | null | undefined;
 }
 
-export class SelfUnitHp extends $ProtoSchemaBase {
+export class Conditions extends $ProtoSchemaBase {
     private _coSkillAreaTypeId?: number | null | undefined;
     private _unitCategoryId?: number | null | undefined;
+    private _tileCategoryId?: number | null | undefined;
+    private _weatherCategoryId?: number | null | undefined;
     private _unitLoadedStateId?: number | null | undefined;
-    private _regularHpOffset?: number | null | undefined;
-    private _costMultiplierPct?: number | null | undefined;
 
-    public static fromJson(obj: SelfUnitHpJson): SelfUnitHp {
-        return new SelfUnitHp().loadJson(obj);
+    public static fromJson(obj: ConditionsJson): Conditions {
+        return new Conditions().loadJson(obj);
     }
-    public override loadJson(obj: SelfUnitHpJson): this {
+    public override loadJson(obj: ConditionsJson): this {
         this.setCoSkillAreaTypeId(obj.coSkillAreaTypeId);
         this.setUnitCategoryId(obj.unitCategoryId);
+        this.setTileCategoryId(obj.tileCategoryId);
+        this.setWeatherCategoryId(obj.weatherCategoryId);
         this.setUnitLoadedStateId(obj.unitLoadedStateId);
-        this.setRegularHpOffset(obj.regularHpOffset);
-        this.setCostMultiplierPct(obj.costMultiplierPct);
         return this;
     }
-    public override toJson(obj?: SelfUnitHpJson): SelfUnitHpJson {
-        obj ??= ({} as SelfUnitHpJson);
+    public override toJson(obj?: ConditionsJson): ConditionsJson {
+        obj ??= ({} as ConditionsJson);
 
         {
             const value = this.getCoSkillAreaTypeId();
@@ -41,18 +41,18 @@ export class SelfUnitHp extends $ProtoSchemaBase {
         }
 
         {
+            const value = this.getTileCategoryId();
+            (value != null) && (obj.tileCategoryId = value);
+        }
+
+        {
+            const value = this.getWeatherCategoryId();
+            (value != null) && (obj.weatherCategoryId = value);
+        }
+
+        {
             const value = this.getUnitLoadedStateId();
             (value != null) && (obj.unitLoadedStateId = value);
-        }
-
-        {
-            const value = this.getRegularHpOffset();
-            (value != null) && (obj.regularHpOffset = value);
-        }
-
-        {
-            const value = this.getCostMultiplierPct();
-            (value != null) && (obj.costMultiplierPct = value);
         }
         return obj;
     }
@@ -67,27 +67,27 @@ export class SelfUnitHp extends $ProtoSchemaBase {
 
         {
             const value = this.getUnitCategoryId();
-            if (value != null) {
+            if ((value != null) && (value != 0)) {
                 writer.uint32(16).int32(value);
             }
         }
 
         {
-            const value = this.getUnitLoadedStateId();
+            const value = this.getTileCategoryId();
             if ((value != null) && (value != 0)) {
                 writer.uint32(24).int32(value);
             }
         }
 
         {
-            const value = this.getRegularHpOffset();
+            const value = this.getWeatherCategoryId();
             if ((value != null) && (value != 0)) {
                 writer.uint32(32).int32(value);
             }
         }
 
         {
-            const value = this.getCostMultiplierPct();
+            const value = this.getUnitLoadedStateId();
             if ((value != null) && (value != 0)) {
                 writer.uint32(40).int32(value);
             }
@@ -96,13 +96,13 @@ export class SelfUnitHp extends $ProtoSchemaBase {
         return writer;
     }
 
-    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): SelfUnitHp {
+    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): Conditions {
         if (!(reader instanceof protobuf.Reader)) {
             reader = protobuf.Reader.create(reader);
         }
 
         const end = length == null ? reader.len : reader.pos + length;
-        const msg = new SelfUnitHp();
+        const msg = new Conditions();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -115,15 +115,15 @@ export class SelfUnitHp extends $ProtoSchemaBase {
                     break;
 
                 case 3:
-                    msg.setUnitLoadedStateId(reader.int32());
+                    msg.setTileCategoryId(reader.int32());
                     break;
 
                 case 4:
-                    msg.setRegularHpOffset(reader.int32());
+                    msg.setWeatherCategoryId(reader.int32());
                     break;
 
                 case 5:
-                    msg.setCostMultiplierPct(reader.int32());
+                    msg.setUnitLoadedStateId(reader.int32());
                     break;
 
                 default:
@@ -135,12 +135,12 @@ export class SelfUnitHp extends $ProtoSchemaBase {
         return msg;
     }
 
-    public override clone(): SelfUnitHp {
-        return SelfUnitHp.decode(this.encode());
+    public override clone(): Conditions {
+        return Conditions.decode(this.encode());
     }
 
-    public override getSchemaName(): "SelfUnitHp" {
-        return "SelfUnitHp";
+    public override getSchemaName(): "Conditions" {
+        return "Conditions";
     }
 
     public checkHasCoSkillAreaTypeId(): boolean {
@@ -160,11 +160,43 @@ export class SelfUnitHp extends $ProtoSchemaBase {
     public checkHasUnitCategoryId(): boolean {
         return this._unitCategoryId != null;
     }
-    public getUnitCategoryId(): number | null | undefined {
-        return this._unitCategoryId;
+    public getUnitCategoryId(): number {
+        return this._unitCategoryId ?? 0;
     }
     public setUnitCategoryId(value: number | null | undefined): void {
-        this._unitCategoryId = value;
+        if ((value == null) || (value == 0)) {
+            this._unitCategoryId = null;
+        } else {
+            this._unitCategoryId = value;
+        }
+    }
+
+    public checkHasTileCategoryId(): boolean {
+        return this._tileCategoryId != null;
+    }
+    public getTileCategoryId(): number {
+        return this._tileCategoryId ?? 0;
+    }
+    public setTileCategoryId(value: number | null | undefined): void {
+        if ((value == null) || (value == 0)) {
+            this._tileCategoryId = null;
+        } else {
+            this._tileCategoryId = value;
+        }
+    }
+
+    public checkHasWeatherCategoryId(): boolean {
+        return this._weatherCategoryId != null;
+    }
+    public getWeatherCategoryId(): number {
+        return this._weatherCategoryId ?? 0;
+    }
+    public setWeatherCategoryId(value: number | null | undefined): void {
+        if ((value == null) || (value == 0)) {
+            this._weatherCategoryId = null;
+        } else {
+            this._weatherCategoryId = value;
+        }
     }
 
     public checkHasUnitLoadedStateId(): boolean {
@@ -178,34 +210,6 @@ export class SelfUnitHp extends $ProtoSchemaBase {
             this._unitLoadedStateId = null;
         } else {
             this._unitLoadedStateId = value;
-        }
-    }
-
-    public checkHasRegularHpOffset(): boolean {
-        return this._regularHpOffset != null;
-    }
-    public getRegularHpOffset(): number {
-        return this._regularHpOffset ?? 0;
-    }
-    public setRegularHpOffset(value: number | null | undefined): void {
-        if ((value == null) || (value == 0)) {
-            this._regularHpOffset = null;
-        } else {
-            this._regularHpOffset = value;
-        }
-    }
-
-    public checkHasCostMultiplierPct(): boolean {
-        return this._costMultiplierPct != null;
-    }
-    public getCostMultiplierPct(): number {
-        return this._costMultiplierPct ?? 0;
-    }
-    public setCostMultiplierPct(value: number | null | undefined): void {
-        if ((value == null) || (value == 0)) {
-            this._costMultiplierPct = null;
-        } else {
-            this._costMultiplierPct = value;
         }
     }
 }

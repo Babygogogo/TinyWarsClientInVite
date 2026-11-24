@@ -1,6 +1,8 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
+    CoSkills_Utils_InstantManual_Conditions,
+    Helpers_Misc,
     Helpers_Team,
     Numbers_Utils,
     Players_Player,
@@ -25,34 +27,37 @@ export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExe
     isFastExecute   : boolean;
 }): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
-    const cfg           = skillCfg.getInstantManual()?.getSelfUnitHp();
-    if (cfg) {
+    const attributes    = skillCfg.getInstantManual()?.getUnitAttributes();
+    const cfg           = attributes?.getSelfHp();
+    const conditions    = attributes?.getConditions();
+    if ((cfg != null) && (conditions != null)) {
         const war                   = player.getWar();
         const playerIndex           = player.getPlayerIndex();
         const zoneRadius            = player.getCoZoneRadius();
-        const unitCategoryId        = cfg.getUnitCategoryId();
-        const regularHpOffset       = cfg.getRegularHpOffset();
-        const unitLoadedStateId     = cfg.getUnitLoadedStateId();
-        const coSkillAreaTypeId     = cfg.getCoSkillAreaTypeId();
+        const regularHpOffset       = cfg.getRegularHpOffset() ?? 0;
         const costMultiplier        = (cfg.getCostMultiplierPct()) / 100 / 10;
         const gameConfig            = war.getGcData();
+        const tileMap               = war.getTileMap();
+        const weatherTypeId         = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const warStatisticsManager  = war.getWarStatisticsManager();
         const hpOffset              = regularHpOffset * Units_Constants.Hp.Normalizer;
         let totalCost               = 0;
         for (const unit of war.getUnitMap().getAllUnits()) {
-            const unitType  = unit.getUnitTypeId();
-            const gridIndex = unit.getGridIndex();
-            const maxHp     = unit.getMaxHp();
-            const currentHp = unit.getCurrentHp();
-            if ((unit.getPlayerIndex() === playerIndex)                                                         &&
-                (unit.checkIsMeetLoadedState(unitLoadedStateId))                                                &&
-                ((unitCategoryId == null) || (gameConfig.checkIsUnitTypeInCategory(unitType, unitCategoryId)))  &&
-                (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : coSkillAreaTypeId,
-                    getCoGridIndexArrayOnMap : () => coGridIndexList,
-                    coZoneRadius             : zoneRadius,
+            if ((unit.getPlayerIndex() === playerIndex) &&
+                (CoSkills_Utils_InstantManual_Conditions.checkIsMeet({
+                    conditions      : conditions,
+                    unit            : unit,
+                    tileMap         : tileMap,
+                    weatherTypeId   : weatherTypeId,
+                    coGridIndexList : coGridIndexList,
+                    coZoneRadius    : zoneRadius,
+                    gameConfig      : gameConfig,
                 }))
             ) {
+                const unitType        = unit.getUnitTypeId();
+                const gridIndex       = unit.getGridIndex();
+                const maxHp           = unit.getMaxHp();
+                const currentHp       = unit.getCurrentHp();
                 const oldNormalizedHp = unit.getNormalizedCurrentHp();
                 if (regularHpOffset >= 0) {
                     unit.setCurrentHp(Numbers_Utils.getValueInRange({

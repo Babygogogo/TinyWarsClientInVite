@@ -31,7 +31,7 @@ const runtime = (async () => {
     const compiled = ts.transpileModule(testExport ? `${source}\nexport { ${testExport} };` : source,
       { compilerOptions: { target: ts.ScriptTarget.ES2023, module: ts.ModuleKind.CommonJS } }).outputText
     const context = { exports: {}, require(specifier) {
-      if (specifier.endsWith('/internal.ts')) return internal
+      if (/\/internal(?:\.ts)?$/.test(specifier)) return internal
       assert.match(specifier, /\/proto\//)
       return proto
     } }
@@ -51,6 +51,8 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_RepairCosts: 'coSkills/utils/persistent/selfTileCommonAttributes/RepairCosts',
     CoSkills_Utils_Persistent_SelfTileCommonAttributes_UnitProductionPermissions: 'coSkills/utils/persistent/selfTileCommonAttributes/UnitProductionPermissions',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
+    CoSkills_Utils_InstantManual_Conditions: 'coSkills/utils/instantManual/Conditions',
+    CoSkills_Utils_InstantManual_SelfHp: 'coSkills/utils/instantManual/SelfHp',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations: 'coSkills/utils/persistent/selfUnitCommonAttributes/ArmorPenetrations',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveCosts',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged: 'coSkills/utils/persistent/selfUnitCommonAttributes/ReceiveFullTileDefenseWhenDamaged',
@@ -103,6 +105,63 @@ function categoryFixture(categories, types, getId, matches) {
   }
   assert.fail('Expected a category with both matching and nonmatching types')
 }
+
+test('manual self HP shares category and area conditions, with only the area waived for CO units', async () => {
+  const { internal, gameConfig, raw, CoSkillCfg } = await runtime
+  const unitCategory = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(c => c.getUnitTypeId()),
+    c => c.getUnitCategoryId(), (type, id) => gameConfig.checkIsUnitTypeInCategory(type, id))
+  const tileCategory = categoryFixture(raw.getTileCategory(), raw.getTileTemplate().map(c => c.getTileTypeId()),
+    c => c.getTileCategoryId(), (type, id) => gameConfig.checkIsTileTypeInCategory(type, id))
+  const weatherCategory = categoryFixture(raw.getWeatherCategory(), raw.getWeather().map(c => c.getWeatherTypeId()),
+    c => c.getWeatherCategoryId(), (type, id) => gameConfig.checkIsWeatherTypeInCategory(type, id))
+  const conditions = {
+    coSkillAreaTypeId: internal.CoSkills_Constants.AreaTypeId.Zone,
+    unitCategoryId: unitCategory.id, tileCategoryId: tileCategory.id,
+    weatherCategoryId: weatherCategory.id, unitLoadedStateId: 1,
+  }
+  const GridIndex = internal.AuxiliaryTypes_GridIndex.GridIndex
+  internal.AuxiliaryTypes_ChangedThingsForWarOperation = { ChangedThingsForWarOperation: class {
+    units = []
+    addUnit(unit) { this.units.push(unit) }
+  } }
+  internal.Visibilities_Utils = { getObserverTeamIndexListForUnitOnMap: () => null }
+  const execute = ({ owner = 1, onboard = false, x = 1, loaded = false,
+    unitType = unitCategory.included, tile = tileCategory.included, weather = weatherCategory.included,
+    attributes = { conditions, selfHp: { regularHpOffset: 1 } } } = {}) => {
+    let hp = 51
+    const unit = {
+      getPlayerIndex: () => owner, getIsCoOnboard: () => onboard,
+      getUnitTypeId: () => unitType, getGridIndex: () => new GridIndex(x, 0),
+      checkIsMeetLoadedState: state => internal.Units_Utils_Common.checkIsMeetLoadedStateId(state, loaded),
+      getMaxHp: () => 100, getCurrentHp: () => hp, setCurrentHp: v => { hp = v },
+      getNormalizedCurrentHp: () => Math.ceil(hp / 10),
+    }
+    const war = {
+      getGcData: () => gameConfig, getTileMap: () => ({ getTile: () => ({ getTileTypeId: () => tile }) }),
+      getWeatherManager: () => ({ getCurrentWeatherType: () => weather }),
+      getWarStatisticsManager: () => ({}), getUnitMap: () => ({ getAllUnits: () => [unit] }),
+    }
+    const player = { getPlayerIndex: () => 1, getCoZoneRadius: () => 1, getWar: () => war }
+    const skillCfg = CoSkillCfg.fromJson({ instantManual: { unitAttributes: attributes } })
+    const changes = internal.CoSkills_Utils_InstantManual_SelfHp.executeAsLocalWar({
+      skillCfg, player, coGridIndexList: [new GridIndex(0, 0)], isFastExecute: true,
+    })
+    assert.equal(changes.units.length, hp === 51 ? 0 : 1)
+    return hp
+  }
+  assert.equal(execute(), 70)
+  assert.equal(execute({ x: 2 }), 51)
+  assert.equal(execute({ x: 2, onboard: true }), 70)
+  assert.equal(execute({ onboard: true, unitType: unitCategory.excluded }), 51)
+  assert.equal(execute({ onboard: true, tile: tileCategory.excluded }), 51)
+  assert.equal(execute({ onboard: true, weather: weatherCategory.excluded }), 51)
+  assert.equal(execute({ onboard: true, loaded: true }), 51)
+  assert.equal(execute({ owner: 2 }), 51)
+  assert.equal(execute({ attributes: { conditions } }), 51)
+  assert.equal(execute({ attributes: { selfHp: { regularHpOffset: 1 } } }), 51)
+  assert.equal(execute({ attributes: { conditions, selfHp: { regularHpOffset: 0 } } }), 60)
+  assert.equal(execute({ attributes: { conditions, selfHp: { regularHpOffset: -1 } } }), 41)
+})
 
 test('tile income filters by tile, current weather and CO area, and multiplies matching effects', async () => {
   const { internal, gameConfig, raw, CoSkillCfg } = await runtime

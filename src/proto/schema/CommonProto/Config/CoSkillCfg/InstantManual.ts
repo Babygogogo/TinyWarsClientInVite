@@ -18,10 +18,9 @@ import { SelfPrimaryAmmoGain as $Message$CommonProto$Config$CoSkillCfg$InstantMa
 import { SelfPromotionGain as $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfPromotionGain, type SelfPromotionGainJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfPromotionGain } from "./InstantManual/SelfPromotionGain.js";
 import { SelfUnitActionState as $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitActionState, type SelfUnitActionStateJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitActionState } from "./InstantManual/SelfUnitActionState.js";
 import { SelfUnitBuffGain as $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitBuffGain, type SelfUnitBuffGainJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitBuffGain } from "./InstantManual/SelfUnitBuffGain.js";
-import { SelfUnitHp as $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitHp, type SelfUnitHpJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitHp } from "./InstantManual/SelfUnitHp.js";
+import { UnitAttributes as $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes, type UnitAttributesJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes } from "./InstantManual/UnitAttributes.js";
 
 export interface InstantManualJson extends $ProtoSchemaJsonBase {
-    selfUnitHp?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitHp | null | undefined;
     enemyUnitHp?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp | null | undefined;
     selfPrimaryAmmoGain?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfPrimaryAmmoGain | null | undefined;
     enemyPrimaryAmmoGain?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$EnemyPrimaryAmmoGain | null | undefined;
@@ -40,10 +39,10 @@ export interface InstantManualJson extends $ProtoSchemaJsonBase {
     selfCoOnboard?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfCoOnboard | null | undefined;
     selfUnitBuffGain?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitBuffGain | null | undefined;
     enemyUnitBuffGain?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitBuffGain | null | undefined;
+    unitAttributes?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes | null | undefined;
 }
 
 export class InstantManual extends $ProtoSchemaBase {
-    private _selfUnitHp?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitHp | null | undefined;
     private _enemyUnitHp?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp | null | undefined;
     private _selfPrimaryAmmoGain?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfPrimaryAmmoGain | null | undefined;
     private _enemyPrimaryAmmoGain?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyPrimaryAmmoGain | null | undefined;
@@ -62,12 +61,12 @@ export class InstantManual extends $ProtoSchemaBase {
     private _selfCoOnboard?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfCoOnboard | null | undefined;
     private _selfUnitBuffGain?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitBuffGain | null | undefined;
     private _enemyUnitBuffGain?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitBuffGain | null | undefined;
+    private _unitAttributes?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes | null | undefined;
 
     public static fromJson(obj: InstantManualJson): InstantManual {
         return new InstantManual().loadJson(obj);
     }
     public override loadJson(obj: InstantManualJson): this {
-        this.setSelfUnitHp(obj.selfUnitHp != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitHp.fromJson(obj.selfUnitHp) : null);
         this.setEnemyUnitHp(obj.enemyUnitHp != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp.fromJson(obj.enemyUnitHp) : null);
         this.setSelfPrimaryAmmoGain(obj.selfPrimaryAmmoGain != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfPrimaryAmmoGain.fromJson(obj.selfPrimaryAmmoGain) : null);
         this.setEnemyPrimaryAmmoGain(obj.enemyPrimaryAmmoGain != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyPrimaryAmmoGain.fromJson(obj.enemyPrimaryAmmoGain) : null);
@@ -86,15 +85,11 @@ export class InstantManual extends $ProtoSchemaBase {
         this.setSelfCoOnboard(obj.selfCoOnboard != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfCoOnboard.fromJson(obj.selfCoOnboard) : null);
         this.setSelfUnitBuffGain(obj.selfUnitBuffGain != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitBuffGain.fromJson(obj.selfUnitBuffGain) : null);
         this.setEnemyUnitBuffGain(obj.enemyUnitBuffGain != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitBuffGain.fromJson(obj.enemyUnitBuffGain) : null);
+        this.setUnitAttributes(obj.unitAttributes != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes.fromJson(obj.unitAttributes) : null);
         return this;
     }
     public override toJson(obj?: InstantManualJson): InstantManualJson {
         obj ??= ({} as InstantManualJson);
-
-        {
-            const value = this.getSelfUnitHp();
-            (value != null) && (obj.selfUnitHp = value.toJson());
-        }
 
         {
             const value = this.getEnemyUnitHp();
@@ -185,17 +180,15 @@ export class InstantManual extends $ProtoSchemaBase {
             const value = this.getEnemyUnitBuffGain();
             (value != null) && (obj.enemyUnitBuffGain = value.toJson());
         }
+
+        {
+            const value = this.getUnitAttributes();
+            (value != null) && (obj.unitAttributes = value.toJson());
+        }
         return obj;
     }
 
     public override toWriter(writer = protobuf.Writer.create()): protobuf.Writer {
-        {
-            const value = this.getSelfUnitHp();
-            if (value != null) {
-                value.toWriter(writer.uint32(10).fork()).ldelim();
-            }
-        }
-
         {
             const value = this.getEnemyUnitHp();
             if (value != null) {
@@ -322,6 +315,13 @@ export class InstantManual extends $ProtoSchemaBase {
             }
         }
 
+        {
+            const value = this.getUnitAttributes();
+            if (value != null) {
+                value.toWriter(writer.uint32(162).fork()).ldelim();
+            }
+        }
+
         return writer;
     }
 
@@ -335,10 +335,6 @@ export class InstantManual extends $ProtoSchemaBase {
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
-                case 1:
-                    msg.setSelfUnitHp($Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitHp.decode(reader, reader.uint32()));
-                    break;
-
                 case 2:
                     msg.setEnemyUnitHp($Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp.decode(reader, reader.uint32()));
                     break;
@@ -411,6 +407,10 @@ export class InstantManual extends $ProtoSchemaBase {
                     msg.setEnemyUnitBuffGain($Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitBuffGain.decode(reader, reader.uint32()));
                     break;
 
+                case 20:
+                    msg.setUnitAttributes($Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes.decode(reader, reader.uint32()));
+                    break;
+
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -426,19 +426,6 @@ export class InstantManual extends $ProtoSchemaBase {
 
     public override getSchemaName(): "InstantManual" {
         return "InstantManual";
-    }
-
-    public checkHasSelfUnitHp(): boolean {
-        return this._selfUnitHp != null;
-    }
-    public getSelfUnitHp(): $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitHp | null | undefined {
-        return this._selfUnitHp;
-    }
-    public setSelfUnitHp(value: $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitHp | null | undefined): void {
-        this._selfUnitHp = value;
-    }
-    public createIfNotExistsSelfUnitHp(): $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitHp {
-        return this._selfUnitHp ??= new $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfUnitHp();
     }
 
     public checkHasEnemyUnitHp(): boolean {
@@ -673,5 +660,18 @@ export class InstantManual extends $ProtoSchemaBase {
     }
     public createIfNotExistsEnemyUnitBuffGain(): $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitBuffGain {
         return this._enemyUnitBuffGain ??= new $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitBuffGain();
+    }
+
+    public checkHasUnitAttributes(): boolean {
+        return this._unitAttributes != null;
+    }
+    public getUnitAttributes(): $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes | null | undefined {
+        return this._unitAttributes;
+    }
+    public setUnitAttributes(value: $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes | null | undefined): void {
+        this._unitAttributes = value;
+    }
+    public createIfNotExistsUnitAttributes(): $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes {
+        return this._unitAttributes ??= new $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes();
     }
 }
