@@ -12,18 +12,18 @@ export function executeAsOuterWar({ isFastExecute }: {
     // nothing to do
 }
 
-export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExecute }: {
-    skillCfg        : CoSkillCfg;
-    player          : Players_Player.Player;
-    coGridIndexList : AuxiliaryTypes_GridIndex.GridIndex[];
-    isFastExecute   : boolean;
+export function executeAsLocalWar({ skillCfg, player, skillUserCoGridIndexList: coGridIndexList, skillUserCoZoneRadius, isFastExecute }: {
+    skillCfg             : CoSkillCfg;
+    player               : Players_Player.Player;
+    skillUserCoGridIndexList      : AuxiliaryTypes_GridIndex.GridIndex[];
+    skillUserCoZoneRadius: number;
+    isFastExecute        : boolean;
 }): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     const cfg           = skillCfg.getInstantManual()?.getEnemyPrimaryAmmoGain();
     if (cfg) {
         const war           = player.getWar();
         const playerIndex   = player.getPlayerIndex();
-        const zoneRadius    = player.getCoZoneRadius();
         const category      = cfg.getUnitCategoryId();
         const modifier      = cfg.getGainPct();
         const gameConfig    = war.getGcData();
@@ -41,7 +41,7 @@ export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExe
                 (gridIndex.checkIsInsideCoSkillArea({
                     coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap : () => coGridIndexList,
-                    coZoneRadius             : zoneRadius,
+                    coZoneRadius             : skillUserCoZoneRadius,
                 }))
             ) {
                 if (modifier > 0) {

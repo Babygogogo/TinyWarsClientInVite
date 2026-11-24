@@ -7,15 +7,23 @@ import type {
 import type { Conditions } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantManual/UnitAttributes/Conditions.ts";
 
 export function checkIsMeet({
-    conditions, unit, tileMap, weatherTypeId, coGridIndexList, coZoneRadius, gameConfig,
+    conditions,
+    unit,
+    tileMap,
+    weatherTypeId,
+    skillUserCoGridIndexList,
+    skillUserCoZoneRadius,
+    gameConfig,
+    isSkillUserCoOnboard,
 }: {
-    conditions      : Conditions;
-    unit            : Units_Unit.Unit;
-    tileMap         : Tiles_TileMap.TileMap;
-    weatherTypeId   : number;
-    coGridIndexList  : AuxiliaryTypes_GridIndex.GridIndex[];
-    coZoneRadius    : number;
-    gameConfig      : GameConfigs_GameConfig.GameConfig;
+    conditions                  : Conditions;
+    unit                        : Units_Unit.Unit;
+    tileMap                     : Tiles_TileMap.TileMap;
+    weatherTypeId               : number;
+    skillUserCoGridIndexList    : AuxiliaryTypes_GridIndex.GridIndex[];
+    skillUserCoZoneRadius       : number;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
+    isSkillUserCoOnboard        : boolean;
 }): boolean {
     if (!unit.checkIsMeetLoadedState(conditions.getUnitLoadedStateId())) {
         return false;
@@ -34,9 +42,10 @@ export function checkIsMeet({
         return false;
     }
 
-    return unit.getIsCoOnboard() || gridIndex.checkIsInsideCoSkillArea({
-        coSkillAreaType          : conditions.getCoSkillAreaTypeId(),
-        getCoGridIndexArrayOnMap : () => coGridIndexList,
-        coZoneRadius             : coZoneRadius,
-    });
+    return (isSkillUserCoOnboard)
+        || (gridIndex.checkIsInsideCoSkillArea({
+            coSkillAreaType          : conditions.getCoSkillAreaTypeId(),
+            getCoGridIndexArrayOnMap : () => skillUserCoGridIndexList,
+            coZoneRadius             : skillUserCoZoneRadius,
+        }));
 }

@@ -266,7 +266,7 @@ export * as CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Visions from "./c
 export * as CoSkills_Utils_InstantManual_ChangeWeather from "./coSkills/utils/instantManual/ChangeWeather.ts";
 export * as CoSkills_Utils_InstantManual_EnemyEnergy from "./coSkills/utils/instantManual/EnemyEnergy.ts";
 export * as CoSkills_Utils_InstantManual_EnemyFuelGain from "./coSkills/utils/instantManual/EnemyFuelGain.ts";
-export * as CoSkills_Utils_InstantManual_EnemyHpGain from "./coSkills/utils/instantManual/EnemyHpGain.ts";
+export * as CoSkills_Utils_InstantManual_EnemyHp from "./coSkills/utils/instantManual/EnemyHp.ts";
 export * as CoSkills_Utils_InstantManual_EnemyMaterialGain from "./coSkills/utils/instantManual/EnemyMaterialGain.ts";
 export * as CoSkills_Utils_InstantManual_EnemyPrimaryAmmoGain from "./coSkills/utils/instantManual/EnemyPrimaryAmmoGain.ts";
 export * as CoSkills_Utils_InstantManual_EnemyUnitBuffGain from "./coSkills/utils/instantManual/EnemyUnitBuffGain.ts";

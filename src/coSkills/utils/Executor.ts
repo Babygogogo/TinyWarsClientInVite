@@ -3,7 +3,7 @@ import {
     CoSkills_Utils_InstantManual_ChangeWeather,
     CoSkills_Utils_InstantManual_EnemyEnergy,
     CoSkills_Utils_InstantManual_EnemyFuelGain,
-    CoSkills_Utils_InstantManual_EnemyHpGain,
+    CoSkills_Utils_InstantManual_EnemyHp,
     CoSkills_Utils_InstantManual_EnemyMaterialGain,
     CoSkills_Utils_InstantManual_EnemyPrimaryAmmoGain,
     CoSkills_Utils_InstantManual_EnemyUnitBuffGain,
@@ -42,7 +42,7 @@ export function executeInstantSkillAsOuterWar({ player, skillId, skillData, targ
     CoSkills_Utils_InstantManual_EnemyEnergy.executeAsOuterWar({ isFastExecute : isFastExecute });
     CoSkills_Utils_InstantManual_SelfAddUnit.executeAsOuterWar({ isFastExecute : isFastExecute });
     CoSkills_Utils_InstantManual_SelfHp.executeAsOuterWar({ isFastExecute : isFastExecute });
-    CoSkills_Utils_InstantManual_EnemyHpGain.executeAsOuterWar({ isFastExecute : isFastExecute });
+    CoSkills_Utils_InstantManual_EnemyHp.executeAsOuterWar({ isFastExecute : isFastExecute });
     CoSkills_Utils_InstantManual_SelfFuelGain.executeAsOuterWar({ isFastExecute : isFastExecute });
     CoSkills_Utils_InstantManual_EnemyFuelGain.executeAsOuterWar({ isFastExecute : isFastExecute });
     CoSkills_Utils_InstantManual_SelfMaterialGain.executeAsOuterWar({ isFastExecute : isFastExecute });
@@ -108,10 +108,11 @@ export function executeInstantSkillAsLocalWar({ player, skillId, dataForUseCoSki
     targetGridIndexes   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ProtoGridIndex[]>;
     isFastExecute       : boolean;
 }): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
-    const war               = player.getWar();
-    const skillCfg          = Helpers_Misc.getExisted(war.getGcData().getCoSkillCfg(skillId));
-    const coGridIndexList   = player.getCoGridIndexListOnMap();
-    const changedThings     = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
+    const war                       = player.getWar();
+    const skillCfg                  = Helpers_Misc.getExisted(war.getGcData().getCoSkillCfg(skillId));
+    const skillUserCoGridIndexList  = player.getCoGridIndexListOnMap();
+    const skillUserCoZoneRadius     = player.getCoZoneRadius();
+    const changedThings             = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     changedThings
         .mergeFrom(CoSkills_Utils_InstantManual_SelfFund.executeAsLocalWar({
             skillCfg      : skillCfg,
@@ -124,70 +125,81 @@ export function executeInstantSkillAsLocalWar({ player, skillId, dataForUseCoSki
             isFastExecute : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_SelfAddUnit.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_SelfHp.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
-        .mergeFrom(CoSkills_Utils_InstantManual_EnemyHpGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+        .mergeFrom(CoSkills_Utils_InstantManual_EnemyHp.executeAsLocalWar({
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_SelfFuelGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_EnemyFuelGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_SelfMaterialGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_EnemyMaterialGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_SelfPrimaryAmmoGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_EnemyPrimaryAmmoGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_SelfUnitBuffGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_EnemyUnitBuffGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_FixedAreaDamage.executeAsLocalWar({
             skillCfg          : skillCfg,
@@ -197,22 +209,25 @@ export function executeInstantSkillAsLocalWar({ player, skillId, dataForUseCoSki
             isFastExecute     : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_SelfPromotionGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_SelfUnitActionState.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_SelfFlareAmmoGain.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_ChangeWeather.executeAsLocalWar({
             skillCfg      : skillCfg,
@@ -221,10 +236,11 @@ export function executeInstantSkillAsLocalWar({ player, skillId, dataForUseCoSki
             isFastExecute : isFastExecute,
         }))
         .mergeFrom(CoSkills_Utils_InstantManual_SelfCoOnboard.executeAsLocalWar({
-            skillCfg        : skillCfg,
-            player          : player,
-            coGridIndexList : coGridIndexList,
-            isFastExecute   : isFastExecute,
+            skillCfg                 : skillCfg,
+            player                   : player,
+            skillUserCoGridIndexList : skillUserCoGridIndexList,
+            skillUserCoZoneRadius    : skillUserCoZoneRadius,
+            isFastExecute            : isFastExecute,
         }));
 
     return changedThings;

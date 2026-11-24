@@ -53,6 +53,7 @@ const runtime = (async () => {
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_Conditions: 'coSkills/utils/persistent/selfUnitCommonAttributes/Conditions',
     CoSkills_Utils_InstantManual_Conditions: 'coSkills/utils/instantManual/Conditions',
     CoSkills_Utils_InstantManual_SelfHp: 'coSkills/utils/instantManual/SelfHp',
+    CoSkills_Utils_InstantManual_EnemyHpGain: 'coSkills/utils/instantManual/EnemyHpGain',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ArmorPenetrations: 'coSkills/utils/persistent/selfUnitCommonAttributes/ArmorPenetrations',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_MoveCosts: 'coSkills/utils/persistent/selfUnitCommonAttributes/MoveCosts',
     CoSkills_Utils_Persistent_SelfUnitCommonAttributes_ReceiveFullTileDefenseWhenDamaged: 'coSkills/utils/persistent/selfUnitCommonAttributes/ReceiveFullTileDefenseWhenDamaged',
@@ -106,7 +107,7 @@ function categoryFixture(categories, types, getId, matches) {
   assert.fail('Expected a category with both matching and nonmatching types')
 }
 
-test('manual self HP shares category and area conditions, with only the area waived for CO units', async () => {
+test('manual HP conditions waive the area check only for the skill user’s CO', async () => {
   const { internal, gameConfig, raw, CoSkillCfg } = await runtime
   const unitCategory = categoryFixture(raw.getUnitCategory(), raw.getUnitTemplate().map(c => c.getUnitTypeId()),
     c => c.getUnitCategoryId(), (type, id) => gameConfig.checkIsUnitTypeInCategory(type, id))
@@ -125,12 +126,12 @@ test('manual self HP shares category and area conditions, with only the area wai
     addUnit(unit) { this.units.push(unit) }
   } }
   internal.Visibilities_Utils = { getObserverTeamIndexListForUnitOnMap: () => null }
-  const execute = ({ owner = 1, onboard = false, x = 1, loaded = false,
+  const execute = ({ enemy = false, owner = 1, team = owner, onboard = false, x = 1, loaded = false, radius = 1,
     unitType = unitCategory.included, tile = tileCategory.included, weather = weatherCategory.included,
-    attributes = { conditions, selfHp: { regularHpOffset: 1 } } } = {}) => {
+    attributes = { conditions, selfHp: { regularHpOffset: 1 } }, expectedChanges } = {}) => {
     let hp = 51
     const unit = {
-      getPlayerIndex: () => owner, getIsCoOnboard: () => onboard,
+      getPlayerIndex: () => owner, getTeamIndex: () => team, getIsCoOnboard: () => onboard,
       getUnitTypeId: () => unitType, getGridIndex: () => new GridIndex(x, 0),
       checkIsMeetLoadedState: state => internal.Units_Utils_Common.checkIsMeetLoadedStateId(state, loaded),
       getMaxHp: () => 100, getCurrentHp: () => hp, setCurrentHp: v => { hp = v },
@@ -141,17 +142,20 @@ test('manual self HP shares category and area conditions, with only the area wai
       getWeatherManager: () => ({ getCurrentWeatherType: () => weather }),
       getWarStatisticsManager: () => ({}), getUnitMap: () => ({ getAllUnits: () => [unit] }),
     }
-    const player = { getPlayerIndex: () => 1, getCoZoneRadius: () => 1, getWar: () => war }
-    const skillCfg = CoSkillCfg.fromJson({ instantManual: { unitAttributes: attributes } })
-    const changes = internal.CoSkills_Utils_InstantManual_SelfHp.executeAsLocalWar({
-      skillCfg, player, coGridIndexList: [new GridIndex(0, 0)], isFastExecute: true,
+    const player = { getPlayerIndex: () => 1, getTeamIndex: () => 1, getWar: () => war }
+    const skillCfg = CoSkillCfg.decode(CoSkillCfg.fromJson({ instantManual: { unitAttributes: attributes } }).encode())
+    const effect = enemy ? internal.CoSkills_Utils_InstantManual_EnemyHpGain : internal.CoSkills_Utils_InstantManual_SelfHp
+    const changes = effect.executeAsLocalWar({
+      skillCfg, player, coGridIndexList: [new GridIndex(0, 0)], skillUserCoZoneRadius: radius, isFastExecute: true,
     })
-    assert.equal(changes.units.length, hp === 51 ? 0 : 1)
+    assert.equal(changes.units.length, expectedChanges ?? (hp === 51 ? 0 : 1))
     return hp
   }
   assert.equal(execute(), 70)
   assert.equal(execute({ x: 2 }), 51)
+  assert.equal(execute({ x: 2, radius: 2 }), 70)
   assert.equal(execute({ x: 2, onboard: true }), 70)
+  assert.equal(execute({ x: 2, onboard: true, owner: 2, team: 1 }), 51)
   assert.equal(execute({ onboard: true, unitType: unitCategory.excluded }), 51)
   assert.equal(execute({ onboard: true, tile: tileCategory.excluded }), 51)
   assert.equal(execute({ onboard: true, weather: weatherCategory.excluded }), 51)
@@ -161,6 +165,31 @@ test('manual self HP shares category and area conditions, with only the area wai
   assert.equal(execute({ attributes: { selfHp: { regularHpOffset: 1 } } }), 51)
   assert.equal(execute({ attributes: { conditions, selfHp: { regularHpOffset: 0 } } }), 60)
   assert.equal(execute({ attributes: { conditions, selfHp: { regularHpOffset: -1 } } }), 41)
+
+  const target = { enemy: true, owner: 2, attributes: { conditions, enemyHp: { regularHpOffset: -1 } } }
+  assert.equal(execute(target), 41)
+  assert.equal(execute({ ...target, owner: 1 }), 51)
+  assert.equal(execute({ ...target, onboard: true }), 41)
+  assert.equal(execute({ ...target, x: 2, onboard: true }), 51)
+  assert.equal(execute({ ...target, x: 2, radius: 2 }), 41)
+  assert.equal(execute({ ...target, weather: weatherCategory.excluded }), 51)
+  assert.equal(execute({ ...target, attributes: { conditions, enemyHp: {} } }), 51)
+  assert.equal(execute({ ...target, attributes: { conditions, enemyHp: { regularHpOffset: 0 } }, expectedChanges: 1 }), 51)
+
+  const outsideArea = {
+    conditions: CoSkillCfg.fromJson({ instantManual: { unitAttributes: { conditions } } })
+      .getInstantManual().getUnitAttributes().getConditions(),
+    unit: {
+      checkIsMeetLoadedState: () => true,
+      getUnitTypeId: () => unitCategory.included,
+      getGridIndex: () => new GridIndex(2, 0),
+    },
+    tileMap: { getTile: () => ({ getTileTypeId: () => tileCategory.included }) },
+    weatherTypeId: weatherCategory.included, coGridIndexList: [new GridIndex(0, 0)], coZoneRadius: 1, gameConfig,
+  }
+  const { checkIsMeet } = internal.CoSkills_Utils_InstantManual_Conditions
+  assert.equal(checkIsMeet({ ...outsideArea, isCoOnboard: true }), true)
+  assert.equal(checkIsMeet({ ...outsideArea, isCoOnboard: false }), false)
 })
 
 test('tile income filters by tile, current weather and CO area, and multiplies matching effects', async () => {

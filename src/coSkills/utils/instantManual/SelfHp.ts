@@ -20,11 +20,12 @@ export function executeAsOuterWar({ isFastExecute }: {
     // nothing to do
 }
 
-export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExecute }: {
-    skillCfg        : CoSkillCfg;
-    player          : Players_Player.Player;
-    coGridIndexList : AuxiliaryTypes_GridIndex.GridIndex[];
-    isFastExecute   : boolean;
+export function executeAsLocalWar({ skillCfg, player, skillUserCoGridIndexList, skillUserCoZoneRadius, isFastExecute }: {
+    skillCfg                    : CoSkillCfg;
+    player                      : Players_Player.Player;
+    skillUserCoGridIndexList    : AuxiliaryTypes_GridIndex.GridIndex[];
+    skillUserCoZoneRadius       : number;
+    isFastExecute               : boolean;
 }): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
     const attributes    = skillCfg.getInstantManual()?.getUnitAttributes();
@@ -33,7 +34,6 @@ export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExe
     if ((cfg != null) && (conditions != null)) {
         const war                   = player.getWar();
         const playerIndex           = player.getPlayerIndex();
-        const zoneRadius            = player.getCoZoneRadius();
         const regularHpOffset       = cfg.getRegularHpOffset() ?? 0;
         const costMultiplier        = (cfg.getCostMultiplierPct()) / 100 / 10;
         const gameConfig            = war.getGcData();
@@ -45,13 +45,14 @@ export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExe
         for (const unit of war.getUnitMap().getAllUnits()) {
             if ((unit.getPlayerIndex() === playerIndex) &&
                 (CoSkills_Utils_InstantManual_Conditions.checkIsMeet({
-                    conditions      : conditions,
-                    unit            : unit,
-                    tileMap         : tileMap,
-                    weatherTypeId   : weatherTypeId,
-                    coGridIndexList : coGridIndexList,
-                    coZoneRadius    : zoneRadius,
-                    gameConfig      : gameConfig,
+                    conditions               : conditions,
+                    unit                     : unit,
+                    tileMap                  : tileMap,
+                    weatherTypeId            : weatherTypeId,
+                    skillUserCoGridIndexList : skillUserCoGridIndexList,
+                    skillUserCoZoneRadius    : skillUserCoZoneRadius,
+                    gameConfig               : gameConfig,
+                    isSkillUserCoOnboard     : unit.getIsCoOnboard(),
                 }))
             ) {
                 const unitType        = unit.getUnitTypeId();

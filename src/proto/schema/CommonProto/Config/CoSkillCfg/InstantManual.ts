@@ -6,7 +6,6 @@ import { EnemyFuelGain as $Message$CommonProto$Config$CoSkillCfg$InstantManual$E
 import { EnemyMaterialGain as $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyMaterialGain, type EnemyMaterialGainJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$EnemyMaterialGain } from "./InstantManual/EnemyMaterialGain.js";
 import { EnemyPrimaryAmmoGain as $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyPrimaryAmmoGain, type EnemyPrimaryAmmoGainJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$EnemyPrimaryAmmoGain } from "./InstantManual/EnemyPrimaryAmmoGain.js";
 import { EnemyUnitBuffGain as $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitBuffGain, type EnemyUnitBuffGainJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitBuffGain } from "./InstantManual/EnemyUnitBuffGain.js";
-import { EnemyUnitHp as $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp, type EnemyUnitHpJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp } from "./InstantManual/EnemyUnitHp.js";
 import { FixedAreaDamage as $Message$CommonProto$Config$CoSkillCfg$InstantManual$FixedAreaDamage, type FixedAreaDamageJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$FixedAreaDamage } from "./InstantManual/FixedAreaDamage.js";
 import { SelfAddUnit as $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfAddUnit, type SelfAddUnitJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfAddUnit } from "./InstantManual/SelfAddUnit.js";
 import { SelfCoOnboard as $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfCoOnboard, type SelfCoOnboardJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfCoOnboard } from "./InstantManual/SelfCoOnboard.js";
@@ -21,7 +20,6 @@ import { SelfUnitBuffGain as $Message$CommonProto$Config$CoSkillCfg$InstantManua
 import { UnitAttributes as $Message$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes, type UnitAttributesJson as $Json$CommonProto$Config$CoSkillCfg$InstantManual$UnitAttributes } from "./InstantManual/UnitAttributes.js";
 
 export interface InstantManualJson extends $ProtoSchemaJsonBase {
-    enemyUnitHp?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp | null | undefined;
     selfPrimaryAmmoGain?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfPrimaryAmmoGain | null | undefined;
     enemyPrimaryAmmoGain?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$EnemyPrimaryAmmoGain | null | undefined;
     selfFuelGain?: $Json$CommonProto$Config$CoSkillCfg$InstantManual$SelfFuelGain | null | undefined;
@@ -43,7 +41,6 @@ export interface InstantManualJson extends $ProtoSchemaJsonBase {
 }
 
 export class InstantManual extends $ProtoSchemaBase {
-    private _enemyUnitHp?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp | null | undefined;
     private _selfPrimaryAmmoGain?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfPrimaryAmmoGain | null | undefined;
     private _enemyPrimaryAmmoGain?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyPrimaryAmmoGain | null | undefined;
     private _selfFuelGain?: $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfFuelGain | null | undefined;
@@ -67,7 +64,6 @@ export class InstantManual extends $ProtoSchemaBase {
         return new InstantManual().loadJson(obj);
     }
     public override loadJson(obj: InstantManualJson): this {
-        this.setEnemyUnitHp(obj.enemyUnitHp != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp.fromJson(obj.enemyUnitHp) : null);
         this.setSelfPrimaryAmmoGain(obj.selfPrimaryAmmoGain != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfPrimaryAmmoGain.fromJson(obj.selfPrimaryAmmoGain) : null);
         this.setEnemyPrimaryAmmoGain(obj.enemyPrimaryAmmoGain != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyPrimaryAmmoGain.fromJson(obj.enemyPrimaryAmmoGain) : null);
         this.setSelfFuelGain(obj.selfFuelGain != null ? $Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfFuelGain.fromJson(obj.selfFuelGain) : null);
@@ -90,11 +86,6 @@ export class InstantManual extends $ProtoSchemaBase {
     }
     public override toJson(obj?: InstantManualJson): InstantManualJson {
         obj ??= ({} as InstantManualJson);
-
-        {
-            const value = this.getEnemyUnitHp();
-            (value != null) && (obj.enemyUnitHp = value.toJson());
-        }
 
         {
             const value = this.getSelfPrimaryAmmoGain();
@@ -189,13 +180,6 @@ export class InstantManual extends $ProtoSchemaBase {
     }
 
     public override toWriter(writer = protobuf.Writer.create()): protobuf.Writer {
-        {
-            const value = this.getEnemyUnitHp();
-            if (value != null) {
-                value.toWriter(writer.uint32(18).fork()).ldelim();
-            }
-        }
-
         {
             const value = this.getSelfPrimaryAmmoGain();
             if (value != null) {
@@ -335,10 +319,6 @@ export class InstantManual extends $ProtoSchemaBase {
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
-                case 2:
-                    msg.setEnemyUnitHp($Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp.decode(reader, reader.uint32()));
-                    break;
-
                 case 3:
                     msg.setSelfPrimaryAmmoGain($Message$CommonProto$Config$CoSkillCfg$InstantManual$SelfPrimaryAmmoGain.decode(reader, reader.uint32()));
                     break;
@@ -426,19 +406,6 @@ export class InstantManual extends $ProtoSchemaBase {
 
     public override getSchemaName(): "InstantManual" {
         return "InstantManual";
-    }
-
-    public checkHasEnemyUnitHp(): boolean {
-        return this._enemyUnitHp != null;
-    }
-    public getEnemyUnitHp(): $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp | null | undefined {
-        return this._enemyUnitHp;
-    }
-    public setEnemyUnitHp(value: $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp | null | undefined): void {
-        this._enemyUnitHp = value;
-    }
-    public createIfNotExistsEnemyUnitHp(): $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp {
-        return this._enemyUnitHp ??= new $Message$CommonProto$Config$CoSkillCfg$InstantManual$EnemyUnitHp();
     }
 
     public checkHasSelfPrimaryAmmoGain(): boolean {

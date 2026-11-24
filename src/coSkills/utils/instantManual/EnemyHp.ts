@@ -1,6 +1,8 @@
 import {
     AuxiliaryTypes_ChangedThingsForWarOperation,
     AuxiliaryTypes_GridIndex,
+    CoSkills_Utils_InstantManual_Conditions,
+    Helpers_Misc,
     Helpers_Team,
     Players_Player,
     Units_Constants,
@@ -16,24 +18,23 @@ export function executeAsOuterWar({ isFastExecute }: {
     // nothing to do
 }
 
-export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExecute }: {
-    skillCfg        : CoSkillCfg;
-    player          : Players_Player.Player;
-    coGridIndexList : AuxiliaryTypes_GridIndex.GridIndex[];
-    isFastExecute   : boolean;
+export function executeAsLocalWar({ skillCfg, player, skillUserCoGridIndexList, skillUserCoZoneRadius, isFastExecute }: {
+    skillCfg                    : CoSkillCfg;
+    player                      : Players_Player.Player;
+    skillUserCoGridIndexList    : AuxiliaryTypes_GridIndex.GridIndex[];
+    skillUserCoZoneRadius       : number;
+    isFastExecute               : boolean;
 }): AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation {
     const changedThings = new AuxiliaryTypes_ChangedThingsForWarOperation.ChangedThingsForWarOperation();
-    const cfg           = skillCfg.getInstantManual()?.getEnemyUnitHp();
-    if (cfg) {
+    const attributes    = skillCfg.getInstantManual()?.getUnitAttributes();
+    const deltaHp       = attributes?.getEnemyHp()?.getRegularHpOffset();
+    const conditions    = attributes?.getConditions();
+    if ((deltaHp != null) && (conditions != null)) {
         const teamIndex             = player.getTeamIndex();
-        const zoneRadius            = player.getCoZoneRadius();
         const war                   = player.getWar();
         const tileMap               = war.getTileMap();
         const warStatisticsManager  = war.getWarStatisticsManager();
-        const unitCategory          = cfg.getUnitCategoryId();
-        const tileCategory          = cfg.getTileCategoryId();
-        const deltaHp               = cfg.getHpGain();
-        const loadedState           = cfg.getUnitLoadedStateId();
+        const weatherTypeId         = Helpers_Misc.getExisted(war.getWeatherManager().getCurrentWeatherType());
         const gameConfig            = war.getGcData();
         const modifier              = deltaHp * Units_Constants.Hp.Normalizer;
         for (const unit of war.getUnitMap().getAllUnits()) {
@@ -41,15 +42,16 @@ export function executeAsLocalWar({ skillCfg, player, coGridIndexList, isFastExe
             const gridIndex = unit.getGridIndex();
             const maxHp     = unit.getMaxHp();
             const currentHp = unit.getCurrentHp();
-            const tileType  = tileMap.getTile(gridIndex)?.getTileTypeId();
-            if ((unit.getTeamIndex() !== teamIndex)                             &&
-                (gameConfig.checkIsUnitTypeInCategory(unitType, unitCategory))  &&
-                (gameConfig.checkIsTileTypeInCategory(tileType, tileCategory))  &&
-                (unit.checkIsMeetLoadedState(loadedState))                      &&
-                (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap : () => coGridIndexList,
-                    coZoneRadius             : zoneRadius,
+            if ((unit.getTeamIndex() !== teamIndex) &&
+                (CoSkills_Utils_InstantManual_Conditions.checkIsMeet({
+                    conditions               : conditions,
+                    unit                     : unit,
+                    tileMap                  : tileMap,
+                    weatherTypeId            : weatherTypeId,
+                    skillUserCoGridIndexList : skillUserCoGridIndexList,
+                    skillUserCoZoneRadius    : skillUserCoZoneRadius,
+                    gameConfig               : gameConfig,
+                    isSkillUserCoOnboard     : false,
                 }))
             ) {
                 const oldNormalizedHp = unit.getNormalizedCurrentHp();
