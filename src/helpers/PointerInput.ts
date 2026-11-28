@@ -116,6 +116,12 @@ export function enable(): void {
     _webPlayer          = Helpers_Misc.getExisted(Helpers_Compatibility.getWebPlayer());
     _webTouchHandler    = _webPlayer.webTouchHandler;
     _canvas             = _webPlayer.canvas;
+    _canvas.style.touchAction = "none";
+    _canvas.addEventListener("touchend", e => {
+        if (e.cancelable) {
+            e.preventDefault();
+        }
+    }, { passive : false });
     _canvas.addEventListener("wheel", e => {
         // Notify.Dispatcher.dispatch(Notify.NotifyType.MouseWheel, -(e.deltaX || e.deltaY) * MouseWheelMultiplier);
         const value = e.deltaX + e.deltaY;

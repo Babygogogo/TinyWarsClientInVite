@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "test": "node --experimental-vm-modules --test tests/*.test.mjs",
     "testEgretCircleRef": "node --experimental-vm-modules --test tests/egret-modules.test.mjs",
     "check": "tsc --noEmit",

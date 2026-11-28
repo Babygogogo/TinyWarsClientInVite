@@ -46,7 +46,7 @@ export function executeAsLocalWar({ skillCfg, player, skillUserCoGridIndexList, 
                     skillUserCoGridIndexList : skillUserCoGridIndexList,
                     skillUserCoZoneRadius    : skillUserCoZoneRadius,
                     gameConfig               : gameConfig,
-                    isSkillUserCoOnboard     : false,
+                    isSkillUserCoOnboard     : unit.getIsCoOnboard(),
                 }))
             ) {
                 if (modifier > 0) {

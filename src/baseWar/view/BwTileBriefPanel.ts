@@ -211,7 +211,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             (!WarTypes_Utils.checkCanCheatInWar(warType))
         ) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileDetailPanel, {
-                tile,
+                tile               : tile,
                 callbackForAddUnit : null,
             });
         } else {
@@ -237,7 +237,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             unitMap.setUnitOnMap(unit);
                             unitMap.setNextUnitId(unitId + 1);
                             war.updateTilesAndUnitsOnVisibilityChanged(false);
-                            Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex });
+                            Notifications_Dispatcher.dispatch("BwUnitChanged", { gridIndex : gridIndex });
                         },
                     });
                 },
@@ -252,7 +252,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateView(): void {
         const war = this.getOpenData()?.war;
-        if (war == null) {
+        if ((war == null) || (!war.getIsRunning())) {
             return;
         }
 

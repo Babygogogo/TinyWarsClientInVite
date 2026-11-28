@@ -81,6 +81,7 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
     private readonly _boundOnDomBlur = () => {
         window.TEXT_INPUT_CONTAINER.style.pointerEvents = "none";
         this._setIsFocused(false);
+        this._syncDomRenderAttrs();
         this._applyLabelVisible(true);
         if (this._applyLabelText(this.getText(), this.getIsDisplayAsPassword())) {
             this._updateInnerWidth();
@@ -94,6 +95,12 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
         const target = e.target;
         if ((target != null) && (target !== this._getDomInput())) {
             this.blur();
+        }
+    };
+    private readonly _boundOnContainerMouseDown = (e: Event) => {
+        const target = e.target;
+        if ((this._getIsFocused()) && (target != null) && (target !== this._getDomInput())) {
+            e.preventDefault();
         }
     };
 
@@ -131,22 +138,33 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
     }
 
     private _onAddedToStage(): void {
+        this._previousAttrs = {};
+
         const container = window.TEXT_INPUT_CONTAINER;
         container.addEventListener("pointerdown", this._boundOnBodyPointerDown);
+        container.addEventListener("mousedown", this._boundOnContainerMouseDown);
 
         const dom = this._getDomInput();
-        (dom) && (container.appendChild(dom));
+        if (dom) {
+            container.appendChild(dom);
+        }
     }
     private _onRemovedFromStage(): void {
         this.blur();
 
         const container = window.TEXT_INPUT_CONTAINER;
         container.removeEventListener("pointerdown", this._boundOnBodyPointerDown);
+        container.removeEventListener("mousedown", this._boundOnContainerMouseDown);
 
         const dom = this._getDomInput();
-        (dom) && (container.removeChild(dom));
+        if (dom) {
+            container.removeChild(dom);
+        }
     }
     private _onEnterFrame(): void {
+        this._syncDomRenderAttrs();
+    }
+    private _syncDomRenderAttrs(): void {
         const previousAttrs = this._previousAttrs;
         const isDomVisible  = this._calculateDomVisible();
         if (isDomVisible !== previousAttrs.isDomVisible) {
@@ -252,13 +270,13 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
     }
 
     public focus(): void {
-        if (this._getIsFocused()) {
+        if ((this._getIsFocused()) || (!Ui_Utils_UiHelpers.getWorldVisible(this))) {
             return;
         }
         this._setIsFocused(true);
 
         this._resetDomInput();
-        this._applyDomVisible(true);
+        this._syncDomRenderAttrs();
         this._applyLabelVisible(false);
         this._getDomInput()?.focus();
     }
@@ -268,9 +286,10 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
         }
         this._setIsFocused(false);
 
-        this._applyDomVisible(false);
-        this._applyLabelVisible(true);
         this._getDomInput()?.blur();
+        window.TEXT_INPUT_CONTAINER.style.pointerEvents = "none";   // 用于兜底，防止异常情况下界面完全卡死
+        this._syncDomRenderAttrs();
+        this._applyLabelVisible(true);
     }
     public select(): void {
         this.focus();
@@ -623,13 +642,17 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
     private _applyDomVisible(visible: boolean): void {
         const domStyle = this._getDomInput()?.style;
         if (domStyle) {
-            domStyle.display = visible ? 'block' : 'none';
-            window.scrollTo(0, 0);
+            const targetDisplay = visible ? 'block' : 'none';
+            if (domStyle.display !== targetDisplay) {
+                domStyle.display = targetDisplay;
+                window.scrollTo(0, 0);
+            }
         }
     }
     private _applyLabelVisible(visible: boolean): void {
         this._getLabelInput().setIsVisible(visible);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private _applyDomTransform(canvasBounds: CanvasBounds, transform: Egret_Egret.Matrix): void {
         const domStyle = this._getDomInput()?.style;
         if (domStyle) {
@@ -810,10 +833,10 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
     private _applyLabelHorizontalAlign(align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign): void {
         const label = this._getLabelInput();
         switch (align) {
-            case Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left     : label.setHorizontalAlign(Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left);         return;
-            case Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right    : label.setHorizontalAlign(Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right);        return;
-            case Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center   : label.setHorizontalAlign(Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center);       return;
-            default                         : throw Helpers_Misc.newError(`Invalid align: ${align}`);
+            case Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left      : label.setHorizontalAlign(Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left);         return;
+            case Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right     : label.setHorizontalAlign(Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right);        return;
+            case Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center    : label.setHorizontalAlign(Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center);       return;
+            default                                                     : throw Helpers_Misc.newError(`Invalid align: ${align}`);
         }
     }
     private _applyDomVerticalAlign(align: Ui_Types_UiVerticalAlign.UiVerticalAlign): void {
@@ -831,10 +854,10 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
     private _applyLabelVerticalAlign(align: Ui_Types_UiVerticalAlign.UiVerticalAlign): void {
         const label = this._getLabelInput();
         switch (align) {
-            case Ui_Types_UiVerticalAlign.UiVerticalAlign.Top    : label.setVerticalAlign(Ui_Types_UiVerticalAlign.UiVerticalAlign.Top);              return;
-            case Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom : label.setVerticalAlign(Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom);           return;
-            case Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle : label.setVerticalAlign(Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle);           return;
-            default                     : throw Helpers_Misc.newError(`Invalid align: ${align}`);
+            case Ui_Types_UiVerticalAlign.UiVerticalAlign.Top       : label.setVerticalAlign(Ui_Types_UiVerticalAlign.UiVerticalAlign.Top);              return;
+            case Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom    : label.setVerticalAlign(Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom);           return;
+            case Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle    : label.setVerticalAlign(Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle);           return;
+            default                                                 : throw Helpers_Misc.newError(`Invalid align: ${align}`);
         }
     }
     private _applyDomMaxLength(maxLength: number | undefined): void {
@@ -973,9 +996,9 @@ function _getDomText(dom: HTMLTextAreaElement | HTMLInputElement | undefined): s
     return dom?.value ?? "";
 }
 
-function _matrixToCSS(m: Egret_Egret.Matrix): string {
-    return 'matrix('+[m.a,m.b,m.c,m.d,m.tx,m.ty].join(',')+')';
-}
+// function _matrixToCSS(m: Egret_Egret.Matrix): string {
+//     return 'matrix('+[m.a,m.b,m.c,m.d,m.tx,m.ty].join(',')+')';
+// }
 function _calculateCanvasBounds(): CanvasBounds {
     const rect = Stages_StageManager.getCanvasBoundingClientRect();
     return {
